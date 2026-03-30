@@ -1,15 +1,15 @@
 [project]
 name = "mcp-brasil"
 version = "0.5.0"
-description = "MCP servers para APIs públicas brasileiras"
+description = "Русскоязычная адаптация MCP-сервера для публичных и государственных данных"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
-authors = [{ name = "mcp-brasil contributors" }]
+authors = [{ name = "mcp-russia contributors" }]
 keywords = [
     "mcp",
-    "brasil",
-    "brazil",
+    "russia",
+    "russian",
     "government",
     "api",
     "fastmcp",
@@ -17,11 +17,11 @@ keywords = [
     "llm",
     "claude",
     "opendata",
-    "dados-abertos",
-    "ibge",
-    "bacen",
-    "transparencia",
-    "legislacao",
+    "opendata",
+    "public-data",
+    "gosdata",
+    "government-data",
+    "russian-language",
     "model-context-protocol",
     "agent",
     "async",
@@ -31,7 +31,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
-    "Natural Language :: Portuguese (Brazilian)",
+    "Natural Language :: Russian",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",

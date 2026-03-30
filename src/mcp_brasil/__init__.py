@@ -1,4 +1,4 @@
-"""mcp-brasil — MCP servers para APIs públicas brasileiras."""
+"""Historical package namespace retained during the mcp-russia migration."""
 
 from importlib.metadata import version
 
