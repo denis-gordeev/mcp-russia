@@ -1,5 +1,5 @@
 [project]
-name = "mcp-brasil"
+name = "mcp-russia"
 version = "0.5.0"
 description = "Русскоязычная адаптация MCP-сервера для публичных и государственных данных"
 readme = "README.md"
@@ -71,7 +71,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/mcp_brasil"]
+packages = ["src/mcp_brasil", "src/mcp_russia"]
 
 [tool.ruff]
 target-version = "py310"

@@ -1,5 +1,8 @@
-"""Historical package namespace retained during the mcp-russia migration."""
+"""Historical compatibility namespace retained during the mcp-russia migration."""
 
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
-__version__ = version("mcp-brasil")
+try:
+    __version__ = version("mcp-russia")
+except PackageNotFoundError:
+    __version__ = version("mcp-brasil")

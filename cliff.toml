@@ -1,11 +1,11 @@
-# git-cliff — Changelog generator for mcp-brasil
+# git-cliff — Changelog generator for mcp-russia
 # https://git-cliff.org/docs/configuration
 
 [changelog]
 header = """
 # Changelog
 
-Todas as mudanças notáveis do mcp-brasil estão documentadas neste arquivo.\n
+Todas as mudanças notáveis do mcp-russia estão documentadas neste arquivo.\n
 """
 
 body = """

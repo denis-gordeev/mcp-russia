@@ -1,4 +1,4 @@
-# mcp-brasil — Makefile
+# mcp-russia — Makefile
 
 .DEFAULT_GOAL := help
 .PHONY: help sync dev test test-feature lint fix types run serve inspect ci clean build changelog version release-patch release-minor release-major diagrams
@@ -36,13 +36,13 @@ ci: lint types test ## Full CI pipeline: lint + types + test
 ## —— Server ——
 
 run: ## Run MCP server (stdio)
-	uv run python -m mcp_brasil.server
+	uv run python -m mcp_russia.server
 
 serve: ## Run MCP server (HTTP :8000)
-	uv run python -c "from mcp_brasil.server import mcp; mcp.run(transport='streamable-http', host='0.0.0.0', port=8000)"
+	uv run python -c "from mcp_russia.server import mcp; mcp.run(transport='streamable-http', host='0.0.0.0', port=8000)"
 
 inspect: ## Inspect MCP server tools/resources/prompts
-	uv run python -c "from mcp_brasil.server import mcp, registry; print(registry.summary())"
+	uv run python -c "from mcp_russia.server import mcp, registry; print(registry.summary())"
 
 ## —— Release ——
 

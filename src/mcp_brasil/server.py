@@ -1,12 +1,12 @@
-"""mcp-brasil root server — auto-discovers and mounts all features.
+"""mcp-russia root server — auto-discovers and mounts all features.
 
 This file uses FeatureRegistry for zero-touch feature onboarding.
 You should NEVER need to edit this file to add a new feature.
 Just create a new directory following the convention in ADR-001/002.
 
 Usage:
-    fastmcp run mcp_brasil.server:mcp
-    fastmcp run mcp_brasil.server:mcp --transport http --port 8000
+    fastmcp run mcp_russia.server:mcp
+    fastmcp run mcp_russia.server:mcp --transport http --port 8000
 """
 
 import logging
@@ -28,7 +28,7 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(name)s] %(levelname)s: %(message)s",
 )
-logger = logging.getLogger("mcp-brasil")
+logger = logging.getLogger("mcp-russia")
 
 
 # ---------------------------------------------------------------------------
@@ -74,7 +74,7 @@ class RequestLoggingMiddleware(Middleware):
 # ---------------------------------------------------------------------------
 
 # Create the root server
-mcp = FastMCP("mcp-brasil 🇧🇷", lifespan=http_lifespan)
+mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
 
 # Add middleware
 mcp.add_middleware(RequestLoggingMiddleware())
@@ -94,7 +94,7 @@ build_dispatch(registry)
 # Expose a meta-tool for introspection
 @mcp.tool(tags={"meta", "discovery"})
 def listar_features() -> str:
-    """Lista todas as features (APIs) disponíveis no mcp-brasil.
+    """Lista todas as features (APIs) disponíveis no mcp-russia.
 
     Use esta tool para saber quais APIs governamentais estão conectadas
     e quais tools cada uma oferece.
@@ -111,7 +111,7 @@ async def recomendar_tools(query: str, ctx: Context) -> str:
     """Recomenda tools relevantes a partir de uma pergunta em linguagem natural.
 
     Usa IA para entender sua intenção e sugerir as tools mais adequadas
-    do mcp-brasil, explicando quando e como usar cada uma.
+    do mcp-russia, explicando quando e como usar cada uma.
 
     Args:
         query: Pergunta ou descrição do que você precisa
@@ -170,7 +170,7 @@ async def executar_lote(consultas: list[dict[str, object]], ctx: Context) -> str
 
 
 # ---------------------------------------------------------------------------
-# Tool Search Transform — configurable via MCP_BRASIL_TOOL_SEARCH
+# Tool Search Transform — configurable via MCP_RUSSIA_TOOL_SEARCH
 # ---------------------------------------------------------------------------
 _always_visible = [
     "listar_features",
