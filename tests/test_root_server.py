@@ -1,4 +1,4 @@
-"""Integration tests for the root mcp-brasil server.
+"""Integration tests for the root mcp-russia server.
 
 Tests the fully composed server with all features mounted.
 MCP_BRASIL_TOOL_SEARCH=none is set in conftest.py (before any import).

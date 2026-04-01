@@ -1,7 +1,8 @@
-"""Fixtures globais para testes do mcp-brasil."""
+"""Глобальные фикстуры для тестов mcp-russia."""
 
 import os
 
-# Disable BM25 search transform for tests so the root server exposes all tools
-# directly. This must happen before any mcp_brasil module is imported.
+# Отключаем BM25 discovery для тестов, чтобы корневой сервер публиковал все tools
+# напрямую. Это должно произойти до импорта модулей mcp_brasil.
+os.environ.setdefault("MCP_RUSSIA_TOOL_SEARCH", "none")
 os.environ.setdefault("MCP_BRASIL_TOOL_SEARCH", "none")

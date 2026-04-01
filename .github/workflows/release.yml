@@ -29,7 +29,7 @@ jobs:
         run: uv run ruff check src/ tests/ && uv run ruff format --check src/ tests/
 
       - name: Type check
-        run: uv run mypy src/mcp_brasil/
+        run: uv run mypy src/mcp_brasil/ src/mcp_russia/
 
       - name: Test
         run: uv run pytest -v
@@ -57,7 +57,7 @@ jobs:
 
       - name: Smoke test
         run: |
-          uv run --with ./dist/*.whl --no-project -- python -c "import mcp_brasil; print(mcp_brasil.__version__)"
+          uv run --with ./dist/*.whl --no-project -- python -c "import mcp_russia; print(mcp_russia.__version__)"
 
       - name: Publish to PyPI
         run: uv publish --trusted-publishing always

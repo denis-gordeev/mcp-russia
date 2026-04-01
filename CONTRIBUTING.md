@@ -32,7 +32,7 @@ src/mcp_brasil/
 1. Создайте каталог `src/mcp_brasil/data/{feature}/` (API) или `src/mcp_brasil/agentes/{feature}/` (агенты) с обязательными файлами:
 
 ```
-src/mcp_brasil/data/{feature}/      # ou agentes/{feature}/
+src/mcp_brasil/data/{feature}/      # или agentes/{feature}/
 ├── __init__.py     # FEATURE_META (обязательно для auto-discovery)
 ├── server.py       # mcp: FastMCP (обязательно)
 ├── tools.py        # Функции MCP tools
@@ -69,7 +69,7 @@ mcp.tool(minha_tool)
 4. Добавьте тесты в `tests/data/{feature}/` (или `tests/agentes/{feature}/`):
 
 ```
-tests/data/{feature}/         # ou tests/agentes/{feature}/
+tests/data/{feature}/         # или tests/agentes/{feature}/
 ├── test_tools.py             # Mock client, testa lógica
 ├── test_client.py            # respx mock HTTP
 └── test_integration.py       # fastmcp.Client e2e
@@ -94,41 +94,41 @@ server.py → tools.py → client.py → schemas.py
 
 ## Правила кодовой базы
 
-| Escopo | Convenção | Exemplo |
+| Область | Правило | Пример |
 |--------|-----------|---------|
-| Módulos | snake_case | `client.py` |
+| Модули | snake_case | `client.py` |
 | Classes | PascalCase | `class Estado(BaseModel)` |
-| Funções/tools | snake_case, verbo | `buscar_localidades()` |
-| Constantes | UPPER_SNAKE | `IBGE_API_BASE` |
-| Privados | `_prefixo` | `_shared/`, `_cache` |
+| Функции/tools | snake_case, глагол | `buscar_localidades()` |
+| Константы | UPPER_SNAKE | `IBGE_API_BASE` |
+| Приватные элементы | `_prefixo` | `_shared/`, `_cache` |
 
 ### Инварианты
 
-1. `server.py` raiz nunca muda — auto-registry cuida de tudo
-2. `tools.py` nunca faz HTTP — delega para `client.py`
-3. `client.py` nunca formata para LLM — retorna Pydantic models
-4. `schemas.py` zero lógica — apenas BaseModel
-5. `server.py` da feature apenas registra — zero lógica de negócio
-6. `constants.py` zero imports de outros módulos
+1. Корневой `server.py` не правится без крайней необходимости — auto-registry делает остальное
+2. `tools.py` не делает HTTP-запросы — делегирует в `client.py`
+3. `client.py` не форматирует ответы для LLM — возвращает Pydantic models
+4. `schemas.py` без бизнес-логики — только модели
+5. `server.py` feature только регистрирует — без предметной логики
+6. `constants.py` не импортирует другие модули проекта
 7. У каждой tool есть docstring — LLM использует ее при выборе вызова
-8. Async everywhere — `async def` em tools e clients
-9. Type hints completos em todas as funções
+8. Везде async — `async def` в tools и clients
+9. Полные type hints во всех функциях
 
 ## Технологии
 
 - **Python 3.10+** — базовый язык
 - **FastMCP v3** — MCP-фреймворк (`@mcp.tool`, `@mcp.resource`, `@mcp.prompt`)
 - **httpx** — HTTP async
-- **Pydantic v2** — schemas e validação
+- **Pydantic v2** — схемы и валидация
 - **uv** — менеджер пакетов
 - **ruff** — lint + format (line-length 99)
 - **mypy** — type checking (strict)
-- **pytest + pytest-asyncio + respx** — testes
+- **pytest + pytest-asyncio + respx** — тесты
 
 ## Тесты
 
 ```bash
-make test                 # Todos os testes
+make test                 # Все тесты
 make test-feature F=ibge  # Тесты одной feature
 make lint                 # ruff check + format check
 make types                # mypy strict
@@ -192,7 +192,7 @@ async def test_tool_via_mcp_client():
 
 ## Коммиты
 
-Use **Conventional Commits** (em português ou inglês):
+Используйте **Conventional Commits** (на русском или английском):
 
 ```
 feat(ibge): add tool consultar_populacao
@@ -211,7 +211,7 @@ refactor(camara): simplify pagination logic
 
 ### Типы повышения версии
 
-| Situação | Bump | Exemplo |
+| Ситуация | Bump | Пример |
 |----------|------|---------|
 | Новая feature (новое API, новый агент) | **minor** | `feat(saude): add 5 tools` |
 | Исправление бага, корректировка endpoint | **patch** | `fix(bacen): handle timeout` |
@@ -225,7 +225,7 @@ make version          # Показать текущую версию
 make release-patch    # Повысить patch (сначала запускает CI)
 make release-minor    # Bump minor
 make release-major    # Bump major
-make changelog        # Gerar CHANGELOG.md manualmente
+make changelog        # Сгенерировать CHANGELOG.md вручную
 make build            # Build do pacote (sdist + wheel)
 ```
 
@@ -243,8 +243,8 @@ make build            # Build do pacote (sdist + wheel)
 
 ## Pull request
 
-- Use **Conventional Commits** no título do PR
+- Используйте **Conventional Commits** в заголовке PR
 - Перед открытием PR убедитесь, что `make ci` проходит
 - Опишите, что изменилось и зачем
 - Для новой feature добавляйте тесты (`test_tools.py`, `test_client.py`, `test_integration.py`)
-- Если обнаружили технический долг, зафиксируйте его в `TECH_DEBT.md`
+- Если обнаружили технический долг или следующий шаг миграции, зафиксируйте его в `TODO.md`
