@@ -1,37 +1,49 @@
-# mcp-brasil Documentation
+# Документация mcp-russia
 
-**MCP Server para 27 APIs publicas brasileiras**
+**Русскоязычная адаптация MCP-сервера для публичных и государственных данных**
 
-205 tools · 58 resources · 47 prompts · 24 APIs sem chave
+Текущий публичный пакет: `mcp-russia`  
+Текущий публичный импорт: `mcp_russia`
 
 ---
 
-## O que e o mcp-brasil?
+## Состояние миграции
 
-O mcp-brasil e um pacote Python que expoe APIs publicas brasileiras como um servidor [Model Context Protocol (MCP)](https://modelcontextprotocol.io/). Ele permite que AI agents (Claude, GPT, Copilot, etc.) consultem dados governamentais oficiais do Brasil em linguagem natural.
+`mcp-russia` развивается как русскоязычная адаптация исходного репозитория. При этом значительная часть feature-модулей, схем и внутренних путей пока физически живет в дереве `src/mcp_brasil/`. Это сохранено как compatibility-слой на время поэтапной миграции.
 
-### O que ele cobre
+Что уже можно считать стабильным:
 
-| Categoria | O que voce pode perguntar |
-|-----------|--------------------------|
-| **Economico** | Selic, IPCA, cambio, PIB, estados, municipios, dados demograficos |
-| **Legislativo** | Deputados, senadores, projetos de lei, votacoes, despesas parlamentares |
-| **Transparencia** | Contratos federais, despesas, servidores, sancoes, bolsa familia |
-| **Judiciario** | Processos judiciais, jurisprudencia do STF/STJ/TST, acordaos do TCU |
-| **Eleitoral** | Candidatos, resultados de eleicoes, prestacao de contas |
-| **Ambiental** | Focos de queimadas, desmatamento, reservatorios, estacoes hidrologicas |
-| **Saude** | Estabelecimentos de saude, profissionais, leitos |
-| **Compras Publicas** | Licitacoes, contratos (PNCP + ComprasNet/SIASG) |
-| **Utilidades** | CEP, CNPJ, bancos, FIPE, diarios oficiais, datasets abertos |
+- публичное название проекта: `mcp-russia`;
+- публичные команды запуска и импортов: `mcp_russia`;
+- верхнеуровневые инструкции по запуску, разработке и сопровождению.
 
-## Documentacao
+Что еще остается в переходном состоянии:
 
-| Pagina | Descricao |
-|--------|-----------|
-| [Quick Start](guide/quickstart.md) | Instalacao e configuracao em 2 minutos |
-| [Arquitetura](concepts/architecture.md) | Como o projeto funciona por dentro |
-| [Catalogo de Features](reference/features.md) | Todas as 27 features e suas 205 tools |
-| [Smart Tools](reference/smart-tools.md) | Meta-tools: planner, batch, discovery |
-| [Adicionando Features](guide/adding-features.md) | Guia para contribuir com novas APIs |
-| [Configuracao](reference/configuration.md) | Variaveis de ambiente e opcoes |
-| [Desenvolvimento](guide/development.md) | Setup de dev, testes, lint, CI |
+- большая часть feature-каталога и примеров в `docs/examples/`;
+- внутренние пути `src/mcp_brasil/...` и часть env-переменных;
+- описания интеграций, завязанные на бразильские наборы данных.
+
+## Что есть в проекте
+
+- MCP-сервер на Python с автоматическим discovery feature-пакетов;
+- набор data- и agent-feature модулей, пригодных как основа для дальнейшей локализации;
+- инфраструктура разработки: `uv`, `pytest`, `ruff`, `mypy`, `Makefile`;
+- публичный namespace `mcp_russia` поверх временно сохраненного internal-слоя `mcp_brasil`.
+
+## Навигация
+
+| Страница | Что внутри |
+|----------|------------|
+| [Quick Start](guide/quickstart.md) | Установка и подключение `mcp-russia` к MCP-клиентам |
+| [Архитектура](concepts/architecture.md) | Как устроены root server, auto-registry и feature-пакеты |
+| [Каталог features](reference/features.md) | Текущий каталог интеграций и инструментов в наследуемом дереве |
+| [Smart Tools](reference/smart-tools.md) | Meta-tools: discovery, planner, batch |
+| [Добавление features](guide/adding-features.md) | Как добавлять новую feature в переходной архитектуре |
+| [Конфигурация](reference/configuration.md) | Переменные окружения и режимы запуска |
+| [Разработка](guide/development.md) | Setup, проверки, CI и contribution workflow |
+
+## Практическая оговорка
+
+Если вы подключаете сервер как конечный пользователь, ориентируйтесь на `mcp-russia` и `mcp_russia`.
+
+Если вы дорабатываете кодовую базу, учитывайте, что внутренняя реализация все еще использует `src/mcp_brasil/`. До завершения миграции это ожидаемое состояние.

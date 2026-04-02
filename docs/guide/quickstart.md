@@ -1,53 +1,51 @@
-# Quick Start
+# Быстрый старт
 
-## Instalar
-
-```bash
-pip install mcp-brasil
-```
-
-ou com uv:
+## Установка
 
 ```bash
-uv add mcp-brasil
+pip install mcp-russia
 ```
 
-## Conectar ao seu cliente MCP
+или через `uv`:
+
+```bash
+uv add mcp-russia
+```
+
+## Подключение к MCP-клиенту
 
 ### Claude Desktop
 
-Adicione ao `claude_desktop_config.json`:
+Добавьте в `claude_desktop_config.json`:
 
 ```json
 {
   "mcpServers": {
-    "mcp-brasil": {
+    "mcp-russia": {
       "command": "uvx",
-      "args": ["--from", "mcp-brasil", "python", "-m", "mcp_brasil.server"],
+      "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "sua-chave-aqui",
-        "DATAJUD_API_KEY": "sua-chave-aqui"
+        "TRANSPARENCIA_API_KEY": "your-key-here",
+        "DATAJUD_API_KEY": "your-key-here"
       }
     }
   }
 }
 ```
 
-> As chaves sao opcionais — sem elas, as 24 APIs restantes funcionam normalmente.
-
 ### VS Code / Cursor
 
-Crie `.vscode/mcp.json` na raiz do projeto:
+Создайте `.vscode/mcp.json` в корне проекта:
 
 ```json
 {
   "servers": {
-    "mcp-brasil": {
+    "mcp-russia": {
       "command": "uvx",
-      "args": ["--from", "mcp-brasil", "python", "-m", "mcp_brasil.server"],
+      "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "sua-chave-aqui",
-        "DATAJUD_API_KEY": "sua-chave-aqui"
+        "TRANSPARENCIA_API_KEY": "your-key-here",
+        "DATAJUD_API_KEY": "your-key-here"
       }
     }
   }
@@ -57,38 +55,49 @@ Crie `.vscode/mcp.json` na raiz do projeto:
 ### Claude Code
 
 ```bash
-claude mcp add mcp-brasil -- uvx --from mcp-brasil python -m mcp_brasil.server
+claude mcp add mcp-russia -- uvx --from mcp-russia python -m mcp_russia.server
 ```
 
-### HTTP (outros clientes)
+### HTTP / streamable HTTP
 
 ```bash
-fastmcp run mcp_brasil.server:mcp --transport http --port 8000
-# Server disponivel em http://localhost:8000/mcp
+fastmcp run mcp_russia.server:mcp --transport http --port 8000
+# сервер будет доступен на http://localhost:8000/mcp
 ```
 
-## Testar
+или из репозитория:
 
-Conecte o server e faca perguntas em linguagem natural:
+```bash
+make serve
+```
 
-> "Quais projetos de lei sobre inteligencia artificial tramitaram na Camara em 2024?"
+## Проверка запуска
 
-> "Qual a tendencia da taxa Selic nos ultimos 12 meses? Compare com a inflacao (IPCA)."
+После подключения сервера проверьте простые запросы на естественном языке:
 
-> "Quais os 10 maiores contratos do governo federal em 2024? Quem sao os fornecedores?"
+> "Какие интеграции сейчас активны в этом сервере?"
 
-> "Busque processos sobre licitacao irregular no TCU. Quais foram as penalidades?"
+> "Покажи доступные инструменты для парламентских и бюджетных данных."
 
-> "Quais os maiores doadores da campanha do candidato X?"
+> "Составь план запроса для анализа расходов ведомства по нескольким источникам."
 
-## Chaves de API
+На этапе миграции ответы все еще могут ссылаться на исторические feature-имена и бразильские датасеты. Это связано с тем, что внутреннее дерево `mcp_brasil` пока не заменено полностью.
 
-| API | Obrigatoria? | Como obter |
-|-----|-------------|------------|
-| Portal da Transparencia | Opcional (mais rate limit) | [Cadastro gratuito](http://portaldatransparencia.gov.br/api-de-dados/cadastrar-email) |
-| DataJud/CNJ | Opcional (mais rate limit) | [Cadastro gratuito](https://datajud-wiki.cnj.jus.br/api-publica/acesso) |
-| Todas as outras (24) | Nenhuma chave | — |
+## Ключи API
 
-## Proximo passo
+Часть интеграций работает без ключей, а часть использует legacy-настройки исходного проекта. Для переходного периода ориентируйтесь на:
 
-Veja o [Catalogo de Features](../reference/features.md) para conhecer todas as 205 tools disponiveis.
+| Переменная | Назначение |
+|------------|------------|
+| `TRANSPARENCIA_API_KEY` | Доступ к legacy-интеграции Portal da Transparência |
+| `DATAJUD_API_KEY` | Доступ к legacy-интеграции DataJud/CNJ |
+
+## Важно про совместимость
+
+- Для установки и запуска используйте `mcp-russia` и `mcp_russia`.
+- Для внутренних импортов и части тестов в кодовой базе пока остается `mcp_brasil`.
+- Это не конфликт, а сознательный переходный слой.
+
+## Дальше
+
+Если вы хотите разрабатывать сервер, переходите к [разделу по разработке](development.md) и [архитектуре](../concepts/architecture.md).
