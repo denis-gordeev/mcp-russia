@@ -17,7 +17,7 @@ class TestCreateClient:
 
     def test_sets_default_headers(self) -> None:
         client = create_client()
-        assert "mcp-brasil" in client.headers["user-agent"]
+        assert "mcp-russia" in client.headers["user-agent"]
         assert client.headers["accept"] == "application/json"
 
     def test_custom_base_url(self) -> None:
@@ -31,7 +31,7 @@ class TestCreateClient:
     def test_custom_headers_merged(self) -> None:
         client = create_client(headers={"X-Api-Key": "secret"})
         assert client.headers["x-api-key"] == "secret"
-        assert "mcp-brasil" in client.headers["user-agent"]
+        assert "mcp-russia" in client.headers["user-agent"]
 
     def test_follow_redirects_enabled(self) -> None:
         client = create_client()

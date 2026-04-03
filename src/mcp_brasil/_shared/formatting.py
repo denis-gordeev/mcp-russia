@@ -1,7 +1,8 @@
-"""Formatting helpers for LLM-friendly output.
+"""Helpers for LLM-friendly textual formatting.
 
-Provides functions to format data as Markdown tables,
-formatted numbers (BRL currency, percentages), and lists.
+The module keeps historical helper names such as ``format_brl`` for
+backward compatibility, while the public repository positioning is now
+Russian-language and migration-oriented.
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ from typing import Any
 
 
 def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
-    """Format data as a Markdown table.
+    """Render tabular data as Markdown.
 
     Args:
         headers: Column headers.
@@ -31,7 +32,7 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str
 
 
 def format_brl(value: float) -> str:
-    """Format a number as Brazilian Real currency.
+    """Format a number using the historical BRL-compatible style.
 
     Args:
         value: Numeric value.
@@ -44,7 +45,7 @@ def format_brl(value: float) -> str:
 
 
 def format_number_br(value: float, decimals: int = 2) -> str:
-    """Format a number with Brazilian locale (dot as thousands, comma as decimal).
+    """Format a number with the project's legacy decimal style.
 
     Args:
         value: Numeric value.
@@ -58,7 +59,7 @@ def format_number_br(value: float, decimals: int = 2) -> str:
 
 
 def format_percent(value: float, decimals: int = 2) -> str:
-    """Format a number as percentage.
+    """Format a numeric ratio as percentage text.
 
     Args:
         value: Numeric value (e.g., 0.05 for 5%).
@@ -70,7 +71,7 @@ def format_percent(value: float, decimals: int = 2) -> str:
 
 
 def parse_brl_number(value: Any) -> float | None:
-    """Parse a Brazilian-formatted number string into a float.
+    """Parse a legacy locale-formatted number string into a float.
 
     Handles strings like "348.600,00" (dot=thousands, comma=decimal).
     Passes through int/float values unchanged.
@@ -95,7 +96,7 @@ def parse_brl_number(value: Any) -> float | None:
 
 
 def truncate_list(items: Sequence[str], max_items: int = 50) -> str:
-    """Join items with newlines, truncating if too many.
+    """Join items with newlines and truncate long lists.
 
     Args:
         items: List of strings.

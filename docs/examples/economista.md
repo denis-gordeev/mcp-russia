@@ -1,316 +1,240 @@
-# Caso de Uso: Economista — Análise e Modelagem com Dados Oficiais
+# Сценарий: экономист и аналитик макроданных
 
-> Como economistas, analistas de mercado e pesquisadores podem usar o mcp-brasil para acessar séries temporais do Banco Central, indicadores do IBGE e dados fiscais em tempo real.
-
----
-
-## O Diferencial Para Economistas
-
-O Banco Central do Brasil disponibiliza mais de **40.000 séries temporais** via Sistema Gerador de Séries (SGS). O mcp-brasil oferece acesso direto a essas séries com ferramentas otimizadas para análise econômica:
-
-| Tool | O Que Faz |
-|------|----------|
-| `bacen_indicadores_atuais` | Snapshot instantâneo: Selic, IPCA, câmbio, PIB, desemprego |
-| `bacen_consultar_serie` | Consulta qualquer série do SGS por código |
-| `bacen_ultimos_valores` | Últimos N valores de uma série |
-| `bacen_metadados_serie` | Nome, unidade, periodicidade, última atualização |
-| `bacen_series_populares` | Catálogo curado por categoria |
-| `bacen_buscar_serie` | Busca textual no catálogo |
-| `bacen_calcular_variacao` | Estatísticas: média, desvio, min/max, variação |
-| `bacen_comparar_series` | Compara múltiplas séries lado a lado |
+> Как использовать `mcp-russia` для макроэкономического анализа в российском и русскоязычном контексте. В текущем переходном состоянии часть примеров по-прежнему опирается на совместимые legacy-tools `bacen_*` и `ibge_*`, но сами сценарии и интерпретации уже ориентированы на российские реалии.
 
 ---
 
-## Análise 1: Curva de Juros e Expectativas de Inflação
+## Что показывает этот сценарий
 
-### O Cenário
+- как собирать единый макроэкономический обзор для России;
+- как сопоставлять ключевую ставку, инфляцию, курс рубля и бюджетные показатели;
+- как использовать совместимый tool-layer проекта до полной замены источников на Банк России, Росстат, ЕМИСС, Минфин и Федеральное казначейство.
 
-Um economista precisa analisar a relação entre a Selic, as expectativas de inflação (Focus) e o IPCA realizado.
+---
 
-> Prompt: "Compare a evolução da Selic meta, do IPCA acumulado 12 meses e das expectativas Focus para os próximos 12 meses"
+## Базовый сценарий: денежно-кредитные условия
 
-### Ferramentas Utilizadas
+### Задача
 
+Экономисту нужен быстрый обзор:
+
+- ключевая ставка;
+- инфляция и инфляционные ожидания;
+- курс рубля;
+- динамика деловой активности.
+
+> Prompt: "Собери краткий макрообзор по России: ставка, инфляция, курс, ожидания и деловая активность"
+
+### Совместимые инструменты переходного слоя
+
+```text
+bacen_indicadores_atuais()
+bacen_comparar_series(codigos=[432, 13522, 1], ultimos=24)
+bacen_calcular_variacao(codigo=1, ultimos=120)
 ```
+
+### Как интерпретировать результат в российском контексте
+
+```text
+МАКРООБЗОР: ДЕНЕЖНО-КРЕДИТНЫЕ УСЛОВИЯ
+
+Показатель                   Значение
+────────────────────────────────────────────
+Ключевая ставка              высокая / жесткая
+Инфляция 12м                 выше целевого ориентира
+Курс рубля                   волатильный
+Деловая активность           замедляется / смешанная
+
+Вывод:
+- денежно-кредитные условия остаются жесткими;
+- инфляционное давление сохраняется;
+- курс рубля требует отдельного анализа по внешней торговле и бюджетному правилу.
+```
+
+---
+
+## Сценарий 1: ставка против инфляции
+
+> Prompt: "Сравни траекторию ключевой ставки и инфляции за последние 24 месяца"
+
+```text
 bacen_comparar_series(
-  codigos=[432, 13522, 29043],
+  codigos=[432, 13522],
   ultimos=24
 )
-# 432   = Selic meta
-# 13522 = IPCA acumulado 12m
-# 29043 = Expectativa Focus IPCA 12m
 ```
 
-### Resultado
+Ожидаемая структура ответа:
 
-```
-SELIC vs. IPCA vs. EXPECTATIVAS — Últimos 24 meses
+```text
+СТАВКА vs ИНФЛЯЦИЯ
 
-Mês        Selic   IPCA(12m)  Focus(12m)  Juro Real
-─────────────────────────────────────────────────────
-Mar/2024   10,75%   3,93%      3,52%       6,82%
-Jun/2024   10,50%   4,23%      3,96%       6,27%
-Set/2024   10,75%   4,42%      4,38%       6,33%
-Dez/2024   12,25%   4,83%      4,95%       7,42%
-Mar/2025   14,25%   5,06%      5,12%       9,19%
-─────────────────────────────────────────────────────
-
-Observações:
-• IPCA acelerou de 3,93% para 5,06% (+1,13 p.p.)
-• Selic subiu 3,50 p.p. no mesmo período
-• Expectativas desancoradas: Focus > meta desde Set/24
-• Juro real passou de 6,8% para 9,2% — restritivo
-```
-
----
-
-## Análise 2: Decomposição do IPCA — O Que Está Puxando a Inflação?
-
-> Prompt: "Decomponha o IPCA por grupo de despesa nos últimos 12 meses. Quais componentes mais contribuíram para a alta?"
-
-### Ferramentas
-
-```
-bacen_series_populares(categoria="inflacao")
-→ Retorna séries de IPCA por grupo
-
-bacen_comparar_series(
-  codigos=[7170, 7171, 7172, 7173, 7174, 7175, 7176, 7177, 7178],
-  ultimos=12
-)
-# Séries de IPCA por grupo: Alimentação, Habitação,
-# Transportes, Saúde, Educação, Vestuário, etc.
-```
-
-### Resultado
-
-```
-DECOMPOSIÇÃO DO IPCA — Mar/2025 (12 meses)
-
-Grupo                  Variação   Peso    Contribuição
-────────────────────────────────────────────────────────
-Alimentação e bebidas   6,82%     21,7%    1,48 p.p.
-Habitação               5,23%     15,9%    0,83 p.p.
-Transportes             4,91%     20,1%    0,99 p.p.
-Saúde e cuidados        7,12%      9,1%    0,65 p.p.
-Educação                6,34%      6,3%    0,40 p.p.
-Vestuário               2,45%      4,5%    0,11 p.p.
-Artigos de residência   1,89%      3,7%    0,07 p.p.
-Comunicação             2,12%      4,9%    0,10 p.p.
-Despesas pessoais       5,67%     10,1%    0,57 p.p.
-────────────────────────────────────────────────────────
-IPCA Total              5,06%    100,0%    5,06 p.p.
-
-Principal vetor: Alimentação (1,48 p.p. = 29% do IPCA)
-```
-
----
-
-## Análise 3: Política Fiscal — Receita vs. Despesa
-
-### O Cenário
-
-Analisar a trajetória fiscal do governo federal — receitas, despesas e resultado primário.
-
-> Prompt: "Monte um painel fiscal do governo federal: receitas vs. despesas dos últimos 5 anos, resultado primário e dívida/PIB"
-
-### Ferramentas
-
-```
-bacen_consultar_serie(codigo=4503)    # Receita total governo central
-bacen_consultar_serie(codigo=4504)    # Despesa total governo central
-bacen_consultar_serie(codigo=4505)    # Resultado primário
-bacen_consultar_serie(codigo=4513)    # Dívida bruta/PIB
-bacen_consultar_serie(codigo=4514)    # Dívida líquida/PIB
-```
-
-### Resultado
-
-```
-PAINEL FISCAL — GOVERNO CENTRAL
-
-Ano    Receita    Despesa    Primário    Dív.Bruta/PIB
+Период      Ставка     Инфляция 12м    Реальная ставка
 ──────────────────────────────────────────────────────
-2020   R$ 1,48T   R$ 2,06T   -R$ 583B    88,6%
-2021   R$ 1,87T   R$ 1,94T   -R$  72B    78,3%
-2022   R$ 2,17T   R$ 1,96T   +R$ 209B    72,9%
-2023   R$ 2,19T   R$ 2,10T   +R$  90B    74,4%
-2024   R$ 2,36T   R$ 2,28T   +R$  81B    76,2%
-──────────────────────────────────────────────────────
+Месяц 1     ...        ...             ...
+Месяц 2     ...        ...             ...
+...
 
-Tendência: Resultado primário positivo mas em queda
-Risco: Dívida/PIB voltando a subir
+Наблюдения:
+- реальная ставка положительная;
+- дезинфляция идет медленнее, чем хотелось бы;
+- пространство для смягчения ограничено.
 ```
+
+Такой формат полезен для:
+
+- экономических обзоров;
+- внутренних аналитических записок;
+- LLM-агентов, которые готовят краткое объяснение решений регулятора.
 
 ---
 
-## Análise 4: Câmbio e Balança Comercial
+## Сценарий 2: курс рубля и внешнеторговый баланс
 
-> Prompt: "Analise a relação entre o câmbio real/dólar e a balança comercial nos últimos 10 anos. O real mais fraco melhora as exportações?"
+> Prompt: "Покажи зависимость между курсом рубля и экспортно-импортной динамикой"
 
-### Ferramentas
-
-```
+```text
 bacen_comparar_series(
   codigos=[1, 22707, 22708],
-  ultimos=120  # 10 anos mensais
+  ultimos=120
 )
-# 1     = Dólar PTAX
-# 22707 = Exportações (FOB)
-# 22708 = Importações (FOB)
-```
-
-```
 bacen_calcular_variacao(codigo=1, ultimos=120)
-# Estatísticas do câmbio
 ```
 
-### Resultado
+Интерпретация для российского сценария:
 
-```
-CÂMBIO vs. BALANÇA COMERCIAL — 2015-2025
+- ослабление рубля может поддерживать экспортную выручку в рублевом выражении;
+- одновременно растет давление на импортные цены;
+- без учета сырьевой конъюнктуры и санкционных ограничений вывод будет неполным.
 
-Período         Dólar Médio   Exportações   Saldo Comercial
-─────────────────────────────────────────────────────────────
-2015 (Dilma)    R$ 3,33       $191B         +$19,7B
-2016 (Temer)    R$ 3,48       $185B         +$47,7B
-2017            R$ 3,19       $218B         +$67,0B
-2018            R$ 3,65       $239B         +$58,7B
-2019 (Bolson.)  R$ 3,95       $224B         +$46,7B
-2020 (COVID)    R$ 5,16       $210B         +$50,4B
-2021            R$ 5,39       $280B         +$61,0B
-2022            R$ 5,17       $335B         +$62,3B
-2023 (Lula)     R$ 4,99       $340B         +$98,8B
-2024            R$ 5,18       $337B         +$74,5B
-─────────────────────────────────────────────────────────────
+Ожидаемый итог:
 
-Correlação câmbio x exportações: +0,67 (moderada positiva)
-Conclusão: Real mais fraco ajuda exportações, mas não é o
-único fator (demanda global, preço das commodities importam)
+```text
+КУРС РУБЛЯ И ВНЕШНЯЯ ТОРГОВЛЯ
+
+- рубль оставался волатильным;
+- торговый баланс зависит не только от курса, но и от цен на сырьевой экспорт;
+- импортозависимые категории сильнее реагируют на девальвацию.
 ```
 
 ---
 
-## Análise 5: Mercado de Crédito
+## Сценарий 3: региональные различия
 
-> Prompt: "Como está o mercado de crédito brasileiro? Taxas médias, inadimplência e volume"
+> Prompt: "Сравни экономические показатели российских регионов и выдели лидеров и аутсайдеров"
 
-### Ferramentas
-
-```
-bacen_series_populares(categoria="credito")
-→ Retorna séries de crédito disponíveis
-
-bacen_comparar_series(
-  codigos=[20714, 21082, 20539],
-  ultimos=36
-)
-# 20714 = Taxa média de juros - pessoa física
-# 21082 = Inadimplência - pessoa física (%)
-# 20539 = Saldo de crédito total
+```text
+ibge_listar_estados()
+ibge_consultar_agregado(agregado=6579)
 ```
 
----
+В целевой архитектуре этот сценарий должен быть переведен на российские источники:
 
-## Análise 6: Comparação Internacional — PIB Per Capita
+- Росстат;
+- ЕМИСС;
+- региональные открытые данные.
 
-> Prompt: "Compare o PIB per capita do Brasil com os BRICS e principais economias. Use dados do IBGE e Banco Central"
+Даже на переходном слое полезно сохранять формат итоговой выдачи:
 
-### Ferramentas
+```text
+РЕГИОНАЛЬНЫЙ ПРОФИЛЬ
 
-```
-bacen_indicadores_atuais()  # PIB Brasil
-ibge_consultar_agregado(agregado=6579)  # PIB por estado
-```
+Лидеры:
+- столичные и сырьевые регионы;
+- территории с высокой налоговой базой;
 
-O LLM pode contextualizar com dados internacionais conhecidos:
-
-```
-PIB PER CAPITA — 2024 (USD PPP)
-
-  🇺🇸 EUA         ███████████████████   $85.370
-  🇩🇪 Alemanha    █████████████░░░░░░   $66.470
-  🇫🇷 França      ████████████░░░░░░░   $58.770
-  🇨🇳 China       ██████████░░░░░░░░░   $23.580
-  🇧🇷 Brasil      █████████░░░░░░░░░░   $20.810
-  🇲🇽 México      ████████░░░░░░░░░░░   $22.640
-  🇿🇦 África Sul  ██████░░░░░░░░░░░░░   $16.090
-  🇮🇳 Índia       ████░░░░░░░░░░░░░░░   $10.120
-
-  Brasil: 24% do PIB/capita dos EUA
-  Mas internamente: DF (R$ 91K) vs MA (R$ 15K) = 6x
+Зоны риска:
+- регионы с низкой инвестиционной активностью;
+- субъекты с зависимостью от трансфертов;
+- территории с демографическим спадом.
 ```
 
 ---
 
-## Séries Mais Usadas por Economistas
+## Сценарий 4: бюджет и госрасходы
 
-### Macroeconomia
+> Prompt: "Собери краткий бюджетный профиль: доходы, расходы, дефицит, долг"
 
-| Código SGS | Série | Periodicidade |
-|-----------|-------|---------------|
-| 432 | Selic meta | Diária |
-| 433 | IPCA mensal | Mensal |
-| 13522 | IPCA acumulado 12m | Mensal |
-| 1 | Dólar PTAX | Diária |
-| 4380 | PIB mensal | Mensal |
-| 24364 | Desemprego (PNAD) | Trimestral |
+```text
+bacen_consultar_serie(codigo=4503)
+bacen_consultar_serie(codigo=4504)
+bacen_consultar_serie(codigo=4505)
+bacen_consultar_serie(codigo=4513)
+```
 
-### Fiscal
+В российской адаптации этим данным должны соответствовать:
 
-| Código SGS | Série | Periodicidade |
-|-----------|-------|---------------|
-| 4503 | Receita governo central | Mensal |
-| 4504 | Despesa governo central | Mensal |
-| 4505 | Resultado primário | Mensal |
-| 4513 | Dívida bruta/PIB | Mensal |
-| 4514 | Dívida líquida/PIB | Mensal |
+- федеральный бюджет;
+- исполнение расходов по функциональной классификации;
+- параметры дефицита/профицита;
+- государственный долг.
 
-### Crédito
+Ожидаемый формат:
 
-| Código SGS | Série | Periodicidade |
-|-----------|-------|---------------|
-| 20714 | Taxa média PF | Mensal |
-| 21082 | Inadimplência PF | Mensal |
-| 20539 | Saldo crédito total | Mensal |
+```text
+БЮДЖЕТНЫЙ ПРОФИЛЬ
 
-### Setor Externo
+Год     Доходы     Расходы     Баланс     Долг/ВВП
+──────────────────────────────────────────────────
+...     ...        ...         ...        ...
+```
 
-| Código SGS | Série | Periodicidade |
-|-----------|-------|---------------|
-| 22707 | Exportações (FOB) | Mensal |
-| 22708 | Importações (FOB) | Mensal |
-| 22709 | Saldo balança comercial | Mensal |
+Ключевые аналитические выводы:
 
-> Prompt: "Busque séries sobre reservas internacionais"
-> API: `bacen_buscar_serie(termo="reservas internacionais")`
+- насколько расходная динамика опережает доходную;
+- есть ли структурный дефицит;
+- как меняется долговая нагрузка.
 
 ---
 
-## Fluxo de Trabalho do Economista
+## Сценарий 5: макрообзор для записки руководству
 
+> Prompt: "Сделай короткую аналитическую записку по экономике России на русском языке"
+
+Полезная комбинация:
+
+```text
+bacen_indicadores_atuais()
+bacen_comparar_series(codigos=[432, 13522, 1], ultimos=24)
+bacen_series_populares(categoria="inflacao")
 ```
-1. SNAPSHOT
-   └── bacen_indicadores_atuais() → painel rápido
 
-2. DEEP DIVE
-   └── bacen_consultar_serie(codigo=X) → série específica
-   └── bacen_calcular_variacao() → estatísticas
+Пример структуры ответа:
 
-3. COMPARAÇÃO
-   └── bacen_comparar_series() → múltiplas séries
-   └── executar_lote() → múltiplas análises em paralelo
+```text
+Резюме:
+Экономика находится в фазе жестких денежно-кредитных условий.
 
-4. CONTEXTO
-   └── ibge_consultar_agregado() → dados estruturais
-   └── transparencia_despesas_por_funcao() → gastos do governo
+Что происходит:
+- инфляция остается заметной;
+- ставка удерживает спрос и кредит;
+- курс рубля вносит дополнительную неопределенность.
 
-5. RELATÓRIO
-   └── Agente Redator → nota técnica formatada
+На что смотреть дальше:
+- инфляционные ожидания;
+- бюджетный импульс;
+- динамику потребительского и корпоративного кредитования.
 ```
 
 ---
 
-_Fontes: API do Banco Central (SGS — 40.000+ séries), API do IBGE (Servicodados), API do Portal da Transparência._
+## Что должно быть мигрировано дальше
 
-_Nota: Códigos de séries são reais do SGS/BCB. Use `bacen_series_populares` ou `bacen_buscar_serie` para descobrir séries adicionais._
+- заменить legacy-описания `bacen` и `ibge` на российские источники и названия;
+- подготовить отдельный каталог популярных серий уже для Банка России и Росстата;
+- обновить примеры так, чтобы они ссылались не на совместимый слой, а на целевые feature-группы `mcp-russia`.
+
+---
+
+## Проверка источников
+
+При полной миграции этот сценарий должен опираться на:
+
+- Банк России;
+- Росстат;
+- ЕМИСС;
+- Минфин России;
+- Федеральное казначейство;
+- иные официальные открытые источники по мере подключения feature-модулей.
+
+_Текущий файл описывает именно направление российской адаптации. Названия совместимых tools сохранены только как переходный слой._

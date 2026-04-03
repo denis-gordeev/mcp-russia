@@ -17,7 +17,7 @@ class TestSettings:
         assert settings.HTTP_BACKOFF_BASE == 1.0
 
     def test_default_user_agent(self) -> None:
-        assert "mcp-brasil" in settings.USER_AGENT
+        assert "mcp-russia" in settings.USER_AGENT
 
     def test_env_override_timeout(self) -> None:
         """Settings can be overridden via env vars (at import time)."""
