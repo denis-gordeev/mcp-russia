@@ -1,8 +1,9 @@
-"""LLM-powered query planner for mcp-brasil.
+"""LLM-powered query planner for mcp-russia.
 
-Uses the Anthropic API (claude-haiku-4-5) to analyze user queries and build
-structured execution plans with ordered steps, tool assignments, parameters,
-and dependency information between steps.
+Uses the Anthropic API to analyze user queries and build structured execution
+plans with ordered steps, tool assignments, parameters, and dependencies.
+The planner works against the current catalog, including legacy features that
+remain available during the migration.
 """
 
 from __future__ import annotations
@@ -14,7 +15,7 @@ from pydantic import BaseModel
 
 from ..settings import ANTHROPIC_API_KEY
 
-logger = logging.getLogger("mcp-brasil.planner")
+logger = logging.getLogger("mcp-russia.planner")
 
 
 class EtapaPlano(BaseModel):
@@ -91,54 +92,49 @@ class PlanoConsulta(BaseModel):
 
 
 _SYSTEM_PROMPT = """\
-Você é o planejador de consultas do mcp-brasil — um sistema MCP que conecta \
-agentes de IA a APIs públicas brasileiras (IBGE, Banco Central, Câmara dos \
-Deputados, Senado, Portal da Transparência, DataJud, entre outras).
+Ты строишь планы запросов для mcp-russia. Каталог ниже может содержать
+исторические названия features и tools, которые пока сохранены ради
+совместимости. Твоя задача: по вопросу пользователя и каталогу tools
+собрать структурированный план выполнения.
 
-Sua tarefa: dada uma pergunta do usuário e o catálogo de tools, construir um \
-plano de execução estruturado.
+## Правила
 
-## Regras
+1. Используй ТОЛЬКО tools из каталога. Никогда не придумывай новые names.
+2. Используй точные имена tools с префиксом feature.
+3. Заполняй параметры только теми именами и типами, которые есть в каталоге.
+4. Для ссылок на результаты прошлых шагов используй placeholders вида
+   {{etapa_N.campo}}.
+5. Отвечай только по-русски.
+6. Максимум 8 этапов на один план.
 
-1. Use APENAS tools que existem no catálogo abaixo. Nunca invente tools.
-2. Use os nomes exatos das tools (com prefixo da feature, ex: camara_listar_deputados).
-3. Preencha os parâmetros usando os nomes e tipos do catálogo.
-4. Para dados que vêm de etapas anteriores, use placeholders: {{etapa_N.campo}} \
-(ex: {{etapa_1.id}}, {{etapa_2.nome}}).
-5. Responda sempre em português.
-6. Máximo de 8 etapas por plano.
+## Сложность
 
-## Complexidade
+- **simples**: один прямой вызов
+- **moderada**: 2-3 вызова с линейной зависимостью
+- **complexa**: 4+ вызова, параллельные ветки или сравнение нескольких источников
 
-- **simples**: 1 tool, consulta direta (ex: "lista estados do Brasil")
-- **moderada**: 2-3 tools, com dependências lineares (ex: "gastos do deputado X")
-- **complexa**: 4+ tools, dependências ramificadas ou comparações (ex: "compare \
-gastos de dois deputados com a média")
+## Комбинация источников
 
-## Composição de fontes
+Полезные планы часто объединяют несколько features. Допустимые стратегии:
 
-Consultas ricas geralmente cruzam dados de múltiplas features. Estratégias:
+- **Enriquecimento**: обогатить данные второй feature
+- **Comparação**: сравнить одинаковую метрику из разных источников
+- **Contextualização**: добавить справочные, демографические или макроэкономические данные
+- **Paralelismo**: независимые этапы могут выполняться параллельно
 
-- **Enriquecimento**: buscar entidade em uma API e complementar com outra \
-(ex: deputado na Câmara + gastos na Transparência).
-- **Comparação**: consultar a mesma métrica em fontes diferentes \
-(ex: orçamento previsto no SIOP vs executado na Transparência).
-- **Contextualização**: adicionar dados demográficos ou econômicos do IBGE/Bacen \
-para dar contexto (ex: gasto per capita = despesa ÷ população do estado via IBGE).
-- **Paralelismo**: etapas que não dependem uma da outra podem ter `depende_de` vazio \
-— isso indica ao executor que podem rodar em paralelo.
+Если вопрос это допускает, предпочитай планы, где объединяются 2+ features.
+В поле "resumo" коротко скажи, какие источники комбинируются.
 
-Sempre que a pergunta permitir, prefira planos que cruzem 2+ features para \
-gerar respostas mais completas. Indique no "resumo" quais fontes serão combinadas.
+## Поле observacoes
 
-## Observações
+Используй его, чтобы указать:
+- нужен ли ключ или другая авторизация
+- известные ограничения данных
+- какие именно cross-source связи делает план
 
-Use o campo "observacoes" para informar:
-- Se alguma etapa requer autenticação (veja "Auth:" no catálogo)
-- Limitações conhecidas ou dados que podem não estar disponíveis
-- Quais cruzamentos entre fontes o plano realiza
+## JSON schema
 
-## Schema JSON (retorne APENAS JSON válido, sem markdown, sem ```)
+Верни ТОЛЬКО валидный JSON, без markdown и без ``` блоков.
 
 {{
   "consulta": "pergunta original do usuário",
@@ -157,11 +153,11 @@ Use o campo "observacoes" para informar:
   "observacoes": "notas sobre autenticação, limitações, etc."
 }}
 
-## Exemplos
+## Примеры
 
-### Exemplo 1 — consulta moderada (single-feature)
+### Пример 1: умеренно сложный запрос
 
-Pergunta: "Quais foram os gastos do deputado Nikolas Ferreira em 2024?"
+Вопрос: "Quais foram os gastos do deputado Nikolas Ferreira em 2024?"
 
 {{
   "consulta": "Quais foram os gastos do deputado Nikolas Ferreira em 2024?",
@@ -188,9 +184,9 @@ Pergunta: "Quais foram os gastos do deputado Nikolas Ferreira em 2024?"
   "observacoes": ""
 }}
 
-### Exemplo 2 — consulta complexa (cross-feature com paralelismo)
+### Пример 2: сложный запрос с параллельными этапами
 
-Pergunta: "Qual o gasto per capita com saúde em Minas Gerais?"
+Вопрос: "Qual o gasto per capita com saúde em Minas Gerais?"
 
 {{
   "consulta": "Qual o gasto per capita com saúde em Minas Gerais?",
@@ -219,7 +215,7 @@ Cálculo per capita feito pelo agente após ambas. \
 Transparencia requer TRANSPARENCIA_API_KEY."
 }}
 
-## Catálogo de Tools
+## Каталог tools
 
 {catalog}
 """
@@ -239,17 +235,17 @@ async def planejar_consulta_impl(query: str, catalog: str) -> str:
         import anthropic
     except ImportError:
         return (
-            "Erro: O pacote 'anthropic' não está instalado. "
-            "Instale com: pip install 'mcp-brasil[llm]'\n\n"
-            "Alternativa: use a tool 'search_tools' para buscar por palavras-chave."
+            "Erro / Ошибка: пакет 'anthropic' не установлен. "
+            "Установите его командой: pip install 'mcp-russia[llm]'\n\n"
+            "В качестве альтернативы используйте tool 'search_tools'."
         )
 
     api_key = ANTHROPIC_API_KEY
     if not api_key:
         return (
-            "Erro: ANTHROPIC_API_KEY não configurada. "
-            "Defina a variável de ambiente ANTHROPIC_API_KEY para usar esta tool.\n\n"
-            "Alternativa: use a tool 'search_tools' para buscar por palavras-chave."
+            "Erro / Ошибка: переменная ANTHROPIC_API_KEY не настроена. "
+            "Задайте ANTHROPIC_API_KEY, чтобы использовать этот meta-tool.\n\n"
+            "В качестве альтернативы используйте tool 'search_tools'."
         )
 
     client = anthropic.AsyncAnthropic(api_key=api_key)
@@ -270,9 +266,12 @@ async def planejar_consulta_impl(query: str, catalog: str) -> str:
             plano = PlanoConsulta.model_validate(json.loads(raw_text))
             return plano.to_markdown()
         except (json.JSONDecodeError, Exception):
-            logger.warning("Failed to parse plan as JSON, returning raw text")
+            logger.warning("Failed to parse plan JSON; returning raw text")
             return raw_text
 
     except Exception as e:
-        logger.error("Erro ao chamar Anthropic API: %s", e)
-        return f"Erro ao consultar IA: {e}\n\nUse 'search_tools' como alternativa."
+        logger.error("Anthropic API call failed: %s", e)
+        return (
+            f"Erro / Ошибка при обращении к LLM: {e}\n\n"
+            "В качестве альтернативы используйте 'search_tools'."
+        )

@@ -1,7 +1,7 @@
-"""Shared async HTTP client for mcp-brasil.
+"""Shared async HTTP client for mcp-russia.
 
-Provides a configured httpx.AsyncClient factory and a fetch helper
-with retry + exponential backoff for transient errors (5xx, 429, timeouts).
+Provides a configured httpx.AsyncClient factory and a fetch helper with
+retry + exponential backoff for transient errors (5xx, 429, timeouts).
 
 Usage:
     from mcp_brasil._shared.http_client import create_client, http_get

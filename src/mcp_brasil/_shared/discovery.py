@@ -1,7 +1,8 @@
-"""LLM-powered tool recommendation for mcp-brasil.
+"""LLM-powered tool recommendation for mcp-russia.
 
-Uses the Anthropic API (claude-haiku-4-5) to understand user intent
-and recommend the most relevant tools from the mcp-brasil catalog.
+Uses the Anthropic API to understand user intent and recommend the most
+relevant tools from the current server catalog, including legacy features
+that are still exposed for compatibility.
 """
 
 from __future__ import annotations
@@ -10,7 +11,7 @@ import logging
 
 from ..settings import ANTHROPIC_API_KEY
 
-logger = logging.getLogger("mcp-brasil.discovery")
+logger = logging.getLogger("mcp-russia.discovery")
 
 # Catalog is built once and cached at module level
 _catalog_cache: str = ""
@@ -96,30 +97,31 @@ async def recomendar_tools_impl(query: str, catalog: str) -> str:
         import anthropic
     except ImportError:
         return (
-            "Erro: O pacote 'anthropic' não está instalado. "
-            "Instale com: pip install 'mcp-brasil[llm]'\n\n"
-            "Alternativa: use a tool 'search_tools' para buscar por palavras-chave."
+            "Erro / Ошибка: пакет 'anthropic' не установлен. "
+            "Установите его командой: pip install 'mcp-russia[llm]'\n\n"
+            "В качестве альтернативы используйте tool 'search_tools'."
         )
 
     api_key = ANTHROPIC_API_KEY
     if not api_key:
         return (
-            "Erro: ANTHROPIC_API_KEY não configurada. "
-            "Defina a variável de ambiente ANTHROPIC_API_KEY para usar esta tool.\n\n"
-            "Alternativa: use a tool 'search_tools' para buscar por palavras-chave."
+            "Erro / Ошибка: переменная ANTHROPIC_API_KEY не настроена. "
+            "Задайте ANTHROPIC_API_KEY, чтобы использовать этот meta-tool.\n\n"
+            "В качестве альтернативы используйте tool 'search_tools'."
         )
 
     client = anthropic.AsyncAnthropic(api_key=api_key)
 
     system_prompt = (
-        "Você é um assistente que recomenda tools do mcp-brasil. "
-        "Dado o catálogo de tools disponíveis e a pergunta do usuário, "
-        "recomende as 3-5 tools mais relevantes. Para cada tool:\n"
+        "Ты помогаешь подобрать tools из каталога mcp-russia. "
+        "В каталоге могут встречаться исторические названия features, "
+        "сохраненные для совместимости. На основе вопроса пользователя "
+        "выбери 3-5 наиболее релевантных tools. Для каждой tool:\n"
         "1. Nome completo da tool (com prefixo da feature)\n"
-        "2. Por que é relevante para a pergunta\n"
-        "3. Exemplo de como usar (parâmetros principais)\n\n"
-        "Responda em português. Seja conciso e prático.\n\n"
-        f"## Catálogo de Tools\n{catalog}"
+        "2. Почему она релевантна запросу\n"
+        "3. Пример использования с основными параметрами\n\n"
+        "Отвечай по-русски, кратко и по делу.\n\n"
+        f"## Каталог tools\n{catalog}"
     )
 
     try:
@@ -132,5 +134,8 @@ async def recomendar_tools_impl(query: str, catalog: str) -> str:
         block = response.content[0]
         return str(getattr(block, "text", ""))
     except Exception as e:
-        logger.error("Erro ao chamar Anthropic API: %s", e)
-        return f"Erro ao consultar IA: {e}\n\nUse 'search_tools' como alternativa."
+        logger.error("Anthropic API call failed: %s", e)
+        return (
+            f"Erro / Ошибка при обращении к LLM: {e}\n\n"
+            "В качестве альтернативы используйте 'search_tools'."
+        )

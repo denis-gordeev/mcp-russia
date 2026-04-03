@@ -1,408 +1,368 @@
-# Catalogo de Features
+# Каталог features
 
 27 features · 205 tools · 58 resources · 47 prompts
 
----
+Этот каталог описывает текущее содержимое сервера в переходном состоянии. Публичное позиционирование репозитория уже русскоязычное и ориентировано на `mcp-russia`, но многие интеграции и tool names пока сохраняют исторические бразильские идентификаторы как compatibility-слой.
 
-## Economico
+## Экономика и макростатистика
 
-### `ibge` — IBGE (9 tools)
+### `ibge` — legacy feature статистических данных (9 tools)
 
-Instituto Brasileiro de Geografia e Estatistica — estados, municipios, nomes, agregados estatisticos, CNAE, malhas geograficas.
+Историческая интеграция исходного проекта: регионы, муниципалитеты, частотность имен, статистические агрегаты, классификаторы и геоданные.
 
-| Tool | Descricao |
-|------|-----------|
-| `ibge_listar_estados` | Lista os 27 estados com codigo, nome, sigla e regiao |
-| `ibge_buscar_municipios` | Municipios por codigo do estado |
-| `ibge_listar_regioes` | Lista as 5 regioes do Brasil |
-| `ibge_consultar_nome` | Frequencia de nomes pelo censo do IBGE |
-| `ibge_ranking_nomes` | Nomes mais comuns por estado/municipio |
-| `ibge_consultar_agregado` | Agregados estatisticos (populacao, PIB, area, series de pesquisa) |
-| `ibge_listar_pesquisas` | Lista programas de pesquisa do IBGE |
-| `ibge_obter_malha` | Malhas geograficas (GeoJSON) de estados/municipios |
-| `ibge_buscar_cnae` | Busca codigos CNAE de atividades economicas |
+| Tool | Описание |
+|------|----------|
+| `ibge_listar_estados` | Список регионов с кодом, названием, сокращением и макрорегионом |
+| `ibge_buscar_municipios` | Список муниципалитетов по коду региона |
+| `ibge_listar_regioes` | Список макрорегионов |
+| `ibge_consultar_nome` | Частотность имен по данным переписи |
+| `ibge_ranking_nomes` | Рейтинг имен по региону или муниципалитету |
+| `ibge_consultar_agregado` | Статистические агрегаты: население, ВВП, площадь, временные ряды |
+| `ibge_listar_pesquisas` | Список исследовательских программ источника |
+| `ibge_obter_malha` | Географические контуры в формате GeoJSON |
+| `ibge_buscar_cnae` | Поиск кодов экономической деятельности |
 
-**Chave:** Nenhuma
+**Авторизация:** не требуется
 
----
+### `bacen` — legacy feature центрального банка (9 tools)
 
-### `bacen` — Banco Central do Brasil (9 tools)
+Историческая интеграция исходного проекта: процентные ставки, инфляция, курс валют, ВВП и другие временные ряды.
 
-Selic, IPCA, cambio, PIB, +190 series do SGS, Boletim Focus.
+| Tool | Описание |
+|------|----------|
+| `bacen_consultar_serie` | Получить временной ряд по коду |
+| `bacen_ultimos_valores` | Последние N значений ряда |
+| `bacen_metadados_serie` | Метаданные ряда: название, единица измерения, периодичность |
+| `bacen_series_populares` | Подборка популярных рядов |
+| `bacen_buscar_serie` | Поиск рядов по ключевому слову |
+| `bacen_indicadores_atuais` | Сводка ключевых макроиндикаторов |
+| `bacen_calcular_variacao` | Процентное изменение между датами |
+| `bacen_comparar_series` | Сравнение 2-5 рядов |
+| `bacen_expectativas_focus` | Рыночные ожидания по макропоказателям |
 
-| Tool | Descricao |
-|------|-----------|
-| `bacen_consultar_serie` | Consulta qualquer serie BCB/SGS por codigo |
-| `bacen_ultimos_valores` | Ultimos N valores de uma serie |
-| `bacen_metadados_serie` | Metadados (nome, unidade, periodicidade) |
-| `bacen_series_populares` | Lista curada de series populares (Selic, IPCA, dolar, etc.) |
-| `bacen_buscar_serie` | Busca series por palavra-chave |
-| `bacen_indicadores_atuais` | Busca paralela: Selic, IPCA, IPCA-12m, dolar, IBC-Br |
-| `bacen_calcular_variacao` | Variacao percentual entre duas datas |
-| `bacen_comparar_series` | Compara 2-5 series lado a lado |
-| `bacen_expectativas_focus` | Expectativas do mercado (Boletim Focus) |
+**Авторизация:** не требуется
 
-**Chave:** Nenhuma
+## Законодательство
 
----
+### `camara` — legacy feature нижней палаты парламента (10 tools)
 
-## Legislativo
+Депутаты, законопроекты, голосования, расходы, комиссии и парламентские объединения.
 
-### `camara` — Camara dos Deputados (10 tools)
+| Tool | Описание |
+|------|----------|
+| `camara_listar_deputados` | Список депутатов с фильтрами по имени, партии и региону |
+| `camara_buscar_deputado` | Карточка депутата по ID |
+| `camara_buscar_proposicao` | Поиск законопроектов и инициатив |
+| `camara_consultar_tramitacao` | История прохождения инициативы |
+| `camara_buscar_votacao` | Сессии голосования |
+| `camara_votos_nominais` | Поименное голосование |
+| `camara_despesas_deputado` | Отчет по расходам депутата |
+| `camara_agenda_legislativa` | Законодательный календарь |
+| `camara_buscar_comissoes` | Список комиссий |
+| `camara_frentes_parlamentares` | Парламентские фронты и группы |
 
-Deputados, proposicoes, votacoes, despesas, comissoes, frentes parlamentares.
+**Авторизация:** не требуется
 
-| Tool | Descricao |
-|------|-----------|
-| `camara_listar_deputados` | Lista deputados com filtros (nome, partido, UF) |
-| `camara_buscar_deputado` | Detalhes de um deputado por ID |
-| `camara_buscar_proposicao` | Projetos de lei por tipo, ano, tema, autor |
-| `camara_consultar_tramitacao` | Historico de tramitacao de uma proposicao |
-| `camara_buscar_votacao` | Sessoes de votacao |
-| `camara_votos_nominais` | Votos nominais (como cada deputado votou) |
-| `camara_despesas_deputado` | Relatorio de despesas de deputados |
-| `camara_agenda_legislativa` | Calendario legislativo |
-| `camara_buscar_comissoes` | Comissoes da Camara |
-| `camara_frentes_parlamentares` | Frentes parlamentares |
+### `senado` — legacy feature верхней палаты парламента (26 tools)
 
-**Chave:** Nenhuma
+Сенаторы, законопроекты, голосования, комиссии, календарь заседаний и вспомогательные справочники.
 
----
+**Сенаторы (4):** `senado_listar_senadores`, `senado_buscar_senador`, `senado_buscar_senador_por_nome`, `senado_votacoes_senador`
 
-### `senado` — Senado Federal (26 tools)
+**Материи и инициативы (5):** `senado_buscar_materia`, `senado_detalhe_materia`, `senado_consultar_tramitacao_materia`, `senado_textos_materia`, `senado_votos_materia`
 
-Senadores, materias, votacoes, comissoes, agenda, liderancas.
+**Голосования (3):** `senado_listar_votacoes`, `senado_detalhe_votacao`, `senado_votacoes_recentes`
 
-**Senadores (4):** `senado_listar_senadores`, `senado_buscar_senador`, `senado_buscar_senador_por_nome`, `senado_votacoes_senador`
+**Комиссии (4):** `senado_listar_comissoes`, `senado_detalhe_comissao`, `senado_membros_comissao`, `senado_reunioes_comissao`
 
-**Materias (5):** `senado_buscar_materia`, `senado_detalhe_materia`, `senado_consultar_tramitacao_materia`, `senado_textos_materia`, `senado_votos_materia`
+**Повестка (2):** `senado_agenda_plenario`, `senado_agenda_comissoes`
 
-**Votacoes (3):** `senado_listar_votacoes`, `senado_detalhe_votacao`, `senado_votacoes_recentes`
+**Справочники (6):** `senado_legislatura_atual`, `senado_partidos_senado`, `senado_ufs_senado`, `senado_tipos_materia`, `senado_emendas_materia`, `senado_listar_blocos`
 
-**Comissoes (4):** `senado_listar_comissoes`, `senado_detalhe_comissao`, `senado_membros_comissao`, `senado_reunioes_comissao`
+**Дополнительно (2):** `senado_listar_liderancas`, `senado_relatorias_senador`
 
-**Agenda (2):** `senado_agenda_plenario`, `senado_agenda_comissoes`
+**Авторизация:** не требуется
 
-**Auxiliar (6):** `senado_legislatura_atual`, `senado_partidos_senado`, `senado_ufs_senado`, `senado_tipos_materia`, `senado_emendas_materia`, `senado_listar_blocos`
+## Прозрачность и аудит
 
-**Extra (2):** `senado_listar_liderancas`, `senado_relatorias_senador`
+### `transparencia` — legacy feature портала прозрачности (18 tools)
 
-**Chave:** Nenhuma
+Федеральные контракты, расходы, госслужащие, санкции, социальные выплаты, командировки и платежные карты.
 
----
+| Tool | Описание |
+|------|----------|
+| `transparencia_buscar_contratos` | Поиск федеральных контрактов |
+| `transparencia_consultar_despesas` | Расходы по функции, региону и году |
+| `transparencia_buscar_servidores` | Поиск госслужащих |
+| `transparencia_buscar_licitacoes` | Закупочные процедуры |
+| `transparencia_consultar_bolsa_familia` | Получатели социальной выплаты |
+| `transparencia_buscar_sancoes` | Санкционные и ограничительные реестры |
+| `transparencia_buscar_emendas` | Парламентские поправки и ассигнования |
+| `transparencia_consultar_viagens` | Служебные поездки |
+| `transparencia_buscar_convenios` | Соглашения и субсидии |
+| `transparencia_buscar_cartoes_pagamento` | Операции по государственным картам |
+| `transparencia_buscar_pep` | Политически значимые лица |
+| `transparencia_buscar_acordos_leniencia` | Соглашения о leniency |
+| `transparencia_buscar_notas_fiscais` | Счета и чеки |
+| `transparencia_consultar_beneficio_social` | Социальные пособия |
+| `transparencia_consultar_cpf` | Проверка данных физлица |
+| `transparencia_consultar_cnpj` | Проверка данных юрлица |
+| `transparencia_detalhar_contrato` | Карточка контракта |
+| `transparencia_detalhar_servidor` | Карточка госслужащего |
+
+**Авторизация:** опциональна, нужен ключ API
+
+### `tcu` — legacy feature высшего контрольного органа (8 tools)
+
+Решения, дисквалификации, справки APF, задолженности и контракты.
+
+| Tool | Описание |
+|------|----------|
+| `tcu_buscar_acordaos` | Поиск решений |
+| `tcu_consultar_inabilitados` | Реестр дисквалифицированных лиц |
+| `tcu_consultar_inidoneos` | Реестр недобросовестных компаний |
+| `tcu_consultar_certidoes_apf` | Сводные справки APF |
+| `tcu_calcular_debito_tcu` | Расчет корректировки долга |
+| `tcu_buscar_pedidos_congresso` | Запросы парламента к контрольному органу |
+| `tcu_buscar_contratos_tcu` | Контракты ведомства |
+| `tcu_consultar_cadirreg` | Реестр нарушений |
+
+**Авторизация:** не требуется
+
+### Государственные региональные аудиторские органы (9 features)
+
+| Feature | Регион | Tools | Покрытие |
+|---------|--------|-------|----------|
+| `tce_sp` | Сан-Паулу | 3 | Расходы, доходы, муниципалитеты |
+| `tce_rj` | Рио-де-Жанейро | 7 | Закупки, контракты, стройки, штрафы |
+| `tce_rs` | Риу-Гранди-ду-Сул | 5 | Образование, здравоохранение, бюджетная дисциплина |
+| `tce_sc` | Санта-Катарина | 2 | Муниципалитеты и администраторы |
+| `tce_pe` | Пернамбуку | 5 | Закупки, контракты, расходы, поставщики |
+| `tce_ce` | Сеара | 4 | Закупки, контракты, обязательства |
+| `tce_rn` | Риу-Гранди-ду-Норти | 5 | Поднадзорные организации, закупки, контракты |
+| `tce_pi` | Пиауи | 5 | Муниципалитеты, расходы, доходы |
+| `tce_to` | Токантинс | 3 | Дела, повестки заседаний |
 
-## Transparencia / Fiscal
+**Авторизация:** не требуется
 
-### `transparencia` — Portal da Transparencia (18 tools)
+## Судебный контур
 
-Contratos federais, despesas, servidores, sancoes, bolsa familia, emendas, viagens, cartoes de pagamento.
+### `datajud` — legacy feature судебного поиска (7 tools)
 
-| Tool | Descricao |
-|------|-----------|
-| `transparencia_buscar_contratos` | Contratos federais |
-| `transparencia_consultar_despesas` | Despesas por funcao/UF/ano |
-| `transparencia_buscar_servidores` | Servidores publicos federais |
-| `transparencia_buscar_licitacoes` | Processos licitatorios |
-| `transparencia_consultar_bolsa_familia` | Beneficiarios do Bolsa Familia |
-| `transparencia_buscar_sancoes` | Sancoes (CEIS/CNEP/CEPIM/CEAF) |
-| `transparencia_buscar_emendas` | Emendas parlamentares |
-| `transparencia_consultar_viagens` | Viagens a servico do governo |
-| `transparencia_buscar_convenios` | Convenios |
-| `transparencia_buscar_cartoes_pagamento` | Transacoes de cartoes de pagamento |
-| `transparencia_buscar_pep` | Pessoas politicamente expostas |
-| `transparencia_buscar_acordos_leniencia` | Acordos de leniencia |
-| `transparencia_buscar_notas_fiscais` | Notas fiscais |
-| `transparencia_consultar_beneficio_social` | Beneficios sociais |
-| `transparencia_consultar_cpf` | Consulta CPF |
-| `transparencia_consultar_cnpj` | Consulta CNPJ |
-| `transparencia_detalhar_contrato` | Detalhes de um contrato |
-| `transparencia_detalhar_servidor` | Detalhes de um servidor |
-
-**Chave:** Opcional — [cadastro gratuito](http://portaldatransparencia.gov.br/api-de-dados/cadastrar-email)
-
----
-
-### `tcu` — Tribunal de Contas da Uniao (8 tools)
-
-Acordaos, licitantes inabilitados/inidoneos, certidoes APF, debitos, contratos.
-
-| Tool | Descricao |
-|------|-----------|
-| `tcu_buscar_acordaos` | Acordaos do TCU |
-| `tcu_consultar_inabilitados` | Pessoas inabilitadas |
-| `tcu_consultar_inidoneos` | Empresas inidoneas |
-| `tcu_consultar_certidoes_apf` | Certidoes APF (TCU + CNJ + CGU) |
-| `tcu_calcular_debito_tcu` | Correcao de debito via SELIC |
-| `tcu_buscar_pedidos_congresso` | Pedidos do Congresso ao TCU |
-| `tcu_buscar_contratos_tcu` | Contratos do TCU |
-| `tcu_consultar_cadirreg` | Registro de irregularidades (CADIRREG) |
-
-**Chave:** Nenhuma
-
----
-
-### Tribunais de Contas Estaduais (9 features)
+Поиск дел, движений по делу и расширенных выборок по судебной системе.
 
-| Feature | UF | Tools | Cobertura |
-|---------|-----|-------|-----------|
-| `tce_sp` | Sao Paulo | 3 | Despesas, receitas, municipios |
-| `tce_rj` | Rio de Janeiro | 7 | Licitacoes, contratos, obras, penalidades |
-| `tce_rs` | Rio Grande do Sul | 5 | Educacao, saude, gestao fiscal (LRF) |
-| `tce_sc` | Santa Catarina | 2 | Municipios, unidades gestoras |
-| `tce_pe` | Pernambuco | 5 | Licitacoes, contratos, despesas, fornecedores |
-| `tce_ce` | Ceara | 4 | Licitacoes, contratos, empenhos |
-| `tce_rn` | Rio Grande do Norte | 5 | Jurisdicionados, licitacoes, contratos |
-| `tce_pi` | Piaui | 5 | Prefeituras, despesas, receitas |
-| `tce_to` | Tocantins | 3 | Processos, pautas de sessoes |
+| Tool | Описание |
+|------|----------|
+| `datajud_buscar_processos` | Поиск дел по набору фильтров |
+| `datajud_buscar_processo_por_numero` | Поиск дела по номеру |
+| `datajud_buscar_processos_por_classe` | Поиск по классу дела |
+| `datajud_buscar_processos_por_assunto` | Поиск по тематике |
+| `datajud_buscar_processos_por_orgao` | Поиск по суду или органу |
+| `datajud_buscar_processos_avancado` | Расширенный поиск с пагинацией |
+| `datajud_consultar_movimentacoes` | Движения по делу |
 
-**Chave:** Nenhuma (todas)
+**Авторизация:** опциональна, нужен ключ API
 
----
+### `jurisprudencia` — legacy feature по прецедентам и обзорам (6 tools)
 
-## Judiciario
+Решения высших судов, обзоры, тематические подборки и краткие судебные сводки.
 
-### `datajud` — DataJud / CNJ (7 tools)
+| Tool | Описание |
+|------|----------|
+| `jurisprudencia_buscar_jurisprudencia_stf` | Решения STF |
+| `jurisprudencia_buscar_jurisprudencia_stj` | Решения STJ |
+| `jurisprudencia_buscar_jurisprudencia_tst` | Решения трудового суда |
+| `jurisprudencia_buscar_sumulas` | Судебные тезисы и sumulas |
+| `jurisprudencia_buscar_repercussao_geral` | Темы repercussao geral |
+| `jurisprudencia_buscar_informativos` | Информационные бюллетени судов |
 
-Processos judiciais de todos os tribunais brasileiros, movimentacoes, busca avancada.
+**Авторизация:** не требуется
 
-| Tool | Descricao |
-|------|-----------|
-| `datajud_buscar_processos` | Processos com filtros diversos |
-| `datajud_buscar_processo_por_numero` | Processo por numero (formato CNJ) |
-| `datajud_buscar_processos_por_classe` | Por codigo de classe processual |
-| `datajud_buscar_processos_por_assunto` | Por codigo de assunto |
-| `datajud_buscar_processos_por_orgao` | Por tribunal/orgao julgador |
-| `datajud_buscar_processos_avancado` | Busca avancada com paginacao `search_after` |
-| `datajud_consultar_movimentacoes` | Movimentacoes de um processo |
+## Выборы
 
-**Chave:** Opcional — [cadastro gratuito](https://datajud-wiki.cnj.jus.br/api-publica/acesso)
+### `tse` — legacy feature электоральных данных (15 tools)
 
----
+Выборы, кандидаты, результаты, финансовая отчетность и ход подсчета голосов.
 
-### `jurisprudencia` — STF, STJ, TST (6 tools)
+| Tool | Описание |
+|------|----------|
+| `tse_anos_eleitorais` | Годы с доступными выборами |
+| `tse_listar_eleicoes` | Выборы по году |
+| `tse_listar_eleicoes_suplementares` | Дополнительные выборы |
+| `tse_listar_estados_suplementares` | Регионы с дополнительными выборами |
+| `tse_listar_cargos` | Список избираемых должностей |
+| `tse_listar_candidatos` | Кандидаты с фильтрами |
+| `tse_buscar_candidato` | Карточка кандидата |
+| `tse_resultado_eleicao` | Итоги конкретных выборов |
+| `tse_consultar_prestacao_contas` | Финансовая отчетность кандидатов |
+| `tse_resultado_nacional` | Национальные результаты |
+| `tse_resultado_por_estado` | Итоги по региону |
+| `tse_mapa_resultado_estados` | Сравнение результатов по всем регионам |
+| `tse_listar_municipios_eleitorais` | Муниципалитеты в электоральном контуре |
+| `tse_resultado_por_municipio` | Итоги по муниципалитету |
+| `tse_apuracao_status` | Статус подсчета |
+
+**Авторизация:** не требуется
+
+## Природа и экология
+
+### `inpe` — legacy feature спутникового мониторинга (4 tools)
+
+Очаги пожаров, обезлесение и спутниковые наблюдения.
 
-Decisoes dos tribunais superiores, sumulas, repercussao geral, informativos.
+| Tool | Описание |
+|------|----------|
+| `inpe_buscar_focos_queimadas` | Активные очаги возгорания |
+| `inpe_consultar_desmatamento` | Данные по обезлесению |
+| `inpe_alertas_deter` | Оперативные экологические алерты |
+| `inpe_dados_satelite` | Данные по сенсорам спутников |
+
+**Авторизация:** не требуется
 
-| Tool | Descricao |
-|------|-----------|
-| `jurisprudencia_buscar_jurisprudencia_stf` | Decisoes do STF |
-| `jurisprudencia_buscar_jurisprudencia_stj` | Decisoes do STJ |
-| `jurisprudencia_buscar_jurisprudencia_tst` | Decisoes trabalhistas do TST |
-| `jurisprudencia_buscar_sumulas` | Sumulas de todos os tribunais |
-| `jurisprudencia_buscar_repercussao_geral` | Temas de repercussao geral (STF) |
-| `jurisprudencia_buscar_informativos` | Boletins informativos dos tribunais |
+### `ana` — legacy feature водного мониторинга (3 tools)
 
-**Chave:** Nenhuma
+Станции наблюдений, телеметрия и состояние водохранилищ.
 
----
+| Tool | Описание |
+|------|----------|
+| `ana_buscar_estacoes` | Поиск гидрологических станций |
+| `ana_consultar_telemetria` | Телеметрические измерения |
+| `ana_monitorar_reservatorios` | Состояние водохранилищ |
 
-## Eleitoral
+**Авторизация:** не требуется
 
-### `tse` — Tribunal Superior Eleitoral (15 tools)
+## Здравоохранение
 
-Eleicoes, candidatos, resultados, prestacao de contas, apuracao.
+### `saude` — legacy feature медицинских справочников (4 tools)
 
-| Tool | Descricao |
-|------|-----------|
-| `tse_anos_eleitorais` | Anos com eleicoes disponiveis |
-| `tse_listar_eleicoes` | Eleicoes por ano |
-| `tse_listar_eleicoes_suplementares` | Eleicoes suplementares |
-| `tse_listar_estados_suplementares` | Estados com eleicoes suplementares |
-| `tse_listar_cargos` | Cargos em disputa |
-| `tse_listar_candidatos` | Candidatos com filtros |
-| `tse_buscar_candidato` | Detalhes de um candidato |
-| `tse_resultado_eleicao` | Resultado de uma eleicao |
-| `tse_consultar_prestacao_contas` | Prestacao de contas de candidatos |
-| `tse_resultado_nacional` | Resultado nacional via CDN |
-| `tse_resultado_por_estado` | Resultado por estado |
-| `tse_mapa_resultado_estados` | Mapa de resultados (27 estados em paralelo) |
-| `tse_listar_municipios_eleitorais` | Municipios eleitorais |
-| `tse_resultado_por_municipio` | Resultado por municipio |
-| `tse_apuracao_status` | Status da apuracao |
+Медицинские учреждения, специалисты, койки и типы организаций.
 
-**Chave:** Nenhuma
+| Tool | Описание |
+|------|----------|
+| `saude_buscar_estabelecimentos` | Медицинские организации |
+| `saude_buscar_profissionais` | Медицинские специалисты |
+| `saude_listar_tipos_estabelecimento` | Типы организаций |
+| `saude_consultar_leitos` | Наличие коек |
 
----
+**Авторизация:** не требуется
 
-## Ambiental
+## Публичные закупки
 
-### `inpe` — INPE (4 tools)
+### `compras/pncp` — legacy feature национального каталога закупок (6 tools)
 
-Focos de queimadas, desmatamento (PRODES e DETER), dados de satelite.
+Публичные закупки, контракты, рамочные соглашения, поставщики и заказчики.
 
-| Tool | Descricao |
-|------|-----------|
-| `inpe_buscar_focos_queimadas` | Focos ativos de incendio |
-| `inpe_consultar_desmatamento` | Dados de desmatamento (PRODES) |
-| `inpe_alertas_deter` | Alertas de desmatamento (DETER) |
-| `inpe_dados_satelite` | Dados por sensor de satelite |
+| Tool | Описание |
+|------|----------|
+| `compras_pncp_buscar_contratacoes` | Поиск закупок по тексту, CNPJ и дате |
+| `compras_pncp_buscar_contratos` | Поиск контрактов |
+| `compras_pncp_buscar_atas` | Реестр рамочных соглашений |
+| `compras_pncp_consultar_fornecedor` | Карточка поставщика |
+| `compras_pncp_buscar_itens` | Позиции закупки |
+| `compras_pncp_consultar_orgao` | Информация о заказчике |
 
-**Chave:** Nenhuma
+**Авторизация:** не требуется
 
----
+### `compras/dadosabertos` — legacy feature по архивным закупочным данным (8 tools)
 
-### `ana` — Agencia Nacional de Aguas (3 tools)
+Архивные закупки, тендеры, исключения, договоры и классификаторы.
 
-Estacoes hidrologicas, telemetria (chuva, vazao, nivel), reservatorios.
+| Tool | Описание |
+|------|----------|
+| `compras_dadosabertos_buscar_licitacoes` | Поиск тендеров по дате |
+| `compras_dadosabertos_buscar_pregoes` | Электронные аукционы |
+| `compras_dadosabertos_buscar_dispensas` | Закупки у единственного поставщика |
+| `compras_dadosabertos_buscar_contratos` | Поиск контрактов по периоду |
+| `compras_dadosabertos_consultar_fornecedor` | Поиск поставщиков |
+| `compras_dadosabertos_buscar_material_catmat` | Каталог материалов CATMAT |
+| `compras_dadosabertos_buscar_servico_catser` | Каталог услуг CATSER |
+| `compras_dadosabertos_buscar_uasg` | Коды заказчиков UASG |
 
-| Tool | Descricao |
-|------|-----------|
-| `ana_buscar_estacoes` | Estacoes de monitoramento hidrologico |
-| `ana_consultar_telemetria` | Leituras de telemetria |
-| `ana_monitorar_reservatorios` | Monitoramento de reservatorios (SAR/ANA) |
+**Авторизация:** не требуется
 
-**Chave:** Nenhuma
+## Справочные и сервисные данные
 
----
+### `brasilapi` — legacy utility feature (16 tools)
 
-## Saude
+CEP, CNPJ, DDD, банки, валюты, FIPE, праздники, PIX, ISBN, NCM и домены `.br`.
 
-### `saude` — CNES / DataSUS (4 tools)
+| Tool | Описание |
+|------|----------|
+| `brasilapi_consultar_cep` | Проверка почтового индекса |
+| `brasilapi_consultar_cnpj` | Проверка юридического лица |
+| `brasilapi_consultar_ddd` | Проверка телефонного кода |
+| `brasilapi_listar_bancos` | Список банков |
+| `brasilapi_consultar_banco` | Детали банка |
+| `brasilapi_listar_moedas` | Доступные валюты |
+| `brasilapi_consultar_cotacao` | Курс валюты |
+| `brasilapi_consultar_feriados` | Национальные праздники по году |
+| `brasilapi_consultar_taxa` | Ставки и индексы |
+| `brasilapi_listar_tabelas_fipe` | Таблицы FIPE |
+| `brasilapi_listar_marcas_fipe` | Марки в справочнике FIPE |
+| `brasilapi_buscar_veiculos_fipe` | Поиск транспорта в FIPE |
+| `brasilapi_consultar_isbn` | Данные книги по ISBN |
+| `brasilapi_buscar_ncm` | Коды товарной номенклатуры |
+| `brasilapi_consultar_pix_participantes` | Участники PIX |
+| `brasilapi_consultar_registro_br` | Домены `.br` |
 
-Estabelecimentos de saude, profissionais, leitos.
+**Авторизация:** не требуется
 
-| Tool | Descricao |
-|------|-----------|
-| `saude_buscar_estabelecimentos` | Estabelecimentos de saude (CNES) |
-| `saude_buscar_profissionais` | Profissionais de saude |
-| `saude_listar_tipos_estabelecimento` | Tipos de estabelecimento |
-| `saude_consultar_leitos` | Disponibilidade de leitos |
+### `dados_abertos` — legacy feature каталога datasets (4 tools)
 
-**Chave:** Nenhuma
+Наборы данных, их ресурсы и организации-публикаторы.
 
----
+| Tool | Описание |
+|------|----------|
+| `dados_abertos_buscar_conjuntos` | Поиск наборов данных |
+| `dados_abertos_detalhar_conjunto` | Детали набора |
+| `dados_abertos_listar_organizacoes` | Список организаций |
+| `dados_abertos_buscar_recursos` | Ресурсы внутри набора |
 
-## Compras Publicas
+**Авторизация:** не требуется
 
-### `compras/pncp` — PNCP (6 tools)
+### `diario_oficial` — legacy feature по официальным публикациям (4 tools)
 
-Portal Nacional de Contratacoes Publicas (Lei 14.133/2021).
+Поиск по выпускам официальных бюллетеней и по муниципалитетам.
 
-| Tool | Descricao |
-|------|-----------|
-| `compras_pncp_buscar_contratacoes` | Contratacoes por texto, CNPJ, data |
-| `compras_pncp_buscar_contratos` | Contratos por texto, CNPJ do fornecedor |
-| `compras_pncp_buscar_atas` | Atas de registro de preco |
-| `compras_pncp_consultar_fornecedor` | Dados do fornecedor por CNPJ |
-| `compras_pncp_buscar_itens` | Itens de contratacao |
-| `compras_pncp_consultar_orgao` | Orgaos contratantes |
+| Tool | Описание |
+|------|----------|
+| `diario_oficial_buscar_diarios` | Полнотекстовый поиск по выпускам |
+| `diario_oficial_buscar_trechos` | Поиск фрагментов по муниципалитету |
+| `diario_oficial_buscar_cidades` | Поиск муниципалитетов по названию |
+| `diario_oficial_listar_territorios` | Территории с доступными выпусками |
 
-**Chave:** Nenhuma
+**Авторизация:** не требуется
 
----
+### `transferegov` — legacy feature по трансфертам и поправкам (5 tools)
 
-### `compras/dadosabertos` — ComprasNet / SIASG (8 tools)
+Парламентские трансферты, детали по ID, выборки по муниципалитету и ежегодные сводки.
 
-Dados legados de compras publicas (ate ~2020).
+| Tool | Описание |
+|------|----------|
+| `transferegov_buscar_emendas_pix` | Поиск специальных трансфертов |
+| `transferegov_buscar_emenda_por_autor` | Поиск по автору |
+| `transferegov_detalhe_emenda` | Детали трансферта |
+| `transferegov_emendas_por_municipio` | Трансферты конкретному муниципалитету |
+| `transferegov_resumo_emendas_ano` | Годовая сводка |
 
-| Tool | Descricao |
-|------|-----------|
-| `compras_dadosabertos_buscar_licitacoes` | Processos licitatorios por data |
-| `compras_dadosabertos_buscar_pregoes` | Pregoes eletronicos |
-| `compras_dadosabertos_buscar_dispensas` | Dispensas/inexigibilidades |
-| `compras_dadosabertos_buscar_contratos` | Contratos por vigencia |
-| `compras_dadosabertos_consultar_fornecedor` | Fornecedores por CNPJ/CPF |
-| `compras_dadosabertos_buscar_material_catmat` | Catalogo CATMAT (materiais) |
-| `compras_dadosabertos_buscar_servico_catser` | Catalogo CATSER (servicos) |
-| `compras_dadosabertos_buscar_uasg` | Codigos UASG de orgaos |
+**Авторизация:** не требуется
 
-**Chave:** Nenhuma
+## AI-агенты
 
----
+### `redator` — legacy агент официального письма (5 tools + 6 prompts + 10 resources)
 
-## Utilidades
+Исторический агент исходного проекта для генерации официальных документов: письма, memo, despacho, portaria, parecer и note tecnica.
 
-### `brasilapi` — BrasilAPI (16 tools)
-
-CEP, CNPJ, DDD, bancos, cambio, FIPE, feriados, PIX, ISBN, NCM.
-
-| Tool | Descricao |
-|------|-----------|
-| `brasilapi_consultar_cep` | Consulta CEP |
-| `brasilapi_consultar_cnpj` | Consulta CNPJ |
-| `brasilapi_consultar_ddd` | Consulta DDD |
-| `brasilapi_listar_bancos` | Lista bancos |
-| `brasilapi_consultar_banco` | Detalhes de um banco |
-| `brasilapi_listar_moedas` | Lista moedas disponiveis |
-| `brasilapi_consultar_cotacao` | Cotacao de moeda |
-| `brasilapi_consultar_feriados` | Feriados nacionais por ano |
-| `brasilapi_consultar_taxa` | Taxas (SELIC/CDI/IPCA/TR) |
-| `brasilapi_listar_tabelas_fipe` | Tabelas FIPE |
-| `brasilapi_listar_marcas_fipe` | Marcas na FIPE |
-| `brasilapi_buscar_veiculos_fipe` | Veiculos na FIPE |
-| `brasilapi_consultar_isbn` | Consulta ISBN de livros |
-| `brasilapi_buscar_ncm` | Nomenclatura Comum do Mercosul |
-| `brasilapi_consultar_pix_participantes` | Participantes do PIX |
-| `brasilapi_consultar_registro_br` | Dominios .br |
-
-**Chave:** Nenhuma
-
----
-
-### `dados_abertos` — Portal Dados Abertos (4 tools)
-
-Catalogo de datasets de dados.gov.br.
-
-| Tool | Descricao |
-|------|-----------|
-| `dados_abertos_buscar_conjuntos` | Busca datasets |
-| `dados_abertos_detalhar_conjunto` | Detalhes de um dataset |
-| `dados_abertos_listar_organizacoes` | Organizacoes publicadoras |
-| `dados_abertos_buscar_recursos` | Recursos/arquivos dentro de um dataset |
-
-**Chave:** Nenhuma
-
----
-
-### `diario_oficial` — Querido Diario (4 tools)
-
-Diarios oficiais de 5.000+ municipios brasileiros.
-
-| Tool | Descricao |
-|------|-----------|
-| `diario_oficial_buscar_diarios` | Busca full-text em diarios oficiais |
-| `diario_oficial_buscar_trechos` | Trechos de um municipio especifico |
-| `diario_oficial_buscar_cidades` | Busca municipios por nome (codigo IBGE) |
-| `diario_oficial_listar_territorios` | Territorios com diarios disponiveis |
-
-**Chave:** Nenhuma
-
----
-
-### `transferegov` — TransfereGov (5 tools)
-
-Emendas parlamentares PIX (transferencias especiais).
-
-| Tool | Descricao |
-|------|-----------|
-| `transferegov_buscar_emendas_pix` | Emendas PIX por ano/estado |
-| `transferegov_buscar_emenda_por_autor` | Emendas por nome do parlamentar |
-| `transferegov_detalhe_emenda` | Detalhes por ID do plano de acao |
-| `transferegov_emendas_por_municipio` | Emendas para um municipio |
-| `transferegov_resumo_emendas_ano` | Resumo anual de emendas PIX |
-
-**Chave:** Nenhuma
-
----
-
-## Agentes IA
-
-### `redator` — Redator Oficial (5 tools + 6 prompts + 10 resources)
-
-Agente inteligente para redacao oficial brasileira — oficio, despacho, memorando, portaria, parecer, nota tecnica.
-
-**Tools:**
-
-| Tool | Descricao |
-|------|-----------|
-| `redator_formatar_data_extenso` | Formata data por extenso em portugues |
-| `redator_gerar_numeracao` | Gera numeracao oficial de documentos |
-| `redator_consultar_pronome_tratamento` | Pronome de tratamento correto por cargo |
-| `redator_validar_documento` | Valida CPF/CNPJ |
-| `redator_listar_tipos_documento` | Lista tipos de documento suportados |
+| Tool | Описание |
+|------|----------|
+| `redator_formatar_data_extenso` | Форматирование даты прописью |
+| `redator_gerar_numeracao` | Генерация регистрационного номера документа |
+| `redator_consultar_pronome_tratamento` | Подсказка по официальной форме обращения |
+| `redator_validar_documento` | Проверка CPF/CNPJ |
+| `redator_listar_tipos_documento` | Список поддерживаемых типов документов |
 
 **Prompts:** `redator_despacho`, `redator_memorando`, `redator_oficio`, `redator_portaria`, `redator_parecer`, `redator_nota_tecnica`
 
-**Resources:** 7 templates de documentos + 3 documentos normativos (manual de redacao, pronomes, fechos)
+**Resources:** 7 шаблонов документов и 3 нормативных справочника
 
-**Chave:** Nenhuma
+**Авторизация:** не требуется

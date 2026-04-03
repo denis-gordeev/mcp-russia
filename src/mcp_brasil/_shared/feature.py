@@ -1,4 +1,4 @@
-"""Feature metadata and auto-registry for mcp-brasil.
+"""Feature metadata and auto-registry for mcp-russia.
 
 This module implements convention-based auto-discovery of features.
 Any subpackage of mcp_brasil that exports a FEATURE_META and has a
@@ -14,7 +14,7 @@ Usage:
     from fastmcp import FastMCP
     from mcp_brasil._shared.feature import FeatureRegistry
 
-    mcp = FastMCP("mcp-brasil 🇧🇷")
+    mcp = FastMCP("mcp-russia")
     registry = FeatureRegistry()
     registry.discover()
     registry.mount_all(mcp)
@@ -211,7 +211,7 @@ class FeatureRegistry:
         Useful for logging at startup and generating docs.
         """
         lines = [
-            f"mcp-brasil — {len(self._features)} feature(s) active, {len(self._skipped)} skipped\n"
+            f"mcp-russia — {len(self._features)} feature(s) active, {len(self._skipped)} skipped\n"
         ]
 
         if self._features:

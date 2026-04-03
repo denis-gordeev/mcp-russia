@@ -1,145 +1,134 @@
-# Smart Tools
+# Smart tools
 
-O server raiz expoe 4 meta-tools que vao alem de consultas individuais — elas permitem descobrir, planejar e executar consultas combinadas.
+Корневой сервер публикует 4 meta-tools, которые помогают находить нужные integrations, строить план запроса и выполнять несколько вызовов за один проход. Публично это часть `mcp-russia`, хотя внутри каталог пока включает legacy features исходного проекта.
 
 ## `listar_features`
 
-Lista todas as features ativas com status de autenticacao.
+Показывает все активные features и статус авторизации.
 
-```
+```text
 → listar_features()
-← 27 features ativas:
+← 27 активных features:
    ibge (9 tools) ✓
    bacen (9 tools) ✓
-   transparencia (18 tools) ✓ (com chave)
+   transparencia (18 tools) ✓ (с ключом)
    ...
 ```
 
-Util para o LLM saber quais APIs estao disponiveis antes de montar uma estrategia.
-
----
+Это хороший первый шаг, когда модели нужно понять, какие API вообще доступны в текущем экземпляре сервера.
 
 ## `recomendar_tools`
 
-Recebe uma pergunta em linguagem natural e recomenda 3-5 tools relevantes.
+Принимает вопрос на естественном языке и предлагает 3-5 наиболее релевантных tools.
 
+```text
+→ recomendar_tools("Какие крупнейшие расходы федерального бюджета доступны за 2024 год?")
+← Рекомендация:
+   1. transparencia_consultar_despesas
+   2. transparencia_buscar_contratos
+   3. tcu_buscar_acordaos
 ```
-→ recomendar_tools("Quais os maiores gastos do governo federal em 2024?")
-← Recomendacao:
-   1. transparencia_consultar_despesas — despesas por funcao/UF/ano
-   2. transparencia_buscar_contratos — contratos federais
-   3. tcu_buscar_acordaos — acordaos sobre gastos irregulares
-```
 
-**Como funciona:**
-1. `build_catalog()` gera um catalogo markdown de todas as tools (cacheado)
-2. Envia o catalogo + a pergunta para `claude-haiku-4-5-20251001`
-3. O LLM seleciona as tools mais relevantes com justificativa
+Как работает:
 
-**Requer:** `ANTHROPIC_API_KEY`
+1. `build_catalog()` собирает markdown-каталог всех tools
+2. Каталог и пользовательский вопрос отправляются в LLM
+3. Модель возвращает краткий список tools с объяснением и примером использования
 
----
+**Требует:** `ANTHROPIC_API_KEY`
 
 ## `planejar_consulta`
 
-Cria um plano de execucao estruturado para consultas que envolvem multiplas APIs. Retorna etapas com dependencias, parametros e estrategia de combinacao.
+Строит структурированный план выполнения для запросов, где нужно несколько API, зависимые шаги или параллельные вызовы.
 
-```
-→ planejar_consulta("Compare gastos de saude em SP e MG nos ultimos 3 anos")
-← Plano de Execucao:
-   Etapa 1: tce_sp_consultar_despesas (SP, funcao=saude, 2022-2024)
-   Etapa 2: [depende de contexto] buscar dados de MG
-   Etapa 3: comparar per capita usando populacao do IBGE
-   Estrategia: enriquecimento + comparacao
+```text
+→ planejar_consulta("Сравни расходы на здравоохранение в двух регионах за 3 года")
+← План:
+   Этап 1: получить данные по первому региону
+   Этап 2: получить данные по второму региону
+   Этап 3: добавить население и рассчитать per capita
 ```
 
-**Modelo de dados:**
+Модель данных:
 
 ```python
 class EtapaPlano(BaseModel):
-    ordem: int           # Sequencia de execucao
-    tool: str            # Nome da tool
-    parametros: dict     # Parametros sugeridos
-    depende_de: list     # Etapas que devem completar antes
-    justificativa: str   # Por que essa etapa
+    etapa: int
+    descricao: str
+    tool: str
+    parametros: dict[str, str]
+    depende_de: list[int]
+    justificativa: str
 
 class PlanoConsulta(BaseModel):
-    objetivo: str
+    consulta: str
+    complexidade: str
+    resumo: str
     etapas: list[EtapaPlano]
-    estrategia: str      # enriquecimento, comparacao, etc.
+    observacoes: str
 ```
 
-**Estrategias suportadas:**
-- **Enriquecimento** — adiciona contexto de outra API (ex: populacao do IBGE para calcular per capita)
-- **Comparacao** — mesma metrica de fontes diferentes (ex: gastos SP vs MG)
-- **Contextualizacao** — dados complementares (ex: votacao + proposicao + autor)
-- **Paralelismo** — consultas independentes executadas juntas
+Типичные стратегии:
 
-**Requer:** `ANTHROPIC_API_KEY`
+- `enriquecimento`: добавить контекст из другой feature
+- `comparacao`: сопоставить одну и ту же метрику по разным регионам или источникам
+- `contextualizacao`: подтянуть справочные, демографические или макроэкономические данные
+- `paralelismo`: выполнить независимые шаги одновременно
 
----
+**Требует:** `ANTHROPIC_API_KEY`
 
 ## `executar_lote`
 
-Executa ate 10 tool calls em paralelo numa unica chamada MCP. Reduz round-trips entre o LLM e o server.
+Выполняет до 10 tool calls за одну MCP-команду и снижает число round-trips между моделью и сервером.
 
-```
+```text
 → executar_lote([
     {"tool": "bacen_indicadores_atuais", "params": {}},
     {"tool": "ibge_listar_estados", "params": {}},
     {"tool": "brasilapi_consultar_taxa", "params": {"sigla": "SELIC"}}
   ])
-← [resultado1, resultado2, resultado3]  # Executados em paralelo
+← [resultado1, resultado2, resultado3]
 ```
 
-**Como funciona:**
-1. `build_dispatch(registry)` mapeia nome de tool → funcao async
-2. `asyncio.gather()` executa todas em paralelo
-3. Retorna array de resultados na mesma ordem
+Как работает:
 
-**Limites:** Maximo 10 queries por chamada.
+1. `build_dispatch(registry)` строит отображение `tool name -> async function`
+2. `asyncio.gather()` выполняет вызовы параллельно
+3. Результаты возвращаются в исходном порядке
 
----
+**Лимит:** максимум 10 вызовов за одну команду
 
-## Quando usar cada uma
+## Когда использовать
 
-| Situacao | Tool |
+| Ситуация | Tool |
 |----------|------|
-| "O que posso consultar?" | `listar_features` |
-| "Qual tool devo usar para X?" | `recomendar_tools` |
-| "Como combino dados de varias APIs?" | `planejar_consulta` |
-| "Preciso de varios dados de uma vez" | `executar_lote` |
+| Нужно понять, что вообще доступно | `listar_features` |
+| Нужно быстро подобрать tool под вопрос | `recomendar_tools` |
+| Нужно разложить сложный запрос на этапы | `planejar_consulta` |
+| Нужно получить несколько независимых ответов за один проход | `executar_lote` |
 
-### Fluxo combinado
+## Рекомендуемый поток
 
-Para consultas complexas, o fluxo ideal e:
-
-```
-1. planejar_consulta("minha pergunta complexa")
-   → Recebe plano com etapas e dependencias
-
-2. executar_lote([etapas independentes])
-   → Executa etapas sem dependencias em paralelo
-
-3. executar_lote([etapas dependentes])
-   → Executa etapas que precisavam dos resultados anteriores
-
-4. LLM sintetiza os resultados
+```text
+1. planejar_consulta("сложный вопрос")
+2. executar_lote([...независимые этапы...])
+3. executar_lote([...зависимые этапы...])
+4. модель синтезирует итоговый ответ
 ```
 
 ## Tool Search (BM25)
 
-Com 205 tools disponiveis, enviar todas ao LLM seria ineficiente. O BM25 Search Transform filtra automaticamente:
+Полный каталог слишком большой, чтобы всегда публиковать его целиком в LLM-контекст. Поэтому по умолчанию используется BM25-фильтрация:
 
-- Analisa o contexto da conversa
-- Ranqueia tools por relevancia (BM25 scoring)
-- Retorna apenas as top-10 mais relevantes
-- Meta-tools (`listar_features`, `recomendar_tools`, etc.) sempre ficam visiveis
+- анализируется текущий диалог
+- tools ранжируются по релевантности
+- в контекст попадают только top-N совпадений
+- meta-tools всегда остаются видимыми
 
-Configuravel via `MCP_BRASIL_TOOL_SEARCH`:
+Настройка управляется через `MCP_RUSSIA_TOOL_SEARCH`:
 
-| Valor | Comportamento |
-|-------|---------------|
-| `bm25` (default) | Filtra para top-10 relevantes |
-| `none` | Todas as 205 tools visiveis |
-| `code_mode` | Experimental — discovery programatico |
+| Значение | Поведение |
+|----------|-----------|
+| `bm25` | Показать только релевантные tools |
+| `none` | Показать весь каталог |
+| `code_mode` | Экспериментальный программный discovery |
