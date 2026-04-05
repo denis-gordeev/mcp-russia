@@ -1,7 +1,6 @@
-"""Static reference data for the BrasilAPI feature.
+"""Справочные resources для совместимого слоя BrasilAPI.
 
-Resources are read-only data sources that clients can pull.
-They provide context to LLMs without requiring tool calls.
+Эти данные нужны LLM как read-only контекст и не требуют tool-вызовов.
 """
 
 from __future__ import annotations
@@ -28,7 +27,7 @@ def tipos_veiculo_fipe() -> str:
 
 
 def endpoints_brasilapi() -> str:
-    """Catálogo de todos os endpoints disponíveis na BrasilAPI."""
+    """Каталог legacy-endpoints BrasilAPI, доступных через compatibility-layer."""
     data = [
         {"endpoint": "CEP", "descricao": "Consulta endereço por CEP", "auth": False},
         {"endpoint": "CNPJ", "descricao": "Consulta empresa por CNPJ", "auth": False},

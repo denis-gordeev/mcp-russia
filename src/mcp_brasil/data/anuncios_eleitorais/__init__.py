@@ -1,12 +1,12 @@
-"""Feature Anuncios Eleitorais — Biblioteca de Anúncios da Meta."""
+"""Совместимый слой Meta Ad Library для политической рекламы."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="anuncios_eleitorais",
     description=(
-        "Biblioteca de Anúncios da Meta — busca e análise de anúncios eleitorais "
-        "e sobre temas sociais, eleições ou política veiculados no Brasil"
+        "Переходный слой Meta Ad Library: поиск и анализ политической и "
+        "общественно значимой рекламы, показанной в Бразилии."
     ),
     version="0.1.0",
     api_base="https://graph.facebook.com/v25.0",

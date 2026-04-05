@@ -1,43 +1,46 @@
-"""Analysis prompts for the BrasilAPI feature.
-
-Prompts are reusable templates that guide LLM interactions.
-They instruct the LLM on which tools to call and how to analyze the data.
-"""
+"""Переиспользуемые prompts для переходного слоя BrasilAPI."""
 
 from __future__ import annotations
 
 
 def analise_empresa(cnpj: str) -> str:
-    """Análise completa de uma empresa brasileira pelo CNPJ.
+    """Анализ компании по CNPJ через текущий compatibility-layer.
 
-    Gera um relatório com dados cadastrais, endereço e situação.
+    Собирает регистрационные сведения, адрес и статус компании.
 
     Args:
         cnpj: CNPJ da empresa (com ou sem formatação).
     """
     return (
-        f"Faça uma análise completa da empresa com CNPJ {cnpj}.\n\n"
+        f"Подготовь структурированный профиль организации с CNPJ {cnpj}.\n\n"
+        "Контекст:\n"
+        "- Репозиторий `mcp-russia` еще находится в миграции.\n"
+        "- Данные ниже приходят из исторического бразильского integration-layer BrasilAPI.\n\n"
         "Passos:\n"
         f"1. Use consultar_cnpj(cnpj='{cnpj}') para obter os dados cadastrais\n"
         "2. Com o CEP retornado, use consultar_cep para confirmar o endereço\n"
         "3. Com o DDD do telefone, use consultar_ddd para identificar a região\n\n"
-        "Apresente um relatório organizado com:\n"
-        "- Dados da empresa (razão social, fantasia, CNAE, porte)\n"
-        "- Situação cadastral\n"
-        "- Endereço completo\n"
-        "- Capital social"
+        "Сформируй отчет со следующими блоками:\n"
+        "- Профиль организации (razão social, nome fantasia, CNAE, porte)\n"
+        "- Статус регистрации\n"
+        "- Полный адрес\n"
+        "- Контактные данные и капитал social\n"
+        "- Короткая пометка, что это legacy-бразильский источник в переходном контуре `mcp-russia`"
     )
 
 
 def panorama_economico() -> str:
-    """Panorama das principais taxas e indicadores econômicos."""
+    """Черновой макроэкономический обзор на базе исторических бразильских индикаторов."""
     return (
-        "Monte um panorama econômico atual do Brasil.\n\n"
+        "Собери краткий макроэкономический обзор по текущему compatibility-layer BrasilAPI.\n\n"
+        "Контекст:\n"
+        "- Это не финальная российская модель данных, а переходный бразильский набор индикаторов.\n"
+        "- В выводе явно обозначь источник как legacy-layer внутри `mcp-russia`.\n\n"
         "Passos:\n"
         "1. Use consultar_taxa(sigla='SELIC') para a taxa básica de juros\n"
         "2. Use consultar_taxa(sigla='CDI') para o CDI\n"
         "3. Use consultar_taxa(sigla='IPCA') para a inflação\n"
         "4. Use consultar_cotacao(moeda='USD', data=<ontem>) para o dólar\n"
         "5. Use consultar_cotacao(moeda='EUR', data=<ontem>) para o euro\n\n"
-        "Apresente uma tabela comparativa com os indicadores e uma breve análise."
+        "В ответе дай сравнительную таблицу индикаторов, краткую интерпретацию и отдельную пометку о переходном статусе этих данных."
     )

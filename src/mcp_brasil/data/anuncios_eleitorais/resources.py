@@ -1,10 +1,7 @@
-"""Static reference data for the Anuncios Eleitorais feature.
+"""Справочные resources для compatibility-layer Meta Ad Library.
 
-Resources are read-only data sources that clients can pull.
-They provide context to LLMs without requiring tool calls.
-
-Resources are registered with data:// URIs (without the feature namespace —
-mount() adds the namespace prefix automatically).
+Дают read-only контекст для LLM и регистрируются как data:// URI.
+Namespace feature добавляется при mount автоматически.
 """
 
 from __future__ import annotations
@@ -27,7 +24,7 @@ def estados_brasileiros() -> str:
 
 
 def parametros_busca() -> str:
-    """Referência dos parâmetros de busca disponíveis na API de anúncios eleitorais."""
+    """Справка по параметрам поиска в текущем legacy API политической рекламы."""
     params = {
         "search_terms": {
             "descricao": "Termos de busca (max 100 chars). Espaço = AND.",
@@ -82,7 +79,7 @@ def parametros_busca() -> str:
 
 
 def campos_disponiveis() -> str:
-    """Referência dos campos de dados disponíveis nos resultados de anúncios eleitorais."""
+    """Справка по полям, которые возвращает текущий compatibility-layer объявлений."""
     campos = {
         "basicos": {
             "id": "ID da biblioteca do anúncio",
@@ -100,8 +97,8 @@ def campos_disponiveis() -> str:
             "publisher_platforms": "Plataformas (Facebook, Instagram, etc.)",
         },
         "politicos_brasil": {
-            "bylines": "Financiador (campo 'Pago por')",
-            "currency": "Moeda do gasto (BRL)",
+            "bylines": "Financiador (campo 'Pago por'; legacy coverage no Brasil)",
+            "currency": "Moeda do gasto (BRL; legacy coverage no Brasil)",
             "spend": "Gasto total (faixa: <100, 100-499, 500-999, ...)",
             "impressions": "Impressões (faixa: <1000, 1K-5K, ...)",
             "demographic_distribution": "Distribuição por idade e gênero (%)",

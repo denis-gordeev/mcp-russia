@@ -1,12 +1,12 @@
-"""Feature BrasilAPI — agregador de APIs públicas brasileiras."""
+"""Совместимый слой BrasilAPI внутри публичного контура mcp-russia."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="brasilapi",
     description=(
-        "BrasilAPI: CEP, CNPJ, DDD, bancos, câmbio, feriados, taxas, "
-        "FIPE, ISBN, NCM, PIX e Registro.br — dados públicos unificados."
+        "Переходный data-layer с BrasilAPI: CEP, CNPJ, DDD, банки, валюты, "
+        "праздники, ставки, FIPE, ISBN, NCM, PIX и Registro.br."
     ),
     version="0.1.0",
     api_base="https://brasilapi.com.br/api",
