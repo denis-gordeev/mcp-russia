@@ -1,6 +1,6 @@
-# Caso de Uso: Análise de Políticas Públicas
+# Сценарий: Анализ Государственной Политики
 
-> Como pesquisadores, gestores públicos e organizações da sociedade civil podem usar o mcp-brasil para avaliar o impacto de políticas públicas com dados de múltiplas fontes governamentais.
+> Как исследователи, государственные аналитики и общественные организации могут использовать `mcp-russia` для оценки эффекта государственных программ на основе данных из нескольких публичных систем.
 
 ---
 
@@ -18,7 +18,9 @@ Avaliar uma política pública exige cruzar dados de implementação (orçamento
 | Contexto jurídico | DataJud, Jurisprudência |
 | Contexto legislativo | Câmara, Senado |
 
-**O mcp-brasil conecta todas essas fontes numa única interface.**
+**`mcp-russia` сводит эти источники в единый аналитический интерфейс.**
+
+На текущем этапе часть tool IDs и интеграций по-прежнему наследуется от исходного `mcp-brasil`. В examples ниже это compatibility-layer, а не публичное позиционирование проекта.
 
 ---
 
@@ -286,9 +288,9 @@ API: tcu_buscar_licitantes_inidoneos
 
 ---
 
-## Framework Para Análise de Política Pública
+## Каркас Для Анализа Государственной Политики
 
-O mcp-brasil permite seguir um framework sistemático:
+`mcp-russia` позволяет выстроить системный сценарий исследования:
 
 ```
 1. CONTEXTO LEGISLATIVO
@@ -310,12 +312,12 @@ O mcp-brasil permite seguir um framework sistemático:
    └── TSE: quem se beneficiou politicamente?
 ```
 
-### Automatizando com `planejar_consulta`
+### Автоматизация Через `planejar_consulta`
 
-> Prompt: "Quero avaliar o impacto da política de farmácia popular no acesso a medicamentos. Planeje as consultas"
+> Prompt: "Хочу оценить влияние программы льготного лекарственного обеспечения на доступность медикаментов. Составь план запросов"
 
-O mcp-brasil gera o plano de investigação completo com ferramentas, ordem de execução e dependências.
+`mcp-russia` строит полный план исследования: набор инструментов, порядок вызовов и зависимости между шагами.
 
 ---
 
-_Fontes: APIs do IBGE, Banco Central, Portal da Transparência, TCEs (9 estados), PNCP, Compras.gov.br, TransfereGov, INPE, ANA, CNES/DataSUS, DataJud, Jurisprudência STF/STJ, Câmara, Senado, Diário Oficial, TSE._
+_Источники: API IBGE, Banco Central, Portal da Transparência, TCEs (9 штатов), PNCP, Compras.gov.br, TransfereGov, INPE, ANA, CNES/DataSUS, DataJud, Jurisprudência STF/STJ, Câmara, Senado, Diário Oficial, TSE. В текущей версии они сохраняются как legacy-источники исходного проекта и должны постепенно заменяться на российские аналоги._

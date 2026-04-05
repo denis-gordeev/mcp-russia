@@ -31,7 +31,7 @@ from .tools import (
     validar_documento,
 )
 
-mcp = FastMCP("mcp-brasil-redator")
+mcp = FastMCP("mcp-russia-redator")
 
 # Tools (5)
 mcp.tool(formatar_data_extenso, tags={"formatacao", "data", "redacao-oficial"})

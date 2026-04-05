@@ -1,12 +1,12 @@
-# Caso de Uso: Redator Oficial — Geração de Documentos Governamentais
+# Сценарий: Официальный Редактор Для Госдокументов
 
-> Usando o agente Redator do mcp-brasil para gerar documentos oficiais com dados reais de APIs governamentais.
+> Как использовать агент Redator в `mcp-russia` для подготовки официальных документов с опорой на реальные данные публичных API.
 
 ---
 
-## O Que É o Redator Oficial
+## Что Такое Redator Oficial
 
-O **Redator Oficial** é um agente inteligente do mcp-brasil que gera documentos no padrão da redação oficial brasileira (Manual de Redação da Presidência). Ele combina:
+**Redator Oficial** в `mcp-russia` пока остается переходным агентом: публично он подается как инструмент для русскоязычных и государственных сценариев, а внутри еще использует нормы и шаблоны исходного бразильского проекта. Сейчас он сочетает:
 
 - **5 tools** para geração de documentos
 - **9 resources** com templates e regras de redação
@@ -234,16 +234,16 @@ O LLM consulta automaticamente o resource relevante antes de gerar o documento.
 
 O que torna o Redator único é a combinação:
 
-| Funcionalidade | Sem mcp-brasil | Com mcp-brasil |
-|---------------|----------------|----------------|
+| Funcionalidade | Без `mcp-russia` | С `mcp-russia` |
+|---------------|-----------------|-----------------|
 | Formato oficial | ✅ (qualquer LLM) | ✅ |
 | Dados reais do governo | ❌ (inventados) | ✅ (APIs ao vivo) |
 | Pronomes de tratamento corretos | ⚠️ (erro frequente) | ✅ (resource dedicado) |
 | Tabelas com dados verificáveis | ❌ | ✅ |
 | Fundamentação legal atualizada | ⚠️ | ✅ (via DataJud/jurisprudência) |
 
-**O Redator não inventa dados — ele puxa dados reais de APIs governamentais e os formata no padrão oficial.**
+**Redator не выдумывает данные: он подтягивает фактические значения из подключенных госсистем и оформляет их по официальному шаблону.**
 
 ---
 
-_Fontes: Agente Redator Oficial (mcp-brasil), API do Banco Central, API do IBGE, API do Portal da Transparência, API do TCU, API do PNCP, CNES/DataSUS._
+_Источники: агент Redator Oficial (`mcp-russia` как публичный слой, `mcp-brasil` как compatibility-layer), API Banco Central, IBGE, Portal da Transparência, TCU, PNCP, CNES/DataSUS._

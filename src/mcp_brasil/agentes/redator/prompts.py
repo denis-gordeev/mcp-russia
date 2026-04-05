@@ -219,7 +219,8 @@ Dados/fontes disponíveis: {dados if dados else "Consultar APIs disponíveis (IB
 
 Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
 1. Consulte o template de nota técnica (resource template://nota_tecnica)
-2. Se houver dados relevantes, use as tools do mcp-brasil para consultar:
+2. Se houver dados relevantes, use as tools disponíveis no mcp-russia
+   (incluindo integrações legadas ainda expostas pelo compatibility-layer) para consultar:
    - IBGE: indicadores, população, PIB
    - Bacen: câmbio, Selic, inflação
    - Transparência: contratos, despesas
