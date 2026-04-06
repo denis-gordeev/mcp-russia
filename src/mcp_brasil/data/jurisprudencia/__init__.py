@@ -1,10 +1,13 @@
-"""Feature Jurisprudência — Busca em tribunais superiores (STF, STJ, TST)."""
+"""Переходный слой судебного поиска по бразильским высшим судам."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="jurisprudencia",
-    description="Jurisprudência: busca de acórdãos, súmulas e decisões no STF, STJ e TST",
+    description=(
+        "Переходный judicial-layer: поиск решений, обзоров и суммул "
+        "по STF, STJ и TST как legacy-совместимому источнику."
+    ),
     version="0.1.0",
     api_base="https://jurisprudencia.stf.jus.br",
     requires_auth=False,

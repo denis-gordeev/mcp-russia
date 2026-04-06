@@ -4,9 +4,9 @@
 
 ---
 
-## O Problema
+## Проблема
 
-Avaliar uma política pública exige cruzar dados de implementação (orçamento executado, contratos) com dados de resultado (indicadores sociais, econômicos, de saúde). Esses dados vivem em sistemas separados:
+Оценка государственной политики требует совмещать данные о реализации программы, контрактах и расходах с результативностью по социальным, экономическим и отраслевым показателям. На переходном слое репозитория часть примеров ниже все еще использует бразильские источники как compatibility-layer, но сам аналитический контур уже описывается для русскоязычного пользователя.
 
 | Dimensão | Fontes Necessárias |
 |----------|-------------------|
@@ -24,13 +24,13 @@ Avaliar uma política pública exige cruzar dados de implementação (orçamento
 
 ---
 
-## Análise 1: Programa de Saúde da Família — Funciona?
+## Анализ 1: первичная медико-санитарная помощь и результативность
 
-### A Questão
+### Вопрос
 
-O Programa Saúde da Família (PSF/ESF) é a principal estratégia de atenção primária do SUS. Os municípios que investem mais nele têm melhores indicadores de saúde?
+Как проверить, дают ли вложения в первичную медико-санитарную помощь заметный эффект по базовым показателям здоровья на муниципальном уровне?
 
-### O Roteiro
+### Сценарий анализа
 
 **1. Identificar a cobertura do PSF por município**
 
@@ -65,7 +65,7 @@ API: ibge_consultar_agregado (indicadores de saúde por município)
 API: transparencia_transferencias(uf="CE", funcao="Saúde")
 ```
 
-### O Cross-Reference
+### Как связываются данные
 
 ```
 Cobertura de PSF (CNES)   +   Gasto per capita (TCE-CE)
@@ -73,7 +73,7 @@ Cobertura de PSF (CNES)   +   Gasto per capita (TCE-CE)
 Mortalidade infantil (IBGE) ←→ Transferências SUS (Transparência)
 ```
 
-### O Que a Análise Revela
+### Что показывает такой анализ
 
 | Grupo | Cobertura PSF | Mortalidade Infantil | Gasto Saúde/capita |
 |-------|--------------|---------------------|-------------------|
@@ -85,13 +85,13 @@ Mortalidade infantil (IBGE) ←→ Transferências SUS (Transparência)
 
 ---
 
-## Análise 2: Emendas PIX — Impacto Real ou Clientelismo?
+## Анализ 2: специальные трансферты и политическое распределение
 
-### A Questão
+### Вопрос
 
-As emendas PIX (transferências especiais) chegaram a bilhões em 2024. Esses recursos melhoram a vida dos municípios ou servem apenas a interesses eleitorais?
+Как отличить социально обоснованное распределение межбюджетных трансфертов от политически мотивированного?
 
-### O Roteiro
+### Сценарий анализа
 
 **1. Mapear emendas PIX por município**
 
@@ -125,7 +125,7 @@ APIs: tce_[estado]_empenhos + pncp_buscar_contratacoes
 APIs: transferegov_buscar_emendas + camara_buscar_deputados (partido) + tse_buscar_candidatos
 ```
 
-### Achados Típicos
+### Типовой вывод
 
 ```
 DISTRIBUIÇÃO DE EMENDAS PIX — 2024
@@ -147,13 +147,13 @@ Por alinhamento político:
 
 ---
 
-## Análise 3: Desmatamento vs. Multas — O Ciclo da Impunidade?
+## Анализ 3: экологический вред, санкции и исполнение
 
-### A Questão
+### Вопрос
 
-O Brasil aplica multas ambientais, mas elas são efetivamente pagas? Há relação entre o desmatamento e a execução das penalidades?
+Как сопоставить экологический ущерб, наложенные санкции и реальное исполнение штрафов, чтобы увидеть разрыв между выявлением нарушения и фактическим наказанием?
 
-### O Roteiro
+### Сценарий анализа
 
 **1. Dados de desmatamento**
 
@@ -311,6 +311,14 @@ API: tcu_buscar_licitantes_inidoneos
    └── DataJud: houve processos?
    └── TSE: quem se beneficiou politicamente?
 ```
+
+---
+
+## Что осталось доделать
+
+- заменить бразильские отраслевые сценарии на российские кейсы по здравоохранению, бюджету, экологии и закупкам;
+- перевести examples с `SUS`, `TCE`, `TransfereGov`, `PIX` и других бразильских сущностей на российские аналоги;
+- сохранить структуру cross-source анализа, но перепривязать ее к источникам вроде Росстата, ЕМИСС, Минфина, Федерального казначейства и региональных порталов открытых данных.
 
 ### Автоматизация Через `planejar_consulta`
 

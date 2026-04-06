@@ -16,7 +16,7 @@ from .tools import (
     buscar_sumulas,
 )
 
-mcp = FastMCP("mcp-brasil-jurisprudencia")
+mcp = FastMCP("mcp-russia-jurisprudencia")
 
 # Tools (6)
 mcp.tool(buscar_jurisprudencia_stf, tags={"busca", "jurisprudencia", "stf"})

@@ -4,43 +4,43 @@
 
 ---
 
-## Что Такое Redator Oficial
+## Что такое Redator Oficial
 
-**Redator Oficial** в `mcp-russia` пока остается переходным агентом: публично он подается как инструмент для русскоязычных и государственных сценариев, а внутри еще использует нормы и шаблоны исходного бразильского проекта. Сейчас он сочетает:
+**Redator Oficial** в `mcp-russia` пока остается переходным агентом: публично он подается как инструмент для русскоязычных и государственных сценариев, а внутри еще использует нормы и шаблоны исходного бразильского проекта. Это не финальная модель российского делопроизводства, а совместимый слой для постепенной миграции. Сейчас агент сочетает:
 
-- **5 tools** para geração de documentos
-- **9 resources** com templates e regras de redação
-- **5 prompts** para diferentes tipos de documento
+- **5 tools** для генерации документов
+- **9 resources** с шаблонами и правилами оформления
+- **5 prompts** для разных типов документов
 
-### Tipos de Documento Suportados
+### Поддерживаемые типы документов
 
-| Tipo | Quando Usar |
+| Тип | Когда использовать |
 |------|-------------|
-| **Ofício** | Comunicação entre órgãos públicos |
-| **Despacho** | Decisão administrativa sobre processo |
-| **Portaria** | Ato normativo interno de um órgão |
-| **Parecer** | Análise técnica ou jurídica fundamentada |
-| **Nota Técnica** | Posicionamento técnico sobre um tema |
+| **Ofício** | Переписка между органами и учреждениями |
+| **Despacho** | Административное решение по материалу или делу |
+| **Portaria** | Внутренний распорядительный акт |
+| **Parecer** | Юридическое или экспертное заключение |
+| **Nota Técnica** | Техническая записка по вопросу политики или регулирования |
 
 ---
 
-## Exemplo 1: Nota Técnica com Dados Econômicos
+## Пример 1: техническая записка на основе макроданных
 
-### O Cenário
+### Сценарий
 
-Um analista da Secretaria de Política Econômica precisa redigir uma nota técnica sobre a evolução da inflação para subsidiar decisão do Ministro.
+Аналитику экономического блока нужен черновик записки об инфляции, чтобы быстро собрать аргументы для руководства на основе публичных временных рядов.
 
 > Prompt: "Redija uma nota técnica sobre a evolução do IPCA nos últimos 12 meses, incluindo comparação com a meta de inflação e a taxa Selic"
 
-### O Que Acontece
+### Что делает агент
 
-O Redator automaticamente:
+Агент автоматически:
 
-1. **Busca dados reais** via `bacen_indicadores_atuais` e `bacen_comparar_series`
-2. **Aplica o template** de Nota Técnica (cabeçalho, destinatário, numeração)
-3. **Estrutura o texto** conforme o Manual de Redação da Presidência
+1. **Забирает фактические ряды** через `bacen_indicadores_atuais` и `bacen_comparar_series`
+2. **Применяет шаблон** технической записки
+3. **Собирает текст** по правилам текущего compatibility-layer редактирования
 
-### Resultado
+### Результат
 
 ```
 NOTA TÉCNICA Nº XX/2025/SPE/MF
@@ -91,23 +91,23 @@ SPE/MF
 
 ---
 
-## Exemplo 2: Parecer Jurídico com Dados de Licitação
+## Пример 2: правовое заключение по закупке
 
-### O Cenário
+### Сценарий
 
-Um procurador municipal precisa emitir parecer sobre a legalidade de uma contratação direta por dispensa de licitação.
+Юристу или сотруднику контрактной службы нужен черновик заключения по закупке у единственного поставщика с быстрой сверкой по публичным реестрам.
 
 > Prompt: "Redija um parecer sobre a legalidade da dispensa de licitação nº 015/2024 da Prefeitura de [Município] para serviços de TI, valor R$ 78.000. Verifique se o fornecedor tem penalidades no TCU"
 
-### O Que Acontece
+### Что делает агент
 
-O Redator:
+Агент:
 
-1. **Consulta o fornecedor** via `tcu_buscar_licitantes_inidoneos`
-2. **Busca a contratação** via `pncp_buscar_contratacoes`
-3. **Gera o parecer** com fundamentação legal
+1. **Проверяет контрагента** через `tcu_buscar_licitantes_inidoneos`
+2. **Находит закупку** через `pncp_buscar_contratacoes`
+3. **Формирует заключение** с правовой аргументацией
 
-### Resultado
+### Результат
 
 ```
 PARECER JURÍDICO Nº XX/2024/PGM
@@ -141,22 +141,22 @@ Procurador Municipal
 
 ---
 
-## Exemplo 3: Ofício com Dados de Transparência
+## Пример 3: служебное письмо на основе данных о трансфертах
 
-### O Cenário
+### Сценарий
 
-Um secretário estadual de educação precisa solicitar informações ao MEC sobre transferências federais.
+Региональному ведомству нужно быстро подготовить служебное письмо по межбюджетным трансфертам и приложить к нему проверяемые цифры из открытых источников.
 
 > Prompt: "Redija um ofício do Secretário de Educação do Estado do Ceará ao MEC, solicitando esclarecimentos sobre as transferências federais para educação básica em 2024. Inclua dados reais das transferências recebidas"
 
-### O Que Acontece
+### Что делает агент
 
-O Redator:
+Агент:
 
-1. **Busca transferências reais** via `transparencia_transferencias(uf="CE", funcao="Educação")`
-2. **Gera o ofício** no formato padrão
+1. **Подтягивает фактические перечисления** через `transparencia_transferencias(uf="CE", funcao="Educação")`
+2. **Готовит письмо** в формализованном стиле
 
-### Resultado
+### Результат
 
 ```
 OFÍCIO Nº XX/2024/SEDUC-CE
@@ -243,6 +243,14 @@ O que torna o Redator único é a combinação:
 | Fundamentação legal atualizada | ⚠️ | ✅ (via DataJud/jurisprudência) |
 
 **Redator не выдумывает данные: он подтягивает фактические значения из подключенных госсистем и оформляет их по официальному шаблону.**
+
+---
+
+## Что осталось доделать
+
+- заменить бразильские нормы оформления и шаблоны на российские требования делопроизводства;
+- перевести примеры с `MEC`, `TCU`, `PNCP`, `CNPJ` и другими бразильскими сущностями на российские органы, реестры и реквизиты;
+- сохранить сам workflow агента Redator, но переписать templates/resources/prompts под русскоязычный официальный документооборот.
 
 ---
 

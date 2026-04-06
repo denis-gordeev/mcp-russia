@@ -17,7 +17,7 @@ from .tools import (
     tabua_mare_por_geolocalizacao,
 )
 
-mcp = FastMCP("mcp-brasil-tabua_mares")
+mcp = FastMCP("mcp-russia-tabua_mares")
 
 # Tools
 mcp.tool(listar_estados_costeiros)

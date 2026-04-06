@@ -9,7 +9,7 @@ from .prompts import analisar_pessoa_to
 from .resources import endpoints_tce_to
 from .tools import buscar_pessoas_to, consultar_processo_to, listar_pautas_to
 
-mcp = FastMCP("mcp-brasil-tce_to")
+mcp = FastMCP("mcp-russia-tce_to")
 
 # Tools
 mcp.tool(buscar_pessoas_to)

@@ -16,7 +16,7 @@ from .tools import (
     buscar_anuncios_por_regiao,
 )
 
-mcp = FastMCP("mcp-brasil-anuncios_eleitorais")
+mcp = FastMCP("mcp-russia-anuncios_eleitorais")
 
 # Tools
 mcp.tool(buscar_anuncios_eleitorais)
