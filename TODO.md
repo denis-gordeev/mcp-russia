@@ -2,6 +2,22 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-04-08 (текущий проход)
+
+### Выполнено
+
+- Подчищены user-facing feature metadata в [src/mcp_brasil/data/bacen/__init__.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/bacen/__init__.py), [src/mcp_brasil/data/saude/__init__.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/saude/__init__.py) и [src/mcp_brasil/data/datajud/__init__.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/datajud/__init__.py): эти features теперь явно описаны как legacy/compatibility-layer внутри `mcp-russia`, а не как финальный российский продуктовый слой.
+- Обновлены prompts в [src/mcp_brasil/data/bacen/prompts.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/bacen/prompts.py), [src/mcp_brasil/data/saude/prompts.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/saude/prompts.py) и [src/mcp_brasil/data/datajud/prompts.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/datajud/prompts.py): они теперь требуют явно помечать бразильскую юрисдикцию и не смешивать эти источники с целевыми российскими моделями данных.
+- Обновлены runtime-названия feature servers в [src/mcp_brasil/data/bacen/server.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/bacen/server.py), [src/mcp_brasil/data/saude/server.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/saude/server.py) и [src/mcp_brasil/data/datajud/server.py](/Users/denis/programming/autowork/mcp-russia/src/mcp_brasil/data/datajud/server.py): прямой брендинг `mcp-brasil` убран из имен FastMCP серверов без переименования namespaces и внутренних Python-путей.
+- Добавлены регрессионные проверки в [tests/data/bacen/test_prompts.py](/Users/denis/programming/autowork/mcp-russia/tests/data/bacen/test_prompts.py) и [tests/test_root_server.py](/Users/denis/programming/autowork/mcp-russia/tests/test_root_server.py), чтобы compatibility-формулировки для `bacen` и `saude` сохранялись в prompts и summary meta-tool `listar_features`.
+- Прогнаны релевантные проверки через `uv run`: `pytest tests/data/bacen/test_prompts.py tests/data/saude/test_integration.py tests/data/datajud/test_integration.py tests/test_root_server.py -q` (`45 passed`).
+
+### Следующие действия
+
+- Продолжить такой же проход по остальным заметным legacy features в `src/mcp_brasil/data/*`, где еще остались `mcp-brasil-*` в runtime names и бразильский narrative в `FeatureMeta` или prompts.
+- Отдельно проверить `resources.py` и tool docstrings для `bacen`, `saude`, `datajud` и соседних модулей: там все еще много прямых ссылок на бразильские доменные сущности без явной пометки compatibility-layer.
+- После выравнивания user-facing metadata подготовить отдельный план по содержательной замене наиболее заметных бразильских источников на российские аналоги, начиная с экономики, здравоохранения и судебных данных.
+
 ## Статус раунда 2026-04-06 (текущий проход)
 
 ### Выполнено

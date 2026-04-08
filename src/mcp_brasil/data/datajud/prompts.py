@@ -13,8 +13,11 @@ def analise_processo(numero_processo: str, tribunal: str = "tjsp") -> str:
         tribunal: Sigla do tribunal (ex: tjsp, trf1, stj).
     """
     return (
-        f"Faça uma análise completa do processo {numero_processo} "
-        f"no {tribunal.upper()} usando os dados do DataJud.\n\n"
+        f"Сделай полный разбор процесса {numero_processo} "
+        f"в {tribunal.upper()} по данным DataJud.\n"
+        "Это переходный бразильский судебный источник внутри mcp-russia, "
+        "поэтому не смешивай его с российскими судебными системами и явно "
+        "обозначай юрисдикцию.\n\n"
         "Passos:\n"
         f"1. Use buscar_processo_por_numero(numero_processo='{numero_processo}', "
         f"tribunal='{tribunal}') para obter detalhes\n"
@@ -25,7 +28,8 @@ def analise_processo(numero_processo: str, tribunal: str = "tjsp") -> str:
         "- Partes envolvidas (polo ativo e passivo)\n"
         "- Cronologia das movimentações relevantes\n"
         "- Situação atual do processo\n"
-        "- Observações sobre prazos ou próximos passos"
+        "- Observações sobre prazos ou próximos passos\n"
+        "- Nota de escopo: вывод относится к бразильской системе tribunais"
     )
 
 
@@ -39,8 +43,10 @@ def pesquisa_juridica(tema: str, tribunal: str = "tjsp") -> str:
         tribunal: Sigla do tribunal. Default: tjsp.
     """
     return (
-        f"Faça uma pesquisa jurídica sobre '{tema}' "
-        f"no {tribunal.upper()} usando o DataJud.\n\n"
+        f"Сделай юридический обзор по теме '{tema}' "
+        f"в {tribunal.upper()} на основе DataJud.\n"
+        "Считай DataJud legacy-источником Бразилии в составе mcp-russia "
+        "и помечай это в финальном ответе.\n\n"
         "Passos:\n"
         f"1. Use buscar_processos(query='{tema}', tribunal='{tribunal}') "
         "para encontrar processos relevantes\n"
@@ -53,5 +59,6 @@ def pesquisa_juridica(tema: str, tribunal: str = "tjsp") -> str:
         "- Principais classes processuais usadas\n"
         "- Órgãos julgadores mais frequentes\n"
         "- Resumo dos processos mais relevantes\n"
-        "- Tendências observadas (se houver)"
+        "- Tendências observadas (se houver)\n"
+        "- Ограничения переноса: результаты относятся к бразильской судебной практике"
     )

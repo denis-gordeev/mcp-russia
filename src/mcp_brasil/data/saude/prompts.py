@@ -8,7 +8,7 @@ from __future__ import annotations
 
 
 def analise_rede_saude(codigo_municipio: str) -> str:
-    """Gera uma análise da rede de saúde de um município.
+    """Gera uma análise сети здравоохранения по legacy-данным Бразилии.
 
     Cria um template de análise que orienta o LLM a consultar dados
     de estabelecimentos, profissionais e leitos hospitalares do município.
@@ -17,8 +17,10 @@ def analise_rede_saude(codigo_municipio: str) -> str:
         codigo_municipio: Código IBGE do município (ex: "355030" para São Paulo).
     """
     return (
-        f"Faça uma análise da rede de saúde do município {codigo_municipio} "
-        "usando os dados do CNES/DataSUS.\n\n"
+        f"Сделай разбор сети здравоохранения муниципалитета {codigo_municipio} "
+        "по данным CNES/DataSUS.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
         "Passos:\n"
         f"1. Use buscar_estabelecimentos(codigo_municipio='{codigo_municipio}') "
         "para listar os estabelecimentos de saúde\n"
@@ -31,5 +33,6 @@ def analise_rede_saude(codigo_municipio: str) -> str:
         "- Quantidade e tipos de estabelecimentos\n"
         "- Distribuição de profissionais por especialidade\n"
         "- Capacidade de leitos (existentes vs SUS)\n"
-        "- Avaliação geral da cobertura de saúde no município"
+        "- Avaliação geral da cobertura de saúde no município\n"
+        "- Nota de escopo: análise baseada em dados CNES/DataSUS do Brasil"
     )

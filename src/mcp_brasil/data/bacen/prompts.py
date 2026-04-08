@@ -8,7 +8,7 @@ from __future__ import annotations
 
 
 def analise_economica(periodo: str = "últimos 12 meses") -> str:
-    """Gera um panorama da conjuntura econômica brasileira.
+    """Gera um обзор по legacy-макроданным Бразилии.
 
     Cria um template que orienta o LLM a consultar os principais
     indicadores econômicos e produzir uma análise integrada.
@@ -17,7 +17,9 @@ def analise_economica(periodo: str = "últimos 12 meses") -> str:
         periodo: Período de análise (ex: "últimos 12 meses", "2024", "jan/2024 a dez/2024").
     """
     return (
-        f"Faça uma análise da conjuntura econômica brasileira para o período: {periodo}.\n\n"
+        f"Подготовь обзор макроэкономических данных Бразилии за период: {periodo}.\n"
+        "Это legacy-источник внутри mcp-russia: используй его как справочный "
+        "compatibility-layer и не выдавай за финальную российскую модель данных.\n\n"
         "Passos:\n"
         "1. Use indicadores_atuais() para obter o panorama atual "
         "(Selic, IPCA, IPCA 12m, Dólar, IBC-Br)\n"
@@ -29,7 +31,8 @@ def analise_economica(periodo: str = "últimos 12 meses") -> str:
         "- Resumo executivo dos indicadores atuais\n"
         "- Tendência de cada indicador (alta, estável, queda)\n"
         "- Relações entre os indicadores (ex: Selic vs IPCA, câmbio vs IBC-Br)\n"
-        "- Perspectiva geral: a economia está aquecendo, desaquecendo ou estável?"
+        "- Perspectiva geral: a economia está aquecendo, desaquecendo ou estável?\n"
+        "- Ограничения: явно отметь, что вывод основан на данных Banco Central do Brasil"
     )
 
 
@@ -46,8 +49,11 @@ def comparar_indicadores(codigos: str, periodo: str = "últimos 12 meses") -> st
     codigos_formatados = ", ".join(lista_codigos)
 
     return (
-        f"Compare os seguintes indicadores do Banco Central: {codigos_formatados}\n"
+        f"Compare os seguintes indicadores legacy-слоя Banco Central do Brasil: "
+        f"{codigos_formatados}\n"
         f"Período de análise: {periodo}\n\n"
+        "Контекст: для mcp-russia это переходный бразильский источник, "
+        "поэтому в выводе нужно явно обозначить страну и ограничения интерпретации.\n\n"
         "Passos:\n"
         + "\n".join(
             f"{i + 1}. Use metadados_serie(codigo={c}) para entender cada série"
@@ -63,5 +69,6 @@ def comparar_indicadores(codigos: str, periodo: str = "últimos 12 meses") -> st
         "- Descrição de cada indicador (nome, unidade, periodicidade)\n"
         "- Tabela comparativa com valores recentes\n"
         "- Variação percentual de cada série no período\n"
-        "- Correlações ou relações observadas entre os indicadores"
+        "- Correlações ou relações observadas entre os indicadores\n"
+        "- Nota de escopo: trata-se de indicadores do Banco Central do Brasil"
     )

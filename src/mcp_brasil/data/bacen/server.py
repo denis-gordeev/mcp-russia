@@ -19,7 +19,7 @@ from .tools import (
     ultimos_valores,
 )
 
-mcp = FastMCP("mcp-brasil-bacen")
+mcp = FastMCP("mcp-russia-bacen-legacy")
 
 # Tools
 mcp.tool(consultar_serie, tags={"consulta", "series-temporais", "indicadores"})

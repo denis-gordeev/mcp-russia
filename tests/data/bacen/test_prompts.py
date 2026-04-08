@@ -23,6 +23,11 @@ class TestAnaliseEconomica:
         assert "indicadores_atuais" in result
         assert "ultimos_valores" in result
 
+    def test_marks_legacy_scope(self) -> None:
+        result = analise_economica()
+        assert "mcp-russia" in result
+        assert "legacy" in result.lower()
+
 
 class TestCompararIndicadores:
     def test_returns_string(self) -> None:
@@ -39,6 +44,10 @@ class TestCompararIndicadores:
         result = comparar_indicadores("432,433")
         assert "metadados_serie" in result
         assert "ultimos_valores" in result
+
+    def test_marks_brazilian_scope(self) -> None:
+        result = comparar_indicadores("432,433")
+        assert "Banco Central do Brasil" in result
 
 
 class TestPromptsIntegration:

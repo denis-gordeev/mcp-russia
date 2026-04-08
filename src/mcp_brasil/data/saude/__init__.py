@@ -1,12 +1,12 @@
-"""Feature Saúde — dados de estabelecimentos de saúde via CNES/DataSUS."""
+"""Legacy feature Saúde — переходный слой CNES/DataSUS внутри mcp-russia."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="saude",
     description=(
-        "CNES/DataSUS: estabelecimentos de saúde, profissionais, "
-        "tipos de estabelecimento e leitos hospitalares."
+        "Legacy-слой CNES/DataSUS внутри mcp-russia: учреждения, "
+        "медперсонал, типы организаций и больничные койки в бразильском контуре."
     ),
     version="0.1.0",
     api_base="https://apidadosabertos.saude.gov.br/cnes",

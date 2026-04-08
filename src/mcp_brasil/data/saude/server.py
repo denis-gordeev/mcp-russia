@@ -14,7 +14,7 @@ from .tools import (
     listar_tipos_estabelecimento,
 )
 
-mcp = FastMCP("mcp-brasil-saude")
+mcp = FastMCP("mcp-russia-saude-legacy")
 
 # Tools (4)
 mcp.tool(buscar_estabelecimentos, tags={"busca", "estabelecimentos", "cnes", "sus"})

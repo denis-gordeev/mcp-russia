@@ -17,7 +17,7 @@ from .tools import (
     consultar_movimentacoes,
 )
 
-mcp = FastMCP("mcp-brasil-datajud")
+mcp = FastMCP("mcp-russia-datajud-legacy")
 
 # Tools (7)
 mcp.tool(buscar_processos, tags={"busca", "processos", "judicial"})
