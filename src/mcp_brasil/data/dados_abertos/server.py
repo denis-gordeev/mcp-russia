@@ -9,7 +9,7 @@ from .prompts import explorar_dados
 from .resources import formatos_disponiveis
 from .tools import buscar_conjuntos, buscar_recursos, detalhar_conjunto, listar_organizacoes
 
-mcp = FastMCP("mcp-brasil-dados-abertos")
+mcp = FastMCP("mcp-russia-dados-abertos")
 
 # Tools
 mcp.tool(buscar_conjuntos, tags={"busca", "datasets", "dados-abertos"})

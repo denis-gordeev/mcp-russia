@@ -15,7 +15,7 @@ from .tools import (
     listar_jurisdicionados_rn,
 )
 
-mcp = FastMCP("mcp-brasil-tce_rn")
+mcp = FastMCP("mcp-russia-tce-rn")
 
 # Tools
 mcp.tool(listar_jurisdicionados_rn)

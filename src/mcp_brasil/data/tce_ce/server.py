@@ -14,7 +14,7 @@ from .tools import (
     listar_municipios_ce,
 )
 
-mcp = FastMCP("mcp-brasil-tce-ce")
+mcp = FastMCP("mcp-russia-tce-ce")
 
 # Tools
 mcp.tool(listar_municipios_ce)

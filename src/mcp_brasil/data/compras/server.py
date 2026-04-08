@@ -12,7 +12,7 @@ from fastmcp import FastMCP
 from .dadosabertos.server import mcp as dadosabertos_mcp
 from .pncp.server import mcp as pncp_mcp
 
-mcp = FastMCP("mcp-brasil-compras")
+mcp = FastMCP("mcp-russia-compras")
 
 # Mount sub-sources with namespace
 mcp.mount(pncp_mcp, namespace="pncp")

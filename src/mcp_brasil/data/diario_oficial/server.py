@@ -9,7 +9,7 @@ from .prompts import investigar_empresa
 from .resources import capitais_cobertas
 from .tools import buscar_cidades, buscar_diarios, buscar_trechos, listar_territorios
 
-mcp = FastMCP("mcp-brasil-diario-oficial")
+mcp = FastMCP("mcp-russia-diario-oficial")
 
 # Tools
 mcp.tool(buscar_diarios, tags={"busca", "diarios-oficiais", "publicacoes"})

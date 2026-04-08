@@ -1,4 +1,8 @@
-"""Prompts for the IBGE feature — analysis templates for LLMs.
+"""Prompts for the IBGE feature — legacy compatibility layer for Brazilian demographic analysis.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian demographic analysis prompts are kept for backward compatibility
+with the historical IBGE integration and are NOT part of the target Russian data model.
 
 Prompts provide reusable message templates that guide LLM interactions.
 They appear in client UIs (e.g., Claude Desktop) as slash-commands.

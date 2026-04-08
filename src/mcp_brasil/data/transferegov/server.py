@@ -15,7 +15,7 @@ from .tools import (
     resumo_emendas_ano,
 )
 
-mcp = FastMCP("mcp-brasil-transferegov")
+mcp = FastMCP("mcp-russia-transferegov")
 
 # Tools
 mcp.tool(buscar_emendas_pix, tags={"busca", "emendas-pix", "transferencias"})

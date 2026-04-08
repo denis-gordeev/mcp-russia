@@ -1,12 +1,12 @@
 # Fiscalização Municipal: Onde Vai o Dinheiro da Sua Cidade
 
-> Todos os dados extraídos ao vivo de APIs públicas brasileiras usando o mcp-brasil: TCEs (9 estados), Portal da Transparência, PNCP, TransfereGov e IBGE.
+> Пример показывает, как в `mcp-russia` можно собирать муниципальную картину из открытых государственных API. Источники и feature-имена ниже частично остаются в legacy-совместимом виде, унаследованном от исходного проекта.
 
 ---
 
 ## O Que Este Exemplo Demonstra
 
-Como usar o mcp-brasil para fiscalizar gastos municipais, cruzando dados de **9 Tribunais de Contas Estaduais** com o Portal da Transparência, PNCP (licitações federais) e IBGE (dados populacionais). Uma análise que antes exigia semanas de coleta manual pode ser feita em minutos.
+Как использовать `mcp-russia` для муниципального контроля расходов, сопоставляя данные **9 региональных контрольно-счетных источников** с Portal da Transparencia, PNCP (федеральные закупки) и IBGE (демография). Сценарий по-прежнему опирается на бразильские API как на переходный data-layer, но публичное описание проекта уже русскоязычное.
 
 ---
 
@@ -220,7 +220,7 @@ Compara com necessidades reais (IBGE + Saúde/CNES)
 
 ## Comparação Entre Estados: O Poder dos 9 TCEs
 
-O mcp-brasil conecta **9 Tribunais de Contas Estaduais**. Isso permite comparações inéditas:
+В текущем compatibility-слое `mcp-russia` связывает **9 Tribunais de Contas Estaduais**. Это позволяет строить сквозные сравнения между регионами:
 
 > Prompt: "Compare os gastos per capita com saúde dos municípios-capital de SP, RJ, RS, SC, PE, CE, RN, PI e TO"
 
@@ -281,4 +281,4 @@ Usando `executar_lote`:
 
 _Fontes de dados: APIs dos TCEs (SP, RJ, RS, SC, PE, CE, RN, PI, TO), API do Portal da Transparência, API do PNCP, API do TransfereGov, API do IBGE._
 
-_Nota: Valores ilustrativos para demonstrar as capacidades do mcp-brasil. Use as tools para obter dados reais atualizados. A disponibilidade dos dados varia por estado e período._
+_Примечание: значения в примере иллюстративные и нужны, чтобы показать сценарий работы `mcp-russia`. Для актуальных выводов запускайте tools против живых источников; полнота данных зависит от региона, периода и состояния legacy-интеграций._

@@ -9,7 +9,7 @@ from .prompts import analisar_financas_municipio_sp
 from .resources import endpoints_tce_sp
 from .tools import consultar_despesas_sp, consultar_receitas_sp, listar_municipios_sp
 
-mcp = FastMCP("mcp-brasil-tce-sp")
+mcp = FastMCP("mcp-russia-tce-sp")
 
 # Tools
 mcp.tool(listar_municipios_sp)

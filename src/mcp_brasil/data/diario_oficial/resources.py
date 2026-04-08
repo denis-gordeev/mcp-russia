@@ -1,4 +1,9 @@
-"""Static reference data for the Diário Oficial feature."""
+"""Static reference data for the Diário Oficial feature — legacy compatibility layer.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+Brazilian municipal gazetteer data is kept for backward compatibility
+with the historical Querido Diário integration and is NOT part of the target Russian data model.
+"""
 
 from __future__ import annotations
 

@@ -15,7 +15,7 @@ from .tools import (
     listar_prefeituras_pi,
 )
 
-mcp = FastMCP("mcp-brasil-tce_pi")
+mcp = FastMCP("mcp-russia-tce-pi")
 
 # Tools
 mcp.tool(listar_prefeituras_pi)

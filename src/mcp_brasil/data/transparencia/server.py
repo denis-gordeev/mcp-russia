@@ -28,7 +28,7 @@ from .tools import (
     detalhar_servidor,
 )
 
-mcp = FastMCP("mcp-brasil-transparencia")
+mcp = FastMCP("mcp-russia-transparencia")
 
 # Tools
 mcp.tool(buscar_contratos, tags={"busca", "contratos", "fornecedores"})

@@ -9,7 +9,7 @@ from .prompts import monitoramento_ambiental
 from .resources import biomas_brasileiros, estados_amazonia_legal
 from .tools import alertas_deter, buscar_focos_queimadas, consultar_desmatamento, dados_satelite
 
-mcp = FastMCP("mcp-brasil-inpe")
+mcp = FastMCP("mcp-russia-inpe")
 
 # Tools
 mcp.tool(buscar_focos_queimadas, tags={"busca", "queimadas", "satelite", "ambiental"})

@@ -1,12 +1,14 @@
-"""Feature Diário Oficial — busca em diários oficiais municipais via Querido Diário."""
+"""Legacy-слой Diário Oficial внутри mcp-russia — поиск в официальных
+муниципальных газетах через Querido Diário (compatibility layer)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="diario_oficial",
     description=(
-        "Querido Diário: busca textual em diários oficiais municipais de 5.000+ cidades. "
-        "Contratos, nomeações, sanções, licitações e atos administrativos."
+        "Legacy-слой Querido Diário внутри mcp-russia: "
+        "Текстовый поиск в официальных муниципальных газетах 5000+ городов Бразилии. "
+        "Контракты, назначения, санкции, тендеры и административные акты."
     ),
     version="0.1.0",
     api_base="https://queridodiario.ok.org.br",

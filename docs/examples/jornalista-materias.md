@@ -1,12 +1,12 @@
 # Caso de Uso: Jornalista — Produção de Matérias com Dados
 
-> Como usar o mcp-brasil para apurar, enriquecer e verificar matérias jornalísticas com dados de APIs governamentais em tempo real.
+> Как использовать `mcp-russia` для подготовки, обогащения и проверки журналистских материалов на основе официальных и публичных API. Ниже часть источников и tool IDs все еще указана в legacy-виде, но публичный сценарий уже описывает русскоязычный продуктовый слой.
 
 ---
 
 ## O Diferencial
 
-Diferente do [jornalista investigativo](./jornalista-investigativo.md) (que busca irregularidades), este caso de uso é sobre **jornalismo de dados cotidiano** — produzir matérias com números verificáveis, comparações entre municípios/estados e visualizações baseadas em fontes oficiais.
+В отличие от сценария [jornalista investigativo](./jornalista-investigativo.md), здесь фокус не на выявлении нарушений, а на **повседневной data-driven журналистике**: быстро собрать проверяемые цифры, сравнить регионы или муниципалитеты и получить основу для публикации без ручного обхода десятка порталов.
 
 ---
 
@@ -14,7 +14,7 @@ Diferente do [jornalista investigativo](./jornalista-investigativo.md) (que busc
 
 ### A Pauta
 
-Comparar as despesas de gabinete dos deputados federais — quem gasta mais, quem gasta menos, e em quê.
+Сравнить представительские и аппаратные расходы парламентариев: кто тратит больше всего, кто экономит и какие категории расходов доминируют.
 
 ### A Apuração
 
@@ -71,7 +71,7 @@ Deputados que usaram > 90% da cota: 47 de 513
 
 ### A Pauta
 
-Comparar a infraestrutura de saúde entre estados brasileiros — leitos, profissionais, gastos.
+Сравнить инфраструктуру здравоохранения между регионами: койки, кадры, расходы и итоговые показатели.
 
 ### A Apuração
 
@@ -121,7 +121,7 @@ MAPA DA SAÚDE PÚBLICA — 2024
 
 ### A Pauta
 
-Explicar o impacto da alta de juros na vida cotidiana.
+Показать, как изменение ключевой ставки и инфляции влияет на повседневные расходы домохозяйств и стоимость кредита.
 
 ### A Apuração
 
@@ -158,9 +158,9 @@ JUROS REAIS — COMPARATIVO INTERNACIONAL
   🇯🇵 Japão       █░░░░░░░░░░░░░░░░░░  -0,1%
 ```
 
-### O Lead da Matéria
+### O lead da matéria
 
-> "Com a Selic em 14,25% e inflação de 5,06%, o Brasil tem o maior juro real do mundo entre as grandes economias: 9,19%. Um financiamento de R$ 300 mil que custava R$ 1.580/mês em 2021 (Selic a 2%) hoje custa R$ 2.890 — 83% a mais. Dados: Banco Central do Brasil."
+> "При ключевой ставке 14,25% и инфляции 5,06% реальная ставка достигает 9,19%. Кредит на R$ 300 тыс., который в 2021 году обходился в R$ 1.580 в месяц, теперь стоит около R$ 2.890. Источник: данные центрального банка и официальной статистики."
 
 ---
 
@@ -168,7 +168,7 @@ JUROS REAIS — COMPARATIVO INTERNACIONAL
 
 ### A Pauta
 
-Cobrir a temporada de queimadas com dados reais do INPE.
+Покрыть сезон природных пожаров и связанных климатических рисков на основе официальных данных наблюдения.
 
 ### A Apuração
 
@@ -210,7 +210,7 @@ API: diario_oficial_buscar(termo="emergencia ambiental queimadas")
 
 ### A Pauta
 
-Acompanhar o financiamento de pré-candidatos às eleições de 2026.
+Отслеживать финансирование предвыборной активности и ранние финансовые сигналы кампаний.
 
 ### A Apuração
 
@@ -259,8 +259,10 @@ A ferramenta retorna o roteiro de apuração completo.
 
 ### 4. Dados + Redator = Matéria pronta
 
-Combine as APIs de dados com o agente Redator para gerar textos com formatação profissional e dados verificáveis embutidos.
+Комбинируйте data-tools с агентом Redator, если нужен черновик служебной записки, справки, explainer-текста или структурированного приложения к публикации.
+
+Пока `mcp-russia` находится в миграции, такие сценарии полезно читать как редакционный workflow поверх текущего набора legacy-интеграций: продукт уже русскоязычный, а часть конкретных источников еще требует содержательной замены на российские аналоги.
 
 ---
 
-_Fontes: APIs do Banco Central, IBGE, Câmara dos Deputados, TSE, Portal da Transparência, INPE, ANA, CNES/DataSUS, TCEs, Diário Oficial._
+_Источники: Banco Central, IBGE, парламентские и электоральные API, порталы прозрачности, экологические и отраслевые источники, Diário Oficial и другие сохраненные legacy-интеграции._

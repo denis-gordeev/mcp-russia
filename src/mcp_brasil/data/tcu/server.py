@@ -18,7 +18,7 @@ from .tools import (
     consultar_inidoneos,
 )
 
-mcp = FastMCP("mcp-brasil-tcu")
+mcp = FastMCP("mcp-russia-tcu")
 
 # Tools
 mcp.tool(buscar_acordaos, tags={"busca", "acordaos", "auditoria"})

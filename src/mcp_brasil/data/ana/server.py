@@ -9,7 +9,7 @@ from .prompts import analise_bacia
 from .resources import tipos_estacao
 from .tools import buscar_estacoes, consultar_telemetria, monitorar_reservatorios
 
-mcp = FastMCP("mcp-brasil-ana")
+mcp = FastMCP("mcp-russia-ana")
 
 # Tools
 mcp.tool(buscar_estacoes, tags={"busca", "estacoes", "hidrologia"})

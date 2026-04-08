@@ -25,7 +25,7 @@ from .tools import (
     resultado_por_municipio,
 )
 
-mcp = FastMCP("mcp-brasil-tse")
+mcp = FastMCP("mcp-russia-tse")
 
 # Tools — DivulgaCandContas (9)
 mcp.tool(anos_eleitorais, tags={"listagem", "eleicoes"})

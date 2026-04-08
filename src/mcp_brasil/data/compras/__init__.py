@@ -1,4 +1,4 @@
-"""Feature Compras — contratações públicas federais, estaduais e municipais.
+"""Legacy-слой Compras внутри mcp-russia — публичные закупки Бразилии (compatibility layer).
 
 Sub-packages:
     - pncp: Portal Nacional de Contratações Públicas (Lei 14.133/2021)
@@ -10,8 +10,9 @@ from mcp_brasil._shared.feature import FeatureMeta
 FEATURE_META = FeatureMeta(
     name="compras",
     description=(
-        "Compras públicas: PNCP, Dados Abertos Compras.gov.br (licitações, contratos, "
-        "fornecedores, CATMAT, CATSER, pregões, pesquisa de preços)."
+        "Legacy-слой Compras внутри mcp-russia: "
+        "Публичные закупки Бразилии: PNCP, Dados Abertos Compras.gov.br (тендеры, контракты, "
+        "поставщики, CATMAT, CATSER, аукционы, исследование цен)."
     ),
     version="0.2.0",
     api_base="https://pncp.gov.br/api/consulta",

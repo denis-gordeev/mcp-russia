@@ -1,12 +1,12 @@
 # Análise Legislativa Cruzada: O Caminho de um Projeto de Lei
 
-> Todos os dados extraídos ao vivo de APIs públicas brasileiras usando o mcp-brasil: Câmara dos Deputados, Senado Federal, Diário Oficial, DataJud e TSE.
+> Публичный сценарий для `mcp-russia`: кросс-анализ законодательного процесса по открытым парламентским, судебным и официальным источникам. Внутренние имена некоторых features пока могут оставаться legacy-совместимыми.
 
 ---
 
 ## O Que Este Exemplo Demonstra
 
-Como acompanhar a jornada completa de um projeto de lei — da apresentação na Câmara até a publicação no Diário Oficial — cruzando dados de **5 APIs diferentes** para entender quem propôs, quem votou, quem financiou os votantes e se a lei gerou processos judiciais.
+Как проследить полный путь законопроекта: от внесения в парламент до публикации в официальных источниках, сопоставляя данные из **5 разных API**, чтобы понять, кто выступил инициатором, как проходили голосования, кто финансировал участников кампании и привел ли акт к судебным спорам.
 
 ---
 
@@ -27,7 +27,7 @@ Como acompanhar a jornada completa de um projeto de lei — da apresentação na
 
 ### O Cenário
 
-O Brasil está debatendo a regulamentação da inteligência artificial. Múltiplos projetos tramitam no Congresso. Como acompanhar o que está acontecendo?
+В российской и русскоязычной повестке регулирование искусственного интеллекта обсуждается одновременно на уровне законопроектов, подзаконных актов и судебной практики. Как собрать это в единую аналитическую картину?
 
 ---
 
@@ -116,7 +116,7 @@ Resultado esperado:
 | **Abstenção** | 12 (3%) | 5 (6%) |
 | **Resultado** | Aprovado | Aprovado com emendas |
 
-**Quando o Senado altera o texto, o PL volta à Câmara.** As ferramentas acompanham essa pingue-pongue automaticamente.
+**Когда верхняя палата меняет текст, законопроект возвращается на повторное рассмотрение.** Такой цикл удобно отслеживать в одном сценарии вместо ручного обхода нескольких порталов.
 
 ---
 
@@ -127,7 +127,7 @@ Resultado esperado:
 Ferramentas:
 - `diario_oficial_buscar(termo="inteligencia artificial", tipo="lei")`
 
-O Querido Diário indexa diários oficiais de 5.000+ municípios. Para leis federais, a busca retorna publicações no DOU e repercussões em diários municipais (regulamentações locais).
+Querido Diario агрегирует муниципальные и региональные официальные публикации. Для федеральных актов поиск помогает увидеть не только публикацию в центральном источнике, но и локальные акты применения или имплементации.
 
 ---
 
@@ -191,7 +191,7 @@ Contestação judicial (DataJud/STF)
 Jurisprudência (STF/STJ/TST)
 ```
 
-**6 APIs diferentes, uma narrativa completa.**
+**Несколько API и один связный аналитический контур.**
 
 ---
 
@@ -226,7 +226,7 @@ Ferramentas:
 - `senado_texto_materia(codigo=...)` — texto do Senado
 - `senado_emendas_materia(codigo=...)` — emendas que alteraram o texto
 
-O LLM pode comparar os textos e destacar as diferenças substanciais.
+LLM может сопоставить редакции и выделить содержательные расхождения без ручной вычитки больших массивов текста.
 
 ---
 
@@ -254,6 +254,8 @@ Para gerar uma estimativa de como a votação pode se desenrolar.
 ## Usando `planejar_consulta` Para Análise Completa
 
 > Prompt: "Faça uma análise completa do PL 2338/2023 sobre IA: tramitação, votações, autores, financiamento dos votantes e processos judiciais"
+
+Публично этот сценарий относится к `mcp-russia`, даже если внутри отдельные tool IDs и модули еще используют исторические namespaced-алиасы.
 
 A meta-tool gera:
 
@@ -290,7 +292,7 @@ Etapa 6 — Publicação:
 
 ## O Poder da Análise Cruzada
 
-O que torna o mcp-brasil único não é acessar cada API individualmente — é **cruzar todas elas**:
+Ключевая ценность `mcp-russia` не в доступе к каждой API по отдельности, а в том, чтобы **сшивать их между собой**:
 
 | Pergunta | APIs Necessárias |
 |----------|-----------------|
@@ -301,7 +303,7 @@ O que torna o mcp-brasil único não é acessar cada API individualmente — é 
 | "Os doadores dos votantes se beneficiam da lei?" | TSE + Transparência + PNCP |
 | "Qual a repercussão nos municípios?" | Diário Oficial (municipal) |
 
-**Nenhuma dessas perguntas pode ser respondida por uma API sozinha.** O valor está na combinação.
+**Ни на один из этих вопросов нельзя полноценно ответить одной API.** Практическая ценность возникает именно на стыке источников.
 
 ---
 
@@ -323,4 +325,4 @@ O que torna o mcp-brasil único não é acessar cada API individualmente — é 
 
 _Fontes de dados: API da Câmara dos Deputados, API do Senado Federal, API do Querido Diário, API do DataJud/CNJ, Jurisprudência STF/STJ/TST, API do TSE, API do Portal da Transparência, API do PNCP._
 
-_Nota: Valores e cenários ilustrativos para demonstrar as capacidades do mcp-brasil. Use as tools para obter dados reais atualizados._
+_Nota: Valores e cenários ilustrativos para demonstrar as capacidades do `mcp-russia` в его текущем переходном состоянии. Используйте tools для получения актуальных данных и учитывайте, что часть внутренних названий пока остается legacy-совместимой._

@@ -1,102 +1,99 @@
-# Caso de Uso: Jornalista Investigativo
+# Caso de Uso: Журналист-расследователь
 
-> Como um jornalista investigativo pode usar o mcp-brasil para cruzar dados públicos e descobrir irregularidades em minutos — trabalho que antes levava semanas.
-
----
-
-## O Problema
-
-Jornalismo investigativo brasileiro depende de dados dispersos em dezenas de portais governamentais. Um repórter que quer investigar gastos de um político precisa consultar manualmente:
-
-- Portal da Transparência (contratos, despesas)
-- TSE (financiamento de campanha)
-- Câmara/Senado (votações, proposições)
-- TCU (irregularidades, condenações)
-- TCEs (gastos estaduais/municipais)
-- PNCP (licitações)
-- DataJud (processos judiciais)
-- Diário Oficial (publicações, nomeações)
-
-**Cada portal tem interface diferente, API diferente, formato diferente.** Cruzar essas bases manualmente consome semanas de trabalho. Com o mcp-brasil, um LLM faz em minutos.
+> Как журналист-расследователь может использовать `mcp-russia`, чтобы быстро сопоставлять открытые данные и находить подозрительные связи в закупках, финансировании и судебных делах.
 
 ---
 
-## Investigação 1: "Quem Ganha com as Emendas?"
+## Проблема
 
-### A Pauta
+Расследовательская журналистика в России и русскоязычном пространстве опирается на данные, разбросанные по десяткам государственных и публичных порталов. Чтобы проверить траты чиновника, депутата или муниципального подрядчика, репортеру обычно приходится вручную просматривать:
 
-Rastrear o caminho das emendas parlamentares — do deputado que destina até a empresa que executa o serviço no município.
+- порталы прозрачности и бюджетной отчетности (контракты, расходы, трансферты);
+- избирательные и парламентские данные (финансирование кампаний, голосования, инициативы);
+- контрольные и аудиторские источники (предписания, нарушения, санкции);
+- региональные и муниципальные порталы закупок;
+- судебные базы и официальные публикации.
 
-### O Roteiro de Consultas
+**У каждого источника свой формат, ограничения и способ поиска.** На ручное сопоставление этих баз уходят дни и недели. `mcp-russia` сводит их к единому набору tools и позволяет быстро собрать проверяемую цепочку фактов.
 
-**1. Mapear as emendas de um deputado**
+---
 
-> Prompt: "Liste todas as emendas parlamentares do deputado [Nome] em 2024, valores e municípios de destino"
+## Расследование 1: «Кто выигрывает от бюджетных трансфертов?»
+
+### Задача
+
+Проследить путь межбюджетного трансферта или депутатского финансирования: от политического решения до подрядчика, который осваивает деньги на месте.
+
+### Сценарий запросов
+
+**1. Найти распределение средств**
+
+> Prompt: "Покажи все трансферты и депутатские средства, связанные с [ФИО/регион] в 2024 году, с суммами и муниципалитетами назначения"
 
 ```
 APIs: transparencia_emendas_parlamentares + transferegov_buscar_emendas
 ```
 
-**2. Identificar os beneficiários finais**
+**2. Определить конечных получателей**
 
-> Prompt: "Para cada município que recebeu emenda, quais empresas foram contratadas com esse dinheiro?"
+> Prompt: "Для каждого муниципалитета, получившего средства, покажи контракты и подрядчиков, которые могли быть профинансированы этими деньгами"
 
 ```
 APIs: tce_[estado]_contratos + pncp_buscar_contratacoes
 ```
 
-**3. Verificar se os beneficiários doaram para a campanha**
+**3. Проверить политические связи бенефициаров**
 
-> Prompt: "Alguma dessas empresas ou seus sócios doaram para a campanha do deputado?"
+> Prompt: "Есть ли у этих компаний или их владельцев политические пожертвования, связи с кампанией или пересечения с публичными реестрами?"
 
 ```
-APIs: tse_receitas_candidato + brasilapi_consultar_cnpj (dados da empresa)
+APIs: электоральные/парламентские источники + `brasilapi_consultar_cnpj` как legacy-слой для корпоративных данных
 ```
 
-**4. Checar antecedentes dos beneficiários**
+**4. Проверить историю нарушений**
 
-> Prompt: "Essas empresas têm penalidades no TCU ou processos no DataJud?"
+> Prompt: "Есть ли у этих компаний санкции, претензии контрольных органов или судебные дела?"
 
 ```
 APIs: tcu_buscar_licitantes_inidoneos + datajud_buscar_processos
 ```
 
-### O Que o Jornalista Encontra
+### Что получает журналист
 
 ```
-CADEIA DOCUMENTAL:
+ДОКУМЕНТАЛЬНАЯ ЦЕПОЧКА:
 
 Deputado X (PL-SP)
 ├── Emenda R$ 5M → Município Y/SP (TransfereGov)
 │   ├── Contrato R$ 4,8M → Empresa ABC Ltda (TCE-SP)
-│   │   ├── Sócios: João da Silva, Maria Santos (BrasilAPI)
-│   │   └── João da Silva doou R$ 50K para Dep. X (TSE 2022)
+│   │   ├── Владельцы: João da Silva, Maria Santos (legacy BrasilAPI)
+│   │   └── João da Silva фигурирует в данных о финансировании кампании Dep. X
 │   └── Dispensa de licitação - valor abaixo de R$ 5M (PNCP)
 │
 ├── Emenda R$ 3M → Município Z/SP (TransfereGov)
 │   ├── Contrato R$ 2,9M → Empresa DEF Ltda (TCE-SP)
-│   │   └── Mesmo endereço que Empresa ABC (BrasilAPI)
-│   └── Empresa DEF tem penalidade no TCE-RJ (TCE-RJ)
+│   │   └── Совпадает адрес с Empresa ABC (legacy BrasilAPI)
+│   └── Empresa DEF уже упоминалась в материалах контрольного органа
 │
 └── Emenda R$ 2M → Município W/SP (TransfereGov)
-    └── Sem contratação registrada ⚠️ Cadê o dinheiro?
+    └── Контракт не найден ⚠️ Нужно разбирать движение средств дальше
 ```
 
-**Cada elo da cadeia é verificável em fontes oficiais.** O jornalista tem números de documentos, CNPJs, datas e valores para citar na reportagem.
+**Каждое звено этой цепочки можно подтвердить ссылкой на источник.** На выходе у редакции есть даты, суммы, идентификаторы контрактов и юридические сущности, пригодные для публикации и фактчека.
 
 ---
 
-## Investigação 2: "Os Fantasmas do Funcionalismo"
+## Расследование 2: «Мертвые души в ведомстве»
 
-### A Pauta
+### Задача
 
-Identificar servidores fantasmas — pessoas que recebem salário mas não trabalham efetivamente.
+Выявить сотрудников или подрядчиков, которые числятся в выплатных ведомостях, но их фактическая работа вызывает сомнения.
 
-### O Roteiro de Consultas
+### Сценарий запросов
 
 **1. Buscar servidores de um órgão**
 
-> Prompt: "Liste os servidores do [Órgão] com os maiores salários em 2024"
+> Prompt: "Покажи сотрудников или исполнителей [ведомства] с наибольшими выплатами в 2024 году"
 
 ```
 API: transparencia_servidores(orgao="...")
@@ -104,7 +101,7 @@ API: transparencia_servidores(orgao="...")
 
 **2. Cruzar com outros vínculos**
 
-> Prompt: "Algum desses servidores também tem vínculo em outro órgão ou mandato eletivo?"
+> Prompt: "Есть ли у этих людей параллельные назначения, контракты или связи с выборными должностями?"
 
 ```
 APIs: transparencia_servidores + camara_buscar_deputados + senado_buscar_senadores
@@ -112,7 +109,7 @@ APIs: transparencia_servidores + camara_buscar_deputados + senado_buscar_senador
 
 **3. Verificar se há processos judiciais**
 
-> Prompt: "Algum desses servidores tem processos relacionados a improbidade administrativa?"
+> Prompt: "Есть ли у этих людей судебные дела по коррупции, злоупотреблениям или конфликту интересов?"
 
 ```
 APIs: datajud_buscar_processos(assunto="improbidade")
@@ -120,7 +117,7 @@ APIs: datajud_buscar_processos(assunto="improbidade")
 
 **4. Buscar no Diário Oficial**
 
-> Prompt: "Busque publicações no Diário Oficial sobre nomeação e exoneração desses servidores"
+> Prompt: "Найди официальные публикации о назначении, переводе или увольнении этих людей"
 
 ```
 API: diario_oficial_buscar(termo="[nome do servidor]")
@@ -128,17 +125,17 @@ API: diario_oficial_buscar(termo="[nome do servidor]")
 
 ---
 
-## Investigação 3: "Licitações Dirigidas"
+## Расследование 3: «Закупки под своего поставщика»
 
-### A Pauta
+### Задача
 
-Identificar licitações em que sempre vence a mesma empresa, sugerindo direcionamento.
+Найти закупки, где регулярно побеждает одна и та же компания, что может указывать на заранее заданный результат.
 
 ### O Roteiro de Consultas
 
 **1. Buscar licitações de um município**
 
-> Prompt: "Liste todas as licitações da Prefeitura de [Município] nos últimos 2 anos"
+> Prompt: "Покажи все закупки администрации [муниципалитета] за последние 2 года"
 
 ```
 APIs: tce_[estado]_licitacoes + pncp_buscar_contratacoes
@@ -148,10 +145,10 @@ APIs: tce_[estado]_licitacoes + pncp_buscar_contratacoes
 
 > Prompt: "Quais empresas venceram mais licitações? Alguma venceu em múltiplas categorias diferentes?"
 
-O LLM agrupa automaticamente e identifica concentração:
+LLM автоматически группирует победителей и показывает концентрацию:
 
 ```
-CONCENTRAÇÃO DE VENCEDORES:
+КОНЦЕНТРАЦИЯ ПОБЕДИТЕЛЕЙ:
 
 Empresa GHI Ltda:
   ├── Pregão 001/2023 - Material escolar      R$ 890K   ✅ venceu
@@ -159,12 +156,12 @@ Empresa GHI Ltda:
   ├── Pregão 023/2024 - Combustíveis          R$ 1,2M   ✅ venceu
   ├── Pregão 031/2024 - Alimentação escolar   R$ 780K   ✅ venceu
   └── Total: 4 de 4 licitações = 100% de aproveitamento
-      ⚠️ Empresa vende material escolar E combustíveis E alimentos?
+      ⚠️ Один поставщик одновременно продает канцтовары, топливо и продукты?
 ```
 
 **3. Verificar se houve impugnação**
 
-> Prompt: "Alguma dessas licitações foi impugnada ou questionada judicialmente?"
+> Prompt: "Оспаривались ли эти закупки в суде или у контрольных органов?"
 
 ```
 APIs: tcu_buscar_acordaos(assunto="licitação [município]") + datajud_buscar_processos
@@ -172,7 +169,7 @@ APIs: tcu_buscar_acordaos(assunto="licitação [município]") + datajud_buscar_p
 
 **4. Checar vínculos entre empresa e gestores**
 
-> Prompt: "Consulte o CNPJ da empresa vencedora e verifique quem são os sócios"
+> Prompt: "Проверь регистрационные данные победителя и покажи владельцев"
 
 ```
 API: brasilapi_consultar_cnpj(cnpj="...")
@@ -180,17 +177,17 @@ API: brasilapi_consultar_cnpj(cnpj="...")
 
 ---
 
-## Investigação 4: "Saúde Pública em Colapso"
+## Расследование 4: «Сбой в системе здравоохранения»
 
-### A Pauta
+### Задача
 
-Investigar a situação da saúde pública em um município — infraestrutura, profissionais e gastos.
+Проверить состояние здравоохранения в муниципалитете: инфраструктуру, кадры, расходы и соответствие нормативам.
 
-### O Roteiro de Consultas
+### Сценарий запросов
 
 **1. Infraestrutura de saúde**
 
-> Prompt: "Quantos hospitais, UPAs e UBSs existem em [Município]? Quantos leitos?"
+> Prompt: "Сколько больниц, поликлиник и коек есть в [муниципалитете]?"
 
 ```
 API: saude_buscar_estabelecimentos(municipio="...", tipo="hospital")
@@ -198,7 +195,7 @@ API: saude_buscar_estabelecimentos(municipio="...", tipo="hospital")
 
 **2. Gastos com saúde**
 
-> Prompt: "Quanto a prefeitura gastou com saúde em 2024? Cumpriu o mínimo de 15%?"
+> Prompt: "Сколько местный бюджет потратил на здравоохранение в 2024 году и выполнены ли нормативы?"
 
 ```
 APIs: tce_[estado]_despesas(funcao="Saúde") + tce_[estado]_receitas
@@ -206,7 +203,7 @@ APIs: tce_[estado]_despesas(funcao="Saúde") + tce_[estado]_receitas
 
 **3. Transferências federais**
 
-> Prompt: "Quanto o município recebeu do SUS em transferências federais?"
+> Prompt: "Сколько муниципалитет получил целевых межбюджетных трансфертов на здравоохранение?"
 
 ```
 API: transparencia_transferencias(municipio="...", funcao="Saúde")
@@ -214,7 +211,7 @@ API: transparencia_transferencias(municipio="...", funcao="Saúde")
 
 **4. Comparar com municípios vizinhos**
 
-> Prompt: "Compare os gastos per capita com saúde de [Município] com os 5 municípios vizinhos"
+> Prompt: "Сравни расходы на здравоохранение на душу населения в [муниципалитете] и пяти соседних муниципалитетах"
 
 ```
 APIs: ibge_buscar_municipios + tce_[estado]_despesas (em lote)
@@ -222,7 +219,7 @@ APIs: ibge_buscar_municipios + tce_[estado]_despesas (em lote)
 
 **5. Verificar óbitos e causas**
 
-> Prompt: "Há dados sobre mortalidade evitável nesse município?"
+> Prompt: "Есть ли показатели предотвратимой смертности и других проблемных исходов по этому муниципалитету?"
 
 ```
 API: ibge_consultar_agregado(agregado=...) — indicadores de saúde
@@ -230,32 +227,32 @@ API: ibge_consultar_agregado(agregado=...) — indicadores de saúde
 
 ---
 
-## Ferramentas do Jornalista no mcp-brasil
+## Инструменты журналиста в `mcp-russia`
 
-### `planejar_consulta` — O Editor de Pauta Digital
+### `planejar_consulta` — цифровой редакторский план
 
-> Prompt: "Quero investigar possíveis irregularidades na prefeitura de [Município]. Crie um plano de investigação"
+> Prompt: "Хочу проверить возможные нарушения в администрации [муниципалитета]. Составь план расследования"
 
 A ferramenta retorna um plano estruturado:
 
 ```
-Plano de Investigação: Prefeitura de [Município]
+План расследования: администрация [муниципалитета]
 ═══════════════════════════════════════════════
 
 1. PANORAMA FISCAL
    ├── tce_[estado]_despesas → gastos por função
    ├── tce_[estado]_receitas → arrecadação
-   └── Meta: verificar limites LRF (pessoal, endividamento)
+   └── Цель: проверить бюджетные лимиты и аномалии
 
 2. LICITAÇÕES E CONTRATOS
    ├── tce_[estado]_licitacoes → processos licitatórios
    ├── pncp_buscar_contratacoes → contratações federais
-   └── Meta: identificar concentração de fornecedores
+   └── Цель: выявить концентрацию поставщиков
 
 3. EMENDAS E TRANSFERÊNCIAS
-   ├── transferegov_buscar_emendas → emendas PIX
+   ├── transferegov_buscar_emendas → специальные и иные трансферты
    ├── transparencia_transferencias → repasses federais
-   └── Meta: rastrear destino dos recursos
+   └── Цель: проследить маршрут денег
 
 4. VERIFICAÇÃO DE IRREGULARIDADES
    ├── tcu_buscar_acordaos → decisões do TCU
@@ -263,7 +260,7 @@ Plano de Investigação: Prefeitura de [Município]
    └── datajud_buscar_processos → processos judiciais
 ```
 
-### `executar_lote` — A Apuração em Paralelo
+### `executar_lote` — параллельная проверка
 
 Uma única chamada dispara consultas em múltiplas APIs simultaneamente:
 
@@ -276,35 +273,35 @@ Uma única chamada dispara consultas em múltiplas APIs simultaneamente:
 ]
 ```
 
-4 fontes, 1 chamada, todos os dados em paralelo.
+4 источника, 1 вызов, вся первичка собирается параллельно.
 
-### `recomendar_tools` — Quando Não Sabe Por Onde Começar
+### `recomendar_tools` — когда непонятно, с чего начать
 
-> Prompt: "Quero investigar fraudes em licitações. Quais ferramentas devo usar?"
+> Prompt: "Хочу проверить закупочные манипуляции. Какие инструменты лучше использовать?"
 
 ```
 API: recomendar_tools(query="fraudes em licitações municipais")
 ```
 
-Retorna as tools mais relevantes com explicação de quando usar cada uma.
+Возвращает подходящие tools и объясняет, в какой последовательности их лучше запускать.
 
 ---
 
-## Checklist do Jornalista Investigativo
+## Чеклист для журналистского расследования
 
 | Etapa | O Que Verificar | APIs |
 |-------|----------------|------|
 | 1. Financiamento | Quem doou para a campanha | TSE |
 | 2. Votações | Como votou e em favor de quem | Câmara/Senado |
-| 3. Emendas | Para onde destinou recursos | Transparência/TransfereGov |
+| 3. Трансферты | Куда ушли средства | Transparência/TransfereGov |
 | 4. Contratos | Quem recebeu os contratos | TCE/PNCP/Transparência |
-| 5. Vínculos | Doadores = Contratados? | TSE + BrasilAPI + TCE |
+| 5. Связи | Доноры/контакты совпадают с подрядчиками? | электоральные данные + legacy BrasilAPI + TCE |
 | 6. Antecedentes | Empresa/pessoa na lista suja? | TCU + DataJud |
 | 7. Publicações | O que foi publicado oficialmente | Diário Oficial |
 | 8. Jurisprudência | Há processos ou condenações? | DataJud + STF/STJ |
 
-**Cada elo pode ser documentado com fonte oficial — essencial para publicação jornalística.**
+`mcp-russia` полезен здесь не как «готовый вывод», а как слой оркестрации между источниками. Публикуется только то, что подтверждается первичными данными.
 
 ---
 
-_Fontes: APIs da Câmara, Senado, TSE, Portal da Transparência, TCU, 9 TCEs, PNCP, Compras.gov.br, DataJud, Jurisprudência STF/STJ, Diário Oficial, BrasilAPI, IBGE, CNES/DataSUS, TransfereGov._
+_Источники: парламентские API, электоральные данные, порталы прозрачности, TCU и TCE, PNCP, судебные базы, Diário Oficial, IBGE, CNES/DataSUS, TransfereGov и сохраненные legacy-интеграции вроде BrasilAPI._

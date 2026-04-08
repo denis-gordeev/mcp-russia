@@ -1,4 +1,8 @@
-"""Prompts for the ANA feature — analysis templates for LLMs.
+"""Prompts for the ANA feature — legacy compatibility layer for Brazilian hydrological analysis.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian hydrological analysis prompts are kept for backward compatibility
+with the historical ANA integration and are NOT part of the target Russian data model.
 
 Prompts provide reusable message templates that guide LLM interactions.
 """

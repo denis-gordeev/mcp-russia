@@ -1,24 +1,24 @@
 # Caso de Uso: Cientista Político — Comportamento Legislativo, Coalizões e Poder
 
-> Como pesquisadores em ciência política podem usar o mcp-brasil para estudar votações nominais, formação de coalizões, fidelidade partidária, emendas parlamentares e financiamento eleitoral com dados primários de APIs oficiais.
+> Публичный сценарий для `mcp-russia`: как исследователи политических институтов могут изучать поименные голосования, коалиции, дисциплину фракций, распределение трансфертов и электоральное финансирование на основе официальных API. Часть внутренних feature-имен ниже пока сохранена в legacy-совместимом виде.
 
 ---
 
-## Por Que o mcp-brasil Para Ciência Política
+## Почему `mcp-russia` полезен для политического анализа
 
-A ciência política brasileira depende de bases de dados que historicamente exigem scraping manual, downloads de CSV e limpeza exaustiva. O mcp-brasil dá acesso programático a:
+Для политической науки в русскоязычном контуре главная проблема обычно одна и та же: данные о парламентской активности, финансировании, трансфертах и судебных спорах лежат в разрозненных системах, где без ручной выгрузки и чистки быстро не обойтись. `mcp-russia` собирает такой исследовательский контур в единую точку входа, а текущие бразильские интеграции выступают как переходный compatibility-layer:
 
 | Base | Feature | Relevância |
 |------|---------|-----------|
 | **Câmara dos Deputados** | `camara` (10 tools) | Votações nominais, proposições, comissões, despesas |
 | **Senado Federal** | `senado` (26 tools) | Votações, matérias, composição de comissões, agenda |
-| **TSE** | `tse` (15 tools) | Financiamento eleitoral, candidaturas, resultados |
-| **Portal da Transparência** | `transparencia` (18 tools) | Emendas, transferências, contratos |
-| **TransfereGov** | `transferegov` (5 tools) | Emendas PIX, transferências especiais |
+| **TSE** | `tse` (15 tools) | Электоральное финансирование, кандидаты, результаты |
+| **Portal da Transparência** | `transparencia` (18 tools) | Трансферты, выплаты, контракты |
+| **TransfereGov** | `transferegov` (5 tools) | Специальные трансферты и иные межбюджетные перечисления |
 | **Diário Oficial** | `diario_oficial` (4 tools) | Publicações, nomeações, regulamentações |
 | **DataJud** | `datajud` (7 tools) | Processos, judicialização da política |
 
-**Total: 85 tools diretamente relevantes para pesquisa em ciência política.**
+**Итого: 85 tools, полезных для сравнительного институционального анализа уже сейчас.**
 
 ---
 
@@ -26,7 +26,7 @@ A ciência política brasileira depende de bases de dados que historicamente exi
 
 ### A Pergunta de Pesquisa
 
-Qual o grau de fidelidade partidária na Câmara dos Deputados? Quais partidos são mais coesos? Quais deputados mais divergem de seus partidos?
+Каков уровень фракционной дисциплины в парламенте? Какие объединения голосуют наиболее слаженно, а какие депутаты чаще других расходятся с линией своей политической силы?
 
 ### Metodologia
 
@@ -108,7 +108,7 @@ Deputado              Partido   Fidelidade   Divergências
 
 ### A Pergunta de Pesquisa
 
-Qual o tamanho real da base governista? Ela se mantém estável ou varia por tema?
+Каков реальный размер проправительственной коалиции? Сохраняется ли она от голосования к голосованию или разваливается на отдельных темах?
 
 ### Metodologia
 
@@ -167,7 +167,7 @@ votam com a oposição conservadora.
 
 ### A Pergunta de Pesquisa
 
-As emendas parlamentares são distribuídas por critérios sociais (necessidade) ou políticos (base aliada)?
+Распределяются ли парламентские трансферты по социальным критериям или решающую роль играют политические связи и электоральные интересы?
 
 ### Metodologia
 
@@ -222,7 +222,7 @@ Interpretação:
   recebem um pouco mais, mas efeito é fraco vs. político
 ```
 
-**5. Mapear concentração geográfica**
+**5. Проверить географическую концентрацию**
 
 > Prompt: "Quais municípios mais receberam emendas per capita? São redutos eleitorais de quais deputados?"
 
@@ -244,6 +244,8 @@ Município         UF   Pop.     Emendas/cap   Dep. que enviou    Votação do d
 
 Correlação: emendas/capita × votação do deputado no município = +0,61
 ```
+
+Даже в этом примере `mcp-russia` следует читать как публичную исследовательскую оболочку: конкретные calls к `tse_*`, `transferegov_*` и другим legacy tools пока отражают текущее состояние исходного data-layer, а не финальную российскую модель данных.
 
 ---
 
@@ -459,7 +461,7 @@ Até 25 consultas por lote, múltiplos lotes em sequência = cobertura total.
 
 ### `recomendar_tools` — Descoberta de Dados
 
-> Prompt: "Quais dados sobre comportamento legislativo estão disponíveis no mcp-brasil?"
+> Prompt: "Какие данные о законодательном поведении уже доступны в `mcp-russia`?"
 
 Retorna as ferramentas mais relevantes com descrição de cada uma.
 
@@ -537,6 +539,6 @@ Retorna as ferramentas mais relevantes com descrição de cada uma.
 
 ---
 
-_Fontes: API da Câmara dos Deputados (10 tools), API do Senado Federal (26 tools), API do TSE (15 tools), API do Portal da Transparência (18 tools), API do TransfereGov (5 tools), API do DataJud (7 tools), Jurisprudência STF/STJ/TST (6 tools), API do IBGE (9 tools), API do Banco Central (9 tools)._
+_Источники: парламентские API, электоральные данные, Portal da Transparencia, TransfereGov, DataJud, судебная практика, IBGE, Banco Central и другие legacy-интеграции исходного проекта._
 
-_Nota: Resultados e coeficientes são ilustrativos para demonstrar as capacidades analíticas. Use as tools para obter dados reais e construir seus próprios modelos._
+_Примечание: коэффициенты и результаты в примере иллюстративные. Для реального исследования запускайте tools на живых данных и отдельно фиксируйте, какие сущности пока используются как compatibility-слой, а какие уже перенесены в русскоязычное позиционирование `mcp-russia`._

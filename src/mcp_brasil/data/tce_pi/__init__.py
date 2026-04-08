@@ -1,12 +1,13 @@
-"""Feature TCE-PI — Portal da Cidadania do Tribunal de Contas do Piauí."""
+"""Legacy-слой TCE-PI внутри mcp-russia — Tribunal de Contas do Piauí (compatibility layer)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="tce_pi",
     description=(
-        "TCE-PI: prefeituras, despesas, receitas e órgãos do Piauí "
-        "via API do Portal da Cidadania do TCE-PI."
+        "Legacy-слой TCE-PI внутри mcp-russia: "
+        "Префектуры, расходы, доходы и органы штата Пиауи "
+        "через API портала гражданского участия TCE-PI."
     ),
     version="0.1.0",
     api_base="https://sistemas.tce.pi.gov.br/api/portaldacidadania",

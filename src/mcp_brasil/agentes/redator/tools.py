@@ -1,4 +1,9 @@
-"""Tool functions for the Redator Oficial feature.
+"""Tool functions for the Redator Oficial feature — legacy compatibility layer.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian official document formatting tools are kept for backward compatibility
+with the historical redator integration based on Manual de Redação da Presidência da República
+and are NOT part of the target Russian data model.
 
 Based on Manual de Redação da Presidência da República, 3ª edição (2018).
 

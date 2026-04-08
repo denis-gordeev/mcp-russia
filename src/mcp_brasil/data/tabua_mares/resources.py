@@ -1,4 +1,8 @@
-"""Static reference data for the Tabua Mares feature.
+"""Static reference data for the Tabua Mares feature — legacy compatibility layer.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+Brazilian coastal tide table data is kept for backward compatibility
+with the historical maritime integration and is NOT part of the target Russian data model.
 
 Resources are read-only data sources that clients can pull.
 They provide context to LLMs without requiring tool calls.

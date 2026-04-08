@@ -15,7 +15,7 @@ from .tools import (
     buscar_unidades_pe,
 )
 
-mcp = FastMCP("mcp-brasil-tce-pe")
+mcp = FastMCP("mcp-russia-tce-pe")
 
 # Tools
 mcp.tool(buscar_unidades_pe)

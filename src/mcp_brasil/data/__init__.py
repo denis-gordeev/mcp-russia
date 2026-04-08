@@ -1,1 +1,2 @@
-"""Data features — API integrations for Brazilian public data sources."""
+"""Data features — legacy переходный слой интеграций с бразильскими
+источниками публичных данных внутри mcp-russia."""

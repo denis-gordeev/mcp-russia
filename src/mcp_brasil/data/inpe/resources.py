@@ -1,7 +1,8 @@
-"""Resources for the INPE feature — static reference data for LLM context.
+"""Resources for the INPE feature — legacy compatibility layer for Brazilian environmental data.
 
-Resources expose read-only data that LLMs can pull for context.
-These are static datasets useful as grounding information.
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian environmental reference datasets are kept for backward compatibility
+with the historical INPE integration and are NOT part of the target Russian data model.
 """
 
 from __future__ import annotations

@@ -38,7 +38,7 @@ from .tools import (
     tipos_materia as tipos_materia_tool,
 )
 
-mcp = FastMCP("mcp-brasil-senado")
+mcp = FastMCP("mcp-russia-senado")
 
 # Tools — Senadores (4)
 mcp.tool(listar_senadores, tags={"listagem", "senadores", "parlamentares"})

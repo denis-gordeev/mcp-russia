@@ -1,10 +1,13 @@
-"""Feature Transparência — Portal da Transparência do Governo Federal."""
+"""Legacy-слой Transparencia внутри mcp-russia — Portal da Transparencia (compatibility layer)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="transparencia",
-    description="Portal da Transparência: contratos, despesas, servidores, licitações, sanções",
+    description=(
+        "Legacy-слой Transparencia внутри mcp-russia: "
+        "Портал прозрачности Бразилии: контракты, расходы, служащие, тендеры, санкции"
+    ),
     version="0.1.0",
     api_base="https://api.portaldatransparencia.gov.br/api-de-dados",
     requires_auth=True,

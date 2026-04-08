@@ -1,14 +1,14 @@
 # Caso de Uso: Relatório Parlamentar (Votação + Emendas + Atividade)
 
-> Como gerar um relatório completo da atividade de um parlamentar, combinando votações, emendas, proposições e despesas.
+> Как в `mcp-russia` собрать единый профиль парламентария: голосования, инициативы, расходы, трансферты и связанные источники в одном отчете. Отдельные названия tools и источников пока остаются legacy-совместимыми.
 
 ---
 
-## O Problema
+## Проблема
 
-Avaliar a atuação de um parlamentar exige consultar múltiplas fontes:
+Чтобы оценить работу депутата или сенатора, обычно приходится вручную собирать сведения из нескольких систем:
 
-| Dado | Fonte | Antes do mcp-brasil |
+| Dado | Fonte | До `mcp-russia` |
 |------|-------|-------------------|
 | Presenças e votações | Câmara/Senado | Navegar portal manualmente |
 | Proposições apresentadas | Câmara/Senado | Buscar uma a uma |
@@ -17,13 +17,13 @@ Avaliar a atuação de um parlamentar exige consultar múltiplas fontes:
 | Financiamento de campanha | TSE | Outro portal |
 | Processos judiciais | DataJud | Outro portal |
 
-**Com o mcp-brasil:** Uma conversa gera o relatório completo.
+**С `mcp-russia`:** один сценарий может собрать сводный отчет и подсветить узкие места для дальнейшей проверки.
 
 ---
 
-## O Relatório: Deputado Federal
+## Отчет по парламентарию
 
-### Etapa 1 — Perfil e Histórico
+### Этап 1 — профиль и история
 
 > Prompt: "Gere um perfil completo do deputado [Nome]: partido, estado, legislaturas, comissões e cargos"
 
@@ -48,7 +48,7 @@ Mandatos anteriores: 2 (2015-2019, 2019-2023)
 
 ---
 
-### Etapa 2 — Atividade Legislativa
+### Этап 2 — законодательная активность
 
 > Prompt: "Quantas proposições o deputado [Nome] apresentou em 2024? Liste por tipo"
 
@@ -79,7 +79,7 @@ Principais temas:
 
 ---
 
-### Etapa 3 — Votações
+### Этап 3 — голосования
 
 > Prompt: "Como o deputado votou nas principais matérias de 2024? Comparar com a orientação do partido e do governo"
 
@@ -112,7 +112,7 @@ VOTAÇÕES MAIS RELEVANTES:
 
 ---
 
-### Etapa 4 — Despesas de Gabinete
+### Этап 4 — расходы
 
 > Prompt: "Detalhe as despesas de gabinete do deputado em 2024. Quais os maiores gastos?"
 
@@ -147,7 +147,7 @@ Fornecedores mais recorrentes:
 
 ---
 
-### Etapa 5 — Emendas Parlamentares
+### Этап 5 — трансферты и распределение средств
 
 > Prompt: "Quais emendas o deputado destinou em 2024? Para quais municípios e áreas?"
 
@@ -165,9 +165,9 @@ Total destinado: R$ 25.380.000,00
 Por tipo:
   ├── Emendas individuais:    R$ 18.000.000
   ├── Emendas de bancada:     R$  5.380.000
-  └── Emendas PIX (TE):       R$  2.000.000
+  └── Transferências especiais: R$  2.000.000
 
-Top 5 municípios:
+Top 5 муниципалитетов:
 | Município        | UF | Valor          | Área      |
 |------------------|----|----------------|-----------|
 | [Cidade natal]   | SP | R$ 5.000.000   | Saúde     |
@@ -176,13 +176,13 @@ Top 5 municípios:
 | [Município 4]    | SP | R$ 2.500.000   | Saúde     |
 | [Município 5]    | SP | R$ 2.000.000   | Cultura   |
 
-Concentração: 73% das emendas para 5 municípios
+Концентрация: 73% средств направлено в 5 муниципалитетов
 Áreas: 45% Saúde, 25% Educação, 20% Infraestrutura, 10% Outros
 ```
 
 ---
 
-### Etapa 6 — Financiamento Eleitoral
+### Этап 6 — электоральное финансирование
 
 > Prompt: "Quem financiou a campanha do deputado em 2022? Compare os doadores com os municípios que recebem emendas"
 
@@ -217,11 +217,11 @@ Top 10 doadores PF:
 
 ---
 
-### Relatório Consolidado
+### Сводный отчет
 
 > Prompt: "Gere um relatório consolidado da atuação do deputado [Nome] em 2024"
 
-O mcp-brasil combina todas as etapas via `planejar_consulta`:
+`mcp-russia` объединяет все этапы через `planejar_consulta`:
 
 ```
 ═══════════════════════════════════════════════════════
@@ -233,7 +233,7 @@ PRESENÇA:      79/87 votações (90,8%)
 ALINHAMENTO:   Partido 82% | Governo 61%
 PROPOSIÇÕES:   23 apresentadas | 3 aprovadas
 DESPESAS:      R$ 312K (58% da cota)
-EMENDAS:       R$ 25,4M (73% para 5 municípios)
+TRANSFERÊNCIAS: R$ 25,4M (73% для 5 муниципалитетов)
 CAMPANHA:      R$ 2,9M arrecadados (52% fundo eleitoral)
 
 DESTAQUES POSITIVOS:
@@ -242,14 +242,16 @@ DESTAQUES POSITIVOS:
   ✅ Despesas abaixo da cota parlamentar
 
 PONTOS DE ATENÇÃO:
-  ⚠️ Concentração de emendas em poucos municípios
+  ⚠️ Концентрация средств в небольшом числе муниципалитетов
   ⚠️ 14 votações divergentes do partido
-  ⚠️ Cross-reference doador ↔ município beneficiado
+  ⚠️ Cross-reference донор ↔ получатель средств
 
 FONTES: Câmara dos Deputados, TSE, Portal da
 Transparência, TransfereGov. Consulta em [data].
 ═══════════════════════════════════════════════════════
 ```
+
+В текущем состоянии репозитория такой отчет стоит понимать как публичный workflow `mcp-russia` над унаследованным набором парламентских и электоральных интеграций. Это важно: продуктовая оболочка уже русскоязычная, но конкретные data-sources внутри еще мигрируют.
 
 ---
 
@@ -288,4 +290,4 @@ Para gerar o relatório de múltiplos parlamentares de uma vez:
 
 ---
 
-_Fontes: API da Câmara dos Deputados, API do Senado Federal, API do TSE, API do Portal da Transparência, API do TransfereGov._
+_Источники: парламентские API, TSE, Portal da Transparencia, TransfereGov и другие legacy-компоненты исходного проекта._

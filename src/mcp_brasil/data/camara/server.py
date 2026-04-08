@@ -21,7 +21,7 @@ from .tools import (
     votos_nominais,
 )
 
-mcp = FastMCP("mcp-brasil-camara")
+mcp = FastMCP("mcp-russia-camara")
 
 # Tools (11)
 mcp.tool(listar_deputados, tags={"listagem", "deputados", "parlamentares"})

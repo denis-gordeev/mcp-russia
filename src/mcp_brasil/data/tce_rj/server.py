@@ -17,7 +17,7 @@ from .tools import (
     buscar_prestacao_contas,
 )
 
-mcp = FastMCP("mcp-brasil-tce-rj")
+mcp = FastMCP("mcp-russia-tce-rj")
 
 # Tools
 mcp.tool(buscar_licitacoes)

@@ -1,4 +1,9 @@
-"""Resources for the DataJud feature — static reference data for LLM context."""
+"""Resources for the DataJud feature — legacy compatibility layer for Brazilian judicial data.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+Brazilian judicial reference data is kept for backward compatibility
+with the historical CNJ DataJud integration and is NOT part of the target Russian data model.
+"""
 
 from __future__ import annotations
 
@@ -29,7 +34,7 @@ def info_api() -> str:
         "autenticacao": "Requer API Key (cadastro em datajud.cnj.jus.br)",
         "formato": "Elasticsearch (POST com body JSON)",
         "documentacao": "https://datajud-wiki.cnj.jus.br/api-publica/",
-        "cobertura": "Processos de todos os tribunais brasileiros",
+        "cobertura": "Processos de todos os tribunais brasileiros (legacy/compatibility layer)",
         "total_tribunais": len(TRIBUNAIS),
     }
     return json.dumps(data, ensure_ascii=False)

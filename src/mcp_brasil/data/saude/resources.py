@@ -1,7 +1,8 @@
-"""Resources for the Saúde feature — static reference data for LLM context.
+"""Resources for the Saúde feature — legacy compatibility layer for Brazilian health data.
 
-Resources expose read-only data that LLMs can pull for context.
-These are static/low-frequency datasets useful as grounding information.
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+Brazilian CNES/DataSUS reference datasets are kept for backward compatibility
+with the historical health integration and are NOT part of the target Russian data model.
 """
 
 from __future__ import annotations

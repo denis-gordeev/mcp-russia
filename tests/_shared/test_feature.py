@@ -215,4 +215,4 @@ class TestRegistryIntegration:
 
         async with Client(mcp) as client:
             result = await client.call_tool("listar_features", {})
-            assert "mcp-brasil" in result.data
+            assert "mcp-russia" in result.data

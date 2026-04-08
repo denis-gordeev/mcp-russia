@@ -32,15 +32,19 @@ def analise_empresa(cnpj: str) -> str:
 def panorama_economico() -> str:
     """Черновой макроэкономический обзор на базе исторических бразильских индикаторов."""
     return (
-        "Собери краткий макроэкономический обзор по текущему compatibility-layer BrasilAPI.\n\n"
+        "Собери краткий макроэкономический обзор по текущему\n"
+        "compatibility-layer BrasilAPI.\n\n"
         "Контекст:\n"
-        "- Это не финальная российская модель данных, а переходный бразильский набор индикаторов.\n"
-        "- В выводе явно обозначь источник как legacy-layer внутри `mcp-russia`.\n\n"
+        "- Это не финальная российская модель данных, а переходный\n"
+        "  бразильский набор индикаторов.\n"
+        "- В выводе явно обозначь источник как legacy-layer внутри\n"
+        "  `mcp-russia`.\n\n"
         "Passos:\n"
         "1. Use consultar_taxa(sigla='SELIC') para a taxa básica de juros\n"
         "2. Use consultar_taxa(sigla='CDI') para o CDI\n"
         "3. Use consultar_taxa(sigla='IPCA') para a inflação\n"
         "4. Use consultar_cotacao(moeda='USD', data=<ontem>) para o dólar\n"
         "5. Use consultar_cotacao(moeda='EUR', data=<ontem>) para o euro\n\n"
-        "В ответе дай сравнительную таблицу индикаторов, краткую интерпретацию и отдельную пометку о переходном статусе этих данных."
+        "В ответе дай сравнительную таблицу индикаторов, краткую\n"
+        "интерпретацию и отдельную пометку о переходном статусе этих данных."
     )

@@ -26,7 +26,7 @@ from .tools import (
     listar_tabelas_fipe,
 )
 
-mcp = FastMCP("mcp-brasil-brasilapi")
+mcp = FastMCP("mcp-russia-brasilapi")
 
 # Tools (16)
 mcp.tool(consultar_cep, tags={"consulta", "cep", "endereco"})

@@ -1,13 +1,15 @@
-"""Feature TCE-RJ — Tribunal de Contas do Estado do Rio de Janeiro."""
+"""Legacy-слой TCE-RJ внутри mcp-russia — Tribunal de Contas do Estado
+do Rio de Janeiro (compatibility layer)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="tce_rj",
     description=(
-        "TCE-RJ: licitações, contratos, compras diretas, obras paralisadas, "
-        "penalidades, prestação de contas e concessões públicas do Estado "
-        "e municípios do Rio de Janeiro."
+        "Legacy-слой TCE-RJ внутри mcp-russia: "
+        "Тендеры, контракты, прямые закупки, остановленные стройки, "
+        "штрафы, отчёты о расходах и публичные концессии штата "
+        "и муниципалитетов Рио-де-Жанейро."
     ),
     version="0.1.0",
     api_base="https://dados.tcerj.tc.br/api/v1",

@@ -9,7 +9,7 @@ from .prompts import consultar_unidades_sc
 from .resources import endpoints_tce_sc
 from .tools import listar_municipios_sc, listar_unidades_gestoras_sc
 
-mcp = FastMCP("mcp-brasil-tce_sc")
+mcp = FastMCP("mcp-russia-tce-sc")
 
 # Tools
 mcp.tool(listar_municipios_sc)

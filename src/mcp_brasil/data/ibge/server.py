@@ -19,7 +19,7 @@ from .tools import (
     ranking_nomes,
 )
 
-mcp = FastMCP("mcp-brasil-ibge")
+mcp = FastMCP("mcp-russia-ibge")
 
 # Tools
 mcp.tool(listar_estados, tags={"listagem", "estados", "geografia"})
