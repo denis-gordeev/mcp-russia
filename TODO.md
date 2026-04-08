@@ -2,7 +2,27 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-04-08 (текущий проход)
+## Статус раунда 2026-04-08 (второй проход)
+
+### Выполнено
+
+- Переименованы 21 server.py файлы: все FastMCP серверы переключены с `mcp-brasil-*` на `mcp-russia-*` (ana, brasilapi, camara, compras, dados_abertos, diario_oficial, ibge, inpe, senado, tce_ce, tce_pe, tce_pi, tce_rj, tce_rn, tce_rs, tce_sc, tce_sp, tcu, transferegov, transparencia, tse).
+- Добавлена explicit compatibility-layer marking во все оставшиеся `__init__.py` модули данных: ibge, tcu, camara, senado, compras, transparencia, transferegov, tse, все tce_* (ce, pe, pi, rj, rn, rs, sc, sp), ana, inpe, dados_abertos, diario_oficial, а также корневой `data/__init__.py`. Теперь каждый модуль явно описан как legacy-слой внутри mcp-russia, а не как финальный российский продуктовый слой.
+- Добавлены legacy-пометки в resources.py файлы: ibge, inpe, diario_oficial, datajud, saude, tabua_mares — с явным указанием, что бразильские справочные данные сохранены для обратной совместимости и не являются частью целевой российской модели.
+- Добавлены legacy-пометки в prompts.py файлы: ibge, ana — с указанием, что анализы бразильских демографических и гидрологических данных являются переходным слоем.
+- Обновлён модуль agentes/redator: `__init__.py` и `tools.py` теперь явно маркируют бразильские стандарты официальной переписки (Manual de Redação da Presidência da República) как legacy/compatibility-layer.
+- Исправлены ошибки длины строк (E501) в brasilapi/prompts.py и всех обновлённых `__init__.py` файлах.
+- Прогнаны все проверки: `pytest` (1584 passed), `ruff check` (E,F,W,I,UP,B,SIM — all passed).
+- Изменения закоммичены и отправлены в remote (`4b3eccb`).
+
+### Следующие действия
+
+- Оценить содержательную замену бразильских API-интеграций на российские аналоги: начать с экономических (bacen/IBGE → Росстат/ЦБ РФ), здравоохранения (saude/DataSUS → российские медицинские источники) и судебных данных (datajud/TCU → российские судебные и аудиторские источники).
+- Переработать примеры в `docs/examples/` с фокусом на российских сценариях использования, сохранив пометки о текущем переходном состоянии.
+- Подготовить план миграции tool IDs и внутренних namespace с бразильских на российские аналоги (без поломки обратной совместимости).
+- Решить, какие legacy-алиасы `mcp_brasil` и `MCP_BRASIL_*` сохранить надолго, а какие пометить как deprecated.
+
+## Статус раунда 2026-04-08 (первый проход)
 
 ### Выполнено
 
