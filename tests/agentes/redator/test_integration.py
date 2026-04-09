@@ -1,4 +1,4 @@
-"""Integration tests for the Redator Oficial feature using fastmcp.Client."""
+"""Integration tests for the Russian official document feature using fastmcp.Client."""
 
 import pytest
 from fastmcp import Client
@@ -13,11 +13,11 @@ class TestToolsRegistered:
             tool_list = await c.list_tools()
             names = {t.name for t in tool_list}
             expected = {
-                "formatar_data_extenso",
-                "gerar_numeracao",
-                "consultar_pronome_tratamento",
-                "validar_documento",
-                "listar_tipos_documento",
+                "formatirovat_data_extenso",
+                "generirovat_numeraciyu",
+                "konsulitirovat_obrashchenie",
+                "validirovat_dokument",
+                "spisok_tipov_dokumentov",
             }
             assert expected.issubset(names), f"Missing: {expected - names}"
 
@@ -31,132 +31,134 @@ class TestToolsRegistered:
 
 class TestResourcesRegistered:
     @pytest.mark.asyncio
-    async def test_all_9_resources_registered(self) -> None:
+    async def test_all_resources_registered(self) -> None:
         async with Client(mcp) as c:
             resources = await c.list_resources()
             uris = {str(r.uri) for r in resources}
             expected = {
-                "template://despacho",
-                "template://oficio",
-                "template://portaria",
-                "template://parecer",
-                "template://nota_tecnica",
-                "template://ata",
-                "normas://manual_redacao",
-                "normas://pronomes",
-                "normas://fechos",
+                "template://pismo",
+                "template://prikaz",
+                "template://rasporyazhenie",
+                "template://akt",
+                "template://spravka",
+                "template://protokol",
+                "template://dokladnaya_zapiska",
+                "normas://manual",
+                "normas://obrashcheniya",
+                "normas://zaklyuchitelnye",
             }
             assert expected.issubset(uris), f"Missing: {expected - uris}"
 
 
 class TestPromptsRegistered:
     @pytest.mark.asyncio
-    async def test_all_5_prompts_registered(self) -> None:
+    async def test_all_prompts_registered(self) -> None:
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
             names = {p.name for p in prompts}
             expected = {
-                "redator_despacho",
-                "redator_oficio",
-                "redator_portaria",
-                "redator_parecer",
-                "redator_nota_tecnica",
+                "redaktor_pismo",
+                "redaktor_prikaz",
+                "redaktor_rasporyazhenie",
+                "redaktor_akt",
+                "redaktor_spravka",
+                "redaktor_protokol",
+                "redaktor_dokladnaya_zapiska",
             }
             assert expected.issubset(names), f"Missing: {expected - names}"
 
 
 class TestToolExecution:
     @pytest.mark.asyncio
-    async def test_formatar_data_e2e(self) -> None:
+    async def test_formatirovat_data_e2e(self) -> None:
         async with Client(mcp) as c:
             result = await c.call_tool(
-                "formatar_data_extenso",
-                {"cidade": "Teresina", "estado": "PI"},
+                "formatirovat_data_extenso",
+                {"gorod": "Санкт-Петербург"},
             )
-            assert "Teresina," in result.data
+            assert "г. Санкт-Петербург" in result.data
 
     @pytest.mark.asyncio
-    async def test_gerar_numeracao_e2e(self) -> None:
+    async def test_generirovat_numeraciyu_e2e(self) -> None:
         async with Client(mcp) as c:
             result = await c.call_tool(
-                "gerar_numeracao",
-                {"tipo": "memorando", "numero": 42, "ano": 2026, "setor": "GAB"},
+                "generirovat_numeraciyu",
+                {"tip": "письмо", "nomer": 42, "god": 2026, "otdel": "Д-15"},
             )
-            assert "OFÍCIO Nº 42/2026/GAB" in result.data
+            assert "ПИСЬМО № 42/2026/Д-15" in result.data
 
     @pytest.mark.asyncio
-    async def test_consultar_pronome_e2e(self) -> None:
+    async def test_konsulitirovat_obrashchenie_e2e(self) -> None:
         async with Client(mcp) as c:
             result = await c.call_tool(
-                "consultar_pronome_tratamento",
-                {"cargo": "Governador"},
+                "konsulitirovat_obrashchenie",
+                {"dolzhnost": "Губернатор"},
             )
-            assert "Vossa Excelência" in result.data
+            assert "Уважаемый господин Губернатор" in result.data
 
     @pytest.mark.asyncio
-    async def test_listar_tipos_e2e(self) -> None:
+    async def test_spisok_tipov_e2e(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool("listar_tipos_documento", {})
-            assert "despacho" in result.data
-            assert "memorando" in result.data.lower()
+            result = await c.call_tool("spisok_tipov_dokumentov", {})
+            assert "приказ" in result.data
+            assert "письмо" in result.data
 
 
 class TestResourceExecution:
     @pytest.mark.asyncio
-    async def test_read_template_oficio(self) -> None:
+    async def test_read_template_pismo(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("template://oficio")
+            content = await c.read_resource("template://pismo")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "OFÍCIO" in text
+            assert "ПИСЬМО" in text or "ОФИЦИАЛЬНОЕ ПИСЬМО" in text
 
     @pytest.mark.asyncio
-    async def test_read_template_despacho(self) -> None:
+    async def test_read_template_prikaz(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("template://despacho")
+            content = await c.read_resource("template://prikaz")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "DESPACHO" in text
+            assert "ПРИКАЗ" in text
 
     @pytest.mark.asyncio
     async def test_read_normas_manual(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("normas://manual_redacao")
+            content = await c.read_resource("normas://manual")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "Impessoalidade" in text
+            assert "ГОСТ" in text or "единообразие" in text.lower()
 
     @pytest.mark.asyncio
-    async def test_read_normas_pronomes_3a_edicao(self) -> None:
+    async def test_read_normas_obrashcheniya(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("normas://pronomes")
+            content = await c.read_resource("normas://obrashcheniya")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "Excelentíssimo" in text
-            assert "Digníssimo" in text  # mentioned as abolished
+            assert "Президент" in text or "Уважаемый" in text
 
 
 class TestPromptExecution:
     @pytest.mark.asyncio
-    async def test_prompt_oficio(self) -> None:
+    async def test_prompt_pismo(self) -> None:
         async with Client(mcp) as c:
             result = await c.get_prompt(
-                "redator_oficio",
+                "redaktor_pismo",
                 arguments={
-                    "destinatario": "João da Silva",
-                    "cargo_destinatario": "Secretário",
-                    "assunto": "Cessão de servidor",
+                    "adresat": "Иванов Иван Иванович",
+                    "dolzhnost_adresata": "Министр",
+                    "tema": "Согласование проекта",
                 },
             )
             messages = result.messages
             assert len(messages) == 2
-            assert "OFÍCIO" in messages[0].content.text
-            assert "Cessão de servidor" in messages[0].content.text
+            assert "ПИСЬМО" in messages[0].content.text
+            assert "Согласование проекта" in messages[0].content.text
 
     @pytest.mark.asyncio
-    async def test_prompt_despacho(self) -> None:
+    async def test_prompt_prikaz(self) -> None:
         async with Client(mcp) as c:
             result = await c.get_prompt(
-                "redator_despacho",
-                arguments={"assunto": "Aprovar licença"},
+                "redaktor_prikaz",
+                arguments={"tema": "О проведении инвентаризации"},
             )
             messages = result.messages
             assert len(messages) == 2
-            assert "DESPACHO" in messages[0].content.text
-            assert "Aprovar licença" in messages[0].content.text
+            assert "ПРИКАЗ" in messages[0].content.text
+            assert "инвентаризации" in messages[0].content.text

@@ -1,59 +1,65 @@
-"""Redator Oficial feature server — registers tools, resources, and prompts.
+"""Сервер функции deloproizvodstvo — регистрирует инструменты, ресурсы и prompts.
 
-This file only registers components. Zero business logic (ADR-001 rule #4).
+Zero business logic (ADR-001 rule #4).
 """
 
 from fastmcp import FastMCP
 
 from .prompts import (
-    redator_despacho,
-    redator_nota_tecnica,
-    redator_oficio,
-    redator_parecer,
-    redator_portaria,
+    redaktor_akt,
+    redaktor_dokladnaya_zapiska,
+    redaktor_pismo,
+    redaktor_prikaz,
+    redaktor_protokol,
+    redaktor_rasporyazhenie,
+    redaktor_spravka,
 )
 from .resources import (
-    get_fechos_oficiais,
-    get_manual_redacao,
-    get_pronomes_tratamento,
-    get_template_ata,
-    get_template_despacho,
-    get_template_nota_tecnica,
-    get_template_oficio,
-    get_template_parecer,
-    get_template_portaria,
+    get_manual_deloproizvodstvo,
+    get_obrashcheniya,
+    get_template_akt,
+    get_template_dokladnaya_zapiska,
+    get_template_pismo,
+    get_template_prikaz,
+    get_template_protokol,
+    get_template_rasporyazhenie,
+    get_template_spravka,
+    get_zaklyuchitelnye_formuly,
 )
 from .tools import (
-    consultar_pronome_tratamento,
-    formatar_data_extenso,
-    gerar_numeracao,
-    listar_tipos_documento,
-    validar_documento,
+    formatirovat_data_extenso,
+    generirovat_numeraciyu,
+    konsulitirovat_obrashchenie,
+    spisok_tipov_dokumentov,
+    validirovat_dokument,
 )
 
-mcp = FastMCP("mcp-russia-redator")
+mcp = FastMCP("mcp-russia-deloproizvodstvo")
 
-# Tools (5)
-mcp.tool(formatar_data_extenso, tags={"formatacao", "data", "redacao-oficial"})
-mcp.tool(gerar_numeracao, tags={"formatacao", "numeracao", "redacao-oficial"})
-mcp.tool(consultar_pronome_tratamento, tags={"consulta", "pronomes", "redacao-oficial"})
-mcp.tool(validar_documento, tags={"validacao", "documento", "redacao-oficial"})
-mcp.tool(listar_tipos_documento, tags={"listagem", "tipos-documento", "redacao-oficial"})
+# Tools
+mcp.tool(formatirovat_data_extenso, tags={"форматирование", "дата"})
+mcp.tool(generirovat_numeraciyu, tags={"форматирование", "нумерация"})
+mcp.tool(konsulitirovat_obrashchenie, tags={"справочник", "обращения"})
+mcp.tool(validirovat_dokument, tags={"валидация", "документ"})
+mcp.tool(spisok_tipov_dokumentov, tags={"справочник", "типы-документов"})
 
-# Prompts (5)
-mcp.prompt(redator_oficio)
-mcp.prompt(redator_despacho)
-mcp.prompt(redator_portaria)
-mcp.prompt(redator_parecer)
-mcp.prompt(redator_nota_tecnica)
+# Prompts
+mcp.prompt(redaktor_pismo)
+mcp.prompt(redaktor_prikaz)
+mcp.prompt(redaktor_rasporyazhenie)
+mcp.prompt(redaktor_akt)
+mcp.prompt(redaktor_spravka)
+mcp.prompt(redaktor_protokol)
+mcp.prompt(redaktor_dokladnaya_zapiska)
 
-# Resources (9)
-mcp.resource("template://oficio")(get_template_oficio)
-mcp.resource("template://despacho")(get_template_despacho)
-mcp.resource("template://portaria")(get_template_portaria)
-mcp.resource("template://parecer")(get_template_parecer)
-mcp.resource("template://nota_tecnica")(get_template_nota_tecnica)
-mcp.resource("template://ata")(get_template_ata)
-mcp.resource("normas://manual_redacao")(get_manual_redacao)
-mcp.resource("normas://pronomes")(get_pronomes_tratamento)
-mcp.resource("normas://fechos")(get_fechos_oficiais)
+# Resources
+mcp.resource("template://pismo")(get_template_pismo)
+mcp.resource("template://prikaz")(get_template_prikaz)
+mcp.resource("template://rasporyazhenie")(get_template_rasporyazhenie)
+mcp.resource("template://akt")(get_template_akt)
+mcp.resource("template://spravka")(get_template_spravka)
+mcp.resource("template://protokol")(get_template_protokol)
+mcp.resource("template://dokladnaya_zapiska")(get_template_dokladnaya_zapiska)
+mcp.resource("normas://manual")(get_manual_deloproizvodstvo)
+mcp.resource("normas://obrashcheniya")(get_obrashcheniya)
+mcp.resource("normas://zaklyuchitelnye")(get_zaklyuchitelnye_formuly)

@@ -1,8 +1,6 @@
-"""Resources: templates e normas de redação oficial.
+"""Resources: шаблоны и нормыамы делопроизводства РФ.
 
-Resources são dados que o LLM carrega como contexto.
-O client MCP pode ler esses resources para entender
-a estrutura e as normas de cada tipo de documento.
+Resources — это данные, которые LLM загружает как контекст.
 """
 
 from __future__ import annotations
@@ -14,64 +12,64 @@ NORMAS_DIR = Path(__file__).parent / "normas"
 
 
 def _load_file(directory: Path, filename: str) -> str:
-    """Carrega um arquivo de template ou norma."""
+    """Загружает файл шаблона или нормы."""
     filepath = directory / filename
     if not filepath.exists():
-        raise FileNotFoundError(f"Arquivo não encontrado: {filepath}")
+        raise FileNotFoundError(f"Файл не найден: {filepath}")
     return filepath.read_text(encoding="utf-8")
 
 
-# === Templates de documentos ===
+# === Шаблоны документов ===
 
 
-def get_template_oficio() -> str:
-    """Template oficial para Ofício (padrão ofício — 3ª edição)."""
+def get_template_pismo() -> str:
+    """Шаблон официального письма."""
     return _load_file(TEMPLATES_DIR, "oficio.md")
 
 
-def get_template_memorando() -> str:
-    """Template oficial para Memorando interno."""
-    return _load_file(TEMPLATES_DIR, "memorando.md")
+def get_template_prikaz() -> str:
+    """Шаблон приказа."""
+    return _load_file(TEMPLATES_DIR, "prikaz.md")
 
 
-def get_template_despacho() -> str:
-    """Template oficial para Despacho administrativo."""
-    return _load_file(TEMPLATES_DIR, "despacho.md")
+def get_template_rasporyazhenie() -> str:
+    """Шаблон распоряжения."""
+    return _load_file(TEMPLATES_DIR, "rasporyazhenie.md")
 
 
-def get_template_portaria() -> str:
-    """Template oficial para Portaria."""
-    return _load_file(TEMPLATES_DIR, "portaria.md")
+def get_template_akt() -> str:
+    """Шаблон акта."""
+    return _load_file(TEMPLATES_DIR, "akt.md")
 
 
-def get_template_parecer() -> str:
-    """Template oficial para Parecer técnico."""
-    return _load_file(TEMPLATES_DIR, "parecer.md")
+def get_template_spravka() -> str:
+    """Шаблон справки."""
+    return _load_file(TEMPLATES_DIR, "spravka.md")
 
 
-def get_template_nota_tecnica() -> str:
-    """Template oficial para Nota Técnica."""
-    return _load_file(TEMPLATES_DIR, "nota_tecnica.md")
+def get_template_protokol() -> str:
+    """Шаблон протокола."""
+    return _load_file(TEMPLATES_DIR, "protokol.md")
 
 
-def get_template_ata() -> str:
-    """Template oficial para Ata de reunião."""
-    return _load_file(TEMPLATES_DIR, "ata.md")
+def get_template_dokladnaya_zapiska() -> str:
+    """Шаблон докладной записки."""
+    return _load_file(TEMPLATES_DIR, "dokladnaya_zapiska.md")
 
 
-# === Normas de redação ===
+# === Нормы делопроизводства ===
 
 
-def get_manual_redacao() -> str:
-    """Resumo das normas do Manual de Redação da Presidência da República (3ª ed.)."""
+def get_manual_deloproizvodstvo() -> str:
+    """Сводка правил оформления документов (ГОСТ Р 7.0.97-2016)."""
     return _load_file(NORMAS_DIR, "manual_redacao.md")
 
 
-def get_pronomes_tratamento() -> str:
-    """Tabela de pronomes de tratamento oficiais."""
+def get_obrashcheniya() -> str:
+    """Формы обращения к должностным лицам."""
     return _load_file(NORMAS_DIR, "pronomes.md")
 
 
-def get_fechos_oficiais() -> str:
-    """Fechos e saudações para correspondência oficial."""
+def get_zaklyuchitelnye_formuly() -> str:
+    """Заключительные формулы в официальных документах."""
     return _load_file(NORMAS_DIR, "fechos.md")

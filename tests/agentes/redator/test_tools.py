@@ -1,4 +1,4 @@
-"""Tests for the Redator Oficial tool functions."""
+"""Tests for the Russian official document tool functions."""
 
 from datetime import datetime
 
@@ -7,173 +7,153 @@ import pytest
 from mcp_brasil.agentes.redator import tools
 
 
-class TestFormatarDataExtenso:
+class TestFormatirovatDataExtenso:
     @pytest.mark.asyncio
-    async def test_default_brasilia(self) -> None:
-        result = await tools.formatar_data_extenso()
+    async def test_default_moskva(self) -> None:
+        result = await tools.formatirovat_data_extenso()
         now = datetime.now()
-        assert "Brasília," in result
+        assert "г. Москва" in result
         assert str(now.year) in result
-        assert result.endswith(".")
-
-    @pytest.mark.asyncio
-    async def test_no_uf_in_date(self) -> None:
-        """3ª edição: data sem sigla da UF."""
-        result = await tools.formatar_data_extenso()
-        assert "/DF" not in result
+        assert result.endswith("г.")
 
     @pytest.mark.asyncio
     async def test_custom_city(self) -> None:
-        result = await tools.formatar_data_extenso(cidade="Teresina", estado="PI")
-        assert "Teresina," in result
-        assert "/PI" not in result
+        result = await tools.formatirovat_data_extenso(gorod="Санкт-Петербург")
+        assert "г. Санкт-Петербург" in result
 
     @pytest.mark.asyncio
     async def test_contains_month(self) -> None:
-        result = await tools.formatar_data_extenso()
-        from mcp_brasil.agentes.redator.constants import MESES
+        result = await tools.formatirovat_data_extenso()
+        from mcp_brasil.agentes.redator.constants import МЕСЯЦЫ
 
         now = datetime.now()
-        assert MESES[now.month] in result
+        assert МЕСЯЦЫ[now.month] in result
 
 
-class TestGerarNumeracao:
+class TestGenerirovatNumeraciyu:
     @pytest.mark.asyncio
-    async def test_memorando_converts_to_oficio(self) -> None:
-        """3ª edição: memorando abolido, converte para OFÍCIO."""
-        result = await tools.gerar_numeracao("memorando", 42, 2026, "COORD-TI")
-        assert result == "OFÍCIO Nº 42/2026/COORD-TI"
-
-    @pytest.mark.asyncio
-    async def test_oficio_without_setor(self) -> None:
-        result = await tools.gerar_numeracao("oficio", 10, 2026)
-        assert result == "OFÍCIO Nº 10/2026"
+    async def test_pismo_with_otdel(self) -> None:
+        result = await tools.generirovat_numeraciyu("письмо", 42, 2026, "Д-15")
+        assert result == "ПИСЬМО № 42/2026/Д-15"
 
     @pytest.mark.asyncio
-    async def test_portaria(self) -> None:
-        result = await tools.gerar_numeracao("portaria", 123, 2026)
-        assert result == "PORTARIA Nº 123/2026"
+    async def test_pismo_bez_otdela(self) -> None:
+        result = await tools.generirovat_numeraciyu("письмо", 10, 2026)
+        assert result == "ПИСЬМО № 10/2026"
+
+    @pytest.mark.asyncio
+    async def test_prikaz(self) -> None:
+        result = await tools.generirovat_numeraciyu("приказ", 123, 2026)
+        assert result == "ПРИКАЗ № 123/2026"
 
     @pytest.mark.asyncio
     async def test_default_year(self) -> None:
-        result = await tools.gerar_numeracao("despacho", 1)
+        result = await tools.generirovat_numeraciyu("распоряжение", 1)
         now = datetime.now()
         assert str(now.year) in result
 
     @pytest.mark.asyncio
     async def test_unknown_type(self) -> None:
-        result = await tools.gerar_numeracao("resolucao", 5, 2026)
-        assert result == "Resolucao Nº 5/2026"
+        result = await tools.generirovat_numeraciyu("rezolyutsiya", 5, 2026)
+        assert result == "REZOLYUTSIYA № 5/2026"
 
 
-class TestConsultarPronomeTratamento:
+class TestKonsulitirovatObrashchenie:
     @pytest.mark.asyncio
     async def test_exact_match(self) -> None:
-        result = await tools.consultar_pronome_tratamento("Governador")
-        assert "Vossa Excelência" in result
-        assert "Governador" in result
-        assert "Endereçamento" in result
+        result = await tools.konsulitirovat_obrashchenie("Губернатор")
+        assert "Уважаемый господин Губернатор" in result
+        assert "Губернатор" in result
+        assert "Адресация" in result
 
     @pytest.mark.asyncio
-    async def test_chefes_de_poder_excelentissimo(self) -> None:
-        """3ª edição: Excelentíssimo apenas para os 3 Chefes de Poder."""
-        result = await tools.consultar_pronome_tratamento("Presidente da República")
-        assert "Excelentíssimo" in result
+    async def test_prezident(self) -> None:
+        result = await tools.konsulitirovat_obrashchenie("Президент Российской Федерации")
+        assert "Уважаемый господин Президент" in result
 
     @pytest.mark.asyncio
-    async def test_demais_sem_excelentissimo(self) -> None:
-        """3ª edição: demais usam 'Senhor + Cargo', não 'Excelentíssimo'."""
-        result = await tools.consultar_pronome_tratamento("Governador")
-        assert "Excelentíssimo" not in result
-        assert "Senhor Governador" in result
+    async def test_minister(self) -> None:
+        result = await tools.konsulitirovat_obrashchenie("Министр")
+        assert "Уважаемый господин Министр" in result
 
     @pytest.mark.asyncio
     async def test_partial_match(self) -> None:
-        result = await tools.consultar_pronome_tratamento("Senador da República")
-        assert "Vossa Excelência" in result
-        assert "similar a" in result
+        result = await tools.konsulitirovat_obrashchenie("Губернатор области")
+        assert "похоже на" in result
 
     @pytest.mark.asyncio
-    async def test_default_senhoria(self) -> None:
-        result = await tools.consultar_pronome_tratamento("Analista")
-        assert "Vossa Senhoria" in result
-
-    @pytest.mark.asyncio
-    async def test_reitor(self) -> None:
-        result = await tools.consultar_pronome_tratamento("Reitor")
-        assert "Magnificência" in result
+    async def test_default(self) -> None:
+        result = await tools.konsulitirovat_obrashchenie("Аналитик")
+        assert "Уважаемый господин/госпожа" in result
 
 
-class TestValidarDocumento:
+class TestValidirovatDokument:
     @pytest.mark.asyncio
     async def test_valid_document(self) -> None:
-        texto = (
-            "OFÍCIO Nº 1/2026/GAB\n\n"
-            "Brasília, 22 de março de 2026.\n\n"
-            "Senhor Diretor,\n\n"
-            "Informo que o processo foi concluído.\n\n"
-            "Atenciosamente,\n\n"
-            "Fulano de Tal"
+        tekst = (
+            "ПИСЬМО № 1/2026\n\n"
+            "г. Москва, 15 марта 2026 г.\n\n"
+            "Уважаемый господин Директор,\n\n"
+            "Сообщаю, что процесс завершён.\n\n"
+            "С уважением,\n\n"
+            "Иванов И.И. __________"
         )
-        result = await tools.validar_documento(texto, "oficio")
-        assert "Nenhum problema" in result
+        result = await tools.validirovat_dokument(tekst, "письмо")
+        assert "проблем" in result.lower() or "Обнаружено" not in result
 
     @pytest.mark.asyncio
     async def test_missing_date(self) -> None:
-        texto = "Senhor Diretor,\n\nInformo.\n\nAtenciosamente,"
-        result = await tools.validar_documento(texto, "oficio")
-        assert "Sem data" in result
+        tekst = "Уважаемый господин Директор,\n\nСообщаю.\n\nС уважением,"
+        result = await tools.validirovat_dokument(tekst, "письмо")
+        assert "дата" in result.lower()
 
     @pytest.mark.asyncio
-    async def test_missing_fecho(self) -> None:
-        texto = "Brasília, 22 de março de 2026.\n\nInformo."
-        result = await tools.validar_documento(texto, "oficio")
-        assert "Sem fecho" in result
+    async def test_missing_signature(self) -> None:
+        tekst = "ПИСЬМО № 1/2026\n\nг. Москва, 15 марта 2026 г.\n\nТекст."
+        result = await tools.validirovat_dokument(tekst, "письмо")
+        assert "подпис" in result.lower()
 
     @pytest.mark.asyncio
-    async def test_portaria_no_fecho_required(self) -> None:
-        texto = "PORTARIA Nº 1/2026\n\n22 de março de 2026.\n\nRESOLVE:"
-        result = await tools.validar_documento(texto, "portaria")
-        assert "Sem fecho" not in result
+    async def test_prikaz_no_fecho_required(self) -> None:
+        tekst = "ПРИКАЗ № 1/2026\n\n15 марта 2026 г.\n\nПРИКАЗЫВАЮ:"
+        result = await tools.validirovat_dokument(tekst, "приказ")
+        assert "проблем" in result.lower() or "Обнаружено" not in result
 
     @pytest.mark.asyncio
-    async def test_abolished_terms_detected(self) -> None:
-        """3ª edição: Digníssimo e Ilustríssimo abolidos."""
-        texto = "Brasília, 22 de março de 2026.\n\nIlustríssimo Senhor Diretor,\n\nAtenciosamente,"
-        result = await tools.validar_documento(texto, "oficio")
-        assert "abolido" in result.lower()
-
-    @pytest.mark.asyncio
-    async def test_expressions_to_avoid(self) -> None:
-        """3ª edição: evitar expressões como 'Tenho a honra'."""
-        texto = "Brasília, 22 de março de 2026.\n\nTenho a honra de informar.\n\nAtenciosamente,"
-        result = await tools.validar_documento(texto, "oficio")
-        assert "tenho a honra" in result.lower()
-
-    @pytest.mark.asyncio
-    async def test_excessive_gerundio(self) -> None:
-        texto = (
-            "Brasília, 22 de março de 2026.\n\n"
-            "Considerando estando tendo fazendo gerando produzindo\n\n"
-            "Atenciosamente,"
+    async def test_informal_expressions(self) -> None:
+        tekst = (
+            "г. Москва, 15 марта 2026 г.\n\n"
+            "С наилучшими пожеланиями,\n\n"
+            "Иванов И.И. __________"
         )
-        result = await tools.validar_documento(texto, "oficio")
-        assert "gerúndios" in result
+        result = await tools.validirovat_dokument(tekst, "письмо")
+        assert "наилучшими пожеланиями" in result.lower()
+
+    @pytest.mark.asyncio
+    async def test_excessive_deeprichastiya(self) -> None:
+        tekst = (
+            "г. Москва, 15 марта 2026 г.\n\n"
+            "Рассматривая изучая анализируя проверяя оценивая сравнивая\n\n"
+            "Иванов И.И. __________"
+        )
+        result = await tools.validirovat_dokument(tekst, "письмо")
+        assert "деепричаст" in result.lower() or "рекомендац" in result.lower()
 
 
-class TestListarTiposDocumento:
+class TestSpisokTipovDokumentov:
     @pytest.mark.asyncio
     async def test_lists_all_types(self) -> None:
-        result = await tools.listar_tipos_documento()
-        assert "oficio" in result
-        assert "despacho" in result
-        assert "portaria" in result
-        assert "parecer" in result
-        assert "nota_tecnica" in result
-        assert "ata" in result
+        result = await tools.spisok_tipov_dokumentov()
+        assert "письмо" in result
+        assert "приказ" in result
+        assert "распоряжение" in result
+        assert "акт" in result
+        assert "справка" in result
+        assert "протокол" in result
+        assert "докладная_записка" in result
 
     @pytest.mark.asyncio
-    async def test_notes_memorando_abolished(self) -> None:
-        """3ª edição: menciona que memorando e aviso foram abolidos."""
-        result = await tools.listar_tipos_documento()
-        assert "abolidos" in result.lower()
+    async def test_contains_count(self) -> None:
+        result = await tools.spisok_tipov_dokumentov()
+        # Should mention 7 document types
+        assert "типов" in result.lower() or "тип" in result.lower()

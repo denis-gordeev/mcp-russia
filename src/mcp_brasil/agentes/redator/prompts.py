@@ -1,13 +1,9 @@
-"""Prompts: agentes especializados por tipo de documento.
+"""Prompts: агенты по типам документов.
 
-Cada prompt é um "agente virtual" que instrui o LLM sobre:
-- Qual tipo de documento redigir
-- Quais normas seguir (Manual de Redação 3ª edição, 2018)
-- Qual estrutura obrigatória
-- Como usar as tools disponíveis
-
-Na 3ª edição do Manual, "memorando" e "aviso" foram abolidos.
-Tudo é "ofício" agora (padrão ofício).
+Каждый prompt — «виртуальный агент», который инструктирует LLM:
+- Какой тип документа создать
+- Какие нормы применять (ГОСТ Р 7.0.97-2016)
+- Какую структуру использовать
 """
 
 from __future__ import annotations
@@ -15,229 +11,211 @@ from __future__ import annotations
 from fastmcp.prompts.prompt import Message
 
 
-def redator_oficio(
-    destinatario: str,
-    cargo_destinatario: str,
-    assunto: str,
-    orgao_remetente: str = "",
+def redaktor_pismo(
+    adresat: str,
+    dolzhnost_adresata: str,
+    tema: str,
+    otpravitel: str = "",
 ) -> list[Message]:
-    """Redator de Ofício — comunicação oficial (padrão ofício, 3ª edição).
-
-    Na 3ª edição do Manual de Redação (2018), memorando e aviso foram
-    ABOLIDOS. O ofício é agora o ÚNICO tipo de comunicação oficial,
-    usado tanto para comunicação interna quanto externa.
+    """Редактор официального письма.
 
     Args:
-        destinatario: Nome do destinatário.
-        cargo_destinatario: Cargo (ex: "Secretário de Fazenda").
-        assunto: Tema do ofício.
-        orgao_remetente: Órgão que envia (opcional).
+        adresat: Имя адресата.
+        dolzhnost_adresata: Должность адресата.
+        tema: Тема письма.
+        otpravitel: Орган-отправитель.
     """
     return [
         Message(
-            f"""Preciso redigir um OFÍCIO oficial (padrão ofício — Manual de Redação 3ª edição).
-
-Para: {destinatario} — {cargo_destinatario}
-De: {orgao_remetente if orgao_remetente else "[informar órgão remetente]"}
-Assunto: {assunto}
-
-Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
-1. Consulte o template de ofício (resource template://oficio)
-2. Consulte as normas de redação oficial (resource normas://manual_redacao)
-3. Numeração: OFÍCIO Nº X/ANO/SIGLAS (siglas da menor para a maior hierarquia)
-4. Use a tool consultar_pronome_tratamento() para o vocativo correto
-   - "Excelentíssimo" APENAS para Presidente da República, do Congresso e do STF
-   - Demais autoridades: "Senhor/Senhora + Cargo"
-   - NUNCA usar "Digníssimo" ou "Ilustríssimo" (abolidos)
-5. Use a tool formatar_data_extenso() para a data
-   - Formato: "Cidade, dia de mês de ano." (sem sigla da UF)
-6. Estrutura: identificação > endereçamento > vocativo > texto > fecho > assinatura
-7. Fecho (resource normas://fechos):
-   - "Respeitosamente," — para autoridade superior
-   - "Atenciosamente," — para mesma hierarquia ou inferior
-   - São os ÚNICOS dois fechos admitidos
-8. Fonte: Calibri ou Carlito, tamanho 12
-9. Margens: esquerda 3cm, direita 1,5cm, superior e inferior 2cm
-10. Linguagem impessoal, concisa, objetiva — evitar gerúndio excessivo"""
+            f"Мне нужно составить официальное ПИСЬМО.\n\n"
+            f"Кому: {adresat} — {dolzhnost_adresata}\n"
+            f"От: {otpravitel if otpravitel else '[указать орган отправителя]'}\n"
+            f"Тема: {tema}\n\n"
+            f"Инструкции (ГОСТ Р 7.0.97-2016, делопроизводство РФ):\n"
+            f"1. Загрузи шаблон письма (resource template://pismo)\n"
+            f"2. Загрузи нормы делопроизводства (resource normas://manual)\n"
+            f"3. Используй konsulitirovat_obrashchenie() для правильной формы обращения\n"
+            f"4. Формат даты: «г. Москва, 15 марта 2026 г.»\n"
+            f"5. Структура: шапка → обращение → текст → подпись\n"
+            f"6. Заключительная формула: «С уважением,»\n"
+            f"7. Шрифт: Times New Roman, 12–14 пт, интервал 1,5\n"
+            f"8. Стиль: официальный, без эмоций, кратко и по делу"
         ),
         Message(
-            "Entendido. Vou redigir o ofício seguindo rigorosamente o Manual de "
-            "Redação da Presidência da República, 3ª edição. "
-            "Consultando template, pronomes e normas...",
+            "Понял. Составлю письмо по ГОСТ Р 7.0.97-2016. "
+            "Загружаю шаблон, нормы делопроизводства и формы обращения...",
             role="assistant",
         ),
     ]
 
 
-def redator_despacho(assunto: str, contexto: str = "") -> list[Message]:
-    """Redator de Despacho — decisão administrativa sobre processo ou requerimento.
-
-    Use este prompt para redigir despachos que aprovam, indeferem,
-    encaminham ou determinam providências sobre processos administrativos.
+def redaktor_prikaz(
+    tema: str,
+    rukovoditel: str = "",
+    osnovanie: str = "",
+) -> list[Message]:
+    """Редактор приказа.
 
     Args:
-        assunto: O que o despacho deve decidir/encaminhar.
-        contexto: Informações adicionais (número do processo, setor, etc.).
+        tema: Тема приказа.
+        rukovoditel: Руководитель-инициатор.
+        osnovanie: Основание для издания.
     """
     return [
         Message(
-            f"""Preciso redigir um DESPACHO oficial sobre: {assunto}
-
-Contexto adicional: {contexto if contexto else "Nenhum fornecido."}
-
-Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
-1. Consulte o template de despacho (resource template://despacho)
-2. Consulte as normas de redação oficial (resource normas://manual_redacao)
-3. Use a tool formatar_data_extenso() para a data atual
-   - Formato: "Cidade, dia de mês de ano." (sem sigla da UF)
-4. Estrutura: cabeçalho > referência ao processo > fundamentação > decisão
-5. O despacho é DECISÓRIO — deve conter determinação clara
-6. Verbos diretos: "Aprovo", "Indefiro", "Encaminho", "Determino"
-7. Evitar gerúndio: "Encaminho" (NÃO "Encaminhando")
-8. Linguagem impessoal, concisa, objetiva
-9. Parágrafos curtos (3-5 linhas)
-10. Despacho NÃO tem fecho obrigatório"""
+            f"Мне нужно составить ПРИКАЗ.\n\n"
+            f"Тема: {tema}\n"
+            f"Руководитель: {rukovoditel if rukovoditel else '[указать руководителя]'}\n"
+            f"Основание: {osnovanie if osnovanie else '[указать основание]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон приказа (resource template://prikaz)\n"
+            f"2. Преамбула — основание/цель издания\n"
+            f"3. Слово «ПРИКАЗЫВАЮ:» заглавными\n"
+            f"4. Поручения с ответственными и сроками\n"
+            f"5. Последний пункт — контроль за исполнением\n"
+            f"6. Подпись руководителя"
         ),
         Message(
-            "Entendido. Vou redigir o despacho seguindo as normas do Manual de "
-            "Redação da Presidência da República. Consultando o template e as normas...",
+            "Составлю приказ с правильной структурой. Загружаю шаблон...",
             role="assistant",
         ),
     ]
 
 
-def redator_portaria(
-    assunto: str,
-    autoridade: str = "",
-    fundamentacao: str = "",
+def redaktor_rasporyazhenie(
+    tema: str,
+    osnovanie: str = "",
 ) -> list[Message]:
-    """Redator de Portaria — ato normativo de autoridade administrativa.
-
-    Use este prompt para redigir portarias que nomeiam, designam,
-    regulamentam ou determinam providências administrativas.
+    """Редактор распоряжения.
 
     Args:
-        assunto: O que a portaria determina.
-        autoridade: Autoridade que assina (ex: "Secretário de Administração").
-        fundamentacao: Base legal (ex: "Lei nº 8.112/1990, art. 67").
+        tema: Тема распоряжения.
+        osnovanie: Основание для издания.
     """
     return [
         Message(
-            f"""Preciso redigir uma PORTARIA oficial.
-
-Autoridade: {autoridade if autoridade else "[informar autoridade]"}
-Assunto: {assunto}
-Fundamentação legal: {fundamentacao if fundamentacao else "[informar base legal]"}
-
-Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
-1. Consulte o template de portaria (resource template://portaria)
-2. Epígrafe em CAIXA ALTA: "PORTARIA Nº X, DE [DATA EM MAIÚSCULAS]"
-3. Preâmbulo: "O [AUTORIDADE], no uso das atribuições que lhe confere..."
-4. CONSIDERANDO (se necessário): justificativas — cada um seguido de ";"
-5. RESOLVE:
-6. Artigos numerados: Art. 1º, Art. 2º, Art. 3º...
-   - Cada artigo = uma disposição
-   - Parágrafos: § 1º, § 2º... (parágrafo único quando for só um)
-   - Incisos: I, II, III... (alíneas: a), b), c)...)
-7. Último artigo: vigência ("entra em vigor na data de sua publicação")
-8. Portaria NÃO tem fecho (sem "Atenciosamente")
-9. Linguagem imperativa e normativa
-10. Use a tool formatar_data_extenso() para a data"""
+            f"Мне нужно составить РАСПОРЯЖЕНИЕ.\n\n"
+            f"Тема: {tema}\n"
+            f"Основание: {osnovanie if osnovanie else '[указать основание]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон (resource template://rasporyazhenie)\n"
+            f"2. Преамбула — цель распоряжения\n"
+            f"3. «РАСПОРЯЖАЮСЬ:» заглавными\n"
+            f"4. Поручения с ответственными и сроками\n"
+            f"5. Контроль за исполнением"
         ),
         Message(
-            "Vou redigir a portaria com a estrutura normativa obrigatória. "
-            "Consultando template e fundamentação...",
+            "Составлю распоряжение. Загружаю шаблон...",
             role="assistant",
         ),
     ]
 
 
-def redator_parecer(
-    processo: str,
-    consulta: str,
-    area: str = "jurídico",
-) -> list[Message]:
-    """Redator de Parecer — manifestação técnica ou jurídica sobre consulta.
-
-    Use este prompt para redigir pareceres técnicos, jurídicos ou
-    administrativos em resposta a consultas formais.
+def redaktor_akt(tema: str, komissiya: str = "") -> list[Message]:
+    """Редактор акта.
 
     Args:
-        processo: Número do processo ou referência.
-        consulta: Pergunta ou tema a ser analisado.
-        area: Área do parecer: "jurídico", "técnico", "contábil" (default: jurídico).
+        tema: Тема акта.
+        komissiya: Состав комиссии.
     """
     return [
         Message(
-            f"""Preciso redigir um PARECER {area.upper()} oficial.
-
-Processo/Referência: {processo}
-Consulta: {consulta}
-Área: {area}
-
-Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
-1. Consulte o template de parecer (resource template://parecer)
-2. Estrutura obrigatória:
-   - EMENTA: resumo em 2-3 linhas
-   - I — DO RELATÓRIO: fatos e histórico
-   - II — DA FUNDAMENTAÇÃO: análise técnica/jurídica
-   - III — DA CONCLUSÃO: resposta objetiva à consulta
-3. Cite legislação relevante
-4. Mantenha objetividade — parecer OPINA, não decide
-5. Fecho: "É o parecer, s.m.j." (salvo melhor juízo)
-6. Use a tool formatar_data_extenso()
-7. Data: "Cidade, dia de mês de ano." (sem sigla da UF)"""
+            f"Мне нужно составить АКТ.\n\n"
+            f"Тема: {tema}\n"
+            f"Комиссия: {komissiya if komissiya else '[указать состав]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон акта (resource template://akt)\n"
+            f"2. Комиссия не менее 3 человек\n"
+            f"3. Факты излагаются последовательно\n"
+            f"4. Подписи всех членов комиссии"
         ),
         Message(
-            f"Vou redigir o parecer {area} com a estrutura técnica adequada. "
-            "Consultando template e normas...",
+            "Составлю акт. Загружаю шаблон...",
             role="assistant",
         ),
     ]
 
 
-def redator_nota_tecnica(
-    assunto: str,
-    dados: str = "",
-) -> list[Message]:
-    """Redator de Nota Técnica — análise técnica com dados e evidências.
-
-    Use este prompt para redigir notas técnicas que fundamentam
-    decisões com dados, análises e recomendações. Pode consultar
-    dados em tempo real do IBGE, Bacen e Portal da Transparência.
+def redaktor_spravka(tema: str, dannye: str = "") -> list[Message]:
+    """Редактор справки.
 
     Args:
-        assunto: Tema da nota técnica.
-        dados: Dados ou fontes a serem consultadas (opcional).
+        tema: Тема справки.
+        dannye: Фактические данные.
     """
     return [
         Message(
-            f"""Preciso redigir uma NOTA TÉCNICA.
-
-Assunto: {assunto}
-Dados/fontes disponíveis: {dados if dados else "Consultar APIs disponíveis (IBGE, Bacen, etc.)"}
-
-Instruções (Manual de Redação da Presidência, 3ª edição, 2018):
-1. Consulte o template de nota técnica (resource template://nota_tecnica)
-2. Se houver dados relevantes, use as tools disponíveis no mcp-russia
-   (incluindo integrações legadas ainda expostas pelo compatibility-layer) para consultar:
-   - IBGE: indicadores, população, PIB
-   - Bacen: câmbio, Selic, inflação
-   - Transparência: contratos, despesas
-3. Estrutura:
-   - ASSUNTO
-   - 1. INTRODUÇÃO: contextualização
-   - 2. ANÁLISE: dados e argumentos (com números reais se possível)
-   - 3. CONCLUSÃO E RECOMENDAÇÕES
-4. Inclua dados concretos sempre que possível
-5. Cite fontes de dados utilizadas
-6. Nota técnica NÃO tem fecho obrigatório
-7. Use a tool formatar_data_extenso()"""
+            f"Мне нужно составить СПРАВКУ.\n\n"
+            f"Тема: {tema}\n"
+            f"Данные: {dannye if dannye else '[указать данные]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон справки (resource template://spravka)\n"
+            f"2. Только факты, без эмоций\n"
+            f"3. Конкретные цифры и данные\n"
+            f"4. Без поручений — это информационный документ"
         ),
         Message(
-            "Vou redigir a nota técnica. Posso consultar dados em tempo real do "
-            "IBGE, Banco Central e Portal da Transparência para fundamentar a análise. "
-            "Vou verificar quais dados estão disponíveis...",
+            "Составлю справку с фактическими данными. Загружаю шаблон...",
+            role="assistant",
+        ),
+    ]
+
+
+def redaktor_protokol(
+    tema: str,
+    uchastniki: str = "",
+    voprosy: str = "",
+) -> list[Message]:
+    """Редактор протокола заседания.
+
+    Args:
+        tema: Тема заседания.
+        uchastniki: Список участников.
+        voprosy: Повестка дня.
+    """
+    return [
+        Message(
+            f"Мне нужно составить ПРОТОКОЛ заседания.\n\n"
+            f"Тема: {tema}\n"
+            f"Участники: {uchastniki if uchastniki else '[указать]'}\n"
+            f"Вопросы: {voprosy if voprosy else '[указать повестку]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон (resource template://protokol)\n"
+            f"2. Председатель и секретарь\n"
+            f"3. Повестка дня нумеруется\n"
+            f"4. По каждому вопросу: слушали — выступили — постановили\n"
+            f"5. Решения с ответственными и сроками"
+        ),
+        Message(
+            "Составлю протокол заседания. Загружаю шаблон...",
+            role="assistant",
+        ),
+    ]
+
+
+def redaktor_dokladnaya_zapiska(
+    tema: str,
+    rukovoditel: str = "",
+) -> list[Message]:
+    """Редактор докладной записки.
+
+    Args:
+        tema: Тема записки.
+        rukovoditel: Руководитель-адресат.
+    """
+    return [
+        Message(
+            f"Мне нужно составить ДОКЛАДНУЮ ЗАПИСКУ.\n\n"
+            f"Тема: {tema}\n"
+            f"Руководителю: {rukovoditel if rukovoditel else '[указать]'}\n\n"
+            f"Инструкции:\n"
+            f"1. Загрузи шаблон (resource template://dokladnaya_zapiska)\n"
+            f"2. Шапка в правом верхнем углу\n"
+            f"3. Изложение фактов → анализ → предложения\n"
+            f"4. Без заключительной формулы"
+        ),
+        Message(
+            "Составлю докладную записку. Загружаю шаблон...",
             role="assistant",
         ),
     ]

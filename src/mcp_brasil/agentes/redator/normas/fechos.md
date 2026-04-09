@@ -1,52 +1,55 @@
-# Fechos para Correspondência Oficial — Manual de Redação 3ª edição (2018)
+# Заключительные формулы в официальных документах РФ
 
-## Regra Principal
+## Основные правила
 
-Na 3ª edição do Manual de Redação, apenas **DOIS fechos** são admitidos
-para a correspondência oficial:
+В российской деловой переписке используются следующие заключительные формулы:
 
-### Respeitosamente,
+### Для официальных писем
 
-Usado quando o remetente se dirige a autoridade **SUPERIOR**.
+- **С уважением,** — универсальная формула для внешней переписки
+- **С уважением и надеждой на сотрудничество,** — для партнёрских отношений
 
-Exemplos:
-- Servidor → Diretor
-- Diretor → Secretário
-- Secretário → Ministro
-- Qualquer autoridade → Presidente da República
+### Для служебных документов
 
-### Atenciosamente,
+| Документ | Заключительная формула |
+|----------|------------------------|
+| Служебная записка | Не требуется |
+| Докладная записка | Не требуется |
+| Справка | Не требуется |
+| Акт | «Подписи сторон» |
+| Протокол | «Председатель __________ / Секретарь __________» |
+| Приказ | Не требуется |
+| Распоряжение | Не требуется |
 
-Usado quando o remetente se dirige a autoridade de **mesma hierarquia** ou **inferior**.
+### Для писем в государственные органы
 
-Exemplos:
-- Diretor → Diretor (mesmo nível)
-- Secretário → Coordenador
-- Ministro → Secretário
+- **Прошу рассмотреть данное обращение в установленный законом срок** — при обращении гражданина
+- **На основании изложенного прошу** — при официальном запросе
+- **Надеемся на Ваше содействие в решении данного вопроса** — при обращении к партнёрам
 
-## Fechos por Tipo de Documento
+## Запрещённые выражения
 
-| Documento | Fecho |
-|-----------|-------|
-| Ofício (para superior) | Respeitosamente, |
-| Ofício (mesmo nível/inferior) | Atenciosamente, |
-| Parecer | É o parecer, s.m.j. |
-| Portaria | Sem fecho |
-| Despacho | Sem fecho obrigatório |
-| Nota Técnica | Sem fecho obrigatório |
-| Ata | "Nada mais havendo a tratar..." |
+НЕ следует использовать:
 
-## Expressões PROIBIDAS como fecho
+- «С наилучшими пожеланиями» (слишком неформально)
+- «Искренне Ваш» (избыточно эмоционально)
+- «До свидания» (не соответствует официальному стилю)
+- «Заранее благодарен» (допустимо в менее формальной переписке)
 
-NÃO usar:
-- "Sem mais para o momento"
-- "Subscrevemo-nos"
-- "Cordialmente"
-- "Com os protestos de elevada estima e distinta consideração"
-- "Aproveitamos o ensejo para apresentar votos de estima"
+## Формат подписи
 
-## Formato do Fecho
+1. Должность
+2. Личная подпись
+3. Расшифровка подписи (инициалы перед фамилией)
 
-1. Fecho seguido de **vírgula**
-2. Nova linha com nome e cargo do signatário
-3. Uma linha em branco entre o último parágrafo e o fecho
+Пример:
+
+```
+Генеральный директор     __________     И.И. Иванов
+```
+
+## Печать
+
+- Печать ставится на документах, предусмотренных нормативными актами
+- Печать не должна закрывать подпись
+- Для документов с гербовой печатью — в соответствии с Положением о печати

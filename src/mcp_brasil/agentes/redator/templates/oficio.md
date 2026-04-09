@@ -1,90 +1,76 @@
-# MODELO: OFÍCIO (Padrão Ofício — 3ª edição)
+# ОБРАЗЕЦ: ОФИЦИАЛЬНОЕ ПИСЬМО
 
-Na 3ª edição do Manual de Redação (2018), memorando e aviso foram abolidos.
-O ofício é agora o ÚNICO tipo de comunicação oficial, usado tanto para
-comunicação interna quanto externa.
-
-## Estrutura Obrigatória
+## Структура документа
 
 ```
-[Brasão da República / logomarca do órgão]
-[Nome do Ministério]
-[Nome do órgão / entidade]
-[Nome do setor]
+[Герб или эмблема организации]
+[Наименование организации]
+[Наименование структурного подразделения]
 
-OFÍCIO Nº [NÚMERO]/[ANO]/[SIGLAS DO SETOR]
+[Исх. номер] от [дата]
+На № [вх. номер] от [дата]
 
-[Cidade], [dia] de [mês] de [ano].
+                                           [Должность адресата]
+                                           [Наименование организации]
+                                           [И.О. Фамилия адресата]
 
-A Sua Excelência o Senhor(a)
-[Nome do destinatário]
-[Cargo]
-[Órgão/Entidade]
-[Endereço]
-[CEP] — [Cidade]-[UF]
+[Название документа] — [заголовок]
 
-Assunto: [Tema do ofício]
+[Обращение],
 
-[Vocativo],
+        [Текст письма]
 
-        [Parágrafo 1: Exposição do assunto — ir direto ao ponto]
-        [Parágrafo 2: Detalhamento ou fundamentação]
-        [Parágrafo 3: Solicitação, informação ou providência]
+        [Заключительная формула]
 
-        [Fecho],
-
-[Nome]
-[Cargo]
+[Должность]     [Подпись]     [И.О. Фамилия]
+[Исполнитель]
+[Телефон]
 ```
 
-## Regras (3ª edição)
+## Правила оформления
 
-1. Ofício substitui memorando e aviso — é comunicação interna E externa
-2. Numeração obrigatória: OFÍCIO Nº X/ANO/SIGLAS (siglas da menor para a maior hierarquia)
-3. Data: "Cidade, dia de mês de ano." (SEM sigla da UF, com ponto final)
-4. Data com 1º (ordinal) para o primeiro dia do mês
-5. Endereçamento completo no cabeçalho
-6. Vocativo conforme pronome de tratamento:
-   - "Excelentíssimo" APENAS para os 3 Chefes de Poder
-   - Demais: "Senhor(a) + Cargo"
-7. Fecho conforme hierarquia (ÚNICOS dois admitidos):
-   - "Respeitosamente," — para autoridade superior
-   - "Atenciosamente," — para mesma hierarquia ou inferior
-8. Fonte: Calibri ou Carlito, tamanho 12
-9. Margens: esquerda 3cm, direita 1,5cm, superior e inferior 2cm
-10. Espaçamento: 1,5 entre linhas
-11. Parágrafos com recuo de 2,5cm na primeira linha
+1. Письмо — основной вид официальной переписки
+2. Исходящий номер и дата обязательны
+3. Дата: «15 марта 2026 г.» (город не указывается)
+4. Шапка — в правом верхнем углу
+5. Заголовок — по центру, с заглавной буквы, без точки
+6. Текст делится на абзацы
+7. Подпись: должность, подпись, И.О. Фамилия
+8. Шрифт: Times New Roman, 12–14 пт
+9. Интервал: 1,5
+10. Поля: левое 30 мм, правое 10 мм, верхнее/нижнее 20 мм
 
-## Exemplo
+## Пример
 
-OFÍCIO Nº 42/2026/SAA/SE/MT
+Министерство экономического развития
+Российской Федерации
+Департамент стратегического планирования
 
-Brasília, 22 de março de 2026.
+Исх. № 1234/Д-15 от 15 марта 2026 г.
 
-A Sua Excelência o Senhor
-João da Silva
-Secretário de Administração
-Ministério do Planejamento
-Esplanada dos Ministérios, Bloco K
-70040-906 — Brasília-DF
+                                           Председателю Комитета
+                                           по экономической политике
+                                           Государственной Думы
+                                           А.Г. Аксакову
 
-Assunto: Solicitação de cessão de servidor
+Уважаемый Андрей Геннадьевич!
 
-Senhor Secretário,
+        Департамент стратегического планирования Министерства
+экономического развития Российской Федерации рассмотрел
+Ваше обращение от 1 марта 2026 г. № АГ-123/2026 о внесении
+изменений в Федеральный закон «О стратегическом планировании
+в Российской Федерации» и сообщает следующее.
 
-        Dirijo-me a Vossa Excelência para solicitar a cessão
-do servidor Pedro Santos, matrícula nº 654321, lotado
-na Coordenação de Gestão de Pessoas desse Ministério.
+        Предложения, изложенные в обращении, поддерживаются
+Министерством и будут учтены при подготовке проекта
+федерального закона. Соответствующие поправки будут
+направлены в комитет в установленном порядке.
 
-        O referido servidor possui expertise em sistemas de
-gestão de pessoas e sua atuação é essencial para a
-implantação do novo sistema de folha de pagamento
-deste órgão, prevista para o segundo semestre de 2026.
+        Дополнительная информация будет предоставлена
+в срок до 1 апреля 2026 г.
 
-        Informo que os custos de remuneração serão assumidos
-pelo órgão cessionário, conforme art. 93 da Lei nº 8.112/1990.
+        С уважением,
 
-        Respeitosamente,
-
-FULANA DE TAL
-Secretária de Gestão
+Директор Департамента     __________     И.И. Петров
+Исполнитель: М.С. Сидорова
+Тел.: (495) 123-45-67

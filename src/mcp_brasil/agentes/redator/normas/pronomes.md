@@ -1,61 +1,73 @@
-# Pronomes de Tratamento — Manual de Redação 3ª edição (2018)
+# Формы обращения в официальных документах РФ
 
-## Regras Fundamentais (3ª edição)
+## Основные правила
 
-1. **"Excelentíssimo"** é reservado APENAS para os **3 Chefes de Poder**:
-   - Presidente da República
-   - Presidente do Congresso Nacional
-   - Presidente do Supremo Tribunal Federal
-2. Demais autoridades que recebem V. Exa.: vocativo "Senhor(a) + Cargo"
-3. **Digníssimo (DD) foi ABOLIDO** — não usar em hipótese alguma
-4. **Ilustríssimo (Ilmo.) foi ABOLIDO** — não usar
-5. **"Doutor"** não é forma de tratamento — usar apenas para quem tem doutorado
-6. Concordância: "Vossa Excelência **nomeou**" (sempre 3ª pessoa)
+1. **Обращение** указывается в начале документа после наименования адресата
+2. **Титулование** зависит от должности и статуса адресата
+3. **Адресация** указывается в шапке документа
 
-## Vossa Excelência (V. Exa.)
+## Формы обращения к должностным лицам
 
-### Chefes de Poder — vocativo "Excelentíssimo"
-| Cargo | Vocativo | Endereçamento |
-|-------|----------|---------------|
-| Presidente da República | Excelentíssimo Senhor Presidente da República, | A Sua Excelência o Senhor |
-| Presidente do Congresso Nacional | Excelentíssimo Senhor Presidente do Congresso Nacional, | A Sua Excelência o Senhor |
-| Presidente do STF | Excelentíssimo Senhor Presidente do Supremo Tribunal Federal, | A Sua Excelência o Senhor |
+### Высшие должностные лица
 
-### Demais autoridades — vocativo "Senhor(a) + Cargo"
-| Cargo | Vocativo | Endereçamento |
-|-------|----------|---------------|
-| Vice-Presidente da República | Senhor Vice-Presidente, | A Sua Excelência o Senhor |
-| Ministro de Estado | Senhor Ministro, | A Sua Excelência o Senhor |
-| Secretário-Executivo | Senhor Secretário-Executivo, | A Sua Excelência o Senhor |
-| Governador | Senhor Governador, | A Sua Excelência o Senhor |
-| Prefeito | Senhor Prefeito, | A Sua Excelência o Senhor |
-| Senador | Senhor Senador, | A Sua Excelência o Senhor |
-| Deputado Federal/Estadual | Senhor Deputado, | A Sua Excelência o Senhor |
-| Vereador | Senhor Vereador, | A Sua Excelência o Senhor |
-| Desembargador | Senhor Desembargador, | A Sua Excelência o Senhor |
-| Juiz | Senhor Juiz, | A Sua Excelência o Senhor |
-| Secretário de Estado | Senhor Secretário, | A Sua Excelência o Senhor |
-| Embaixador | Senhor Embaixador, | A Sua Excelência o Senhor |
-| General (Oficiais-Generais) | Senhor General, | A Sua Excelência o Senhor |
-| Procurador-Geral | Senhor Procurador-Geral, | A Sua Excelência o Senhor |
+| Должность | Обращение | Титулование |
+|-----------|-----------|-------------|
+| Президент Российской Федерации | Уважаемый господин Президент | Президент Российской Федерации |
+| Председатель Совета Федерации | Уважаемый господин Председатель | Председатель Совета Федерации |
+| Председатель Государственной Думы | Уважаемый господин Председатель | Председатель Государственной Думы |
+| Председатель Правительства | Уважаемый господин Председатель | Председатель Правительства |
+| Председатель Конституционного Суда | Уважаемый господин Председатель | Председатель Конституционного Суда |
+| Председатель Верховного Суда | Уважаемый господин Председатель | Председатель Верховного Суда |
 
-## Vossa Senhoria (V. Sa.)
+### Министры и руководители федеральных органов
 
-| Cargo | Vocativo | Endereçamento |
-|-------|----------|---------------|
-| Coronel | Senhor Coronel, | Ao Senhor |
-| Diretor | Senhor Diretor, | Ao Senhor |
-| Coordenador | Senhor Coordenador, | Ao Senhor |
-| Chefe de seção | Senhor Chefe, | Ao Senhor |
-| Demais autoridades | Senhor(a) [Cargo], | Ao Senhor / À Senhora |
+| Должность | Обращение | Титулование |
+|-----------|-----------|-------------|
+| Министр | Уважаемый господин Министр | Министр [название министерства] |
+| Руководитель федеральной службы | Уважаемый господин Руководитель | Руководитель [название службы] |
+| Генеральный прокурор | Уважаемый господин Генеральный прокурор | Генеральный прокурор |
+| Председатель Следственного комитета | Уважаемый господин Председатель | Председатель СК России |
 
-## Vossa Magnificência (V. Maga.)
+### Региональные должностные лица
 
-| Cargo | Vocativo | Endereçamento |
-|-------|----------|---------------|
-| Reitor de universidade | Magnífico Reitor, | Ao Magnífico Senhor Reitor |
+| Должность | Обращение | Титулование |
+|-----------|-----------|-------------|
+| Губернатор | Уважаемый господин Губернатор | Губернатор [субъекта РФ] |
+| Глава муниципального образования | Уважаемый господин Глава | Глава [муниципалитета] |
+| Мэр города | Уважаемый господин Мэр | Мэр города [название] |
+| Депутат регионального парламента | Уважаемый господин Депутат | Депутат [название парламента] |
 
-## Uso de "Vossa" vs "Sua"
+### Организации и учреждения
 
-- **Vossa Excelência**: quando se dirige À pessoa ("Vossa Excelência nomeou...")
-- **Sua Excelência**: quando se refere à pessoa em 3ª pessoa ("Sua Excelência nomeou...")
+| Должность | Обращение | Титулование |
+|-----------|-----------|-------------|
+| Генеральный директор | Уважаемый господин Генеральный директор | Генеральный директор [организации] |
+| Директор | Уважаемый господин Директор | Директор [организации] |
+| Ректор вуза | Уважаемый господин Ректор | Ректор [название вуза] |
+| Начальник подразделения | Уважаемый господин Начальник | Начальник [подразделения] |
+
+## Правила использования
+
+- Инициалы указываются **перед** фамилией: «И.И. Иванов»
+- При обращении по должности слово «господин» не обязательно: «Уважаемый Министр»
+- В деловой переписке допустимо: «Уважаемый Иван Иванович!»
+- При обращении к суду: «Уважаемый суд!»
+- В служебных записках обращение может опускаться
+
+## Оформление в шапке документа
+
+Шапка документа оформляется в правом верхнем углу:
+
+```
+                                           Председателю Государственной Думы
+                                           Российской Федерации
+                                           В.В. Володину
+```
+
+Или:
+
+```
+                                           Генеральному директору
+                                           ООО «Ромашка»
+                                           И.И. Иванову
+```

@@ -1,11 +1,6 @@
-"""Tool functions for the Redator Oficial feature — legacy compatibility layer.
+"""Инструменты для создания официальных документов РФ.
 
-NOTE: This is a legacy/compatibility layer within mcp-russia.
-These Brazilian official document formatting tools are kept for backward compatibility
-with the historical redator integration based on Manual de Redação da Presidência da República
-and are NOT part of the target Russian data model.
-
-Based on Manual de Redação da Presidência da República, 3ª edição (2018).
+Основано на ГОСТ Р 7.0.97-2016 и правилах делопроизводства РФ.
 
 Rules (ADR-001):
     - Returns formatted strings for LLM consumption
@@ -16,229 +11,206 @@ from __future__ import annotations
 import re
 from datetime import datetime
 
-from .constants import MESES, PREFIXOS_DOCUMENTO, PRONOMES_TRATAMENTO
+from .constants import (
+    МЕСЯЦЫ,
+    ОБРАЩЕНИЯ,
+    ПРЕФИКСЫ_ДОКУМЕНТОВ,
+)
 
 
-async def formatar_data_extenso(
-    cidade: str = "Brasília",
-    estado: str = "DF",
+async def formatirovat_data_extenso(
+    gorod: str = "Москва",
 ) -> str:
-    """Formata a data atual no padrão oficial brasileiro por extenso.
+    """Форматирует текущую дату по стандартам официальных документов РФ.
 
-    Segue o Manual de Redação: nome da cidade (sem sigla da UF na data),
-    dia ordinal se for 1º, cardinal sem zero à esquerda para os demais,
-    mês com inicial minúscula, ponto-final ao término.
+    Согласно ГОСТ Р 7.0.97-2016: название города, день (1-е число —
+    порядковое, остальные — количественное), месяц в родительном падеже,
+    год, точка в конце.
 
     Args:
-        cidade: Nome da cidade. Default: Brasília.
-        estado: Sigla do estado (UF). Default: DF.
+        gorod: Название города. По умолчанию: Москва.
 
     Returns:
-        Data formatada (ex: "Brasília, 22 de março de 2026.").
+        Дата в формате: «г. Москва, 15 марта 2026 г.»
     """
-    hoje = datetime.now()
-    mes = MESES[hoje.month]
-    dia = "1º" if hoje.day == 1 else str(hoje.day)
-    return f"{cidade}, {dia} de {mes} de {hoje.year}."
+    segodnya = datetime.now()
+    mesyac = МЕСЯЦЫ[segodnya.month]
+    den = "1" if segodnya.day == 1 else str(segodnya.day)
+    return f"г. {gorod}, {den} {mesyac} {segodnya.year} г."
 
 
-async def gerar_numeracao(
-    tipo: str,
-    numero: int,
-    ano: int | None = None,
-    setor: str = "",
+async def generirovat_numeraciyu(
+    tip: str,
+    nomer: int,
+    god: int | None = None,
+    otdel: str = "",
 ) -> str:
-    """Gera a numeração oficial de um documento.
+    """Генерирует номер официального документа.
 
-    Segue o padrão do Manual de Redação: TIPO Nº NÚMERO/ANO/SIGLAS.
-    Siglas do setor vão da menor para a maior hierarquia.
-
-    Nota: Na 3ª edição do Manual, "memorando" e "aviso" foram abolidos.
-    Ambos são automaticamente convertidos para "OFÍCIO".
+    Стандартный формат: ТИП № НОМЕР/ГОД/ОТДЕЛ
 
     Args:
-        tipo: Tipo do documento (oficio, despacho, portaria, parecer,
-              nota_tecnica, ata). Aceita "memorando" por retrocompatibilidade.
-        numero: Número sequencial do documento.
-        ano: Ano do documento (default: ano atual).
-        setor: Siglas do setor (ex: SAA/SE/MT). Opcional.
+        tip: Тип документа (письмо, распоряжение, приказ, акт, справка,
+             протокол, докладная_записка).
+        nomer: Порядковый номер документа.
+        god: Год документа (по умолчанию — текущий).
+        otdel: Аббревиатура подразделения. Необязательно.
 
     Returns:
-        Numeração formatada (ex: "OFÍCIO Nº 652/2026/SAA/SE/MT").
+        Номер документа (например, «ПИСЬМО № 42/2026/Д-15»).
     """
-    ano = ano or datetime.now().year
-    tipo = tipo.lower().strip()
+    god = god or datetime.now().year
+    tip = tip.lower().strip()
 
-    prefixo = PREFIXOS_DOCUMENTO.get(tipo, tipo.capitalize())
+    prefiks = ПРЕФИКСЫ_ДОКУМЕНТОВ.get(tip, tip.upper())
 
-    if setor:
-        return f"{prefixo} Nº {numero}/{ano}/{setor}"
-    return f"{prefixo} Nº {numero}/{ano}"
+    if otdel:
+        return f"{prefiks} № {nomer}/{god}/{otdel}"
+    return f"{prefiks} № {nomer}/{god}"
 
 
-async def consultar_pronome_tratamento(cargo: str) -> str:
-    """Retorna o pronome de tratamento correto para um cargo público.
+async def konsulitirovat_obrashchenie(dolzhnost: str) -> str:
+    """Возвращает правильную форму обращения к должностному лицу.
 
-    Segue a tabela oficial do Manual de Redação da Presidência (3ª edição).
-
-    REGRAS IMPORTANTES:
-    - "Excelentíssimo" é reservado APENAS para os 3 Chefes de Poder
-      (Presidente da República, do Congresso Nacional e do STF)
-    - Demais autoridades: vocativo "Senhor/Senhora + Cargo"
-    - Digníssimo (DD) e Ilustríssimo (Ilmo.) foram ABOLIDOS
-    - Evitar "Doutor" indiscriminadamente
+    Основано на правилах российского делопроизводства.
 
     Args:
-        cargo: Cargo do destinatário (ex: "Governador", "Secretário", "Juiz").
+        dolzhnost: Должность адресата (например, «Министр», «Губернатор»).
 
     Returns:
-        Pronome de tratamento, vocativo, abreviatura e endereçamento.
+        Форма обращения, титулование и адресация.
     """
-    cargo_lower = cargo.lower().strip()
+    dolzhnost_lower = dolzhnost.lower().strip()
 
-    # Busca exata
-    if cargo_lower in PRONOMES_TRATAMENTO:
-        p = PRONOMES_TRATAMENTO[cargo_lower]
+    # Точный поиск
+    if dolzhnost_lower in ОБРАЩЕНИЯ:
+        o = ОБРАЩЕНИЯ[dolzhnost_lower]
         return (
-            f"Cargo: {cargo}\n"
-            f"Tratamento: {p['tratamento']}\n"
-            f"Vocativo: {p['vocativo']}\n"
-            f"Abreviatura: {p['abreviatura']}\n"
-            f"Endereçamento: {p['enderecamento']}"
+            f"Должность: {dolzhnost}\n"
+            f"Обращение: {o['обращение']}\n"
+            f"Титулование: {o['титулование']}\n"
+            f"Адресация: {o['адресация']}"
         )
 
-    # Busca parcial
-    for key, p in PRONOMES_TRATAMENTO.items():
-        if key in cargo_lower or cargo_lower in key:
+    # Частичный поиск
+    for key, o in ОБРАЩЕНИЯ.items():
+        if key in dolzhnost_lower or dolzhnost_lower in key:
             return (
-                f"Cargo: {cargo} (similar a: {key})\n"
-                f"Tratamento: {p['tratamento']}\n"
-                f"Vocativo: {p['vocativo']}\n"
-                f"Abreviatura: {p['abreviatura']}\n"
-                f"Endereçamento: {p['enderecamento']}"
+                f"Должность: {dolzhnost} (похоже на: {key})\n"
+                f"Обращение: {o['обращение']}\n"
+                f"Титулование: {o['титулование']}\n"
+                f"Адресация: {o['адресация']}"
             )
 
-    # Default — Vossa Senhoria
+    # По умолчанию
     return (
-        f"Cargo: {cargo}\n"
-        f"Tratamento: Vossa Senhoria (padrão para demais autoridades)\n"
-        f"Vocativo: Senhor(a) {cargo},\n"
-        f"Abreviatura: V. Sa.\n"
-        f"Endereçamento: Ao Senhor / À Senhora"
+        f"Должность: {dolzhnost}\n"
+        f"Обращение: Уважаемый господин/госпожа {dolzhnost}\n"
+        f"Титулование: {dolzhnost} [наименование организации]\n"
+        f"Адресация: [Должность] [наименование организации]"
     )
 
 
-async def validar_documento(texto: str, tipo: str) -> str:
-    """Valida se um documento segue as normas de redação oficial.
+async def validirovat_dokument(tekst: str, tip: str) -> str:
+    """Проверяет документ на соответствие нормам делопроизводства.
 
-    Verifica aspectos formais conforme o Manual de Redação (3ª edição):
-    data por extenso, fecho adequado, numeração, gerúndios, parágrafos.
+    Проверяет формальные аспекты: дата, номер, подписи, стиль.
 
     Args:
-        texto: Texto do documento para validar.
-        tipo: Tipo do documento (oficio, despacho, portaria, parecer,
-              nota_tecnica, ata).
+        tekst: Текст документа.
+        tip: Тип документа (письмо, приказ, распоряжение, акт, справка,
+             протокол, докладная_записка).
 
     Returns:
-        Relatório de validação com problemas encontrados e sugestões.
+        Отчёт о валидации с проблемами и рекомендациями.
     """
-    problemas: list[str] = []
-    sugestoes: list[str] = []
+    problemy: list[str] = []
+    rekomendacii: list[str] = []
 
-    # Verifica data por extenso
-    meses_lista = list(MESES.values())
-    tem_data = any(mes in texto.lower() for mes in meses_lista)
-    if not tem_data:
-        problemas.append("Sem data por extenso no documento")
+    # Проверка даты
+    mesyacy_spisok = list(МЕСЯЦЫ.values())
+    est_data = any(mesyac in tekst.lower() for mesyac in mesyacy_spisok)
+    if not est_data:
+        problemy.append("Отсутствует дата в документе")
 
-    # Verifica fecho (apenas para tipos que exigem)
-    fechos_validos = ["atenciosamente", "respeitosamente", "é o parecer", "s.m.j."]
-    tem_fecho = any(fecho in texto.lower() for fecho in fechos_validos)
-    if not tem_fecho and tipo in ("oficio", "memorando"):
-        problemas.append(
-            "Sem fecho oficial — use 'Respeitosamente,' (superior) "
-            "ou 'Atenciosamente,' (mesma hierarquia ou inferior)"
-        )
+    # Проверка номера
+    est_nomer = "№" in tekst or "номер" in tekst.lower()
+    if not est_nomer and tip in ("письмо", "приказ", "распоряжение", "акт", "протокол"):
+        rekomendacii.append("Рекомендуется указать номер документа")
 
-    # Verifica numeração
-    tem_numeracao = "Nº" in texto or "nº" in texto or "n°" in texto
-    if not tem_numeracao and tipo in ("oficio", "portaria", "parecer", "nota_tecnica"):
-        sugestoes.append("Sem numeração (padrão: TIPO Nº X/ANO/SETOR)")
+    # Проверка подписи
+    if tip in ("письмо", "приказ", "распоряжение", "акт", "справка") \
+            and "__________" not in tekst:
+        rekomendacii.append("Отсутствует место для подписи")
 
-    # Verifica uso de expressões abolidas
-    abolidos = ["digníssimo", "ilustríssimo", "ilmo.", "d.d."]
-    for termo in abolidos:
-        if termo in texto.lower():
-            problemas.append(f"Termo abolido encontrado: '{termo}' — não usar (Manual 3ª ed.)")
-
-    # Verifica "Tenho a honra de" e similares
-    expressoes_evitar = ["tenho a honra", "tenho o prazer", "cumpre-me informar"]
-    for expr in expressoes_evitar:
-        if expr in texto.lower():
-            sugestoes.append(
-                f"Expressão '{expr}' — preferir forma direta: 'Informo', 'Solicito', 'Comunico'"
+    # Проверка на излишне эмоциональные выражения
+    izbytochnye = [
+        "с наилучшими пожеланиями",
+        "искренне ваш",
+        "до свидания",
+        "с благодарностью",
+    ]
+    for fraza in izbytochnye:
+        if fraza in tekst.lower():
+            rekomendacii.append(
+                f"Фраза «{fraza}» не соответствует официальному стилю"
             )
 
-    # Verifica gerúndio excessivo
-    gerundios = re.findall(r"\b\w+ndo\b", texto)
-    if len(gerundios) > 5:
-        sugestoes.append(
-            f"{len(gerundios)} gerúndios encontrados — redação oficial prefere formas diretas"
+    # Проверка на герундий (деепричастия)
+    deeprichastiya = re.findall(r"\b\w+(?:я|ая|учи|в)\b", tekst)
+    if len(deeprichastiya) > 5:
+        rekomendacii.append(
+            f"Найдено {len(deeprichastiya)} деепричастий — "
+            "официальный стиль предпочитает прямые формы"
         )
 
-    # Verifica parágrafos muito longos
-    paragrafos = [p for p in texto.split("\n\n") if p.strip()]
-    longos = [p for p in paragrafos if len(p) > 500]
-    if longos:
-        sugestoes.append(
-            f"{len(longos)} parágrafo(s) com mais de 500 caracteres — "
-            "considere dividir para clareza"
+    # Проверка длинных абзацев
+    abzaczy = [p for p in tekst.split("\n\n") if p.strip()]
+    dlinnye = [p for p in abzaczy if len(p) > 500]
+    if dlinnye:
+        rekomendacii.append(
+            f"{len(dlinnye)} абзац(ев) длиннее 500 символов — "
+            "рекомендуется разделить для ясности"
         )
 
-    # Monta relatório
-    if not problemas and not sugestoes:
-        return "Documento segue as normas de redação oficial. Nenhum problema encontrado."
+    # Отчёт
+    if not problemy and not rekomendacii:
+        return "Документ соответствует нормам делопроизводства. Проблем не обнаружено."
 
-    relatorio = "RELATÓRIO DE VALIDAÇÃO\n\n"
-    if problemas:
-        relatorio += "Problemas encontrados:\n"
-        relatorio += "\n".join(f"  - {p}" for p in problemas)
-        relatorio += "\n\n"
-    if sugestoes:
-        relatorio += "Sugestões de melhoria:\n"
-        relatorio += "\n".join(f"  - {s}" for s in sugestoes)
+    otchet = "ОТЧЁТ О ВАЛИДАЦИИ ДОКУМЕНТА\n\n"
+    if problemy:
+        otchet += "Обнаружены проблемы:\n"
+        otchet += "\n".join(f"  - {p}" for p in problemy)
+        otchet += "\n\n"
+    if rekomendacii:
+        otchet += "Рекомендации по улучшению:\n"
+        otchet += "\n".join(f"  - {r}" for r in rekomendacii)
 
-    return relatorio
+    return otchet
 
 
-async def listar_tipos_documento() -> str:
-    """Lista todos os tipos de documento oficial suportados.
-
-    Na 3ª edição do Manual de Redação, "memorando" e "aviso" foram
-    abolidos como tipos distintos — tudo é "ofício" agora.
+async def spisok_tipov_dokumentov() -> str:
+    """Возвращает список поддерживаемых типов официальных документов.
 
     Returns:
-        Lista formatada dos tipos com descrição.
+        Форматированный список типов с описанием.
     """
-    tipos = {
-        "oficio": "Comunicação oficial (substitui memorando e aviso desde a 3ª edição)",
-        "despacho": "Decisão administrativa sobre processo ou requerimento",
-        "portaria": "Ato normativo de autoridade administrativa",
-        "parecer": "Manifestação técnica ou jurídica sobre consulta",
-        "nota_tecnica": "Análise técnica com dados e recomendações",
-        "ata": "Registro de reunião ou assembleia",
+    tipy = {
+        "письмо": "Официальная переписка с внешними организациями",
+        "распоряжение": "Акт по оперативным вопросам деятельности",
+        "приказ": "Правовой акт руководителя организации",
+        "акт": "Документ, фиксирующий факты и события",
+        "справка": "Документ с фактическими данными",
+        "протокол": "Запись хода заседания коллегиального органа",
+        "докладная_записка": "Документ внутреннего обращения к руководителю",
     }
 
-    linhas = ["Tipos de documento oficial suportados:\n"]
-    for tipo, desc in tipos.items():
-        linhas.append(f"  - {tipo}: {desc}")
+    stroki = ["Поддерживаемые типы официальных документов:\n"]
+    for tip, opisanie in tipy.items():
+        stroki.append(f"  - {tip}: {opisanie}")
 
-    linhas.append(
-        "\nNota: 'memorando' e 'aviso' foram abolidos na 3ª edição do Manual. "
-        "Use 'ofício' para todas as comunicações oficiais."
+    stroki.append(
+        "\nИспользуйте инструменты redator для создания каждого типа. "
+        "Шаблоны доступны в templates/."
     )
-    linhas.append(
-        "\nUse os prompts do redator para gerar cada tipo. "
-        "Exemplo: selecione 'Redator de Ofício' no menu de prompts."
-    )
-    return "\n".join(linhas)
+    return "\n".join(stroki)
