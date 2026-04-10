@@ -77,11 +77,13 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
 
     rows = []
     for i, addr in enumerate(results[:10], 1):
-        rows.append((
-            str(i),
-            addr.get("value", ""),
-            addr.get("postal_code", ""),
-        ))
+        rows.append(
+            (
+                str(i),
+                addr.get("value", ""),
+                addr.get("postal_code", ""),
+            )
+        )
 
     header = f"**Результаты поиска: {zapros}**\n\n"
     return header + markdown_table(["#", "Адрес", "Индекс"], rows)
@@ -147,10 +149,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     result = await client.find_org_by_inn(ogrn)  # Same API endpoint
 
     if isinstance(result, dict) and "error" in result:
-        return (
-            f"**ОГРН: {ogrn}**\n\n"
-            f"{result['error']}"
-        )
+        return f"**ОГРН: {ogrn}**\n\n{result['error']}"
 
     lines = [
         f"**{result.name_short or result.name_full or 'Организация'}**",
@@ -177,10 +176,12 @@ async def spisok_bankov(ctx: Context) -> str:
     # Use built-in reference list (always works, no API key needed)
     rows = []
     for bank in OSNOVNYE_BANKI:
-        rows.append((
-            bank["bik"],
-            bank["name"],
-        ))
+        rows.append(
+            (
+                bank["bik"],
+                bank["name"],
+            )
+        )
 
     header = "**Основные банки России** (справочник)\n\n"
     header += (
@@ -209,11 +210,7 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
             break
 
     if found:
-        return (
-            f"**{found['name']}**\n\n"
-            f"- БИК: {found['bik']}\n"
-            f"- Источник: Справочник ЦБ РФ"
-        )
+        return f"**{found['name']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
 
     return (
         f"Банк с БИК {bik} не найден в справочнике.\n\n"
@@ -269,7 +266,5 @@ async def nalogovye_stavki(ctx: Context) -> str:
         rows.append((code, name, stavka))
 
     header = "**Основные налоговые ставки РФ**\n\n"
-    header += (
-        "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
-    )
+    header += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
     return header + markdown_table(["Код", "Налог", "Ставка"], rows)

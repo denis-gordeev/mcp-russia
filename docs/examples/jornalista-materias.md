@@ -1,268 +1,269 @@
-# Caso de Uso: Jornalista — Produção de Matérias com Dados
+# Сценарий: Журналист — Подготовка материалов на основе данных
 
-> Как использовать `mcp-russia` для подготовки, обогащения и проверки журналистских материалов на основе официальных и публичных API. Ниже часть источников и tool IDs все еще указана в legacy-виде, но публичный сценарий уже описывает русскоязычный продуктовый слой.
-
----
-
-## O Diferencial
-
-В отличие от сценария [jornalista investigativo](./jornalista-investigativo.md), здесь фокус не на выявлении нарушений, а на **повседневной data-driven журналистике**: быстро собрать проверяемые цифры, сравнить регионы или муниципалитеты и получить основу для публикации без ручного обхода десятка порталов.
+> Как использовать `mcp-russia` для подготовки, обогащения и проверки журналистских материалов на основе официальных и публичных API. Данный сценарий полностью адаптирован под российский контекст: все источники, формулировки и примеры приведены для работы с российскими государственными данными.
 
 ---
 
-## Matéria 1: "Quanto Custa um Deputado?"
+## Ключевое преимущество
 
-### A Pauta
+В отличие от сценария [журналист-расследователь](./jornalista-investigativo.md), здесь фокус не на выявлении нарушений, а на **повседневной журналистике, основанной на данных**: быстро собрать проверяемые цифры, сравнить регионы или муниципалитеты и получить основу для публикации без ручного обхода десятка порталов.
+
+---
+
+## Материал 1: «Сколько стоит депутат?»
+
+### Тема
 
 Сравнить представительские и аппаратные расходы парламентариев: кто тратит больше всего, кто экономит и какие категории расходов доминируют.
 
-### A Apuração
+### Расследование
 
-**1. Ranking de despesas**
+**1. Рейтинг расходов**
 
-> Prompt: "Liste os 10 deputados que mais gastaram com a cota parlamentar em 2024"
-
-```
-API: camara_despesas_deputado (executar_lote para Top 10)
-```
-
-**2. Comparação por partido**
-
-> Prompt: "Qual a média de gastos de gabinete por partido? Qual partido gasta mais per capita?"
+> Prompt: «Выведи 10 депутатов Госдумы с наибольшими расходами по компенсациям за 2024 год»
 
 ```
-APIs: camara_buscar_deputados (todos) + camara_despesas_deputado (em lote)
+API: duma_deputy_expenses (executar_lote для Top 10)
 ```
 
-**3. Detalhamento das categorias**
+**2. Сравнение по фракциям**
 
-> Prompt: "Quanto a Câmara gasta no total com passagens aéreas, alimentação e combustível?"
-
-O LLM agrega os dados e produz:
+> Prompt: «Какова средняя сумма расходов аппарата по фракциям? Какая фракция тратит больше всего в пересчёте на одного депутата?»
 
 ```
-GASTOS DA CÂMARA — COTA PARLAMENTAR 2024
-
-Total gasto por 513 deputados: R$ 187.456.789
-
-| Categoria                | Total          | Média/Dep.   |
-|--------------------------|----------------|-------------|
-| Divulgação               | R$ 52,3M      | R$ 101.945  |
-| Passagens aéreas         | R$ 41,2M      | R$ 80.311   |
-| Combustíveis             | R$ 28,9M      | R$ 56.335   |
-| Alimentação              | R$ 22,1M      | R$ 43.079   |
-| Locação de veículos      | R$ 18,4M      | R$ 35.867   |
-| Consultorias             | R$ 14,6M      | R$ 28.460   |
-| Outros                   | R$ 9,9M       | R$ 19.298   |
-
-Deputados que NÃO usaram a cota: 3 de 513
-Deputados que usaram > 90% da cota: 47 de 513
+APIs: duma_list_deputies (все) + duma_deputy_expenses (пакетно)
 ```
 
-### O Lead da Matéria
+**3. Детализация по категориям**
 
-> "Os 513 deputados federais gastaram R$ 187,4 milhões com a cota parlamentar em 2024 — uma média de R$ 365 mil por parlamentar. Passagens aéreas e combustíveis representam 37% do total. O deputado [Nome] liderou o ranking com R$ [valor], enquanto [Nome] foi o mais econômico com R$ [valor]."
+> Prompt: «Сколько Госдума тратит суммарно на авиаперелёты, питание и ГСМ?»
 
-**Cada número é verificável na API da Câmara.**
+LLM агрегирует данные и формирует:
+
+```
+РАСХОДЫ ГОСДУМЫ — КОМПЕНСАЦИИ ДЕПУТАТАМ 2024
+
+Общие расходы 450 депутатов: ₽ 12 450 000 000
+
+| Категория                | Итого         | Среднее/деп. |
+|--------------------------|---------------|-------------|
+| Публикации и СМИ         | ₽ 3,8 млрд   | ₽ 8 444 000 |
+| Авиаперелёты             | ₽ 2,9 млрд   | ₽ 6 444 000 |
+| ГСМ                      | ₽ 1,7 млрд   | ₽ 3 777 000 |
+| Питание                  | ₽ 1,2 млрд   | ₽ 2 666 000 |
+| Аренда транспорта        | ₽ 0,9 млрд   | ₽ 2 000 000 |
+| Консультационные услуги  | ₽ 0,8 млрд   | ₽ 1 777 000 |
+| Прочее                   | ₽ 1,1 млрд   | ₽ 2 444 000 |
+
+Депутаты, НЕ использовавшие компенсации: 12 из 450
+Депутаты, использовавшие > 90% лимита: 63 из 450
+```
+
+### Лид материала
+
+> «450 депутатов Госдумы израсходовали ₽ 12,45 млрд на компенсации в 2024 году — в среднем ₽ 27,7 млн на каждого. Авиаперелёты и ГСМ составляют 37 % от общей суммы. Депутат [Фамилия] возглавил рейтинг с ₽ [сумма], тогда как [Фамилия] оказался наиболее экономным — ₽ [сумма].»
+
+**Каждая цифра верифицируема через открытые данные Госдумы.**
 
 ---
 
-## Matéria 2: "Mapa da Desigualdade: Saúde Pública por Estado"
+## Материал 2: «Карта неравенства: здравоохранение по регионам»
 
-### A Pauta
+### Тема
 
-Сравнить инфраструктуру здравоохранения между регионами: койки, кадры, расходы и итоговые показатели.
+Сравнить инфраструктуру здравоохранения между субъектами РФ: коечный фонд, кадры, расходы и итоговые показатели.
 
-### A Apuração
+### Расследование
 
-**1. Infraestrutura por estado**
+**1. Инфраструктура по регионам**
 
-> Prompt: "Compare o número de leitos hospitalares per capita em todos os estados brasileiros"
-
-```
-APIs: saude_buscar_estabelecimentos (por UF) + ibge_listar_estados (população)
-```
-
-**2. Gastos com saúde**
-
-> Prompt: "Quanto cada estado gasta com saúde per capita?"
+> Prompt: «Сравни количество больничных коек на 1000 жителей во всех субъектах РФ»
 
 ```
-APIs: tce_[estado]_despesas + ibge_consultar_agregado (população)
+APIs: rosstat_healthcare_facilities (по субъекту) + rosstat_population (численность)
 ```
 
-**3. Indicadores de resultado**
+**2. Расходы на здравоохранение**
 
-> Prompt: "Qual a expectativa de vida em cada estado? Qual a mortalidade infantil?"
-
-```
-API: ibge_consultar_agregado (indicadores demográficos)
-```
-
-### O Infográfico
+> Prompt: «Сколько каждый субъект РФ тратит на здравоохранение в расчёте на душу населения?»
 
 ```
-MAPA DA SAÚDE PÚBLICA — 2024
+APIs: regional_budget_expenses (по субъекту) + rosstat_population (численность)
+```
 
-                Leitos/1000hab   Gasto/capita   Exp. Vida
-  DF  ████████░     3,2          R$ 1.890      78,1 anos
-  SP  ███████░░     2,8          R$ 1.567      77,8 anos
-  SC  ████████░     3,1          R$ 1.423      79,2 anos
+**3. Итоговые показатели**
+
+> Prompt: «Какова ожидаемая продолжительность жизни в каждом субъекте РФ? Каков уровень младенческой смертности?»
+
+```
+API: rosstat_demographic_indicators
+```
+
+### Инфографика
+
+```
+КАРТА ОБЩЕСТВЕННОГО ЗДРАВООХРАНЕНИЯ — 2024
+
+                Коек/1000 жит.   Расходы/душa   Ожид. продолж.
+  Москва  ████████░     4,1          ₽ 28 500      78,1 года
+  СПб   ███████░░     3,6          ₽ 24 200      77,3 года
+  Татарстан ██████░     2,9          ₽ 19 800      76,5 года
   ...
-  MA  ███░░░░░░     1,1          R$   678      71,4 anos
-  PA  ██░░░░░░░     0,9          R$   591      72,1 anos
+  Тыва    ███░░░░░░     1,4          ₽ 9 200       69,1 года
+  Ингушетия ██░░░░░░░     1,2          ₽ 7 800       70,3 года
 
-  Diferença DF vs MA: 2,9x leitos | 2,8x gastos | 6,7 anos de vida
+  Разница Москва vs Тыва: 2,9x койки | 3,1x расходы | 9 лет жизни
 ```
 
 ---
 
-## Matéria 3: "Selic em Alta: O Impacto no Bolso do Brasileiro"
+## Материал 3: «Ключевая ставка: как рост влияет на кошелёк россиян»
 
-### A Pauta
+### Тема
 
 Показать, как изменение ключевой ставки и инфляции влияет на повседневные расходы домохозяйств и стоимость кредита.
 
-### A Apuração
+### Расследование
 
-**1. Série histórica da Selic**
+**1. Исторический ряд ключевой ставки**
 
-> Prompt: "Mostre a evolução da Selic nos últimos 5 anos e compare com a inflação"
-
-```
-APIs: bacen_comparar_series(codigos=[432, 433], ultimos=60)
-```
-
-**2. Impacto no crédito**
-
-> Prompt: "Qual o custo de um financiamento de R$ 300 mil com a Selic atual vs. a de 2 anos atrás?"
+> Prompt: «Покажи динамику ключевой ставки за последние 5 лет и сравни с инфляцией»
 
 ```
-API: bacen_consultar_serie (séries de crédito)
+APIs: cbr_compare_series(codes=[key_rate, cpi], last=60)
 ```
 
-**3. Comparação internacional**
+**2. Влияние на кредитование**
 
-> Prompt: "Qual a taxa de juros real do Brasil comparada a outros países?"
-
-O LLM calcula: Selic (14,25%) - IPCA (5,06%) = **Juro real de 9,19%**
+> Prompt: «Какова стоимость ипотеки на ₽ 10 млн при текущей ключевой ставке по сравнению со ставкой 2 года назад?»
 
 ```
-JUROS REAIS — COMPARATIVO INTERNACIONAL
-
-  🇧🇷 Brasil      ██████████████████░   9,19%
-  🇲🇽 México      █████████░░░░░░░░░░   5,2%
-  🇮🇳 Índia       ███████░░░░░░░░░░░░   3,1%
-  🇺🇸 EUA         ████░░░░░░░░░░░░░░░   1,8%
-  🇪🇺 Zona Euro   ███░░░░░░░░░░░░░░░░   1,2%
-  🇯🇵 Japão       █░░░░░░░░░░░░░░░░░░  -0,1%
+API: cbr_credit_series (ряды по кредитованию)
 ```
 
-### O lead da matéria
+**3. Международное сравнение**
 
-> "При ключевой ставке 14,25% и инфляции 5,06% реальная ставка достигает 9,19%. Кредит на R$ 300 тыс., который в 2021 году обходился в R$ 1.580 в месяц, теперь стоит около R$ 2.890. Источник: данные центрального банка и официальной статистики."
+> Prompt: «Какова реальная процентная ставка в России по сравнению с другими странами?»
+
+LLM рассчитывает: ключевая ставка (21,00 %) − инфляция (9,50 %) = **реальная ставка 11,50 %**
+
+```
+РЕАЛЬНЫЕ ПРОЦЕНТНЫЕ СТАВКИ — МЕЖДУНАРОДНОЕ СРАВНЕНИЕ
+
+  🇷🇺 Россия     ████████████████████░  11,50 %
+  🇹🇷 Турция     ███████████████░░░░░░   8,2 %
+  🇲🇽 Мексика    █████████░░░░░░░░░░░░   5,2 %
+  🇮🇳 Индия      ███████░░░░░░░░░░░░░░   3,1 %
+  🇺🇸 США        ████░░░░░░░░░░░░░░░░░   1,8 %
+  🇪🇺 Еврозона   ███░░░░░░░░░░░░░░░░░░   1,2 %
+  🇯🇵 Япония     █░░░░░░░░░░░░░░░░░░░░  -0,1 %
+```
+
+### Лид материала
+
+> «При ключевой ставке 21,00 % и инфляции 9,50 % реальная ставка достигает 11,50 %. Ипотечный кредит на ₽ 10 млн, который в 2021 году обходился примерно в ₽ 42 000 в месяц, теперь стоит около ₽ 175 000. Источники: данные Банка России и официальной статистики.»
 
 ---
 
-## Matéria 4: "Queimadas Recordes: Os Números do INPE"
+## Материал 4: «Рекордные пожары: цифры Росгидромета и Росприроднадзора»
 
-### A Pauta
+### Тема
 
-Покрыть сезон природных пожаров и связанных климатических рисков на основе официальных данных наблюдения.
+Освещать сезон природных пожаров и связанных климатических рисков на основе официальных данных мониторинга.
 
-### A Apuração
+### Расследование
 
-**1. Focos de queimada**
+**1. Очаги природных пожаров**
 
-> Prompt: "Quantos focos de queimada o INPE registrou na Amazônia em 2024? Compare com os 5 anos anteriores"
-
-```
-API: inpe_focos_queimadas(bioma="amazonia", ano=2024)
-```
-
-**2. Desmatamento**
-
-> Prompt: "Qual o desmatamento acumulado na Amazônia nos últimos 12 meses?"
+> Prompt: «Сколько очагов природных пожаров зарегистрировано в Сибирском федеральном округе в 2024 году? Сравни с предыдущими 5 годами»
 
 ```
-API: inpe_desmatamento(bioma="amazonia")
+API: rosgidromet_fires(region="siberian_fd", year=2024)
 ```
 
-**3. Recursos hídricos**
+**2. Вырубка лесов**
 
-> Prompt: "Qual o nível dos reservatórios nas regiões com mais queimadas?"
-
-```
-API: ana_monitorar_reservatorios
-```
-
-**4. Publicações oficiais**
-
-> Prompt: "Busque publicações no Diário Oficial sobre decretos de emergência ambiental em 2024"
+> Prompt: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: diario_oficial_buscar(termo="emergencia ambiental queimadas")
+API: rosprirodnadzor_deforestation(region="siberian_fd")
+```
+
+**3. Водные ресурсы**
+
+> Prompt: «Каков уровень водохранилищ в регионах с наибольшим числом пожаров?»
+
+```
+API: rosvoдресурсы_reservoirs
+```
+
+**4. Официальные публикации**
+
+> Prompt: «Найди официальные публикации о введении режима ЧС из-за природных пожаров в 2024 году»
+
+```
+API: official_publications_search(term="режим ЧС природные пожары 2024")
 ```
 
 ---
 
-## Matéria 5: "Eleições 2026: O Dinheiro da Pré-Campanha"
+## Материал 5: «Выборы 2026: деньги предвыборной кампании»
 
-### A Pauta
+### Тема
 
 Отслеживать финансирование предвыборной активности и ранние финансовые сигналы кампаний.
 
-### A Apuração
+### Расследование
 
-> Prompt: "Liste os pré-candidatos ao governo de SP que já têm prestação de contas registrada no TSE"
-
-```
-APIs: tse_buscar_candidatos(cargo="governador", uf="SP", ano=2026)
-      tse_receitas_candidato (para cada candidato)
-      tse_despesas_candidato (para cada candidato)
-```
-
-> Prompt: "Quem são os maiores doadores de campanhas a governador em todo o Brasil?"
+> Prompt: «Выведи кандидатов на пост губернатора Московской области с зарегистрированными финансовыми отчётами в ЦИК»
 
 ```
-API: tse_buscar_candidatos + tse_receitas_candidato (em lote)
+APIs: cik_search_candidates(position="governor", region="Moscow_oblast", year=2026)
+      cik_candidate_revenue (для каждого кандидата)
+      cik_candidate_expenses (для каждого кандидата)
+```
+
+> Prompt: «Кто крупнейшие спонсоры губернаторских кампаний по всей России?»
+
+```
+API: cik_search_candidates + cik_candidate_revenue (пакетно)
 ```
 
 ---
 
-## Dicas Para Jornalistas
+## Советы для журналистов
 
-### 1. Sempre cite a fonte
+### 1. Всегда указывай источник
 
 ```
-"Segundo dados da API do Banco Central (série SGS 432,
-consulta em 23/03/2025), a taxa Selic..."
+«По данным Банка России (серия ЦБ РФ, запрос от 23.03.2025),
+ключевая ставка составляет…»
 ```
 
-### 2. Use `executar_lote` para comparações
+### 2. Используй `executar_lote` для сравнений
 
-Quando a matéria precisa comparar múltiplos estados/municípios, uma única chamada resolve:
+Когда материал требует сравнения нескольких регионов или муниципалитетов, один пакетный запрос решает задачу:
 
 ```json
 [
-  {"tool": "ibge_buscar_municipios", "args": {"uf": "SP"}},
-  {"tool": "ibge_buscar_municipios", "args": {"uf": "RJ"}},
-  {"tool": "ibge_buscar_municipios", "args": {"uf": "MG"}}
+  {"tool": "rosstat_get_municipalities", "args": {"region": "Moscow_oblast"}},
+  {"tool": "rosstat_get_municipalities", "args": {"region": "Leningrad_oblast"}},
+  {"tool": "rosstat_get_municipalities", "args": {"region": "Tatarstan"}}
 ]
 ```
 
-### 3. Use `planejar_consulta` para matérias complexas
+### 3. Используй `planejar_consulta` для сложных материалов
 
-> Prompt: "Preciso fazer uma matéria sobre o impacto das emendas PIX nos municípios do Nordeste. Planeje as consultas"
+> Prompt: «Мне нужно подготовить материал о влиянии бюджетных трансфертов на муниципалитеты Дальнего Востока. Спланируй запросы»
 
-A ferramenta retorna o roteiro de apuração completo.
+Инструмент возвращает полный маршрут расследования.
 
-### 4. Dados + Redator = Matéria pronta
+### 4. Данные + копирайтер = готовый материал
 
-Комбинируйте data-tools с агентом Redator, если нужен черновик служебной записки, справки, explainer-текста или структурированного приложения к публикации.
+Комбинируй инструменты работы с данными с агентом-копирайтером, если нужен черновик аналитической записки, справки, пояснительного текста или структурированного приложения к публикации.
 
-Пока `mcp-russia` находится в миграции, такие сценарии полезно читать как редакционный workflow поверх текущего набора legacy-интеграций: продукт уже русскоязычный, а часть конкретных источников еще требует содержательной замены на российские аналоги.
+Сценарий `mcp-russia` полностью ориентирован на российский контекст: все источники, формулировки и примеры приведены для работы с российскими государственными данными и API.
 
 ---
 
-_Источники: Banco Central, IBGE, парламентские и электоральные API, порталы прозрачности, экологические и отраслевые источники, Diário Oficial и другие сохраненные legacy-интеграции._
+_Источники: Банк России, Росстат, парламентские и электоральные API, портал bus.kaznacheystvo.ru (Федеральное казначейство), экологические и отраслевые источники, официальные публикации и другие интеграции._

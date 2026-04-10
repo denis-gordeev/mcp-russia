@@ -68,6 +68,7 @@ async def _find_by_fias(fias_id: str, token: str | None = None) -> dict[str, Any
 
 # ─── Public postal code API (no auth required) ───────────────────────
 
+
 async def _postal_by_index(index: str) -> dict[str, Any]:
     """Look up postal office by index using public API.
 
@@ -88,6 +89,7 @@ async def _postal_by_index(index: str) -> dict[str, Any]:
 
 
 # ─── Organization lookup (INN/OGRN) ─────────────────────────────────
+
 
 async def _find_org_by_inn(inn: str, token: str | None = None) -> dict[str, Any]:
     """Find organization by INN via Dadata."""
@@ -122,6 +124,7 @@ async def _find_org_by_ogrn(ogrn: str, token: str | None = None) -> dict[str, An
 
 # ─── Bank directory ──────────────────────────────────────────────────
 
+
 async def _list_banks(token: str | None = None) -> list[dict[str, Any]]:
     """List all Russian banks via Dadata suggestions."""
     headers: dict[str, str] = {
@@ -145,6 +148,7 @@ async def _list_banks(token: str | None = None) -> list[dict[str, Any]]:
 
 # ─── Holidays ────────────────────────────────────────────────────────
 
+
 def get_holidays(year: int) -> list[dict[str, str]]:
     """Generate Russian national holidays for a given year.
 
@@ -155,18 +159,30 @@ def get_holidays(year: int) -> list[dict[str, str]]:
     holidays = []
     for date_str, name in PRAZDNIKI_RF.items():
         full_date = f"{year}-{date_str}"
-        holidays.append({
-            "date": full_date,
-            "name": name,
-            "type": "national" if date_str in [
-                "01-01", "01-07", "02-23", "03-08",
-                "05-01", "05-09", "06-12", "11-04",
-            ] else "weekend",
-        })
+        holidays.append(
+            {
+                "date": full_date,
+                "name": name,
+                "type": "national"
+                if date_str
+                in [
+                    "01-01",
+                    "01-07",
+                    "02-23",
+                    "03-08",
+                    "05-01",
+                    "05-09",
+                    "06-12",
+                    "11-04",
+                ]
+                else "weekend",
+            }
+        )
     return holidays
 
 
 # ─── Public API wrappers (no auth) ───────────────────────────────────
+
 
 async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str]:
     """Look up address by Russian postal code.
@@ -206,15 +222,17 @@ async def search_address(query: str) -> list[dict[str, str]]:
     results = []
     for s in suggestions:
         data = s.get("data", {})
-        results.append({
-            "value": s.get("value", ""),
-            "postal_code": data.get("postal_code", ""),
-            "region": data.get("region", ""),
-            "city": data.get("city", ""),
-            "street": data.get("street", ""),
-            "house": data.get("house", ""),
-            "fias_id": data.get("fias_id", ""),
-        })
+        results.append(
+            {
+                "value": s.get("value", ""),
+                "postal_code": data.get("postal_code", ""),
+                "region": data.get("region", ""),
+                "city": data.get("city", ""),
+                "street": data.get("street", ""),
+                "house": data.get("house", ""),
+                "fias_id": data.get("fias_id", ""),
+            }
+        )
     return results
 
 
@@ -259,14 +277,16 @@ async def list_banks_public() -> list[BankRF]:
     banks = []
     for b in banks_raw:
         data = b.get("data", {})
-        banks.append(BankRF(
-            bik=data.get("bic", b.get("value", "")),
-            name=data.get("name", b.get("value", "")),
-            name_short=data.get("short_name"),
-            city=data.get("city"),
-            region=data.get("region"),
-            swift=data.get("swift"),
-        ))
+        banks.append(
+            BankRF(
+                bik=data.get("bic", b.get("value", "")),
+                name=data.get("name", b.get("value", "")),
+                name_short=data.get("short_name"),
+                city=data.get("city"),
+                region=data.get("region"),
+                swift=data.get("swift"),
+            )
+        )
     return banks
 
 

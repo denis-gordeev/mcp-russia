@@ -92,10 +92,7 @@ async def okrug_info(kod: str, ctx: Context) -> str:
     data = await client.buscar_federalny_okrug(kod)
 
     if "error" in data:
-        return (
-            f"{data['error']}\n\n"
-            f"Используйте spisok_okrugov() для списка округов."
-        )
+        return f"{data['error']}\n\nИспользуйте spisok_okrugov() для списка округов."
 
     lines = [
         f"**{data['name']}** (код {data['code']})",

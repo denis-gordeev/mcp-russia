@@ -139,8 +139,7 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
         rekomendacii.append("Рекомендуется указать номер документа")
 
     # Проверка подписи
-    if tip in ("письмо", "приказ", "распоряжение", "акт", "справка") \
-            and "__________" not in tekst:
+    if tip in ("письмо", "приказ", "распоряжение", "акт", "справка") and "__________" not in tekst:
         rekomendacii.append("Отсутствует место для подписи")
 
     # Проверка на излишне эмоциональные выражения
@@ -152,9 +151,7 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     ]
     for fraza in izbytochnye:
         if fraza in tekst.lower():
-            rekomendacii.append(
-                f"Фраза «{fraza}» не соответствует официальному стилю"
-            )
+            rekomendacii.append(f"Фраза «{fraza}» не соответствует официальному стилю")
 
     # Проверка на герундий (деепричастия)
     deeprichastiya = re.findall(r"\b\w+(?:я|ая|учи|в)\b", tekst)
@@ -169,8 +166,7 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     dlinnye = [p for p in abzaczy if len(p) > 500]
     if dlinnye:
         rekomendacii.append(
-            f"{len(dlinnye)} абзац(ев) длиннее 500 символов — "
-            "рекомендуется разделить для ясности"
+            f"{len(dlinnye)} абзац(ев) длиннее 500 символов — рекомендуется разделить для ясности"
         )
 
     # Отчёт

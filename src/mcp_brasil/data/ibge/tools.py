@@ -19,13 +19,15 @@ from .constants import AGREGADOS_POPULARES, MALHAS_URL
 
 
 async def listar_estados(ctx: Context) -> str:
-    """Lista todos os 27 estados brasileiros com sigla, nome e região.
+    """Список всех 27 бразильских штатов с аббревиатурой, названием и регионом. (legacy)
 
-    Consulta dados geográficos do IBGE.
-    Útil para obter siglas de UF, nomes de estados e suas regiões.
+    Запрос географических данных IBGE (Бразильский институт географии и статистики).
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Полезно для получения аббревиатур штатов, названий штатов и их регионов.
 
     Returns:
-        Tabela com todos os estados brasileiros.
+        Таблица со всеми бразильскими штатами.
     """
     await ctx.info("Buscando estados brasileiros...")
     estados = await client.listar_estados()
@@ -35,16 +37,18 @@ async def listar_estados(ctx: Context) -> str:
 
 
 async def buscar_municipios(uf: str, ctx: Context) -> str:
-    """Busca todos os municípios de um estado pela sigla da UF.
+    """Поиск всех муниципалитетов штата по его аббревиатуре. (legacy)
 
-    Retorna a lista de municípios com código IBGE e nome.
-    O Brasil tem ~5.570 municípios distribuídos em 27 UFs.
+    Возвращает список муниципалитетов с кодом IBGE и названием.
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    В Бразилии ~5570 муниципалитетов, распределённых по 27 штатам.
 
     Args:
-        uf: Sigla do estado com 2 letras (ex: SP, RJ, PI, BA).
+        uf: Аббревиатура штата из 2 букв (напр.: SP, RJ, PI, BA).
 
     Returns:
-        Lista de municípios do estado.
+        Список муниципалитетов штата.
     """
     await ctx.info(f"Buscando municípios de {uf.upper()}...")
     municipios = await client.listar_municipios(uf)
@@ -55,12 +59,15 @@ async def buscar_municipios(uf: str, ctx: Context) -> str:
 
 
 async def listar_regioes(ctx: Context) -> str:
-    """Lista as 5 macro-regiões do Brasil.
+    """Список 5 макрорегионов Бразилии. (legacy)
 
-    Regiões: Norte, Nordeste, Centro-Oeste, Sudeste, Sul.
+    Регионы: Norte (Север), Nordeste (Северо-Восток), Centro-Oeste (Центрально-Западный),
+    Sudeste (Юго-Восток), Sul (Юг).
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
 
     Returns:
-        Tabela com as regiões brasileiras.
+        Таблица с бразильскими регионами.
     """
     await ctx.info("Buscando regiões brasileiras...")
     regioes = await client.listar_regioes()
@@ -69,17 +76,19 @@ async def listar_regioes(ctx: Context) -> str:
 
 
 async def consultar_nome(nome: str, ctx: Context) -> str:
-    """Consulta a frequência de um nome ao longo das décadas no Brasil.
+    """Запрос частоты встречаемости имени по десятилетиям в Бразилии. (legacy)
 
-    Dados do Censo Demográfico do IBGE. Mostra quantas pessoas
-    foram registradas com esse nome em cada período de 10 anos
-    (de 1930 até 2010).
+    Данные демографической переписи IBGE (Бразильский институт географии и статистики).
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Показывает, сколько людей было зарегистрировано с этим именем в каждый 10-летний период
+    (с 1930 по 2010 год).
 
     Args:
-        nome: Nome a consultar (ex: João, Maria, Pedro).
+        nome: Имя для запроса (напр.: João, Maria, Pedro).
 
     Returns:
-        Evolução da frequência do nome por década.
+        Динамика частоты встречаемости имени по десятилетиям.
     """
     await ctx.info(f"Consultando frequência do nome '{nome}'...")
     resultados = await client.consultar_nome(nome)
@@ -101,18 +110,20 @@ async def consultar_nome(nome: str, ctx: Context) -> str:
 async def ranking_nomes(
     ctx: Context, localidade: str | None = None, sexo: str | None = None
 ) -> str:
-    """Mostra o ranking dos nomes mais populares do Brasil.
+    """Рейтинг самых популярных имён в Бразилии. (legacy)
 
-    Dados do Censo Demográfico do IBGE. Pode filtrar por estado
-    ou município (usando o código IBGE) e por sexo.
+    Данные демографической переписи IBGE (Бразильский институт географии и статистики).
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Возможна фильтрация по штату или муниципалитету (с использованием кода IBGE) и по полу.
 
     Args:
-        localidade: Código IBGE do estado ou município (opcional).
-                    Ex: "33" para RJ, "3550308" para São Paulo capital.
-        sexo: Filtrar por sexo: "M" para masculino, "F" para feminino (opcional).
+        localidade: Код IBGE штата или муниципалитета (необязательно).
+                    Напр.: "33" для RJ, "3550308" для Сан-Паулу.
+        sexo: Фильтр по полу: "M" — мужской, "F" — женский (необязательно).
 
     Returns:
-        Ranking dos nomes mais frequentes.
+        Рейтинг самых часто встречающихся имён.
     """
     await ctx.info("Buscando ranking de nomes...")
     resultados = await client.ranking_nomes(localidade=localidade, sexo=sexo)
@@ -136,31 +147,33 @@ async def consultar_agregado(
     localidade: str = "all",
     periodos: str = "-6",
 ) -> str:
-    """Consulta dados agregados de pesquisas do IBGE.
+    """Запрос агрегированных данных исследований IBGE. (legacy)
 
-    Permite acessar indicadores como população, PIB, PIB per capita,
-    e área territorial por estado, município ou região.
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Позволяет получать такие показатели, как население, ВВП, ВВП на душу населения
+    и площадь территории по штатам, муниципалитетам или регионам.
 
-    Para indicadores comuns, use o parâmetro 'indicador':
-    - "populacao": População residente estimada
-    - "pib": Produto Interno Bruto
-    - "pib_per_capita": PIB per capita (apenas nível nacional)
-    - "area_territorial": Área territorial em km²
+    Для общих показателей используйте параметр 'indicador':
+    - "populacao": предполагаемая численность населения
+    - "pib": валовой внутренний продукт (ВВП)
+    - "pib_per_capita": ВВП на душу населения (только национальный уровень)
+    - "area_territorial": площадь территории в км²
 
-    Para outros agregados, informe agregado_id e variavel_id diretamente.
-    Use a tool listar_pesquisas() para descobrir IDs disponíveis.
+    Для других агрегатов укажите agregado_id и variavel_id напрямую.
+    Используйте инструмент listar_pesquisas() для поиска доступных идентификаторов.
 
     Args:
-        indicador: Atalho para indicadores comuns
+        indicador: Сокращение для общих показателей
             (populacao, pib, pib_per_capita, area_territorial).
-        agregado_id: ID do agregado IBGE (usado se indicador não informado).
-        variavel_id: ID da variável dentro do agregado.
-        nivel: Nível territorial: pais, regiao, estado, municipio.
-        localidade: Código IBGE ou "all" para todas.
-        periodos: Períodos a consultar ("-6" para últimos 6, "2020|2021", etc).
+        agregado_id: ID агрегата IBGE (используется, если indicador не указан).
+        variavel_id: ID переменной внутри агрегата.
+        nivel: Территориальный уровень: pais, regiao, estado, municipio.
+        localidade: Код IBGE или "all" для всех.
+        periodos: Периоды для запроса ("-6" для последних 6, "2020|2021" и т.д.).
 
     Returns:
-        Tabela com os dados do agregado.
+        Таблица с агрегированными данными.
     """
     if indicador and indicador in AGREGADOS_POPULARES:
         info = AGREGADOS_POPULARES[indicador]
@@ -199,14 +212,16 @@ async def consultar_agregado(
 
 
 async def listar_pesquisas(ctx: Context) -> str:
-    """Lista as pesquisas e agregados disponíveis no IBGE.
+    """Список доступных исследований и агрегатов IBGE. (legacy)
 
-    Retorna os IDs de pesquisa e agregados que podem ser usados
-    com a tool consultar_agregado(). Útil para descobrir quais
-    dados estatísticos estão disponíveis.
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Возвращает идентификаторы исследований и агрегатов, которые можно использовать
+    с инструментом consultar_agregado(). Полезно для обнаружения доступных
+    статистических данных.
 
     Returns:
-        Lista de pesquisas com seus agregados.
+        Список исследований с их агрегатами.
     """
     await ctx.info("Listando pesquisas disponíveis no IBGE...")
     pesquisas = await client.listar_pesquisas()
@@ -226,17 +241,19 @@ async def listar_pesquisas(ctx: Context) -> str:
 
 
 async def obter_malha(codigo: str, ctx: Context) -> str:
-    """Obtém metadados geográficos de uma região do Brasil.
+    """Получение географических метаданных региона Бразилии. (legacy)
 
-    Retorna centroide, área territorial, bounding box e URL para download
-    do GeoJSON da malha. Aceita código IBGE de estado, município ou região.
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Возвращает центроид, площадь территории, ограничивающий прямоугольник и URL для скачивания
+    GeoJSON-файла географической основы. Принимает код IBGE штата, муниципалитета или региона.
 
     Args:
-        codigo: Código IBGE da região (ex: "35" para SP, "3550308" para
-                São Paulo capital, "3" para região Sudeste, "BR" para Brasil).
+        codigo: Код IBGE региона (напр.: "35" для SP, "3550308" для
+                Сан-Паулу, "3" для региона Sudeste, "BR" для Бразилии).
 
     Returns:
-        Metadados geográficos da região.
+        Географические метаданные региона.
     """
     await ctx.info(f"Buscando metadados geográficos para {codigo}...")
     meta = await client.buscar_malha_metadados(codigo)
@@ -262,20 +279,22 @@ async def obter_malha(codigo: str, ctx: Context) -> str:
 
 
 async def buscar_cnae(ctx: Context, codigo: str | None = None) -> str:
-    """Busca informações da CNAE (Classificação Nacional de Atividades Econômicas).
+    """Поиск информации CNAE (Национальная классификация экономических деятельностей). (legacy)
 
-    Se um código é informado, retorna a hierarquia completa da subclasse
-    (seção → divisão → grupo → classe → subclasse) com lista de atividades.
-    Sem código, lista todas as 21 seções da CNAE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским
+    справочным данным в рамках mcp-russia.
+    Если указан код, возвращает полную иерархию подкласса
+    (секция -> раздел -> группа -> класс -> подкласс) со списком деятельностей.
+    Без кода перечисляет все 21 секцию CNAE.
 
-    Útil para classificar empresas e entender atividades econômicas.
+    Полезно для классификации предприятий и понимания экономических деятельностей.
 
     Args:
-        codigo: Código CNAE da subclasse (ex: "6201501" para desenvolvimento
-                de software, "9430800" para defesa de direitos). Opcional.
+        codigo: Код подкласса CNAE (напр.: "6201501" для разработки
+                программного обеспечения, "9430800" для защиты прав). Необязательно.
 
     Returns:
-        Hierarquia CNAE ou lista de seções.
+        Иерархия CNAE или список секций.
     """
     if not codigo:
         await ctx.info("Listando seções CNAE...")

@@ -93,10 +93,7 @@ async def buscar_frakcii() -> list[Frakciya]:
     Returns:
         List of factions.
     """
-    return [
-        Frakciya(code=f["code"], name=f["name"])
-        for f in FRAKCII
-    ]
+    return [Frakciya(code=f["code"], name=f["name"]) for f in FRAKCII]
 
 
 def get_sozyvy() -> list[dict[str, str]]:
@@ -112,4 +109,5 @@ def get_frakcii() -> list[dict[str, str]]:
 def get_komitety() -> list[dict[str, str]]:
     """Get list of Duma committees."""
     from .constants import KOMITETY
+
     return KOMITETY

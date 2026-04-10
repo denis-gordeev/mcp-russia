@@ -40,19 +40,23 @@ async def consultar_serie(
     data_inicial: str | None = None,
     data_final: str | None = None,
 ) -> str:
-    """Consulta valores de uma série temporal do Banco Central por código.
+    """(legacy) Запрос значений временного ряда Центрального банка Бразилии по коду.
 
-    Retorna dados históricos com data e valor de qualquer série do SGS
-    (Sistema Gerenciador de Séries Temporais). O catálogo tem 190+ séries
-    populares. Use buscar_serie() para encontrar códigos.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Возвращает исторические данные с датой и значением для любого ряда SGS
+    (Система управления временными рядами). Каталог содержит 190+ популярных рядов.
+    Используйте buscar_serie() для поиска кодов.
 
     Args:
-        codigo: Código da série no SGS/BCB (ex: 433 para IPCA, 432 para Selic).
-        data_inicial: Data inicial yyyy-MM-dd ou dd/MM/yyyy (opcional).
-        data_final: Data final yyyy-MM-dd ou dd/MM/yyyy (opcional).
+        codigo: Код ряда в SGS/BCB (напр., 433 для IPCA — индекс инфляции,
+            432 для Selic — ключевая ставка).
+        data_inicial: Дата начала в формате yyyy-MM-dd или dd/MM/yyyy
+            (необязательно).
+        data_final: Дата окончания в формате yyyy-MM-dd или dd/MM/yyyy
+            (необязательно).
 
     Returns:
-        Tabela com dados da série.
+        Таблица с данными ряда.
     """
     await ctx.info(f"Consultando série {codigo}...")
     valores = await client.buscar_valores(codigo, data_inicial, data_final)
@@ -75,17 +79,18 @@ async def consultar_serie(
 
 
 async def ultimos_valores(codigo: int, ctx: Context, quantidade: int = 10) -> str:
-    """Obtém os últimos N valores de uma série temporal do BCB.
+    """(legacy) Получение последних N значений временного ряда BCB.
 
-    Útil para consultar os dados mais recentes de qualquer indicador.
-    Padrão: últimos 10 valores.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Полезно для запроса наиболее свежих данных любого индикатора.
+    По умолчанию: последние 10 значений.
 
     Args:
-        codigo: Código da série no SGS/BCB (ex: 433, 432, 3698).
-        quantidade: Quantidade de valores (1 a 1000, padrão 10).
+        codigo: Код ряда в SGS/BCB (напр., 433, 432, 3698).
+        quantidade: Количество значений (от 1 до 1000, по умолчанию 10).
 
     Returns:
-        Tabela com os últimos valores da série.
+        Таблица с последними значениями ряда.
     """
     await ctx.info(f"Buscando últimos {quantidade} valores da série {codigo}...")
     valores = await client.buscar_ultimos(codigo, quantidade)
@@ -103,16 +108,19 @@ async def ultimos_valores(codigo: int, ctx: Context, quantidade: int = 10) -> st
 
 
 async def metadados_serie(codigo: int, ctx: Context) -> str:
-    """Obtém metadados/informações de uma série do Banco Central.
+    """(legacy) Получение метаданных/информации о ряде Центрального банка.
 
-    Retorna nome, periodicidade, unidade, fonte e outras informações.
-    Tenta o endpoint de metadados e, se indisponível, usa o catálogo interno.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Возвращает название, периодичность, единицу измерения, источник и другую
+    информацию.
+    Пытается получить данные из эндпоинта метаданных; если недоступен —
+    использует внутренний каталог.
 
     Args:
-        codigo: Código da série no SGS/BCB.
+        codigo: Код ряда в SGS/BCB.
 
     Returns:
-        Informações da série.
+        Информация о ряде.
     """
     await ctx.info(f"Buscando metadados da série {codigo}...")
     try:
@@ -145,17 +153,19 @@ async def metadados_serie(codigo: int, ctx: Context) -> str:
 
 
 async def series_populares(ctx: Context, categoria: str | None = None) -> str:
-    """Lista as 190+ séries temporais do BCB disponíveis no catálogo.
+    """(legacy) Список 190+ временных рядов BCB, доступных в каталоге.
 
-    Inclui séries de juros, inflação, câmbio, PIB, emprego, crédito,
-    fiscal, setor externo, agregados monetários, poupança e expectativas.
-    Use o código da série com consultar_serie() ou ultimos_valores().
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Включает ряды по процентным ставкам, инфляции, валютному курсу, ВВП, занятости, кредитованию,
+    бюджету, внешнему сектору, денежным агрегатам, сберегательным вкладам и ожиданиям.
+    Используйте код ряда с consultar_serie() или ultimos_valores().
 
     Args:
-        categoria: Filtrar por categoria (ex: Juros, Inflação, Câmbio). Opcional.
+        categoria: Фильтр по категории (напр., Juros — ставки,
+            Inflação — инфляция, Câmbio — валютный курс). Необязательно.
 
     Returns:
-        Lista de séries agrupadas por categoria.
+        Список рядов, сгруппированных по категориям.
     """
     await ctx.info("Listando séries populares do catálogo BCB...")
     grupos = listar_por_categoria(categoria)
@@ -181,16 +191,17 @@ async def series_populares(ctx: Context, categoria: str | None = None) -> str:
 
 
 async def buscar_serie(termo: str, ctx: Context) -> str:
-    """Busca séries no catálogo do BCB por nome ou descrição.
+    """(legacy) Поиск рядов в каталоге BCB по названию или описанию.
 
-    Busca por texto sem acentos (ex: 'inflacao' encontra 'Inflação').
-    Retorna séries com código, nome, categoria e periodicidade.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Поиск по тексту без диакритики (напр., 'inflacao' находит 'Inflação').
+    Возвращает ряды с кодом, названием, категорией и периодичностью.
 
     Args:
-        termo: Termo de busca (mínimo 2 caracteres).
+        termo: Поисковый запрос (минимум 2 символа).
 
     Returns:
-        Séries encontradas ou sugestão de termos.
+        Найденные ряды или предложение поисковых терминов.
     """
     await ctx.info(f"Buscando séries com termo '{termo}'...")
     encontradas = buscar_series_por_termo(termo)
@@ -209,13 +220,16 @@ async def buscar_serie(termo: str, ctx: Context) -> str:
 
 
 async def indicadores_atuais(ctx: Context) -> str:
-    """Obtém os valores mais recentes dos principais indicadores econômicos.
+    """(legacy) Получение актуальных значений ключевых экономических индикаторов.
 
-    Consulta em paralelo: Selic (a.a.), IPCA mensal, IPCA 12 meses,
-    Dólar PTAX (venda) e IBC-Br. Útil para um panorama rápido da economia.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Параллельный запрос: Selic (годовая, ключевая ставка ЦБ Бразилии),
+    IPCA месячный, IPCA за 12 месяцев (официальный индекс инфляции),
+    Dólar PTAX (курс продажи доллара) и IBC-Br.
+    Полезно для быстрого обзора состояния экономики Бразилии.
 
     Returns:
-        Tabela com indicadores atuais.
+        Таблица с текущими индикаторами.
     """
     await ctx.info("Buscando indicadores econômicos atuais (5 séries em paralelo)...")
     resultados = await client.buscar_indicadores_atuais()
@@ -246,19 +260,20 @@ async def calcular_variacao(
     data_final: str | None = None,
     periodos: int | None = None,
 ) -> str:
-    """Calcula a variação percentual de uma série do BCB entre datas ou períodos.
+    """(legacy) Расчёт процентного изменения ряда BCB между датами или периодами.
 
-    Mostra variação absoluta e percentual, além de estatísticas
-    (máximo, mínimo, média, amplitude). Útil para análise de tendências.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Показывает абсолютное и процентное изменение, а также статистику
+    (максимум, минимум, среднее, размах). Полезно для анализа трендов.
 
     Args:
-        codigo: Código da série no SGS/BCB.
-        data_inicial: Data inicial (yyyy-MM-dd ou dd/MM/yyyy).
-        data_final: Data final (yyyy-MM-dd ou dd/MM/yyyy).
-        periodos: Alternativa: usar os últimos N períodos (ignora datas).
+        codigo: Код ряда в SGS/BCB.
+        data_inicial: Дата начала (yyyy-MM-dd или dd/MM/yyyy).
+        data_final: Дата окончания (yyyy-MM-dd или dd/MM/yyyy).
+        periodos: Альтернатива: использовать последние N периодов (игнорирует даты).
 
     Returns:
-        Análise de variação da série.
+        Анализ изменения ряда.
     """
     await ctx.info(f"Calculando variação da série {codigo}...")
     if periodos and periodos > 1:
@@ -306,18 +321,19 @@ async def comparar_series(
     data_final: str,
     ctx: Context,
 ) -> str:
-    """Compara 2 a 5 séries temporais do BCB no mesmo período.
+    """(legacy) Сравнение 2–5 временных рядов BCB за один период.
 
-    Calcula variação, máximo, mínimo e média de cada série,
-    e ordena por variação percentual. Útil para análise comparativa.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Рассчитывает изменение, максимум, минимум и среднее каждого ряда,
+    сортирует по процентному изменению. Полезно для сравнительного анализа.
 
     Args:
-        codigos: Lista de 2 a 5 códigos de séries para comparar.
-        data_inicial: Data inicial (yyyy-MM-dd ou dd/MM/yyyy).
-        data_final: Data final (yyyy-MM-dd ou dd/MM/yyyy).
+        codigos: Список из 2–5 кодов рядов для сравнения.
+        data_inicial: Дата начала (yyyy-MM-dd или dd/MM/yyyy).
+        data_final: Дата окончания (yyyy-MM-dd или dd/MM/yyyy).
 
     Returns:
-        Ranking comparativo das séries.
+        Сравнительный рейтинг рядов.
     """
     if len(codigos) < 2 or len(codigos) > 5:
         return "Informe entre 2 e 5 códigos de séries para comparar."
@@ -395,19 +411,21 @@ async def expectativas_focus(
     data_inicio: str | None = None,
     limite: int = 10,
 ) -> str:
-    """Consulta expectativas do mercado do Boletim Focus do BCB.
+    """(legacy) Запрос рыночных ожиданий из бюллетеня Focus BCB.
 
-    O Boletim Focus é publicado semanalmente pelo Banco Central com as
-    projeções do mercado para os principais indicadores econômicos.
-    Indicadores disponíveis: IPCA, IGP-M, Selic, Câmbio, PIB.
+    Инструмент совместимости с API Bacen (Центральный банк Бразилии).
+    Бюллетень Focus публикуется еженедельно Центральным банком Бразилии и содержит
+    рыночные прогнозы по ключевым экономическим индикаторам.
+    Доступные индикаторы: IPCA (инфляция), IGP-M (оптовый индекс цен),
+    Selic (ключевая процентная ставка), Câmbio (валютный курс), PIB (ВВП).
 
     Args:
-        indicador: Indicador econômico (IPCA, IGP-M, Selic, Câmbio, PIB). Padrão: IPCA.
-        data_inicio: Data mínima das expectativas (YYYY-MM-DD). Opcional.
-        limite: Número máximo de registros (padrão 10).
+        indicador: Экономический индикатор (IPCA, IGP-M, Selic, Câmbio, PIB). По умолчанию: IPCA.
+        data_inicio: Минимальная дата ожиданий (YYYY-MM-DD). Необязательно.
+        limite: Максимальное количество записей (по умолчанию 10).
 
     Returns:
-        Tabela com expectativas do mercado.
+        Таблица с рыночными ожиданиями.
     """
     from .constants import FOCUS_INDICADORES
 

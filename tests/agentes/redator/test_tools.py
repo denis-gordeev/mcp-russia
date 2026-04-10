@@ -122,9 +122,7 @@ class TestValidirovatDokument:
     @pytest.mark.asyncio
     async def test_informal_expressions(self) -> None:
         tekst = (
-            "г. Москва, 15 марта 2026 г.\n\n"
-            "С наилучшими пожеланиями,\n\n"
-            "Иванов И.И. __________"
+            "г. Москва, 15 марта 2026 г.\n\nС наилучшими пожеланиями,\n\nИванов И.И. __________"
         )
         result = await tools.validirovat_dokument(tekst, "письмо")
         assert "наилучшими пожеланиями" in result.lower()

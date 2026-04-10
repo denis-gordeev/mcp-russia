@@ -1,6 +1,6 @@
-# Caso de Uso: Relatório Parlamentar (Votação + Emendas + Atividade)
+# Практическое применение: отчёт парламентария (голосования + средства + активность)
 
-> Как в `mcp-russia` собрать единый профиль парламентария: голосования, инициативы, расходы, трансферты и связанные источники в одном отчете. Отдельные названия tools и источников пока остаются legacy-совместимыми.
+> Как в `mcp-russia` собрать единый профиль парламентария: голосования, инициативы, расходы, трансферты и связанные источники в одном отчёте. Отдельные названия инструментов и источников пока остаются legacy-совместимыми.
 
 ---
 
@@ -8,286 +8,286 @@
 
 Чтобы оценить работу депутата или сенатора, обычно приходится вручную собирать сведения из нескольких систем:
 
-| Dado | Fonte | До `mcp-russia` |
-|------|-------|-------------------|
-| Presenças e votações | Câmara/Senado | Navegar portal manualmente |
-| Proposições apresentadas | Câmara/Senado | Buscar uma a uma |
-| Despesas de gabinete | Câmara | Planilhas CSV |
-| Emendas parlamentares | Transparência/TransfereGov | Portais separados |
-| Financiamento de campanha | TSE | Outro portal |
-| Processos judiciais | DataJud | Outro portal |
+| Данные | Источник | До `mcp-russia` |
+|--------|----------|-------------------|
+| Посещения и голосования | Парламент | Вручную просматривать портал |
+| Внесённые инициативы | Парламент | Искать по одной |
+| Расходы аппарата | Парламент | Таблицы CSV |
+| Депутатские средства | Портал открытых данных/Казначейство | Разрозненные порталы |
+| Финансирование кампании | Избирательные данные | Отдельный портал |
+| Судебные дела | DataJud | Отдельный портал |
 
-**С `mcp-russia`:** один сценарий может собрать сводный отчет и подсветить узкие места для дальнейшей проверки.
+**С `mcp-russia`:** один сценарий может собрать сводный отчёт и подсветить узкие места для дальнейшей проверки.
 
 ---
 
-## Отчет по парламентарию
+## Отчёт по парламентарию
 
 ### Этап 1 — профиль и история
 
-> Prompt: "Gere um perfil completo do deputado [Nome]: partido, estado, legislaturas, comissões e cargos"
+> Prompt: "Сформируй полный профиль депутата [ФИО]: фракция, регион, сроки полномочий, комиссии и должности"
 
-Ferramentas:
-- `camara_buscar_deputados(nome="...")` → ID
-- `camara_detalhes_deputado(id=...)` → perfil completo
+Инструменты:
+- `duma_poisk_deputatov(fio="...")` → ID
+- `duma_podrobnosti_deputata(id=...)` → полный профиль
 
 ```
 ═══════════════════════════════════════════
-  PERFIL PARLAMENTAR
+  ПРОФИЛЬ ПАРЛАМЕНТАРИЯ
 ═══════════════════════════════════════════
 
-Nome: [Nome Completo]
-Partido: [Sigla]-[UF]
-Legislatura: 57ª (2023-2027)
-Comissões:
-  ├── Comissão de Finanças e Tributação (titular)
-  ├── Comissão de Educação (suplente)
-  └── CPI das Apostas Online (titular)
-Mandatos anteriores: 2 (2015-2019, 2019-2023)
+ФИО: [Полное имя]
+Фракция: [Название]-[Регион]
+Срок полномочий: 8-й созыв (2021-2026)
+Комиссии:
+  ├── Комитет по бюджету и налогам (председатель)
+  ├── Комитет по образованию (заместитель)
+  └── Комиссия по цифровой экономике (член)
+Предыдущие сроки: 2 (2011-2016, 2016-2021)
 ```
 
 ---
 
 ### Этап 2 — законодательная активность
 
-> Prompt: "Quantas proposições o deputado [Nome] apresentou em 2024? Liste por tipo"
+> Prompt: "Сколько законопроектов внёс депутат [ФИО] в 2024 году? Сгруппируй по типу"
 
-Ferramentas:
-- `camara_buscar_proposicoes(autor="[Nome]", ano=2024)`
+Инструменты:
+- `duma_poisk_zakonoproektov(avtor="[ФИО]", god=2024)`
 
 ```
 ═══════════════════════════════════════════
-  ATIVIDADE LEGISLATIVA — 2024
+  ЗАКОНОДАТЕЛЬНАЯ АКТИВНОСТЬ — 2024
 ═══════════════════════════════════════════
 
-Proposições apresentadas: 23
-  ├── Projetos de Lei (PL):           8
-  ├── Requerimentos:                  7
-  ├── Indicações:                     4
-  ├── Projetos de Decreto Leg.:       2
-  └── Emendas a PL:                   2
+Внесённых инициатив: 23
+  ├── Федеральные законы (ФЗ):        8
+  ├── Депутатские запросы:            7
+  ├── Предложения:                    4
+  ├── Постановления:                  2
+  └── Поправки к ФЗ:                  2
 
-Proposições aprovadas: 3 de 23 (13%)
-Proposições arquivadas: 5
-Proposições em tramitação: 15
+Принято: 3 из 23 (13%)
+Отклонено: 5
+На рассмотрении: 15
 
-Principais temas:
-  1. Tributação (7 proposições)
-  2. Educação (5 proposições)
-  3. Tecnologia (4 proposições)
+Основные темы:
+  1. Налогообложение (7 инициатив)
+  2. Образование (5 инициатив)
+  3. Цифровизация (4 инициативы)
 ```
 
 ---
 
 ### Этап 3 — голосования
 
-> Prompt: "Como o deputado votou nas principais matérias de 2024? Comparar com a orientação do partido e do governo"
+> Prompt: "Как голосовал депутат [ФИО] по основным законопроектам 2024 года? Сравни с позицией фракции и правительства"
 
-Ferramentas:
-- `camara_votacoes_deputado(id=..., ano=2024)`
+Инструменты:
+- `duma_golosovaniya_deputata(id=..., god=2024)`
 
 ```
 ═══════════════════════════════════════════
-  VOTAÇÕES — 2024
+  ГОЛОСОВАНИЯ — 2024
 ═══════════════════════════════════════════
 
-Total de votações nominais: 87
-Presenças: 79 (90,8%)
-Ausências: 8 (9,2%)
+Всего поимённых голосований: 87
+Присутствовал: 79 (90,8%)
+Отсутствовал: 8 (9,2%)
 
-Alinhamento com o partido: 82% (65/79)
-Alinhamento com o governo: 61% (48/79)
-Votações em que divergiu do partido: 14
+Совпадение с фракцией: 82% (65/79)
+Совпадение с правительством: 61% (48/79)
+Расхождения с фракцией: 14
 
-VOTAÇÕES MAIS RELEVANTES:
+НАИБОЛЕЕ ЗНАЧИМЫЕ ГОЛОСОВАНИЯ:
 
-| Matéria                    | Voto | Partido | Governo |
-|----------------------------|------|---------|---------|
-| Reforma Tributária         | SIM  | SIM ✅   | SIM ✅   |
-| Marco Legal da IA          | SIM  | SIM ✅   | SIM ✅   |
-| Desoneração da Folha       | NÃO  | SIM ❌   | NÃO ✅   |
-| Orçamento 2025             | SIM  | SIM ✅   | SIM ✅   |
-| Marco Temporal Indígena    | SIM  | SIM ✅   | NÃO ❌   |
+| Законопроект                  | Голос | Фракция | Правительство |
+|-------------------------------|-------|---------|---------------|
+| Налоговая реформа             | ЗА    | ЗА ✅    | ЗА ✅          |
+| Регулирование ИИ              | ЗА    | ЗА ✅    | ЗА ✅          |
+| Снижение страховых взносов    | ПРОТИВ| ЗА ❌    | ПРОТИВ ✅      |
+| Бюджет 2025                   | ЗА    | ЗА ✅    | ЗА ✅          |
+| Земельные вопросы             | ЗА    | ЗА ✅    | ПРОТИВ ❌      |
 ```
 
 ---
 
 ### Этап 4 — расходы
 
-> Prompt: "Detalhe as despesas de gabinete do deputado em 2024. Quais os maiores gastos?"
+> Prompt: "Детализируй расходы аппарата депутата в 2024 году. Какие статьи самые крупные?"
 
-Ferramentas:
-- `camara_despesas_deputado(id=..., ano=2024)`
+Инструменты:
+- `duma_raskhody_deputata(id=..., god=2024)`
 
 ```
 ═══════════════════════════════════════════
-  DESPESAS DE GABINETE — 2024
+  РАСХОДЫ АППАРАТА — 2024
 ═══════════════════════════════════════════
 
-Total gasto: R$ 312.456,78
-Cota parlamentar mensal: R$ 44.632,46 (limite UF)
-Utilização média: 58,3% da cota
+Всего израсходовано: 3 456 780 руб.
+Ежемесячное пособие: 492 000 руб. (лимит по региону)
+Среднее использование: 58,3% пособия
 
-Por categoria:
-| Categoria                    | Valor         | % Total |
-|------------------------------|---------------|---------|
-| Divulgação de atividade      | R$ 89.234     | 28,6%   |
-| Passagens aéreas             | R$ 67.891     | 21,7%   |
-| Combustíveis e lubrificantes | R$ 45.672     | 14,6%   |
-| Alimentação                  | R$ 38.456     | 12,3%   |
-| Locação de veículos          | R$ 28.903     | 9,3%    |
-| Consultoria/assessoria       | R$ 24.567     | 7,9%    |
-| Outros                       | R$ 17.734     | 5,6%    |
+По категориям:
+| Категория                        | Сумма        | % от общего |
+|----------------------------------|--------------|-------------|
+| Информирование об активности     | 985 000      | 28,6%       |
+| Проезд                           | 750 000      | 21,7%       |
+| ГСМ                              | 504 000      | 14,6%       |
+| Питание                          | 425 000      | 12,3%       |
+| Аренда транспорта                | 321 000      | 9,3%        |
+| Консалтинг/экспертиза            | 273 000      | 7,9%        |
+| Прочее                           | 196 780      | 5,6%        |
 
-Fornecedores mais recorrentes:
-  1. [Empresa A] — R$ 67.891 (passagens)
-  2. [Empresa B] — R$ 45.672 (combustível)
-  3. [Empresa C] — R$ 38.456 (alimentação)
+Наиболее частые получатели:
+  1. [Компания А] — 750 000 руб. (проезд)
+  2. [Компания Б] — 504 000 руб. (ГСМ)
+  3. [Компания В] — 425 000 руб. (питание)
 ```
 
 ---
 
 ### Этап 5 — трансферты и распределение средств
 
-> Prompt: "Quais emendas o deputado destinou em 2024? Para quais municípios e áreas?"
+> Prompt: "Какие средства направил депутат в 2024 году? В какие муниципальные образования и на какие цели?"
 
-Ferramentas:
-- `transparencia_emendas_parlamentares(autor="[Nome]", ano=2024)`
-- `transferegov_buscar_emendas(autor="[Nome]", ano=2024)`
+Инструменты:
+- `otkryte_dannye_emendy(avtor="[ФИО]", god=2024)`
+- `kaznacheistvo_emendy(avtor="[ФИО]", god=2024)`
 
 ```
 ═══════════════════════════════════════════
-  EMENDAS PARLAMENTARES — 2024
+  ДЕПУТАТСКИЕ СРЕДСТВА — 2024
 ═══════════════════════════════════════════
 
-Total destinado: R$ 25.380.000,00
+Всего направлено: 280 000 000 руб.
 
-Por tipo:
-  ├── Emendas individuais:    R$ 18.000.000
-  ├── Emendas de bancada:     R$  5.380.000
-  └── Transferências especiais: R$  2.000.000
+По типу:
+  ├── Индивидуальные:         200 000 000 руб.
+  ├── Региональные:            60 000 000 руб.
+  └── Целевые трансферты:      20 000 000 руб.
 
-Top 5 муниципалитетов:
-| Município        | UF | Valor          | Área      |
-|------------------|----|----------------|-----------|
-| [Cidade natal]   | SP | R$ 5.000.000   | Saúde     |
-| [Município 2]    | SP | R$ 3.500.000   | Educação  |
-| [Município 3]    | SP | R$ 3.000.000   | Infra.    |
-| [Município 4]    | SP | R$ 2.500.000   | Saúde     |
-| [Município 5]    | SP | R$ 2.000.000   | Cultura   |
+Топ-5 муниципальных образований:
+| Муниципалитет    | Регион | Сумма          | Направление   |
+|------------------|--------|----------------|---------------|
+| [Родной город]   | МО     | 55 000 000     | Здравоохранение|
+| [Муниципалитет 2]| МО     | 38 000 000     | Образование   |
+| [Муниципалитет 3]| МО     | 33 000 000     | Инфраструктура|
+| [Муниципалитет 4]| МО     | 28 000 000     | Здравоохранение|
+| [Муниципалитет 5]| МО     | 22 000 000     | Культура      |
 
-Концентрация: 73% средств направлено в 5 муниципалитетов
-Áreas: 45% Saúde, 25% Educação, 20% Infraestrutura, 10% Outros
+Концентрация: 73% средств направлено в 5 муниципальных образований
+Направления: 45% здравоохранение, 25% образование, 20% инфраструктура, 10% прочее
 ```
 
 ---
 
-### Этап 6 — электоральное финансирование
+### Этап 6 — финансирование кампании
 
-> Prompt: "Quem financiou a campanha do deputado em 2022? Compare os doadores com os municípios que recebem emendas"
+> Prompt: "Кто финансировал кампанию депутата в 2021 году? Сравни спонсоров с муниципалитетами-получателями средств"
 
-Ferramentas:
-- `tse_buscar_candidatos(nome="...", ano=2022)`
-- `tse_receitas_candidato(id=...)`
+Инструменты:
+- `izbirkom_poisk_kandidatov(fio="...", god=2021)`
+- `izbirkom_dokhody_kandidata(id=...)`
 
 ```
 ═══════════════════════════════════════════
-  FINANCIAMENTO DE CAMPANHA — 2022
+  ФИНАНСИРОВАНИЕ КАМПАНИИ — 2021
 ═══════════════════════════════════════════
 
-Total arrecadado: R$ 2.890.456,00
+Всего собрано: 32 000 000 руб.
 
-Por origem:
-  ├── Fundo Eleitoral:     R$ 1.500.000 (51,9%)
-  ├── Fundo Partidário:    R$   450.000 (15,6%)
-  ├── Pessoas físicas:      R$   680.456 (23,5%)
-  └── Recursos próprios:    R$   260.000 (9,0%)
+По источникам:
+  ├── Избирательный фонд:     16 500 000 (51,9%)
+  ├── Партийный фонд:          5 000 000 (15,6%)
+  ├── Физические лица:         7 500 000 (23,5%)
+  └── Собственные средства:    3 000 000 (9,0%)
 
-Top 10 doadores PF:
-| Doador              | Valor     | Profissão      |
+Топ-10 спонсоров (физлица):
+| Спонсор             | Сумма     | Профессия      |
 |---------------------|-----------|----------------|
-| [Nome 1]            | R$ 80.000 | Empresário     |
-| [Nome 2]            | R$ 65.000 | Agropecuarista |
+| [ФИО 1]             | 880 000   | Предприниматель|
+| [ФИО 2]             | 715 000   | Сельхозпроизв. |
 | ...                 | ...       | ...            |
 
-⚠️ CROSS-REFERENCE:
-[Nome 1] é sócio da [Empresa X] de [Município Y]
-[Município Y] recebeu R$ 3.500.000 em emendas do deputado
+⚠️ ПЕРЕКРЁСТНАЯ ПРОВЕРКА:
+[ФИО 1] — учредитель [Компании X] в [Муниципалитете Y]
+[Муниципалитет Y] получил 38 000 000 руб. от депутата
 ```
 
 ---
 
-### Сводный отчет
+### Сводный отчёт
 
-> Prompt: "Gere um relatório consolidado da atuação do deputado [Nome] em 2024"
+> Prompt: "Сформируй сводный отчёт о деятельности депутата [ФИО] в 2024 году"
 
-`mcp-russia` объединяет все этапы через `planejar_consulta`:
+`mcp-russia` объединяет все этапы через `zaplaniravat_zapros`:
 
 ```
 ═══════════════════════════════════════════════════════
-  RELATÓRIO PARLAMENTAR CONSOLIDADO — 2024
-  Dep. [Nome Completo] ([Partido]-[UF])
+  СВОДНЫЙ ОТЧЁТ — 2024
+  Деп. [Полное имя] ([Фракция]-[Регион])
 ═══════════════════════════════════════════════════════
 
-PRESENÇA:      79/87 votações (90,8%)
-ALINHAMENTO:   Partido 82% | Governo 61%
-PROPOSIÇÕES:   23 apresentadas | 3 aprovadas
-DESPESAS:      R$ 312K (58% da cota)
-TRANSFERÊNCIAS: R$ 25,4M (73% для 5 муниципалитетов)
-CAMPANHA:      R$ 2,9M arrecadados (52% fundo eleitoral)
+ПОСЕЩАЕМОСТЬ:    79/87 голосований (90,8%)
+СОВПАДЕНИЕ:      Фракция 82% | Правительство 61%
+ИНИЦИАТИВЫ:      23 внесено | 3 принято
+РАСХОДЫ:         3,46 млн руб. (58% пособия)
+ТРАНСФЕРТЫ:      280 млн руб. (73% в 5 муниципалитетов)
+КАМПАНИЯ:        32 млн руб. собрано (52% избирательный фонд)
 
-DESTAQUES POSITIVOS:
-  ✅ Alta presença em plenário (91%)
-  ✅ 3 projetos aprovados (acima da média)
-  ✅ Despesas abaixo da cota parlamentar
+ПОЛОЖИТЕЛЬНЫЕ МОМЕНТЫ:
+  ✅ Высокая посещаемость голосований (91%)
+  ✅ 3 принятых законопроекта (выше среднего)
+  ✅ Расходы в рамках пособия
 
-PONTOS DE ATENÇÃO:
-  ⚠️ Концентрация средств в небольшом числе муниципалитетов
-  ⚠️ 14 votações divergentes do partido
-  ⚠️ Cross-reference донор ↔ получатель средств
+ЗОНЫ ВНИМАНИЯ:
+  ⚠️ Концентрация средств в малом числе муниципалитетов
+  ⚠️ 14 расхождений с фракцией
+  ⚠️ Перекрёстная проверка: спонсор ↔ получатель средств
 
-FONTES: Câmara dos Deputados, TSE, Portal da
-Transparência, TransfereGov. Consulta em [data].
+ИСТОЧНИКИ: Парламент, избирательные данные, портал открытых
+данных, Федеральное казначейство. Запрос от [дата].
 ═══════════════════════════════════════════════════════
 ```
 
-В текущем состоянии репозитория такой отчет стоит понимать как публичный workflow `mcp-russia` над унаследованным набором парламентских и электоральных интеграций. Это важно: продуктовая оболочка уже русскоязычная, но конкретные data-sources внутри еще мигрируют.
+В текущем состоянии репозитория такой отчёт стоит понимать как публичный workflow `mcp-russia` над унаследованным набором парламентских и избирательных интеграций. Это важно: продуктовая оболочка уже русскоязычная, но конкретные источники данных внутри ещё мигрируют.
 
 ---
 
-## Para o Senado
+## Для Совета Федерации
 
-O mesmo relatório funciona para senadores, trocando as ferramentas:
+Аналогичный отчёт работает для сенаторов, с заменой инструментов:
 
-| Dado | Câmara | Senado |
-|------|--------|--------|
-| Perfil | `camara_detalhes_deputado` | `senado_detalhes_senador` |
-| Votações | `camara_votacoes_deputado` | `senado_votacoes_materia` |
-| Proposições | `camara_buscar_proposicoes` | `senado_buscar_materias` |
-| Despesas | `camara_despesas_deputado` | (via Transparência) |
-| Comissões | `camara_membros_comissao` | `senado_composicao_comissao` |
+| Данные | Дума | Совет Федерации |
+|--------|------|-----------------|
+| Профиль | `duma_podrobnosti_deputata` | `sovet_podrobnosti_senatora` |
+| Голосования | `duma_golosovaniya_deputata` | `sovet_golosovaniya` |
+| Инициативы | `duma_poisk_zakonoproektov` | `sovet_poisk_zakonoproektov` |
+| Расходы | `duma_raskhody_deputata` | (через портал открытых данных) |
+| Комиссии | `duma_chleny_komissii` | `sovet_sostav_komissii` |
 
-O Senado tem **26 tools** — mais do que qualquer outra feature — com cobertura detalhada de matérias, emendas, agenda plenária e composição de comissões.
+Совет Федерации имеет **26 инструментов** — больше, чем любой другой источник — с подробным охватом законопроектов, поправок, повестки заседаний и состава комиссий.
 
 ---
 
-## Automatizando com `executar_lote`
+## Автоматизация через `batah_zapros`
 
-Para gerar o relatório de múltiplos parlamentares de uma vez:
+Для формирования отчёта по нескольким парламентариям одновременно:
 
 ```json
 [
-  {"tool": "camara_detalhes_deputado", "args": {"id": 204554}},
-  {"tool": "camara_detalhes_deputado", "args": {"id": 204555}},
-  {"tool": "camara_detalhes_deputado", "args": {"id": 204556}},
-  {"tool": "camara_despesas_deputado", "args": {"deputado_id": 204554, "ano": 2024}},
-  {"tool": "camara_despesas_deputado", "args": {"deputado_id": 204555, "ano": 2024}},
-  {"tool": "camara_despesas_deputado", "args": {"deputado_id": 204556, "ano": 2024}}
+  {"tool": "duma_podrobnosti_deputata", "args": {"id": 204554}},
+  {"tool": "duma_podrobnosti_deputata", "args": {"id": 204555}},
+  {"tool": "duma_podrobnosti_deputata", "args": {"id": 204556}},
+  {"tool": "duma_raskhody_deputata", "args": {"deputat_id": 204554, "god": 2024}},
+  {"tool": "duma_raskhody_deputata", "args": {"deputat_id": 204555, "god": 2024}},
+  {"tool": "duma_raskhody_deputata", "args": {"deputat_id": 204556, "god": 2024}}
 ]
 ```
 
-6 consultas em paralelo — perfil + despesas de 3 deputados numa única chamada.
+6 запросов параллельно — профиль + расходы 3 депутатов за один вызов.
 
 ---
 
-_Источники: парламентские API, TSE, Portal da Transparencia, TransfereGov и другие legacy-компоненты исходного проекта._
+_Источники: парламентские API, избирательные данные, портал открытых данных, Федеральное казначейство и другие legacy-компоненты исходного проекта._

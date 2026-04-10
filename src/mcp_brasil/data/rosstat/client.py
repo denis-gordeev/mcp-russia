@@ -46,13 +46,15 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
 
     results = []
     for item in data.get("data", []):
-        results.append(PokazatelRosstata(
-            code=code,
-            name=item.get("name", code),
-            value=float(item.get("value", 0)),
-            unit=item.get("unit", ""),
-            date=item.get("date", ""),
-        ))
+        results.append(
+            PokazatelRosstata(
+                code=code,
+                name=item.get("name", code),
+                value=float(item.get("value", 0)),
+                unit=item.get("unit", ""),
+                date=item.get("date", ""),
+            )
+        )
     return results
 
 

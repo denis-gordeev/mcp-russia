@@ -1,12 +1,12 @@
-# Сценарий: Официальный Редактор Для Госдокументов
+# Сценарий: Официальный редактор государственных документов
 
 > Как использовать агент Redator в `mcp-russia` для подготовки официальных документов с опорой на реальные данные публичных API.
 
 ---
 
-## Что такое Redator Oficial
+## Что такое «Официальный редактор»
 
-**Redator Oficial** в `mcp-russia` пока остается переходным агентом: публично он подается как инструмент для русскоязычных и государственных сценариев, а внутри еще использует нормы и шаблоны исходного бразильского проекта. Это не финальная модель российского делопроизводства, а совместимый слой для постепенной миграции. Сейчас агент сочетает:
+**Официальный редактор** в `mcp-russia` пока остаётся переходным агентом: публично он подаётся как инструмент для русскоязычных и государственных сценариев, а внутри ещё использует нормы и шаблоны исходного проекта. Это не финальная модель российского делопроизводства, а совместимый слой для постепенной миграции. Сейчас агент сочетает:
 
 - **5 tools** для генерации документов
 - **9 resources** с шаблонами и правилами оформления
@@ -16,242 +16,242 @@
 
 | Тип | Когда использовать |
 |------|-------------|
-| **Ofício** | Переписка между органами и учреждениями |
-| **Despacho** | Административное решение по материалу или делу |
-| **Portaria** | Внутренний распорядительный акт |
-| **Parecer** | Юридическое или экспертное заключение |
-| **Nota Técnica** | Техническая записка по вопросу политики или регулирования |
+| **Письмо** | Переписка между органами и учреждениями |
+| **Распоряжение** | Административное решение по материалу или делу |
+| **Приказ** | Внутренний распорядительный акт |
+| **Заключение** | Юридическое или экспертное заключение |
+| **Справка** | Аналитическая записка по вопросу политики или регулирования |
 
 ---
 
-## Пример 1: техническая записка на основе макроданных
+## Пример 1: аналитическая справка на основе макроданных
 
 ### Сценарий
 
-Аналитику экономического блока нужен черновик записки об инфляции, чтобы быстро собрать аргументы для руководства на основе публичных временных рядов.
+Аналитику экономического блока нужен черновик справки об инфляции, чтобы быстро собрать аргументы для руководства на основе публичных временных рядов.
 
-> Prompt: "Redija uma nota técnica sobre a evolução do IPCA nos últimos 12 meses, incluindo comparação com a meta de inflação e a taxa Selic"
+> Промпт: «Подготовь справку о динамике ИПЦ за последние 12 месяцев, включая сравнение с целевым ориентиром Банка России и ключевой ставкой»
 
 ### Что делает агент
 
 Агент автоматически:
 
-1. **Забирает фактические ряды** через `bacen_indicadores_atuais` и `bacen_comparar_series`
-2. **Применяет шаблон** технической записки
+1. **Забирает фактические ряды** через `cbr_indicators_current` и `cbr_compare_series`
+2. **Применяет шаблон** аналитической справки
 3. **Собирает текст** по правилам текущего compatibility-layer редактирования
 
 ### Результат
 
 ```
-NOTA TÉCNICA Nº XX/2025/SPE/MF
+СПРАВКА
 
-Assunto: Evolução do Índice Nacional de Preços ao Consumidor Amplo
-         (IPCA) — Período março/2024 a março/2025.
+Тема: Динамика индекса потребительских цен (ИПЦ)
+      Период: апрель 2024 — март 2025 г.
 
-1. INTRODUÇÃO
+1. ВВЕДЕНИЕ
 
-   A presente Nota Técnica tem por objetivo analisar a trajetória do
-   IPCA nos últimos 12 meses, em cotejo com a meta de inflação
-   definida pelo Conselho Monetário Nacional (CMN) e a evolução da
-   taxa Selic no período.
+   Настоящая справка подготовлена в целях анализа динамики ИПЦ
+   за последние 12 месяцев в сопоставлении с целевым ориентиром
+   Банка России по инфляции и динамикой ключевой ставки.
 
-2. DADOS E ANÁLISE
+2. ДАННЫЕ И АНАЛИЗ
 
-   2.1. O IPCA acumulado em 12 meses atingiu 5,06% em março/2025
-   (Fonte: IBGE/BCB, Série 13522), acima do teto da meta de
-   inflação de 4,50% (meta de 3,00% ± 1,50 p.p.).
+   2.1. ИПЦ за 12 месяцев составил 7,42% в марте 2025 г.
+   (Источник: Росстат/ЦБ РФ), выше целевого ориентира в 4,0%.
 
-   2.2. A taxa Selic meta encontra-se em 14,25% a.a. (Fonte: BCB,
-   Série 432), configurando juro real de aproximadamente 9,19 p.p.
+   2.2. Ключевая ставка Банка России установлена на уровне
+   21,00% годовых (Источник: ЦБ РФ), что обеспечивает реальную
+   ставку на уровне приблизительно 13,58 п.п.
 
-   2.3. Comparativo mensal:
+   2.3. Помесячная динамика:
 
-   | Mês      | IPCA (mensal) | IPCA (12m) | Selic (meta) |
-   |----------|--------------|------------|-------------|
-   | Mar/2024 | 0,16%        | 3,93%      | 10,75%      |
-   | Jun/2024 | 0,21%        | 4,23%      | 10,50%      |
-   | Set/2024 | 0,44%        | 4,42%      | 10,75%      |
-   | Dez/2024 | 0,52%        | 4,83%      | 12,25%      |
-   | Mar/2025 | 0,39%        | 5,06%      | 14,25%      |
+   | Месяц      | ИПЦ (мес.) | ИПЦ (12 мес.) | Ключевая ставка |
+   |------------|-----------|---------------|-----------------|
+   | Апр 2024   | 0,43%     | 7,80%         | 16,00%          |
+   | Июл 2024   | 0,35%     | 8,10%         | 18,00%          |
+   | Окт 2024   | 0,52%     | 8,50%         | 21,00%          |
+   | Янв 2025   | 0,61%     | 8,90%         | 21,00%          |
+   | Мар 2025   | 0,38%     | 7,42%         | 21,00%          |
 
-3. CONCLUSÃO
+3. ВЫВОДЫ
 
-   Os dados indicam aceleração inflacionária no período, com o IPCA
-   acumulado ultrapassando o teto da meta desde janeiro/2025. O
-   Banco Central tem respondido com elevação da Selic, que atingiu
-   o maior patamar desde [data]. Recomenda-se acompanhamento mensal
-   e eventual revisão das projeções fiscais.
+   Данные свидетельствуют о сохранении инфляционного давления
+   в рассматриваемом периоде. Банк России удерживает ключевую
+   ставку на повышенном уровне. Рекомендуется ежемесячный
+   мониторинг и актуализация прогнозных оценок.
 
-[Local], [data].
+[Город], [дата].
 
-[Nome]
-Analista de Política Econômica
-SPE/MF
+[Фамилия И.О.]
+Аналитик, Департамент экономической политики
 ```
 
 ---
 
-## Пример 2: правовое заключение по закупке
+## Пример 2: юридическое заключение по закупке
 
 ### Сценарий
 
 Юристу или сотруднику контрактной службы нужен черновик заключения по закупке у единственного поставщика с быстрой сверкой по публичным реестрам.
 
-> Prompt: "Redija um parecer sobre a legalidade da dispensa de licitação nº 015/2024 da Prefeitura de [Município] para serviços de TI, valor R$ 78.000. Verifique se o fornecedor tem penalidades no TCU"
+> Промпт: «Подготовь заключение о правомерности закупки у единственного поставщика № 015/2024 администрации г. [Город] для ИТ-услуг на сумму 78 000 руб. Проверь, нет ли у поставщика санкций в реестре недобросовестных поставщиков»
 
 ### Что делает агент
 
 Агент:
 
-1. **Проверяет контрагента** через `tcu_buscar_licitantes_inidoneos`
-2. **Находит закупку** через `pncp_buscar_contratacoes`
+1. **Проверяет контрагента** через `registry_search_unreliable_suppliers`
+2. **Находит закупку** через `eis_search_contracts`
 3. **Формирует заключение** с правовой аргументацией
 
 ### Результат
 
 ```
-PARECER JURÍDICO Nº XX/2024/PGM
+ЮРИДИЧЕСКОЕ ЗАКЛЮЧЕНИЕ № XX/2024
 
-Ref.: Dispensa de Licitação nº 015/2024
-Objeto: Serviços de tecnologia da informação
-Contratada: [Empresa] (CNPJ: XX.XXX.XXX/0001-XX)
-Valor: R$ 78.000,00
+Предмет: Закупка у единственного поставщика № 015/2024
+Объект: Информационно-технологические услуги
+Поставщик: [Наименование] (ИНН: XXXXXXXXXX)
+Сумма: 78 000,00 руб.
 
-1. DO RELATÓRIO
-   [Descrição dos fatos]
+1. ОПИСАТЕЛЬНАЯ ЧАСТЬ
+   [Описание фактических обстоятельств]
 
-2. DA FUNDAMENTAÇÃO LEGAL
-   2.1. A dispensa de licitação encontra amparo no art. 75, II,
-   da Lei nº 14.133/2021, que autoriza contratação direta para
-   serviços de engenharia/TI de até R$ 100.000,00.
+2. ПРАВОВОЕ ОБОСНОВАНИЕ
+   2.1. Закупка у единственного поставщика предусмотрена
+   п. 4 ч. 1 ст. 93 Федерального закона № 44-ФЗ, допускающим
+   осуществление закупки у единственного поставщика при сумме,
+   не превышающей установленные лимиты.
 
-   2.2. Consulta ao Cadastro de Licitantes Inidôneos do TCU
-   (realizada em [data]) não identificou penalidades vigentes
-   para a empresa contratada.
+   2.2. Проверка по Реестру недобросовестных поставщиков
+   (на дату [дата]) не выявила действующих санкций в отношении
+   указанного поставщика.
 
-3. DA CONCLUSÃO
-   Opinamos pela LEGALIDADE da dispensa, desde que observados
-   os requisitos do art. 72 da Lei nº 14.133/2021.
+3. ВЫВОД
+   Закупка соответствует требованиям Федерального закона
+   № 44-ФЗ при условии соблюдения процедур оформления
+   и обоснования цены контракта.
 
-[Local], [data].
+[Город], [дата].
 
-[Nome]
-Procurador Municipal
+[Фамилия И.О.]
+Юрисконсульт
 ```
 
 ---
 
-## Пример 3: служебное письмо на основе данных о трансфертах
+## Пример 3: официальное письмо на основе данных о межбюджетных трансфертах
 
 ### Сценарий
 
-Региональному ведомству нужно быстро подготовить служебное письмо по межбюджетным трансфертам и приложить к нему проверяемые цифры из открытых источников.
+Региональному ведомству нужно быстро подготовить официальное письмо по межбюджетным трансфертам и приложить к нему проверяемые цифры из открытых источников.
 
-> Prompt: "Redija um ofício do Secretário de Educação do Estado do Ceará ao MEC, solicitando esclarecimentos sobre as transferências federais para educação básica em 2024. Inclua dados reais das transferências recebidas"
+> Промпт: «Подготовь письмо от руководителя Департамента образования [Регион] в Министерство просвещения РФ с запросом разъяснений о федеральных трансфертах на общее образование в 2024 году. Включи реальные данные о полученных трансфертах»
 
 ### Что делает агент
 
 Агент:
 
-1. **Подтягивает фактические перечисления** через `transparencia_transferencias(uf="CE", funcao="Educação")`
+1. **Подтягивает фактические перечисления** через `transparency_transfers(region="[Регион]", function="Образование")`
 2. **Готовит письмо** в формализованном стиле
 
 ### Результат
 
 ```
-OFÍCIO Nº XX/2024/SEDUC-CE
+ИСХ. № XX/2024
 
-Excelentíssimo Senhor Ministro de Estado da Educação,
+Министру просвещения Российской Федерации
+[Фамилия И.О.]
 
-1. Dirijo-me a Vossa Excelência para solicitar esclarecimentos
-   acerca das transferências federais destinadas à educação básica
-   no Estado do Ceará no exercício de 2024.
+Уважаемый [Имя Отчество]!
 
-2. Segundo dados do Portal da Transparência (consulta em [data]),
-   o Estado recebeu R$ [valor] em transferências para a função
-   Educação no período de janeiro a dezembro de 2024, conforme
-   detalhamento:
+1. Обращаюсь к Вам с просьбой о разъяснении порядка и объёмов
+   федеральных трансфертов, направленных на финансирование
+   общего образования в [Регион] в 2024 году.
 
-   | Programa              | Valor Transferido     |
-   |-----------------------|-----------------------|
-   | FUNDEB                | R$ [valor]            |
-   | PNAE (merenda)        | R$ [valor]            |
-   | PNATE (transporte)    | R$ [valor]            |
-   | Total                 | R$ [valor]            |
+2. По данным Портала открытых данных (на [дата]), в 2024 году
+   региону были перечислены следующие трансферты на образование:
 
-3. Solicito informações sobre:
-   a) Previsão de repasses para o 1º semestre de 2025;
-   b) Critérios de distribuição do FUNDEB complementar;
-   c) Calendário de liberação dos recursos do PNAE.
+   | Направление                       | Сумма         |
+   |-----------------------------------|---------------|
+   | Финансовое обеспечение школ       | [сумма] руб.  |
+   | Питание обучающихся               | [сумма] руб.  |
+   | Подвоз обучающихся                | [сумма] руб.  |
+   | Итого                             | [сумма] руб.  |
 
-Atenciosamente,
+3. Прошу разъяснить:
+   а) планируемые объёмы трансфертов на I полугодие 2025 года;
+   б) критерии распределения дотаций на выравнивание;
+   в) график перечисления средств.
 
-[Nome]
-Secretário de Estado da Educação do Ceará
+С уважением,
+
+[Фамилия И.О.]
+Руководитель Департамента образования [Регион]
 ```
 
 ---
 
-## Exemplo 4: Portaria com Dados do CNES
+## Пример 4: приказ с данными из реестра медицинских организаций
 
-### O Cenário
+### Сценарий
 
-Um diretor de hospital público precisa publicar portaria de regulamentação interna, referenciando dados do CNES.
+Руководителю государственной больницы нужно опубликовать приказ о регламентации порядка оказания экстренной помощи с опорой на данные реестра медицинских организаций.
 
-> Prompt: "Redija uma portaria do Hospital Municipal [Nome] regulamentando o fluxo de atendimento de urgência, com base na capacidade instalada do CNES"
+> Промпт: «Подготовь приказ ГБУЗ «Городская больница [Номер]» о порядке оказания экстренной медицинской помощи, с учётом данных о коечном фонде и штатной численности»
 
-### O Que Acontece
+### Что делает агент
 
-O Redator:
+Агент:
 
-1. **Consulta o CNES** via `saude_buscar_estabelecimentos(nome="Hospital Municipal...")`
-2. **Obtém dados de capacidade** — leitos, profissionais, especialidades
-3. **Gera a portaria** adequada à realidade do estabelecimento
-
----
-
-## Como os Resources Funcionam
-
-O Redator usa 9 resources internos com templates e regras:
-
-| Resource | Conteúdo |
-|----------|----------|
-| `redator://manual/estrutura` | Estrutura de cada tipo de documento |
-| `redator://manual/pronomes` | Pronomes de tratamento (V.Exa., V.Sa.) |
-| `redator://manual/fechos` | Fechos oficiais (Respeitosamente, Atenciosamente) |
-| `redator://templates/oficio` | Template de ofício |
-| `redator://templates/despacho` | Template de despacho |
-| `redator://templates/portaria` | Template de portaria |
-| `redator://templates/parecer` | Template de parecer |
-| `redator://templates/nota_tecnica` | Template de nota técnica |
-| `redator://manual/regras` | Regras gerais do Manual de Redação |
-
-O LLM consulta automaticamente o resource relevante antes de gerar o documento.
+1. **Запрашивает реестр** через `healthcare_search_facilities(name="Городская больница...")`
+2. **Получает данные о мощностях** — койки, персонал, специализации
+3. **Генерирует приказ** с учётом реальной ситуации в учреждении
 
 ---
 
-## O Diferencial: Dados Reais + Redação Oficial
+## Как работают resources
 
-O que torna o Redator único é a combinação:
+Официальный редактор использует 9 внутренних resources с шаблонами и правилами:
 
-| Funcionalidade | Без `mcp-russia` | С `mcp-russia` |
-|---------------|-----------------|-----------------|
-| Formato oficial | ✅ (qualquer LLM) | ✅ |
-| Dados reais do governo | ❌ (inventados) | ✅ (APIs ao vivo) |
-| Pronomes de tratamento corretos | ⚠️ (erro frequente) | ✅ (resource dedicado) |
-| Tabelas com dados verificáveis | ❌ | ✅ |
-| Fundamentação legal atualizada | ⚠️ | ✅ (via DataJud/jurisprudência) |
+| Resource | Содержимое |
+|----------|------------|
+| `redator://manual/structure` | Структура каждого типа документа |
+| `redator://manual/forms_of_address` | Формы обращения (Уважаемый, Господин Министр) |
+| `redator://manual/closings` | Стандартные завершения (С уважением, С почтением) |
+| `redator://templates/letter` | Шаблон письма |
+| `redator://templates/order` | Шаблон распоряжения |
+| `redator://templates/decree` | Шаблон приказа |
+| `redator://templates/opinion` | Шаблон заключения |
+| `redator://templates/brief` | Шаблон справки |
+| `redator://manual/rules` | Общие правила оформления документов |
 
-**Redator не выдумывает данные: он подтягивает фактические значения из подключенных госсистем и оформляет их по официальному шаблону.**
+LLM автоматически обращается к relevant resource перед генерацией документа.
+
+---
+
+## Ключевое отличие: реальные данные + официальное оформление
+
+Что делает Official Editor уникальным — это сочетание:
+
+| Функция | Без `mcp-russia` | С `mcp-russia` |
+|---------|-----------------|-----------------|
+| Официальный формат | ✅ (любой LLM) | ✅ |
+| Реальные данные госорганов | ❌ (вымышленные) | ✅ (живые API) |
+| Корректные формы обращения | ⚠️ (частые ошибки) | ✅ (выделенный resource) |
+| Таблицы с проверяемыми данными | ❌ | ✅ |
+| Актуальное правовое обоснование | ⚠️ | ✅ (через ГАС «Правосудие»/судебную практику) |
+
+**Официальный редактор не выдумывает данные: он подтягивает фактические значения из подключённых госсистем и оформляет их по официальному шаблону.**
 
 ---
 
 ## Что осталось доделать
 
-- заменить бразильские нормы оформления и шаблоны на российские требования делопроизводства;
-- перевести примеры с `MEC`, `TCU`, `PNCP`, `CNPJ` и другими бразильскими сущностями на российские органы, реестры и реквизиты;
-- сохранить сам workflow агента Redator, но переписать templates/resources/prompts под русскоязычный официальный документооборот.
+- заменить нормы оформления и шаблоны на российские требования делопроизводства (ГОСТ Р 7.0.97-2016);
+- перевести примеры с иностранными органами, реестрами и реквизитами на российские (Минпросвещения, 44-ФЗ/223-ФЗ, ИНН/ОГРН, ЕИС);
+- сохранить сам workflow агента, но переписать templates/resources/prompts под русскоязычный официальный документооборот.
 
 ---
 
-_Источники: агент Redator Oficial (`mcp-russia` как публичный слой, `mcp-brasil` как compatibility-layer), API Banco Central, IBGE, Portal da Transparência, TCU, PNCP, CNES/DataSUS._
+_Источники: агент Official Editor (`mcp-russia` как публичный слой), API Банка России, Росстат, Портал открытых данных, ЕИС в сфере закупок, ГАС «Правосудие», реестр медицинских организаций._

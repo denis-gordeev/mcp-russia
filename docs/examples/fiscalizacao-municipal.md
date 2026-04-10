@@ -1,284 +1,284 @@
-# Fiscalização Municipal: Onde Vai o Dinheiro da Sua Cidade
+# Муниципальный контроль: куда идут деньги вашего города
 
-> Пример показывает, как в `mcp-russia` можно собирать муниципальную картину из открытых государственных API. Источники и feature-имена ниже частично остаются в legacy-совместимом виде, унаследованном от исходного проекта.
-
----
-
-## O Que Este Exemplo Demonstra
-
-Как использовать `mcp-russia` для муниципального контроля расходов, сопоставляя данные **9 региональных контрольно-счетных источников** с Portal da Transparencia, PNCP (федеральные закупки) и IBGE (демография). Сценарий по-прежнему опирается на бразильские API как на переходный data-layer, но публичное описание проекта уже русскоязычное.
+> В этом примере показано, как с помощью `mcp-russia` собирать муниципальную картину из открытых государственных API. Названия инструментов и источников частично остаются в legacy-совместимом виде, унаследованном от исходного проекта.
 
 ---
 
-## APIs Utilizadas
+## Что демонстрирует этот пример
 
-| API | Feature | O Que Forneceu |
-|-----|---------|----------------|
-| **TCE-SP** | `tce_sp` | Despesas e receitas de 645 municípios paulistas |
-| **TCE-RJ** | `tce_rj` | Licitações, contratos, obras, penalidades |
-| **TCE-RS** | `tce_rs` | Educação, saúde, gestão fiscal (LRF) |
-| **TCE-PE** | `tce_pe` | Licitações, contratos, despesas, fornecedores |
-| **TCE-CE** | `tce_ce` | Licitações, contratos, empenhos |
-| **TCE-SC** | `tce_sc` | Municípios e unidades gestoras |
-| **TCE-RN** | `tce_rn` | Jurisdicionados, licitações, contratos |
-| **TCE-PI** | `tce_pi` | Prefeituras, despesas, receitas |
-| **TCE-TO** | `tce_to` | Processos, pautas de sessões |
-| **Portal da Transparência** | `transparencia` | Transferências federais para municípios |
-| **PNCP** | `pncp` | Licitações e contratações públicas |
-| **TransfereGov** | `transferegov` | Emendas parlamentares PIX |
-| **IBGE** | `ibge` | População municipal, dados demográficos |
-| **Compras.gov.br** | `dadosabertos` | Contratos e atas de registro de preços |
+Как использовать `mcp-russia` для муниципального контроля расходов, сопоставляя данные региональных контрольно-счётных органов с порталами открытых данных, федеральными закупками и Росстатом (демография).
 
 ---
 
-## Caso 1: Comparando Gastos com Educação Per Capita Entre Municípios
+## Используемые источники
 
-### O Cenário
+| Источник | Инструмент | Что предоставляет |
+|----------|-------------|-------------------|
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_sp` | Расходы и доходы муниципальных образований |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_msk` | Закупки, контракты, объекты строительства, санкции |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_mo` | Образование, здравоохранение, финансовое управление |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_spb` | Закупки, контракты, расходы, поставщики |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_kr` | Закупки, контракты, бюджетные обязательства |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_nn` | Муниципалитеты и подведомственные учреждения |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_ro` | Подконтрольные органы, закупки, контракты |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_tat` | Местные администрации, расходы, доходы |
+| **Контрольно-счётный орган субъекта РФ** | `ks_region_sverd` | Процессы, повестки заседаний |
+| **Портал открытых данных** | `otkryte_dannye` | Федеральные трансферты муниципалитетам |
+| **ЕИС (zakupki.gov.ru)** | `eis_zakupki` | Закупки и государственные контракты |
+| **Федеральное казначейство** | `kaznacheistvo` | Исполнение бюджетов |
+| **Росстат** | `rosstat` | Население муниципальных образований, демографические данные |
+| **Реестр контрактов** | `reestr_kontraktov` | Контракты и протоколы рассмотрения цен |
 
-Dois municípios vizinhos no interior de São Paulo com população similar têm resultados educacionais muito diferentes. A fiscalização começa pela comparação dos gastos.
+---
 
-### Passo a Passo
+## Пример 1: сравнение расходов на образование на душу населения
 
-**1. Identificar os municípios e suas populações**
+### Сценарий
 
-> Prompt: "Qual a população dos municípios de Araraquara e Franca em São Paulo?"
+Два соседних городских округа с похожим населением показывают существенно разные результаты в образовании. Контроль начинается со сравнения расходов.
 
-Ferramentas:
-- `ibge_buscar_municipios(uf="SP")` — lista municípios
-- `ibge_consultar_agregado(...)` — dados populacionais
+### Пошаговое выполнение
 
-**2. Buscar despesas com educação nos dois municípios**
+**1. Определить муниципальные образования и их население**
 
-> Prompt: "Compare os gastos com educação de Araraquara e Franca nos últimos 3 anos"
+> Prompt: "Какое население у городских округов Мытищи и Люберцы в Московской области?"
 
-Ferramentas:
-- `tce_sp_despesas(municipio="Araraquara", funcao="Educação", ano=2024)`
-- `tce_sp_despesas(municipio="Franca", funcao="Educação", ano=2024)`
+Инструменты:
+- `rosstat_poisk_munitsipalitetov(region="МО")` — список муниципальных образований
+- `rosstat_agregat(...)` — демографические данные
 
-Usando `executar_lote` para paralelizar:
+**2. Найти расходы на образование в обоих муниципальных образованиях**
+
+> Prompt: "Сравни расходы на образование городских округов Мытищи и Люберцы за последние 3 года"
+
+Инструменты:
+- `ks_region_mo_raskhody(munitsipalitet="Мытищи", funktsiya="Образование", god=2024)`
+- `ks_region_mo_raskhody(munitsipalitet="Люберцы", funktsiya="Образование", god=2024)`
+
+Используем `batah_zapros` для параллелизации:
 
 ```json
 [
-  {"tool": "tce_sp_despesas", "args": {"municipio": "Araraquara", "funcao": "Educação", "ano": 2024}},
-  {"tool": "tce_sp_despesas", "args": {"municipio": "Franca", "funcao": "Educação", "ano": 2024}},
-  {"tool": "tce_sp_despesas", "args": {"municipio": "Araraquara", "funcao": "Educação", "ano": 2023}},
-  {"tool": "tce_sp_despesas", "args": {"municipio": "Franca", "funcao": "Educação", "ano": 2023}}
+  {"tool": "ks_region_mo_raskhody", "args": {"munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
+  {"tool": "ks_region_mo_raskhody", "args": {"munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
+  {"tool": "ks_region_mo_raskhody", "args": {"munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
+  {"tool": "ks_region_mo_raskhody", "args": {"munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
 ]
 ```
 
-**3. Calcular gasto per capita**
+**3. Рассчитать расходы на душу населения**
 
-Com os dados de população (IBGE) e despesas (TCE-SP), o cálculo é direto:
+Имея данные по населению (Росстат) и расходам (контрольно-счётный орган), расчёт выполняется напрямую:
 
-| Município | População | Gasto Educação | Per Capita |
-|-----------|-----------|---------------|-----------|
-| Araraquara | 238.000 | R$ 285M | R$ 1.197 |
-| Franca | 355.000 | R$ 320M | R$ 901 |
-| **Diferença** | | | **+33%** |
+| Муниципалитет | Население | Расходы на образование | На душу населения |
+|---------------|-----------|-----------------------|------------------|
+| Мытищи | 245 000 | 285 млн руб. | 1 163 руб. |
+| Люберцы | 365 000 | 320 млн руб. | 877 руб. |
+| **Разница** | | | **+33%** |
 
-**4. Verificar transferências federais**
+**4. Проверить федеральные трансферты**
 
-> Prompt: "Quais transferências federais Araraquara e Franca receberam para educação em 2024?"
+> Prompt: "Какие федеральные трансферты получили Мытищи и Люберцы на образование в 2024 году?"
 
-Ferramentas:
-- `transparencia_transferencias` — transferências por município
-- `transferegov_buscar_emendas` — emendas parlamentares destinadas
-
----
-
-## Caso 2: Identificando Fornecedores Suspeitos em Licitações
-
-### O Cenário
-
-Um município do Rio de Janeiro contrata repetidamente o mesmo fornecedor para serviços diferentes, sempre abaixo do limite de dispensa de licitação.
-
-### Passo a Passo
-
-**1. Buscar contratos do município**
-
-> Prompt: "Liste todos os contratos da Prefeitura de [Município] no último ano"
-
-Ferramentas:
-- `tce_rj_contratos(municipio="...", ano=2024)` — contratos pelo TCE-RJ
-- `pncp_buscar_contratacoes(orgao="...", ano=2024)` — via PNCP
-
-**2. Agrupar por fornecedor**
-
-> Prompt: "Quais fornecedores mais receberam contratos dessa prefeitura? Algum aparece em múltiplas categorias?"
-
-O LLM agrupa os resultados e identifica padrões:
-
-```
-Fornecedor: Empresa ABC Ltda (CNPJ: XX.XXX.XXX/0001-XX)
-  ├── Contrato 001/2024 - Material de escritório   R$ 78.000 (dispensa)
-  ├── Contrato 015/2024 - Serviço de limpeza       R$ 79.500 (dispensa)
-  ├── Contrato 023/2024 - Manutenção predial        R$ 79.900 (dispensa)
-  └── Total: R$ 237.400 em 3 contratos por dispensa
-      ⚠️ Limite de dispensa: R$ 80.000 por contrato
-```
-
-**3. Verificar se o fornecedor tem penalidades**
-
-> Prompt: "A Empresa ABC Ltda está na lista de licitantes inidôneos do TCU?"
-
-Ferramentas:
-- `tcu_buscar_licitantes_inidoneos(nome="Empresa ABC")`
-- `tce_rj_penalidades(fornecedor="Empresa ABC")`
-
-**4. Buscar obras relacionadas**
-
-> Prompt: "A prefeitura tem obras em andamento? Qual o status de cada uma?"
-
-Ferramentas:
-- `tce_rj_obras(municipio="...")` — obras registradas no TCE-RJ
+Инструменты:
+- `otkryte_dannye_transfery` — трансферты по муниципалитетам
+- `kaznacheistvo_emendy` — депутатские средства
 
 ---
 
-## Caso 3: Gestão Fiscal — Quais Municípios Estão em Risco?
+## Пример 2: выявление подозрительных поставщиков в закупках
 
-### O Cenário
+### Сценарий
 
-O TCE-RS publica indicadores de gestão fiscal (Lei de Responsabilidade Fiscal) para todos os municípios gaúchos. Quais estão no limite?
+Городской округ неоднократно заключает контракты с одним и тем же поставщиком для разных видов услуг, каждый раз — в пределах порога, позволяющего избежать конкурентных процедур.
 
-### Passo a Passo
+### Пошаговое выполнение
 
-> Prompt: "Quais municípios do Rio Grande do Sul estão no limite da Lei de Responsabilidade Fiscal para gastos com pessoal?"
+**1. Найти контракты муниципального образования**
 
-Ferramentas:
-- `tce_rs_gestao_fiscal` — indicadores LRF por município
-- `tce_rs_educacao` — gastos com educação (mínimo constitucional 25%)
-- `tce_rs_saude` — gastos com saúde (mínimo constitucional 15%)
+> Prompt: "Перечисли все контракты администрации городского округа [Название] за последний год"
 
-### Resultado Esperado
+Инструменты:
+- `ks_region_msk_kontrakty(munitsipalitet="...", god=2024)` — контракты через контрольно-счётный орган
+- `eis_zakupki_poisk_kontraktov(organ="...", god=2024)` — через ЕИС
 
-| Município | Gasto Pessoal/RCL | Limite | Status |
-|-----------|-------------------|--------|--------|
-| [Município A] | 58,3% | 60% | ⚠️ Limite prudencial |
-| [Município B] | 54,1% | 60% | ✅ OK |
-| [Município C] | 61,2% | 60% | ❌ Acima do limite |
+**2. Сгруппировать по поставщикам**
 
-> Prompt: "Os municípios que ultrapassaram o limite de pessoal também cumprem o mínimo de 25% em educação?"
+> Prompt: "Какие поставщики получили больше всего контрактов от этой администрации? Есть ли те, кто фигурирует в нескольких категориях?"
 
-**Cross-reference:** Municípios que gastam demais com pessoal frequentemente descumprem os mínimos constitucionais em educação e saúde — porque não sobra orçamento.
+LLM группирует результаты и выявляет закономерности:
+
+```
+Поставщик: ООО «Альфа-Сервис» (ИНН: 77XXXXXXXX)
+  ├── Контракт №001/2024 — Канцтовары           78 000 руб. (малая закупка)
+  ├── Контракт №015/2024 — Клининг              79 500 руб. (малая закупка)
+  ├── Контракт №023/2024 — Текущий ремонт зданий 79 900 руб. (малая закупка)
+  └── Итого: 237 400 руб. за 3 контракта как малые закупки
+      ⚠️ Порог малой закупки: 600 000 руб. по 44-ФЗ
+```
+
+**3. Проверить наличие санкций у поставщика**
+
+> Prompt: "Есть ли у ООО «Альфа-Сервис» санкции в реестре недобросовестных поставщиков?"
+
+Инструменты:
+- `reestr_nedobrosovestnykh_postavshchikov(nazvanie="Альфа-Сервис")`
+- `ks_region_msk_sanktsii(postavshchik="Альфа-Сервис")`
+
+**4. Найти связанные объекты строительства**
+
+> Prompt: "Есть ли у администрации объекты строительства в стадии реализации? Каков статус каждого?"
+
+Инструменты:
+- `ks_region_msk_stroitelstvo(munitsipalitet="...")` — объекты, зарегистрированные в контрольно-счётном органе
 
 ---
 
-## Caso 4: Rastreando Emendas PIX — De Brasília ao Seu Município
+## Пример 3: финансовое управление — какие муниципалитеты в зоне риска?
 
-### O Cenário
+### Сценарий
 
-As "emendas PIX" (transferências especiais) são recursos enviados diretamente por parlamentares a municípios, sem necessidade de convênio ou prestação de contas detalhada. Para onde estão indo?
+Контрольно-счётный орган публикует индикаторы финансового управления (требования Бюджетного кодекса РФ) для всех муниципальных образований региона. Какие из них на грани?
 
-### Passo a Passo
+### Пошаговое выполнение
 
-**1. Buscar emendas por estado**
+> Prompt: "Какие муниципальные образования Московской области находятся на пределе ограничений Бюджетного кодекса по расходам на персонал?"
 
-> Prompt: "Quais municípios do Ceará mais receberam emendas PIX em 2024?"
+Инструменты:
+- `ks_region_mo_finansovoe_upravlenie` — индикаторы по БК РФ для каждого муниципального образования
+- `ks_region_mo_obrazovanie` — расходы на образование (минимум по закону об образовании)
+- `ks_region_mo_zdravookhranenie` — расходы на здравоохранение (минимальные нормативы)
 
-Ferramentas:
-- `transferegov_buscar_emendas(uf="CE", ano=2024)`
+### Ожидаемый результат
 
-**2. Cruzar com dados populacionais**
+| Муниципалитет | Расходы на персонал / ДОД | Предел | Статус |
+|---------------|---------------------------|--------|--------|
+| [Муниципалитет А] | 58,3% | 60% | ⚠️ Превентивный предел |
+| [Муниципалитет Б] | 54,1% | 60% | ✅ В норме |
+| [Муниципалитет В] | 61,2% | 60% | ❌ Сверх предела |
 
-> Prompt: "Calcule o valor per capita das emendas PIX para cada município do Ceará"
+> Prompt: "Соблюдают ли муниципальные образования, превысившие лимит расходов на персонал, минимальные расходы на образование?"
 
-Ferramentas:
-- `ibge_buscar_municipios(uf="CE")` — população
-- Cross-reference com os valores do TransfereGov
+**Перекрёстная проверка:** муниципалитеты с чрезмерными расходами на персонал часто наруают минимальные нормативы на образование и здравоохранение — потому что бюджет исчерпан.
 
-**3. Identificar quem enviou as emendas**
+---
 
-> Prompt: "Quais deputados e senadores destinaram emendas para [Município]?"
+## Пример 4: отслеживание целевых трансфертов — от федерального уровня до муниципального образования
 
-Ferramentas:
-- `transparencia_emendas_parlamentares(municipio="...")`
+### Сценарий
 
-**4. Verificar gastos do município**
+Целевые трансферты (включая депутатские средства) — это ресурсы, направляемые непосредственно муниципальным образованиям без необходимости детализированной отчётности. Куда они направляются?
 
-> Prompt: "O município aplicou as emendas em quê? Houve licitação?"
+### Пошаговое выполнение
 
-Ferramentas:
-- `tce_ce_empenhos(municipio="...")` — como foi gasto
-- `tce_ce_licitacoes(municipio="...")` — se houve licitação
-- `pncp_buscar_contratacoes(municipio="...")` — contratações registradas
+**1. Найти трансферты по региону**
 
-### A Cadeia Completa
+> Prompt: "Какие муниципальные образования Московской области получили больше всего целевых трансфертов в 2024 году?"
+
+Инструменты:
+- `kaznacheistvo_emendy(region="МО", god=2024)`
+
+**2. Сопоставить с демографическими данными**
+
+> Prompt: "Рассчитай объём целевых трансфертов на душу населения для каждого муниципального образования Московской области"
+
+Инструменты:
+- `rosstat_poisk_munitsipalitetov(region="МО")` — население
+- Сопоставление с данными Федерального казначейства
+
+**3. Определить, кто направил средства**
+
+> Prompt: "Какие депутаты направили средства в [муниципалитет]?"
+
+Инструменты:
+- `otkryte_dannye_emendy(munitsipalitet="...")`
+
+**4. Проверить расходы муниципального образования**
+
+> Prompt: "На что муниципалитет потратил трансферты? Была ли конкурентная закупка?"
+
+Инструменты:
+- `ks_region_kr_byudzhetnye_obязательства(munitsipalitet="...")` — как были израсходованы
+- `ks_region_kr_zakupki(munitsipalitet="...")` — была ли закупка
+- `eis_zakupki_poisk_kontraktov(munitsipalitet="...")` — зарегистрированные контракты
+
+### Полная цепочка
 
 ```
-Deputado destina emenda PIX (TransfereGov)
+Депутат направляет средства (Казначейство)
         ↓
-Município recebe o recurso (Transparência)
+Муниципалитет получает ресурс (Портал открытых данных)
         ↓
-Prefeitura realiza despesa (TCE-CE)
+Администрация осуществляет расход (Контр.-счётный орган)
         ↓
-Verifica se houve licitação (PNCP + TCE-CE)
+Проверка конкурентной закупки (ЕИС + контр.-счётный орган)
         ↓
-Compara com necessidades reais (IBGE + Saúde/CNES)
+Сопоставление с реальными потребностями (Росстат + здравоохранение)
 ```
 
 ---
 
-## Comparação Entre Estados: O Poder dos 9 TCEs
+## Сравнение между регионами: мощь 9 контрольно-счётных органов
 
-В текущем compatibility-слое `mcp-russia` связывает **9 Tribunais de Contas Estaduais**. Это позволяет строить сквозные сравнения между регионами:
+В текущем совместимом слое `mcp-russia` связывает **9 контрольно-счётных органов субъектов РФ**. Это позволяет строить сквозные сравнения между регионами:
 
-> Prompt: "Compare os gastos per capita com saúde dos municípios-capital de SP, RJ, RS, SC, PE, CE, RN, PI e TO"
+> Prompt: "Сравни расходы на здравоохранение на душу населения для столиц субъектов РФ: Московская область, Санкт-Петербург, Свердловская область, Ростовская область, Нижегородская область, Краснодарский край, Республика Татарстан, Красноярский край"
 
-Usando `executar_lote`:
+Используя `batah_zapros`:
 
 ```json
 [
-  {"tool": "tce_sp_despesas", "args": {"municipio": "São Paulo", "funcao": "Saúde"}},
-  {"tool": "tce_rj_contratos", "args": {"municipio": "Rio de Janeiro", "tipo": "saude"}},
-  {"tool": "tce_rs_saude", "args": {"municipio": "Porto Alegre"}},
-  {"tool": "tce_sc_unidades_gestoras", "args": {"municipio": "Florianópolis"}},
-  {"tool": "tce_pe_despesas", "args": {"municipio": "Recife", "funcao": "saude"}},
-  {"tool": "tce_ce_empenhos", "args": {"municipio": "Fortaleza", "funcao": "saude"}},
-  {"tool": "tce_rn_contratos", "args": {"municipio": "Natal"}},
-  {"tool": "tce_pi_despesas", "args": {"municipio": "Teresina", "funcao": "saude"}},
-  {"tool": "tce_to_processos", "args": {"municipio": "Palmas"}}
+  {"tool": "ks_region_mo_raskhody", "args": {"munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
+  {"tool": "ks_region_msk_kontrakty", "args": {"munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
+  {"tool": "ks_region_sverd_zdravookhranenie", "args": {"munitsipalitet": "Екатеринбург"}},
+  {"tool": "ks_region_nn_podvedomstvennye", "args": {"munitsipalitet": "Нижний Новгород"}},
+  {"tool": "ks_region_ro_raskhody", "args": {"munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
+  {"tool": "ks_region_kr_byudzhetnye_obязательства", "args": {"munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
+  {"tool": "ks_region_tat_kontrakty", "args": {"munitsipalitet": "Казань"}},
+  {"tool": "ks_region_spb_raskhody", "args": {"munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
+  {"tool": "ks_region_kr_protsessy", "args": {"munitsipalitet": "Красноярск"}}
 ]
 ```
 
-9 APIs consultadas em paralelo, uma chamada.
+9 источников, один вызов — параллельный опрос.
 
 ---
 
-## O Que os Dados Mostram vs. O Que Não Mostram
+## Что данные показывают и что они не показывают
 
-### O Que Mostram
-- Quanto cada município gasta por área
-- Com quem contrata e por quanto
-- Se cumpre os mínimos constitucionais
-- De onde vêm os recursos (transferências, emendas, receita própria)
-- Se há fornecedores com penalidades
+### Что показывают
+- Сколько каждое муниципальное образование тратит по направлениям
+- С кем заключаются контракты и на какие суммы
+- Соблюдаются ли минимальные нормативы
+- Откуда поступают средства (трансферты, собственные доходы)
+- Есть ли поставщики с санкциями
 
-### O Que Não Mostram
-- Se o dinheiro foi bem aplicado (qualidade do gasto)
-- Se houve superfaturamento (requer auditoria técnica)
-- Se o prefeito agiu de má-fé (requer investigação)
-- Se os dados estão completos (nem todo município alimenta os sistemas)
+### Что не показывают
+- Насколько эффективно израсходованы средства (качество расхода)
+- Было ли завышение цен (требует технической проверки)
+- Был ли умысел со стороны главы администрации (требует расследования)
+- Полноту данных (не все муниципалитеты своевременно наполняют системы)
 
-**Os dados públicos são o primeiro passo da fiscalização — não o último.**
-
----
-
-## Como Verificar Você Mesmo
-
-| Dado | Fonte | URL |
-|------|-------|-----|
-| Despesas/receitas SP | TCE-SP | transparencia.tce.sp.gov.br |
-| Contratos/obras RJ | TCE-RJ | portal.tce.rj.gov.br |
-| Gestão fiscal RS | TCE-RS | portal.tce.rs.gov.br |
-| Licitações/contratos PE | TCE-PE | sistemas.tce.pe.gov.br |
-| Empenhos CE | TCE-CE | api.tce.ce.gov.br |
-| Licitações federais | PNCP | pncp.gov.br |
-| Emendas PIX | TransfereGov | transferegov.sistema.gov.br |
-| Transferências | Transparência | portaldatransparencia.gov.br |
-| População | IBGE | servicodados.ibge.gov.br |
+**Открытые данные — это первый шаг контроля, а не последний.**
 
 ---
 
-_Fontes de dados: APIs dos TCEs (SP, RJ, RS, SC, PE, CE, RN, PI, TO), API do Portal da Transparência, API do PNCP, API do TransfereGov, API do IBGE._
+## Как проверить самостоятельно
 
-_Примечание: значения в примере иллюстративные и нужны, чтобы показать сценарий работы `mcp-russia`. Для актуальных выводов запускайте tools против живых источников; полнота данных зависит от региона, периода и состояния legacy-интеграций._
+| Данные | Источник | URL |
+|--------|----------|-----|
+| Расходы/доходы Московской области | Контрольно-счётный орган МО | ks.mosreg.ru |
+| Контракты/строительство Москвы | Контрольно-счётный орган г. Москвы | control.mos.ru |
+| Финансовое управление Свердловской области | Контрольно-счётный орган СО | kso.sverdlovsk.ru |
+| Закупки/контракты Ростовской области | Контрольно-счётный орган РО | ks.donland.ru |
+| Бюджетные обязательства Красноярского края | Контрольно-счётный орган КК | ksk.krskstate.ru |
+| Федеральные закупки | ЕИС | zakupki.gov.ru |
+| Депутатские средства | Казначейство | kaznacheistvo.ru |
+| Трансферты | Портал открытых данных | bus.gov.ru |
+| Население | Росстат | rosstat.gov.ru |
+
+---
+
+_Источники данных: API контрольно-счётных органов (Московская область, Москва, Санкт-Петербург, Свердловская, Ростовская, Нижегородская области, Краснодарский край, Республика Татарстан, Красноярский край), API портала открытых данных, API ЕИС, API Федерального казначейства, API Росстата._
+
+_Примечание: значения в примере иллюстративные и нужны, чтобы показать сценарий работы `mcp-russia`. Для актуальных выводов запускайте инструменты против живых источников; полнота данных зависит от региона, периода и состояния legacy-интеграций._

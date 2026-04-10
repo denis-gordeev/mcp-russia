@@ -50,8 +50,7 @@ async def info_deputata(id_deputata: int, ctx: Context) -> str:
 
     if not deputat:
         return (
-            f"Депутат с ID {id_deputata} не найден.\n\n"
-            f"Используйте spisok_deputatov() для поиска."
+            f"Депутат с ID {id_deputata} не найден.\n\nИспользуйте spisok_deputatov() для поиска."
         )
 
     lines = [

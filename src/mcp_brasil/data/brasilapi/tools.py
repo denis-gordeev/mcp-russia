@@ -1,9 +1,12 @@
-"""Tool functions for the BrasilAPI feature.
+"""Инструменты для работы с BrasilAPI (слой совместимости, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют справочные данные по Бразилии и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -22,16 +25,17 @@ from .constants import TAXAS_CONHECIDAS, TIPOS_VEICULO
 
 
 async def consultar_cep(cep: str, ctx: Context) -> str:
-    """Consulta endereço completo a partir de um CEP.
+    """Поиск адреса по бразильскому почтовому индексу CEP (legacy).
 
-    Retorna logradouro, bairro, cidade e estado.
-    Aceita CEP com ou sem hífen (ex: 01001-000 ou 01001000).
+    Примечание: это инструмент совместимости для бразильских данных CEP.
+    Возвращает улицу, район, город и штат.
+    Принимает CEP с дефисом или без (например: 01001-000 или 01001000).
 
     Args:
-        cep: CEP com 8 dígitos (ex: 01001000 ou 01001-000).
+        cep: CEP из 8 цифр (например: 01001000 или 01001-000).
 
     Returns:
-        Dados do endereço correspondente ao CEP.
+        Данные адреса, соответствующего CEP.
     """
     await ctx.info(f"Consultando CEP {cep}...")
     endereco = await client.consultar_cep(cep)
@@ -46,17 +50,18 @@ async def consultar_cep(cep: str, ctx: Context) -> str:
 
 
 async def consultar_cnpj(cnpj: str, ctx: Context) -> str:
-    """Consulta dados cadastrais de uma empresa pelo CNPJ.
+    """Поиск регистрационных данных компании по бразильскому номеру CNPJ (legacy).
 
-    Retorna razão social, nome fantasia, situação cadastral, endereço,
-    atividade econômica (CNAE) e capital social.
-    Aceita CNPJ com ou sem formatação.
+    Примечание: инструмент совместимости для бразильских данных CNPJ.
+    Возвращает юридическое наименование, коммерческое название, статус регистрации,
+    адрес, вид экономической деятельности (CNAE) и уставный капитал.
+    Принимает CNPJ с форматированием или без.
 
     Args:
-        cnpj: CNPJ com 14 dígitos (ex: 00000000000191 ou 00.000.000/0001-91).
+        cnpj: CNPJ из 14 цифр (например: 00000000000191 или 00.000.000/0001-91).
 
     Returns:
-        Dados cadastrais da empresa.
+        Регистрационные данные компании.
     """
     await ctx.info(f"Consultando CNPJ {cnpj}...")
     emp = await client.consultar_cnpj(cnpj)
@@ -80,15 +85,16 @@ async def consultar_cnpj(cnpj: str, ctx: Context) -> str:
 
 
 async def consultar_ddd(ddd: str, ctx: Context) -> str:
-    """Consulta quais cidades e estado pertencem a um código DDD.
+    """Поиск городов и штата по бразильскому телефонному коду DDD (legacy).
 
-    Útil para identificar a localização geográfica de um número de telefone.
+    Примечание: инструмент совместимости для бразильских данных DDD.
+    Полезно для определения географического положения по телефонному номеру.
 
     Args:
-        ddd: Código DDD com 2 dígitos (ex: 11, 21, 61).
+        ddd: Код DDD из 2 цифр (например: 11, 21, 61).
 
     Returns:
-        Estado e lista de cidades do DDD.
+        Штат и список городов кода DDD.
     """
     await ctx.info(f"Consultando DDD {ddd}...")
     info = await client.consultar_ddd(ddd)
@@ -98,13 +104,14 @@ async def consultar_ddd(ddd: str, ctx: Context) -> str:
 
 
 async def listar_bancos(ctx: Context) -> str:
-    """Lista todos os bancos brasileiros registrados no Banco Central.
+    """Список всех бразильских банков, зарегистрированных в Центральном банке (legacy).
 
-    Retorna código, nome e ISPB de cada banco.
-    Útil para identificar bancos por código ou buscar informações bancárias.
+    Примечание: инструмент совместимости для бразильских банковских данных.
+    Возвращает код, название и ISPB каждого банка.
+    Полезно для идентификации банков по коду или поиска банковской информации.
 
     Returns:
-        Tabela com todos os bancos brasileiros.
+        Таблица со всеми бразильскими банками.
     """
     await ctx.info("Buscando lista de bancos...")
     bancos = await client.listar_bancos()
@@ -119,13 +126,15 @@ async def listar_bancos(ctx: Context) -> str:
 
 
 async def consultar_banco(codigo: int, ctx: Context) -> str:
-    """Consulta dados de um banco específico pelo código.
+    """Поиск данных конкретного банка по коду (legacy).
+
+    Примечание: инструмент совместимости для бразильских банковских данных.
 
     Args:
-        codigo: Código do banco (ex: 1 para Banco do Brasil, 341 para Itaú).
+        codigo: Код банка (например: 1 — Banco do Brasil, 341 — Itaú).
 
     Returns:
-        Dados completos do banco.
+        Полные данные банка.
     """
     await ctx.info(f"Consultando banco {codigo}...")
     banco = await client.consultar_banco(codigo)
@@ -139,12 +148,13 @@ async def consultar_banco(codigo: int, ctx: Context) -> str:
 
 
 async def listar_moedas(ctx: Context) -> str:
-    """Lista todas as moedas disponíveis para consulta de câmbio.
+    """Список всех валют, доступных для запроса курсов (legacy).
 
-    Retorna símbolo e nome de cada moeda para uso em consultar_cotacao.
+    Примечание: инструмент совместимости для бразильских валютных данных.
+    Возвращает символ и название каждой валюты для использования в consultar_cotacao.
 
     Returns:
-        Tabela com as moedas disponíveis.
+        Таблица с доступными валютами.
     """
     await ctx.info("Buscando moedas disponíveis...")
     moedas = await client.listar_moedas()
@@ -154,17 +164,18 @@ async def listar_moedas(ctx: Context) -> str:
 
 
 async def consultar_cotacao(moeda: str, data: str, ctx: Context) -> str:
-    """Consulta a cotação de uma moeda em relação ao Real (BRL) em uma data.
+    """Поиск курса валюты по отношению к бразильскому реалу (BRL) на определённую дату (legacy).
 
-    Use listar_moedas para ver moedas disponíveis.
-    Dados disponíveis a partir de 1984-11-28. Não é possível consultar datas futuras.
+    Примечание: инструмент совместимости для бразильских валютных данных.
+    Используйте listar_moedas для просмотра доступных валют.
+    Данные доступны с 28.11.1984. Невозможно запросить будущие даты.
 
     Args:
-        moeda: Símbolo da moeda (ex: USD, EUR, GBP).
-        data: Data no formato YYYY-MM-DD (ex: 2024-01-15).
+        moeda: Символ валюты (например: USD, EUR, GBP).
+        data: Дата в формате YYYY-MM-DD (например: 2024-01-15).
 
     Returns:
-        Cotação de compra e venda da moeda.
+        Курс покупки и продажи валюты.
     """
     await ctx.info(f"Consultando cotação {moeda} em {data}...")
     cotacao = await client.consultar_cotacao(moeda, data)
@@ -180,15 +191,16 @@ async def consultar_cotacao(moeda: str, data: str, ctx: Context) -> str:
 
 
 async def consultar_feriados(ano: int, ctx: Context) -> str:
-    """Lista todos os feriados nacionais de um ano.
+    """Список всех национальных праздников Бразилии за год (legacy).
 
-    Retorna data, nome e tipo de cada feriado.
+    Примечание: инструмент совместимости для бразильских данных.
+    Возвращает дату, название и тип каждого праздника.
 
     Args:
-        ano: Ano com 4 dígitos (ex: 2024, 2025).
+        ano: Год из 4 цифр (например: 2024, 2025).
 
     Returns:
-        Tabela com os feriados nacionais do ano.
+        Таблица с национальными праздниками Бразилии за год.
     """
     await ctx.info(f"Consultando feriados de {ano}...")
     feriados = await client.consultar_feriados(ano)
@@ -198,15 +210,16 @@ async def consultar_feriados(ano: int, ctx: Context) -> str:
 
 
 async def consultar_taxa(sigla: str, ctx: Context) -> str:
-    """Consulta uma taxa ou índice oficial da economia brasileira.
+    """Поиск ставки или индекса бразильской экономики (legacy).
 
-    Taxas disponíveis: SELIC, CDI, IPCA, TR, INPC, IGP-M, entre outras.
+    Примечание: инструмент совместимости для бразильских экономических данных.
+    Доступные ставки: SELIC, CDI, IPCA, TR, INPC, IGP-M и другие.
 
     Args:
-        sigla: Sigla da taxa (ex: SELIC, CDI, IPCA).
+        sigla: Аббревиатура ставки (например: SELIC, CDI, IPCA).
 
     Returns:
-        Nome e valor atual da taxa.
+        Название и текущее значение ставки.
     """
     await ctx.info(f"Consultando taxa {sigla.upper()}...")
     taxa = await client.consultar_taxa(sigla)
@@ -222,13 +235,14 @@ async def consultar_taxa(sigla: str, ctx: Context) -> str:
 
 
 async def listar_tabelas_fipe(ctx: Context) -> str:
-    """Lista as tabelas de referência FIPE disponíveis.
+    """Список доступных справочных таблиц FIPE (legacy).
 
-    A tabela mais recente é a primeira da lista.
-    Use o código da tabela em listar_marcas_fipe para filtrar por período.
+    Примечание: инструмент совместимости для бразильских данных об автомобилях.
+    Самая свежая таблица находится первой в списке.
+    Используйте код таблицы в listar_marcas_fipe для фильтрации по периоду.
 
     Returns:
-        Lista das tabelas de referência FIPE com código e mês.
+        Список справочных таблиц FIPE с кодом и месяцем.
     """
     await ctx.info("Buscando tabelas FIPE...")
     tabelas = await client.listar_tabelas_fipe()
@@ -238,13 +252,15 @@ async def listar_tabelas_fipe(ctx: Context) -> str:
 
 
 async def listar_marcas_fipe(tipo_veiculo: str, ctx: Context) -> str:
-    """Lista as marcas de veículos na tabela FIPE por tipo.
+    """Список марок автомобилей в таблице FIPE по типу (legacy).
+
+    Примечание: инструмент совместимости для бразильских данных об автомобилях.
 
     Args:
-        tipo_veiculo: Tipo de veículo: carros, caminhoes ou motos.
+        tipo_veiculo: Тип транспортного средства: carros, caminhoes или motos.
 
     Returns:
-        Lista de marcas com nome e código para consulta de veículos.
+        Список марок с названием и кодом для поиска автомобилей.
     """
     if tipo_veiculo not in TIPOS_VEICULO:
         return f"Tipo inválido: {tipo_veiculo}. Use: {', '.join(sorted(TIPOS_VEICULO))}"
@@ -256,16 +272,17 @@ async def listar_marcas_fipe(tipo_veiculo: str, ctx: Context) -> str:
 
 
 async def buscar_veiculos_fipe(tipo_veiculo: str, codigo_marca: str, ctx: Context) -> str:
-    """Busca modelos de veículos na tabela FIPE por tipo e marca.
+    """Поиск моделей автомобилей в таблице FIPE по типу и марке (legacy).
 
-    Use listar_marcas_fipe para obter o código da marca.
+    Примечание: инструмент совместимости для бразильских данных об автомобилях.
+    Используйте listar_marcas_fipe для получения кода марки.
 
     Args:
-        tipo_veiculo: Tipo de veículo: carros, caminhoes ou motos.
-        codigo_marca: Código da marca (obtido de listar_marcas_fipe).
+        tipo_veiculo: Тип транспортного средства: carros, caminhoes или motos.
+        codigo_marca: Код марки (полученный из listar_marcas_fipe).
 
     Returns:
-        Lista de modelos com preço FIPE.
+        Список моделей с ценой FIPE.
     """
     if tipo_veiculo not in TIPOS_VEICULO:
         return f"Tipo inválido: {tipo_veiculo}. Use: {', '.join(sorted(TIPOS_VEICULO))}"
@@ -277,15 +294,16 @@ async def buscar_veiculos_fipe(tipo_veiculo: str, codigo_marca: str, ctx: Contex
 
 
 async def consultar_isbn(isbn: str, ctx: Context) -> str:
-    """Consulta dados de um livro pelo ISBN.
+    """Поиск данных книги по ISBN (legacy).
 
-    Busca em múltiplos provedores: CBL, Google Books, Mercado Editorial, Open Library.
+    Примечание: инструмент совместимости для бразильских библиографических данных.
+    Поиск по нескольким источникам: CBL, Google Books, Mercado Editorial, Open Library.
 
     Args:
-        isbn: ISBN-10 ou ISBN-13 (com ou sem hífens).
+        isbn: ISBN-10 или ISBN-13 (с дефисами или без).
 
     Returns:
-        Dados do livro (título, autor, editora, ano, páginas).
+        Данные книги (название, автор, издательство, год, страницы).
     """
     await ctx.info(f"Consultando ISBN {isbn}...")
     livro = await client.consultar_isbn(isbn)
@@ -310,16 +328,17 @@ async def consultar_isbn(isbn: str, ctx: Context) -> str:
 
 
 async def buscar_ncm(busca: str, ctx: Context) -> str:
-    """Busca códigos NCM (Nomenclatura Comum do Mercosul) por descrição ou código.
+    """Поиск кодов NCM (Общая номенклатура Меркосур) по описанию или коду (legacy).
 
-    NCM é o código usado para classificar mercadorias em operações de
-    comércio exterior e nota fiscal eletrônica.
+    Примечание: инструмент совместимости для бразильских таможенных данных.
+    NCM — это код, используемый для классификации товаров во внешней торговле
+    и при оформлении электронных счетов-фактур.
 
     Args:
-        busca: Texto de busca (descrição do produto ou código NCM parcial).
+        busca: Текст для поиска (описание товара или частичный код NCM).
 
     Returns:
-        Lista de códigos NCM encontrados.
+        Список найденных кодов NCM.
     """
     await ctx.info(f"Buscando NCM '{busca}'...")
     itens = await client.buscar_ncm(busca)
@@ -331,12 +350,13 @@ async def buscar_ncm(busca: str, ctx: Context) -> str:
 
 
 async def consultar_pix_participantes(ctx: Context) -> str:
-    """Lista todas as instituições participantes do sistema PIX.
+    """Список всех организаций — участников платёжной системы PIX (legacy).
 
-    Retorna ISPB, nome e tipo de participação de cada instituição.
+    Примечание: инструмент совместимости для бразильских платёжных данных.
+    Возвращает ISPB, название и тип участия каждой организации.
 
     Returns:
-        Tabela com os participantes do PIX.
+        Таблица с участниками системы PIX.
     """
     await ctx.info("Buscando participantes do PIX...")
     participantes = await client.listar_pix_participantes()
@@ -349,13 +369,15 @@ async def consultar_pix_participantes(ctx: Context) -> str:
 
 
 async def consultar_registro_br(dominio: str, ctx: Context) -> str:
-    """Consulta a disponibilidade de um domínio .br no Registro.br.
+    """Проверка доступности домена .br в Registro.br (legacy).
+
+    Примечание: инструмент совместимости для бразильских доменных данных.
 
     Args:
-        dominio: Nome de domínio (ex: meusite.com.br).
+        dominio: Имя домена (например: meusite.com.br).
 
     Returns:
-        Status de disponibilidade do domínio.
+        Статус доступности домена.
     """
     await ctx.info(f"Consultando domínio {dominio}...")
     info = await client.consultar_registro_br(dominio)

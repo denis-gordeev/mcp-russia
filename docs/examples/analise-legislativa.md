@@ -1,328 +1,327 @@
-# Análise Legislativa Cruzada: O Caminho de um Projeto de Lei
+# Кросс-анализ законодательства: Путь законопроекта
 
 > Публичный сценарий для `mcp-russia`: кросс-анализ законодательного процесса по открытым парламентским, судебным и официальным источникам. Внутренние имена некоторых features пока могут оставаться legacy-совместимыми.
 
 ---
 
-## O Que Este Exemplo Demonstra
+## Что демонстрирует этот пример
 
-Как проследить полный путь законопроекта: от внесения в парламент до публикации в официальных источниках, сопоставляя данные из **5 разных API**, чтобы понять, кто выступил инициатором, как проходили голосования, кто финансировал участников кампании и привел ли акт к судебным спорам.
-
----
-
-## APIs Utilizadas
-
-| API | Feature | O Que Forneceu |
-|-----|---------|----------------|
-| **Câmara dos Deputados** | `camara` | Proposições, autores, votações, tramitação |
-| **Senado Federal** | `senado` | Matérias, votações, relatores, emendas |
-| **Diário Oficial** | `diario_oficial` | Publicação da lei, regulamentações, portarias |
-| **DataJud/CNJ** | `datajud` | Processos judiciais sobre a lei (ADIs, mandados) |
-| **TSE** | `tse` | Financiamento de campanha dos votantes |
-| **Jurisprudência** | `jurisprudencia` | Decisões do STF/STJ sobre a constitucionalidade |
+Как проследить полный путь законопроекта: от внесения в парламент до публикации в официальных источниках, сопоставляя данные из **5 разных API**, чтобы понять, кто выступил инициатором, как проходили голосования, кто финансировал участников кампании и привёл ли акт к судебным спорам.
 
 ---
 
-## Caso: O Marco Legal da Inteligência Artificial
+## Используемые API
 
-### O Cenário
-
-В российской и русскоязычной повестке регулирование искусственного интеллекта обсуждается одновременно на уровне законопроектов, подзаконных актов и судебной практики. Как собрать это в единую аналитическую картину?
-
----
-
-### Etapa 1: Encontrar os Projetos na Câmara
-
-> Prompt: "Busque todos os projetos de lei sobre inteligência artificial que tramitaram na Câmara em 2024"
-
-Ferramentas:
-- `camara_buscar_proposicoes(tema="inteligencia artificial", ano=2024)`
-
-Resultado esperado:
-
-| PL | Autor | Partido | Situação |
-|----|-------|---------|----------|
-| PL 2338/2023 | Sen. Rodrigo Pacheco | PSD-MG | Em tramitação |
-| PL 21/2020 | Dep. Eduardo Bismarck | PDT-CE | Aprovado Câmara |
-| PL 5051/2019 | Sen. Styvenson Valentim | Podemos-RN | Arquivado |
-| PL 872/2021 | Sen. Veneziano Vital do Rêgo | MDB-PB | Apensado |
-
-> Prompt: "Detalhe o PL 2338/2023 — quem é o autor, qual a ementa e em que fase está"
-
-Ferramentas:
-- `camara_detalhes_proposicao(id=...)` — texto e ementa
-- `camara_tramitacao_proposicao(id=...)` — histórico de tramitação
+| API | Feature | Что предоставляет |
+|-----|---------|-------------------|
+| **Государственная Дума** | `duma` | Законопроекты, авторы, голосования, продвижение |
+| **Совет Федерации** | `sovfed` | Законопроекты, голосования, докладчики, поправки |
+| **Официальные публикации** | `official_publications` | Публикация закона, подзаконные акты, приказы |
+| **ГАС «Правосудие»** | `gas_pravosudie` | Судебные дела по закону (оспаривание конституционности) |
+| **ЦИК** | `cik` | Финансирование кампаний голосовавших депутатов |
+| **Судебная практика** | `jurisprudence` | Решения Конституционного Суда и Верховного Суда |
 
 ---
 
-### Etapa 2: Votação na Câmara
+## Пример: Закон об регулировании искусственного интеллекта
 
-> Prompt: "Como foi a votação do PL sobre IA na Câmara? Qual foi o placar por partido?"
+### Сценарий
 
-Ferramentas:
-- `camara_votacoes_proposicao(id=...)` — resultado da votação
-- `camara_votos_votacao(votacao_id=...)` — voto de cada deputado
-
-Resultado esperado:
-
-| Partido | Sim | Não | Abstenção |
-|---------|-----|-----|-----------|
-| PL | 89 | 2 | 1 |
-| PT | 65 | 0 | 3 |
-| UNIÃO | 51 | 5 | 0 |
-| MDB | 39 | 3 | 1 |
-| PSD | 35 | 1 | 0 |
-| ... | | | |
-| **Total** | **401** | **23** | **12** |
+В российской повестке регулирование искусственного интеллекта обсуждается одновременно на уровне федеральных законов, указов Президента и постановлений Правительства. Как собрать это в единую аналитическую картину?
 
 ---
 
-### Etapa 3: Tramitação no Senado
+### Этап 1: Поиск законопроектов в Государственной Думе
 
-> Prompt: "O PL sobre IA já chegou no Senado? Quem é o relator? Que emendas foram apresentadas?"
+> Промпт: «Найди все законопроекты об искусственном интеллекте, рассматривавшиеся в Государственной Думе в 2024 году»
 
-Ferramentas:
-- `senado_buscar_materias(tipo="PL", tema="inteligencia artificial")`
-- `senado_detalhes_materia(codigo=...)` — relator, comissão
-- `senado_emendas_materia(codigo=...)` — emendas apresentadas
-- `senado_tramitacao_materia(codigo=...)` — histórico no Senado
+Инструменты:
+- `duma_search_bills(topic="искусственный интеллект", year=2024)`
 
-Resultado esperado:
+Ожидаемый результат:
+
+| Законопроект | Автор | Фракция | Статус |
+|--------------|-------|---------|--------|
+| ФЗ № 12345-8 | Группа депутатов | Разные | На рассмотрении |
+| ФЗ № 11200-8 | Депутат Иванов А.И. | Справедливая Россия | Принят в I чтении |
+| ФЗ № 10500-8 | Сенатор Петров В.В. | — | Отклонён |
+| ФЗ № 9800-8 | Депутат Сидоров К.Л. | ЛДПР | На экспертизе |
+
+> Промпт: «Подробности по законопроекту ФЗ № 12345-8 — кто автор, какое содержание, на какой стадии рассмотрение»
+
+Инструменты:
+- `duma_bill_details(id=...)` — текст и пояснительная записка
+- `duma_bill_progress(id=...)` — история рассмотрения
+
+---
+
+### Этап 2: Голосование в Государственной Думе
+
+> Промпт: «Как прошло голосование по законопроекту об ИИ в Госдуме? Какой результат по фракциям?»
+
+Инструменты:
+- `duma_bill_votes(id=...)` — результат голосования
+- `duma_vote_details(vote_id=...)` — голос каждого депутата
+
+Ожидаемый результат:
+
+| Фракция | За | Против | Воздержались |
+|---------|-----|--------|--------------|
+| Единая Россия | 265 | 8 | 5 |
+| КПРФ | 38 | 12 | 4 |
+| Справедливая Россия | 22 | 5 | 3 |
+| ЛДПР | 30 | 3 | 2 |
+| Новые люди | 10 | 2 | 1 |
+| **Итого** | **365** | **30** | **15** |
+
+---
+
+### Этап 3: Рассмотрение в Совете Федерации
+
+> Промпт: «Законопроект об ИИ уже в Совете Федерации? Кто докладчик? Какие поступили поправки?»
+
+Инструменты:
+- `sovfed_search_bills(type="ФЗ", topic="искусственный интеллект")`
+- `sovfed_bill_details(code=...)` — докладчик, комитет
+- `sovfed_amendments(code=...)` — внесённые поправки
+- `sovfed_bill_progress(code=...)` — история в Совете Федерации
+
+Ожидаемый результат:
 
 ```
-Matéria: PL 2338/2023 — Marco Legal da IA
-Relator: Sen. [Nome] ([Partido]-[UF])
-Comissão: CTIA (Comissão Temporária sobre IA)
-Status: Aprovado com substitutivo
-Emendas: 52 apresentadas, 18 acatadas
+Законопроект: ФЗ № 12345-8 — Об регулировании искусственного интеллекта
+Докладчик: Сенатор [Фамилия И.О.]
+Комитет: Комитет по экономической политике
+Статус: Одобрено с поправками
+Поправки: 34 внесено, 12 принято
 ```
 
 ---
 
-### Etapa 4: Votação no Senado
+### Этап 4: Голосование в Совете Федерации
 
-> Prompt: "Como os senadores votaram o Marco Legal da IA? Compare com a votação na Câmara"
+> Промпт: «Как сенаторы проголосовали за закон об ИИ? Сравни с голосованием в Госдуме»
 
-Ferramentas:
-- `senado_votacoes_materia(codigo=...)` — resultado
-- `senado_votos_votacao(codigo_sessao=...)` — voto nominal
+Инструменты:
+- `sovfed_bill_votes(code=...)` — результат
+- `sovfed_vote_details(session_code=...)` — именной голос
 
-Resultado esperado:
+Ожидаемый результат:
 
-| | Câmara | Senado |
-|--|--------|--------|
-| **Sim** | 401 (92%) | 64 (79%) |
-| **Não** | 23 (5%) | 12 (15%) |
-| **Abstenção** | 12 (3%) | 5 (6%) |
-| **Resultado** | Aprovado | Aprovado com emendas |
+| | Госдума | Совет Федерации |
+|--|---------|-----------------|
+| **За** | 365 (89%) | 142 (83%) |
+| **Против** | 30 (7%) | 18 (11%) |
+| **Воздержались** | 15 (4%) | 10 (6%) |
+| **Результат** | Принят | Одобрено с поправками |
 
-**Когда верхняя палата меняет текст, законопроект возвращается на повторное рассмотрение.** Такой цикл удобно отслеживать в одном сценарии вместо ручного обхода нескольких порталов.
-
----
-
-### Etapa 5: Publicação no Diário Oficial
-
-> Prompt: "A lei de IA já foi publicada no Diário Oficial? Busque a publicação"
-
-Ferramentas:
-- `diario_oficial_buscar(termo="inteligencia artificial", tipo="lei")`
-
-Querido Diario агрегирует муниципальные и региональные официальные публикации. Для федеральных актов поиск помогает увидеть не только публикацию в центральном источнике, но и локальные акты применения или имплементации.
+**Когда верхняя палата вносит изменения, законопроект возвращается на повторное рассмотрение.** Такой цикл удобно отслеживать в одном сценарии вместо ручного обхода нескольких порталов.
 
 ---
 
-### Etapa 6: Contestações Judiciais
+### Этап 5: Публикация в официальных источниках
 
-> Prompt: "Alguém entrou com ação judicial contra a lei de IA? Busque ADIs no STF"
+> Промпт: «Закон об ИИ уже опубликован? Найди публикацию»
 
-Ferramentas:
-- `datajud_buscar_processos(assunto="inteligencia artificial", tribunal="STF")`
-- `jurisprudencia_buscar_stf(termo="inteligencia artificial regulamentacao")`
+Инструменты:
+- `official_publications_search(term="искусственный интеллект", type="закон")`
 
-Resultado esperado:
-
-| Processo | Tipo | Requerente | Status |
-|----------|------|-----------|--------|
-| ADI 7654 | Ação Direta de Inconstitucionalidade | Partido X | Em julgamento |
-| MC 12345 | Mandado de Segurança | Associação Y | Indeferido |
-
-> Prompt: "Qual o entendimento do STF sobre regulamentação de tecnologia? Há precedentes?"
-
-Ferramentas:
-- `jurisprudencia_buscar_stf(termo="regulamentacao tecnologia")`
-- `jurisprudencia_buscar_stj(termo="inteligencia artificial responsabilidade")`
+Официальные источники агрегируют федеральные и региональные публикации. Для федеральных законов поиск помогает увидеть не только публикацию в «Российской газате» или на портале pravo.gov.ru, но и локальные акты применения или имплементации.
 
 ---
 
-### Etapa 7: Quem Financiou os Votantes?
+### Этап 6: Судебные оспаривания
 
-> Prompt: "Os deputados que votaram contra o Marco da IA receberam doações de empresas de tecnologia?"
+> Промпт: «Кто-то оспорил закон об ИИ в суде? Найди дела в Конституционном Суде»
 
-Ferramentas:
-- `camara_votos_votacao(votacao_id=...)` — lista dos que votaram "Não"
-- `executar_lote` para buscar financiamento de cada um no TSE:
+Инструменты:
+- `gas_pravosudie_search(subject="искусственный интеллект", court="КС РФ")`
+- `jurisprudence_search_ks(term="искусственный интеллект регулирование")`
+
+Ожидаемый результат:
+
+| Дело | Тип | Заявитель | Статус |
+|------|-----|-----------|--------|
+| Дело № 12-П/2025 | Запрос о конституционности | Группа депутатов | На рассмотрении |
+| Дело № 8-П/2025 | Жалоба на нарушение прав | IT-ассоциация | Рассмотрено |
+
+> Промпт: «Какова позиция Конституционного Суда по регулированию технологий? Есть ли прецеденты?»
+
+Инструменты:
+- `jurisprudence_search_ks(term="регулирование технологий")`
+- `jurisprudence_search_vs(term="искусственный интеллект ответственность")`
+
+---
+
+### Этап 7: Кто финансировал голосовавших?
+
+> Промпт: «Депутаты, голосовавшие против закона об ИИ, получали пожертвования от IT-компаний?»
+
+Инструменты:
+- `duma_vote_details(vote_id=...)` — список голосовавших «Против»
+- `execute_batch` для поиска финансирования каждого в ЦИК:
 
 ```json
 [
-  {"tool": "tse_buscar_candidatos", "args": {"nome": "Deputado 1", "ano": 2022}},
-  {"tool": "tse_buscar_candidatos", "args": {"nome": "Deputado 2", "ano": 2022}},
-  {"tool": "tse_buscar_candidatos", "args": {"nome": "Deputado 3", "ano": 2022}}
+  {"tool": "cik_search_candidates", "args": {"name": "Депутат 1", "year": 2021}},
+  {"tool": "cik_search_candidates", "args": {"name": "Депутат 2", "year": 2021}},
+  {"tool": "cik_search_candidates", "args": {"name": "Депутат 3", "year": 2021}}
 ]
 ```
 
-Depois, para cada candidato encontrado:
-- `tse_receitas_candidato(id=...)` — doadores e valores
+Затем для каждого найденного кандидата:
+- `cik_candidate_revenues(id=...)` — жертвователи и суммы
 
-### O Cross-Reference Completo
+### Полная кросс-ссылка
 
 ```
-PL apresentado (Câmara)
+Законопроект внесён (Госдума)
     ↓
-Votação na Câmara (Câmara) → Quem votou? (Câmara)
-    ↓                              ↓
-Tramitação no Senado (Senado)   Quem financiou? (TSE)
-    ↓                              ↓
-Votação no Senado (Senado)     Doadores têm contratos? (Transparência)
+Голосование в Госдуме (Госдума) → Кто как голосовал? (Госдума)
+    ↓                                      ↓
+Рассмотрение в СовФеде (СовФед)         Кто финансировал? (ЦИК)
+    ↓                                      ↓
+Голосование в СовФеде (СовФед)        Есть ли конфликты интересов? (Прозрачность)
     ↓
-Publicação (Diário Oficial)
+Публикация (Официальные публикации)
     ↓
-Contestação judicial (DataJud/STF)
+Судебное оспаривание (ГАС «Правосудие»/КС РФ)
     ↓
-Jurisprudência (STF/STJ/TST)
+Судебная практика (КС РФ/ВС РФ)
 ```
 
 **Несколько API и один связный аналитический контур.**
 
 ---
 
-## Caso 2: Monitoramento Legislativo Contínuo
+## Пример 2: Непрерывный законодательный мониторинг
 
-### Para Organizações e Jornalistas
+### Для организаций и журналистов
 
-> Prompt: "Liste todas as proposições sobre mineração em terras indígenas que tiveram movimentação na última semana"
+> Промпт: «Перечисли все законопроекты о регулировании цифровых платформ, по которым были движения за последнюю неделю»
 
-Ferramentas:
-- `camara_buscar_proposicoes(tema="mineracao terras indigenas", tramitacao_recente=True)`
-- `senado_buscar_materias(assunto="mineracao terras indigenas")`
+Инструменты:
+- `duma_search_bills(topic="цифровые платформы", recent_progress=True)`
+- `sovfed_search_bills(subject="цифровые платформы")`
 
-> Prompt: "Quais proposições sobre reforma tributária estão pautadas para votação esta semana?"
+> Промпт: «Какие законопроекты о налоговой реформе поставлены на голосование на этой неделе?»
 
-Ferramentas:
-- `senado_agenda_plenario` — pauta do Senado
-- `camara_buscar_proposicoes(situacao="Pauta")` — pauta da Câmara
+Инструменты:
+- `sovfed_agenda` — повестка Совета Федерации
+- `duma_search_bills(status="На голосовании")` — повестка Госдумы
 
 ---
 
-## Caso 3: Comparando Versões — Câmara vs. Senado
+## Пример 3: Сравнение версий — Госдума vs. Совет Федерации
 
-### O Cenário
+### Сценарий
 
-O Senado altera significativamente um projeto vindo da Câmara. Quais artigos mudaram?
+Совет Федерации существенно изменил текст законопроекта, поступившего из Госдумы. Какие статьи изменены?
 
-> Prompt: "Compare a versão aprovada na Câmara do PL [X] com o substitutivo do Senado. Quais os principais pontos de divergência?"
+> Промпт: «Сравни версию закона, принятую Госдумой, с редакцией Совета Федерации. Какие ключевые разночтения?»
 
-Ferramentas:
-- `camara_detalhes_proposicao(id=...)` — texto da Câmara
-- `senado_texto_materia(codigo=...)` — texto do Senado
-- `senado_emendas_materia(codigo=...)` — emendas que alteraram o texto
+Инструменты:
+- `duma_bill_details(id=...)` — текст Госдумы
+- `sovfed_bill_text(code=...)` — текст Совета Федерации
+- `sovfed_amendments(code=...)` — поправки, изменившие текст
 
 LLM может сопоставить редакции и выделить содержательные расхождения без ручной вычитки больших массивов текста.
 
 ---
 
-## Caso 4: Agenda do Plenário e Análise Preditiva
+## Пример 4: Повестка заседания и прогнозная аналитика
 
-> Prompt: "O que está pautado para votação no Senado esta semana? Para cada matéria, como as bancadas tendem a votar com base em votações similares?"
+> Промпт: «Что поставлено на голосование в Совете Федерации на этой неделе? По каждому вопросу — как могут проголосовать комитеты, исходя из предыдущих аналогичных голосований?»
 
-Ferramentas:
-- `senado_agenda_plenario` — pauta da semana
-- `senado_votacoes_materia` — histórico de votações similares
-- `senado_composicao_comissao` — quem é relator de cada matéria
+Инструменты:
+- `sovfed_agenda` — повестка недели
+- `sovfed_bill_votes` — история аналогичных голосований
+- `sovfed_committee_composition` — кто докладчик по каждому вопросу
 
-### Análise Preditiva
+### Прогнозная аналитика
 
-O LLM pode cruzar:
-1. **Tema da matéria** (ex: ambiental)
-2. **Histórico de votação por partido** em temas similares
-3. **Posição do relator** e da comissão
-4. **Governo vs. oposição** na composição atual
+LLM может сопоставить:
+1. **Тему законопроекта** (например: экология)
+2. **Историю голосований по комитетам** по аналогичным темам
+3. **Позицию докладчика** и профильного комитета
+4. **Правительственную поддержку** и расклад сил
 
-Para gerar uma estimativa de como a votação pode se desenrolar.
+Для формирования оценки того, как может пройти голосование.
 
 ---
 
-## Usando `planejar_consulta` Para Análise Completa
+## Использование `plan_query` для полного анализа
 
-> Prompt: "Faça uma análise completa do PL 2338/2023 sobre IA: tramitação, votações, autores, financiamento dos votantes e processos judiciais"
+> Промпт: «Сделай полный анализ законопроекта ФЗ № 12345-8 об ИИ: рассмотрение, голосования, авторы, финансирование голосовавших и судебные дела»
 
-Публично этот сценарий относится к `mcp-russia`, даже если внутри отдельные tool IDs и модули еще используют исторические namespaced-алиасы.
+Публично этот сценарий относится к `mcp-russia`, даже если внутри отдельные tool IDs и модули ещё используют исторические namespaced-алиасы.
 
-A meta-tool gera:
+Мета-инструмент генерирует:
 
 ```
-Plano de Execução:
+План выполнения:
 ═══════════════════
 
-Etapa 1 — Identificação:
-  ├── camara_buscar_proposicoes(numero=2338, ano=2023)
-  └── senado_buscar_materias(numero=2338, ano=2023)
+Этап 1 — Идентификация:
+  ├── duma_search_bills(number=12345, convocation=8)
+  └── sovfed_search_bills(number=12345, convocation=8)
 
-Etapa 2 — Detalhamento (paralelo):
-  ├── camara_detalhes_proposicao(id=...)
-  ├── camara_tramitacao_proposicao(id=...)
-  ├── senado_detalhes_materia(codigo=...)
-  └── senado_tramitacao_materia(codigo=...)
+Этап 2 — Детализация (параллельно):
+  ├── duma_bill_details(id=...)
+  ├── duma_bill_progress(id=...)
+  ├── sovfed_bill_details(code=...)
+  └── sovfed_bill_progress(code=...)
 
-Etapa 3 — Votações (paralelo):
-  ├── camara_votacoes_proposicao(id=...)
-  └── senado_votacoes_materia(codigo=...)
+Этап 3 — Голосования (параллельно):
+  ├── duma_bill_votes(id=...)
+  └── sovfed_bill_votes(code=...)
 
-Etapa 4 — Financiamento (paralelo, lote):
-  └── executar_lote([tse_receitas para cada votante-chave])
+Этап 4 — Финансирование (параллельно, пакетно):
+  └── execute_batch([cik_candidate_revenues для каждого ключевого голосовавшего])
 
-Etapa 5 — Judicial:
-  ├── datajud_buscar_processos(assunto="PL 2338")
-  └── jurisprudencia_buscar_stf(termo="inteligencia artificial")
+Этап 5 — Судебная часть:
+  ├── gas_pravosudie_search(subject="ФЗ 12345")
+  └── jurisprudence_search_ks(term="искусственный интеллект")
 
-Etapa 6 — Publicação:
-  └── diario_oficial_buscar(termo="Lei [número]")
+Этап 6 — Публикация:
+  └── official_publications_search(term="ФЗ [номер]")
 ```
 
 ---
 
-## O Poder da Análise Cruzada
+## Сила кросс-анализа
 
-Ключевая ценность `mcp-russia` не в доступе к каждой API по отдельности, а в том, чтобы **сшивать их между собой**:
+Ключевая ценность `mcp-russia` не в доступе к каждому API по отдельности, а в том, чтобы **сшивать их между собой**:
 
-| Pergunta | APIs Necessárias |
-|----------|-----------------|
-| "Quem propôs e quem financiou o autor?" | Câmara + TSE |
-| "Quem votou a favor e quem financiou os votantes?" | Câmara/Senado + TSE |
-| "A lei foi publicada e está sendo cumprida?" | Diário Oficial + DataJud |
-| "Há contestação judicial?" | DataJud + Jurisprudência |
-| "Os doadores dos votantes se beneficiam da lei?" | TSE + Transparência + PNCP |
-| "Qual a repercussão nos municípios?" | Diário Oficial (municipal) |
+| Вопрос | Необходимые API |
+|--------|-----------------|
+| «Кто внёс и кто финансировал автора?» | Госдума + ЦИК |
+| «Кто голосовал за и кто финансировал голосовавших?» | Госдума/СовФед + ЦИК |
+| «Закон опубликован и применяется?» | Официальные публикации + ГАС «Правосудие» |
+| «Есть ли судебные оспаривания?» | ГАС «Правосудие» + Судебная практика |
+| «Жертвователи голосовавших выигрывают от закона?» | ЦИК + Прозрачность + Закупки |
+| «Какой отклик в регионах?» | Официальные публикации (региональные) |
 
 **Ни на один из этих вопросов нельзя полноценно ответить одной API.** Практическая ценность возникает именно на стыке источников.
 
 ---
 
-## Como Verificar Você Mesmo
+## Как проверить самостоятельно
 
-| Dado | Fonte | URL |
-|------|-------|-----|
-| Proposições e votações | Câmara | dadosabertos.camara.leg.br |
-| Matérias e votações | Senado | legis.senado.leg.br |
-| Diários oficiais | Querido Diário | queridodiario.ok.org.br |
-| Processos judiciais | DataJud/CNJ | datajud-wiki.cnj.jus.br |
-| Jurisprudência STF | STF | portal.stf.jus.br |
-| Jurisprudência STJ | STJ | scon.stj.jus.br |
-| Financiamento eleitoral | TSE | divulgacandcontas.tse.jus.br |
-| Contratos federais | Transparência | portaldatransparencia.gov.br |
-| Licitações | PNCP | pncp.gov.br |
+| Данные | Источник | URL |
+|--------|----------|-----|
+| Законопроекты и голосования | Государственная Дума | duma.gov.ru |
+| Законопроекты и голосования | Совет Федерации | council.gov.ru |
+| Официальные публикации | pravo.gov.ru / «Российская газета» | pravo.gov.ru |
+| Судебные дела | ГАС «Правосудие» | sudrf.ru |
+| Судебная практика КС РФ | Конституционный Суд | ksrf.ru |
+| Судебная практика ВС РФ | Верховный Суд | vsrf.ru |
+| Данные о выборах и финансировании | ЦИК | cikrf.ru |
+| Федеральные контракты | Портал госзакупок | zakupki.gov.ru |
+| Реестр контрактов | ЕИС в сфере закупок | zakupki.gov.ru |
 
 ---
 
-_Fontes de dados: API da Câmara dos Deputados, API do Senado Federal, API do Querido Diário, API do DataJud/CNJ, Jurisprudência STF/STJ/TST, API do TSE, API do Portal da Transparência, API do PNCP._
+_Источники данных: API Государственной Думы, API Совета Федерации, API официальных публикаций, API ГАС «Правосудие», судебная практика КС РФ/ВС РФ, API ЦИК, API Портала госзакупок, API ЕИС._
 
-_Nota: Valores e cenários ilustrativos para demonstrar as capacidades do `mcp-russia` в его текущем переходном состоянии. Используйте tools для получения актуальных данных и учитывайте, что часть внутренних названий пока остается legacy-совместимой._
+_Примечание: Значения и сценарии иллюстративны и демонстрируют возможности `mcp-russia` в его текущем переходном состоянии. Используйте tools для получения актуальных данных и учитывайте, что часть внутренних названий пока остаётся legacy-совместимой._

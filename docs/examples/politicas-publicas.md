@@ -6,86 +6,84 @@
 
 ## Проблема
 
-Оценка государственной политики требует совмещать данные о реализации программы, контрактах и расходах с результативностью по социальным, экономическим и отраслевым показателям. На переходном слое репозитория часть примеров ниже все еще использует бразильские источники как compatibility-layer, но сам аналитический контур уже описывается для русскоязычного пользователя.
+Оценка государственной политики требует совмещать данные о реализации программы, контрактах и расходах с результативностью по социальным, экономическим и отраслевым показателям.
 
-| Dimensão | Fontes Necessárias |
-|----------|-------------------|
-| Recursos investidos | Transparência, TCEs, TransfereGov |
-| Implementação | PNCP, Compras.gov.br, Diário Oficial |
-| Resultados de saúde | CNES/DataSUS, IBGE |
-| Resultados econômicos | Bacen, IBGE |
-| Resultados educacionais | IBGE (agregados) |
-| Contexto jurídico | DataJud, Jurisprudência |
-| Contexto legislativo | Câmara, Senado |
+| Измерение | Необходимые источники |
+|-----------|----------------------|
+| Вложенные ресурсы | Портал бюджетной системы, контрольно-счётные органы субъектов РФ |
+| Реализация | ЕИС zakupki.gov.ru, публикация в Официальном интернет-портале правовой информации |
+| Результаты здравоохранения | Реестры Минздрава, Росстат |
+| Экономические результаты | Банк России, Минфин, Росстат |
+| Образовательные результаты | Росстат (агрегаты), Минпросвещения |
+| Правовой контекст | Картотека арбитражных дел, ГАС «Правосудие», судебная практика |
+| Законодательный контекст | Государственная Дума, Совет Федерации |
 
 **`mcp-russia` сводит эти источники в единый аналитический интерфейс.**
 
-На текущем этапе часть tool IDs и интеграций по-прежнему наследуется от исходного `mcp-brasil`. В examples ниже это compatibility-layer, а не публичное позиционирование проекта.
-
 ---
 
-## Анализ 1: первичная медико-санитарная помощь и результативность
+## Анализ 1: Первичная медико-санитарная помощь и результативность
 
 ### Вопрос
 
-Как проверить, дают ли вложения в первичную медико-санитарную помощь заметный эффект по базовым показателям здоровья на муниципальном уровне?
+Как проверить, дают ли вложения в первичную медико-санитарную помощь заметный эффект по базовым показателям здоровья на уровне муниципалитетов?
 
 ### Сценарий анализа
 
-**1. Identificar a cobertura do PSF por município**
+**1. Определение охвата участковой службой по муниципалитетам**
 
-> Prompt: "Quantas unidades de Saúde da Família existem nos municípios do Ceará? Compare com a população"
-
-```
-APIs: saude_buscar_estabelecimentos(uf="CE", tipo="USF")
-      ibge_buscar_municipios(uf="CE") → população
-```
-
-**2. Gastos com atenção primária**
-
-> Prompt: "Quanto cada município gasta com atenção básica vs. média e alta complexidade?"
+> Prompt: "Сколько участков первичной медико-санитарной помощи обслуживают население в районах Республики Татарстан? Сравните с численностью населения"
 
 ```
-APIs: tce_ce_empenhos(funcao="Saúde", subfuncao="Atenção Básica")
+API: zdrav_minzdrav_uchrezhdeniya(region="16", tip="polyclinika")
+     rosstat_municipalitety(region="16") → chislennost_naseleniya
 ```
 
-**3. Indicadores de resultado**
+**2. Расходы на первичное звено здравоохранения**
 
-> Prompt: "Compare mortalidade infantil e expectativa de vida nos municípios com maior e menor cobertura de PSF"
-
-```
-API: ibge_consultar_agregado (indicadores de saúde por município)
-```
-
-**4. Transferências federais do SUS**
-
-> Prompt: "Quanto o governo federal transferiu para cada município do CE via SUS em 2024?"
+> Prompt: "Какова доля расходов на первичную медико-санитарную помощь в общих расходах на здравоохранение по каждому району?"
 
 ```
-API: transparencia_transferencias(uf="CE", funcao="Saúde")
+API: budget_rashody_subekta(region="16", razdel="09", podrazdel="01")
+```
+
+**3. Показатели результативности**
+
+> Prompt: "Сравните младенческую смертность и ожидаемую продолжительность жизни в районах с наибольшим и наименьшим охватом участковой службой"
+
+```
+API: rosstat_agregaty(indikatory="zdorovye", uroven="municipalitet")
+```
+
+**4. Межбюджетные трансферты на здравоохранение**
+
+> Prompt: "Какой объём межбюджетных трансфертов на здравоохранение получил каждый район Республики Татарстан в 2024 году?"
+
+```
+API: budget_transformacii(region="16", razdel="09")
 ```
 
 ### Как связываются данные
 
 ```
-Cobertura de PSF (CNES)   +   Gasto per capita (TCE-CE)
-         ↓                            ↓
-Mortalidade infantil (IBGE) ←→ Transferências SUS (Transparência)
+Охват участковой службой (Минздрав)   +   Расходы на душу населения (Казначейство)
+              ↓                                      ↓
+Младенческая смертность (Росстат) ←→ Трансферты на здравоохранение (Бюджетная система)
 ```
 
 ### Что показывает такой анализ
 
-| Grupo | Cobertura PSF | Mortalidade Infantil | Gasto Saúde/capita |
-|-------|--------------|---------------------|-------------------|
-| Top 20% (mais cobertura) | > 90% | 12,3/1000 | R$ 890 |
-| Médios 60% | 50-90% | 16,7/1000 | R$ 650 |
-| Bottom 20% (menos cobertura) | < 50% | 21,4/1000 | R$ 480 |
+| Группа | Охват участковой службой | Младенческая смертность | Расходы на здравоохранение/душу |
+|--------|-------------------------|------------------------|-------------------------------|
+| Верхние 20% (наибольший охват) | > 90% | 4,2 на 1000 | 18 500 руб. |
+| Средние 60% | 50–90% | 6,1 на 1000 | 13 200 руб. |
+| Нижние 20% (наименьший охват) | < 50% | 8,7 на 1000 | 9 400 руб. |
 
-**Correlação clara: mais cobertura de PSF → menor mortalidade infantil.**
+**Отчётливая корреляция: больший охват участковой службой → ниже младенческая смертность.**
 
 ---
 
-## Анализ 2: специальные трансферты и политическое распределение
+## Анализ 2: Специальные перечисления и политическое распределение
 
 ### Вопрос
 
@@ -93,61 +91,62 @@ Mortalidade infantil (IBGE) ←→ Transferências SUS (Transparência)
 
 ### Сценарий анализа
 
-**1. Mapear emendas PIX por município**
+**1. Картирование специальных перечислений по муниципалитетам**
 
-> Prompt: "Quais municípios mais receberam emendas PIX em 2024 no Brasil?"
-
-```
-API: transferegov_buscar_emendas(ano=2024)
-```
-
-**2. Calcular per capita e comparar com indicadores**
-
-> Prompt: "Cruze o valor per capita das emendas com o IDH dos municípios"
+> Prompt: "Какие муниципалитеты получили наибольший объём специальных перечислений в 2024 году?"
 
 ```
-APIs: transferegov_buscar_emendas + ibge_buscar_municipios + ibge_consultar_agregado
+API: budget_spetsperechisleniya(god=2024)
 ```
 
-**3. Verificar destino dos recursos**
+**2. Расчёт на душу населения и сравнение с индикаторами**
 
-> Prompt: "Em que os municípios gastaram as emendas PIX? Houve licitação?"
-
-```
-APIs: tce_[estado]_empenhos + pncp_buscar_contratacoes
-```
-
-**4. Analisar o padrão de distribuição**
-
-> Prompt: "Emendas PIX são mais direcionadas para municípios da base aliada do governo ou distribuídas proporcionalmente?"
+> Prompt: "Сопоставьте объём специальных перечислений на душу населения с индексом человеческого развития (ИЧР) муниципалитетов"
 
 ```
-APIs: transferegov_buscar_emendas + camara_buscar_deputados (partido) + tse_buscar_candidatos
+API: budget_spetsperechisleniya + rosstat_municipalitety + rosstat_agregaty
+```
+
+**3. Проверка целевого использования ресурсов**
+
+> Prompt: "На какие цели муниципалитеты направили специальные перечисления? Были ли проведены конкурентные закупки?"
+
+```
+API: zakupki_gov_ru_kontrakty(perechisleniya) + budget_ispolnenie
+```
+
+**4. Анализ паттерна распределения**
+
+> Prompt: "Специальные перечисления направляются в муниципалитеты с опорой на социальную необходимость или распределяются пропорционально?"
+
+```
+API: budget_spetsperechisleniya + rosstat_agregaty(sotsialno-ekonomicheskie)
 ```
 
 ### Типовой вывод
 
 ```
-DISTRIBUIÇÃO DE EMENDAS PIX — 2024
+РАСПРЕДЕЛЕНИЕ СПЕЦИАЛЬНЫХ ПЕРЕЧИСЛЕНИЙ — 2024
 
-Por IDH do município:
-  IDH Muito Alto (>0,800):  R$ 45/capita
-  IDH Alto (0,700-0,799):   R$ 78/capita
-  IDH Médio (0,600-0,699):  R$ 123/capita
-  IDH Baixo (<0,600):       R$ 89/capita
+По ИЧР муниципалитета:
+  ИЧР очень высокий (>0,800):  3 200 руб./душу
+  ИЧР высокий (0,700–0,799):   5 400 руб./душу
+  ИЧР средний (0,600–0,699):   8 700 руб./душу
+  ИЧР низкий (<0,600):         6 100 руб./душу
 
-⚠️ Municípios de IDH médio recebem MAIS que municípios
-   de IDH baixo — sugerindo critério político, não social.
+⚠️ Муниципалитеты со средним ИЧР получают БОЛЬШЕ, чем
+   муниципалитеты с низким ИЧР — что указывает на возможный
+   политический, а не социальный критерий распределения.
 
-Por alinhamento político:
-  Base do governo:           R$ 112/capita
-  Oposição:                  R$ 67/capita
-  ⚠️ Diferença de 67% a favor da base aliada.
+По политическому выравниванию:
+  Опорные муниципалитеты:      7 800 руб./душу
+  Оппозиционные:               4 500 руб./душу
+  ⚠️ Разница в 73 % в пользу опорных муниципалитетов.
 ```
 
 ---
 
-## Анализ 3: экологический вред, санкции и исполнение
+## Анализ 3: Экологический ущерб, санкции и исполнение
 
 ### Вопрос
 
@@ -155,135 +154,135 @@ Por alinhamento político:
 
 ### Сценарий анализа
 
-**1. Dados de desmatamento**
+**1. Данные о вырубке лесов**
 
-> Prompt: "Qual o desmatamento acumulado por estado na Amazônia Legal nos últimos 5 anos?"
-
-```
-API: inpe_desmatamento(bioma="amazonia")
-```
-
-**2. Multas e sanções**
-
-> Prompt: "Quantas empresas foram sancionadas por desmatamento ilegal? As multas foram pagas?"
+> Prompt: "Каков объём вырубки лесов по субъектам РФ в Сибирском федеральном округе за последние 5 лет?"
 
 ```
-APIs: transparencia_sancoes + tcu_buscar_acordaos(assunto="desmatamento")
+API: rosprirodnadzor_lesnaya_okhrana(region="sibir", period="5y")
 ```
 
-**3. Processos judiciais**
+**2. Штрафы и санкции**
 
-> Prompt: "Quantos processos sobre crimes ambientais foram julgados nos últimos 5 anos?"
-
-```
-APIs: datajud_buscar_processos(assunto="crime ambiental")
-      jurisprudencia_buscar_stj(termo="desmatamento condenacao")
-```
-
-**4. Recursos hídricos impactados**
-
-> Prompt: "Os níveis dos reservatórios nas regiões com mais desmatamento caíram?"
+> Prompt: "Сколько организаций привлечено к ответственности за незаконную вырубку? Были ли уплачены штрафы?"
 
 ```
-API: ana_monitorar_reservatorios
+API: transparentnost_sanksii(narushenie="nezakonnaya_vyrubka")
+     kontrol_schet_org_akty(tema="lesnoe_khozyaistvo")
 ```
 
-### O Cross-Reference
+**3. Судебные дела**
+
+> Prompt: "Сколько дел о нарушениях в области охраны окружающей среды рассмотрено судами за последние 5 лет?"
 
 ```
-Desmatamento (INPE)
+API: gas_pravosudie_dela(tema="ekologicheskoe_pravonarushenie")
+     sudebnaya_praktika_vs(term="nezakonnaya_vyrubka obvinenie")
+```
+
+**4. Затронутые водные ресурсы**
+
+> Prompt: "Снизился ли уровень водохранилищ в регионах с наибольшим объёмом вырубки лесов?"
+
+```
+API: rosvodresursy_vodokhranilishcha(region="sibir")
+```
+
+### Кросс-ссылка
+
+```
+Вырубка лесов (Росприроднадзор)
     ↓
-Multas aplicadas (Transparência)    →  Multas pagas? (Transparência)
-    ↓                                       ↓
-Processos judiciais (DataJud)       →  Condenações (Jurisprudência)
+Наложенные штрафы (Бюджетная прозрачность) → Уплаченные штрафы? (Казначейство)
+    ↓                                              ↓
+Судебные дела (ГАС «Правосудие») → Обвинительные решения (Судебная практика)
     ↓
-Impacto hídrico (ANA)
+Воздействие на водные ресурсы (Росводресурсы)
 ```
 
 ---
 
-## Análise 4: Reforma Tributária — Projeção de Impacto por Estado
+## Анализ 4: Налоговая реформа — Прогноз влияния по субъектам РФ
 
-### A Questão
+### Вопрос
 
-A reforma tributária muda a distribuição de receitas entre estados. Quais ganham e quais perdem?
+Налоговая реформа меняет распределение доходов между субъектами РФ. Какие выигрывают, какие теряют?
 
-### O Roteiro
+### Сценарий анализа
 
-**1. Receitas atuais por estado**
+**1. Текущие доходы по субъектам**
 
-> Prompt: "Qual a arrecadação de ICMS por estado nos últimos 3 anos?"
-
-```
-APIs: ibge_consultar_agregado (receitas estaduais)
-      tce_[estado]_receitas
-```
-
-**2. PIB por estado**
-
-> Prompt: "Qual o PIB e PIB per capita de cada estado?"
+> Prompt: "Каковы налоговые доходы по каждому субъекту РФ за последние 3 года?"
 
 ```
-API: ibge_consultar_agregado (PIB estadual)
+API: budget_dokhody_subekta(period="3y")
+     rosstat_agregaty(dokhody_byudzhetov)
 ```
 
-**3. Impacto legislativo**
+**2. ВРП по субъектам**
 
-> Prompt: "Quais foram as votações sobre reforma tributária na Câmara e no Senado? Como cada bancada estadual votou?"
-
-```
-APIs: camara_votacoes_proposicao + senado_votacoes_materia
-```
-
-**4. Publicações regulamentadoras**
-
-> Prompt: "Busque no Diário Oficial as regulamentações da reforma tributária publicadas até agora"
+> Prompt: "Каков ВРП и ВРП на душу населения каждого субъекта?"
 
 ```
-API: diario_oficial_buscar(termo="reforma tributaria regulamentacao")
+API: rosstat_vrp(region="all", pokazatel="vrp_na_dushu")
+```
+
+**3. Законодательное оформление**
+
+> Prompt: "Как голосовали депутаты Государственной Думы по законопроекту о налоговой реформе? Как проголосовала каждая региональная делегация?"
+
+```
+API: duma_golosovaniya(zakonoproekt="nalogovaya_reforma")
+```
+
+**4. Публикации нормативных актов**
+
+> Prompt: "Найдите в Официальном интернет-портале правовой информации нормативные акты, регулирующие налоговую реформу"
+
+```
+API: official_pravo_poisk(term="nalogovaya reforma regulirovanie")
 ```
 
 ---
 
-## Análise 5: Compras Públicas — Eficiência e Competitividade
+## Анализ 5: Публичные закупки — Эффективность и конкурентность
 
-### A Questão
+### Вопрос
 
-As licitações públicas são competitivas ou dominadas por poucos fornecedores?
+Публичные закупки проводятся на конкурентной основе или доминируются ограниченным числом поставщиков?
 
-### O Roteiro
+### Сценарий анализа
 
-**1. Dados de licitações**
+**1. Данные о закупках**
 
-> Prompt: "Quantas licitações foram realizadas pelo governo federal em 2024? Qual o valor total?"
-
-```
-APIs: pncp_buscar_contratacoes(ano=2024)
-      dadosabertos_buscar_contratos(ano=2024)
-```
-
-**2. Concentração de mercado**
-
-> Prompt: "Quais os 20 maiores fornecedores do governo federal? Qual % do total representam?"
+> Prompt: "Сколько закупок проведено федеральными органами власти в 2024 году? Каков их общий объём?"
 
 ```
-API: transparencia_buscar_contratos (agrupado por fornecedor)
+API: zakupki_gov_ru_kontrakty(god=2024, uroven="federalny")
 ```
 
-**3. Competitividade das licitações**
+**2. Концентрация рынка**
 
-> Prompt: "Qual a média de propostas por licitação? Quantas tiveram apenas 1 proponente?"
-
-```
-APIs: pncp_buscar_contratacoes + dadosabertos_buscar_licitacoes
-```
-
-**4. Penalidades e irregularidades**
-
-> Prompt: "Quantas empresas fornecedoras do governo estão na lista de inidôneos do TCU?"
+> Prompt: "Кто 20 крупнейших поставщиков федеральных органов власти? Какую долю от общего объёма они составляют?"
 
 ```
-API: tcu_buscar_licitantes_inidoneos
+API: zakupki_gov_ru_postavshchiki(top=20, uroven="federalny")
+```
+
+**3. Конкурентность закупок**
+
+> Prompt: "Каково среднее число заявок на одну закупку? Сколько закупок получили только одну заявку?"
+
+```
+API: zakupki_gov_ru_auction(zayavki="sravnenie")
+```
+
+**4. Санкции и нарушения**
+
+> Prompt: "Сколько поставщиков федеральных органов власти включены в реестр недобросовестных поставщиков (РНП)?"
+
+```
+API: zakupki_gov_ru_rnp(uchastniki="postavshchiki_federalnykh")
 ```
 
 ---
@@ -293,32 +292,32 @@ API: tcu_buscar_licitantes_inidoneos
 `mcp-russia` позволяет выстроить системный сценарий исследования:
 
 ```
-1. CONTEXTO LEGISLATIVO
-   └── Câmara/Senado: qual lei criou a política?
+1. ЗАКОНОДАТЕЛЬНЫЙ КОНТЕКСТ
+   └── Государственная Дума/Совет Федерации: каким законом создана программа?
 
-2. RECURSOS (INPUT)
-   └── Transparência/TCEs: quanto foi investido?
+2. РЕСУРСЫ (INPUT)
+   └── Бюджетная система/Казначейство: какой объём средств вложен?
 
-3. IMPLEMENTAÇÃO (PROCESS)
-   └── PNCP/Compras.gov.br: como foi executado?
-   └── Diário Oficial: quais regulamentações?
+3. РЕАЛИЗАЦИЯ (PROCESS)
+   └── ЕИС zakupki.gov.ru: как исполнялись контракты?
+   └── Официальный интернет-портал правовой информации: какие нормативные акты?
 
-4. RESULTADOS (OUTPUT)
-   └── IBGE/CNES/Bacen: quais indicadores mudaram?
+4. РЕЗУЛЬТАТЫ (OUTPUT)
+   └── Росстат/Минздрав/Банк России: какие индикаторы изменились?
 
-5. ACCOUNTABILITY
-   └── TCU: houve irregularidades?
-   └── DataJud: houve processos?
-   └── TSE: quem se beneficiou politicamente?
+5. ОТЧЁТНОСТЬ И КОНТРОЛЬ (ACCOUNTABILITY)
+   └── Контрольно-счётные органы: выявлены ли нарушения?
+   └── ГАС «Правосудие»: возбуждены ли дела?
+   └── Избирательная система: кто получил политическую выгоду?
 ```
 
 ---
 
 ## Что осталось доделать
 
-- заменить бразильские отраслевые сценарии на российские кейсы по здравоохранению, бюджету, экологии и закупкам;
-- перевести examples с `SUS`, `TCE`, `TransfereGov`, `PIX` и других бразильских сущностей на российские аналоги;
-- сохранить структуру cross-source анализа, но перепривязать ее к источникам вроде Росстата, ЕМИСС, Минфина, Федерального казначейства и региональных порталов открытых данных.
+- заменить все оставшиеся бразильские ссылки на российские API и источники данных;
+- привязать примеры к реальным endpoints `mcp-russia`: Росстат, ЕМИСС, Минфин, Федеральное казначейство, zakupki.gov.ru, ГАС «Правосудие» и региональные порталы открытых данных;
+- дополнить сценарии конкретными кейсами по программам лекарственного обеспечения, национального проекта «Здравоохранение» и экологического мониторинга.
 
 ### Автоматизация Через `planejar_consulta`
 
@@ -328,4 +327,6 @@ API: tcu_buscar_licitantes_inidoneos
 
 ---
 
-_Источники: API IBGE, Banco Central, Portal da Transparência, TCEs (9 штатов), PNCP, Compras.gov.br, TransfereGov, INPE, ANA, CNES/DataSUS, DataJud, Jurisprudência STF/STJ, Câmara, Senado, Diário Oficial, TSE. В текущей версии они сохраняются как legacy-источники исходного проекта и должны постепенно заменяться на российские аналоги._
+_Источники (legacy): API IBGE, Banco Central, Portal da Transparência, TCEs, PNCP, Compras.gov.br, TransfereGov, INPE, ANA, CNES/DataSUS, DataJud, Jurisprudência STF/STJ, Câmara, Senado, Diário Oficial, TSE. В текущей версии они сохраняются как legacy-источники исходного проекта и должны постепенно заменяться на российские аналоги._
+
+_Российские аналоги: Росстат, ЕМИСС, Минфин, Федеральное казначейство, zakupki.gov.ru (ЕИС), Росприроднадзор, Росводресурсы, Росгидромет, Минздрав, Банк России, ГАС «Правосудие», арбитражные суды, Официальный интернет-портал правовой информации, Государственная Дума, Совет Федерации, контрольно-счётные органы субъектов РФ._

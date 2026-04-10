@@ -32,9 +32,7 @@ mcp.tool(prazdniki_rf, tags={"праздники", "календарь", "нац
 mcp.tool(nalogovye_stavki, tags={"налоги", "ставки", "фнс"})
 
 # Resources
-mcp.resource("data://nalogovye-stavki", mime_type="application/json")(
-    nalogovye_stavki_resurs
-)
+mcp.resource("data://nalogovye-stavki", mime_type="application/json")(nalogovye_stavki_resurs)
 mcp.resource("data://servisy", mime_type="application/json")(dostupnye_servisy)
 
 # Prompts

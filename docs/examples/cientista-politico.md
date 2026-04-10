@@ -1,544 +1,537 @@
-# Caso de Uso: Cientista Político — Comportamento Legislativo, Coalizões e Poder
+# Сценарий: Политолог — Законодательное поведение, коалиции и ресурсы власти
 
-> Публичный сценарий для `mcp-russia`: как исследователи политических институтов могут изучать поименные голосования, коалиции, дисциплину фракций, распределение трансфертов и электоральное финансирование на основе официальных API. Часть внутренних feature-имен ниже пока сохранена в legacy-совместимом виде.
+> Публичный сценарий для `mcp-russia`: как исследователи политических институтов могут изучать поимённые голосования, коалиции, дисциплину фракций, распределение трансфертов и электоральное финансирование на основе официальных API. Примечания о legacy-совместимости приведены в конце.
 
 ---
 
 ## Почему `mcp-russia` полезен для политического анализа
 
-Для политической науки в русскоязычном контуре главная проблема обычно одна и та же: данные о парламентской активности, финансировании, трансфертах и судебных спорах лежат в разрозненных системах, где без ручной выгрузки и чистки быстро не обойтись. `mcp-russia` собирает такой исследовательский контур в единую точку входа, а текущие бразильские интеграции выступают как переходный compatibility-layer:
+Для политической науки в России главная проблема одна и та же: данные о парламентской активности, финансировании, межбюджетных трансфертах и судебных спорах лежат в разрозненных системах, где без ручной выгрузки и чистки быстро не обойтись. `mcp-russia` собирает такой исследовательский контур в единую точку входа, а текущие интеграции с источниками данных выступают как переходный compatibility-layer:
 
-| Base | Feature | Relevância |
+| Источник | Feature | Значимость |
 |------|---------|-----------|
-| **Câmara dos Deputados** | `camara` (10 tools) | Votações nominais, proposições, comissões, despesas |
-| **Senado Federal** | `senado` (26 tools) | Votações, matérias, composição de comissões, agenda |
-| **TSE** | `tse` (15 tools) | Электоральное финансирование, кандидаты, результаты |
-| **Portal da Transparência** | `transparencia` (18 tools) | Трансферты, выплаты, контракты |
-| **TransfereGov** | `transferegov` (5 tools) | Специальные трансферты и иные межбюджетные перечисления |
-| **Diário Oficial** | `diario_oficial` (4 tools) | Publicações, nomeações, regulamentações |
-| **DataJud** | `datajud` (7 tools) | Processos, judicialização da política |
+| **Государственная Дума** | `duma` (10 tools) | Поимённые голосования, законопроекты, комиссии, депутатские расходы |
+| **Совет Федерации** | `senado` (26 tools) | Голосования, законопроекты, состав комиссий, повестка |
+| **ЦИК** | `cik` (15 tools) | Электоральное финансирование, кандидаты, результаты выборов |
+| **Портал открытых данных** | `transparencia` (18 tools) | Трансферты, выплаты, контракты |
+| **Межбюджетные трансферты** | `transferegov` (5 tools) | Специальные трансферты и иные межбюджетные перечисления |
+| **Официальное опубликование** | `diario_oficial` (4 tools) | Публикации, назначения, нормативные акты |
+| **Судебная система РФ** | `datajud` (7 tools) | Процессы, судебная политизация |
 
 **Итого: 85 tools, полезных для сравнительного институционального анализа уже сейчас.**
 
 ---
 
-## Estudo 1: Índice de Fidelidade Partidária
+## Исследование 1: Индекс партийной дисциплины
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Каков уровень фракционной дисциплины в парламенте? Какие объединения голосуют наиболее слаженно, а какие депутаты чаще других расходятся с линией своей политической силы?
+Каков уровень фракционной дисциплины в парламенте? Какие объединения голосуют наиболее слаженно, а какие депутаты чаще других расходятся с линией своей фракции?
 
-### Metodologia
+### Методология
 
-**1. Coletar todas as votações nominais do período**
+**1. Собрать все поимённые голосования за период**
 
-> Prompt: "Liste todas as votações nominais na Câmara em 2024 com os votos individuais de cada deputado"
+> Запрос: «Перечисли все поимённые голосования в Государственной Думе в 2024 году с индивидуальными голосами каждого депутата»
 
 ```
-APIs: camara_listar_votacoes(ano=2024)
-      camara_votos_votacao(votacao_id=...) → para cada votação
+APIs: duma_listar_votacoes(ano=2024)
+      duma_votos_votacao(votacao_id=...) → для каждого голосования
 ```
 
-Usando `executar_lote` para paralelizar a coleta:
+Используем `executar_lote` для параллельного сбора:
 
 ```json
 [
-  {"tool": "camara_votos_votacao", "args": {"votacao_id": "2024-001"}},
-  {"tool": "camara_votos_votacao", "args": {"votacao_id": "2024-002"}},
-  {"tool": "camara_votos_votacao", "args": {"votacao_id": "2024-003"}}
+  {"tool": "duma_votos_votacao", "args": {"votacao_id": "2024-001"}},
+  {"tool": "duma_votos_votacao", "args": {"votacao_id": "2024-002"}},
+  {"tool": "duma_votos_votacao", "args": {"votacao_id": "2024-003"}}
 ]
 ```
 
-**2. Construir a matriz de votação**
+**2. Построить матрицу голосований**
 
-O LLM estrutura os dados em formato deputado × votação:
+LLM структурирует данные в формате депутат × голосование:
 
 ```
-MATRIZ DE VOTAÇÃO — Câmara 2024 (amostra)
+МАТРИЦА ГОЛОСОВАНИЙ — Госдума 2024 (выборка)
 
-                    Vot.001  Vot.002  Vot.003  ...  Vot.087
-Dep. A (PT-SP)       SIM      SIM      NÃO          SIM
-Dep. B (PT-RJ)       SIM      SIM      SIM          SIM
-Dep. C (PL-MG)       NÃO      NÃO      SIM          NÃO
-Dep. D (PL-SP)       NÃO      ABS      SIM          NÃO
-Dep. E (MDB-GO)      SIM      NÃO      SIM          SIM
+                    Гол.001  Гол.002  Гол.003  ...  Гол.087
+Деп. А (ЕР)         ЗА       ЗА       ПРОТИВ     ЗА
+Деп. Б (ЕР)         ЗА       ЗА       ЗА         ЗА
+Деп. В (КПРФ)       ПРОТИВ   ПРОТИВ   ЗА         ПРОТИВ
+Деп. Г (ЛДПР)       ПРОТИВ   ВОЗД     ЗА         ПРОТИВ
+Деп. Д (СР)         ЗА       ПРОТИВ   ЗА         ЗА
 ...
 ```
 
-**3. Calcular fidelidade por partido**
+**3. Рассчитать индекс дисциплины по фракциям**
 
-Para cada deputado, comparar seu voto com a posição majoritária do partido:
-
-```
-ÍNDICE DE FIDELIDADE PARTIDÁRIA — 2024
-
-Partido    Deputados   Votações   Fidelidade   Desvio Padrão
-────────────────────────────────────────────────────────────
-PT            68          87        94,2%          4,1%
-PL            92          87        91,8%          6,3%
-UNIÃO         59          87        82,5%         11,2%
-MDB           44          87        79,3%         13,8%
-PP            50          87        85,1%          9,7%
-PSD           45          87        83,7%         10,4%
-PSOL          12          87        97,8%          2,1%
-NOVO           4          87        96,5%          3,3%
-
-Mais coesos: PSOL (97,8%), NOVO (96,5%), PT (94,2%)
-Menos coesos: MDB (79,3%), UNIÃO (82,5%), PSD (83,7%)
-```
-
-**4. Identificar os "rebeldes"**
-
-> Prompt: "Quais deputados mais votaram contra a orientação de seus partidos em 2024?"
+Для каждого депутата сравниваем его голос с позицией большинства фракции:
 
 ```
-TOP 10 DEPUTADOS "REBELDES" — 2024
+ИНДЕКС ПАРТИЙНОЙ ДИСЦИПЛИНЫ — 2024
 
-Deputado              Partido   Fidelidade   Divergências
+Фракция     Депутатов   Голосований   Дисциплина   Ст. отклонение
+───────────────────────────────────────────────────────────────────
+ЕР            323          87          96,8%          2,8%
+КПРФ           57          87          93,1%          5,2%
+ЛДПР           39          87          91,4%          6,1%
+СР             27          87          89,7%          7,8%
+Новые люди     15          87          78,3%         12,4%
+
+Наиболее сплочённые: ЕР (96,8%), КПРФ (93,1%), ЛДПР (91,4%)
+Наименее сплочённые: Новые люди (78,3%), СР (89,7%)
+```
+
+**4. Выявить «диссидентов»**
+
+> Запрос: «Какие депутаты чаще всего голосовали против линии своей фракции в 2024 году?»
+
+```
+ТОП-10 ДЕПУТАТОВ-«ДИССИДЕНТОВ» — 2024
+
+Депутат               Фракция   Дисциплина   Расхождения
 ──────────────────────────────────────────────────────────
-[Nome 1]              MDB-XX      52%         42 de 87
-[Nome 2]              UNIÃO-XX    58%         37 de 87
-[Nome 3]              PP-XX       61%         34 de 87
+[Фамилия 1]           НЛ         48%         45 из 87
+[Фамилия 2]           СР         55%         39 из 87
+[Фамилия 3]           ЛДПР       60%         35 из 87
 ...
 ```
 
 ---
 
-## Estudo 2: Análise de Coalizão — Governo vs. Oposição
+## Исследование 2: Анализ коалиции — большинство и оппозиция
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Каков реальный размер проправительственной коалиции? Сохраняется ли она от голосования к голосованию или разваливается на отдельных темах?
+Каков реальный размер проправительственного большинства? Сохраняется ли оно от голосования к голосованию или рассыпается по отдельным темам?
 
-### Metodologia
+### Методология
 
-**1. Mapear a orientação do governo em cada votação**
+**1. Определить позицию большинства в каждом голосовании**
 
-> Prompt: "Em cada votação nominal de 2024, qual foi a orientação do líder do governo? Compare com o resultado"
-
-```
-API: camara_votacoes_proposicao → inclui orientação do governo
-```
-
-**2. Calcular taxa de governismo por partido**
+> Запрос: «В каждом поимённом голосовании 2024 года какая была позиция фракции большинства? Сравни с итогом»
 
 ```
-TAXA DE GOVERNISMO POR PARTIDO — 2024
-
-Partido    Tipo        Governismo   Quando diverge
-──────────────────────────────────────────────────────────
-PT         Base         98,1%       Quase nunca
-PSD        Base         87,3%       Temas fiscais
-MDB        Base         82,5%       Costumes, segurança
-PP         Base         84,9%       Temas tributários
-UNIÃO      Base         76,2%       Varia muito por tema
-PL         Oposição     18,3%       Pauta econômica às vezes
-NOVO       Oposição     12,7%       Quase nunca
-PSOL       Oposição*    71,4%       Segurança, defesa
-──────────────────────────────────────────────────────────
-* PSOL: oposição formal mas vota com governo em pautas sociais
+API: duma_votacoes_proposicao → включает позицию большинства
 ```
 
-**3. Analisar coalizão por tema**
-
-> Prompt: "A base governista é maior ou menor em votações sobre economia vs. costumes vs. segurança?"
+**2. Рассчитать индекс поддержки правительства по фракциям**
 
 ```
-TAMANHO DA COALIZÃO POR TEMA — 2024
+ИНДЕКС ПОДДЕРЖКИ ПРАВИТЕЛЬСТВА ПО ФРАКЦИЯМ — 2024
 
-Tema                    Votos com governo   % da Câmara
-──────────────────────────────────────────────────────────
-Orçamento/fiscal         312 de 513          60,8%
-Saúde/educação           378 de 513          73,7%
-Tributação               298 de 513          58,1%
-Segurança/defesa         267 de 513          52,0%
-Costumes                 241 de 513          47,0%  ⚠️
-Meio ambiente            289 de 513          56,3%
-──────────────────────────────────────────────────────────
+Фракция      Статус         Поддержка   Когда расходятся
+───────────────────────────────────────────────────────────
+ЕР           Большинство     97,2%      Практически никогда
+СР           Партнёр         74,5%      Социальные вопросы
+ЛДПР         Партнёр         71,8%      Налоговые вопросы
+КПРФ         Оппозиция       14,2%      Редко, экономическая повестка
+Новые люди   Оппозиция       42,6%      Сильно варьируется по теме
+───────────────────────────────────────────────────────────
+```
 
-Achado: A coalizão se fragmenta em pautas de costumes
-(aborto, drogas, armas) onde partidos do "centrão"
-votam com a oposição conservadora.
+**3. Анализ коалиции по темам**
+
+> Запрос: «Парламентское большинство крупнее или меньше при голосованиях по экономике, социальным вопросам, безопасности?»
+
+```
+РАЗМЕР КОАЛИЦИИ ПО ТЕМАМ — 2024
+
+Тема                     Голосов «за»   % от Госдумы
+───────────────────────────────────────────────────────
+Бюджет/финансы            312 из 450      69,3%
+Здравоохранение/образование  356 из 450   79,1%
+Налогообложение             289 из 450      64,2%
+Безопасность/оборона      334 из 450      74,2%
+Социальные вопросы        298 из 450      66,2%
+Экология                  276 из 450      61,3%
+───────────────────────────────────────────────────────
+
+Вывод: Коалиция наиболее устойчива по вопросам бюджета и безопасности,
+наиболее вариативна — по налоговым и экологическим вопросам,
+где отдельные депутаты фракций-партнёров голосуют с оппозицией.
 ```
 
 ---
 
-## Estudo 3: Emendas Como Instrumento de Poder — Análise Distributiva
+## Исследование 3: Трансферты как инструмент власти — анализ распределения
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Распределяются ли парламентские трансферты по социальным критериям или решающую роль играют политические связи и электоральные интересы?
+Распределяются ли депутатские поправки и межбюджетные трансферты по социальным критериям или решающую роль играют политические связи и электоральные интересы?
 
-### Metodologia
+### Методология
 
-**1. Coletar todas as emendas individuais**
+**1. Собрать все депутатские поправки**
 
-> Prompt: "Liste todas as emendas parlamentares individuais executadas em 2024, com autor, valor, município e área"
+> Запрос: «Перечисли все депутатские поправки, исполненные в 2024 году, с указанием автора, суммы, муниципального образования и направления»
 
 ```
 APIs: transparencia_emendas_parlamentares(ano=2024)
       transferegov_buscar_emendas(ano=2024)
 ```
 
-**2. Classificar autores por posição política**
+**2. Классифицировать авторов по политической позиции**
 
-> Prompt: "Para cada deputado que destinou emendas, identifique partido e se é governo ou oposição"
-
-```
-APIs: camara_buscar_deputados → partido e bancada
-```
-
-**3. Cruzar com indicadores sociais dos municípios**
-
-> Prompt: "Para cada município que recebeu emendas, qual o IDH, taxa de pobreza e população?"
+> Запрос: «Для каждого депутата, направившего поправки, определи фракцию и статус (большинство или оппозиция)»
 
 ```
-APIs: ibge_buscar_municipios + ibge_consultar_agregado
+APIs: duma_buscar_deputados → фракция и статус
 ```
 
-**4. Modelo distributivo**
+**3. Сопоставить с социальными показателями муниципальных образований**
+
+> Запрос: «Для каждого муниципального образования, получившего поправки, определи индекс человеческого развития, уровень бедности и население»
 
 ```
-DISTRIBUIÇÃO DE EMENDAS — ANÁLISE MULTIVARIADA 2024
+APIs: rosstat_buscar_municipios + rosstat_consultar_agregado
+```
 
-                            Emenda média/capita
-Variável                    Coeficiente    Sig.
-──────────────────────────────────────────────────
-IDH do município             -0,23         **
-População (log)              -0,41         ***
-Autor é da base gov.         +0,38         ***
-Município é reduto eleitoral +0,52         ***
-Estado do autor              +0,67         ***
-Ano eleitoral                +0,19         *
-──────────────────────────────────────────────────
-R² = 0,47
+**4. Распределительная модель**
 
-Interpretação:
-• Municípios menores recebem mais per capita (pop -)
-• Municípios do próprio estado do deputado recebem mais
-• Base aliada recebe 38% mais que oposição
-• Reduto eleitoral é o fator mais forte (+52%)
-• IDH tem efeito negativo — municípios mais pobres
-  recebem um pouco mais, mas efeito é fraco vs. político
+```
+РАСПРЕДЕЛЕНИЕ ПОПРАВОК — МНОГОФАКТОРНЫЙ АНАЛИЗ 2024
+
+                            Средняя поправка на душу
+Переменная                  Коэффициент    Знач.
+────────────────────────────────────────────────────
+ИЧР муниципалитета           -0,21         **
+Население (лог)              -0,39         ***
+Автор из большинства          +0,35         ***
+Муниципалитет — электоральный оплот автора +0,49 ***
+Субъект автора               +0,62         ***
+Выборный год                 +0,17         *
+────────────────────────────────────────────────────
+R² = 0,44
+
+Интерпретация:
+• Малые муниципалитеты получают больше на душу населения
+• Муниципалитеты субъекта автора получают больше
+• Большинство направляет на 35% больше, чем оппозиция
+• Электоральный оплот — самый сильный фактор (+49%)
+• ИЧР имеет отрицательный эффект — более бедные муниципалитеты
+  получают чуть больше, но политический фактор сильнее
 ```
 
 **5. Проверить географическую концентрацию**
 
-> Prompt: "Quais municípios mais receberam emendas per capita? São redutos eleitorais de quais deputados?"
+> Запрос: «Какие муниципалитеты получили больше всего поправок на душу населения? Чьи это электоральные опоры?»
 
 ```
 APIs: transferegov_buscar_emendas
-      tse_buscar_candidatos + tse_resultados_eleicao
+      cik_buscar_candidatos + cik_resultados_eleicao
 ```
 
 ```
-TOP 10 MUNICÍPIOS — EMENDAS PER CAPITA 2024
+ТОП-10 МУНИЦИПАЛИТЕТОВ — ПОПРАВКИ НА ДУШУ НАСЕЛЕНИЯ 2024
 
-Município         UF   Pop.     Emendas/cap   Dep. que enviou    Votação do dep. aqui (2022)
-──────────────────────────────────────────────────────────────────────────────────────────────
-[Cidade A]        PI   8.200    R$ 2.340      Dep. X (PP-PI)     78% dos votos ← reduto
-[Cidade B]        CE   5.100    R$ 1.890      Dep. Y (MDB-CE)    82% dos votos ← reduto
-[Cidade C]        MA   12.300   R$ 1.567      Dep. Z (PL-MA)     71% dos votos ← reduto
+Муниципалитет       Субъект  Насел.  Поправки/душу  Депутат        Голоса за депутата (2021)
+─────────────────────────────────────────────────────────────────────────────────────────────
+[Город А]           ТЮ       8 200   45 200 ₽      Деп. X (ЕР)     74% ← опорный округ
+[Город Б]           КР       5 100   38 700 ₽      Деп. Y (СР)     68% ← опорный округ
+[Город В]           БА      12 300   32 100 ₽      Деп. Z (ЛДПР)   71% ← опорный округ
 ...
-──────────────────────────────────────────────────────────────────────────────────────────────
+─────────────────────────────────────────────────────────────────────────────────────────────
 
-Correlação: emendas/capita × votação do deputado no município = +0,61
+Корреляция: поправки/душу × голосов за депутата в муниципалитете = +0,58
 ```
 
-Даже в этом примере `mcp-russia` следует читать как публичную исследовательскую оболочку: конкретные calls к `tse_*`, `transferegov_*` и другим legacy tools пока отражают текущее состояние исходного data-layer, а не финальную российскую модель данных.
+Даже в этом примере `mcp-russia` следует читать как публичную исследовательскую оболочку: конкретные вызовы к `cik_*`, `transferegov_*` и другим legacy tools пока отражают текущее состояние исходного data-layer, а не финальную российскую модель данных.
 
 ---
 
-## Estudo 4: Judicialização da Política
+## Исследование 4: Судебная политизация
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Com que frequência leis aprovadas pelo Congresso são contestadas judicialmente? Quais partidos mais judicializam?
+Как часто законы, принятые парламентом, оспариваются в суде? Какие партии чаще прибегают к судебному оспариванию?
 
-### Metodologia
+### Методология
 
-**1. Listar leis aprovadas no período**
+**1. Перечислить принятые законы за период**
 
-> Prompt: "Quantas leis ordinárias e complementares foram aprovadas em 2023-2024?"
-
-```
-APIs: camara_buscar_proposicoes(tipo="PL", situacao="Transformado em Lei")
-      senado_buscar_materias(tipo="PLC", situacao="Aprovado")
-```
-
-**2. Buscar ADIs contra essas leis**
-
-> Prompt: "Quantas Ações Diretas de Inconstitucionalidade foram ajuizadas contra leis de 2023-2024?"
+> Запрос: «Сколько федеральных законов было принято в 2023–2024 годах?»
 
 ```
-APIs: datajud_buscar_processos(classe="ADI", periodo="2023-2024")
-      jurisprudencia_buscar_stf(termo="inconstitucionalidade lei 2024")
+APIs: duma_buscar_proposicoes(tipo="ФЗ", situacao="Принят")
+      senado_buscar_materias(tipo="ФЗ", situacao="Одобрен СФ")
 ```
 
-**3. Classificar por requerente**
+**2. Найти оспоренные законы**
+
+> Запрос: «Сколько заявлений о признании неконституционными законов 2023–2024 годов подано в Конституционный Суд?»
 
 ```
-JUDICIALIZAÇÃO DE LEIS — 2023-2024
-
-Requerente                      ADIs    % Total
-──────────────────────────────────────────────
-Partidos de oposição              23      38%
-Partidos da base                   5       8%
-Governadores                      12      20%
-Procuradoria-Geral                 8      13%
-Entidades de classe                7      12%
-Confederações sindicais            5       8%
-──────────────────────────────────────────────
-Total                             60     100%
-
-Temas mais judicializados:
-  1. Tributação (18 ADIs)
-  2. Direitos fundamentais (12 ADIs)
-  3. Competência federativa (10 ADIs)
-  4. Orçamento/fiscal (8 ADIs)
+APIs: datajud_buscar_processos(classe="КС РФ заявление", periodo="2023-2024")
+      jurisprudencia_buscar_ks(termo="неконституционность закона 2024")
 ```
 
-**4. Taxa de sucesso**
-
-> Prompt: "Das ADIs ajuizadas, quantas obtiveram liminar ou foram julgadas procedentes?"
+**3. Классифицировать по заявителю**
 
 ```
-APIs: jurisprudencia_buscar_stf(termo="ADI procedente 2024")
+СУДЕБНАЯ ПОЛИТИЗАЦИЯ ЗАКОНОВ — 2023–2024
+
+Заявитель                      Заявл.   % Всего
+─────────────────────────────────────────────────
+Депутаты оппозиции               18       36%
+Субъекты Федерации               14       28%
+Генеральный прокурор              6       12%
+Уполномоченный по правам человека  4        8%
+Общественные организации          5       10%
+Профсоюзы                         3        6%
+─────────────────────────────────────────────────
+Всего                            50      100%
+
+Наиболее оспариваемые темы:
+  1. Налогообложение (14 заявлений)
+  2. Права и свободы (10 заявлений)
+  3. Разграничение полномочий (9 заявлений)
+  4. Бюджет/финансы (7 заявлений)
+```
+
+**4. Доля удовлетворённых заявлений**
+
+> Запрос: «Из поданных заявлений сколько были удовлетворены полностью или частично?»
+
+```
+APIs: jurisprudencia_buscar_ks(termo="КС РФ удовлетворено 2024")
       datajud_movimentacoes_processo(id=...)
 ```
 
 ---
 
-## Estudo 5: Poder de Agenda — Quem Controla a Pauta?
+## Исследование 5: Власть повестки — кто контролирует повестку дня?
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Quem define o que é votado e quando? A pauta do plenário reflete as prioridades do presidente da Casa, do governo ou das comissões?
+Кто определяет, что и когда голосуется? Повестка пленарных заседаний отражает приоритеты руководства, правительства или комиссий?
 
-### Metodologia
+### Методология
 
-**1. Coletar a agenda do plenário**
+**1. Собрать повестку пленарных заседаний**
 
-> Prompt: "Quais matérias foram pautadas para votação no Senado em cada semana de 2024?"
+> Запрос: «Какие законопроекты были вынесены на голосование в Совете Федерации каждую неделю 2024 года?»
 
 ```
 API: senado_agenda_plenario(ano=2024)
 ```
 
-**2. Classificar por origem e prioridade**
+**2. Классифицировать по источнику и приоритету**
 
-> Prompt: "Para cada matéria votada, identifique: quem propôs, qual comissão relatou, se é urgência do governo"
+> Запрос: «Для каждого рассмотренного законопроекта определи: кто внёс, какая комиссия подготовила заключение, является ли срочным»
 
 ```
 APIs: senado_detalhes_materia(codigo=...)
       senado_tramitacao_materia(codigo=...)
 ```
 
-**3. Analisar tempo de tramitação**
+**3. Анализировать сроки прохождения**
 
 ```
-TEMPO DE TRAMITAÇÃO — SENADO 2024
+СРОКИ ПРОХОЖДЕНИЯ — СОВЕТ ФЕДЕРАЦИИ 2024
 
-Origem da matéria          Mediana (dias)   Máximo
-──────────────────────────────────────────────────
-Governo (urgência const.)       45            120
-Governo (regime normal)        180            540
-Senador da base                210            720
-Senador da oposição            380          1.200+
-Câmara (revisão)               90            365
-──────────────────────────────────────────────────
+Источник законопроекта         Медиана (дней)   Максимум
+─────────────────────────────────────────────────────────
+Правительство (срочный)            30               90
+Правительство (обычный)           120              360
+Сенатор из большинства            150              540
+Сенатор из оппозиции              270            900+
+Госдума (повторное рассмотрение)   60              240
+─────────────────────────────────────────────────────────
 
-Achado: Matérias do governo com urgência constitucional
-tramitam 8x mais rápido que projetos da oposição.
+Вывод: Правительственные законопроекты в срочном порядке
+рассматриваются в 9 раз быстрее, чем проекты оппозиционных сенаторов.
 ```
 
-**4. Medir o "poder de gaveta"**
+**4. Измерить «право полки»**
 
-> Prompt: "Quantas proposições foram apresentadas vs. quantas chegaram a votação em plenário?"
+> Запрос: «Сколько законопроектов было внесено и сколько дошло до голосования?»
 
 ```
-FUNIL LEGISLATIVO — SENADO 2024
+ЗАКОНОДАТЕЛЬНАЯ ВОРОНКА — СОВЕТ ФЕДЕРАЦИИ 2024
 
-Apresentadas:                    432  (100%)
-Distribuídas a comissão:         398   (92%)
-Relatório aprovado em comissão:  112   (26%)
-Pautadas no plenário:             67   (16%)
-Votadas:                          54   (13%)
-Aprovadas:                        41    (9%)
+Внесено:                         312  (100%)
+Передано в комиссию:             289   (93%)
+Заключение комиссии одобрено:     87   (28%)
+Вынесено на пленарное заседание:  52   (17%)
+Проголосовано:                    41   (13%)
+Одобрено:                         34   (11%)
 ──────────────────────────────────────────────
-87% das proposições NUNCA chegam ao plenário.
-O relator e o presidente da comissão decidem
-o destino de 74% dos projetos.
+83% законопроектов НЕ доходят до голосования.
+Докладчик и председатель комиссии определяют
+судьбу 72% проектов.
 ```
 
 ---
 
-## Estudo 6: Carreiras Políticas e Financiamento
+## Исследование 6: Политические карьеры и финансирование
 
-### A Pergunta de Pesquisa
+### Исследовательский вопрос
 
-Existe correlação entre o volume de financiamento e o sucesso eleitoral? Candidatos mais financiados vencem mais?
+Существует ли корреляция между объёмом финансирования и электоральным успехом? Кандидаты с большим финансированием побеждают чаще?
 
-### Metodologia
+### Методология
 
-**1. Coletar dados de candidaturas e receitas**
+**1. Собрать данные о кандидатах и доходах**
 
-> Prompt: "Para todos os candidatos a deputado federal em SP em 2022, liste: votos recebidos, total arrecadado e se foi eleito"
-
-```
-APIs: tse_buscar_candidatos(cargo="deputado federal", uf="SP", ano=2022)
-      tse_receitas_candidato(id=...) → para cada candidato
-      tse_resultados_eleicao(...) → votos e resultado
-```
-
-**2. Construir o modelo**
+> Запрос: «Для всех кандидатов в депутаты Госдумы по Москве в 2021 году перечисли: полученные голоса, общий объём поступлений и избран ли»
 
 ```
-FINANCIAMENTO vs. ELEIÇÃO — Dep. Federal SP 2022
-
-                        Eleitos     Não-eleitos   Razão
-──────────────────────────────────────────────────────────
-Arrecadação média       R$ 2,8M     R$ 340K       8,2x
-Mediana arrecadação     R$ 2,1M     R$ 120K      17,5x
-% fundo eleitoral       62%          31%          2,0x
-% pessoas físicas       24%          45%          0,5x
-Nº de doadores PF       89           23           3,9x
-──────────────────────────────────────────────────────────
-
-Correlação financiamento × votos: +0,72 (forte)
-Correlação fundo eleitoral × eleição: +0,58 (moderada)
-
-Achado: O acesso ao fundo eleitoral é o preditor mais
-forte de sucesso — mais do que ideologia, experiência
-prévia ou popularidade medida por pesquisas.
+APIs: cik_buscar_candidatos(cargo="депутат ГД", region="Москва", ano=2021)
+      cik_receitas_candidato(id=...) → для каждого кандидата
+      cik_resultados_eleicao(...) → голоса и результат
 ```
 
-**3. Analisar a concentração do fundo**
-
-> Prompt: "Como o fundo eleitoral foi distribuído entre os partidos? E dentro de cada partido, entre candidatos?"
+**2. Построить модель**
 
 ```
-CONCENTRAÇÃO DO FUNDO ELEITORAL — 2022
+ФИНАНСИРОВАНИЕ vs. ВЫБОРЫ — Депутаты ГД, Москва 2021
 
-Distribuição entre partidos:
-  Top 5 partidos: 68% do total
-  Bottom 15 partidos: 8% do total
-  Gini entre partidos: 0,62
+                        Избраны    Не избраны   Отношение
+───────────────────────────────────────────────────────────
+Средний объём           18,2 млн ₽  2,1 млн ₽    8,7x
+Медиана поступлений     14,5 млн ₽  0,9 млн ₽   16,1x
+% из избирательного фонда  58%       28%         2,1x
+% от физлиц               27%       48%         0,6x
+Число жертвователей-физлиц  72        19         3,8x
+───────────────────────────────────────────────────────────
 
-Distribuição DENTRO dos partidos (média):
-  10% dos candidatos recebem 55% dos recursos
-  50% dos candidatos recebem 12% dos recursos
-  Gini intra-partidário: 0,71
+Корреляция финансирование × голоса: +0,69 (сильная)
+Корреляция избирательный фонд × победа: +0,54 (умеренная)
 
-Achado: A concentração DENTRO dos partidos é maior
-que ENTRE partidos — a direção partidária escolhe
-quem vai ser eleito ao direcionar os recursos.
+Вывод: Доступ к избирательному фонду — самый сильный
+предиктор успеха, сильнее идеологии, прежнего опыта
+или узнаваемости по опросам.
+```
+
+**3. Анализировать концентрацию фонда**
+
+> Запрос: «Как избирательный фонд был распределён между партиями? А внутри каждой партии — между кандидатами?»
+
+```
+КОНЦЕНТРАЦИЯ ИЗБИРАТЕЛЬНОГО ФОНДА — 2021
+
+Распределение между партиями:
+  Топ-5 партий: 71% от общего объёма
+  Оставшиеся 12 партий: 7% от общего объёма
+  Джини между партиями: 0,65
+
+Распределение ВНУТРИ партий (среднее):
+  10% кандидатов получают 58% ресурсов
+  50% кандидатов получают 10% ресурсов
+  Джини внутрипартийный: 0,74
+
+Вывод: Концентрация ВНУТРИ партий выше, чем МЕЖДУ
+партиями — партийное руководство выбирает победителей,
+направляя ресурсы.
 ```
 
 ---
 
-## Ferramentas Para o Cientista Político
+## Инструменты для политолога
 
-### `planejar_consulta` — Design de Pesquisa Assistido
+### `planejar_consulta` — Ассистированное проектирование исследования
 
-> Prompt: "Quero estudar o efeito das emendas parlamentares na votação dos deputados a favor do governo. Planeje as consultas necessárias"
+> Запрос: «Я хочу изучить влияние депутатских поправок на голосование депутатов в поддержку правительства. Спланируй необходимые запросы»
 
-Retorna um plano com todas as variáveis, fontes e ordem de coleta.
+Возвращает план со всеми переменными, источниками и порядком сбора.
 
-### `executar_lote` — Coleta de Dados em Escala
+### `executar_lote` — Масштабный сбор данных
 
-Para coletar votações de todos os 513 deputados:
+Для сбора голосований всех 450 депутатов:
 
 ```json
 [
-  {"tool": "camara_votacoes_deputado", "args": {"id": 204554}},
-  {"tool": "camara_votacoes_deputado", "args": {"id": 204555}},
-  {"tool": "camara_votacoes_deputado", "args": {"id": 204556}}
+  {"tool": "duma_votacoes_deputado", "args": {"id": 204554}},
+  {"tool": "duma_votacoes_deputado", "args": {"id": 204555}},
+  {"tool": "duma_votacoes_deputado", "args": {"id": 204556}}
 ]
 ```
 
-Até 25 consultas por lote, múltiplos lotes em sequência = cobertura total.
+До 25 запросов в пакет, несколько пакетов последовательно = полное покрытие.
 
-### `recomendar_tools` — Descoberta de Dados
+### `recomendar_tools` — Обнаружение данных
 
-> Prompt: "Какие данные о законодательном поведении уже доступны в `mcp-russia`?"
+> Запрос: «Какие данные о законодательном поведении уже доступны в `mcp-russia`?»
 
-Retorna as ferramentas mais relevantes com descrição de cada uma.
-
----
-
-## Variáveis Disponíveis Para Modelos
-
-### Variável Dependente — Comportamento do Parlamentar
-
-| Variável | Fonte | Tool |
-|----------|-------|------|
-| Voto nominal (sim/não/abs) | Câmara | `camara_votos_votacao` |
-| Voto nominal | Senado | `senado_votos_votacao` |
-| Proposições apresentadas | Câmara | `camara_buscar_proposicoes` |
-| Proposições apresentadas | Senado | `senado_buscar_materias` |
-| Despesas de gabinete | Câmara | `camara_despesas_deputado` |
-
-### Variáveis Independentes — Político
-
-| Variável | Fonte | Tool |
-|----------|-------|------|
-| Partido e bancada | Câmara/Senado | `camara_detalhes_deputado` |
-| Receitas de campanha | TSE | `tse_receitas_candidato` |
-| Doadores (PF e PJ) | TSE | `tse_receitas_candidato` |
-| Votação recebida | TSE | `tse_resultados_eleicao` |
-| Emendas destinadas | Transparência | `transparencia_emendas_parlamentares` |
-| Emendas PIX | TransfereGov | `transferegov_buscar_emendas` |
-
-### Variáveis Independentes — Contexto
-
-| Variável | Fonte | Tool |
-|----------|-------|------|
-| IDH do município | IBGE | `ibge_consultar_agregado` |
-| População | IBGE | `ibge_buscar_municipios` |
-| PIB per capita | IBGE | `ibge_consultar_agregado` |
-| Indicadores econômicos | Bacen | `bacen_indicadores_atuais` |
-| Processos judiciais | DataJud | `datajud_buscar_processos` |
-
-### Variáveis de Resultado — Políticas Públicas
-
-| Variável | Fonte | Tool |
-|----------|-------|------|
-| Gastos municipais por área | TCEs | `tce_[estado]_despesas` |
-| Contratos celebrados | PNCP | `pncp_buscar_contratacoes` |
-| Infraestrutura de saúde | CNES | `saude_buscar_estabelecimentos` |
-| Indicadores ambientais | INPE | `inpe_focos_queimadas` |
-| Indicadores hídricos | ANA | `ana_monitorar_reservatorios` |
+Возвращает наиболее релевантные инструменты с описанием каждого.
 
 ---
 
-## Limitações e Cuidados Metodológicos
+## Доступные переменные для моделей
 
-### O Que os Dados Permitem
+### Зависимая переменная — поведение парламентария
 
-- Análise descritiva de comportamento legislativo
-- Correlações entre financiamento e votação
-- Mapeamento de coalizões e fidelidade
-- Análise distributiva de emendas
-- Séries temporais de indicadores
+| Переменная | Источник | Tool |
+|----------|-------|------|
+| Поимённый голос (за/против/воздержался) | Госдума | `duma_votos_votacao` |
+| Поимённый голос | Совет Федерации | `senado_votos_votacao` |
+| Внесённые законопроекты | Госдума | `duma_buscar_proposicoes` |
+| Внесённые законопроекты | Совет Федерации | `senado_buscar_materias` |
+| Депутатские расходы | Госдума | `duma_despesas_deputado` |
 
-### O Que os Dados NÃO Permitem (Sozinhos)
+### Независимые переменные — политические
 
-- **Causalidade:** Correlação entre doação e voto não prova compra de voto
-- **Motivação:** Dados não revelam por que um deputado votou de certa forma
-- **Completude:** Nem toda interação política é registrada em APIs
-- **Tempo real:** Algumas APIs têm atraso de atualização (dias a meses)
+| Переменная | Источник | Tool |
+|----------|-------|------|
+| Партия и фракция | Госдума/СФ | `duma_detalhes_deputado` |
+| Поступления в кампанию | ЦИК | `cik_receitas_candidato` |
+| Жертвователи (физ- и юрлица) | ЦИК | `cik_receitas_candidato` |
+| Полученные голоса | ЦИК | `cik_resultados_eleicao` |
+| Направленные поправки | Портал открытых данных | `transparencia_emendas_parlamentares` |
+| Специальные трансферты | Межбюджетные трансферты | `transferegov_buscar_emendas` |
 
-### Boas Práticas
+### Независимые переменные — контекст
 
-1. **Sempre cite a API de origem** com data da consulta
-2. **Use múltiplas fontes** para triangulação
-3. **Distinga correlação de causalidade** na análise
-4. **Considere variáveis omitidas** — lobby presencial, relações pessoais, pressão da mídia
-5. **Verifique outliers** — dados faltantes podem distorcer estatísticas
+| Переменная | Источник | Tool |
+|----------|-------|------|
+| ИЧР муниципалитета | Росстат | `rosstat_consultar_agregado` |
+| Население | Росстат | `rosstat_buscar_municipios` |
+| ВРП на душу | Росстат | `rosstat_consultar_agregado` |
+| Экономические показатели | ЦБ РФ | `cbr_indicadores_atuais` |
+| Судебные процессы | Судебная система РФ | `datajud_buscar_processos` |
+
+### Переменные результата — публичная политика
+
+| Переменная | Источник | Tool |
+|----------|-------|------|
+| Расходы муниципалитетов по направлениям | КРО | `kro_[region]_despesas` |
+| Заключённые контракты | ЕИС закупки | `eis_buscar_zakupki` |
+| Инфраструктура здравоохранения | Минздрав | `saude_buscar_estabelecimentos` |
+| Экологические показатели | Росприроднадзор | `ecologia_fokus` |
+| Водные ресурсы | Росводресурсы | `water_monitorar_reservuarios` |
 
 ---
 
-_Источники: парламентские API, электоральные данные, Portal da Transparencia, TransfereGov, DataJud, судебная практика, IBGE, Banco Central и другие legacy-интеграции исходного проекта._
+## Методологические ограничения и предосторожности
+
+### Что данные позволяют
+
+- Описательный анализ законодательного поведения
+- Корреляции между финансированием и голосованием
+- Картирование коалиций и дисциплины
+- Распределительный анализ поправок
+- Временные ряды индикаторов
+
+### Что данные НЕ позволяют (сами по себе)
+
+- **Причинность:** Корреляция между пожертвованием и голосом не доказывает подкуп
+- **Мотивация:** Данные не раскрывают, почему депутат проголосовал тем или иным образом
+- **Полнота:** Не всё политическое взаимодействие фиксируется в API
+- **Реальное время:** Некоторые API обновляются с задержкой (дни и месяцы)
+
+### Рекомендации
+
+1. **Всегда указывайте источник API** с датой запроса
+2. **Используйте несколько источников** для триангуляции
+3. **Различайте корреляцию и причинность** в анализе
+4. **Учитывайте пропущенные переменные** — лоббирование, личные связи, давление СМИ
+5. **Проверяйте выбросы** — пропущенные данные могут искажать статистику
+
+---
+
+_Источники: парламентские API, электоральные данные, портал открытых данных, система межбюджетных трансфертов, судебная система РФ, судебная практика, Росстат, ЦБ РФ и другие legacy-интеграции исходного проекта._
 
 _Примечание: коэффициенты и результаты в примере иллюстративные. Для реального исследования запускайте tools на живых данных и отдельно фиксируйте, какие сущности пока используются как compatibility-слой, а какие уже перенесены в русскоязычное позиционирование `mcp-russia`._

@@ -43,13 +43,15 @@ async def cursos_atuais(ctx: Context) -> str:
         else:
             change = "—"
 
-        rows.append((
-            m.codigo,
-            m.nome,
-            str(m.nominal),
-            format_number_br(m.valor, 4),
-            change,
-        ))
+        rows.append(
+            (
+                m.codigo,
+                m.nome,
+                str(m.nominal),
+                format_number_br(m.valor, 4),
+                change,
+            )
+        )
 
     header = "**Официальные курсы валют ЦБ РФ**\n\n"
     return header + markdown_table(
@@ -89,9 +91,7 @@ async def consultar_moeda(codigo: str, ctx: Context) -> str:
         diff = moeda.valor - moeda.valor_anterior
         sinal = "+" if diff >= 0 else ""
         pct = (diff / moeda.valor_anterior) * 100 if moeda.valor_anterior else 0
-        lines.append(
-            f"- Предыдущий: {format_number_br(moeda.valor_anterior, 4)} ₽"
-        )
+        lines.append(f"- Предыдущий: {format_number_br(moeda.valor_anterior, 4)} ₽")
         pct_str = f"{sinal}{format_number_br(pct, 2)}%"
         diff_str = f"{sinal}{format_number_br(diff, 4)}"
         lines.append(f"- Изменение: {diff_str} ({pct_str})")
