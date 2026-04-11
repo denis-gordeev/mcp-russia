@@ -75,8 +75,9 @@ class TestRootServerTools:
             assert "bacen" in result.data
             assert "camara" in result.data
             assert "senado" in result.data
+            assert "cekrf" in result.data
             assert "Legacy-слой BCB dentro mcp-russia" not in result.data
-            assert "Legacy-слой BCB внутри mcp-russia" in result.data
+            assert "DEPRECATED" in result.data
             assert "Legacy-слой CNES/DataSUS внутри mcp-russia" in result.data
 
 

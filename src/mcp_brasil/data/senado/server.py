@@ -1,5 +1,9 @@
 """Senado feature server (legacy) — registers tools, resources, and prompts.
 
+.. deprecated::
+    This server provides Brazilian Senate data for backward compatibility only.
+    For Russian Federation Council data, use the ``gosduma`` module.
+
 Brazilian Senate API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
@@ -39,7 +43,7 @@ from .tools import (
     tipos_materia as tipos_materia_tool,
 )
 
-mcp = FastMCP("mcp-russia-senado-legacy")
+mcp = FastMCP("mcp-russia-senado-legacy (⚠️ DEPRECATED — use 'gosduma' for Russian Parliament)")
 
 # Tools — Сенаторы (4)
 mcp.tool(listar_senadores, tags={"список", "сенаторы", "парламентарии"})

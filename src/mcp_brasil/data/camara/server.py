@@ -1,5 +1,9 @@
 """Câmara feature server (legacy) — registers tools, resources, and prompts.
 
+.. deprecated::
+    This server provides Brazilian Chamber of Deputies data for backward compatibility only.
+    For Russian State Duma data, use the ``gosduma`` module.
+
 Brazilian Chamber of Deputies API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
@@ -22,7 +26,7 @@ from .tools import (
     votos_nominais,
 )
 
-mcp = FastMCP("mcp-russia-camara-legacy")
+mcp = FastMCP("mcp-russia-camara-legacy (⚠️ DEPRECATED — use 'gosduma' for Russian State Duma)")
 
 # Tools (11)
 mcp.tool(listar_deputados, tags={"список", "депутаты", "парламентарии"})

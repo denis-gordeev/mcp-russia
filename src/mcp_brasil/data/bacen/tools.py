@@ -1,5 +1,9 @@
 """Tool functions for the Bacen feature.
 
+.. deprecated::
+    This module provides Brazilian Central Bank (BCB) data for backward compatibility only.
+    For Russian Central Bank (CBR) data, use the ``cbrf`` module instead.
+
 Ported from bcb-br-mcp/src/tools.ts (8 handler functions).
 Covers: series data, metadata, catalog, indicators, variation, comparison.
 

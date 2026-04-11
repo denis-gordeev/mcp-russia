@@ -1,5 +1,9 @@
 """Bacen feature server — registers tools, resources, and prompts.
 
+.. deprecated::
+    This server provides Brazilian Central Bank (BCB) data for backward compatibility only.
+    For Russian Central Bank (CBR) data, use the ``cbrf`` module.
+
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -19,7 +23,7 @@ from .tools import (
     ultimos_valores,
 )
 
-mcp = FastMCP("mcp-russia-bacen-legacy")
+mcp = FastMCP("mcp-russia-bacen-legacy (⚠️ DEPRECATED — use 'cbrf' for Russian Central Bank)")
 
 # Tools
 mcp.tool(consultar_serie, tags={"consulta", "series-temporais", "indicadores"})

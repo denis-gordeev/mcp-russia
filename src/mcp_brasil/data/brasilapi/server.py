@@ -1,5 +1,9 @@
 """BrasilAPI feature server — registers tools, resources, and prompts.
 
+.. deprecated::
+    This server provides BrasilAPI data for backward compatibility only.
+    For Russian reference data, use the ``rosapi`` module.
+
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -26,7 +30,7 @@ from .tools import (
     listar_tabelas_fipe,
 )
 
-mcp = FastMCP("mcp-russia-brasilapi")
+mcp = FastMCP("mcp-russia-brasilapi-legacy (⚠️ DEPRECATED)")
 
 # Tools (16)
 mcp.tool(consultar_cep, tags={"consulta", "cep", "endereco"})

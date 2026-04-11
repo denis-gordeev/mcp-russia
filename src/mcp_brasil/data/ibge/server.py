@@ -1,5 +1,9 @@
 """IBGE feature server — registers tools, resources, and prompts.
 
+.. deprecated::
+    This server provides Brazilian IBGE data for backward compatibility only.
+    For Russian Rosstat data, use the ``rosstat`` module.
+
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -19,7 +23,7 @@ from .tools import (
     ranking_nomes,
 )
 
-mcp = FastMCP("mcp-russia-ibge")
+mcp = FastMCP("mcp-russia-ibge-legacy (⚠️ DEPRECATED — use 'rosstat' for Russian statistics)")
 
 # Tools
 mcp.tool(listar_estados, tags={"listagem", "estados", "geografia"})
