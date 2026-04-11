@@ -1,5 +1,6 @@
-"""Senado feature server — registers tools, resources, and prompts.
+"""Senado feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Senate API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -38,47 +39,47 @@ from .tools import (
     tipos_materia as tipos_materia_tool,
 )
 
-mcp = FastMCP("mcp-russia-senado")
+mcp = FastMCP("mcp-russia-senado-legacy")
 
-# Tools — Senadores (4)
-mcp.tool(listar_senadores, tags={"listagem", "senadores", "parlamentares"})
-mcp.tool(buscar_senador, tags={"detalhe", "senadores", "parlamentares"})
-mcp.tool(buscar_senador_por_nome, tags={"busca", "senadores", "parlamentares"})
-mcp.tool(votacoes_senador, tags={"consulta", "senadores", "votacoes"})
+# Tools — Сенаторы (4)
+mcp.tool(listar_senadores, tags={"список", "сенаторы", "парламентарии"})
+mcp.tool(buscar_senador, tags={"подробности", "сенаторы", "парламентарии"})
+mcp.tool(buscar_senador_por_nome, tags={"поиск", "сенаторы", "парламентарии"})
+mcp.tool(votacoes_senador, tags={"запрос", "сенаторы", "голосования"})
 
-# Tools — Matérias (5)
-mcp.tool(buscar_materia, tags={"busca", "materias", "legislacao"})
-mcp.tool(detalhe_materia, tags={"detalhe", "materias", "legislacao"})
-mcp.tool(consultar_tramitacao_materia, tags={"consulta", "tramitacao", "materias"})
-mcp.tool(textos_materia, tags={"consulta", "documentos", "materias"})
-mcp.tool(votos_materia, tags={"consulta", "votacoes", "materias"})
+# Tools — Материалы (5)
+mcp.tool(buscar_materia, tags={"поиск", "материалы", "законодательство"})
+mcp.tool(detalhe_materia, tags={"подробности", "материалы", "законодательство"})
+mcp.tool(consultar_tramitacao_materia, tags={"запрос", "движение", "материалы"})
+mcp.tool(textos_materia, tags={"запрос", "документы", "материалы"})
+mcp.tool(votos_materia, tags={"запрос", "голосования", "материалы"})
 
-# Tools — Votações (3)
-mcp.tool(listar_votacoes, tags={"listagem", "votacoes", "plenario"})
-mcp.tool(detalhe_votacao, tags={"detalhe", "votacoes", "plenario"})
-mcp.tool(votacoes_recentes, tags={"listagem", "votacoes", "plenario"})
+# Tools — Голосования (3)
+mcp.tool(listar_votacoes, tags={"список", "голосования", "пленум"})
+mcp.tool(detalhe_votacao, tags={"подробности", "голосования", "пленум"})
+mcp.tool(votacoes_recentes, tags={"список", "голосования", "пленум"})
 
-# Tools — Comissões (4)
-mcp.tool(listar_comissoes, tags={"listagem", "comissoes"})
-mcp.tool(detalhe_comissao, tags={"detalhe", "comissoes"})
-mcp.tool(membros_comissao, tags={"consulta", "comissoes", "parlamentares"})
-mcp.tool(reunioes_comissao, tags={"consulta", "comissoes", "agenda"})
+# Tools — Комиссии (4)
+mcp.tool(listar_comissoes, tags={"список", "комиссии"})
+mcp.tool(detalhe_comissao, tags={"подробности", "комиссии"})
+mcp.tool(membros_comissao, tags={"запрос", "комиссии", "парламентарии"})
+mcp.tool(reunioes_comissao, tags={"запрос", "комиссии", "повестка"})
 
-# Tools — Agenda (2)
-mcp.tool(agenda_plenario, tags={"consulta", "agenda", "plenario"})
-mcp.tool(agenda_comissoes, tags={"consulta", "agenda", "comissoes"})
+# Tools — Повестка (2)
+mcp.tool(agenda_plenario, tags={"запрос", "повестка", "пленум"})
+mcp.tool(agenda_comissoes, tags={"запрос", "повестка", "комиссии"})
 
-# Tools — Auxiliares (4)
-mcp.tool(legislatura_atual, tags={"consulta", "legislatura"})
-mcp.tool(tipos_materia_tool, tags={"listagem", "materias", "tipos"})
-mcp.tool(partidos_senado, tags={"listagem", "partidos", "parlamentares"})
-mcp.tool(ufs_senado, tags={"listagem", "estados", "parlamentares"})
+# Tools — Вспомогательные (4)
+mcp.tool(legislatura_atual, tags={"запрос", "легислатура"})
+mcp.tool(tipos_materia_tool, tags={"список", "материалы", "типы"})
+mcp.tool(partidos_senado, tags={"список", "партии", "парламентарии"})
+mcp.tool(ufs_senado, tags={"список", "штаты", "парламентарии"})
 
-# Tools — Dados Abertos Extras (4)
-mcp.tool(emendas_materia, tags={"consulta", "emendas", "materias"})
-mcp.tool(listar_blocos, tags={"listagem", "blocos", "coalizoes"})
-mcp.tool(listar_liderancas, tags={"listagem", "liderancas", "parlamentares"})
-mcp.tool(relatorias_senador, tags={"consulta", "relatorias", "senadores"})
+# Tools — Открытые данные (4)
+mcp.tool(emendas_materia, tags={"запрос", "поправки", "материалы"})
+mcp.tool(listar_blocos, tags={"список", "блоки", "коалиции"})
+mcp.tool(listar_liderancas, tags={"список", "руководство", "парламентарии"})
+mcp.tool(relatorias_senador, tags={"запрос", "докладчики", "сенаторы"})
 
 # Resources (URIs without namespace prefix — mount adds "senado/" automatically)
 mcp.resource("data://tipos-materia", mime_type="application/json")(tipos_materia)

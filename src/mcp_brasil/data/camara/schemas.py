@@ -1,4 +1,4 @@
-"""Pydantic models for Câmara dos Deputados API responses."""
+"""Pydantic-схемы для ответов API Палаты депутатов (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Deputado(BaseModel):
-    """Deputado federal."""
+    """Федеральный депутат (legacy -- Brazil)."""
 
     id: int | None = None
     nome: str | None = None
@@ -18,7 +18,7 @@ class Deputado(BaseModel):
 
 
 class Proposicao(BaseModel):
-    """Proposição legislativa (PL, PEC, MPV, etc.)."""
+    """Законодательное предложение (PL, PEC, MPV и т.д.) (legacy -- Brazil)."""
 
     id: int | None = None
     sigla_tipo: str | None = None
@@ -37,7 +37,7 @@ class Proposicao(BaseModel):
 
 
 class Tramitacao(BaseModel):
-    """Evento de tramitação de uma proposição."""
+    """Событие законодательного процесса (legacy -- Brazil)."""
 
     data: str | None = None
     descricao: str | None = None
@@ -47,7 +47,7 @@ class Tramitacao(BaseModel):
 
 
 class Votacao(BaseModel):
-    """Votação em plenário ou comissão."""
+    """Голосование в пленарном зале или комиссии (legacy -- Brazil)."""
 
     id: str | None = None
     data: str | None = None
@@ -58,7 +58,7 @@ class Votacao(BaseModel):
 
 
 class VotoNominal(BaseModel):
-    """Voto individual de deputado em uma votação."""
+    """Индивидуальный голос депутата по вопросу голосования (legacy -- Brazil)."""
 
     deputado_id: int | None = None
     deputado_nome: str | None = None
@@ -68,7 +68,7 @@ class VotoNominal(BaseModel):
 
 
 class DespesaDeputado(BaseModel):
-    """Despesa de cota parlamentar (CEAP)."""
+    """Расходы депутатского парламентского фонда (CEAP) (legacy -- Brazil)."""
 
     deputado_id: int | None = None
     deputado_nome: str | None = None
@@ -83,7 +83,7 @@ class DespesaDeputado(BaseModel):
 
 
 class Evento(BaseModel):
-    """Evento legislativo (sessão, audiência, reunião)."""
+    """Законодательное событие (сессия, слушание, заседание) (legacy -- Brazil)."""
 
     id: int | None = None
     data_inicio: str | None = None
@@ -96,7 +96,7 @@ class Evento(BaseModel):
 
 
 class Orgao(BaseModel):
-    """Órgão legislativo (comissão, CPI, etc.)."""
+    """Законодательный орган (комиссия, CPI и т.д.) (legacy -- Brazil)."""
 
     id: int | None = None
     sigla: str | None = None
@@ -106,7 +106,7 @@ class Orgao(BaseModel):
 
 
 class FrenteParlamentar(BaseModel):
-    """Frente parlamentar."""
+    """Парламентская фракция (legacy -- Brazil)."""
 
     id: int | None = None
     titulo: str | None = None

@@ -1,5 +1,5 @@
 """Legacy-слой INPE внутри mcp-russia — Instituto Nacional de Pesquisas
-Espaciais (compatibility layer)."""
+Espaciais (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -13,5 +13,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://terrabrasilis.dpi.inpe.br",
     requires_auth=False,
-    tags=["queimadas", "desmatamento", "amazonia", "meio-ambiente", "inpe"],
+    tags=["пожары", "вырубка-лесов", "амазония", "окружающая-среда", "inpe"],
 )

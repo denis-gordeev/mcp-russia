@@ -1,16 +1,24 @@
-"""Prompts for the Jurisprudência feature — analysis templates for LLMs."""
+"""Prompts для модуля Jurisprudencia — шаблоны анализа судебной практики (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильской судебной практики сохранены
+для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def pesquisa_jurisprudencial(tema: str, tribunais: str = "stf,stj,tst") -> str:
-    """Gera uma pesquisa jurisprudencial completa sobre um tema.
+    """Выполняет полный поиск судебной практики по правовой теме (legacy).
 
-    Orienta o LLM a buscar decisões em múltiplos tribunais superiores.
+    Направляет LLM на поиск решений в нескольких высших судах Бразилии.
 
     Args:
-        tema: Tema jurídico para pesquisar.
-        tribunais: Tribunais para consultar (separados por vírgula). Default: stf,stj,tst.
+        tema: Правовая тема для поиска.
+        tribunais: Суды для запроса (через запятую). По умолчанию: stf,stj,tst.
     """
     tribs = [t.strip().upper() for t in tribunais.split(",")]
     steps = []
@@ -18,49 +26,55 @@ def pesquisa_jurisprudencial(tema: str, tribunais: str = "stf,stj,tst") -> str:
     for t in tribs:
         t_lower = t.lower()
         steps.append(
-            f"{step_num}. Use buscar_jurisprudencia_{t_lower}(query='{tema}') para buscar no {t}"
+            f"{step_num}. Используй buscar_jurisprudencia_{t_lower}(query='{tema}') для поиска в {t}"
         )
         step_num += 1
 
     steps.append(
-        f"{step_num}. Use buscar_sumulas(tribunal='stf', query='{tema}') "
-        "para verificar súmulas relacionadas"
+        f"{step_num}. Используй buscar_sumulas(tribunal='stf', query='{tema}') "
+        "для проверки связанных сумул (судебных прецедентов)"
     )
     step_num += 1
     steps.append(
-        f"{step_num}. Use buscar_repercussao_geral(query='{tema}') para temas de repercussão geral"
+        f"{step_num}. Используй buscar_repercussao_geral(query='{tema}') для тем общей значимости"
     )
 
     return (
-        f"Faça uma pesquisa jurisprudencial completa sobre '{tema}' "
-        f"nos tribunais {', '.join(tribs)}.\n\n"
-        "Passos:\n" + "\n".join(steps) + "\n\n"
-        "Apresente:\n"
-        "- Entendimento predominante em cada tribunal\n"
-        "- Súmulas aplicáveis (se houver)\n"
-        "- Temas de repercussão geral relacionados\n"
-        "- Divergências entre tribunais (se houver)\n"
-        "- Evolução jurisprudencial do tema"
+        f"Выполни полный поиск судебной практики по теме '{tema}' "
+        f"в судах {', '.join(tribs)} по данным бразильской системы Jurisprudencia.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n" + "\n".join(steps) + "\n\n"
+        "Представь:\n"
+        "- Преобладающее понимание в каждом суде\n"
+        "- Применимые сумулы (если имеются)\n"
+        "- Темы общей значимости (repercussao geral)\n"
+        "- Расхождения между судами (если имеются)\n"
+        "- Эволюция судебной практики по данной теме\n"
+        "- Примечание: анализ основан на данных бразильской судебной системы"
     )
 
 
 def analise_tema(numero_tema: int) -> str:
-    """Gera uma análise de um tema de repercussão geral do STF.
+    """Выполняет анализ темы общей значимости Верховного суда Бразилии (STF).
 
     Args:
-        numero_tema: Número do tema de repercussão geral.
+        numero_tema: Номер темы общей значимости (repercussao geral).
     """
     return (
-        f"Analise o Tema {numero_tema} de Repercussão Geral do STF.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_repercussao_geral(tema={numero_tema}) "
-        "para obter detalhes do tema\n"
-        "2. Use buscar_jurisprudencia_stf(query='tema {numero_tema} "
-        "repercussão geral') para decisões relacionadas\n\n"
-        "Apresente:\n"
-        "- Questão constitucional discutida\n"
-        "- Tese fixada pelo STF\n"
-        "- Leading case (processo paradigma)\n"
-        "- Situação atual (pendente, julgado, em revisão)\n"
-        "- Impacto prático da decisão"
+        f"Проанализируй Тему {numero_tema} общей значимости Верховного суда Бразилии (STF).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай юрисдикцию.\n\n"
+        "Шаги:\n"
+        f"1. Используй buscar_repercussao_geral(tema={numero_tema}) "
+        "для получения деталей темы\n"
+        f"2. Используй buscar_jurisprudencia_stf(query='тема {numero_tema} "
+        "общая значимость') для поиска связанных решений\n\n"
+        "Представь:\n"
+        "- Обсуждаемый конституционный вопрос\n"
+        "- Установленную тезис STF\n"
+        "- Ведущее дело (процесс-ориентир)\n"
+        "- Текущий статус (на рассмотрении, решён, на пересмотре)\n"
+        "- Практическое влияние решения\n"
+        "- Примечание: анализ относится к бразильской судебной системе"
     )

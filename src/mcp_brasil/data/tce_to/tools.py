@@ -1,9 +1,13 @@
 """Tool functions for the TCE-TO feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Токантинс (TCE-TO) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -18,19 +22,22 @@ async def buscar_pessoas_to(
     nome: str | None = None,
     codigo: str | None = None,
 ) -> str:
-    """Busca pessoas com processos no TCE-TO.
+    """(legacy) Поиск лиц с процессами в TCE-TO.
 
-    Pesquisa por nome ou CPF (parcial) no sistema e-Contas.
-    Retorna as pessoas encontradas e seus processos vinculados.
-    Ao menos um filtro (nome ou codigo) é obrigatório.
+    Примечание: инструмент совместимости для бразильских данных TCE-TO.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск по названию или CPF (частичный) в системе e-Contas.
+    Возвращает найденных лиц и связанные с ними процессы.
+    Необходим хотя бы один фильтр (nome или codigo).
 
     Args:
-        ctx: Contexto MCP.
-        nome: Nome da pessoa (busca parcial).
-        codigo: CPF (busca parcial).
+        ctx: Контекст MCP.
+        nome: Название лица (частичный поиск).
+        codigo: CPF (частичный поиск).
 
     Returns:
-        Lista de pessoas com processos vinculados.
+        Список лиц со связанными процессами.
     """
     await ctx.info("Buscando pessoas no TCE-TO...")
     pessoas = await client.buscar_pessoas(nome=nome, codigo=codigo)
@@ -63,18 +70,21 @@ async def consultar_processo_to(
     numero: int,
     ano: int,
 ) -> str:
-    """Consulta detalhes de um processo no TCE-TO.
+    """(legacy) Запрос подробностей процесса в TCE-TO.
 
-    Retorna informações do processo: assunto, entidade de origem,
-    departamento atual, complemento e distribuição.
+    Примечание: инструмент совместимости для бразильских данных TCE-TO.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает информацию о процессе: тема, орган-источник,
+    текущий департамент, дополнение и распределение.
 
     Args:
-        ctx: Contexto MCP.
-        numero: Número do processo.
-        ano: Ano do processo.
+        ctx: Контекст MCP.
+        numero: Номер процесса.
+        ano: Год процесса.
 
     Returns:
-        Detalhes do processo.
+        Подробные данные процесса.
     """
     await ctx.info(f"Consultando processo {numero}/{ano} no TCE-TO...")
     proc = await client.consultar_processo(numero=numero, ano=ano)
@@ -102,17 +112,20 @@ async def listar_pautas_to(
     ctx: Context,
     tamanho: int = 10,
 ) -> str:
-    """Lista pautas de sessões do TCE-TO.
+    """(legacy) Список повесток заседаний TCE-TO.
 
-    Retorna as pautas mais recentes (sessões ordinárias, virtuais,
-    por videoconferência) das câmaras e do plenário do TCE-TO.
+    Примечание: инструмент совместимости для бразильских данных TCE-TO.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает самые свежие повестки (ординарные, виртуальные,
+    видеоконференции) палат и пленума TCE-TO.
 
     Args:
-        ctx: Contexto MCP.
-        tamanho: Número de pautas a retornar (padrão: 10).
+        ctx: Контекст MCP.
+        tamanho: Количество возвращаемых повесток (по умолчанию: 10).
 
     Returns:
-        Lista de pautas com data, tipo e origem.
+        Список повесток с датой, типом и источником.
     """
     await ctx.info("Buscando pautas de sessões do TCE-TO...")
     pautas = await client.listar_pautas(tamanho=tamanho)

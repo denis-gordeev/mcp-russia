@@ -1,9 +1,13 @@
 """Tool functions for the TCE-RJ feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Рио-де-Жанейро (TCE-RJ) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -22,20 +26,23 @@ async def buscar_licitacoes(
     inicio: int = 0,
     limite: int = 50,
 ) -> str:
-    """Busca licitações municipais no Estado do Rio de Janeiro.
+    """(legacy) Поиск муниципальных закупок штата Рио-де-Жанейро.
 
-    Dados de processos licitatórios dos 92 municípios fluminenses,
-    incluindo modalidade, objeto, valor estimado e situação.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные конкурсных процедур 92 муниципалитетов штата Рио-де-Жанейро,
+    включая модальность, объект, оценочную стоимость и статус.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        municipio: Nome do município em MAIÚSCULAS (ex: "NITEROI").
-        inicio: Offset para paginação.
-        limite: Quantidade máxima de resultados.
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        municipio: Название муниципалитета ЗАГЛАВНЫМИ (напр.: "NITEROI").
+        inicio: Смещение для пагинации.
+        limite: Максимальное количество результатов.
 
     Returns:
-        Lista de licitações com objeto, modalidade e valores.
+        Список закупок с объектом, модальностью и стоимостью.
     """
     await ctx.info("Buscando licitações no TCE-RJ...")
     resultado = await client.buscar_licitacoes(
@@ -72,20 +79,23 @@ async def buscar_contratos_municipio(
     inicio: int = 0,
     limite: int = 50,
 ) -> str:
-    """Busca contratos municipais no Estado do Rio de Janeiro.
+    """(legacy) Поиск муниципальных контрактов штата Рио-де-Жанейро.
 
-    Contratos firmados pelos 92 municípios fluminenses com fornecedores,
-    incluindo valores, vigência e objeto contratado.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Контракты, заключённые 92 муниципалитетами штата Рио-де-Жанейро с поставщиками,
+    включая стоимость, срок действия и объект контракта.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano do contrato (ex: 2024).
-        municipio: Nome do município em MAIÚSCULAS (ex: "NITEROI").
-        inicio: Offset para paginação.
-        limite: Quantidade máxima de resultados.
+        ctx: Контекст MCP.
+        ano: Год контракта (напр.: 2024).
+        municipio: Название муниципалитета ЗАГЛАВНЫМИ (напр.: "NITEROI").
+        inicio: Смещение для пагинации.
+        limite: Максимальное количество результатов.
 
     Returns:
-        Lista de contratos com fornecedor, objeto e valores.
+        Список контрактов с поставщиком, объектом и стоимостью.
     """
     await ctx.info("Buscando contratos municipais no TCE-RJ...")
     resultado = await client.buscar_contratos_municipio(
@@ -121,20 +131,23 @@ async def buscar_compras_diretas(
     inicio: int = 0,
     limite: int = 50,
 ) -> str:
-    """Busca compras diretas (dispensas e inexigibilidades) no RJ.
+    """(legacy) Поиск прямых закупок (отказы и необязательности) в штате Рио-де-Жанейро.
 
-    Compras sem licitação dos municípios fluminenses, incluindo
-    dispensas de licitação e inexigibilidades com fundamentação legal.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Закупки без торгов муниципалитетов штата Рио-де-Жанейро, включая
+    отказы от торгов и необязательности с правовым обоснованием.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência.
-        municipio: Nome do município em MAIÚSCULAS (ex: "NITEROI").
-        inicio: Offset para paginação.
-        limite: Quantidade máxima de resultados.
+        ctx: Контекст MCP.
+        ano: Год справки.
+        municipio: Название муниципалитета ЗАГЛАВНЫМИ (напр.: "NITEROI").
+        inicio: Смещение для пагинации.
+        limite: Максимальное количество результатов.
 
     Returns:
-        Lista de compras diretas com fornecedor e valores.
+        Список прямых закупок с поставщиком и стоимостью.
     """
     await ctx.info("Buscando compras diretas municipais no TCE-RJ...")
     compras = await client.buscar_compras_diretas_municipio(
@@ -159,17 +172,20 @@ async def buscar_compras_diretas(
 
 
 async def buscar_obras_paralisadas(ctx: Context) -> str:
-    """Busca obras públicas paralisadas no Estado do Rio de Janeiro.
+    """(legacy) Поиск приостановленных общественных работ штата Рио-де-Жанейро.
 
-    Lista todas as obras paralisadas (estaduais e municipais) com
-    motivo da paralisação, tempo parado, valor do contrato e situação.
-    Dados fundamentais para fiscalização de investimentos públicos.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Список всех приостановленных работ (штатных и муниципальных) с
+    указанием причины приостановки, времени простоя, стоимости контракта и статуса.
+    Фундаментальные данные для контроля инвестиций.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de obras paralisadas com motivo e valores.
+        Список приостановленных работ с причиной и стоимостью.
     """
     await ctx.info("Buscando obras paralisadas no TCE-RJ...")
     obras = await client.buscar_obras_paralisadas()
@@ -199,17 +215,20 @@ async def buscar_penalidades(
     ctx: Context,
     tipo: str | None = None,
 ) -> str:
-    """Busca penalidades e ressarcimentos aplicados pelo TCE-RJ a municípios.
+    """(legacy) Поиск штрафов и возмещений, наложенных TCE-RJ на муниципалитеты.
 
-    Multas e débitos impostos pelo Tribunal de Contas a gestores
-    municipais por irregularidades na gestão pública.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Штрафы и долги, наложенные Счётным трибуналом на муниципальных
+    управленцев за нарушения в управлении.
 
     Args:
-        ctx: Contexto MCP.
-        tipo: Tipo de penalidade: "multa" ou "debito".
+        ctx: Контекст MCP.
+        tipo: Тип штрафа: "multa" или "debito".
 
     Returns:
-        Lista de penalidades com valores e processos.
+        Список штрафов со стоимостью и процессами.
     """
     await ctx.info("Buscando penalidades no TCE-RJ...")
     penalidades = await client.buscar_penalidades(tipo=tipo)
@@ -234,16 +253,19 @@ async def buscar_penalidades(
 
 
 async def buscar_prestacao_contas(ctx: Context) -> str:
-    """Busca prestação de contas dos municípios do RJ.
+    """(legacy) Поиск отчётов о расходовании средств муниципалитетов штата Рио-де-Жанейро.
 
-    Resultado da análise das contas dos prefeitos pelo TCE-RJ,
-    indicando parecer favorável ou desfavorável.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Результат анализа счетов мэров TCE-RJ,
+    указывающий благоприятное или неблагоприятное заключение.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de municípios com indicador de prestação de contas.
+        Список муниципалитетов с индикатором отчётности.
     """
     await ctx.info("Buscando prestação de contas no TCE-RJ...")
     contas = await client.buscar_prestacao_contas()
@@ -267,17 +289,20 @@ async def buscar_concessoes(
     ctx: Context,
     municipio: str | None = None,
 ) -> str:
-    """Busca concessões públicas municipais no RJ.
+    """(legacy) Поиск муниципальных концессий штата Рио-де-Жанейро.
 
-    PPPs, concessões de transporte, iluminação pública, água e esgoto
-    e demais serviços públicos delegados nos municípios fluminenses.
+    Примечание: инструмент совместимости для бразильских данных TCE-RJ.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    ГЧП, концессии транспорта, общественного освещения, водоснабжения и канализации,
+    а также остальные делегированные общественные услуги муниципалитетов штата.
 
     Args:
-        ctx: Contexto MCP.
-        municipio: Nome do município para filtrar (MAIÚSCULAS).
+        ctx: Контекст MCP.
+        municipio: Название муниципалитета для фильтрации (ЗАГЛАВНЫМИ).
 
     Returns:
-        Lista de concessões com concessionário, objeto e valores.
+        Список концессий с концессионером, объектом и стоимостью.
     """
     await ctx.info("Buscando concessões públicas no TCE-RJ...")
     dados = await client.buscar_concessoes()

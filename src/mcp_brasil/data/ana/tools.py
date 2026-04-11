@@ -1,8 +1,12 @@
 """Tool functions for the ANA feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API Национального агентства водных ресурсов Бразилии (ANA).
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -23,21 +27,24 @@ async def buscar_estacoes(
     nome_estacao: str | None = None,
     tipo_estacao: int | None = None,
 ) -> str:
-    """Busca estações hidrológicas da ANA no sistema Hidroweb.
+    """(legacy) Поиск гидрологических станций ANA в системе Hidroweb.
 
-    Permite pesquisar estações fluviométricas e pluviométricas por
-    código, nome, rio, bacia ou sub-bacia hidrográfica.
+    Примечание: инструмент совместимости для бразильских данных ANA.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Позволяет искать флювиометрические и плювиометрические станции
+    по коду, названию, реке, бассейну или суббассейну.
 
     Args:
-        codigo_estacao: Código da estação (ex: "60435000").
-        codigo_rio: Código do rio para filtrar.
-        codigo_bacia: Código da bacia hidrográfica.
-        codigo_sub_bacia: Código da sub-bacia.
-        nome_estacao: Nome da estação (busca parcial).
-        tipo_estacao: Tipo da estação (1=Fluviométrica, 2=Pluviométrica).
+        codigo_estacao: Код станции (напр.: "60435000").
+        codigo_rio: Код реки для фильтрации.
+        codigo_bacia: Код гидрологического бассейна.
+        codigo_sub_bacia: Код суббассейна.
+        nome_estacao: Название станции (частичный поиск).
+        tipo_estacao: Тип станции (1=Флювиометрическая, 2=Плювиометрическая).
 
     Returns:
-        Tabela com as estações encontradas.
+        Таблица с найденными станциями.
     """
     await ctx.info("Buscando estações hidrológicas na ANA...")
     estacoes = await client.buscar_estacoes(
@@ -75,19 +82,21 @@ async def consultar_telemetria(
     data_inicio: str | None = None,
     data_fim: str | None = None,
 ) -> str:
-    """Consulta dados telemétricos de uma estação hidrológica da ANA.
+    """(legacy) Запрос телеметрических данных гидрологической станции ANA.
 
-    Retorna leituras de nível da água, vazão e precipitação (chuva)
-    de uma estação. Os dados são coletados automaticamente por
-    sensores em tempo real.
+    Примечание: инструмент совместимости для бразильских данных ANA.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает показания уровня воды, расхода и осадков (дождя) станции.
+    Данные собираются автоматически датчиками в реальном времени.
 
     Args:
-        codigo_estacao: Código da estação (ex: "60435000").
-        data_inicio: Data inicial no formato dd/MM/yyyy (opcional).
-        data_fim: Data final no formato dd/MM/yyyy (opcional).
+        codigo_estacao: Код станции (напр.: "60435000").
+        data_inicio: Начальная дата в формате dd/MM/yyyy (необязательно).
+        data_fim: Конечная дата в формате dd/MM/yyyy (необязательно).
 
     Returns:
-        Tabela com os dados telemétricos.
+        Таблица с телеметрическими данными.
     """
     await ctx.info(f"Consultando telemetria da estação {codigo_estacao}...")
     dados = await client.consultar_telemetria(
@@ -120,19 +129,22 @@ async def monitorar_reservatorios(
     data_inicio: str | None = None,
     data_fim: str | None = None,
 ) -> str:
-    """Monitora reservatórios do Sistema de Acompanhamento de Reservatórios (SAR) da ANA.
+    """(legacy) Мониторинг водохранилищ системы SAR Национального агентства водных ресурсов.
 
-    Retorna dados de volume útil, cota, vazão afluente e defluente
-    dos principais reservatórios brasileiros. Útil para acompanhar
-    a situação hídrica e o nível dos reservatórios de hidrelétricas.
+    Примечание: инструмент совместимости для бразильских данных ANA.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает данные о полезном объёме, отметке, притоке и сбросе
+    основных водохранилищ Бразилии. Полезно для мониторинга
+    гидрологической ситуации и уровня водохранилищ ГЭС.
 
     Args:
-        codigo_reservatorio: Código do reservatório (opcional).
-        data_inicio: Data inicial no formato dd/MM/yyyy (opcional).
-        data_fim: Data final no formato dd/MM/yyyy (opcional).
+        codigo_reservatorio: Код водохранилища (необязательно).
+        data_inicio: Начальная дата в формате dd/MM/yyyy (необязательно).
+        data_fim: Конечная дата в формате dd/MM/yyyy (необязательно).
 
     Returns:
-        Tabela com os dados dos reservatórios.
+        Таблица с данными водохранилищ.
     """
     await ctx.info("Consultando dados de reservatórios no SAR/ANA...")
     reservatorios = await client.monitorar_reservatorios(

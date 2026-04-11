@@ -1,9 +1,13 @@
 """Tool functions for the TCE-RS feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Риу-Гранди-ду-Сул (TCE-RS) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -16,16 +20,19 @@ from . import client
 
 
 async def listar_municipios_rs(ctx: Context) -> str:
-    """Lista os municípios do Rio Grande do Sul registrados no TCE-RS.
+    """(legacy) Список муниципалитетов штата Риу-Гранди-ду-Сул, зарегистрированных в TCE-RS.
 
-    Dados de referência do portal de dados abertos do TCE-RS.
-    Retorna código, nome e código IBGE de cada município.
+    Примечание: инструмент совместимости для бразильских данных TCE-RS.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Справочные данные портала открытых данных TCE-RS.
+    Возвращает код, название и код IBGE каждого муниципалитета.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de municípios do RS com códigos.
+        Список муниципалитетов RS с кодами.
     """
     await ctx.info("Buscando municípios do RS no TCE-RS...")
     municipios = await client.listar_municipios()
@@ -48,19 +55,22 @@ async def buscar_indices_educacao_rs(
     ano: int,
     municipio: str | None = None,
 ) -> str:
-    """Busca índices de aplicação em educação dos municípios do RS.
+    """(legacy) Поиск индексов расходов на образование муниципалитетов RS.
 
-    Dados do TCE-RS sobre o cumprimento do mínimo constitucional de 25%
-    em Manutenção e Desenvolvimento do Ensino (MDE). Útil para verificar
-    se municípios estão cumprindo a obrigação legal.
+    Примечание: инструмент совместимости для бразильских данных TCE-RS.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные TCE-RS о соблюдении конституционного минимума 25%
+    на поддержание и развитие образования (MDE). Полезно для проверки
+    соблюдения муниципалитетами законодательных обязательств.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        municipio: Filtrar por nome do município (busca parcial).
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        municipio: Фильтр по названию муниципалитета (частичный поиск).
 
     Returns:
-        Lista de municípios com índice de educação.
+        Список муниципалитетов с индексом образования.
     """
     await ctx.info(f"Buscando índices de educação no TCE-RS (ano={ano})...")
     indices = await client.buscar_indices_educacao(ano)
@@ -90,19 +100,22 @@ async def buscar_indices_saude_rs(
     ano: int,
     municipio: str | None = None,
 ) -> str:
-    """Busca índices de aplicação em saúde dos municípios do RS.
+    """(legacy) Поиск индексов расходов на здравоохранение муниципалитетов RS.
 
-    Dados do TCE-RS sobre o cumprimento do mínimo constitucional de 15%
-    em Ações e Serviços Públicos de Saúde (ASPS). Útil para verificar
-    se municípios estão cumprindo a obrigação legal.
+    Примечание: инструмент совместимости для бразильских данных TCE-RS.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные TCE-RS о соблюдении конституционного минимума 15%
+    на действия и услуги общественного здравоохранения (ASPS). Полезно для проверки
+    соблюдения муниципалитетами законодательных обязательств.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        municipio: Filtrar por nome do município (busca parcial).
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        municipio: Фильтр по названию муниципалитета (частичный поиск).
 
     Returns:
-        Lista de municípios com índice de saúde.
+        Список муниципалитетов с индексом здравоохранения.
     """
     await ctx.info(f"Buscando índices de saúde no TCE-RS (ano={ano})...")
     indices = await client.buscar_indices_saude(ano)
@@ -132,19 +145,22 @@ async def buscar_gestao_fiscal_rs(
     ano: int,
     municipio: str | None = None,
 ) -> str:
-    """Busca dados de gestão fiscal (LRF) dos municípios do RS.
+    """(legacy) Поиск данных фискального управления (LRF) муниципалитетов RS.
 
-    Dados do TCE-RS sobre a Lei de Responsabilidade Fiscal: receita corrente
-    líquida, despesa com pessoal, dívida consolidada, operações de crédito,
-    e gastos com educação (MDE) e saúde (ASPS).
+    Примечание: инструмент совместимости для бразильских данных TCE-RS.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные TCE-RS о Законе об ответственности за управление: чистый текущий доход,
+    расходы на персонал, консолидированный долг, кредитные операции,
+    и расходы на образование (MDE) и здравоохранение (ASPS).
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        municipio: Filtrar por nome do município (busca parcial).
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        municipio: Фильтр по названию муниципалитета (частичный поиск).
 
     Returns:
-        Lista de municípios com dados de gestão fiscal.
+        Список муниципалитетов с данными фискального управления.
     """
     await ctx.info(f"Buscando gestão fiscal no TCE-RS (ano={ano})...")
     dados = await client.buscar_gestao_fiscal(ano)
@@ -178,20 +194,23 @@ async def buscar_datasets_rs(
     grupo: str | None = None,
     limite: int = 10,
 ) -> str:
-    """Busca datasets no portal de dados abertos do TCE-RS.
+    """(legacy) Поиск наборов данных на портале открытых данных TCE-RS.
 
-    O portal CKAN do TCE-RS possui ~69.000 datasets organizados em 16 grupos:
-    despesa, receita, licitacoes, contratos, decisoes, educacao, saude,
-    previdencia, gestao-fiscal, ouvidoria, entre outros.
+    Примечание: инструмент совместимости для бразильских данных TCE-RS.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Портал CKAN TCE-RS содержит ~69 000 наборов данных, организованных в 16 групп:
+    расходы, доходы, закупки, контракты, решения, образование, здравоохранение,
+    социальное обеспечение, фискальное управление, омбудсмен и другие.
 
     Args:
-        ctx: Contexto MCP.
-        query: Termo de busca (ex: "consolidado 2024", "licitacoes recife").
-        grupo: Filtrar por grupo (ex: "despesa", "licitacoes", "contratos").
-        limite: Máximo de resultados (1-50, padrão 10).
+        ctx: Контекст MCP.
+        query: Поисковый термин (напр.: "consolidado 2024", "licitacoes recife").
+        grupo: Фильтр по группе (напр.: "despesa", "licitacoes", "contratos").
+        limite: Максимум результатов (1-50, по умолчанию 10).
 
     Returns:
-        Lista de datasets com título, grupo e link para download.
+        Список наборов данных с заголовком, группой и ссылкой для скачивания.
     """
     await ctx.info(f"Buscando datasets no TCE-RS (query='{query}')...")
     datasets, total = await client.buscar_datasets(query, grupo=grupo, limite=limite)

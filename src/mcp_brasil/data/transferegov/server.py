@@ -1,5 +1,6 @@
-"""TransfereGov feature server — registers tools, resources, and prompts.
+"""TransfereGov feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Transfer Government API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -15,14 +16,14 @@ from .tools import (
     resumo_emendas_ano,
 )
 
-mcp = FastMCP("mcp-russia-transferegov")
+mcp = FastMCP("mcp-russia-transferegov-legacy")
 
 # Tools
-mcp.tool(buscar_emendas_pix, tags={"busca", "emendas-pix", "transferencias"})
-mcp.tool(buscar_emenda_por_autor, tags={"busca", "emendas-pix", "parlamentares"})
-mcp.tool(detalhe_emenda, tags={"detalhe", "emendas-pix", "transferencias"})
-mcp.tool(emendas_por_municipio, tags={"busca", "emendas-pix", "municipios"})
-mcp.tool(resumo_emendas_ano, tags={"listagem", "emendas-pix", "orcamento"})
+mcp.tool(buscar_emendas_pix, tags={"поиск", "emendas-pix", "переводы"})
+mcp.tool(buscar_emenda_por_autor, tags={"поиск", "emendas-pix", "парламентарии"})
+mcp.tool(detalhe_emenda, tags={"подробности", "emendas-pix", "переводы"})
+mcp.tool(emendas_por_municipio, tags={"поиск", "emendas-pix", "муниципалитеты"})
+mcp.tool(resumo_emendas_ano, tags={"список", "emendas-pix", "бюджет"})
 
 # Resources
 mcp.resource("data://info-api", mime_type="application/json")(info_api)

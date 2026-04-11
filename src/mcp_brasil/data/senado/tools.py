@@ -1,8 +1,12 @@
-"""Tool functions for the Senado Federal feature.
+"""Инструменты для работы с Федеральным сенатом Бразилии (слой совместимости, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильского Федерального сената
+и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ from .constants import DEFAULT_PAGE_SIZE
 
 
 def _pagination_hint(count: int, page_size: int = DEFAULT_PAGE_SIZE) -> str:
-    """Hint when there may be more results."""
+    """Подсказка при наличии дополнительных результатов."""
     if count >= page_size:
         return "\n\n> Há mais resultados. Refine os filtros para resultados mais específicos."
     return ""
@@ -24,12 +28,13 @@ def _pagination_hint(count: int, page_size: int = DEFAULT_PAGE_SIZE) -> str:
 
 
 async def listar_senadores() -> str:
-    """Lista todos os senadores em exercício no Senado Federal.
+    """(legacy) Список всех действующих сенаторов Федерального сената.
 
-    Retorna a lista completa de senadores da legislatura atual com partido e UF.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает полный список сенаторов текущего созыва с партией и штатом.
 
     Returns:
-        Tabela com senadores em exercício.
+        Таблица с действующими сенаторами.
     """
     senadores = await client.listar_senadores()
     if not senadores:
@@ -49,15 +54,16 @@ async def listar_senadores() -> str:
 
 
 async def buscar_senador(codigo: str) -> str:
-    """Busca detalhes de um senador pelo código.
+    """(legacy) Поиск данных сенатора по коду.
 
-    Retorna perfil completo com nome, partido, UF, contato e mandato.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает полный профиль: имя, партия, штат, контакты и мандат.
 
     Args:
-        codigo: Código do senador na API do Senado.
+        codigo: Код сенатора в API Сената.
 
     Returns:
-        Perfil detalhado do senador.
+        Подробный профиль сенатора.
     """
     sen = await client.obter_senador(codigo)
     if not sen:
@@ -78,15 +84,16 @@ async def buscar_senador(codigo: str) -> str:
 
 
 async def buscar_senador_por_nome(nome: str) -> str:
-    """Busca senadores em exercício pelo nome.
+    """(legacy) Поиск сенаторов по имени.
 
-    Pesquisa parcial no nome dos senadores da legislatura atual.
+    Инструмент совместимости с API Сената Бразилии.
+    Частичный поиск по именам сенаторов текущего созыва.
 
     Args:
-        nome: Nome ou parte do nome do senador.
+        nome: Имя или часть имени сенатора.
 
     Returns:
-        Tabela com senadores encontrados.
+        Таблица с найденными сенаторами.
     """
     senadores = await client.buscar_senador_por_nome(nome)
     if not senadores:
@@ -106,13 +113,15 @@ async def buscar_senador_por_nome(nome: str) -> str:
 
 
 async def votacoes_senador(codigo: str) -> str:
-    """Consulta votações em que um senador participou.
+    """(legacy) Запрос голосований, в которых участвовал сенатор.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        codigo: Código do senador na API do Senado.
+        codigo: Код сенатора в API Сената.
 
     Returns:
-        Lista de votações com datas e resultados.
+        Список голосований с датами и результатами.
     """
     votacoes = await client.votacoes_senador(codigo)
     if not votacoes:
@@ -144,19 +153,20 @@ async def buscar_materia(
     keywords: str | None = None,
     tramitando: bool = False,
 ) -> str:
-    """Busca matérias legislativas no Senado (PEC, PLS, PLC, MPV, etc.).
+    """(legacy) Поиск законодательных материалов Сената (PEC, PLS, PLC, MPV и др.).
 
-    Permite filtrar por tipo, número, ano ou palavras-chave na ementa.
+    Инструмент совместимости с API Сената Бразилии.
+    Позволяет фильтровать по типу, номеру, году или ключевым словам.
 
     Args:
-        sigla_tipo: Tipo da matéria (ex: PEC, PLS, PLC, MPV, PLP).
-        numero: Número da matéria.
-        ano: Ano da matéria.
-        keywords: Palavras-chave para busca na ementa.
-        tramitando: Se True, retorna apenas matérias em tramitação.
+        sigla_tipo: Тип материала (напр.: PEC, PLS, PLC, MPV, PLP).
+        numero: Номер материала.
+        ano: Год материала.
+        keywords: Ключевые слова для поиска в аннотации.
+        tramitando: Если True, возвращает только материалы на рассмотрении.
 
     Returns:
-        Tabela com matérias encontradas.
+        Таблица с найденными материалами.
     """
     materias = await client.buscar_materias(
         sigla_tipo=sigla_tipo,
@@ -183,15 +193,16 @@ async def buscar_materia(
 
 
 async def detalhe_materia(codigo: str) -> str:
-    """Obtém detalhes de uma matéria legislativa pelo código.
+    """(legacy) Получение детальной информации о законодательном материале по коду.
 
-    Retorna ementa completa, autor, situação e casa de origem.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает полную аннотацию, автора, статус и палату происхождения.
 
     Args:
-        codigo: Código da matéria na API do Senado.
+        codigo: Код материала в API Сената.
 
     Returns:
-        Detalhes completos da matéria.
+        Полные детали материала.
     """
     materia = await client.obter_materia(codigo)
     if not materia:
@@ -216,15 +227,16 @@ async def detalhe_materia(codigo: str) -> str:
 
 
 async def consultar_tramitacao_materia(codigo: str) -> str:
-    """Consulta a tramitação de uma matéria legislativa no Senado.
+    """(legacy) Запрос истории рассмотрения законодательного материала в Сенате.
 
-    Mostra o histórico de tramitação com datas, locais e situações.
+    Инструмент совместимости с API Сената Бразилии.
+    Показывает историю прохождения с датами, местами и статусами.
 
     Args:
-        codigo: Código da matéria na API do Senado.
+        codigo: Код материала в API Сената.
 
     Returns:
-        Lista de eventos de tramitação.
+        Список событий прохождения.
     """
     tramitacoes = await client.tramitacao_materia(codigo)
     if not tramitacoes:
@@ -247,15 +259,16 @@ async def consultar_tramitacao_materia(codigo: str) -> str:
 
 
 async def textos_materia(codigo: str) -> str:
-    """Lista textos e documentos de uma matéria legislativa.
+    """(legacy) Список текстов и документов законодательного материала.
 
-    Retorna links para os documentos oficiais (texto original, emendas, pareceres, etc.).
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает ссылки на официальные документы (оригинальный текст, поправки, заключения).
 
     Args:
-        codigo: Código da matéria na API do Senado.
+        codigo: Код материала в API Сената.
 
     Returns:
-        Lista de documentos com URLs.
+        Список документов с URL.
     """
     textos = await client.textos_materia(codigo)
     if not textos:
@@ -274,15 +287,16 @@ async def textos_materia(codigo: str) -> str:
 
 
 async def votos_materia(codigo: str) -> str:
-    """Consulta votações de uma matéria legislativa no Senado.
+    """(legacy) Запрос голосований по законодательному материалу в Сенате.
 
-    Mostra resultados com placar (Sim/Não/Abstenção).
+    Инструмент совместимости с API Сената Бразилии.
+    Показывает результаты с подсчётом (Да/Нет/Воздержался).
 
     Args:
-        codigo: Código da matéria na API do Senado.
+        codigo: Код материала в API Сената.
 
     Returns:
-        Lista de votações com resultados.
+        Список голосований с результатами.
     """
     votacoes = await client.votos_materia(codigo)
     if not votacoes:
@@ -306,13 +320,15 @@ async def votos_materia(codigo: str) -> str:
 
 
 async def listar_votacoes(ano: str) -> str:
-    """Lista votações do plenário do Senado em um ano.
+    """(legacy) Список голосований пленарного зала Сената за год.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        ano: Ano das votações (ex: 2024).
+        ano: Год голосований (напр.: 2024).
 
     Returns:
-        Tabela com votações do ano.
+        Таблица с голосованиями года.
     """
     votacoes = await client.listar_votacoes(ano)
     if not votacoes:
@@ -333,13 +349,15 @@ async def listar_votacoes(ano: str) -> str:
 
 
 async def detalhe_votacao(codigo_sessao: str) -> str:
-    """Obtém detalhes de uma votação do Senado, incluindo placar.
+    """(legacy) Получение детальной информации о голосовании Сената, включая подсчёт.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        codigo_sessao: Código da sessão de votação.
+        codigo_sessao: Код сессии голосования.
 
     Returns:
-        Detalhes da votação com placar.
+        Детали голосования с подсчётом.
     """
     votacao = await client.obter_votacao(codigo_sessao)
     if not votacao:
@@ -359,13 +377,15 @@ async def detalhe_votacao(codigo_sessao: str) -> str:
 
 
 async def votacoes_recentes(data: str) -> str:
-    """Lista votações do Senado em uma data específica.
+    """(legacy) Список голосований Сената за конкретную дату.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        data: Data no formato AAAAMMDD (ex: 20240315).
+        data: Дата в формате YYYYMMDD (напр.: 20240315).
 
     Returns:
-        Tabela com votações da data.
+        Таблица с голосованиями даты.
     """
     votacoes = await client.votacoes_recentes(data)
     if not votacoes:
@@ -388,12 +408,13 @@ async def votacoes_recentes(data: str) -> str:
 
 
 async def listar_comissoes() -> str:
-    """Lista comissões do Senado Federal.
+    """(legacy) Список комиссий Федерального сената.
 
-    Inclui comissões permanentes, temporárias, CPIs e subcomissões.
+    Инструмент совместимости с API Сената Бразилии.
+    Включает постоянные комиссии, временные комиссии, CPI и подкомиссии.
 
     Returns:
-        Tabela com comissões do Senado.
+        Таблица с комиссиями Сената.
     """
     comissoes = await client.listar_comissoes()
     if not comissoes:
@@ -413,13 +434,15 @@ async def listar_comissoes() -> str:
 
 
 async def detalhe_comissao(codigo: str) -> str:
-    """Obtém detalhes de uma comissão do Senado.
+    """(legacy) Получение детальной информации о комиссии Сената.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        codigo: Código da comissão na API do Senado.
+        codigo: Код комиссии в API Сената.
 
     Returns:
-        Detalhes da comissão.
+        Детали комиссии.
     """
     comissao = await client.obter_comissao(codigo)
     if not comissao:
@@ -438,13 +461,15 @@ async def detalhe_comissao(codigo: str) -> str:
 
 
 async def membros_comissao(codigo: str) -> str:
-    """Lista membros de uma comissão do Senado.
+    """(legacy) Список членов комиссии Сената.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        codigo: Código da comissão na API do Senado.
+        codigo: Код комиссии в API Сената.
 
     Returns:
-        Tabela com membros da comissão.
+        Таблица с членами комиссии.
     """
     membros = await client.membros_comissao(codigo)
     if not membros:
@@ -464,13 +489,15 @@ async def membros_comissao(codigo: str) -> str:
 
 
 async def reunioes_comissao(codigo: str) -> str:
-    """Lista reuniões de uma comissão do Senado.
+    """(legacy) Список заседаний комиссии Сената.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        codigo: Código da comissão na API do Senado.
+        codigo: Код комиссии в API Сената.
 
     Returns:
-        Tabela com reuniões da comissão.
+        Таблица с заседаниями комиссии.
     """
     reunioes = await client.reunioes_comissao(codigo)
     if not reunioes:
@@ -494,14 +521,16 @@ async def reunioes_comissao(codigo: str) -> str:
 
 
 async def agenda_plenario(ano: str, mes: str) -> str:
-    """Consulta a agenda do plenário do Senado para um mês.
+    """(legacy) Запрос повестки пленарного зала Сената на месяц.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        ano: Ano (ex: 2024).
-        mes: Mês (01-12).
+        ano: Год (напр.: 2024).
+        mes: Месяц (01-12).
 
     Returns:
-        Tabela com sessões plenárias do mês.
+        Таблица с пленарными сессиями месяца.
     """
     sessoes = await client.agenda_plenario(ano, mes)
     if not sessoes:
@@ -521,13 +550,15 @@ async def agenda_plenario(ano: str, mes: str) -> str:
 
 
 async def agenda_comissoes(data: str) -> str:
-    """Consulta a agenda de comissões do Senado para uma data.
+    """(legacy) Запрос повестки комиссий Сената на дату.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Args:
-        data: Data no formato AAAAMMDD (ex: 20240315).
+        data: Дата в формате YYYYMMDD (напр.: 20240315).
 
     Returns:
-        Tabela com reuniões de comissões na data.
+        Таблица с заседаниями комиссий на дату.
     """
     reunioes = await client.agenda_comissoes(data)
     if not reunioes:
@@ -550,10 +581,12 @@ async def agenda_comissoes(data: str) -> str:
 
 
 async def legislatura_atual() -> str:
-    """Consulta informações da legislatura atual do Senado.
+    """(legacy) Запрос информации о текущем созыве Сената.
+
+    Инструмент совместимости с API Сената Бразилии.
 
     Returns:
-        Dados da legislatura (número, período).
+        Данные созыва (номер, период).
     """
     leg = await client.legislatura_atual()
     if not leg:
@@ -567,12 +600,13 @@ async def legislatura_atual() -> str:
 
 
 async def partidos_senado() -> str:
-    """Lista partidos com representação no Senado Federal.
+    """(legacy) Список партий, представленных в Федеральном сенате.
 
-    Retorna os partidos ordenados pelo número de senadores em exercício.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает партии, отсортированные по количеству действующих сенаторов.
 
     Returns:
-        Tabela com partidos e quantidade de senadores.
+        Таблица с партиями и количеством сенаторов.
     """
     senadores = await client.listar_senadores()
     if not senadores:
@@ -589,12 +623,13 @@ async def partidos_senado() -> str:
 
 
 async def ufs_senado() -> str:
-    """Lista unidades federativas com representação no Senado Federal.
+    """(legacy) Список федеративных единиц, представленных в Федеральном сенате.
 
-    Retorna os estados ordenados pela sigla com o número de senadores em exercício.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает штаты, отсортированные по аббревиатуре с количеством сенаторов.
 
     Returns:
-        Tabela com UFs e quantidade de senadores.
+        Таблица с UF и количеством сенаторов.
     """
     senadores = await client.listar_senadores()
     if not senadores:
@@ -611,12 +646,13 @@ async def ufs_senado() -> str:
 
 
 async def tipos_materia() -> str:
-    """Lista os tipos de matéria legislativa do Senado.
+    """(legacy) Список типов законодательных материалов Сената.
 
-    Retorna as siglas e descrições dos principais tipos de proposição.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает аббревиатуры и описания основных типов предложений.
 
     Returns:
-        Tabela com tipos de matéria.
+        Таблица с типами материалов.
     """
     tipos = await client.tipos_materia_api()
     rows = [(sigla, descricao) for sigla, descricao in sorted(tipos.items())]
@@ -627,15 +663,16 @@ async def tipos_materia() -> str:
 
 
 async def emendas_materia(codigo: str) -> str:
-    """Lista emendas apresentadas a uma matéria legislativa do Senado.
+    """(legacy) Список поправок к законодательному материалу Сената.
 
-    Retorna emendas com autor, tipo, decisão e link para o documento.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает поправки с автором, типом, решением и ссылкой на документ.
 
     Args:
-        codigo: Código da matéria na API do Senado.
+        codigo: Код материала в API Сената.
 
     Returns:
-        Tabela com emendas da matéria.
+        Таблица с поправками материала.
     """
     emendas = await client.emendas_materia(codigo)
     if not emendas:
@@ -657,12 +694,13 @@ async def emendas_materia(codigo: str) -> str:
 
 
 async def listar_blocos() -> str:
-    """Lista blocos parlamentares (coalizões) do Senado Federal.
+    """(legacy) Список парламентских блоков (коалиций) Федерального сената.
 
-    Retorna os blocos ativos com partidos integrantes.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает активные блоки с входящими партиями.
 
     Returns:
-        Tabela com blocos parlamentares.
+        Таблица с парламентскими блоками.
     """
     blocos = await client.listar_blocos()
     if not blocos:
@@ -683,12 +721,13 @@ async def listar_blocos() -> str:
 
 
 async def listar_liderancas() -> str:
-    """Lista lideranças do Senado Federal.
+    """(legacy) Список руководств Федерального сената.
 
-    Retorna líderes de partidos, blocos e governo com seus cargos.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает лидеров партий, блоков и правительства с их должностями.
 
     Returns:
-        Tabela com lideranças do Senado.
+        Таблица с руководствами Сената.
     """
     liderancas = await client.listar_liderancas()
     if not liderancas:
@@ -709,15 +748,16 @@ async def listar_liderancas() -> str:
 
 
 async def relatorias_senador(codigo: str) -> str:
-    """Consulta matérias de relatoria de um senador.
+    """(legacy) Запрос материалов, по которым сенатор назначен докладчиком.
 
-    Retorna as matérias para as quais o senador foi designado relator.
+    Инструмент совместимости с API Сената Бразилии.
+    Возвращает материалы, для которых сенатор был назначен докладчиком.
 
     Args:
-        codigo: Código do senador na API do Senado.
+        codigo: Код сенатора в API Сената.
 
     Returns:
-        Tabela com relatorias do senador.
+        Таблица с докладчиками сенатора.
     """
     relatorias = await client.relatorias_senador(codigo)
     if not relatorias:

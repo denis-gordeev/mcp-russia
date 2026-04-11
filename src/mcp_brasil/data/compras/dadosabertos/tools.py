@@ -1,8 +1,12 @@
 """Tool functions for the Dados Abertos Compras.gov.br feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API открытых данных Compras.gov.br Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -22,21 +26,24 @@ async def buscar_licitacoes(
     modalidade: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca licitações no sistema legado SIASG/ComprasNet (até 2020).
+    """(legacy) Поиск закупок в устаревшей системе SIASG/ComprasNet (до 2020).
 
-    Pesquisa licitações federais por período de publicação. Dados históricos
-    do SIASG (Sistema Integrado de Administração de Serviços Gerais).
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск федеральных закупок по периоду публикации. Исторические данные
+    SIASG (Интегрированная система управления услугами).
 
     Args:
-        data_publicacao_inicial: Data início YYYY-MM-DD (obrigatório).
-        data_publicacao_final: Data fim YYYY-MM-DD (obrigatório).
-        uasg: Código UASG do órgão (opcional).
-        modalidade: Código da modalidade (1=Convite, 2=Tomada de preço,
-            3=Concorrência, 5=Pregão, 6=Dispensa, 7=Inexigibilidade).
-        pagina: Página de resultados (padrão 1).
+        data_publicacao_inicial: Начальная дата публикации YYYY-MM-DD (обязательно).
+        data_publicacao_final: Конечная дата публикации YYYY-MM-DD (обязательно).
+        uasg: Код UASG органа (необязательно).
+        modalidade: Код модальности (1=Приглашение, 2=Запрос цен,
+            3=Конкурс, 5=Аукцион, 6=Отказ, 7=Необязательность).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de licitações encontradas com objeto, valor e situação.
+        Список найденных закупок с объектом, стоимостью и статусом.
     """
     await ctx.info(
         f"Buscando licitações de {data_publicacao_inicial} a {data_publicacao_final}..."
@@ -81,19 +88,22 @@ async def buscar_pregoes(
     co_uasg: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca pregões eletrônicos no SIASG/ComprasNet.
+    """(legacy) Поиск электронных аукционов в SIASG/ComprasNet.
 
-    Pregões são a modalidade mais utilizada para aquisição de bens e
-    serviços comuns pelo governo federal.
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Аукционы — наиболее используемая модальность для приобретения товаров
+    и услуг федеральным правительством.
 
     Args:
-        data_edital_inicial: Data início do edital YYYY-MM-DD (obrigatório).
-        data_edital_final: Data fim do edital YYYY-MM-DD (obrigatório).
-        co_uasg: Código UASG do órgão (opcional).
-        pagina: Página de resultados (padrão 1).
+        data_edital_inicial: Начальная дата извещения YYYY-MM-DD (обязательно).
+        data_edital_final: Конечная дата извещения YYYY-MM-DD (обязательно).
+        co_uasg: Код UASG органа (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de pregões encontrados.
+        Список найденных аукционов.
     """
     await ctx.info(f"Buscando pregões de {data_edital_inicial} a {data_edital_final}...")
     resultado = await client.buscar_pregoes(
@@ -133,18 +143,21 @@ async def buscar_dispensas(
     co_uasg: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca compras sem licitação (dispensas e inexigibilidades).
+    """(legacy) Поиск закупок без торгов (отказы и необязательности).
 
-    Dispensas são compras realizadas sem processo licitatório, conforme
-    previsão legal (art. 24 da Lei 8.666/93 ou art. 75 da Lei 14.133/2021).
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Отказы — закупки, осуществляемые без конкурентных процедур, согласно
+    законодательным положениям (ст. 24 Закона 8.666/93 или ст. 75 Закона 14.133/2021).
 
     Args:
-        ano_aviso: Ano do aviso de dispensa (obrigatório, ex: 2020).
-        co_uasg: Código UASG do órgão (opcional).
-        pagina: Página de resultados (padrão 1).
+        ano_aviso: Год извещения об отказе (обязательно, напр.: 2020).
+        co_uasg: Код UASG органа (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de compras sem licitação encontradas.
+        Список найденных закупок без торгов.
     """
     await ctx.info(f"Buscando dispensas do ano {ano_aviso}...")
     resultado = await client.buscar_dispensas(
@@ -183,20 +196,23 @@ async def buscar_contratos(
     ni_fornecedor: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca contratos no Compras.gov.br (Dados Abertos).
+    """(legacy) Поиск контрактов в Compras.gov.br (Открытые данные).
 
-    Consulta contratos federais por período de vigência. Inclui dados
-    completos: órgão, fornecedor, objeto, valor e prazo.
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Запрос федеральных контрактов по периоду действия. Включает полные
+    данные: орган, поставщик, объект, стоимость и срок.
 
     Args:
-        data_vigencia_inicial_min: Início da vigência mínima YYYY-MM-DD (obrigatório).
-        data_vigencia_inicial_max: Início da vigência máxima YYYY-MM-DD (obrigatório).
-        codigo_orgao: Código do órgão (opcional).
-        ni_fornecedor: CNPJ/CPF do fornecedor (opcional).
-        pagina: Página de resultados (padrão 1).
+        data_vigencia_inicial_min: Минимальное начало действия YYYY-MM-DD (обязательно).
+        data_vigencia_inicial_max: Максимальное начало действия YYYY-MM-DD (обязательно).
+        codigo_orgao: Код органа (необязательно).
+        ni_fornecedor: CNPJ/CPF поставщика (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de contratos encontrados.
+        Список найденных контрактов.
     """
     await ctx.info("Buscando contratos...")
     resultado = await client.buscar_contratos(
@@ -240,18 +256,21 @@ async def consultar_fornecedor(
     cpf: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta fornecedores cadastrados no Compras.gov.br.
+    """(legacy) Запрос поставщиков, зарегистрированных в Compras.gov.br.
 
-    Busca dados de fornecedores que participam de licitações federais.
-    Pelo menos um filtro (CNPJ ou CPF) deve ser informado.
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск данных поставщиков, участвующих в федеральных закупках.
+    Необходим хотя бы один фильтр (CNPJ или CPF).
 
     Args:
-        cnpj: CNPJ do fornecedor (opcional).
-        cpf: CPF do fornecedor pessoa física (opcional).
-        pagina: Página de resultados (padrão 1).
+        cnpj: CNPJ поставщика (необязательно).
+        cpf: CPF поставщика-физлица (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Dados do fornecedor encontrado.
+        Данные найденного поставщика.
     """
     if not any([cnpj, cpf]):
         return "Informe pelo menos um filtro: cnpj ou cpf."
@@ -289,19 +308,22 @@ async def buscar_material_catmat(
     codigo_classe: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca itens no catálogo CATMAT (materiais do governo federal).
+    """(legacy) Поиск позиций в каталоге CATMAT (материалы федерального правительства).
 
-    O CATMAT é o Catálogo de Materiais usado pelo governo federal para
-    classificar e padronizar a aquisição de materiais (bens).
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    CATMAT — Каталог материалов, используемый федеральным правительством
+    для классификации и стандартизации приобретения материалов (товаров).
 
     Args:
-        descricao: Descrição do material (opcional).
-        codigo_grupo: Código do grupo CATMAT (opcional, ex: 70=TIC, 65=Saúde).
-        codigo_classe: Código da classe CATMAT (opcional).
-        pagina: Página de resultados (padrão 1).
+        descricao: Описание материала (необязательно).
+        codigo_grupo: Код группы CATMAT (необязательно, напр.: 70=ТИК, 65=Здравоохранение).
+        codigo_classe: Код класса CATMAT (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de materiais encontrados no catálogo.
+        Список найденных материалов каталога.
     """
     if not any([descricao, codigo_grupo, codigo_classe]):
         return "Informe pelo menos um filtro: descricao, codigo_grupo ou codigo_classe."
@@ -345,18 +367,21 @@ async def buscar_servico_catser(
     codigo_grupo: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca itens no catálogo CATSER (serviços do governo federal).
+    """(legacy) Поиск позиций в каталоге CATSER (услуги федерального правительства).
 
-    O CATSER é o Catálogo de Serviços usado pelo governo federal para
-    classificar e padronizar a contratação de serviços.
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    CATSER — Каталог услуг, используемый федеральным правительством
+    для классификации и стандартизации привлечения услуг.
 
     Args:
-        codigo_servico: Código do serviço CATSER (opcional).
-        codigo_grupo: Código do grupo CATSER (opcional).
-        pagina: Página de resultados (padrão 1).
+        codigo_servico: Код услуги CATSER (необязательно).
+        codigo_grupo: Код группы CATSER (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de serviços encontrados no catálogo.
+        Список найденных услуг каталога.
     """
     if not any([codigo_servico, codigo_grupo]):
         return "Informe pelo menos um filtro: codigo_servico ou codigo_grupo."
@@ -397,18 +422,21 @@ async def buscar_uasg(
     sigla_uf: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca UASGs (Unidades Administrativas de Serviços Gerais).
+    """(legacy) Поиск UASG (Административные единицы обслуживания).
 
-    UASGs são as unidades do governo federal que realizam compras. Use esta
-    ferramenta para encontrar o código UASG de um órgão e filtrar buscas.
+    Примечание: инструмент совместимости для бразильских данных госзакупок.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    UASG — единицы федерального правительства, осуществляющие закупки.
+    Используйте этот инструмент для обнаружения кода UASG органа и фильтрации запросов.
 
     Args:
-        codigo_uasg: Código da UASG (opcional).
-        sigla_uf: Sigla da UF (ex: SP, RJ, DF) (opcional).
-        pagina: Página de resultados (padrão 1).
+        codigo_uasg: Код UASG (необязательно).
+        sigla_uf: Аббревиатура штата (напр.: SP, RJ, DF) (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de UASGs encontradas.
+        Список найденных UASG.
     """
     if not any([codigo_uasg, sigla_uf]):
         return "Informe pelo menos um filtro: codigo_uasg ou sigla_uf."

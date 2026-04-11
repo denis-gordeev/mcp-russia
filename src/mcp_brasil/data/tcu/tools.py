@@ -1,9 +1,13 @@
-"""Tool functions for the TCU feature.
+"""Инструменты для работы с TCU (Счётная палата Бразилии, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильской Счётной палаты
+(Tribunal de Contas da União) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -25,19 +29,19 @@ async def buscar_acordaos(
     inicio: int = 0,
     quantidade: int = 20,
 ) -> str:
-    """Busca acórdãos (decisões colegiadas) do TCU.
+    """(legacy) Поиск постановлений (коллегиальных решений) TCU.
 
-    Acórdãos são as decisões formais do Tribunal de Contas da União, incluindo
-    julgamentos de contas, auditorias e recursos. Retorna decisões recentes
-    por padrão (mais recentes primeiro).
+    Инструмент совместимости с TCU (Бразилия).
+    Acórdãos — формальные решения Счётной палаты, включая рассмотрение
+    отчётов, аудиты и апелляции. Возвращает недавние решения.
 
     Args:
-        ctx: Contexto MCP.
-        inicio: Índice inicial para paginação (0 = mais recentes).
-        quantidade: Quantidade de acórdãos a retornar (máx ~50).
+        ctx: Контекст MCP.
+        inicio: Начальный индекс для пагинации (0 = самые свежие).
+        quantidade: Количество постановлений (макс. ~50).
 
     Returns:
-        Lista formatada de acórdãos com título, colegiado, relator e sumário.
+        Форматированный список постановлений с заголовком и кратким содержанием.
     """
     await ctx.info(f"Buscando acórdãos do TCU (início={inicio})...")
     acordaos = await client.buscar_acordaos(inicio=inicio, quantidade=quantidade)
@@ -79,20 +83,20 @@ async def consultar_inabilitados(
     offset: int = 0,
     limit: int = 25,
 ) -> str:
-    """Consulta pessoas inabilitadas para exercer função pública por decisão do TCU.
+    """(legacy) Запрос лиц, лишённых права занимать государственные должности по решению TCU.
 
-    Pessoas inabilitadas não podem exercer cargo em comissão ou função de
-    confiança na Administração Pública Federal. Permite buscar por CPF
-    específico ou listar todos.
+    Инструмент совместимости с TCU (Бразилия).
+    Лишённые права не могут занимать должности в комиссии или функции
+    доверия в Федеральной публичной администрации. Поиск по CPF или полный список.
 
     Args:
-        ctx: Contexto MCP.
-        cpf: CPF para consulta específica (somente números).
-        offset: Deslocamento para paginação.
-        limit: Quantidade por página (padrão 25).
+        ctx: Контекст MCP.
+        cpf: CPF для конкретного запроса (только цифры).
+        offset: Смещение для пагинации.
+        limit: Количество на страницу (по умолчанию 25).
 
     Returns:
-        Lista de pessoas inabilitadas com dados da sanção.
+        Список лишённых права лиц с данными о санкции.
     """
     await ctx.info("Consultando inabilitados no TCU...")
     resultado = await client.consultar_inabilitados(cpf=cpf, offset=offset, limit=limit)
@@ -133,20 +137,20 @@ async def consultar_inidoneos(
     offset: int = 0,
     limit: int = 25,
 ) -> str:
-    """Consulta licitantes declarados inidôneos pelo TCU.
+    """(legacy) Запрос компаний/лиц, объявленных недобросовестными TCU.
 
-    Empresas e pessoas declaradas inidôneas não podem participar de
-    licitações na Administração Pública Federal. Permite buscar por
-    CPF/CNPJ específico ou listar todos.
+    Инструмент совместимости с TCU (Бразилия).
+    Объявленные недобросовестными не могут участвовать в тендерах
+    Федеральной публичной администрации. Поиск по CPF/CNPJ или полный список.
 
     Args:
-        ctx: Contexto MCP.
-        cpf_cnpj: CPF ou CNPJ para consulta específica (somente números).
-        offset: Deslocamento para paginação.
-        limit: Quantidade por página (padrão 25).
+        ctx: Контекст MCP.
+        cpf_cnpj: CPF или CNPJ для конкретного запроса (только цифры).
+        offset: Смещение для пагинации.
+        limit: Количество на страницу (по умолчанию 25).
 
     Returns:
-        Lista de licitantes inidôneos com dados da sanção.
+        Список недобросовестных участников с данными о санкции.
     """
     await ctx.info("Consultando inidôneos no TCU...")
     resultado = await client.consultar_inidoneos(cpf_cnpj=cpf_cnpj, offset=offset, limit=limit)
@@ -182,22 +186,23 @@ async def consultar_inidoneos(
 
 
 async def consultar_certidoes_apf(cnpj: str, ctx: Context) -> str:
-    """Consulta certidões consolidadas de pessoa jurídica (APF).
+    """(legacy) Запрос консолидированных сертификатов юридического лица (APF).
 
-    Verifica a situação de uma empresa em 4 cadastros simultaneamente:
-    - **TCU Inidôneos**: licitantes declarados inidôneos
-    - **CNJ CNIA**: condenações por improbidade administrativa
-    - **CGU CEIS**: empresas inidôneas e suspensas
-    - **CGU CNEP**: empresas punidas
+    Инструмент совместимости с TCU (Бразилия).
+    Проверяет компанию в 4 реестрах одновременно:
+    - **TCU Inidôneos**: недобросовестные участники торгов
+    - **CNJ CNIA**: осуждения за административное правонарушение
+    - **CGU CEIS**: недобросовестные и приостановленные компании
+    - **CGU CNEP**: наказанные компании
 
-    Muito útil para due diligence de fornecedores em licitações.
+    Полезно для проверки добросовестности (due diligence) поставщиков.
 
     Args:
-        cnpj: CNPJ da empresa (somente números, 14 dígitos).
-        ctx: Contexto MCP.
+        cnpj: CNPJ компании (только цифры, 14 знаков).
+        ctx: Контекст MCP.
 
     Returns:
-        Situação consolidada da empresa nos 4 cadastros.
+        Консолидированный статус компании в 4 реестрах.
     """
     await ctx.info(f"Consultando certidões APF para CNPJ {cnpj}...")
     resultado = await client.consultar_certidoes(cnpj)
@@ -241,22 +246,22 @@ async def calcular_debito_tcu(
     aplica_juros: bool = True,
     tipo: str = "D",
 ) -> str:
-    """Calcula débito atualizado com correção monetária (variação SELIC).
+    """(legacy) Расчёт обновлённой задолженности с денежной коррекцией (вариация SELIC).
 
-    Usa a calculadora oficial do TCU para atualizar valores de débitos
-    apurados em processos de controle externo. Aplica correção monetária
-    pela variação da taxa SELIC e, opcionalmente, juros de mora.
+    Инструмент совместимости с TCU (Бразилия).
+    Использует официальный калькулятор TCU для обновления сумм задолженности.
+    Применяет денежную коррекцию по вариации ставки SELIC и, опционально, проценты.
 
     Args:
-        data_atualizacao: Data de atualização no formato DD/MM/AAAA.
-        data_fato: Data do fato gerador no formato DD/MM/AAAA.
-        valor_original: Valor original do débito em reais.
-        ctx: Contexto MCP.
-        aplica_juros: Se deve aplicar juros de mora (padrão: True).
-        tipo: "D" para débito, "C" para crédito (padrão: "D").
+        data_atualizacao: Дата обновления в формате DD/MM/YYYY.
+        data_fato: Дата факта в формате DD/MM/YYYY.
+        valor_original: Сумма задолженности в реалах.
+        ctx: Контекст MCP.
+        aplica_juros: Применять ли проценты (по умолчанию: True).
+        tipo: "D" для задолженности, "C" для кредита (по умолчанию: "D").
 
     Returns:
-        Detalhamento do cálculo com valor atualizado.
+        Детализация расчёта с обновлённой суммой.
     """
     await ctx.info("Calculando débito atualizado no TCU...")
     parcela = ParcelaDebito(
@@ -293,19 +298,19 @@ async def buscar_pedidos_congresso(
     processo: str | None = None,
     page: int | None = None,
 ) -> str:
-    """Busca solicitações do Congresso Nacional ao TCU.
+    """(legacy) Поиск запросов Национального конгресса в TCU.
 
-    Requerimentos e solicitações de informação feitos por parlamentares
-    ao Tribunal de Contas da União. Permite buscar por processo específico
-    ou listar todos os pedidos.
+    Инструмент совместимости с TCU (Бразилия).
+    Запросы и требования парламентариев к Счётной палате.
+    Поиск по номеру процесса или полный список.
 
     Args:
-        ctx: Contexto MCP.
-        processo: Número do processo TCU para filtrar (ex: "004.808/2026-6").
-        page: Página dos resultados.
+        ctx: Контекст MCP.
+        processo: Номер процесса TCU для фильтрации (напр.: "004.808/2026-6").
+        page: Страница результатов.
 
     Returns:
-        Lista de pedidos com autor, assunto e links.
+        Список запросов с автором, темой и ссылками.
     """
     await ctx.info("Buscando pedidos do Congresso ao TCU...")
     resultado = await client.buscar_pedidos_congresso(processo=processo, page=page)
@@ -338,17 +343,18 @@ async def buscar_pedidos_congresso(
 
 
 async def buscar_contratos_tcu(ctx: Context) -> str:
-    """Busca contratos e termos contratuais firmados pelo próprio TCU.
+    """(legacy) Поиск контрактов, заключённых самим TCU.
 
-    Retorna a lista completa de contratos do Tribunal de Contas da União,
-    incluindo contratações por nota de empenho, pregões e dispensas.
-    Útil para transparência dos gastos do próprio órgão de controle.
+    Инструмент совместимости с TCU (Бразилия).
+    Возвращает полный список контрактов Счётной палаты, включая
+    закупки, аукционы и прямые контракты. Полезно для прозрачности
+    расходов самого контролирующего органа.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista resumida dos contratos mais recentes do TCU.
+        Краткий список самых недавних контрактов TCU.
     """
     await ctx.info("Buscando contratos do TCU...")
     contratos = await client.buscar_contratos_tcu()
@@ -356,7 +362,6 @@ async def buscar_contratos_tcu(ctx: Context) -> str:
     if not contratos:
         return "Nenhum contrato do TCU encontrado."
 
-    # Sort by year desc, show most recent
     contratos.sort(key=lambda c: (c.ano or 0, c.numero or 0), reverse=True)
     amostra = contratos[:20]
 
@@ -382,18 +387,18 @@ async def buscar_contratos_tcu(ctx: Context) -> str:
 
 
 async def consultar_cadirreg(cpf: str, ctx: Context) -> str:
-    """Consulta pessoa no CADIRREG — Cadastro de Responsáveis com Contas Irregulares.
+    """(legacy) Запрос лица в CADIRREG — реестре лиц с нерегулярными отчётами.
 
-    Verifica se um CPF possui contas julgadas irregulares pelo TCU.
-    Pessoas neste cadastro tiveram suas contas reprovadas em processos
-    de controle externo.
+    Инструмент совместимости с TCU (Бразилия).
+    Проверяет, имеет ли CPF счета с нерегулярными отчётами, рассмотренными TCU.
+    Лица в этом реестре имели свои счета отклонённые в процессах внешнего контроля.
 
     Args:
-        cpf: CPF da pessoa (somente números, 11 dígitos).
-        ctx: Contexto MCP.
+        cpf: CPF лица (только цифры, 11 знаков).
+        ctx: Контекст MCP.
 
     Returns:
-        Dados das contas irregulares ou confirmação de nada consta.
+        Данные о нерегулярных счетах или подтверждение отсутствия записей.
     """
     await ctx.info(f"Consultando CADIRREG para CPF {cpf}...")
     registros = await client.consultar_cadirreg(cpf)

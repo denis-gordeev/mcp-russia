@@ -1,23 +1,33 @@
-"""Analysis prompts for TCE-PI."""
+"""Prompts для модуля TCE-PI — анализ муниципальных данных Пиауи (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-PI
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 
 def analisar_municipio_pi(municipio: str, exercicio: int = 2024) -> str:
-    """Prompt para análise fiscal de um município do Piauí.
+    """Выполняет финансовый анализ муниципалитета штата Пиауи (legacy).
 
     Args:
-        municipio: Nome do município a ser analisado.
-        exercicio: Ano do exercício fiscal.
+        municipio: Название муниципалитета для анализа.
+        exercicio: Год финансового анализа.
     """
-    return f"""Analise a situação fiscal do município de {municipio} (PI) no exercício {exercicio}.
+    return f"""Выполни финансовый анализ муниципалитета {municipio} (штат Пиауи) за финансовый год {exercicio} по данным TCE-PI.
+Это legacy-источник Бразилии внутри mcp-russia: используй его как справочный compatibility-layer и явно помечай географические ограничения.
 
-Passos:
-1. Use buscar_prefeitura_pi para encontrar o ID do município "{municipio}"
-2. Use consultar_despesas_pi com o ID e exercício {exercicio} para ver despesas por função
-3. Use consultar_receitas_pi para ver receitas detalhadas
+Шаги:
+1. Используй buscar_prefeitura_pi для поиска ID муниципалитета "{municipio}"
+2. Используй consultar_despesas_pi с ID и годом {exercicio} для просмотра расходов по функциям
+3. Используй consultar_receitas_pi для просмотра подробных доходов
 
-Análise esperada:
-- Maiores funções de despesa (saúde, educação, administração)
-- Proporção entre receita prevista e arrecadada
-- Evolução histórica das despesas (empenhada vs paga)
-- Comparação com limites constitucionais (25% educação, 15% saúde)
+Ожидаемый анализ:
+- Крупнейшие функции расходов (здравоохранение, образование, администрация)
+- Соотношение запланированных и фактических доходов
+- Историческая динамика расходов (обязательства vs фактические выплаты)
+- Сравнение с конституционными лимитами (25% образование, 15% здравоохранение)
+- Примечание: анализ основан на данных TCE-PI (Бразилия)
 """

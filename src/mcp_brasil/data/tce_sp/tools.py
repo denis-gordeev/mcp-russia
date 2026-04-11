@@ -1,9 +1,13 @@
 """Tool functions for the TCE-SP feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Сан-Паулу (TCE-SP) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -16,16 +20,19 @@ from . import client
 
 
 async def listar_municipios_sp(ctx: Context) -> str:
-    """Lista os 645 municípios paulistas sob jurisdição do TCE-SP.
+    """(legacy) Список 645 муниципалитетов штата Сан-Паулу в юрисдикции TCE-SP.
 
-    Retorna nome completo e slug (usado como parâmetro nas demais tools).
-    Dados estáticos — não muda entre consultas.
+    Примечание: инструмент совместимости для бразильских данных TCE-SP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает полное название и slug (используется как параметр в остальных инструментах).
+    Статические данные — не меняются между запросами.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de municípios com slug e nome completo.
+        Список муниципалитетов с slug и полным названием.
     """
     await ctx.info("Listando municípios do TCE-SP...")
     municipios = await client.listar_municipios()
@@ -48,20 +55,23 @@ async def consultar_despesas_sp(
     exercicio: int,
     mes: int,
 ) -> str:
-    """Consulta despesas de um município paulista em um mês específico.
+    """(legacy) Запрос расходов муниципалитета Сан-Паулу за конкретный месяц.
 
-    Retorna empenhos, pagamentos e anulações com fornecedor e valor.
-    Dados do sistema Audesp do TCE-SP desde 2014.
+    Примечание: инструмент совместимости для бразильских данных TCE-SP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает резервирования, платежи и аннулирования с поставщиком и стоимостью.
+    Данные системы Audesp TCE-SP с 2014 года.
 
     Args:
-        ctx: Contexto MCP.
-        municipio: Slug do município (ex: "campinas", "sao-paulo").
-            Use listar_municipios_sp para obter slugs válidos.
-        exercicio: Ano fiscal (2014 a atual, ex: 2025).
-        mes: Mês (1 a 12).
+        ctx: Контекст MCP.
+        municipio: Slug муниципалитета (напр.: "campinas", "sao-paulo").
+            Используйте listar_municipios_sp для получения валидных slug.
+        exercicio: Финансовый год (2014 до текущего, напр.: 2025).
+        mes: Месяц (1 до 12).
 
     Returns:
-        Lista de despesas com fornecedor, evento e valor.
+        Список расходов с поставщиком, событием и стоимостью.
     """
     await ctx.info(f"Buscando despesas de {municipio} ({exercicio}/{mes})...")
     despesas = await client.buscar_despesas(municipio, exercicio, mes)
@@ -93,20 +103,23 @@ async def consultar_receitas_sp(
     exercicio: int,
     mes: int,
 ) -> str:
-    """Consulta receitas de um município paulista em um mês específico.
+    """(legacy) Запрос доходов муниципалитета Сан-Паулу за конкретный месяц.
 
-    Retorna arrecadação por fonte de recurso, alinea e subalinea.
-    Dados do sistema Audesp do TCE-SP desde 2014.
+    Примечание: инструмент совместимости для бразильских данных TCE-SP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает сборы по источнику ресурсов, алинее и субалинее.
+    Данные системы Audesp TCE-SP с 2014 года.
 
     Args:
-        ctx: Contexto MCP.
-        municipio: Slug do município (ex: "campinas", "sao-paulo").
-            Use listar_municipios_sp para obter slugs válidos.
-        exercicio: Ano fiscal (2014 a atual, ex: 2025).
-        mes: Mês (1 a 12).
+        ctx: Контекст MCP.
+        municipio: Slug муниципалитета (напр.: "campinas", "sao-paulo").
+            Используйте listar_municipios_sp для получения валидных slug.
+        exercicio: Финансовый год (2014 до текущего, напр.: 2025).
+        mes: Месяц (1 до 12).
 
     Returns:
-        Lista de receitas com fonte, classificação e valor.
+        Список доходов с источником, классификацией и стоимостью.
     """
     await ctx.info(f"Buscando receitas de {municipio} ({exercicio}/{mes})...")
     receitas = await client.buscar_receitas(municipio, exercicio, mes)

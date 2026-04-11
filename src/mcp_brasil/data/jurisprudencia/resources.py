@@ -1,4 +1,9 @@
-"""Resources for the Jurisprudência feature — static reference data for LLM context."""
+"""Resources для Jurisprudencia — уровень обратной совместимости для бразильских судебных данных.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные судебной практики сохраняются для обратной совместимости
+с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -8,31 +13,32 @@ from .constants import OPERADORES_BUSCA, TRIBUNAIS_SUPERIORES
 
 
 def tribunais_superiores() -> str:
-    """Informações sobre os tribunais superiores (STF, STJ, TST)."""
+    """Информация о высших судах Бразилии (STF, STJ, TST) (legacy)."""
     return json.dumps(TRIBUNAIS_SUPERIORES, ensure_ascii=False)
 
 
 def operadores_busca() -> str:
-    """Operadores de busca disponíveis por tribunal para pesquisa jurisprudencial."""
+    """Доступные операторы поиска по судам для поиска судебной практики (legacy)."""
     return json.dumps(OPERADORES_BUSCA, ensure_ascii=False)
 
 
 def info_api() -> str:
-    """Informações gerais sobre as APIs de jurisprudência."""
+    """Общая информация об API судебной практики Бразилии (legacy)."""
     data = {
-        "nome": "APIs de Jurisprudência — STF, STJ e TST",
+        "nome": "API судебной практики — STF, STJ и TST (Бразилия, legacy)",
         "tribunais": ["STF", "STJ", "TST"],
-        "autenticacao": "Não requer autenticação",
-        "formato": "REST (JSON) — APIs não oficiais (reverse-engineered)",
+        "autenticacao": "Не требует аутентификации",
+        "formato": "REST (JSON) — неофициальные API (reverse-engineered)",
         "tipos_busca": [
-            "Acórdãos (decisões colegiadas)",
-            "Súmulas (enunciados vinculantes e não vinculantes)",
-            "Repercussão Geral (temas de alcance geral — STF)",
-            "Informativos (resumos periódicos de decisões)",
+            "Решения коллегий (acordaos)",
+            "Суммарные положения (связывающие и несвязывающие)",
+            "Общая реперкуссия (темы общего охвата — STF)",
+            "Информационные бюллетени (периодические резюме решений)",
         ],
         "observacao": (
-            "As APIs são baseadas nos sistemas de pesquisa dos tribunais. "
-            "Resultados podem variar conforme disponibilidade dos serviços."
+            "API основаны на системах поиска судов. "
+            "Результаты могут варьироваться в зависимости от доступности сервисов. "
+            "Данные относятся к бразильской судебной системе (legacy)."
         ),
     }
     return json.dumps(data, ensure_ascii=False)

@@ -1,64 +1,72 @@
-"""Prompts for the DataJud feature — analysis templates for LLMs."""
+"""Prompts для модуля DataJud — шаблоны анализа судебных процессов (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских судебных процессов через DataJud
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analise_processo(numero_processo: str, tribunal: str = "tjsp") -> str:
-    """Gera uma análise completa de um processo judicial.
+    """Выполняет полный анализ судебного процесса по legacy-данным Бразилии.
 
-    Orienta o LLM a consultar dados do processo, partes e movimentações.
+    Направляет LLM на запрос данных о процессе, сторонах и движениях по делу.
 
     Args:
-        numero_processo: Número do processo (NPU).
-        tribunal: Sigla do tribunal (ex: tjsp, trf1, stj).
+        numero_processo: Номер процесса (NPU).
+        tribunal: Код суда (напр.: tjsp, trf1, stj).
     """
     return (
-        f"Сделай полный разбор процесса {numero_processo} "
+        f"Выполни полный разбор процесса {numero_processo} "
         f"в {tribunal.upper()} по данным DataJud.\n"
-        "Это переходный бразильский судебный источник внутри mcp-russia, "
+        "Это legacy-источник Бразилии внутри mcp-russia, "
         "поэтому не смешивай его с российскими судебными системами и явно "
         "обозначай юрисдикцию.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_processo_por_numero(numero_processo='{numero_processo}', "
-        f"tribunal='{tribunal}') para obter detalhes\n"
-        f"2. Use consultar_movimentacoes(numero_processo='{numero_processo}', "
-        f"tribunal='{tribunal}') para o histórico\n\n"
-        "Apresente:\n"
-        "- Resumo: classe, assunto, órgão julgador\n"
-        "- Partes envolvidas (polo ativo e passivo)\n"
-        "- Cronologia das movimentações relevantes\n"
-        "- Situação atual do processo\n"
-        "- Observações sobre prazos ou próximos passos\n"
-        "- Nota de escopo: вывод относится к бразильской системе tribunais"
+        "Шаги:\n"
+        f"1. Используй buscar_processo_por_numero(numero_processo='{numero_processo}', "
+        f"tribunal='{tribunal}') для получения деталей\n"
+        f"2. Используй consultar_movimentacoes(numero_processo='{numero_processo}', "
+        f"tribunal='{tribunal}') для истории процесса\n\n"
+        "Представь:\n"
+        "- Сводка: класс дела, предмет, судебный орган\n"
+        "- Задействованные стороны (активная и пассивная)\n"
+        "- Хронология значимых процессуальных действий\n"
+        "- Текущее состояние процесса\n"
+        "- Примечания о сроках или следующих шагах\n"
+        "- Примечание: выводы относятся к бразильской судебной системе (tribunais)"
     )
 
 
 def pesquisa_juridica(tema: str, tribunal: str = "tjsp") -> str:
-    """Gera uma pesquisa jurídica sobre um tema.
+    """Выполняет юридический обзор по теме в бразильском суде (legacy).
 
-    Orienta o LLM a buscar processos relacionados a um tema específico.
+    Направляет LLM на поиск процессов, связанных с конкретной темой.
 
     Args:
-        tema: Tema jurídico para pesquisar.
-        tribunal: Sigla do tribunal. Default: tjsp.
+        tema: Правовая тема для поиска.
+        tribunal: Код суда. По умолчанию: tjsp.
     """
     return (
-        f"Сделай юридический обзор по теме '{tema}' "
+        f"Выполни юридический обзор по теме '{tema}' "
         f"в {tribunal.upper()} на основе DataJud.\n"
         "Считай DataJud legacy-источником Бразилии в составе mcp-russia "
         "и помечай это в финальном ответе.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_processos(query='{tema}', tribunal='{tribunal}') "
-        "para encontrar processos relevantes\n"
-        f"2. Use buscar_processos_por_assunto(assunto='{tema}', "
-        f"tribunal='{tribunal}') para filtrar por assunto\n"
-        "3. Para processos relevantes, use buscar_processo_por_numero() "
-        "para obter detalhes\n\n"
-        "Apresente:\n"
-        "- Quantos processos foram encontrados\n"
-        "- Principais classes processuais usadas\n"
-        "- Órgãos julgadores mais frequentes\n"
-        "- Resumo dos processos mais relevantes\n"
-        "- Tendências observadas (se houver)\n"
-        "- Ограничения переноса: результаты относятся к бразильской судебной практике"
+        "Шаги:\n"
+        f"1. Используй buscar_processos(query='{tema}', tribunal='{tribunal}') "
+        "для поиска релевантных процессов\n"
+        f"2. Используй buscar_processos_por_assunto(assunto='{tema}', "
+        f"tribunal='{tribunal}') для фильтрации по предмету\n"
+        "3. Для релевантных процессов используй buscar_processo_por_numero() "
+        "для получения деталей\n\n"
+        "Представь:\n"
+        "- Количество найденных процессов\n"
+        "- Основные используемые классы процессов\n"
+        "- Наиболее частые судебные органы\n"
+        "- Краткое описание наиболее релевантных процессов\n"
+        "- Наблюдаемые тенденции (если имеются)\n"
+        "- Ограничения: результаты относятся к бразильской судебной практике"
     )

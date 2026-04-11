@@ -1,5 +1,5 @@
 """Legacy-слой Diário Oficial внутри mcp-russia — поиск в официальных
-муниципальных газетах через Querido Diário (compatibility layer)."""
+муниципальных газетах через Querido Diário (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -13,5 +13,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://queridodiario.ok.org.br",
     requires_auth=False,
-    tags=["diario-oficial", "transparencia", "municipios", "licitacoes", "contratos"],
+    tags=["официальная-газета", "прозрачность", "муниципалитеты", "тендеры", "контракты"],
 )

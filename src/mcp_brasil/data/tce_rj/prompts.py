@@ -1,28 +1,40 @@
-"""Analysis prompts for the TCE-RJ feature."""
+"""Prompts для модуля TCE-RJ — анализ муниципальных данных Рио-де-Жанейро (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-RJ
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analisar_municipio_rj(municipio: str) -> str:
-    """Análise completa de um município fluminense no TCE-RJ.
+    """Полный анализ муниципалитета штата Рио-де-Жанейро по данным TCE-RJ (legacy).
 
-    Verifica licitações, contratos, compras diretas, obras paralisadas,
-    penalidades e prestação de contas de um município do Rio de Janeiro.
+    Проверяет тендеры, контракты, прямые закупки, приостановленные работы,
+    штрафы и отчётность муниципалитета штата Рио-де-Жанейро.
 
     Args:
-        municipio: Nome do município em MAIÚSCULAS (ex: "NITEROI").
+        municipio: Название муниципалитета ВЕРХНИМ РЕГИСТРОМ (напр.: "NITEROI").
     """
     return (
-        f"Analise a situação do município {municipio} no TCE-RJ:\n\n"
-        "1. Use `buscar_licitacoes` para ver os processos licitatórios recentes\n"
-        "2. Use `buscar_contratos_municipio` para listar contratos vigentes\n"
-        "3. Use `buscar_compras_diretas` para verificar dispensas e inexigibilidades\n"
-        "4. Use `buscar_obras_paralisadas` para identificar obras paradas no município\n"
-        "5. Use `buscar_penalidades` para verificar multas aplicadas pelo TCE-RJ\n"
-        "6. Use `buscar_prestacao_contas` para ver o parecer sobre as contas do prefeito\n\n"
-        "Apresente um resumo consolidado com:\n"
-        "- Volume de licitações e contratos\n"
-        "- Eventuais irregularidades (compras diretas excessivas, obras paradas)\n"
-        "- Situação das contas do prefeito\n"
-        "- Penalidades aplicadas\n"
+        f"Выполни анализ муниципалитета {municipio} по данным TCE-RJ "
+        "(Счётная палата штата Рио-де-Жанейро).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "1. Используй `buscar_licitacoes` для просмотра недавних тендерных процедур\n"
+        "2. Используй `buscar_contratos_municipio` для списка действующих контрактов\n"
+        "3. Используй `buscar_compras_diretas` для проверки прямых закупок и исключений\n"
+        "4. Используй `buscar_obras_paralisadas` для выявления приостановленных строек в муниципалитете\n"
+        "5. Используй `buscar_penalidades` для проверки штрафов, наложенных TCE-RJ\n"
+        "6. Используй `buscar_prestacao_contas` для получения заключения по отчёту мэра\n\n"
+        "Представь консолидированную сводку:\n"
+        "- Объём тендеров и контрактов\n"
+        "- Возможные нарушения (чрезмерные прямые закупки, приостановленные стройки)\n"
+        "- Состояние финансовой отчётности мэра\n"
+        "- Применённые штрафы\n"
+        "- Примечание: анализ основан на данных TCE-RJ (Бразилия)"
     )

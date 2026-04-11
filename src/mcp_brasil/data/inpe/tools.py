@@ -1,8 +1,12 @@
-"""Tool functions for the INPE feature.
+"""Инструменты для работы с INPE (Национальный институт космических исследований, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильского INPE (мониторинг
+лесных пожаров и вырубок) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -23,20 +27,21 @@ async def buscar_focos_queimadas(
     satelite: str | None = None,
     limite: int = DEFAULT_LIMIT,
 ) -> str:
-    """Busca focos de queimadas detectados por satélite no Brasil.
+    """(legacy) Поиск очагов лесных пожаров, обнаруженных спутниками в Бразилии.
 
-    Dados do BD Queimadas (INPE). Retorna informações sobre incêndios
-    detectados incluindo localização, satélite, bioma e risco de fogo.
+    Инструмент совместимости с INPE (Бразилия). Данные BD Queimadas.
+    Возвращает информацию об обнаруженных пожарах: координаты, спутник,
+    биом и уровень риска.
 
     Args:
-        estado: Sigla do estado com 2 letras (ex: PA, MT, AM). Opcional.
-        data_inicio: Data inicial no formato YYYY-MM-DD. Opcional.
-        data_fim: Data final no formato YYYY-MM-DD. Opcional.
-        satelite: Nome do satélite (ex: AQUA_M-T, NPP-375). Opcional.
-        limite: Número máximo de resultados (padrão: 50).
+        estado: Аббревиатура штата из 2 букв (напр.: PA, MT, AM). Необязательно.
+        data_inicio: Дата начала в формате YYYY-MM-DD. Необязательно.
+        data_fim: Дата окончания в формате YYYY-MM-DD. Необязательно.
+        satelite: Название спутника (напр.: AQUA_M-T, NPP-375). Необязательно.
+        limite: Максимальное количество результатов (по умолчанию: 50).
 
     Returns:
-        Tabela com os focos de queimadas encontrados.
+        Таблица с найденными очагами пожаров.
     """
     filtros = []
     if estado:
@@ -92,20 +97,21 @@ async def consultar_desmatamento(
     estado: str | None = None,
     ano: int | None = None,
 ) -> str:
-    """Consulta dados históricos de desmatamento do PRODES/INPE.
+    """(legacy) Запрос исторических данных о вырубке леса PRODES/INPE.
 
-    O PRODES monitora o desmatamento por corte raso na Amazônia Legal
-    e outros biomas desde 1988. Dados anuais consolidados.
+    Инструмент совместимости с INPE (Бразилия).
+    PRODES мониторит сплошные вырубки в Legal Amazon и других биомах с 1988 года.
+    Консолидированные ежегодные данные.
 
-    Biomas disponíveis: amazonia, cerrado, mata_atlantica, caatinga, pampa, pantanal.
+    Доступные биомы: amazonia, cerrado, mata_atlantica, caatinga, pampa, pantanal.
 
     Args:
-        bioma: Nome do bioma (ex: amazonia, cerrado). Opcional.
-        estado: Sigla do estado com 2 letras (ex: PA, MT). Opcional.
-        ano: Ano de referência (ex: 2023). Opcional.
+        bioma: Название биома (напр.: amazonia, cerrado). Необязательно.
+        estado: Аббревиатура штата из 2 букв (напр.: PA, MT). Необязательно.
+        ano: Год (напр.: 2023). Необязательно.
 
     Returns:
-        Tabela com dados de desmatamento.
+        Таблица с данными о вырубке леса.
     """
     bioma_nome = BIOMAS.get(bioma, bioma) if bioma else None
 
@@ -154,21 +160,22 @@ async def alertas_deter(
     data_inicio: str | None = None,
     data_fim: str | None = None,
 ) -> str:
-    """Consulta alertas de desmatamento do sistema DETER/INPE.
+    """(legacy) Запрос предупреждений о вырубке леса системы DETER/INPE.
 
-    O DETER (Detecção de Desmatamento em Tempo Real) emite alertas
-    diários de desmatamento e degradação florestal usando imagens de satélite.
+    Инструмент совместимости с INPE (Бразилия).
+    DETER (Детекция вырубки в реальном времени) выдаёт ежедневные предупреждения
+    о вырубке и деградации лесов с использованием спутниковых снимков.
 
-    Biomas disponíveis: amazonia, cerrado, mata_atlantica, caatinga, pampa, pantanal.
+    Доступные биомы: amazonia, cerrado, mata_atlantica, caatinga, pampa, pantanal.
 
     Args:
-        bioma: Nome do bioma (ex: amazonia, cerrado). Opcional.
-        estado: Sigla do estado com 2 letras (ex: PA, MT). Opcional.
-        data_inicio: Data inicial no formato YYYY-MM-DD. Opcional.
-        data_fim: Data final no formato YYYY-MM-DD. Opcional.
+        bioma: Название биома (напр.: amazonia, cerrado). Необязательно.
+        estado: Аббревиатура штата из 2 букв (напр.: PA, MT). Необязательно.
+        data_inicio: Дата начала в формате YYYY-MM-DD. Необязательно.
+        data_fim: Дата окончания в формате YYYY-MM-DD. Необязательно.
 
     Returns:
-        Tabela com alertas de desmatamento.
+        Таблица с предупреждениями о вырубке.
     """
     bioma_nome = BIOMAS.get(bioma, bioma) if bioma else None
 
@@ -219,13 +226,14 @@ async def alertas_deter(
 
 
 async def dados_satelite(ctx: Context) -> str:
-    """Lista os satélites disponíveis para monitoramento ambiental do INPE.
+    """(legacy) Список спутников, доступных для экологического мониторинга INPE.
 
-    Retorna os satélites usados pelo INPE para detecção de queimadas
-    e desmatamento, incluindo satélites da NASA, NOAA e INPE/CBERS.
+    Инструмент совместимости с INPE (Бразилия).
+    Возвращает спутники, используемые INPE для обнаружения пожаров
+    и вырубки леса, включая спутники NASA, NOAA и INPE/CBERS.
 
     Returns:
-        Tabela com os satélites disponíveis.
+        Таблица с доступными спутниками.
     """
     await ctx.info("Listando satélites disponíveis...")
     satelites = await client.listar_satelites()

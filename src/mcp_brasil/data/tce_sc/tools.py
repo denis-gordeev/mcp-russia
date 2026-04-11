@@ -1,9 +1,13 @@
 """Tool functions for the TCE-SC feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Санта-Катарина (TCE-SC) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -14,16 +18,19 @@ from . import client
 
 
 async def listar_municipios_sc(ctx: Context) -> str:
-    """Lista os municípios de Santa Catarina registrados no TCE-SC.
+    """(legacy) Список муниципалитетов штата Санта-Катарина, зарегистрированных в TCE-SC.
 
-    Dados de referência do Portal da Transparência do TCE-SC.
-    Retorna código IBGE e nome de cada município.
+    Примечание: инструмент совместимости для бразильских данных TCE-SC.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Справочные данные портала прозрачности TCE-SC.
+    Возвращает код IBGE и название каждого муниципалитета.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de municípios de SC com código IBGE.
+        Список муниципалитетов SC с кодом IBGE.
     """
     await ctx.info("Buscando municípios de SC no TCE-SC...")
     municipios = await client.listar_municipios()
@@ -44,17 +51,20 @@ async def listar_unidades_gestoras_sc(
     ctx: Context,
     municipio: str | None = None,
 ) -> str:
-    """Lista unidades gestoras de Santa Catarina no TCE-SC.
+    """(legacy) Список управляющих единиц штата Санта-Катарина в TCE-SC.
 
-    Inclui prefeituras, câmaras, autarquias, consórcios e órgãos
-    estaduais. Pode filtrar por nome do município.
+    Примечание: инструмент совместимости для бразильских данных TCE-SC.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Включает префектуры, палаты, автаркии, консорциумы и органы штата.
+    Можно фильтровать по названию муниципалитета.
 
     Args:
-        ctx: Contexto MCP.
-        municipio: Filtrar por nome do município (busca parcial).
+        ctx: Контекст MCP.
+        municipio: Фильтр по названию муниципалитета (частичный поиск).
 
     Returns:
-        Lista de unidades gestoras com código, nome e município.
+        Список управляющих единиц с кодом, названием и муниципалитетом.
     """
     await ctx.info("Buscando unidades gestoras de SC no TCE-SC...")
     unidades = await client.listar_unidades_gestoras()

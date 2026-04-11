@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-RS feature."""
+"""Pydantic-схемы для модуля Счётного суда Риу-Гранди-ду-Сул (TCE-RS, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Municipio(BaseModel):
-    """Município do Rio Grande do Sul."""
+    """Муниципалитет Риу-Гранди-ду-Сул (legacy -- Brazil)."""
 
     codigo: int | None = None
     nome: str | None = None
@@ -15,7 +15,7 @@ class Municipio(BaseModel):
 
 
 class IndiceEducacao(BaseModel):
-    """Índice de aplicação em educação de um município do RS."""
+    """Индекс расходов на образование муниципалитета RS (legacy -- Brazil)."""
 
     ano: int | None = None
     codigo_orgao: int | None = None
@@ -26,7 +26,7 @@ class IndiceEducacao(BaseModel):
 
 
 class IndiceSaude(BaseModel):
-    """Índice de aplicação em saúde de um município do RS."""
+    """Индекс расходов на здравоохранение муниципалитета RS (legacy -- Brazil)."""
 
     ano: int | None = None
     codigo_orgao: int | None = None
@@ -37,7 +37,7 @@ class IndiceSaude(BaseModel):
 
 
 class GestaoFiscal(BaseModel):
-    """Dados de gestão fiscal (LRF) do poder executivo municipal do RS."""
+    """Данные финансового управления (LRF) муниципальной исполнительной власти RS (legacy -- Brazil)."""
 
     ano: int | None = None
     codigo_orgao: int | None = None
@@ -53,7 +53,7 @@ class GestaoFiscal(BaseModel):
 
 
 class Dataset(BaseModel):
-    """Dataset do portal CKAN do TCE-RS."""
+    """Набор данных портала CKAN TCE-RS (legacy -- Brazil)."""
 
     nome: str | None = None
     titulo: str | None = None

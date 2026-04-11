@@ -1,5 +1,6 @@
-"""TCE-RN feature server — registers tools, resources, and prompts.
+"""TCE-RN feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian State Court of Accounts (Rio Grande do Norte) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -15,7 +16,7 @@ from .tools import (
     listar_jurisdicionados_rn,
 )
 
-mcp = FastMCP("mcp-russia-tce-rn")
+mcp = FastMCP("mcp-russia-tce-rn-legacy")
 
 # Tools
 mcp.tool(listar_jurisdicionados_rn)

@@ -1,4 +1,4 @@
-"""Pydantic models for TSE (Tribunal Superior Eleitoral) API responses."""
+"""Pydantic-схемы для ответов API ВСТ (Tribunal Superior Eleitoral, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Eleicao(BaseModel):
-    """Eleição (ordinária ou suplementar)."""
+    """Выборы (очередные или дополнительные) (legacy -- Brazil)."""
 
     id: int | None = None
     sigla_uf: str | None = None
@@ -21,7 +21,7 @@ class Eleicao(BaseModel):
 
 
 class Cargo(BaseModel):
-    """Cargo eletivo."""
+    """Выборная должность (legacy -- Brazil)."""
 
     codigo: int | None = None
     sigla: str | None = None
@@ -31,7 +31,7 @@ class Cargo(BaseModel):
 
 
 class CandidatoResumo(BaseModel):
-    """Candidato (resumo da listagem)."""
+    """Кандидат (сокращённый список) (legacy -- Brazil)."""
 
     id: int | None = None
     nome_urna: str | None = None
@@ -42,7 +42,7 @@ class CandidatoResumo(BaseModel):
 
 
 class Candidato(BaseModel):
-    """Candidato com detalhes completos."""
+    """Кандидат с полной информацией (legacy -- Brazil)."""
 
     id: int | None = None
     nome_urna: str | None = None
@@ -75,7 +75,7 @@ class Candidato(BaseModel):
 
 
 class ResultadoCandidato(BaseModel):
-    """Candidato com resultado eleitoral (totalização de votos)."""
+    """Кандидат с результатами выборов (подсчёт голосов) (legacy -- Brazil)."""
 
     nome_urna: str | None = None
     numero: int | None = None
@@ -86,7 +86,7 @@ class ResultadoCandidato(BaseModel):
 
 
 class BemCandidato(BaseModel):
-    """Bem declarado pelo candidato."""
+    """Имущество, декларированное кандидатом (legacy -- Brazil)."""
 
     ordem: int | None = None
     descricao: str | None = None
@@ -95,7 +95,7 @@ class BemCandidato(BaseModel):
 
 
 class ResultadoCDN(BaseModel):
-    """Candidato com resultado do CDN de resultados do TSE."""
+    """Кандидат с результатами CDN ВСТ (legacy -- Brazil)."""
 
     sequencia: str | None = None
     nome: str | None = None
@@ -110,7 +110,7 @@ class ResultadoCDN(BaseModel):
 
 
 class ResultadoRegiao(BaseModel):
-    """Resultado de uma eleição em uma região (país, estado ou município)."""
+    """Результаты выборов в регионе (страна, штат или муниципалитет) (legacy -- Brazil)."""
 
     codigo: str | None = None
     tipo: str | None = None  # "br", "uf", "mu"
@@ -125,7 +125,7 @@ class ResultadoRegiao(BaseModel):
 
 
 class MunicipioEleitoral(BaseModel):
-    """Município com códigos eleitorais TSE e IBGE."""
+    """Муниципалитет с избирательными кодами ВСТ и IBGE (legacy -- Brazil)."""
 
     codigo_tse: str | None = None
     codigo_ibge: str | None = None
@@ -135,7 +135,7 @@ class MunicipioEleitoral(BaseModel):
 
 
 class PrestaContas(BaseModel):
-    """Resumo da prestação de contas de campanha."""
+    """Сводка финансовой отчётности кампании (legacy -- Brazil)."""
 
     candidato_id: str | None = None
     nome: str | None = None

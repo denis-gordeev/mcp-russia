@@ -1,4 +1,9 @@
-"""Static reference data for the TCE-RN feature."""
+"""Resources для TCE-RN — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-RN (Счётная палата штата Риу-Гранди-ду-Норти) сохраняются для
+обратной совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -6,32 +11,32 @@ import json
 
 
 def endpoints_tce_rn() -> str:
-    """Catálogo de endpoints disponíveis no TCE-RN."""
+    """Каталог доступных endpoints в TCE-RN (legacy, Бразилия)."""
     endpoints = [
         {
-            "grupo": "Informações Básicas",
+            "grupo": "Основная информация",
             "endpoint": "/InformacoesBasicasApi/JurisdicionadosTCE/{formato}",
-            "descricao": "Lista de entidades jurisdicionadas pelo TCE-RN (~914)",
+            "descricao": "Список подконтрольных TCE-RN организаций (~914) (legacy)",
         },
         {
-            "grupo": "Balanço Orçamentário",
+            "grupo": "Бюджетный баланс",
             "endpoint": "/BalancoOrcamentarioApi/Despesa/{fmt}/{ano}/{bimestre}/{id}",
-            "descricao": "Despesas orçamentárias por unidade, ano e bimestre",
+            "descricao": "Бюджетные расходы по единице, году и двухмесячному периоду (legacy)",
         },
         {
-            "grupo": "Balanço Orçamentário",
+            "grupo": "Бюджетный баланс",
             "endpoint": "/BalancoOrcamentarioApi/Receita/{fmt}/{ano}/{bimestre}/{id}",
-            "descricao": "Receitas orçamentárias por unidade, ano e bimestre",
+            "descricao": "Бюджетные доходы по единице, году и двухмесячному периоду (legacy)",
         },
         {
-            "grupo": "Procedimentos Licitatórios",
+            "grupo": "Процедуры закупок",
             "endpoint": "/ProcedimentosLicitatoriosApi/LicitacaoPublica/{fmt}/{id}/{di}/{df}",
-            "descricao": "Licitações públicas por unidade e período",
+            "descricao": "Публичные закупки по единице и периоду (legacy)",
         },
         {
-            "grupo": "Contratos",
+            "grupo": "Контракты",
             "endpoint": "/ContratosApi/Contratos/{fmt}/{id}/{hierarquia}",
-            "descricao": "Contratos por unidade jurisdicionada",
+            "descricao": "Контракты по подконтрольной единице (legacy)",
         },
     ]
     return json.dumps(endpoints, ensure_ascii=False, indent=2)

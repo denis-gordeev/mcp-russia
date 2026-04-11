@@ -1,32 +1,43 @@
-"""Prompts for the TransfereGov feature — analysis templates for LLMs."""
+"""Prompts для модуля TransfereGov — анализ парламентских поправок и трансфертов (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских парламентских трансфертов сохранены
+для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analise_emendas_pix(ano: int, uf: str = "") -> str:
-    """Analisa emendas pix (transferências especiais) de um ano.
+    """Анализирует парламентские поправки типа Pix (специальные трансферты) за год (legacy).
 
-    Cria um template que orienta o LLM a consultar e analisar
-    emendas parlamentares do tipo transferência especial.
+    Создает шаблон, который направляет LLM на запрос и анализ
+    парламентских поправок типа специальных трансфертов (transferencia especial).
 
     Args:
-        ano: Ano de exercício a analisar (ex: 2024).
-        uf: UF para filtrar análise (opcional, ex: PI, SP).
+        ano: Год для анализа (напр.: 2024).
+        uf: Код штата для фильтрации (напр.: PI, SP).
     """
-    filtro_uf = f" no estado {uf.upper()}" if uf else ""
+    filtro_uf = f" в штате {uf.upper()}" if uf else ""
     return (
-        f"Analise as emendas pix (transferências especiais) do ano {ano}"
-        f"{filtro_uf} usando o TransfereGov.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_emendas_pix(ano={ano}"
+        f"Проанализируй парламентские поправки типа Pix (специальные трансферты) "
+        f"за {ano} год{filtro_uf} по данным TransfereGov.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n"
+        f"1. Используй buscar_emendas_pix(ano={ano}"
         + (f', uf="{uf.upper()}"' if uf else "")
-        + ") para listar as emendas\n"
-        "2. Navegue pelas páginas para ter uma visão ampla\n"
-        "3. Para emendas relevantes, use detalhe_emenda(id) para mais informações\n\n"
-        "Apresente:\n"
-        "- Volume total de emendas pix e valores\n"
-        "- Principais autores (parlamentares com mais emendas/valor)\n"
-        "- Distribuição por UF e município\n"
-        "- Áreas temáticas (funções/subfunções) mais contempladas\n"
-        "- Observações sobre concentração de recursos"
+        + ") для списка поправок\n"
+        "2. Просматривай страницы для получения общей картины\n"
+        "3. Для релевантных поправок используй detalhe_emenda(id) для получения подробностей\n\n"
+        "Представь:\n"
+        "- Общий объём поправок Pix и суммы\n"
+        "- Ключевых авторов (парламентарии с наибольшим числом/суммой поправок)\n"
+        "- Распределение по штатам и муниципалитетам\n"
+        "- Наиболее финансируемые тематические области (функции/подфункции)\n"
+        "- Замечания о концентрации ресурсов\n"
+        "- Примечание: анализ основан на бразильских данных TransfereGov"
     )

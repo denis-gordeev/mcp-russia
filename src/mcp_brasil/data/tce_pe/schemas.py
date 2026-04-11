@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-PE feature."""
+"""Pydantic-схемы для модуля Счётного суда Пернамбуку (TCE-PE, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class UnidadeJurisdicionada(BaseModel):
-    """Unidade jurisdicionada (prefeitura, câmara, etc.)."""
+    """Подсудная единица (мэрия, палата и т.д.) (legacy -- Brazil)."""
 
     codigo: str | None = None
     nome: str | None = None
@@ -16,7 +16,7 @@ class UnidadeJurisdicionada(BaseModel):
 
 
 class Licitacao(BaseModel):
-    """Licitação registrada no TCE-PE (SAGRES/LICON)."""
+    """Тендер, зарегистрированный в TCE-PE (SAGRES/LICON) (legacy -- Brazil)."""
 
     numero_licitacao: str | None = None
     ano_licitacao: int | None = None
@@ -30,7 +30,7 @@ class Licitacao(BaseModel):
 
 
 class Contrato(BaseModel):
-    """Contrato registrado no TCE-PE."""
+    """Контракт, зарегистрированный в TCE-PE (legacy -- Brazil)."""
 
     numero_contrato: str | None = None
     ano_referencia: int | None = None
@@ -44,7 +44,7 @@ class Contrato(BaseModel):
 
 
 class Despesa(BaseModel):
-    """Despesa municipal registrada no TCE-PE."""
+    """Муниципальный расход, зарегистрированный в TCE-PE (legacy -- Brazil)."""
 
     numero_empenho: str | None = None
     ano_referencia: int | None = None
@@ -62,7 +62,7 @@ class Despesa(BaseModel):
 
 
 class Fornecedor(BaseModel):
-    """Fornecedor registrado no TCE-PE."""
+    """Поставщик, зарегистрированный в TCE-PE (legacy -- Brazil)."""
 
     cpf_cnpj: str | None = None
     nome: str | None = None

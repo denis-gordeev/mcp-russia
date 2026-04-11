@@ -1,4 +1,4 @@
-"""Legacy-слой Compras внутри mcp-russia — публичные закупки Бразилии (compatibility layer).
+"""Legacy-слой Compras внутри mcp-russia — публичные закупки Бразилии (compatibility layer, legacy).
 
 Sub-packages:
     - pncp: Portal Nacional de Contratações Públicas (Lei 14.133/2021)
@@ -17,5 +17,5 @@ FEATURE_META = FeatureMeta(
     version="0.2.0",
     api_base="https://pncp.gov.br/api/consulta",
     requires_auth=False,
-    tags=["licitacoes", "contratos", "compras", "pncp", "fornecedores", "catmat", "catser"],
+    tags=["тендеры", "контракты", "закупки", "pncp", "поставщики", "catmat", "catser"],
 )

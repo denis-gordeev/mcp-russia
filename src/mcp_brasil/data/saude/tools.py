@@ -1,8 +1,12 @@
 """Tool functions for the Saúde feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API данных здравоохранения Бразилии (CNES/DataSUS).
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -22,21 +26,24 @@ async def buscar_estabelecimentos(
     limit: int = 20,
     offset: int = 0,
 ) -> str:
-    """Busca estabelecimentos de saúde cadastrados no CNES/DataSUS.
+    """(legacy) Поиск учреждений здравоохранения, зарегистрированных в CNES/DataSUS.
 
-    Consulta o Cadastro Nacional de Estabelecimentos de Saúde para encontrar
-    hospitais, UBS, clínicas e outros estabelecimentos. Filtre por município
-    ou UF para resultados mais relevantes.
+    Примечание: инструмент совместимости для бразильских данных здравоохранения.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Запрос в Национальный реестр учреждений здравоохранения для поиска
+    больниц, UBS, клиник и других учреждений. Фильтруйте по муниципалитету
+    или штату для более релевантных результатов.
 
     Args:
-        codigo_municipio: Código IBGE do município (ex: "355030" para São Paulo).
-        codigo_uf: Código IBGE do estado (ex: "35" para SP, "33" para RJ).
-        status: 1 para ativos, 0 para inativos. Se omitido, retorna todos.
-        limit: Número máximo de resultados (padrão: 20, máximo: 100).
-        offset: Deslocamento para paginação (padrão: 0).
+        codigo_municipio: Код IBGE муниципалитета (напр.: "355030" для Сан-Паулу).
+        codigo_uf: Код IBGE штата (напр.: "35" для SP, "33" для RJ).
+        status: 1 — активные, 0 — неактивные. Если пропущено, возвращает все.
+        limit: Максимальное количество результатов (по умолчанию: 20, максимум: 100).
+        offset: Смещение для пагинации (по умолчанию: 0).
 
     Returns:
-        Tabela com estabelecimentos encontrados.
+        Таблица с найденными учреждениями.
     """
     filtro = codigo_municipio or codigo_uf or "Brasil"
     await ctx.info(f"Buscando estabelecimentos de saúde em {filtro}...")
@@ -74,19 +81,22 @@ async def buscar_profissionais(
     limit: int = 20,
     offset: int = 0,
 ) -> str:
-    """Busca profissionais de saúde cadastrados no CNES/DataSUS.
+    """(legacy) Поиск специалистов здравоохранения, зарегистрированных в CNES/DataSUS.
 
-    Consulta profissionais vinculados a estabelecimentos de saúde.
-    Filtre por município ou código CNES do estabelecimento.
+    Примечание: инструмент совместимости для бразильских данных здравоохранения.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Запрос специалистов, привязанных к учреждениям здравоохранения.
+    Фильтруйте по муниципалитету или коду CNES учреждения.
 
     Args:
-        codigo_municipio: Código IBGE do município (ex: "355030").
-        cnes: Código CNES do estabelecimento (ex: "1234567").
-        limit: Número máximo de resultados (padrão: 20, máximo: 100).
-        offset: Deslocamento para paginação (padrão: 0).
+        codigo_municipio: Код IBGE муниципалитета (напр.: "355030").
+        cnes: Код CNES учреждения (напр.: "1234567").
+        limit: Максимальное количество результатов (по умолчанию: 20, максимум: 100).
+        offset: Смещение для пагинации (по умолчанию: 0).
 
     Returns:
-        Tabela com profissionais encontrados.
+        Таблица с найденными специалистами.
     """
     filtro = cnes or codigo_municipio or "Brasil"
     await ctx.info(f"Buscando profissionais de saúde em {filtro}...")
@@ -116,13 +126,16 @@ async def buscar_profissionais(
 
 
 async def listar_tipos_estabelecimento(ctx: Context) -> str:
-    """Lista todos os tipos de estabelecimento de saúde do CNES.
+    """(legacy) Список всех типов учреждений здравоохранения CNES.
 
-    Retorna a tabela de tipos (código e descrição) usados na classificação
-    dos estabelecimentos de saúde do SUS, como hospitais, UBS, CAPS, etc.
+    Примечание: инструмент совместимости для бразильских данных здравоохранения.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает таблицу типов (код и описание), используемых для классификации
+    учреждений здравоохранения SUS, таких как больницы, UBS, CAPS и т.д.
 
     Returns:
-        Tabela com todos os tipos de estabelecimento.
+        Таблица со всеми типами учреждений.
     """
     await ctx.info("Listando tipos de estabelecimento de saúde...")
 
@@ -144,20 +157,23 @@ async def consultar_leitos(
     limit: int = 20,
     offset: int = 0,
 ) -> str:
-    """Consulta leitos hospitalares cadastrados no CNES/DataSUS.
+    """(legacy) Запрос данных о больничных койках, зарегистрированных в CNES/DataSUS.
 
-    Retorna dados sobre leitos existentes e leitos SUS por estabelecimento,
-    incluindo tipo de leito e especialidade. Útil para análise de capacidade
-    hospitalar de uma região.
+    Примечание: инструмент совместимости для бразильских данных здравоохранения.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает данные о существующих койках и койках SUS по учреждениям,
+    включая тип койки и специализацию. Полезно для анализа больничной
+    мощности региона.
 
     Args:
-        codigo_municipio: Código IBGE do município (ex: "355030").
-        cnes: Código CNES do estabelecimento (ex: "1234567").
-        limit: Número máximo de resultados (padrão: 20, máximo: 100).
-        offset: Deslocamento para paginação (padrão: 0).
+        codigo_municipio: Код IBGE муниципалитета (напр.: "355030").
+        cnes: Код CNES учреждения (напр.: "1234567").
+        limit: Максимальное количество результатов (по умолчанию: 20, максимум: 100).
+        offset: Смещение для пагинации (по умолчанию: 0).
 
     Returns:
-        Tabela com leitos hospitalares encontrados.
+        Таблица с найденными больничными койками.
     """
     filtro = cnes or codigo_municipio or "Brasil"
     await ctx.info(f"Consultando leitos hospitalares em {filtro}...")

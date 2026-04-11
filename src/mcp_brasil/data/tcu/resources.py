@@ -1,4 +1,9 @@
-"""Static reference data for the TCU feature."""
+"""Справочные данные для слоя TCU (legacy) — слой обратной совместимости.
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные бразильского Счётного суда сохранены для обратной совместимости
+и НЕ являются частью целевой российской модели данных.
+"""
 
 from __future__ import annotations
 
@@ -6,33 +11,33 @@ import json
 
 
 def tipos_certidoes_apf() -> str:
-    """Tipos de certidões consolidadas disponíveis no sistema APF do TCU.
+    """(legacy) Типы консолидированных сертификатов, доступных в системе APF TCU.
 
-    O sistema APF (Administração Pública Federal) consulta 4 cadastros
-    de sanções simultaneamente para verificar a situação de uma empresa.
+    Система APF (Федеральная публичная администрация) одновременно запрашивает 4 реестра
+    санкций для проверки статуса компании.
     """
     tipos = [
         {
             "orgao_emissor": "TCU",
             "sigla": "Inidoneos",
-            "descricao": "Licitantes Inidôneos — empresas/pessoas declaradas "
-            "inidôneas pelo TCU para participar de licitações",
+            "descricao": "Недобросовестные участники тендеров — компании/лица, признанные "
+            "TCU недобросовестными для участия в тендерах",
         },
         {
             "orgao_emissor": "CNJ",
             "sigla": "CNIA",
-            "descricao": "Cadastro Nacional de Condenações Cíveis por Ato de "
-            "Improbidade Administrativa e Inelegibilidade",
+            "descricao": "Национальный реестр гражданских осуждений за акты "
+            "административного неправомерного поведения и недееспособности",
         },
         {
-            "orgao_emissor": "Portal da Transparência",
+            "orgao_emissor": "Портал прозрачности",
             "sigla": "CEIS",
-            "descricao": "Cadastro Nacional de Empresas Inidôneas e Suspensas — mantido pela CGU",
+            "descricao": "Национальный реестр недобросовестных и заблокированных компаний — ведётся CGU",
         },
         {
-            "orgao_emissor": "Portal da Transparência",
+            "orgao_emissor": "Портал прозрачности",
             "sigla": "CNEP",
-            "descricao": "Cadastro Nacional de Empresas Punidas — mantido pela CGU",
+            "descricao": "Национальный реестр наказанных компаний — ведётся CGU",
         },
     ]
     return json.dumps(tipos, ensure_ascii=False, indent=2)

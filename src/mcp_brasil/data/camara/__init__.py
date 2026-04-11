@@ -1,4 +1,4 @@
-"""Legacy-слой Camara внутри mcp-russia — Câmara dos Deputados (compatibility layer)."""
+"""Legacy-слой Camara внутри mcp-russia — Câmara dos Deputados (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -11,5 +11,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://dadosabertos.camara.leg.br/api/v2",
     requires_auth=False,
-    tags=["legislativo", "deputados", "proposições", "votações", "despesas", "comissões"],
+    tags=["законодательный", "депутаты", "законопроекты", "голосования", "расходы", "комиссии"],
 )

@@ -1,5 +1,6 @@
-"""TCE-PI feature server — registers tools, resources, and prompts.
+"""TCE-PI feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian State Court of Accounts (Piaui) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -15,7 +16,7 @@ from .tools import (
     listar_prefeituras_pi,
 )
 
-mcp = FastMCP("mcp-russia-tce-pi")
+mcp = FastMCP("mcp-russia-tce-pi-legacy")
 
 # Tools
 mcp.tool(listar_prefeituras_pi)

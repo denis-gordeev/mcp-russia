@@ -1,25 +1,37 @@
-"""Analysis prompts for the TCE-SP feature."""
+"""Prompts для модуля TCE-SP — анализ муниципальных данных Сан-Паулу (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-SP
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analisar_financas_municipio_sp(municipio: str, exercicio: int) -> str:
-    """Análise financeira de um município paulista no TCE-SP.
+    """Финансовый анализ муниципалитета штата Сан-Паулу по данным TCE-SP (legacy).
 
-    Cruza despesas e receitas mensais para avaliar a saúde financeira.
+    Сопоставляет ежемесячные расходы и доходы для оценки финансового состояния.
 
     Args:
-        municipio: Slug do município (ex: "campinas").
-        exercicio: Ano fiscal (ex: 2025).
+        municipio: Slug муниципалитета (напр.: "campinas").
+        exercicio: Финансовый год (напр.: 2025).
     """
     return (
-        f"Analise as finanças do município {municipio} no exercício {exercicio}:\n\n"
-        "1. Use `consultar_receitas_sp` para cada mês e totalize por fonte de recurso\n"
-        "2. Use `consultar_despesas_sp` para cada mês e totalize por evento\n"
-        "3. Compare receitas vs despesas mês a mês\n"
-        "4. Identifique:\n"
-        "   - Meses com maior gasto\n"
-        "   - Principais fornecedores por volume\n"
-        "   - Proporção empenho vs pagamento efetivo\n"
-        "   - Fontes de receita mais relevantes\n"
+        f"Выполни финансовый анализ муниципалитета {municipio} за финансовый год {exercicio} "
+        "по данным TCE-SP (Счётная палата штата Сан-Паулу).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "1. Используй `consultar_receitas_sp` для каждого месяца и суммируй по источникам доходов\n"
+        "2. Используй `consultar_despesas_sp` для каждого месяца и суммируй по статьям расходов\n"
+        "3. Сравни доходы и расходы по месяцам\n"
+        "4. Определи:\n"
+        "   - Месяцы с наибольшими расходами\n"
+        "   - Ключевые поставщики по объёму\n"
+        "   - Соотношение обязательств и фактических выплат\n"
+        "   - Наиболее значимые источники доходов\n"
+        "5. Примечание: анализ основан на данных TCE-SP (Бразилия)"
     )

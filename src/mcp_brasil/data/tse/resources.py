@@ -1,4 +1,9 @@
-"""Resources for the TSE feature — static reference data for LLM context."""
+"""Справочные resources для слоя TSE (legacy) — данные для контекста LLM.
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные бразильского Высшего избирательного суда сохранены для обратной совместимости
+и НЕ являются частью целевой российской модели данных.
+"""
 
 from __future__ import annotations
 
@@ -8,19 +13,19 @@ from .constants import CARGOS_ELEITORAIS, TSE_API_BASE
 
 
 def cargos_eleitorais() -> str:
-    """Códigos de cargos eleitorais do TSE."""
+    """(legacy) Коды выборных должностей TSE Бразилии."""
     return json.dumps(CARGOS_ELEITORAIS, ensure_ascii=False)
 
 
 def info_api() -> str:
-    """Informações gerais sobre a API do TSE (DivulgaCandContas)."""
+    """(legacy) Общая информация об API TSE (DivulgaCandContas)."""
     data = {
-        "nome": "API DivulgaCandContas — Tribunal Superior Eleitoral",
+        "nome": "API DivulgaCandContas — Высший избирательный суд Бразилии (legacy)",
         "url_base": TSE_API_BASE,
-        "autenticacao": "Não requer autenticação",
+        "autenticacao": "Не требует аутентификации",
         "formato": "REST (JSON)",
-        "documentacao": "https://divulgacandcontas.tse.jus.br (não oficial)",
-        "cobertura": "Eleições, candidatos, prestação de contas desde 2002",
-        "observacao": "API não oficial (reverse-engineered). Sem CORS. Rate limit recomendado.",
+        "documentacao": "https://divulgacandcontas.tse.jus.br (неофициальная)",
+        "cobertura": "Выборы, кандидаты, финансовая отчётность с 2002 года",
+        "observacao": "Неофициальное API (reverse-engineered). Без CORS. Рекомендуется rate limit.",
     }
     return json.dumps(data, ensure_ascii=False)

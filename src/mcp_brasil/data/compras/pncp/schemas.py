@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Compras feature."""
+"""Pydantic-схемы для модуля закупок PNCP (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Contratacao(BaseModel):
-    """Contratação pública retornada pelo PNCP."""
+    """Государственная закупка, возвращаемая PNCP (legacy -- Brazil)."""
 
     orgao_cnpj: str | None = None
     orgao_nome: str | None = None
@@ -29,14 +29,14 @@ class Contratacao(BaseModel):
 
 
 class ContratacaoResultado(BaseModel):
-    """Resultado paginado de busca de contratações."""
+    """Страничный результат поиска закупок (legacy -- Brazil)."""
 
     total: int = 0
     contratacoes: list[Contratacao] = []
 
 
 class Contrato(BaseModel):
-    """Contrato público."""
+    """Государственный контракт (legacy -- Brazil)."""
 
     orgao_cnpj: str | None = None
     orgao_nome: str | None = None
@@ -53,14 +53,14 @@ class Contrato(BaseModel):
 
 
 class ContratoResultado(BaseModel):
-    """Resultado paginado de busca de contratos."""
+    """Страничный результат поиска контрактов (legacy -- Brazil)."""
 
     total: int = 0
     contratos: list[Contrato] = []
 
 
 class AtaRegistroPreco(BaseModel):
-    """Ata de registro de preço."""
+    """Протокол регистрации цен (legacy -- Brazil)."""
 
     orgao_cnpj: str | None = None
     orgao_nome: str | None = None
@@ -75,14 +75,14 @@ class AtaRegistroPreco(BaseModel):
 
 
 class AtaResultado(BaseModel):
-    """Resultado paginado de busca de atas."""
+    """Страничный результат поиска протоколов (legacy -- Brazil)."""
 
     total: int = 0
     atas: list[AtaRegistroPreco] = []
 
 
 class Fornecedor(BaseModel):
-    """Fornecedor de contratações públicas."""
+    """Поставщик государственных закупок (legacy -- Brazil)."""
 
     cnpj: str | None = None
     razao_social: str | None = None
@@ -94,14 +94,14 @@ class Fornecedor(BaseModel):
 
 
 class FornecedorResultado(BaseModel):
-    """Resultado paginado de busca de fornecedores."""
+    """Страничный результат поиска поставщиков (legacy -- Brazil)."""
 
     total: int = 0
     fornecedores: list[Fornecedor] = []
 
 
 class OrgaoContratante(BaseModel):
-    """Órgão contratante no PNCP."""
+    """Закупающий орган в PNCP (legacy -- Brazil)."""
 
     cnpj: str | None = None
     razao_social: str | None = None
@@ -112,7 +112,7 @@ class OrgaoContratante(BaseModel):
 
 
 class OrgaoResultado(BaseModel):
-    """Resultado paginado de busca de órgãos."""
+    """Страничный результат поиска органов (legacy -- Brazil)."""
 
     total: int = 0
     orgaos: list[OrgaoContratante] = []

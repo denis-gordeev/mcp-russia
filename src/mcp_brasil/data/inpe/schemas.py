@@ -1,4 +1,4 @@
-"""Pydantic models for INPE API responses."""
+"""Pydantic-схемы для ответов API INPE (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 
 
 class FocoQueimada(BaseModel):
-    """Foco de queimada detectado por satélite."""
+    """Очаг пожара, обнаруженный спутником (legacy -- Brazil)."""
 
     id: str = ""
     latitude: float = 0.0
@@ -18,11 +18,13 @@ class FocoQueimada(BaseModel):
     bioma: str = ""
     dias_sem_chuva: int | None = None
     risco_fogo: float | None = None
-    frp: float | None = Field(default=None, description="Fire Radiative Power (MW)")
+    frp: float | None = Field(
+        default=None, description="Мощность теплового излучения пожара (МВт) (legacy -- Brazil)"
+    )
 
 
 class AlertaDeter(BaseModel):
-    """Alerta de desmatamento DETER."""
+    """Предупреждение о вырубке леса DETER (legacy -- Brazil)."""
 
     id: str = ""
     data: str = ""
@@ -35,7 +37,7 @@ class AlertaDeter(BaseModel):
 
 
 class DadosProdes(BaseModel):
-    """Dados históricos de desmatamento PRODES."""
+    """Исторические данные о вырубке леса PRODES (legacy -- Brazil)."""
 
     ano: int = 0
     bioma: str = ""
@@ -45,7 +47,7 @@ class DadosProdes(BaseModel):
 
 
 class Satelite(BaseModel):
-    """Satélite de monitoramento disponível."""
+    """Доступный спутник мониторинга (legacy -- Brazil)."""
 
     nome: str
     descricao: str = ""

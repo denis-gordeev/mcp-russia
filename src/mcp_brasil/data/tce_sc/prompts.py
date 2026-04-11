@@ -1,20 +1,32 @@
-"""Analysis prompts for the TCE-SC feature."""
+"""Prompts для модуля TCE-SC — анализ муниципальных данных Санта-Катарины (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-SC
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def consultar_unidades_sc(municipio: str) -> str:
-    """Consulta das unidades gestoras de um município de SC.
+    """Запрос управленческих подразделений муниципалитета штата Санта-Катарина (legacy).
 
-    Lista todas as unidades gestoras (prefeitura, câmara, autarquias,
-    consórcios) de um município catarinense.
+    Выводит список всех управленческих подразделений (мэрия, совет, автономные
+    ведомства, консорциумы) муниципалитета штата Санта-Катарина.
 
     Args:
-        municipio: Nome do município (ex: "Florianópolis").
+        municipio: Название муниципалитета (напр.: "Florianopolis").
     """
     return (
-        f"Consulte as unidades gestoras do município '{municipio}' em Santa Catarina.\n\n"
-        "1. Use `listar_unidades_gestoras_sc` filtrando pelo município.\n"
-        "2. Apresente a lista organizada por tipo (prefeitura, câmara, autarquias, etc.).\n"
-        "3. Inclua o código de cada unidade para referência."
+        f"Выполни запрос управленческих подразделений муниципалитета '{municipio}' "
+        "в штате Санта-Катарина по данным TCE-SC.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "1. Используй `listar_unidades_gestoras_sc` с фильтром по муниципалитету.\n"
+        "2. Представь список, организованный по типу (мэрия, совет, автономные ведомства и т.д.).\n"
+        "3. Включи код каждого подразделения для ссылки.\n"
+        "4. Примечание: данные основаны на TCE-SC (Бразилия)"
     )

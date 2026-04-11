@@ -1,9 +1,13 @@
 """Tool functions for the TCE-CE feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Сеара (TCE-CE) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -16,16 +20,19 @@ from . import client
 
 
 async def listar_municipios_ce(ctx: Context) -> str:
-    """Lista os municípios cearenses sob jurisdição do TCE-CE.
+    """(legacy) Список муниципалитетов штата Сеара в юрисдикции TCE-CE.
 
-    Retorna código e nome de cada município. O código é usado
-    como parâmetro nas demais consultas.
+    Примечание: инструмент совместимости для бразильских данных TCE-CE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает код и название каждого муниципалитета. Код используется
+    как параметр в остальных запросах.
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de municípios com código e nome.
+        Список муниципалитетов с кодом и названием.
     """
     await ctx.info("Listando municípios do TCE-CE...")
     municipios = await client.listar_municipios()
@@ -47,20 +54,23 @@ async def buscar_licitacoes_ce(
     codigo_municipio: str,
     data_realizacao: str,
 ) -> str:
-    """Busca licitações de um município cearense por período.
+    """(legacy) Поиск закупок муниципалитета Сеара по периоду.
 
-    Dados do SIM (Sistema de Informações Municipais) do TCE-CE.
-    Inclui modalidade, objeto, valor estimado e homologação.
+    Примечание: инструмент совместимости для бразильских данных TCE-CE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные SIM (Информационная система муниципалитетов) TCE-CE.
+    Включает модальность, объект, оценочную стоимость и утверждение.
 
     Args:
-        ctx: Contexto MCP.
-        codigo_municipio: Código do município (ex: "057" para Fortaleza).
-            Use listar_municipios_ce para obter códigos.
-        data_realizacao: Data ou intervalo no formato yyyy-mm-dd
-            ou yyyy-mm-dd_yyyy-mm-dd (ex: "2024-01-01_2024-12-31").
+        ctx: Контекст MCP.
+        codigo_municipio: Код муниципалитета (напр.: "057" для Форталезы).
+            Используйте listar_municipios_ce для получения кодов.
+        data_realizacao: Дата или интервал в формате yyyy-mm-dd
+            или yyyy-mm-dd_yyyy-mm-dd (напр.: "2024-01-01_2024-12-31").
 
     Returns:
-        Lista de licitações com objeto, modalidade e valores.
+        Список закупок с объектом, модальностью и стоимостью.
     """
     await ctx.info(f"Buscando licitações no TCE-CE (município {codigo_municipio})...")
     licitacoes = await client.buscar_licitacoes(
@@ -95,20 +105,23 @@ async def buscar_contratos_ce(
     data_contrato: str,
     deslocamento: int = 0,
 ) -> str:
-    """Busca contratos de um município cearense por período.
+    """(legacy) Поиск контрактов муниципалитета Сеара по периоду.
 
-    Dados do SIM do TCE-CE. Inclui objeto, valor total,
-    tipo e vigência do contrato.
+    Примечание: инструмент совместимости для бразильских данных TCE-CE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные SIM TCE-CE. Включает объект, общую стоимость,
+    тип и срок действия контракта.
 
     Args:
-        ctx: Contexto MCP.
-        codigo_municipio: Código do município (ex: "057" para Fortaleza).
-        data_contrato: Data ou intervalo no formato yyyy-mm-dd
-            ou yyyy-mm-dd_yyyy-mm-dd.
-        deslocamento: Offset para paginação.
+        ctx: Контекст MCP.
+        codigo_municipio: Код муниципалитета (напр.: "057" для Форталезы).
+        data_contrato: Дата или интервал в формате yyyy-mm-dd
+            или yyyy-mm-dd_yyyy-mm-dd.
+        deslocamento: Смещение для пагинации.
 
     Returns:
-        Lista de contratos com objeto, valor e vigência.
+        Список контрактов с объектом, стоимостью и сроком действия.
     """
     await ctx.info(f"Buscando contratos no TCE-CE (município {codigo_municipio})...")
     resultado = await client.buscar_contratos(
@@ -148,20 +161,23 @@ async def buscar_empenhos_ce(
     codigo_orgao: str = "02",
     deslocamento: int = 0,
 ) -> str:
-    """Busca notas de empenho de um município cearense.
+    """(legacy) Поиск заметок о резервировании средств муниципалитета Сеара.
 
-    Empenhos são o primeiro estágio da despesa pública.
-    Dados do SIM do TCE-CE.
+    Примечание: инструмент совместимости для бразильских данных TCE-CE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Резервирования — первый этап государственных расходов.
+    Данные SIM TCE-CE.
 
     Args:
-        ctx: Contexto MCP.
-        codigo_municipio: Código numérico do município (ex: 57 para Fortaleza).
-        data_referencia: Ano-mês no formato yyyymm (ex: 202401 para jan/2024).
-        codigo_orgao: Código do órgão ("01" = Câmara, "02" = Prefeitura).
-        deslocamento: Offset para paginação.
+        ctx: Контекст MCP.
+        codigo_municipio: Числовой код муниципалитета (напр.: 57 для Форталезы).
+        data_referencia: Год-месяц в формате yyyymm (напр.: 202401 для янв/2024).
+        codigo_orgao: Код органа ("01" = Палата, "02" = Префектура).
+        deslocamento: Смещение для пагинации.
 
     Returns:
-        Lista de empenhos com credor, valor e descrição.
+        Список резервирований с кредитором, стоимостью и описанием.
     """
     await ctx.info(f"Buscando empenhos no TCE-CE (município {codigo_municipio})...")
     resultado = await client.buscar_empenhos(

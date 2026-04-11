@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Saúde feature."""
+"""Pydantic-схемы для модуля здравоохранения (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Estabelecimento(BaseModel):
-    """Estabelecimento de saúde CNES."""
+    """Медицинское учреждение CNES (legacy -- Brazil)."""
 
     codigo_cnes: str | None = None
     nome_fantasia: str | None = None
@@ -21,7 +21,7 @@ class Estabelecimento(BaseModel):
 
 
 class Profissional(BaseModel):
-    """Profissional de saúde CNES."""
+    """Медицинский работник CNES (legacy -- Brazil)."""
 
     codigo_cnes: str | None = None
     nome: str | None = None
@@ -31,14 +31,14 @@ class Profissional(BaseModel):
 
 
 class TipoEstabelecimento(BaseModel):
-    """Tipo de estabelecimento de saúde."""
+    """Тип медицинского учреждения (legacy -- Brazil)."""
 
     codigo: str | None = None
     descricao: str | None = None
 
 
 class Leito(BaseModel):
-    """Leito hospitalar CNES."""
+    """Больничная койка CNES (legacy -- Brazil)."""
 
     codigo_cnes: str | None = None
     tipo_leito: str | None = None

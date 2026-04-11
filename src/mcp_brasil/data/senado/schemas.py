@@ -1,4 +1,4 @@
-"""Pydantic models for Senado Federal API responses."""
+"""Pydantic-схемы для ответов API Федерального сената (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class SenadorResumo(BaseModel):
-    """Senador em listagem resumida."""
+    """Сенатор в сокращённом списке (legacy -- Brazil)."""
 
     codigo: str | None = None
     nome: str | None = None
@@ -18,7 +18,7 @@ class SenadorResumo(BaseModel):
 
 
 class SenadorDetalhe(BaseModel):
-    """Detalhes de um senador."""
+    """Подробная информация о сенаторе (legacy -- Brazil)."""
 
     codigo: str | None = None
     nome: str | None = None
@@ -33,7 +33,7 @@ class SenadorDetalhe(BaseModel):
 
 
 class MateriaResumo(BaseModel):
-    """Matéria legislativa em listagem resumida."""
+    """Законодательный акт в сокращённом списке (legacy -- Brazil)."""
 
     codigo: str | None = None
     sigla_tipo: str | None = None
@@ -46,7 +46,7 @@ class MateriaResumo(BaseModel):
 
 
 class MateriaDetalhe(BaseModel):
-    """Detalhes de uma matéria legislativa."""
+    """Подробная информация о законодательном акте (legacy -- Brazil)."""
 
     codigo: str | None = None
     sigla_tipo: str | None = None
@@ -61,7 +61,7 @@ class MateriaDetalhe(BaseModel):
 
 
 class Tramitacao(BaseModel):
-    """Evento de tramitação de uma matéria."""
+    """Событие законодательного процесса (legacy -- Brazil)."""
 
     data: str | None = None
     descricao: str | None = None
@@ -70,7 +70,7 @@ class Tramitacao(BaseModel):
 
 
 class VotacaoResumo(BaseModel):
-    """Votação resumida."""
+    """Сокращённая информация о голосовании (legacy -- Brazil)."""
 
     codigo: str | None = None
     data: str | None = None
@@ -79,7 +79,7 @@ class VotacaoResumo(BaseModel):
 
 
 class VotacaoDetalhe(BaseModel):
-    """Detalhes de uma votação."""
+    """Подробная информация о голосовании (legacy -- Brazil)."""
 
     codigo: str | None = None
     data: str | None = None
@@ -93,7 +93,7 @@ class VotacaoDetalhe(BaseModel):
 
 
 class VotoNominal(BaseModel):
-    """Voto individual de um senador."""
+    """Индивидуальный голос сенатора (legacy -- Brazil)."""
 
     senador_codigo: str | None = None
     senador_nome: str | None = None
@@ -103,7 +103,7 @@ class VotoNominal(BaseModel):
 
 
 class ComissaoResumo(BaseModel):
-    """Comissão em listagem resumida."""
+    """Комиссия в сокращённом списке (legacy -- Brazil)."""
 
     codigo: str | None = None
     sigla: str | None = None
@@ -112,7 +112,7 @@ class ComissaoResumo(BaseModel):
 
 
 class ComissaoDetalhe(BaseModel):
-    """Detalhes de uma comissão."""
+    """Подробная информация о комиссии (legacy -- Brazil)."""
 
     codigo: str | None = None
     sigla: str | None = None
@@ -124,7 +124,7 @@ class ComissaoDetalhe(BaseModel):
 
 
 class MembroComissao(BaseModel):
-    """Membro de uma comissão."""
+    """Член комиссии (legacy -- Brazil)."""
 
     codigo_senador: str | None = None
     nome: str | None = None
@@ -134,7 +134,7 @@ class MembroComissao(BaseModel):
 
 
 class ReuniaoComissao(BaseModel):
-    """Reunião de comissão."""
+    """Заседание комиссии (legacy -- Brazil)."""
 
     data: str | None = None
     tipo: str | None = None
@@ -144,7 +144,7 @@ class ReuniaoComissao(BaseModel):
 
 
 class SessaoPlenario(BaseModel):
-    """Sessão plenária."""
+    """Пленарное заседание (legacy -- Brazil)."""
 
     data: str | None = None
     tipo: str | None = None
@@ -153,7 +153,7 @@ class SessaoPlenario(BaseModel):
 
 
 class LegislaturaInfo(BaseModel):
-    """Informações sobre uma legislatura."""
+    """Информация о созыве (legacy -- Brazil)."""
 
     numero: int | None = None
     data_inicio: str | None = None
@@ -161,7 +161,7 @@ class LegislaturaInfo(BaseModel):
 
 
 class Emenda(BaseModel):
-    """Emenda a uma matéria legislativa."""
+    """Поправка к законодательному акту (legacy -- Brazil)."""
 
     codigo: str | None = None
     numero: str | None = None
@@ -176,7 +176,7 @@ class Emenda(BaseModel):
 
 
 class BlocoParlamentar(BaseModel):
-    """Bloco parlamentar (coalizão)."""
+    """Парламентский блок (коалиция) (legacy -- Brazil)."""
 
     codigo: str | None = None
     nome: str | None = None
@@ -186,7 +186,7 @@ class BlocoParlamentar(BaseModel):
 
 
 class Lideranca(BaseModel):
-    """Liderança no Senado."""
+    """Руководство в Сенате (legacy -- Brazil)."""
 
     codigo_parlamentar: str | None = None
     nome_parlamentar: str | None = None
@@ -197,7 +197,7 @@ class Lideranca(BaseModel):
 
 
 class Relatoria(BaseModel):
-    """Relatoria de matéria legislativa."""
+    """Докладчик по законодательному акту (legacy -- Brazil)."""
 
     codigo_materia: str | None = None
     identificacao: str | None = None

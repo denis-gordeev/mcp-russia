@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-RN feature."""
+"""Pydantic-схемы для модуля Счётного суда Риу-Гранди-ду-Норти (TCE-RN, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Jurisdicionado(BaseModel):
-    """Entidade jurisdicionada pelo TCE-RN."""
+    """Подсудная единица TCE-RN (legacy -- Brazil)."""
 
     identificador_unidade: int | None = None
     codigo_orgao: str | None = None
@@ -15,7 +15,7 @@ class Jurisdicionado(BaseModel):
 
 
 class Despesa(BaseModel):
-    """Despesa orçamentária (balanço orçamentário)."""
+    """Бюджетный расход (бюджетный баланс) (legacy -- Brazil)."""
 
     descricao_categoria_economica: str | None = None
     descricao_grupo_despesa: str | None = None
@@ -28,7 +28,7 @@ class Despesa(BaseModel):
 
 
 class Receita(BaseModel):
-    """Receita orçamentária (balanço orçamentário)."""
+    """Бюджетный доход (бюджетный баланс) (legacy -- Brazil)."""
 
     descricao_receita: str | None = None
     cod_natureza_receita: str | None = None
@@ -38,7 +38,7 @@ class Receita(BaseModel):
 
 
 class Licitacao(BaseModel):
-    """Licitação pública registrada no TCE-RN."""
+    """Публичный тендер, зарегистрированный в TCE-RN (legacy -- Brazil)."""
 
     numero_licitacao: str | None = None
     ano_licitacao: str | None = None
@@ -51,7 +51,7 @@ class Licitacao(BaseModel):
 
 
 class Contrato(BaseModel):
-    """Contrato registrado no TCE-RN."""
+    """Контракт, зарегистрированный в TCE-RN (legacy -- Brazil)."""
 
     numero_contrato: str | None = None
     ano_contrato: int | None = None

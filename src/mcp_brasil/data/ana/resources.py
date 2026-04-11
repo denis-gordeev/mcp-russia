@@ -1,6 +1,8 @@
-"""Resources for the ANA feature — static reference data for LLM context.
+"""Resources для ANA — уровень обратной совместимости для бразильских гидрологических данных.
 
-Resources expose read-only data that LLMs can pull for context.
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные ANA сохраняются для обратной совместимости
+с исторической интеграцией и НЕ входят в целевую российскую модель данных.
 """
 
 from __future__ import annotations
@@ -11,7 +13,7 @@ from .constants import TIPOS_ESTACAO
 
 
 def tipos_estacao() -> str:
-    """Tipos de estações hidrológicas da ANA (fluviométrica e pluviométrica)."""
+    """Типы гидрологических станций ANA (флювиометрические и плювиометрические) (legacy)."""
     data = [
         {"codigo": codigo, "descricao": descricao} for codigo, descricao in TIPOS_ESTACAO.items()
     ]

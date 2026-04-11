@@ -1,8 +1,12 @@
-"""Tool functions for the Câmara dos Deputados feature.
+"""Инструменты для работы с Палатой депутатов Бразилии (слой совместимости, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильской Палаты депутатов и
+считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -14,7 +18,7 @@ from .constants import DEFAULT_PAGE_SIZE
 
 
 def _pagination_hint(count: int, pagina: int) -> str:
-    """Return a pagination hint string based on result count and current page."""
+    """Возвращает подсказку о пагинации на основе количества результатов и текущей страницы."""
     if count >= DEFAULT_PAGE_SIZE:
         return f"\n\n> Use `pagina={pagina + 1}` para ver mais resultados."
     if pagina > 1 and count < DEFAULT_PAGE_SIZE:
@@ -29,20 +33,20 @@ async def listar_deputados(
     legislatura: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Lista deputados federais em exercício com filtros opcionais.
+    """(legacy) Список действующих федеральных депутатов с фильтрами.
 
-    Consulta a API da Câmara dos Deputados para listar parlamentares
-    da legislatura atual ou anteriores.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Запрос парламентариев текущего или предыдущих созывов.
 
     Args:
-        nome: Filtrar por nome do deputado (parcial).
-        sigla_partido: Filtrar por partido (ex: PT, PL, PSDB).
-        sigla_uf: Filtrar por UF (ex: SP, RJ, PI).
-        legislatura: ID da legislatura (ex: 57 para 2023-2027). Padrão: atual.
-        pagina: Página de resultados (padrão: 1).
+        nome: Фильтр по имени депутата (частичное совпадение).
+        sigla_partido: Фильтр по партии (напр.: PT, PL, PSDB).
+        sigla_uf: Фильтр по штату (напр.: SP, RJ, PI).
+        legislatura: ID созыва (напр., 57 для 2023-2027). По умолчанию: текущий.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com deputados encontrados.
+        Таблица с найденными депутатами.
     """
     deputados = await client.listar_deputados(
         nome=nome,
@@ -70,15 +74,16 @@ async def listar_deputados(
 
 
 async def buscar_deputado(deputado_id: int) -> str:
-    """Busca detalhes de um deputado federal pelo ID.
+    """(legacy) Поиск данных федерального депутата по ID.
 
-    Retorna informações completas como nome, partido, UF, email e foto.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Возвращает полную информацию: имя, партия, штат, email и фото.
 
     Args:
-        deputado_id: ID do deputado na API da Câmara (ex: 204554).
+        deputado_id: ID депутата в API Палаты (напр., 204554).
 
     Returns:
-        Perfil detalhado do deputado.
+        Подробный профиль депутата.
     """
     dep = await client.obter_deputado(deputado_id)
     if not dep:
@@ -103,19 +108,20 @@ async def buscar_proposicao(
     keywords: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca proposições legislativas (PL, PEC, MPV, etc.).
+    """(legacy) Поиск законодательных предложений (PL, PEC, MPV и др.).
 
-    Permite filtrar por tipo, número, ano ou palavras-chave na ementa.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Позволяет фильтровать по типу, номеру, году или ключевым словам в аннотации.
 
     Args:
-        sigla_tipo: Tipo da proposição (ex: PL, PEC, MPV, PLP, PDL).
-        numero: Número da proposição.
-        ano: Ano da proposição.
-        keywords: Palavras-chave para busca na ementa.
-        pagina: Página de resultados (padrão: 1).
+        sigla_tipo: Тип предложения (напр.: PL, PEC, MPV, PLP, PDL).
+        numero: Номер предложения.
+        ano: Год предложения.
+        keywords: Ключевые слова для поиска в аннотации.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com proposições encontradas.
+        Таблица с найденными предложениями.
     """
     proposicoes = await client.buscar_proposicoes(
         sigla_tipo=sigla_tipo,
@@ -149,17 +155,17 @@ async def buscar_proposicao(
 
 
 async def detalhar_proposicao(proposicao_id: int) -> str:
-    """Detalha uma proposição legislativa pelo ID.
+    """(legacy) Подробная информация о законодательном предложении по ID.
 
-    Retorna informações completas: autor, ementa, situação, regime de
-    tramitação e link para o inteiro teor. Use o ID obtido em
-    ``buscar_proposicao``.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Возвращает полную информацию: автор, аннотация, статус, режим рассмотрения
+    и ссылка на полный текст. Используйте ID, полученный из buscar_proposicao.
 
     Args:
-        proposicao_id: ID da proposição na API da Câmara.
+        proposicao_id: ID предложения в API Палаты.
 
     Returns:
-        Detalhes completos da proposição.
+        Полные детали предложения.
     """
     prop = await client.obter_proposicao(proposicao_id)
     if not prop:
@@ -191,15 +197,16 @@ async def detalhar_proposicao(proposicao_id: int) -> str:
 
 
 async def consultar_tramitacao(proposicao_id: int) -> str:
-    """Consulta a tramitação de uma proposição legislativa.
+    """(legacy) Запрос истории рассмотрения законодательного предложения.
 
-    Mostra o histórico de tramitação incluindo despachos e órgãos.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Показывает историю прохождения, включая резолюции и органы.
 
     Args:
-        proposicao_id: ID da proposição na API da Câmara.
+        proposicao_id: ID предложения в API Палаты.
 
     Returns:
-        Lista de eventos de tramitação.
+        Список событий рассмотрения.
     """
     tramitacoes = await client.obter_tramitacoes(proposicao_id)
     if not tramitacoes:
@@ -227,18 +234,19 @@ async def buscar_votacao(
     data_fim: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca votações nominais em plenário ou comissões.
+    """(legacy) Поиск поимённых голосований в пленарном зале или комиссиях.
 
-    Filtre por proposição específica ou por período de datas.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Фильтрация по конкретному предложению или периоду дат.
 
     Args:
-        proposicao_id: ID da proposição para filtrar votações.
-        data_inicio: Data inicial no formato AAAA-MM-DD.
-        data_fim: Data final no formato AAAA-MM-DD.
-        pagina: Página de resultados (padrão: 1).
+        proposicao_id: ID предложения для фильтрации голосований.
+        data_inicio: Дата начала в формате YYYY-MM-DD.
+        data_fim: Дата окончания в формате YYYY-MM-DD.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com votações encontradas.
+        Таблица с найденными голосованиями.
     """
     votacoes = await client.listar_votacoes(
         proposicao_id=proposicao_id,
@@ -264,15 +272,16 @@ async def buscar_votacao(
 
 
 async def votos_nominais(votacao_id: str) -> str:
-    """Consulta os votos nominais de uma votação específica.
+    """(legacy) Запрос поимённых голосов конкретного голосования.
 
-    Mostra como cada deputado votou (Sim, Não, Abstenção, etc.).
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Показывает, как проголосовал каждый депутат (Да, Нет, Воздержался и т.д.).
 
     Args:
-        votacao_id: ID da votação na API da Câmara.
+        votacao_id: ID голосования в API Палаты.
 
     Returns:
-        Tabela com votos individuais dos deputados.
+        Таблица с индивидуальными голосами депутатов.
     """
     votos = await client.obter_votos(votacao_id)
     if not votos:
@@ -298,18 +307,19 @@ async def despesas_deputado(
     mes: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta despesas de cota parlamentar (CEAP) de um deputado.
+    """(legacy) Запрос расходов депутатского парламентского фонда (CEAP).
 
-    Mostra gastos com alimentação, passagens, escritório, etc.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Показывает расходы на питание, транспорт, офис и т.д.
 
     Args:
-        deputado_id: ID do deputado na API da Câmara.
-        ano: Ano das despesas (ex: 2024).
-        mes: Mês das despesas (1-12).
-        pagina: Página de resultados (padrão: 1).
+        deputado_id: ID депутата в API Палаты.
+        ano: Год расходов (напр.: 2024).
+        mes: Месяц расходов (1-12).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com despesas do deputado.
+        Таблица с расходами депутата.
     """
     despesas = await client.listar_despesas(
         deputado_id=deputado_id,
@@ -342,15 +352,17 @@ async def agenda_legislativa(
     data_fim: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta a agenda legislativa da Câmara (sessões, audiências, reuniões).
+    """(legacy) Запрос законодательной повестки Палаты (сессии, слушания, заседания).
+
+    Инструмент совместимости с API Палаты депутатов Бразилии.
 
     Args:
-        data_inicio: Data inicial no formato AAAA-MM-DD.
-        data_fim: Data final no formato AAAA-MM-DD.
-        pagina: Página de resultados (padrão: 1).
+        data_inicio: Дата начала в формате YYYY-MM-DD.
+        data_fim: Дата окончания в формате YYYY-MM-DD.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com eventos legislativos.
+        Таблица с законодательными событиями.
     """
     eventos = await client.listar_eventos(
         data_inicio=data_inicio,
@@ -380,17 +392,18 @@ async def buscar_comissoes(
     tipo: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca comissões e órgãos legislativos da Câmara.
+    """(legacy) Поиск комиссий и законодательных органов Палаты.
 
-    Inclui comissões permanentes, temporárias, CPIs e outros órgãos.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Включает постоянные комиссии, временные комиссии, CPI и другие органы.
 
     Args:
-        sigla: Sigla da comissão (ex: CCJC, CFT, CESP).
-        tipo: Código do tipo de órgão (ex: comissões permanentes).
-        pagina: Página de resultados (padrão: 1).
+        sigla: Аббревиатура комиссии (напр.: CCJC, CFT, CESP).
+        tipo: Код типа органа (напр., постоянные комиссии).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com comissões encontradas.
+        Таблица с найденными комиссиями.
     """
     orgaos = await client.listar_orgaos(sigla=sigla, tipo=tipo, pagina=pagina)
     if not orgaos:
@@ -414,17 +427,18 @@ async def frentes_parlamentares(
     legislatura: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Lista frentes parlamentares da Câmara dos Deputados.
+    """(legacy) Список парламентских фронтов Палаты депутатов.
 
-    Frentes parlamentares são associações suprapartidárias de deputados
-    para promover legislação sobre temas específicos.
+    Инструмент совместимости с API Палаты депутатов Бразилии.
+    Парламентские фронты — надпартийные объединения депутатов
+    для продвижения законодательства по конкретным темам.
 
     Args:
-        legislatura: ID da legislatura (ex: 57). Padrão: atual.
-        pagina: Página de resultados (padrão: 1).
+        legislatura: ID созыва (напр.: 57). По умолчанию: текущий.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com frentes parlamentares.
+        Таблица с парламентскими фронтами.
     """
     frentes = await client.listar_frentes(legislatura=legislatura, pagina=pagina)
     if not frentes:

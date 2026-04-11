@@ -16,4 +16,5 @@ def test_analise_navegacao_returns_instructions() -> None:
     result = analise_navegacao(-7.11, -34.86, "rj")
     assert "RJ" in result
     assert "porto_mais_proximo" in result
-    assert "navegação" in result.lower()
+    # Check for Russian text (migrated from Portuguese "navegação")
+    assert "навигации" in result.lower()

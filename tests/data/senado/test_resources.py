@@ -42,7 +42,8 @@ class TestInfoApi:
 
     def test_no_auth_required(self) -> None:
         data = json.loads(info_api())
-        assert "Não requer" in data["autenticacao"]
+        # Check for Russian text (migrated from Portuguese "Não requer")
+        assert "Не требует" in data["autenticacao"]
 
 
 class TestComissoesPermanentes:

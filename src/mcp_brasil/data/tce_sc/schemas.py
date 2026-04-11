@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-SC feature."""
+"""Pydantic-схемы для модуля Счётного суда Санта-Катарины (TCE-SC, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,14 +6,14 @@ from pydantic import BaseModel
 
 
 class Municipio(BaseModel):
-    """Município de Santa Catarina."""
+    """Муниципалитет Санта-Катарины (legacy -- Brazil)."""
 
     codigo_municipio: int | None = None
     nome_municipio: str | None = None
 
 
 class UnidadeGestora(BaseModel):
-    """Unidade gestora jurisdicionada pelo TCE-SC."""
+    """Управляющая единица под юрисдикцией TCE-SC (legacy -- Brazil)."""
 
     codigo_unidade: int | None = None
     nome_unidade: str | None = None

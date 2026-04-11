@@ -1,57 +1,67 @@
-"""Analysis prompts for the Tabua Mares feature.
+"""Prompts для модуля Tabua Mares — шаблоны анализа приливов/отливов (legacy).
 
-Prompts are reusable templates that guide LLM interactions.
-They instruct the LLM on which tools to call and how to analyze the data.
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа приливов/отливов бразильского побережья сохранены
+для обеспечения обратной совместимости с исторической интеграцией и
+НЕ являются частью целевой российской модели данных.
 
-In Claude Desktop, prompts appear as selectable options (similar to slash commands).
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
 """
 
 from __future__ import annotations
 
 
 def consulta_mares(estado: str, mes: int) -> str:
-    """Consulta completa de marés para um estado e mês.
+    """Полный запрос приливов/отливов для штата и месяца по legacy-данным Бразилии.
 
-    Guia o LLM a buscar portos e tábua de marés para planejar atividades
-    costeiras como pesca, navegação ou surfe.
+    Направляет LLM на поиск портов и таблиц приливов для планирования
+    прибрежной деятельности: рыбалки, навигации или сёрфинга.
 
     Args:
-        estado: Sigla do estado costeiro (ex: rj, sp, pb).
-        mes: Mês para consulta (1-12).
+        estado: Код прибрежного штата (напр.: rj, sp, pb).
+        mes: Месяц для запроса (1-12).
     """
     return (
-        f"Faça uma consulta completa de marés para o estado '{estado.upper()}' "
-        f"no mês {mes}:\n\n"
-        "1. Use `listar_portos` para ver os portos disponíveis no estado\n"
-        "2. Para cada porto, use `consultar_tabua_mare` para obter os dados do mês\n"
-        "3. Apresente um resumo com:\n"
-        "   - Nome e localização de cada porto\n"
-        "   - Horários de maré alta e baixa mais relevantes\n"
-        "   - Nível médio do mar\n"
-        "4. Destaque os dias com maiores amplitudes de maré"
+        f"Выполни полный запрос приливов/отливов для штата '{estado.upper()}' "
+        f"на месяц {mes} по данным бразильской системы Tabua Mares.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n"
+        "1. Используй `listar_portos` для просмотра доступных портов в штате\n"
+        "2. Для каждого порта используй `consultar_tabua_mare` для получения данных месяца\n"
+        "3. Представь сводку:\n"
+        "   - Название и расположение каждого порта\n"
+        "   - Наиболее значимые времена высокой и низкой воды\n"
+        "   - Средний уровень моря\n"
+        "4. Выдели дни с наибольшей амплитудой приливов\n"
+        "5. Примечание: анализ основан на бразильских прибрежных данных"
     )
 
 
 def analise_navegacao(lat: float, lng: float, estado: str) -> str:
-    """Análise de condições de maré para navegação em uma localização.
+    """Анализ приливных условий для навигации по координатам (legacy).
 
-    Guia o LLM a encontrar o porto mais próximo e analisar as condições
-    de maré para navegação segura.
+    Направляет LLM на поиск ближайшего порта и анализ приливных условий
+    для безопасной навигации.
 
     Args:
-        lat: Latitude da localização.
-        lng: Longitude da localização.
-        estado: Sigla do estado costeiro.
+        lat: Широта локации.
+        lng: Долгота локации.
+        estado: Код прибрежного штата.
     """
     return (
-        f"Analise as condições de maré para navegação nas coordenadas "
-        f"({lat}, {lng}) no estado {estado.upper()}:\n\n"
-        "1. Use `porto_mais_proximo` para encontrar o porto de referência\n"
-        "2. Use `consultar_tabua_mare` para obter as marés dos próximos dias\n"
-        "3. Apresente:\n"
-        "   - Porto de referência e distância aproximada\n"
-        "   - Horários de maré alta (bom para entrada/saída de embarcações)\n"
-        "   - Horários de maré baixa (atenção a calados)\n"
-        "   - Amplitude de maré do dia\n"
-        "4. Dê recomendações para navegação segura"
+        f"Проанализируй приливные условия для навигации по координатам "
+        f"({lat}, {lng}) в штате {estado.upper()} по данным Tabua Mares.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n"
+        "1. Используй `porto_mais_proximo` для поиска ближайшего порта\n"
+        "2. Используй `consultar_tabua_mare` для получения данных о приливах на ближайшие дни\n"
+        "3. Представь:\n"
+        "   - Базовый порт и примерное расстояние\n"
+        "   - Время высокой воды (благоприятно для входа/выхода судов)\n"
+        "   - Время низкой воды (обратить внимание на осадку)\n"
+        "   - Суточная амплитуда приливов\n"
+        "4. Дай рекомендации для безопасной навигации\n"
+        "5. Примечание: выводы основаны на бразильских приливных данных"
     )

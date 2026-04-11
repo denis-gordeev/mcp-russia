@@ -1,8 +1,12 @@
-"""Resources for the Transparência feature — static reference data for LLM context.
+"""Справочные resources для слоя Transparência (legacy) — данные для контекста LLM.
 
-Resources expose read-only data that LLMs can pull for context.
-These give LLMs knowledge of available endpoints and databases
-without calling tools.
+Resources предоставляют данные только для чтения, которые LLM могут запрашивать для контекста.
+Эти данные дают LLM знание доступных конечных точек и баз данных
+без вызова инструментов.
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные бразильского портала прозрачности сохранены для обратной совместимости
+и НЕ являются частью целевой российской модели данных.
 """
 
 from __future__ import annotations
@@ -13,61 +17,61 @@ from .constants import SANCOES_DATABASES, TRANSPARENCIA_API_BASE
 
 
 def endpoints_disponiveis() -> str:
-    """Lista de todos os endpoints da API do Portal da Transparência disponíveis."""
+    """(legacy) Список всех доступных конечных точек API Портала прозрачности Бразилии."""
     data = [
         {
             "endpoint": "contratos",
-            "descricao": "Contratos federais por CPF/CNPJ do fornecedor",
+            "descricao": "Федеральные контракты по CPF/CNPJ поставщика",
             "parametros": ["cpfCnpj", "pagina"],
         },
         {
             "endpoint": "despesas/recursos-recebidos",
-            "descricao": "Despesas e recursos recebidos por favorecido e período",
+            "descricao": "Расходы и полученные ресурсы по получателю и периоду",
             "parametros": ["mesAnoInicio", "mesAnoFim", "codigoFavorecido", "pagina"],
         },
         {
             "endpoint": "servidores",
-            "descricao": "Servidores públicos federais por CPF ou nome",
+            "descricao": "Федеральные государственные служащие по CPF или имени",
             "parametros": ["cpf", "nome", "pagina"],
         },
         {
             "endpoint": "licitacoes",
-            "descricao": "Licitações federais por órgão e/ou período",
+            "descricao": "Федеральные тендеры по органу и/или периоду",
             "parametros": ["codigoOrgao", "dataInicial", "dataFinal", "pagina"],
         },
         {
             "endpoint": "novo-bolsa-familia-por-municipio",
-            "descricao": "Dados do Novo Bolsa Família por município",
+            "descricao": "Данные программы Novo Bolsa Família по муниципалитету",
             "parametros": ["mesAno", "codigoIbge", "pagina"],
         },
         {
             "endpoint": "novo-bolsa-familia-sacado-por-nis",
-            "descricao": "Dados do Novo Bolsa Família por NIS do beneficiário",
+            "descricao": "Данные Novo Bolsa Família по NIS получателя",
             "parametros": ["mesAno", "nis", "pagina"],
         },
         {
             "endpoint": "emendas",
-            "descricao": "Emendas parlamentares por ano e/ou autor",
+            "descricao": "Парламентские поправки по году и/или автору",
             "parametros": ["ano", "nomeAutor", "pagina"],
         },
         {
             "endpoint": "viagens-por-cpf",
-            "descricao": "Viagens a serviço por CPF do servidor",
+            "descricao": "Служебные поездки по CPF служащего",
             "parametros": ["cpf", "pagina"],
         },
         {
             "endpoint": "ceis/cnep/cepim/ceaf",
-            "descricao": "Sanções em bases federais (inidôneas, punidas, impedidas, expulsos)",
+            "descricao": "Санкции в федеральных базах (недобросовестные, наказанные, запрещённые, исключённые)",
             "parametros": ["codigoSancionado", "nomeSancionado", "pagina"],
         },
         {
             "endpoint": "convenios",
-            "descricao": "Convênios e transferências voluntárias",
+            "descricao": "Соглашения и добровольные трансферты",
             "parametros": ["codigoOrgao", "convenente", "pagina"],
         },
         {
             "endpoint": "cartoes",
-            "descricao": "Cartão corporativo / suprimento de fundos",
+            "descricao": "Корпоративная карта / фонд снабжения",
             "parametros": [
                 "cpfPortador",
                 "codigoOrgao",
@@ -78,42 +82,42 @@ def endpoints_disponiveis() -> str:
         },
         {
             "endpoint": "pep",
-            "descricao": "Pessoas Expostas Politicamente",
+            "descricao": "ПолитическиExposed лица (PEP)",
             "parametros": ["cpf", "nome", "pagina"],
         },
         {
             "endpoint": "acordos-leniencia",
-            "descricao": "Acordos de leniência (anticorrupção)",
+            "descricao": "Соглашения о-lenienсe (антикоррупция)",
             "parametros": ["nomeEmpresa", "cnpj", "pagina"],
         },
         {
             "endpoint": "notas-fiscais",
-            "descricao": "Notas fiscais eletrônicas",
+            "descricao": "Электронные счета-фактуры",
             "parametros": ["cnpjEmitente", "dataEmissaoDe", "dataEmissaoAte", "pagina"],
         },
         {
             "endpoint": "beneficios-cidadao",
-            "descricao": "Benefícios sociais (BPC, seguro-desemprego, etc.)",
+            "descricao": "Социальные пособия (BPC, пособие по безработице и т.д.)",
             "parametros": ["cpf", "nis", "mesAno", "pagina"],
         },
         {
             "endpoint": "pessoas-fisicas",
-            "descricao": "Vínculos e benefícios por CPF",
+            "descricao": "Связи и пособия по CPF",
             "parametros": ["cpf", "pagina"],
         },
         {
             "endpoint": "pessoas-juridicas",
-            "descricao": "Sanções e contratos por CNPJ",
+            "descricao": "Санкции и контракты по CNPJ",
             "parametros": ["cnpj", "pagina"],
         },
         {
             "endpoint": "contratos/id/{id}",
-            "descricao": "Detalhe de um contrato específico",
+            "descricao": "Детали конкретного контракта",
             "parametros": ["id"],
         },
         {
             "endpoint": "servidores/{id}",
-            "descricao": "Detalhe completo de servidor com remuneração",
+            "descricao": "Полные данные служащего с вознаграждением",
             "parametros": ["id"],
         },
     ]
@@ -121,7 +125,7 @@ def endpoints_disponiveis() -> str:
 
 
 def bases_sancoes() -> str:
-    """As 4 bases de sanções federais com descrição e parâmetros de consulta."""
+    """(legacy) 4 федеральные базы санкций с описанием и параметрами запроса."""
     data = [
         {
             "sigla": key.upper(),
@@ -136,22 +140,22 @@ def bases_sancoes() -> str:
 
 
 def categorias_beneficios() -> str:
-    """Lista de tipos de benefícios sociais disponíveis para consulta."""
+    """(legacy) Типы социальных пособий, доступных для запроса."""
     data = [
-        {"tipo": "BPC", "descricao": "Benefício de Prestação Continuada (LOAS)"},
-        {"tipo": "seguro-desemprego", "descricao": "Seguro-Desemprego"},
-        {"tipo": "abono-salarial", "descricao": "Abono Salarial PIS/PASEP"},
-        {"tipo": "garantia-safra", "descricao": "Garantia-Safra"},
-        {"tipo": "peti", "descricao": "Programa de Erradicação do Trabalho Infantil"},
-        {"tipo": "bolsa-familia", "descricao": "Novo Bolsa Família (endpoint dedicado)"},
+        {"tipo": "BPC", "descricao": "Непрерывное пособие (LOAS)"},
+        {"tipo": "seguro-desemprego", "descricao": "Пособие по безработице"},
+        {"tipo": "abono-salarial", "descricao": "Зарплатный бонус PIS/PASEP"},
+        {"tipo": "garantia-safra", "descricao": "Гарантия урожая"},
+        {"tipo": "peti", "descricao": "Программа ликвидации детского труда"},
+        {"tipo": "bolsa-familia", "descricao": "Novo Bolsa Família (выделенный endpoint)"},
     ]
     return json.dumps(data, ensure_ascii=False)
 
 
 def info_api() -> str:
-    """Informações gerais sobre a API do Portal da Transparência."""
+    """(legacy) Общая информация об API Портала прозрачности Бразилии."""
     data = {
-        "nome": "API do Portal da Transparência do Governo Federal",
+        "nome": "API Портала прозрачности Федерального правительства Бразилии (legacy)",
         "url_base": TRANSPARENCIA_API_BASE,
         "autenticacao": {
             "tipo": "API Key",
@@ -159,10 +163,10 @@ def info_api() -> str:
             "cadastro": "https://portaldatransparencia.gov.br/api-de-dados/cadastrar-email",
         },
         "limites": {
-            "horario_comercial": "90 requisições/minuto (06h-23h59)",
-            "horario_madrugada": "300 requisições/minuto (00h-05h59)",
+            "horario_comercial": "90 запросов/минуту (06:00–23:59)",
+            "horario_madrugada": "300 запросов/минуту (00:00–05:59)",
         },
-        "paginacao": "Parâmetro 'pagina' (1-indexed, 15 itens por página por padrão)",
+        "paginacao": "Параметр 'pagina' (1-indexed, по умолчанию 15 элементов на страницу)",
         "formatos": "JSON",
     }
     return json.dumps(data, ensure_ascii=False)

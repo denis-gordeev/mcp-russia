@@ -1,4 +1,4 @@
-"""Pydantic models for ANA API responses."""
+"""Pydantic-схемы для ответов API ANA (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Estacao(BaseModel):
-    """Estação hidrológica da ANA (Hidroweb)."""
+    """Гидрологическая станция ANA (Hidroweb) (legacy -- Brazil)."""
 
     codigo_estacao: str
     nome_estacao: str
@@ -23,7 +23,7 @@ class Estacao(BaseModel):
 
 
 class DadoTelemetria(BaseModel):
-    """Dado telemétrico de uma estação (nível, vazão, chuva)."""
+    """Телеметрические данные станции (уровень, расход, осадки) (legacy -- Brazil)."""
 
     codigo_estacao: str
     data_hora: str
@@ -33,7 +33,7 @@ class DadoTelemetria(BaseModel):
 
 
 class Reservatorio(BaseModel):
-    """Dados de monitoramento de um reservatório (SAR/ANA)."""
+    """Данные мониторинга водохранилища (SAR/ANA) (legacy -- Brazil)."""
 
     nome_reservatorio: str
     rio: str = ""

@@ -1,5 +1,6 @@
-"""DataJud feature server — registers tools, resources, and prompts.
+"""DataJud feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Judicial Data API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -20,13 +21,13 @@ from .tools import (
 mcp = FastMCP("mcp-russia-datajud-legacy")
 
 # Tools (7)
-mcp.tool(buscar_processos, tags={"busca", "processos", "judicial"})
-mcp.tool(buscar_processo_por_numero, tags={"busca", "processos", "npu"})
-mcp.tool(buscar_processos_por_classe, tags={"busca", "processos", "classe-processual"})
-mcp.tool(buscar_processos_por_assunto, tags={"busca", "processos", "assunto"})
-mcp.tool(buscar_processos_por_orgao, tags={"busca", "processos", "orgao-julgador"})
-mcp.tool(buscar_processos_avancado, tags={"busca", "processos", "judicial", "avancado"})
-mcp.tool(consultar_movimentacoes, tags={"consulta", "movimentacoes", "processos"})
+mcp.tool(buscar_processos, tags={"поиск", "процессы", "судебный"})
+mcp.tool(buscar_processo_por_numero, tags={"поиск", "процессы", "npu"})
+mcp.tool(buscar_processos_por_classe, tags={"поиск", "процессы", "процессуальный-класс"})
+mcp.tool(buscar_processos_por_assunto, tags={"поиск", "процессы", "тема"})
+mcp.tool(buscar_processos_por_orgao, tags={"поиск", "процессы", "судебный-орган"})
+mcp.tool(buscar_processos_avancado, tags={"поиск", "процессы", "судебный", "расширенный"})
+mcp.tool(consultar_movimentacoes, tags={"запрос", "движение", "процессы"})
 
 # Resources
 mcp.resource("data://tribunais", mime_type="application/json")(tribunais_disponiveis)

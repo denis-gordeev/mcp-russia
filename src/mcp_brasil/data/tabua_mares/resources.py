@@ -1,14 +1,8 @@
-"""Static reference data for the Tabua Mares feature — legacy compatibility layer.
+"""Resources для Tabua Mares — уровень обратной совместимости для бразильских данных о приливах.
 
-NOTE: This is a legacy/compatibility layer within mcp-russia.
-Brazilian coastal tide table data is kept for backward compatibility
-with the historical maritime integration and is NOT part of the target Russian data model.
-
-Resources are read-only data sources that clients can pull.
-They provide context to LLMs without requiring tool calls.
-
-Resources are registered with data:// URIs (without the feature namespace —
-mount() adds the namespace prefix automatically).
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские данные о таблицах приливов для прибрежных зон сохраняются для обратной совместимости
+с исторической морской интеграцией и НЕ входят в целевую российскую модель данных.
 """
 
 from __future__ import annotations
@@ -19,7 +13,7 @@ from .constants import ESTADOS_COSTEIROS
 
 
 def estados_costeiros() -> str:
-    """Lista dos 17 estados costeiros do Brasil com dados de marés disponíveis."""
+    """Список 17 бразильских прибрежных штатов с доступными данными о приливах (legacy)."""
     estados = [
         {"sigla": sigla.upper(), "nome": nome} for sigla, nome in sorted(ESTADOS_COSTEIROS.items())
     ]

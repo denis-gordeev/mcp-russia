@@ -1,4 +1,13 @@
-"""Tool functions for the Dados Abertos feature."""
+"""Инструменты для работы с открытыми данными (Dados Abertos, legacy).
+
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильского портала открытых данных
+(dados.gov.br) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+"""
 
 from __future__ import annotations
 
@@ -10,17 +19,18 @@ from . import client
 
 
 async def buscar_conjuntos(texto: str, ctx: Context, pagina: int = 1) -> str:
-    """Busca conjuntos de dados abertos do governo federal.
+    """(legacy) Поиск наборов открытых данных федерального правительства.
 
-    Pesquisa no catálogo do Portal Dados Abertos (dados.gov.br).
-    Inclui datasets de saúde, educação, meio ambiente, economia e mais.
+    Инструмент совместимости с порталом Dados Abertos (Бразилия).
+    Поиск в каталоге Portal Dados Abertos (dados.gov.br).
+    Включает наборы данных по здравоохранению, образованию, экологии, экономике и др.
 
     Args:
-        texto: Termo de busca (nome, tema ou palavra-chave do dataset).
-        pagina: Página de resultados (padrão 1).
+        texto: Поисковый запрос (название, тема или ключевое слово набора).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de datasets encontrados com título, organização e temas.
+        Список найденных наборов данных с названием, организацией и темами.
     """
     await ctx.info(f"Buscando conjuntos de dados '{texto}'...")
     resultado = await client.buscar_conjuntos(query=texto, pagina=pagina)
@@ -49,16 +59,17 @@ async def buscar_conjuntos(texto: str, ctx: Context, pagina: int = 1) -> str:
 
 
 async def detalhar_conjunto(conjunto_id: str, ctx: Context) -> str:
-    """Obtém detalhes completos de um conjunto de dados do Portal Dados Abertos.
+    """(legacy) Получение полных деталей набора данных портала открытых данных.
 
-    Retorna título, descrição, organização, temas, tags e datas.
-    Use buscar_conjuntos() para encontrar o ID do dataset.
+    Инструмент совместимости с порталом Dados Abertos (Бразилия).
+    Возвращает название, описание, организацию, темы, теги и даты.
+    Используйте buscar_conjuntos() для поиска ID набора данных.
 
     Args:
-        conjunto_id: ID do conjunto de dados.
+        conjunto_id: ID набора данных.
 
     Returns:
-        Detalhes completos do dataset.
+        Полные детали набора данных.
     """
     await ctx.info(f"Detalhando conjunto {conjunto_id}...")
     conjunto = await client.detalhar_conjunto(conjunto_id)
@@ -84,15 +95,16 @@ async def detalhar_conjunto(conjunto_id: str, ctx: Context) -> str:
 
 
 async def listar_organizacoes(ctx: Context, pagina: int = 1) -> str:
-    """Lista organizações que publicam dados no Portal Dados Abertos.
+    """(legacy) Список организаций, публикующих данные на портале открытых данных.
 
-    Retorna ministérios, autarquias e órgãos que disponibilizam datasets.
+    Инструмент совместимости с порталом Dados Abertos (Бразилия).
+    Возвращает министерства, ведомства и органы, предоставляющие наборы данных.
 
     Args:
-        pagina: Página de resultados (padrão 1).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de organizações com nome e quantidade de datasets.
+        Список организаций с названием и количеством наборов данных.
     """
     await ctx.info("Listando organizações...")
     resultado = await client.listar_organizacoes(pagina=pagina)
@@ -112,17 +124,18 @@ async def listar_organizacoes(ctx: Context, pagina: int = 1) -> str:
 
 
 async def buscar_recursos(conjunto_id: str, ctx: Context, pagina: int = 1) -> str:
-    """Lista os recursos (arquivos e APIs) de um conjunto de dados.
+    """(legacy) Список ресурсов (файлов и API) набора данных.
 
-    Cada dataset pode ter múltiplos recursos em diferentes formatos
-    (CSV, JSON, XML, etc.) e links de download.
+    Инструмент совместимости с порталом Dados Abertos (Бразилия).
+    Каждый набор данных может иметь несколько ресурсов в разных форматах
+    (CSV, JSON, XML и т.д.) и ссылки для скачивания.
 
     Args:
-        conjunto_id: ID do conjunto de dados.
-        pagina: Página de resultados (padrão 1).
+        conjunto_id: ID набора данных.
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de recursos com formato, título e link de download.
+        Список ресурсов с форматом, названием и ссылкой для скачивания.
     """
     await ctx.info(f"Buscando recursos do conjunto {conjunto_id}...")
     resultado = await client.buscar_recursos(conjunto_id=conjunto_id, pagina=pagina)

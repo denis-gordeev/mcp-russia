@@ -1,36 +1,40 @@
-"""Prompts for the ANA feature — legacy compatibility layer for Brazilian hydrological analysis.
+"""Prompts для модуля ANA — слой обратной совместимости для бразильского гидрологического анализа (legacy).
 
-NOTE: This is a legacy/compatibility layer within mcp-russia.
-These Brazilian hydrological analysis prompts are kept for backward compatibility
-with the historical ANA integration and are NOT part of the target Russian data model.
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для бразильского гидрологического анализа сохранены
+для обеспечения обратной совместимости с исторической интеграцией ANA
+и НЕ являются частью целевой российской модели данных.
 
-Prompts provide reusable message templates that guide LLM interactions.
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
 """
 
 from __future__ import annotations
 
 
 def analise_bacia(bacia: str) -> str:
-    """Gera uma análise hidrológica completa de uma bacia hidrográfica.
+    """Выполняет полный гидрологический анализ бассейна реки по legacy-данным Бразилии.
 
-    Cria um template de análise que orienta o LLM a consultar estações,
-    dados telemétricos e reservatórios de uma bacia hidrográfica brasileira.
+    Создает шаблон анализа, который направляет LLM на запрос станций,
+    телеметрических данных и водохранилищ бразильского речного бассейна.
 
     Args:
-        bacia: Nome ou código da bacia hidrográfica (ex: "Paraná", "São Francisco").
+        bacia: Название или код речного бассейна (напр.: "Parana", "Sao Francisco").
     """
     return (
-        f"Faça uma análise hidrológica completa da bacia {bacia} "
-        "usando os dados da ANA.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_estacoes(nome_estacao='{bacia}') para encontrar estações na bacia\n"
-        "2. Para as principais estações encontradas, use consultar_telemetria "
-        "para obter dados recentes de nível e vazão\n"
-        "3. Use monitorar_reservatorios() para verificar o nível dos reservatórios "
-        "na bacia\n\n"
-        "Apresente:\n"
-        "- Quantidade de estações fluviométricas e pluviométricas na bacia\n"
-        "- Dados de nível e vazão das principais estações\n"
-        "- Situação dos reservatórios (volume útil, vazões)\n"
-        "- Análise geral da situação hídrica da bacia"
+        f"Выполни полный гидрологический анализ бассейна реки {bacia} "
+        "по данным ANA (бразильское национальное агентство водных ресурсов).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n"
+        f"1. Используй buscar_estacoes(nome_estacao='{bacia}') для поиска станций в бассейне\n"
+        "2. Для основных найденных станций используй consultar_telemetria "
+        "для получения недавних данных об уровне и расходе воды\n"
+        "3. Используй monitorar_reservatorios() для проверки уровня водохранилищ "
+        "в бассейне\n\n"
+        "Представь:\n"
+        "- Количество флювиометрических и плювиометрических станций в бассейне\n"
+        "- Данные об уровне и расходе воды на основных станциях\n"
+        "- Состояние водохранилищ (полезный объём, расходы воды)\n"
+        "- Общий анализ гидрологической ситуации в бассейне\n"
+        "- Примечание: выводы основаны на данных ANA (Бразилия)"
     )

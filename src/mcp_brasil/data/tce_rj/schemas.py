@@ -1,16 +1,16 @@
-"""Pydantic schemas for the TCE-RJ feature."""
+"""Pydantic-схемы для модуля Счётного суда Рио-де-Жанейро (TCE-RJ, Brazil, legacy)."""
 
 from __future__ import annotations
 
 from pydantic import BaseModel
 
 # ---------------------------------------------------------------------------
-# Licitações
+# Тендеры
 # ---------------------------------------------------------------------------
 
 
 class Licitacao(BaseModel):
-    """Licitação municipal no RJ."""
+    """Муниципальный тендер в Рио-де-Жанейро (legacy -- Brazil)."""
 
     ente: str | None = None
     unidade: str | None = None
@@ -26,19 +26,19 @@ class Licitacao(BaseModel):
 
 
 class LicitacaoResultado(BaseModel):
-    """Resultado paginado de licitações."""
+    """Страничный результат поиска тендеров (legacy -- Brazil)."""
 
     licitacoes: list[Licitacao] = []
     total: int = 0
 
 
 # ---------------------------------------------------------------------------
-# Contratos municipais
+# Муниципальные контракты
 # ---------------------------------------------------------------------------
 
 
 class ContratoMunicipio(BaseModel):
-    """Contrato municipal no RJ."""
+    """Муниципальный контракт в Рио-де-Жанейро (legacy -- Brazil)."""
 
     ente: str | None = None
     numero_contrato: str | None = None
@@ -53,19 +53,19 @@ class ContratoMunicipio(BaseModel):
 
 
 class ContratoMunicipioResultado(BaseModel):
-    """Resultado paginado de contratos municipais."""
+    """Страничный результат поиска муниципальных контрактов (legacy -- Brazil)."""
 
     contratos: list[ContratoMunicipio] = []
     total: int = 0
 
 
 # ---------------------------------------------------------------------------
-# Compras diretas
+# Прямые закупки
 # ---------------------------------------------------------------------------
 
 
 class CompraDireta(BaseModel):
-    """Compra direta (dispensa/inexigibilidade)."""
+    """Прямая закупка (отмена/необходимость) (legacy -- Brazil)."""
 
     processo: str | None = None
     ano_processo: str | None = None
@@ -79,12 +79,12 @@ class CompraDireta(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Obras paralisadas
+# Приостановленные стройки
 # ---------------------------------------------------------------------------
 
 
 class ObraParalisada(BaseModel):
-    """Obra pública paralisada."""
+    """Приостановленное общественное строительство (legacy -- Brazil)."""
 
     ente: str | None = None
     tipo_ente: str | None = None
@@ -104,12 +104,12 @@ class ObraParalisada(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Penalidades
+# Штрафы
 # ---------------------------------------------------------------------------
 
 
 class Penalidade(BaseModel):
-    """Penalidade ou ressarcimento aplicado pelo TCE-RJ."""
+    """Штраф или возмещение, применённые TCE-RJ (legacy -- Brazil)."""
 
     processo: str | None = None
     ano_condenacao: int | None = None
@@ -123,12 +123,12 @@ class Penalidade(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Prestação de contas
+# Финансовая отчётность
 # ---------------------------------------------------------------------------
 
 
 class PrestacaoContas(BaseModel):
-    """Prestação de contas municipal."""
+    """Муниципальная финансовая отчётность (legacy -- Brazil)."""
 
     municipio: str | None = None
     regiao: str | None = None
@@ -139,12 +139,12 @@ class PrestacaoContas(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Concessões públicas
+# Публичные концессии
 # ---------------------------------------------------------------------------
 
 
 class Concessao(BaseModel):
-    """Concessão pública municipal."""
+    """Муниципальная публичная концессия (legacy -- Brazil)."""
 
     ente: str | None = None
     unidade: str | None = None
@@ -160,7 +160,7 @@ class Concessao(BaseModel):
 
 
 class ConcessaoMunicipio(BaseModel):
-    """Concessões agrupadas por município."""
+    """Концессии, сгруппированные по муниципалитету (legacy -- Brazil)."""
 
     municipio: str
     concessoes: list[Concessao] = []

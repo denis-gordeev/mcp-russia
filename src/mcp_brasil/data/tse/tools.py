@@ -1,8 +1,12 @@
-"""Tool functions for the TSE (Tribunal Superior Eleitoral) feature.
+"""Инструменты для работы с TSE (Высший избирательный суд Бразилии, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильского Высшего избирательного
+суда (Tribunal Superior Eleitoral) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -16,12 +20,13 @@ from .constants import CARGO_CODES_CDN
 
 
 async def anos_eleitorais() -> str:
-    """Lista os anos com dados eleitorais disponíveis no TSE.
+    """(legacy) Список лет с доступными избирательными данными в TSE.
 
-    Retorna todos os anos em que houve eleições com dados registrados.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает все годы, в которые проходили выборы с зарегистрированными данными.
 
     Returns:
-        Lista de anos eleitorais disponíveis.
+        Список доступных избирательных лет.
     """
     anos = await client.anos_eleitorais()
     if not anos:
@@ -30,12 +35,13 @@ async def anos_eleitorais() -> str:
 
 
 async def listar_eleicoes() -> str:
-    """Lista todas as eleições ordinárias registradas no TSE.
+    """(legacy) Список всех очередных выборов, зарегистрированных в TSE.
 
-    Inclui eleições municipais, estaduais e federais de todos os anos.
+    Инструмент совместимости с TSE (Бразилия).
+    Включает муниципальные, региональные и федеральные выборы всех лет.
 
     Returns:
-        Tabela com eleições disponíveis.
+        Таблица с доступными выборами.
     """
     eleicoes = await client.listar_eleicoes()
     if not eleicoes:
@@ -58,17 +64,18 @@ async def listar_eleicoes() -> str:
 
 
 async def listar_eleicoes_suplementares(ano: int, uf: str) -> str:
-    """Lista eleições suplementares de um estado em um ano específico.
+    """(legacy) Список дополнительных выборов штата за конкретный год.
 
-    Eleições suplementares ocorrem quando eleições regulares são anuladas
-    ou quando há vacância de cargo eletivo.
+    Инструмент совместимости с TSE (Бразилия).
+    Дополнительные выборы проводятся при аннулировании обычных выборов
+    или при вакантности выборной должности.
 
     Args:
-        ano: Ano da eleição (ex: 2020, 2022).
-        uf: Sigla do estado (ex: SP, RJ, MG).
+        ano: Год выборов (напр.: 2020, 2022).
+        uf: Аббревиатура штата (напр.: SP, RJ, MG).
 
     Returns:
-        Tabela com eleições suplementares encontradas.
+        Таблица с найденными дополнительными выборами.
     """
     eleicoes = await client.listar_eleicoes_suplementares(ano, uf)
     if not eleicoes:
@@ -90,16 +97,17 @@ async def listar_eleicoes_suplementares(ano: int, uf: str) -> str:
 
 
 async def listar_estados_suplementares(ano: int) -> str:
-    """Lista estados que tiveram eleições suplementares em um ano.
+    """(legacy) Список штатов с дополнительными выборами за год.
 
-    Útil para descobrir quais UFs tiveram eleições suplementares antes
-    de consultar os detalhes com listar_eleicoes_suplementares().
+    Инструмент совместимости с TSE (Бразилия).
+    Полезно для определения, какие штаты имели дополнительные выборы,
+    перед запросом деталей через listar_eleicoes_suplementares().
 
     Args:
-        ano: Ano para consulta (ex: 2020, 2022).
+        ano: Год запроса (напр.: 2020, 2022).
 
     Returns:
-        Lista de siglas de estados com eleições suplementares.
+        Список аббревиатур штатов с дополнительными выборами.
     """
     estados = await client.listar_estados_suplementares(ano)
     if not estados:
@@ -108,17 +116,18 @@ async def listar_estados_suplementares(ano: int) -> str:
 
 
 async def listar_cargos(eleicao_id: int, municipio: int) -> str:
-    """Lista os cargos disponíveis em um município para uma eleição.
+    """(legacy) Список доступных должностей в муниципалитете для выборов.
 
-    Use o ID da eleição obtido com listar_eleicoes() e o código
-    do município (código IBGE ou TSE).
+    Инструмент совместимости с TSE (Бразилия).
+    Используйте ID выборов из listar_eleicoes() и код муниципалитета
+    (код IBGE или TSE).
 
     Args:
-        eleicao_id: ID da eleição (ex: 2030402020).
-        municipio: Código do município (ex: 35157 para Feira de Santana).
+        eleicao_id: ID выборов (напр.: 2030402020).
+        municipio: Код муниципалитета (напр.: 35157 для Feira de Santana).
 
     Returns:
-        Tabela com cargos e quantidade de candidatos.
+        Таблица с должностями и количеством кандидатов.
     """
     cargos = await client.listar_cargos(eleicao_id, municipio)
     if not cargos:
@@ -144,19 +153,19 @@ async def listar_candidatos(
     eleicao_id: int,
     cargo: int,
 ) -> str:
-    """Lista candidatos para um cargo em um município.
+    """(legacy) Список кандидатов на должность в муниципалитете.
 
-    Requer os IDs de eleição e cargo obtidos com listar_eleicoes()
-    e listar_cargos().
+    Инструмент совместимости с TSE (Бразилия).
+    Требует ID выборов и должности из listar_eleicoes() и listar_cargos().
 
     Args:
-        ano: Ano da eleição (ex: 2020, 2022).
-        municipio: Código do município.
-        eleicao_id: ID da eleição.
-        cargo: Código do cargo (ex: 11=Prefeito, 13=Vereador).
+        ano: Год выборов (напр.: 2020, 2022).
+        municipio: Код муниципалитета.
+        eleicao_id: ID выборов.
+        cargo: Код должности (напр.: 11=Мэр, 13=Депутат).
 
     Returns:
-        Tabela com candidatos e suas situações.
+        Таблица с кандидатами и их статусами.
     """
     candidatos = await client.listar_candidatos(ano, municipio, eleicao_id, cargo)
     if not candidatos:
@@ -183,19 +192,20 @@ async def buscar_candidato(
     eleicao_id: int,
     candidato_id: int,
 ) -> str:
-    """Busca detalhes completos de um candidato.
+    """(legacy) Поиск полной информации о кандидате.
 
-    Retorna informações pessoais, eleitorais, bens declarados
-    e situação da candidatura.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает личные данные, избирательную информацию, декларированное
+    имущество и статус кандидатуры.
 
     Args:
-        ano: Ano da eleição.
-        municipio: Código do município.
-        eleicao_id: ID da eleição.
-        candidato_id: ID do candidato (obtido com listar_candidatos).
+        ano: Год выборов.
+        municipio: Код муниципалитета.
+        eleicao_id: ID выборов.
+        candidato_id: ID кандидата (из listar_candidatos).
 
     Returns:
-        Ficha completa do candidato.
+        Полная карточка кандидата.
     """
     cand = await client.buscar_candidato(ano, municipio, eleicao_id, candidato_id)
     if cand is None:
@@ -211,13 +221,11 @@ async def buscar_candidato(
         f"**Situação do candidato:** {cand.situacao_candidato or '—'}",
     ]
 
-    # Totalização
     if cand.descricao_totalizacao:
         lines.append(f"**Resultado:** {cand.descricao_totalizacao}")
     if cand.total_votos is not None:
         lines.append(f"**Total de votos:** {format_number_br(cand.total_votos, 0)}")
 
-    # Dados pessoais
     lines.append("\n**Dados pessoais:**")
     lines.append(f"  Sexo: {cand.sexo or '—'}")
     lines.append(f"  Cor/Raça: {cand.cor_raca or '—'}")
@@ -226,14 +234,12 @@ async def buscar_candidato(
     lines.append(f"  Ocupação: {cand.ocupacao or '—'}")
     lines.append(f"  Naturalidade: {cand.municipio_nascimento or '—'}/{cand.uf_nascimento or '—'}")
 
-    # Patrimônio
     if cand.total_bens is not None:
         lines.append(f"\n**Total de bens declarados:** {format_brl(cand.total_bens)}")
 
     if cand.gasto_campanha is not None and cand.gasto_campanha > 0:
         lines.append(f"**Gasto de campanha:** {format_brl(cand.gasto_campanha)}")
 
-    # Ficha limpa
     if cand.candidato_inapto:
         lines.append("\n**CANDIDATO INAPTO**")
     if cand.motivo_ficha_limpa:
@@ -248,19 +254,20 @@ async def resultado_eleicao(
     eleicao_id: int,
     cargo: int,
 ) -> str:
-    """Mostra o resultado de uma eleição com candidatos rankeados por votos.
+    """(legacy) Результат выборов с кандидатами, ранжированными по голосам.
 
-    Retorna a totalização de votos para todos os candidatos de um cargo
-    em um município, ordenados do mais votado ao menos votado.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает итоговый подсчёт голосов всех кандидатов по должности
+    в муниципалитете, отсортированный от большинства к меньшинству.
 
     Args:
-        ano: Ano da eleição (ex: 2020, 2022).
-        municipio: Código do município.
-        eleicao_id: ID da eleição.
-        cargo: Código do cargo (ex: 11=Prefeito, 13=Vereador).
+        ano: Год выборов (напр.: 2020, 2022).
+        municipio: Код муниципалитета.
+        eleicao_id: ID выборов.
+        cargo: Код должности (напр.: 11=Мэр, 13=Депутат).
 
     Returns:
-        Tabela com ranking de candidatos por votos.
+        Таблица с рейтингом кандидатов по голосам.
     """
     resultados = await client.resultado_eleicao(ano, municipio, eleicao_id, cargo)
     if not resultados:
@@ -290,19 +297,20 @@ async def consultar_prestacao_contas(
     cargo: int,
     candidato_id: int,
 ) -> str:
-    """Consulta a prestação de contas de campanha de um candidato.
+    """(legacy) Запрос финансовой отчётности кампании кандидата.
 
-    Retorna receitas, despesas, doadores, fornecedores e limites de gastos.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает доходы, расходы, доноров, поставщиков и лимиты расходов.
 
     Args:
-        eleicao_id: ID da eleição.
-        ano: Ano da eleição.
-        municipio: Código do município.
-        cargo: Código do cargo.
-        candidato_id: ID do candidato.
+        eleicao_id: ID выборов.
+        ano: Год выборов.
+        municipio: Код муниципалитета.
+        cargo: Код должности.
+        candidato_id: ID кандидата.
 
     Returns:
-        Resumo financeiro da campanha.
+        Финансовое резюме кампании.
     """
     contas = await client.consultar_prestacao_contas(
         eleicao_id, ano, municipio, cargo, candidato_id
@@ -341,7 +349,7 @@ async def consultar_prestacao_contas(
 
 
 def _cargos_disponiveis() -> str:
-    """Return comma-separated list of available cargo names."""
+    """Возвращает список доступных наименований должностей через запятую."""
     return ", ".join(CARGO_CODES_CDN.keys())
 
 
@@ -351,23 +359,24 @@ async def resultado_nacional(
     ctx: Context,
     turno: int = 1,
 ) -> str:
-    """Mostra o resultado nacional de uma eleição com todos os candidatos.
+    """(legacy) Национальный результат выборов со всеми кандидатами.
 
-    Retorna a totalização de votos em nível nacional: total de eleitores,
-    comparecimento, abstenções e ranking de candidatos por votos.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает итоговый подсчёт на национальном уровне: избиратели,
+    явка, прогулы и рейтинг кандидатов по голосам.
 
-    Cargos disponíveis: presidente, governador, senador, deputado_federal,
+    Доступные должности: presidente, governador, senador, deputado_federal,
     deputado_estadual, prefeito, vereador.
 
-    Eleições disponíveis: 2022 (federal) e 2024 (municipal).
+    Доступные выборы: 2022 (федеральные) и 2024 (муниципальные).
 
     Args:
-        ano: Ano da eleição (ex: 2022, 2024).
-        cargo: Nome do cargo (ex: "presidente", "prefeito").
-        turno: Turno da eleição (1 ou 2). Default: 1.
+        ano: Год выборов (напр.: 2022, 2024).
+        cargo: Название должности (напр.: "presidente", "prefeito").
+        turno: Тур выборов (1 или 2). По умолчанию: 1.
 
     Returns:
-        Tabela com ranking nacional de candidatos por votos.
+        Таблица с национальным рейтингом кандидатов по голосам.
     """
     await ctx.info(f"Buscando resultado nacional {cargo} {ano} T{turno}...")
 
@@ -418,18 +427,19 @@ async def resultado_por_estado(
     ctx: Context,
     turno: int = 1,
 ) -> str:
-    """Mostra o resultado de uma eleição em um estado específico.
+    """(legacy) Результат выборов в конкретном штате.
 
-    Retorna a totalização de votos de cada candidato naquele estado.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает подсчёт голосов каждого кандидата в этом штате.
 
     Args:
-        ano: Ano da eleição (ex: 2022, 2024).
-        cargo: Nome do cargo (ex: "presidente", "governador").
-        uf: Sigla do estado (ex: "SP", "RJ", "PI").
-        turno: Turno da eleição (1 ou 2). Default: 1.
+        ano: Год выборов (напр.: 2022, 2024).
+        cargo: Название должности (напр.: "presidente", "governador").
+        uf: Аббревиатура штата (напр.: "SP", "RJ", "PI").
+        turno: Тур выборов (1 или 2). По умолчанию: 1.
 
     Returns:
-        Tabela com ranking de candidatos no estado.
+        Таблица с рейтингом кандидатов в штате.
     """
     await ctx.info(f"Buscando resultado {cargo} {ano} em {uf.upper()}...")
 
@@ -472,18 +482,19 @@ async def mapa_resultado_estados(
     ctx: Context,
     turno: int = 1,
 ) -> str:
-    """Mostra quem venceu em cada estado — mapa eleitoral completo.
+    """(legacy) Победители в каждом штате — полная карта выборов.
 
-    Faz consulta paralela em todos os 27 estados e retorna o candidato
-    mais votado em cada UF com votos e percentual.
+    Инструмент совместимости с TSE (Бразилия).
+    Параллельный запрос по всем 27 штатам, возвращает кандидата
+    с наибольшим числом голосов в каждом штате.
 
     Args:
-        ano: Ano da eleição (ex: 2022).
-        cargo: Nome do cargo (ex: "presidente").
-        turno: Turno da eleição (1 ou 2). Default: 1.
+        ano: Год выборов (напр.: 2022).
+        cargo: Название должности (напр.: "presidente").
+        turno: Тур выборов (1 или 2). По умолчанию: 1.
 
     Returns:
-        Tabela com vencedor de cada estado.
+        Таблица с победителями каждого штата.
     """
     await ctx.info(f"Buscando mapa eleitoral {cargo} {ano} T{turno} (27 UFs)...")
 
@@ -526,20 +537,21 @@ async def listar_municipios_eleitorais(
     ctx: Context,
     turno: int = 1,
 ) -> str:
-    """Lista municípios eleitorais de uma UF com códigos TSE e IBGE.
+    """(legacy) Список избирательных муниципалитетов штата с кодами TSE и IBGE.
 
-    Retorna os municípios disponíveis para consulta de resultados por município.
-    Disponível apenas para eleições municipais (2024).
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает муниципалитеты, доступные для запроса результатов.
+    Доступно только для муниципальных выборов (2024).
 
-    Use o codigo_tse retornado como parâmetro para resultado_por_municipio().
+    Используйте codigo_tse как параметр для resultado_por_municipio().
 
     Args:
-        ano: Ano da eleição (ex: 2024).
-        uf: Sigla do estado (ex: "SP", "RJ").
-        turno: Turno da eleição (1 ou 2). Default: 1.
+        ano: Год выборов (напр.: 2024).
+        uf: Аббревиатура штата (напр.: "SP", "RJ").
+        turno: Тур выборов (1 или 2). По умолчанию: 1.
 
     Returns:
-        Tabela com municípios e seus códigos TSE/IBGE.
+        Таблица с муниципалитетами и их кодами TSE/IBGE.
     """
     await ctx.info(f"Buscando municípios eleitorais de {uf.upper()} {ano}...")
 
@@ -573,25 +585,26 @@ async def resultado_por_municipio(
     ctx: Context,
     turno: int = 1,
 ) -> str:
-    """Mostra o resultado de uma eleição em um município específico.
+    """(legacy) Результат выборов в конкретном муниципалитете.
 
-    Retorna a totalização de votos de cada candidato no município.
-    Disponível para eleições federais (2022) e municipais (2024).
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает подсчёт голосов каждого кандидата в муниципалитете.
+    Доступно для федеральных (2022) и муниципальных (2024) выборов.
 
-    Use listar_municipios_eleitorais() para obter o código TSE do município.
+    Используйте listar_municipios_eleitorais() для получения кода TSE.
 
-    Cargos 2022: presidente, governador, senador, deputado_federal, deputado_estadual.
-    Cargos 2024: prefeito, vereador.
+    Должности 2022: presidente, governador, senador, deputado_federal, deputado_estadual.
+    Должности 2024: prefeito, vereador.
 
     Args:
-        ano: Ano da eleição (ex: 2022, 2024).
-        cargo: Nome do cargo (ex: "presidente", "governador", "prefeito").
-        uf: Sigla do estado (ex: "SP", "RJ").
-        cod_tse: Código TSE do município (5 dígitos, ex: "71072" para São Paulo).
-        turno: Turno da eleição (1 ou 2). Default: 1.
+        ano: Год выборов (напр.: 2022, 2024).
+        cargo: Название должности (напр.: "presidente", "governador", "prefeito").
+        uf: Аббревиатура штата (напр.: "SP", "RJ").
+        cod_tse: Код TSE муниципалитета (5 цифр, напр.: "71072" для Сан-Паулу).
+        turno: Тур выборов (1 или 2). По умолчанию: 1.
 
     Returns:
-        Tabela com ranking de candidatos por votos no município.
+        Таблица с рейтингом кандидатов по голосам в муниципалитете.
     """
     await ctx.info(f"Buscando resultado {cargo} {ano} em {uf.upper()} (município {cod_tse})...")
 
@@ -639,19 +652,20 @@ async def apuracao_status(
     uf: str = "br",
     turno: int = 1,
 ) -> str:
-    """Mostra o status da apuração de uma eleição.
+    """(legacy) Статус подсчёта голосов на выборах.
 
-    Retorna percentual de seções apuradas, total de eleitores,
-    comparecimento e abstenções.
+    Инструмент совместимости с TSE (Бразилия).
+    Возвращает процент подсчитанных участков, общее число избирателей,
+    явку и прогулы.
 
     Args:
-        ano: Ano da eleição.
-        cargo: Nome do cargo.
-        uf: Sigla do estado ou "br" para nacional. Default: "br".
-        turno: Turno da eleição. Default: 1.
+        ano: Год выборов.
+        cargo: Название должности.
+        uf: Аббревиатура штата или "br" для национального. По умолчанию: "br".
+        turno: Тур выборов. По умолчанию: 1.
 
     Returns:
-        Resumo do status da apuração.
+        Сводка статуса подсчёта.
     """
     regiao_label = "Nacional" if uf.lower() == "br" else uf.upper()
     await ctx.info(f"Consultando apuração {cargo} {ano} ({regiao_label})...")

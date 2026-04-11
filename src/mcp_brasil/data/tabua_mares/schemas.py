@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Tabua Mares feature."""
+"""Pydantic-схемы для модуля таблицы приливов (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,18 +6,22 @@ from pydantic import BaseModel, Field
 
 
 class GeoLocalizacao(BaseModel):
-    """Coordenadas geográficas de um porto."""
+    """Географические координаты порта (legacy -- Brazil)."""
 
     lat: str
     lng: str
-    decimal_lat: str = Field(description="Latitude em formato graus/minutos (ex: 09° 41' S)")
-    decimal_lng: str = Field(description="Longitude em formato graus/minutos (ex: 35° 43'.5 W)")
+    decimal_lat: str = Field(
+        description="Широта в формате градусы/минуты (напр.: 09 41' S) (legacy -- Brazil)"
+    )
+    decimal_lng: str = Field(
+        description="Долгота в формате градусы/минуты (напр.: 35 43'.5 W) (legacy -- Brazil)"
+    )
     lat_direction: str
     lng_direction: str
 
 
 class Porto(BaseModel):
-    """Informações detalhadas de um porto."""
+    """Подробная информация о порте (legacy -- Brazil)."""
 
     id: int
     harbor_name: str
@@ -25,11 +29,13 @@ class Porto(BaseModel):
     timezone: str
     card: str
     geo_location: list[GeoLocalizacao] = Field(default_factory=list)
-    mean_level: float | None = Field(default=None, description="Nível médio do mar em metros")
+    mean_level: float | None = Field(
+        default=None, description="Средний уровень моря в метрах (legacy -- Brazil)"
+    )
 
 
 class PortoResumo(BaseModel):
-    """Resumo de um porto retornado pela listagem por estado."""
+    """Сокращённая информация о порте, возвращаемая списком по штатам (legacy -- Brazil)."""
 
     id: int
     year: int
@@ -38,14 +44,14 @@ class PortoResumo(BaseModel):
 
 
 class HoraMare(BaseModel):
-    """Registro de maré em uma hora específica."""
+    """Запись прилива за конкретный час (legacy -- Brazil)."""
 
-    hour: str = Field(description="Horário no formato HH:MM:SS")
-    level: float = Field(description="Nível da maré em metros")
+    hour: str = Field(description="Время в формате ЧЧ:ММ:СС (legacy -- Brazil)")
+    level: float = Field(description="Уровень прилива в метрах (legacy -- Brazil)")
 
 
 class DiaMare(BaseModel):
-    """Dados de maré para um dia."""
+    """Данные приливов за день (legacy -- Brazil)."""
 
     weekday_name: str
     day: int
@@ -53,7 +59,7 @@ class DiaMare(BaseModel):
 
 
 class MesMare(BaseModel):
-    """Dados de maré para um mês."""
+    """Данные приливов за месяц (legacy -- Brazil)."""
 
     month_name: str
     month: int
@@ -61,7 +67,7 @@ class MesMare(BaseModel):
 
 
 class TabuaMare(BaseModel):
-    """Tábua de marés completa para um porto."""
+    """Полная таблица приливов для порта (legacy -- Brazil)."""
 
     year: int
     harbor_name: str

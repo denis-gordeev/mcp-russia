@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Diário Oficial feature."""
+"""Pydantic-схемы для модуля официальных вестников (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class DiarioOficial(BaseModel):
-    """Edição de diário oficial retornada pela API."""
+    """Выпуск официального вестника, возвращаемый API (legacy -- Brazil)."""
 
     territory_id: str | None = None
     territory_name: str | None = None
@@ -21,14 +21,14 @@ class DiarioOficial(BaseModel):
 
 
 class DiarioResultado(BaseModel):
-    """Resultado paginado da busca de diários."""
+    """Страничный результат поиска вестников (legacy -- Brazil)."""
 
     total_gazettes: int = 0
     gazettes: list[DiarioOficial] = []
 
 
 class Excerto(BaseModel):
-    """Excerto (trecho) de diário oficial."""
+    """Выдержка (фрагмент) из официального вестника (legacy -- Brazil)."""
 
     territory_id: str | None = None
     territory_name: str | None = None
@@ -43,14 +43,14 @@ class Excerto(BaseModel):
 
 
 class ExcertoResultado(BaseModel):
-    """Resultado paginado de busca de excertos."""
+    """Страничный результат поиска выдержек (legacy -- Brazil)."""
 
     total_excerpts: int = 0
     excerpts: list[Excerto] = []
 
 
 class CidadeQueridoDiario(BaseModel):
-    """Cidade disponível na base do Querido Diário."""
+    """Город, доступный в базе Querido Diario (legacy -- Brazil)."""
 
     territory_id: str
     territory_name: str

@@ -1,27 +1,39 @@
-"""Analysis prompts for the TCE-RN feature."""
+"""Prompts для модуля TCE-RN — анализ муниципальных данных Риу-Гранди-ду-Норти (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-RN
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analisar_unidade_rn(id_unidade: int, ano: int = 2024) -> str:
-    """Análise orçamentária e de licitações de uma unidade do RN.
+    """Бюджетный и тендерный анализ подразделения штата РН (legacy).
 
-    Gera uma análise completa usando dados de despesas, receitas,
-    licitações e contratos do TCE-RN.
+    Выполняет полный анализ данных о расходах, доходах,
+    тендерах и контрактах TCE-RN.
 
     Args:
-        id_unidade: ID da unidade (obtido via listar_jurisdicionados_rn).
-        ano: Ano de referência (padrão: 2024).
+        id_unidade: ID подразделения (получается через listar_jurisdicionados_rn).
+        ano: Год для анализа (по умолчанию: 2024).
     """
     return (
-        f"Analise a unidade {id_unidade} no ano {ano} usando dados do TCE-RN.\n\n"
-        "Siga estes passos:\n\n"
-        "1. Use `buscar_despesas_rn` com bimestre=6 para ver o acumulado anual.\n"
-        "2. Use `buscar_receitas_rn` com bimestre=6 para ver arrecadação.\n"
-        f"3. Use `buscar_licitacoes_rn` com período {ano}-01-01 a {ano}-12-31.\n"
-        "4. Use `buscar_contratos_rn` para ver contratos vigentes.\n\n"
-        "Apresente um resumo com:\n"
-        "- Principais despesas e receitas\n"
-        "- Licitações realizadas (quantidade e valor total)\n"
-        "- Contratos vigentes (maiores valores)"
+        f"Выполни анализ подразделения {id_unidade} за {ano} год по данным TCE-RN "
+        "(Счётная палата штата Риу-Гранди-ду-Норти).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Выполни следующие шаги:\n\n"
+        "1. Используй `buscar_despesas_rn` с bimestre=6 для просмотра годового накопленного итога.\n"
+        "2. Используй `buscar_receitas_rn` с bimestre=6 для просмотра поступлений.\n"
+        f"3. Используй `buscar_licitacoes_rn` с периодом {ano}-01-01 по {ano}-12-31.\n"
+        "4. Используй `buscar_contratos_rn` для просмотра действующих контрактов.\n\n"
+        "Представь сводку:\n"
+        "- Ключевые расходы и доходы\n"
+        "- Проведённые тендеры (количество и общая сумма)\n"
+        "- Действующие контракты (наибольшие суммы)\n"
+        "- Примечание: анализ основан на данных TCE-RN (Бразилия)"
     )

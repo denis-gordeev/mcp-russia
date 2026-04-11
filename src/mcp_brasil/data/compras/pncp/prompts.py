@@ -1,22 +1,34 @@
-"""Analysis prompts for the Compras feature."""
+"""Prompts для модуля Compras/PNCP — анализ государственных закупок (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских государственных закупок через PNCP
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def investigar_fornecedor(cnpj: str) -> str:
-    """Investiga um fornecedor em contratações públicas.
+    """Расследует деятельность поставщика в государственных контрактах (legacy).
 
     Args:
-        cnpj: CNPJ do fornecedor a investigar.
+        cnpj: CNPJ поставщика для расследования.
     """
     return (
-        f"Investigue o fornecedor com CNPJ {cnpj} em contratações públicas.\n\n"
-        "Passos:\n"
-        f"1. Use buscar_contratos(cnpj_fornecedor='{cnpj}') para ver contratos\n"
-        f"2. Use buscar_contratacoes(texto='{cnpj}') para ver licitações\n\n"
-        "Apresente um relatório com:\n"
-        "- Total de contratos e valores\n"
-        "- Órgãos contratantes\n"
-        "- Objetos mais frequentes\n"
-        "- Período de atuação"
+        f"Выполни расследование деятельности поставщика с CNPJ {cnpj} "
+        "в государственных контрактах Бразилии.\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "Шаги:\n"
+        f"1. Используй buscar_contratos(cnpj_fornecedor='{cnpj}') для просмотра контрактов\n"
+        f"2. Используй buscar_contratacoes(texto='{cnpj}') для просмотра тендеров\n\n"
+        "Представь отчёт:\n"
+        "- Общее количество контрактов и суммы\n"
+        "- Контрактные органы\n"
+        "- Наиболее частые предметы контрактов\n"
+        "- Период деятельности\n"
+        "- Примечание: анализ основан на бразильских данных PNCP"
     )

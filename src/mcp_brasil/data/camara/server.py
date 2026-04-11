@@ -1,5 +1,6 @@
-"""Câmara feature server — registers tools, resources, and prompts.
+"""Câmara feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Chamber of Deputies API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -21,20 +22,20 @@ from .tools import (
     votos_nominais,
 )
 
-mcp = FastMCP("mcp-russia-camara")
+mcp = FastMCP("mcp-russia-camara-legacy")
 
 # Tools (11)
-mcp.tool(listar_deputados, tags={"listagem", "deputados", "parlamentares"})
-mcp.tool(buscar_deputado, tags={"detalhe", "deputados", "parlamentares"})
-mcp.tool(buscar_proposicao, tags={"busca", "proposicoes", "legislacao"})
-mcp.tool(detalhar_proposicao, tags={"detalhe", "proposicoes", "legislacao"})
-mcp.tool(consultar_tramitacao, tags={"consulta", "tramitacao", "proposicoes"})
-mcp.tool(buscar_votacao, tags={"busca", "votacoes", "plenario"})
-mcp.tool(votos_nominais, tags={"detalhe", "votacoes", "plenario"})
-mcp.tool(despesas_deputado, tags={"consulta", "despesas", "cota-parlamentar"})
-mcp.tool(agenda_legislativa, tags={"consulta", "agenda", "sessoes"})
-mcp.tool(buscar_comissoes, tags={"busca", "comissoes", "cpi"})
-mcp.tool(frentes_parlamentares, tags={"listagem", "frentes", "parlamentares"})
+mcp.tool(listar_deputados, tags={"список", "депутаты", "парламентарии"})
+mcp.tool(buscar_deputado, tags={"подробности", "депутаты", "парламентарии"})
+mcp.tool(buscar_proposicao, tags={"поиск", "предложения", "законодательство"})
+mcp.tool(detalhar_proposicao, tags={"подробности", "предложения", "законодательство"})
+mcp.tool(consultar_tramitacao, tags={"запрос", "движение", "предложения"})
+mcp.tool(buscar_votacao, tags={"поиск", "голосования", "пленум"})
+mcp.tool(votos_nominais, tags={"подробности", "голосования", "пленум"})
+mcp.tool(despesas_deputado, tags={"запрос", "расходы", "парламентские-расходы"})
+mcp.tool(agenda_legislativa, tags={"запрос", "повестка", "сессии"})
+mcp.tool(buscar_comissoes, tags={"поиск", "комиссии", "комиссия-расследования"})
+mcp.tool(frentes_parlamentares, tags={"список", "фронты", "парламентарии"})
 
 # Resources (URIs without namespace prefix — mount adds "camara/" automatically)
 mcp.resource("data://tipos-proposicao", mime_type="application/json")(tipos_proposicao)

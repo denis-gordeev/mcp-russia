@@ -1,54 +1,59 @@
-"""Static reference data for TCE-PI."""
+"""Resources для TCE-PI — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-PI (Счётная палата штата Пиауи) сохраняются для обратной
+совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 import json
 
 
 def endpoints_tce_pi() -> str:
-    """Return a JSON description of all TCE-PI endpoints."""
+    """JSON-описание всех endpoints TCE-PI (legacy, Бразилия)."""
     return json.dumps(
         {
             "api_base": "https://sistemas.tce.pi.gov.br/api/portaldacidadania",
-            "auth": "Nenhuma",
+            "auth": "Отсутствует",
             "endpoints": [
                 {
                     "path": "/prefeituras",
-                    "descricao": "Lista todas as 224 prefeituras do Piauí",
+                    "descricao": "Список всех 224 префектур Пиауи (legacy)",
                 },
                 {
                     "path": "/prefeituras/:nome",
-                    "descricao": "Busca prefeituras por nome",
+                    "descricao": "Поиск префектур по названию (legacy)",
                 },
                 {
                     "path": "/prefeituras/:id/gestor",
-                    "descricao": "Consulta prefeito(a) atual",
+                    "descricao": "Запрос текущего мэра (legacy)",
                 },
                 {
                     "path": "/despesas/:id",
-                    "descricao": "Histórico anual de despesas de um município",
+                    "descricao": "История расходов муниципалитета по годам (legacy)",
                 },
                 {
                     "path": "/despesas/:id/:exercicio/porFuncao",
-                    "descricao": "Despesas por função de governo",
+                    "descricao": "Расходы по функциям управления (legacy)",
                 },
                 {
                     "path": "/despesas/total",
-                    "descricao": "Total de despesas do estado por ano",
+                    "descricao": "Общие расходы штата по годам (legacy)",
                 },
                 {
                     "path": "/receitas/:id/:exercicio",
-                    "descricao": "Receitas detalhadas de um município",
+                    "descricao": "Детализированные доходы муниципалитета (legacy)",
                 },
                 {
                     "path": "/receitas/total",
-                    "descricao": "Total de receitas do estado por ano",
+                    "descricao": "Общие доходы штата по годам (legacy)",
                 },
                 {
                     "path": "/orgaos/lista/:exercicio",
-                    "descricao": "Lista órgãos estaduais por exercício",
+                    "descricao": "Список штатных органов по финансовому году (legacy)",
                 },
                 {
                     "path": "/credores/:id/:exercicio",
-                    "descricao": "Top 10 credores de um município",
+                    "descricao": "Топ-10 кредиторов муниципалитета (legacy)",
                 },
             ],
         },

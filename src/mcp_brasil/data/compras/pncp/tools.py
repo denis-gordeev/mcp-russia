@@ -1,12 +1,16 @@
 """Tool functions for the PNCP feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API Национального портала государственных закупок Бразилии (PNCP).
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
 
-IMPORTANT: The PNCP API has NO text search parameter.
-All text filtering is done client-side after fetching results.
-Date format for all endpoints: YYYYMMDD (also accepts YYYY-MM-DD and DD/MM/YYYY).
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+
+ВАЖНО: API PNCP НЕ поддерживает параметр текстового поиска.
+Вся текстовая фильтрация выполняется на стороне клиента после получения результатов.
+Формат дат для всех эндпоинтов: YYYYMMDD (также принимает YYYY-MM-DD и DD/MM/YYYY).
 """
 
 from __future__ import annotations
@@ -30,33 +34,36 @@ async def buscar_contratacoes(
     modo_disputa: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca licitações e contratações públicas no PNCP por período e modalidade.
+    """(legacy) Поиск государственных закупок и контрактов в PNCP по периоду и модальности.
 
-    Pesquisa no Portal Nacional de Contratações Públicas (Lei 14.133/2021).
-    Cobre contratações federais, estaduais e municipais.
+    Примечание: инструмент совместимости для бразильских данных PNCP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск в Национальном портале государственных закупок (Закон 14.133/2021).
+    Охватывает федеральные, региональные и муниципальные закупки.
 
-    IMPORTANTE: A API PNCP não suporta busca textual. O parâmetro 'texto'
-    filtra os resultados localmente após a consulta.
+    ВАЖНО: API PNCP не поддерживает текстовый поиск. Параметр 'texto'
+    фильтрует результаты локально после запроса API.
 
     Args:
-        data_inicial: Data inicial no formato YYYYMMDD (ex: 20250101).
-            Também aceita YYYY-MM-DD ou DD/MM/YYYY.
-        data_final: Data final no formato YYYYMMDD (ex: 20250331).
-            Máximo de 365 dias entre as datas.
-        modalidade: Código da modalidade de contratação (obrigatório).
-            Principais: 6=Pregão Eletrônico, 8=Dispensa, 9=Inexigibilidade,
-            4=Concorrência Eletrônica, 12=Credenciamento.
-            Use o resource 'data://modalidades' para ver todos os códigos.
-        texto: Filtro textual local (opcional). Filtra por objeto, órgão
-            ou fornecedor APÓS buscar os resultados da API.
-        uf: UF do órgão contratante (ex: SP, RJ, DF). Opcional.
-        cnpj_orgao: CNPJ do órgão contratante (opcional).
-        modo_disputa: Código do modo de disputa (opcional).
-            1=Aberto, 2=Fechado, 3=Aberto-Fechado, 4=Dispensa com Disputa.
-        pagina: Página de resultados (padrão 1).
+        data_inicial: Начальная дата в формате YYYYMMDD (напр.: 20250101).
+            Также принимает YYYY-MM-DD или DD/MM/YYYY.
+        data_final: Конечная дата в формате YYYYMMDD (напр.: 20250331).
+            Максимум 365 дней между датами.
+        modalidade: Код модальности закупки (обязательно).
+            Основные: 6=Электронный аукцион, 8=Отказ, 9=Необязательность,
+            4=Электронный конкурс, 12=Аккредитация.
+            Используйте ресурс 'data://modalidades' для просмотра всех кодов.
+        texto: Локальный текстовый фильтр (необязательно). Фильтрует по объекту, органу
+            или поставщику ПОСЛЕ получения результатов API.
+        uf: Аббревиатура штата органа-заказчика (напр.: SP, RJ, DF). Необязательно.
+        cnpj_orgao: CNPJ органа-заказчика (необязательно).
+        modo_disputa: Код режима торгов (необязательно).
+            1=Открытый, 2=Закрытый, 3=Открыто-Закрытый, 4=Отказ с торгами.
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de contratações encontradas com objeto, valor e situação.
+        Список найденных закупок с объектом, стоимостью и статусом.
     """
     mod_nome = MODALIDADES.get(modalidade, f"Código {modalidade}")
     await ctx.info(f"Buscando contratações ({mod_nome})...")
@@ -119,25 +126,28 @@ async def buscar_contratos(
     cnpj_orgao: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca contratos públicos no PNCP por período.
+    """(legacy) Поиск государственных контрактов в PNCP по периоду.
 
-    Retorna contratos publicados no Portal Nacional de Contratações Públicas.
+    Примечание: инструмент совместимости для бразильских данных PNCP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает контракты, опубликованные в Национальном портале государственных закупок.
 
-    IMPORTANTE: A API PNCP não suporta busca textual em contratos.
-    O parâmetro 'texto' filtra os resultados localmente.
+    ВАЖНО: API PNCP не поддерживает текстовый поиск в контрактах.
+    Параметр 'texto' фильтрует результаты локально.
 
     Args:
-        data_inicial: Data inicial no formato YYYYMMDD (ex: 20250101).
-            Também aceita YYYY-MM-DD ou DD/MM/YYYY.
-        data_final: Data final no formato YYYYMMDD (ex: 20250331).
-            Máximo de 365 dias entre as datas.
-        texto: Filtro textual local (opcional). Filtra por objeto,
-            órgão ou fornecedor APÓS buscar os resultados da API.
-        cnpj_orgao: CNPJ do órgão contratante (opcional).
-        pagina: Página de resultados (padrão 1).
+        data_inicial: Начальная дата в формате YYYYMMDD (напр.: 20250101).
+            Также принимает YYYY-MM-DD или DD/MM/YYYY.
+        data_final: Конечная дата в формате YYYYMMDD (напр.: 20250331).
+            Максимум 365 дней между датами.
+        texto: Локальный текстовый фильтр (необязательно). Фильтрует по объекту,
+            органу или поставщику ПОСЛЕ получения результатов API.
+        cnpj_orgao: CNPJ органа-заказчика (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de contratos encontrados.
+        Список найденных контрактов.
     """
     await ctx.info(f"Buscando contratos ({data_inicial} a {data_final})...")
 
@@ -190,27 +200,30 @@ async def buscar_atas(
     cnpj_orgao: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca atas de registro de preço no PNCP por período de vigência.
+    """(legacy) Поиск протоколов регистрации цен в PNCP по периоду действия.
 
-    Atas de registro de preço são documentos que registram preços praticados
-    em licitações para aquisições futuras. A busca filtra por período de
-    vigência (não por data de publicação).
+    Примечание: инструмент совместимости для бразильских данных PNCP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Протоколы регистрации цен — документы, фиксирующие цены, применяемые
+    в закупках для будущих приобретений. Поиск фильтруется по периоду
+    действия (не по дате публикации).
 
-    IMPORTANTE: A API PNCP não suporta busca textual.
-    O parâmetro 'texto' filtra os resultados localmente.
+    ВАЖНО: API PNCP не поддерживает текстовый поиск.
+    Параметр 'texto' фильтрует результаты локально.
 
     Args:
-        data_inicial: Data inicial no formato YYYYMMDD (ex: 20250101).
-            Também aceita YYYY-MM-DD ou DD/MM/YYYY.
-        data_final: Data final no formato YYYYMMDD (ex: 20250331).
-            Máximo de 365 dias entre as datas.
-        texto: Filtro textual local (opcional). Filtra por objeto,
-            órgão ou fornecedor APÓS buscar os resultados da API.
-        cnpj_orgao: CNPJ do órgão contratante (opcional).
-        pagina: Página de resultados (padrão 1).
+        data_inicial: Начальная дата в формате YYYYMMDD (напр.: 20250101).
+            Также принимает YYYY-MM-DD или DD/MM/YYYY.
+        data_final: Конечная дата в формате YYYYMMDD (напр.: 20250331).
+            Максимум 365 дней между датами.
+        texto: Локальный текстовый фильтр (необязательно). Фильтрует по объекту,
+            органу или поставщику ПОСЛЕ получения результатов API.
+        cnpj_orgao: CNPJ органа-заказчика (необязательно).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de atas de registro de preço encontradas.
+        Список найденных протоколов регистрации цен.
     """
     await ctx.info(f"Buscando atas de registro de preço ({data_inicial} a {data_final})...")
 
@@ -258,16 +271,19 @@ async def buscar_atas(
 
 
 async def consultar_fornecedor(cnpj: str, ctx: Context) -> str:
-    """Consulta informações de um fornecedor de contratações públicas pelo CNPJ.
+    """(legacy) Запрос информации о поставщике государственных закупок по CNPJ.
 
-    Retorna dados cadastrais do fornecedor no PNCP (Portal Nacional de
-    Contratações Públicas).
+    Примечание: инструмент совместимости для бразильских данных PNCP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает регистрационные данные поставщика в PNCP (Национальный портал
+    государственных закупок).
 
     Args:
-        cnpj: CNPJ do fornecedor (com ou sem formatação).
+        cnpj: CNPJ поставщика (с форматированием или без).
 
     Returns:
-        Dados do fornecedor encontrado.
+        Данные найденного поставщика.
     """
     await ctx.info(f"Consultando fornecedor CNPJ {cnpj}...")
     resultado = await client.consultar_fornecedor(cnpj=cnpj)
@@ -298,18 +314,21 @@ async def consultar_orgao(
     uf: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca órgãos contratantes no PNCP.
+    """(legacy) Поиск органов-заказчиков в PNCP.
 
-    Pesquisa órgãos públicos que realizam contratações. Útil para
-    encontrar o CNPJ de um órgão específico para filtrar outras buscas.
+    Примечание: инструмент совместимости для бразильских данных PNCP.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск государственных органов, осуществляющих закупки. Полезно для
+    обнаружения CNPJ конкретного органа для фильтрации других запросов.
 
     Args:
-        texto: Nome do órgão (parcial ou completo).
-        uf: UF do órgão (ex: SP, RJ, DF).
-        pagina: Página de resultados (padrão 1).
+        texto: Название органа (частичное или полное).
+        uf: Аббревиатура штата органа (напр.: SP, RJ, DF).
+        pagina: Страница результатов (по умолчанию 1).
 
     Returns:
-        Lista de órgãos encontrados.
+        Список найденных органов.
     """
     if not any([texto, uf]):
         return "Informe pelo menos um filtro: texto ou uf."

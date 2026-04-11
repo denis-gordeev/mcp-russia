@@ -1,9 +1,13 @@
 """Tool functions for the Tabua Mares feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API данных о приливах и отливах Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -17,12 +21,15 @@ from .constants import ESTADOS_COSTEIROS
 
 
 async def listar_estados_costeiros(ctx: Context) -> str:
-    """Lista os 17 estados costeiros do Brasil com portos disponíveis para consulta de marés.
+    """(legacy) Список 17 прибрежных штатов Бразилии с портами для запроса данных о приливах.
 
-    Use esta tool para descobrir quais estados têm dados de maré disponíveis.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Используйте этот инструмент для обнаружения штатов с доступными данными о приливах.
 
     Returns:
-        Tabela com sigla e nome de cada estado costeiro.
+        Таблица с аббревиатурой и названием каждого прибрежного штата.
     """
     await ctx.info("Buscando estados costeiros...")
     estados = await client.listar_estados()
@@ -31,15 +38,18 @@ async def listar_estados_costeiros(ctx: Context) -> str:
 
 
 async def listar_portos(estado: str, ctx: Context) -> str:
-    """Lista todos os portos disponíveis em um estado costeiro.
+    """(legacy) Список всех доступных портов в прибрежном штате.
 
-    Use esta tool para descobrir os portos de um estado antes de consultar a tábua de marés.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Используйте этот инструмент для обнаружения портов штата перед запросом таблицы приливов.
 
     Args:
-        estado: Sigla do estado em minúsculo (ex: pb, rj, sp, sc).
+        estado: Аббревиатура штата строчными буквами (напр.: pb, rj, sp, sc).
 
     Returns:
-        Tabela com ID, nome do porto e instituição coletora de dados.
+        Таблица с ID, названием порта и учреждением, собирающим данные.
     """
     await ctx.info(f"Buscando portos de {estado.upper()}...")
     portos = await client.listar_portos_estado(estado)
@@ -48,15 +58,18 @@ async def listar_portos(estado: str, ctx: Context) -> str:
 
 
 async def buscar_portos(ids: list[str], ctx: Context) -> str:
-    """Busca informações detalhadas de portos específicos pelo ID.
+    """(legacy) Поиск подробной информации о конкретных портах по ID.
 
-    Retorna dados como localização geográfica, fuso horário e nível médio do mar.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает данные, включая географическое положение, часовой пояс и средний уровень моря.
 
     Args:
-        ids: Lista de IDs de portos (ex: ['pb01', 'al01', 'rj02']).
+        ids: Список ID портов (напр.: ['pb01', 'al01', 'rj02']).
 
     Returns:
-        Detalhes de cada porto encontrado.
+        Подробные данные о каждом найденном порте.
     """
     await ctx.info(f"Buscando detalhes dos portos: {', '.join(ids)}...")
     portos = await client.buscar_portos(ids)
@@ -81,18 +94,21 @@ async def consultar_tabua_mare(
     dias: str,
     ctx: Context,
 ) -> str:
-    """Consulta a tábua de marés de um porto para dias específicos de um mês.
+    """(legacy) Запрос таблицы приливов порта для конкретных дней месяца.
 
-    Retorna os horários e níveis de maré alta e baixa para cada dia solicitado.
-    Use listar_portos primeiro para descobrir o ID do porto desejado.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает время и уровень прилива и отлива для каждого запрошенного дня.
+    Сначала используйте listar_portos для обнаружения ID нужного порта.
 
     Args:
-        porto_id: ID do porto (ex: 'pb01', 'al01').
-        mes: Mês desejado (1-12).
-        dias: Dias no formato '1,2,3' ou '1,5-13' (dias específicos e/ou intervalos).
+        porto_id: ID порта (напр.: 'pb01', 'al01').
+        mes: Нужный месяц (1-12).
+        dias: Дни в формате '1,2,3' или '1,5-13' (конкретные дни и/или интервалы).
 
     Returns:
-        Tábua de marés formatada com horários e níveis.
+        Форматированная таблица приливов со временем и уровнями.
     """
     await ctx.info(f"Consultando tábua de marés do porto {porto_id}, mês {mes}...")
     tabuas = await client.consultar_tabua_mare(porto_id, mes, dias)
@@ -121,17 +137,20 @@ async def porto_mais_proximo(
     lng: float,
     ctx: Context,
 ) -> str:
-    """Encontra o porto mais próximo de uma coordenada dentro de um estado.
+    """(legacy) Поиск ближайшего порта к координате в пределах штата.
 
-    Use esta tool quando souber o estado e as coordenadas do usuário.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Используйте этот инструмент, если известен штат и координаты пользователя.
 
     Args:
-        estado: Sigla do estado (ex: pb, rj, sp).
-        lat: Latitude (ex: -7.11509).
-        lng: Longitude (ex: -34.864).
+        estado: Аббревиатура штата (напр.: pb, rj, sp).
+        lat: Широта (напр.: -7.11509).
+        lng: Долгота (напр.: -34.864).
 
     Returns:
-        Dados do porto mais próximo.
+        Данные ближайшего порта.
     """
     await ctx.info(f"Buscando porto mais próximo em {estado.upper()}...")
     portos = await client.porto_mais_proximo(estado, lat, lng)
@@ -153,16 +172,19 @@ async def porto_mais_proximo(
 
 
 async def porto_mais_proximo_geral(lat: float, lng: float, ctx: Context) -> str:
-    """Encontra o porto mais próximo de uma coordenada, independente do estado.
+    """(legacy) Поиск ближайшего порта к координате независимо от штата.
 
-    Use esta tool quando não souber o estado do usuário, apenas as coordenadas.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Используйте этот инструмент, если неизвестен штат пользователя, только координаты.
 
     Args:
-        lat: Latitude (ex: -7.11509).
-        lng: Longitude (ex: -34.864).
+        lat: Широта (напр.: -7.11509).
+        lng: Долгота (напр.: -34.864).
 
     Returns:
-        Dados do porto mais próximo.
+        Данные ближайшего порта.
     """
     await ctx.info("Buscando porto mais próximo (qualquer estado)...")
     portos = await client.porto_mais_proximo_geral(lat, lng)
@@ -191,20 +213,23 @@ async def tabua_mare_por_geolocalizacao(
     dias: str,
     ctx: Context,
 ) -> str:
-    """Obtém a tábua de marés do porto mais próximo usando coordenadas geográficas.
+    """(legacy) Получение таблицы приливов ближайшего порта по географическим координатам.
 
-    Combina a busca do porto mais próximo com a consulta da tábua de marés
-    em uma única chamada. Ideal quando o usuário informa sua localização.
+    Примечание: инструмент совместимости для бразильских данных о приливах.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Комбинирует поиск ближайшего порта с запросом таблицы приливов
+    в одном вызове. Идеально, когда пользователь сообщает своё местоположение.
 
     Args:
-        lat: Latitude (ex: -7.11509).
-        lng: Longitude (ex: -34.864).
-        estado: Sigla do estado (ex: pb, rj, sp).
-        mes: Mês desejado (1-12).
-        dias: Dias no formato '1,2,3' ou '1,5-13' (dias específicos e/ou intervalos).
+        lat: Широта (напр.: -7.11509).
+        lng: Долгота (напр.: -34.864).
+        estado: Аббревиатура штата (напр.: pb, rj, sp).
+        mes: Нужный месяц (1-12).
+        dias: Дни в формате '1,2,3' или '1,5-13' (конкретные дни и/или интервалы).
 
     Returns:
-        Tábua de marés do porto mais próximo.
+        Таблица приливов ближайшего порта.
     """
     await ctx.info(f"Consultando marés por geolocalização ({lat}, {lng})...")
     tabuas = await client.tabua_mare_por_geolocalizacao(lat, lng, estado, mes, dias)

@@ -1,26 +1,38 @@
-"""Analysis prompts for the TCE-CE feature."""
+"""Prompts для модуля TCE-CE — анализ муниципальных данных Сеары (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских муниципальных данных TCE-CE
+сохранены для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analisar_municipio_ce(codigo_municipio: str, ano: int) -> str:
-    """Análise de um município cearense no TCE-CE.
+    """Анализирует муниципалитет штата Сеара по данным TCE-CE (legacy).
 
-    Cruza licitações, contratos e empenhos para avaliar
-    a gestão de compras e despesas do município.
+    Сопоставляет тендеры, контракты и бюджетные обязательства для оценки
+    управления закупками и расходами муниципалитета.
 
     Args:
-        codigo_municipio: Código do município (ex: "057").
-        ano: Ano de referência (ex: 2024).
+        codigo_municipio: Код муниципалитета (напр.: "057").
+        ano: Год для анализа (напр.: 2024).
     """
     return (
-        f"Analise a gestão do município {codigo_municipio} no ano {ano}:\n\n"
-        f"1. Use `buscar_licitacoes_ce` com data_realizacao={ano}-01-01_{ano}-12-31\n"
-        f"2. Use `buscar_contratos_ce` com data_contrato={ano}-01-01_{ano}-12-31\n"
-        f"3. Use `buscar_empenhos_ce` para meses-chave (ex: {ano}01, {ano}06, {ano}12)\n"
-        "4. Apresente um resumo com:\n"
-        "   - Número de licitações e contratos no período\n"
-        "   - Principais fornecedores por volume\n"
-        "   - Proporção de contratações diretas vs licitações\n"
-        "   - Volume total empenhado\n"
+        f"Выполни анализ управления муниципалитета {codigo_municipio} за {ano} год "
+        "по данным TCE-CE (Счётная палата штата Сеара).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        f"1. Используй `buscar_licitacoes_ce` с data_realizacao={ano}-01-01_{ano}-12-31\n"
+        f"2. Используй `buscar_contratos_ce` с data_contrato={ano}-01-01_{ano}-12-31\n"
+        f"3. Используй `buscar_empenhos_ce` для ключевых месяцев (напр.: {ano}01, {ano}06, {ano}12)\n"
+        "4. Представь сводку:\n"
+        "   - Количество тендеров и контрактов за период\n"
+        "   - Ключевые поставщики по объёму\n"
+        "   - Соотношение прямых закупок и конкурентных тендеров\n"
+        "   - Общий объём бюджетных обязательств\n"
+        "5. Примечание: анализ основан на данных TCE-CE (Бразилия)"
     )

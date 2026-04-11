@@ -1,8 +1,12 @@
-"""Tool functions for the Transparência feature.
+"""Инструменты для работы с Порталом прозрачности Бразилии (слой совместимости, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильского Портала прозрачности
+(Portal da Transparência) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -15,7 +19,7 @@ from .constants import DEFAULT_PAGE_SIZE
 
 
 def _pagination_hint(count: int, pagina: int) -> str:
-    """Return a pagination hint string based on result count and current page."""
+    """Возвращает подсказку о пагинации на основе количества результатов и текущей страницы."""
     if count >= DEFAULT_PAGE_SIZE:
         return f"\n\n> Use `pagina={pagina + 1}` para ver mais resultados."
     if pagina > 1 and count < DEFAULT_PAGE_SIZE:
@@ -24,17 +28,17 @@ def _pagination_hint(count: int, pagina: int) -> str:
 
 
 async def buscar_contratos(cpf_cnpj: str, pagina: int = 1) -> str:
-    """Busca contratos federais por CPF ou CNPJ do fornecedor.
+    """(legacy) Поиск федеральных контрактов по CPF или CNPJ поставщика.
 
-    Consulta o Portal da Transparência para listar contratos firmados
-    com o governo federal por um fornecedor específico.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос контрактов, заключённых с федеральным правительством.
 
     Args:
-        cpf_cnpj: CPF ou CNPJ do fornecedor (aceita com ou sem formatação).
-        pagina: Página de resultados (padrão: 1).
+        cpf_cnpj: CPF или CNPJ поставщика (с форматированием или без).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com contratos encontrados.
+        Таблица с найденными контрактами.
     """
     contratos = await client.buscar_contratos(cpf_cnpj, pagina)
     if not contratos:
@@ -64,19 +68,19 @@ async def consultar_despesas(
     codigo_favorecido: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta despesas e recursos recebidos por favorecido.
+    """(legacy) Запрос расходов и поступлений получателя бюджетных средств.
 
-    Mostra pagamentos realizados pelo governo federal a um favorecido
-    (pessoa física ou jurídica) em um período.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Показывает выплаты, произведённые федеральным правительством.
 
     Args:
-        mes_ano_inicio: Mês/ano de início no formato MM/AAAA (ex: 01/2024).
-        mes_ano_fim: Mês/ano de fim no formato MM/AAAA (ex: 12/2024).
-        codigo_favorecido: CPF ou CNPJ do favorecido (opcional).
-        pagina: Página de resultados (padrão: 1).
+        mes_ano_inicio: Месяц/год начала в формате MM/YYYY (напр.: 01/2024).
+        mes_ano_fim: Месяц/год окончания в формате MM/YYYY (напр.: 12/2024).
+        codigo_favorecido: CPF или CNPJ получателя (необязательно).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com despesas encontradas.
+        Таблица с найденными расходами.
     """
     despesas = await client.consultar_despesas(
         mes_ano_inicio, mes_ano_fim, codigo_favorecido, pagina
@@ -106,24 +110,21 @@ async def buscar_servidores(
     codigo_orgao_exercicio: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca servidores públicos federais por CPF, nome ou órgão.
+    """(legacy) Поиск федеральных государственных служащих по CPF, имени или органу.
 
-    Consulta a base de servidores do Portal da Transparência.
-    A API exige pelo menos um: CPF, código de órgão de lotação ou código de
-    órgão de exercício. O nome sozinho não é aceito pela API — combine com
-    código de órgão para buscar por nome.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    API требует хотя бы одного: CPF, код органа назначения или код органа
+    фактической работы. Одно только имя не принимается — комбинируйте с кодом органа.
 
     Args:
-        cpf: CPF do servidor (opcional).
-        nome: Nome do servidor (opcional, requer código de órgão junto).
-        codigo_orgao_lotacao: Código SIAPE do órgão de lotação (ex: "3" para AGU,
-            "26246" para UFPI). Permite buscar todos os servidores de um órgão.
-        codigo_orgao_exercicio: Código SIAPE do órgão de exercício (alternativo
-            ao código de lotação).
-        pagina: Página de resultados (padrão: 1).
+        cpf: CPF служащего (необязательно).
+        nome: Имя служащего (необязательно, требует код органа).
+        codigo_orgao_lotacao: Код SIAPE органа назначения (напр. "3" для AGU).
+        codigo_orgao_exercicio: Код SIAPE органа фактической работы.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com servidores encontrados.
+        Таблица с найденными служащими.
     """
     if not cpf and not codigo_orgao_lotacao and not codigo_orgao_exercicio:
         return (
@@ -165,19 +166,19 @@ async def buscar_licitacoes(
     data_final: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca licitações federais por órgão e/ou período.
+    """(legacy) Поиск федеральных торгов по органу и/или периоду.
 
-    Consulta processos licitatórios do governo federal.
-    Pelo menos um filtro (órgão ou datas) é recomendado.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос тендерных процедур федерального правительства.
 
     Args:
-        codigo_orgao: Código SIAFI do órgão (ex: "26246" para UFPI).
-        data_inicial: Data inicial no formato DD/MM/AAAA.
-        data_final: Data final no formato DD/MM/AAAA.
-        pagina: Página de resultados (padrão: 1).
+        codigo_orgao: Код SIAFI органа (напр. "26246" для UFPI).
+        data_inicial: Дата начала в формате DD/MM/YYYY.
+        data_final: Дата окончания в формате DD/MM/YYYY.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com licitações encontradas.
+        Таблица с найденными торгами.
     """
     licitacoes = await client.buscar_licitacoes(
         codigo_orgao=codigo_orgao,
@@ -212,19 +213,20 @@ async def consultar_bolsa_familia(
     nis: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta dados do Novo Bolsa Família por município ou NIS.
+    """(legacy) Запрос данных программы Bolsa Família по муниципалитету или NIS.
 
-    Informe código IBGE do município OU NIS do beneficiário.
-    Retorna dados de pagamento do programa de transferência de renda.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Укажите код IBGE муниципалитета ИЛИ NIS получателя.
+    Возвращает данные о выплатах программы социальной поддержки.
 
     Args:
-        mes_ano: Mês/ano de referência no formato AAAAMM (ex: 202401).
-        codigo_ibge: Código IBGE do município (ex: 3550308 para São Paulo).
-        nis: NIS (Número de Identificação Social) do beneficiário.
-        pagina: Página de resultados (padrão: 1).
+        mes_ano: Месяц/год в формате YYYYMM (напр.: 202401).
+        codigo_ibge: Код IBGE муниципалитета (напр.: 3550308 для Сан-Паулу).
+        nis: NIS (Номер социальной идентификации) получателя.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Dados do Bolsa Família encontrados.
+        Найденные данные Bolsa Família.
     """
     if not codigo_ibge and not nis:
         return "Informe o código IBGE do município ou o NIS do beneficiário."
@@ -273,24 +275,25 @@ async def buscar_sancoes(
     bases: list[str] | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca sanções em bases federais (CEIS, CNEP, CEPIM, CEAF).
+    """(legacy) Поиск санкций в федеральных реестрах (CEIS, CNEP, CEPIM, CEAF).
 
-    Consulta simultânea nas bases de sanções do governo federal.
-    Útil para due diligence, compliance e verificação anticorrupção.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Одновременный запрос реестров санкций федерального правительства.
+    Полезно для проверки добросовестности (due diligence) и антикоррупционного контроля.
 
-    Bases disponíveis:
-    - CEIS: Empresas Inidôneas e Suspensas
-    - CNEP: Empresas Punidas (Lei Anticorrupção 12.846)
-    - CEPIM: Entidades sem Fins Lucrativos Impedidas
-    - CEAF: Expulsões da Administração Federal
+    Доступные реестры:
+    - CEIS: Недобросовестные и приостановленные компании
+    - CNEP: Наказанные компании (Антикоррупционный закон 12.846)
+    - CEPIM: Некоммерческие организации с ограничениями
+    - CEAF: Исключения из Федеральной администрации
 
     Args:
-        consulta: CPF, CNPJ ou nome da pessoa/empresa a pesquisar.
-        bases: Lista de bases (ex: ["ceis", "cnep"]). Padrão: todas.
-        pagina: Página de resultados (padrão: 1).
+        consulta: CPF, CNPJ или имя лица/компании для поиска.
+        bases: Список реестров (напр., ["ceis", "cnep"]). По умолчанию: все.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Sanções encontradas agrupadas por base.
+        Найденные санкции, сгруппированные по реестрам.
     """
     sancoes = await client.buscar_sancoes(consulta, bases, pagina)
     if not sancoes:
@@ -321,17 +324,18 @@ async def buscar_emendas(
     nome_autor: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca emendas parlamentares por ano e/ou autor.
+    """(legacy) Поиск парламентских поправок по году и/или автору.
 
-    Consulta emendas individuais e de bancada ao orçamento federal.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос индивидуальных и банковских поправок к федеральному бюджету.
 
     Args:
-        ano: Ano da emenda (ex: 2024).
-        nome_autor: Nome do parlamentar autor da emenda.
-        pagina: Página de resultados (padrão: 1).
+        ano: Год поправки (напр.: 2024).
+        nome_autor: Имя парламентария — автора поправки.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com emendas encontradas.
+        Таблица с найденными поправками.
     """
     emendas = await client.buscar_emendas(ano=ano, nome_autor=nome_autor, pagina=pagina)
     if not emendas:
@@ -356,16 +360,17 @@ async def buscar_emendas(
 
 
 async def consultar_viagens(cpf: str, pagina: int = 1) -> str:
-    """Consulta viagens a serviço de servidor federal por CPF.
+    """(legacy) Запрос служебных поездок федерального служащего по CPF.
 
-    Mostra viagens realizadas a serviço, incluindo diárias e passagens.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Показывает служебные поездки, включая суточные и транспорт.
 
     Args:
-        cpf: CPF do servidor (aceita com ou sem formatação).
-        pagina: Página de resultados (padrão: 1).
+        cpf: CPF служащего (с форматированием или без).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com viagens encontradas.
+        Таблица с найденными поездками.
     """
     viagens = await client.consultar_viagens(cpf, pagina)
     if not viagens:
@@ -395,18 +400,19 @@ async def buscar_convenios(
     convenente: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca convênios e transferências voluntárias do governo federal.
+    """(legacy) Поиск соглашений и добровольных трансферов федерального правительства.
 
-    Consulta convênios celebrados entre órgãos federais e entidades
-    (estados, municípios, ONGs) para repasse de recursos.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос соглашений между федеральными органами и организациями
+    (штаты, муниципалитеты, НКО) для передачи ресурсов.
 
     Args:
-        orgao: Código do órgão concedente (ex: "26246").
-        convenente: Nome ou CNPJ do convenente.
-        pagina: Página de resultados (padrão: 1).
+        orgao: Код органа-грантодателя (напр. "26246").
+        convenente: Название или CNPJ организации-партнёра.
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com convênios encontrados.
+        Таблица с найденными соглашениями.
     """
     convenios = await client.buscar_convenios(orgao=orgao, convenente=convenente, pagina=pagina)
     if not convenios:
@@ -438,20 +444,20 @@ async def buscar_cartoes_pagamento(
     mes_ano_fim: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca pagamentos com cartão corporativo (suprimento de fundos).
+    """(legacy) Поиск платежей по корпоративным картам (авансовое обеспечение).
 
-    Consulta gastos realizados com cartão de pagamento do governo federal,
-    incluindo cartão corporativo e suprimento de fundos.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос расходов по корпоративным картам федерального правительства.
 
     Args:
-        cpf_portador: CPF do portador do cartão (opcional).
-        codigo_orgao: Código do órgão (opcional).
-        mes_ano_inicio: Mês/ano de início no formato MM/AAAA (ex: 01/2024).
-        mes_ano_fim: Mês/ano de fim no formato MM/AAAA (ex: 12/2024).
-        pagina: Página de resultados (padrão: 1).
+        cpf_portador: CPF держателя карты (необязательно).
+        codigo_orgao: Код органа (необязательно).
+        mes_ano_inicio: Месяц/год начала в формате MM/YYYY (напр.: 01/2024).
+        mes_ano_fim: Месяц/год окончания в формате MM/YYYY (напр.: 12/2024).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com pagamentos encontrados.
+        Таблица с найденными платежами.
     """
     cartoes = await client.buscar_cartoes_pagamento(
         cpf_portador=cpf_portador,
@@ -486,18 +492,19 @@ async def buscar_pep(
     nome: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca Pessoas Expostas Politicamente (PEP).
+    """(legacy) Поиск политически значимых лиц (PEP).
 
-    Consulta a base de PEPs do governo federal — pessoas que ocupam ou
-    ocuparam cargos, empregos ou funções públicas relevantes.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос базы данных PEP федерального правительства — лиц, занимающих
+    или занимавших значимые государственные должности.
 
     Args:
-        cpf: CPF da pessoa (opcional se nome fornecido).
-        nome: Nome da pessoa (opcional se CPF fornecido).
-        pagina: Página de resultados (padrão: 1).
+        cpf: CPF лица (необязательно, если указано имя).
+        nome: Имя лица (необязательно, если указан CPF).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com PEPs encontrados.
+        Таблица с найденными PEP.
     """
     if not cpf and not nome:
         return "Informe CPF ou nome para buscar Pessoas Expostas Politicamente."
@@ -529,18 +536,19 @@ async def buscar_acordos_leniencia(
     cnpj: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca acordos de leniência (anticorrupção).
+    """(legacy) Поиск соглашений о снисхождении (антикоррупция).
 
-    Consulta acordos firmados com empresas envolvidas em atos ilícitos
-    contra a administração pública (Lei Anticorrupção 12.846/2013).
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос соглашений с компаниями, вовлечёнными в противоправные действия
+    против публичной администрации (Антикоррупционный закон 12.846/2013).
 
     Args:
-        nome_empresa: Nome da empresa (opcional).
-        cnpj: CNPJ da empresa (opcional).
-        pagina: Página de resultados (padrão: 1).
+        nome_empresa: Название компании (необязательно).
+        cnpj: CNPJ компании (необязательно).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com acordos encontrados.
+        Таблица с найденными соглашениями.
     """
     acordos = await client.buscar_acordos_leniencia(
         nome_empresa=nome_empresa, cnpj=cnpj, pagina=pagina
@@ -572,19 +580,19 @@ async def buscar_notas_fiscais(
     data_emissao_ate: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca notas fiscais eletrônicas vinculadas a gastos federais.
+    """(legacy) Поиск электронных счетов-фактур, связанных с федеральными расходами.
 
-    Consulta notas fiscais eletrônicas relacionadas a despesas
-    do governo federal.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос электронных счетов-фактур, связанных с расходами федерального правительства.
 
     Args:
-        cnpj_emitente: CNPJ do emitente da nota (opcional).
-        data_emissao_de: Data de emissão inicial DD/MM/AAAA (opcional).
-        data_emissao_ate: Data de emissão final DD/MM/AAAA (opcional).
-        pagina: Página de resultados (padrão: 1).
+        cnpj_emitente: CNPJ эмитента счета (необязательно).
+        data_emissao_de: Дата выставления начала DD/MM/YYYY (необязательно).
+        data_emissao_ate: Дата выставления окончания DD/MM/YYYY (необязательно).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com notas fiscais encontradas.
+        Таблица с найденными счетами-фактурами.
     """
     notas = await client.buscar_notas_fiscais(
         cnpj_emitente=cnpj_emitente,
@@ -619,19 +627,19 @@ async def consultar_beneficio_social(
     mes_ano: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Consulta benefícios sociais (BPC, seguro-desemprego, etc.) por CPF ou NIS.
+    """(legacy) Запрос социальных пособий (BPC, пособие по безработице и др.) по CPF или NIS.
 
-    Consulta programas sociais do governo federal além do Bolsa Família,
-    como BPC (Benefício de Prestação Continuada) e seguro-desemprego.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Запрос социальных программ федерального правительства, помимо Bolsa Família.
 
     Args:
-        cpf: CPF do beneficiário (opcional se NIS fornecido).
-        nis: NIS do beneficiário (opcional se CPF fornecido).
-        mes_ano: Mês/ano de referência no formato AAAAMM (ex: 202401).
-        pagina: Página de resultados (padrão: 1).
+        cpf: CPF получателя (необязательно, если указан NIS).
+        nis: NIS получателя (необязательно, если указан CPF).
+        mes_ano: Месяц/год в формате YYYYMM (напр.: 202401).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com benefícios encontrados.
+        Таблица с найденными пособиями.
     """
     if not cpf and not nis:
         return "Informe CPF ou NIS do beneficiário."
@@ -663,17 +671,18 @@ async def consultar_beneficio_social(
 
 
 async def consultar_cpf(cpf: str, pagina: int = 1) -> str:
-    """Consulta vínculos e benefícios de uma pessoa física por CPF.
+    """(legacy) Запрос связей и пособий физического лица по CPF.
 
-    Mostra informações consolidadas sobre os vínculos de uma pessoa
-    com o governo federal (servidores, beneficiários, fornecedores).
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Показывает консолидированную информацию о связях лица
+    с федеральным правительством (служащие, получатели, поставщики).
 
     Args:
-        cpf: CPF da pessoa (aceita com ou sem formatação).
-        pagina: Página de resultados (padrão: 1).
+        cpf: CPF лица (с форматированием или без).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Informações sobre vínculos encontrados.
+        Информация о найденных связях.
     """
     vinculos = await client.consultar_cpf(cpf, pagina)
     if not vinculos:
@@ -696,17 +705,18 @@ async def consultar_cpf(cpf: str, pagina: int = 1) -> str:
 
 
 async def consultar_cnpj(cnpj: str, pagina: int = 1) -> str:
-    """Consulta sanções e contratos de pessoa jurídica por CNPJ.
+    """(legacy) Запрос санкций и контрактов юридического лица по CNPJ.
 
-    Mostra informações consolidadas sobre uma empresa junto ao
-    governo federal (contratos, sanções, pendências).
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Показывает консолидированную информацию о компании
+    при федеральном правительстве (контракты, санкции, задолженности).
 
     Args:
-        cnpj: CNPJ da empresa (aceita com ou sem formatação).
-        pagina: Página de resultados (padrão: 1).
+        cnpj: CNPJ компании (с форматированием или без).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Informações sobre vínculos encontrados.
+        Информация о найденных связях.
     """
     try:
         vinculos = await client.consultar_cnpj(cnpj, pagina)
@@ -736,16 +746,16 @@ async def consultar_cnpj(cnpj: str, pagina: int = 1) -> str:
 
 
 async def detalhar_contrato(id_contrato: int) -> str:
-    """Detalha um contrato federal específico por ID.
+    """(legacy) Подробная информация о конкретном федеральном контракте.
 
-    Retorna informações completas de um contrato, incluindo
-    modalidade, licitação, situação e valores.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Возвращает полную информацию: modalidade, тендер, статус и суммы.
 
     Args:
-        id_contrato: ID do contrato no Portal da Transparência.
+        id_contrato: ID контракта на Портале прозрачности.
 
     Returns:
-        Detalhes do contrato.
+        Детали контракта.
     """
     contrato = await client.detalhar_contrato(id_contrato)
     if not contrato:
@@ -768,16 +778,16 @@ async def detalhar_contrato(id_contrato: int) -> str:
 
 
 async def detalhar_servidor(id_servidor: int) -> str:
-    """Detalha um servidor público federal por ID, incluindo remuneração.
+    """(legacy) Подробная информация о федеральном служащем по ID, включая вознаграждение.
 
-    Retorna informações completas de um servidor, incluindo cargo,
-    função e remuneração bruta e líquida.
+    Инструмент совместимости с Порталом прозрачности Бразилии.
+    Возвращает полную информацию: должность, функция и размер вознаграждения.
 
     Args:
-        id_servidor: ID do servidor no Portal da Transparência.
+        id_servidor: ID служащего на Портале прозрачности.
 
     Returns:
-        Detalhes do servidor.
+        Детали служащего.
     """
     servidor = await client.detalhar_servidor(id_servidor)
     if not servidor:

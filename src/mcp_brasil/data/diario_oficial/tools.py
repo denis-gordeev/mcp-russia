@@ -1,8 +1,12 @@
-"""Tool functions for the Diário Oficial feature.
+"""Инструменты для работы с официальным вестником (Diário Oficial, legacy).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Примечание: это слой совместимости в рамках mcp-russia. Данные инструменты
+предоставляют устаревший доступ к данным бразильских официальных вестников
+(Querido Diário) и считаются переходными.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -26,21 +30,22 @@ async def buscar_diarios(
     data_fim: str | None = None,
     pagina: int = 0,
 ) -> str:
-    """Busca em diários oficiais municipais por texto livre.
+    """(legacy) Поиск в муниципальных официальных вестниках по свободному тексту.
 
-    Pesquisa full-text em diários oficiais de 5.000+ municípios brasileiros.
-    Útil para encontrar menções a empresas, pessoas, contratos, licitações,
-    nomeações, exonerações e atos administrativos.
+    Инструмент совместимости с Querido Diário (Бразилия).
+    Полнотекстовый поиск в официальных вестниках 5000+ бразильских муниципалитетов.
+    Полезно для поиска упоминаний компаний, лиц, контрактов, торгов,
+    назначений, увольнений и административных актов.
 
     Args:
-        texto: Termo de busca (nome de empresa, CNPJ, pessoa, palavra-chave).
-        territorio_id: Código IBGE do município (opcional, ex: 3550308 para São Paulo).
-        data_inicio: Data inicial no formato YYYY-MM-DD (opcional).
-        data_fim: Data final no formato YYYY-MM-DD (opcional).
-        pagina: Página de resultados (0-indexada, padrão 0).
+        texto: Поисковый запрос (название компании, CNPJ, имя, ключевое слово).
+        territorio_id: Код IBGE муниципалитета (необязательно, напр.: 3550308 для Сан-Паулу).
+        data_inicio: Дата начала в формате YYYY-MM-DD (необязательно).
+        data_fim: Дата окончания в формате YYYY-MM-DD (необязательно).
+        pagina: Страница результатов (0-indexed, по умолчанию 0).
 
     Returns:
-        Lista de diários oficiais com trechos relevantes.
+        Список официальных вестников с релевантными фрагментами.
     """
     await ctx.info(f"Buscando diários oficiais para '{texto}'...")
     resultado = await client.buscar_diarios(
@@ -84,23 +89,24 @@ async def buscar_trechos(
     data_fim: str | None = None,
     pagina: int = 0,
 ) -> str:
-    """Busca excertos específicos em diários oficiais de um município.
+    """(legacy) Поиск конкретных фрагментов в официальных вестниках муниципалитета.
 
-    Retorna trechos individuais (recortes) de diários oficiais de um município
-    específico. Diferente de buscar_diarios que retorna edições inteiras, esta
-    ferramenta retorna excertos isolados com contexto.
+    Инструмент совместимости с Querido Diário (Бразилия).
+    Возвращает отдельные выдержки (вырезки) из официальных вестников
+    конкретного муниципалитета. В отличие от buscar_diarios, который возвращает
+    целые выпуски, этот инструмент возвращает изолированные фрагменты с контекстом.
 
-    Use buscar_cidades() para obter o código IBGE do município (territorio_id).
+    Используйте buscar_cidades() для получения кода IBGE муниципалитета (territorio_id).
 
     Args:
-        territorio_id: Código IBGE do município (ex: 3550308 para São Paulo).
-        texto: Termo de busca (nome, CNPJ, palavra-chave).
-        data_inicio: Data inicial no formato YYYY-MM-DD (opcional).
-        data_fim: Data final no formato YYYY-MM-DD (opcional).
-        pagina: Página de resultados (0-indexada, padrão 0).
+        territorio_id: Код IBGE муниципалитета (напр.: 3550308 для Сан-Паулу).
+        texto: Поисковый запрос (имя, CNPJ, ключевое слово).
+        data_inicio: Дата начала в формате YYYY-MM-DD (необязательно).
+        data_fim: Дата окончания в формате YYYY-MM-DD (необязательно).
+        pagina: Страница результатов (0-indexed, по умолчанию 0).
 
     Returns:
-        Lista de excertos encontrados com data e conteúdo.
+        Список найденных фрагментов с датой и содержанием.
     """
     await ctx.info(f"Buscando trechos para '{texto}' no território {territorio_id}...")
     resultado = await client.buscar_trechos(
@@ -139,15 +145,16 @@ async def buscar_trechos(
 
 
 async def buscar_cidades(nome: str, ctx: Context) -> str:
-    """Busca municípios disponíveis no Querido Diário pelo nome.
+    """(legacy) Поиск муниципалитетов, доступных в Querido Diário, по названию.
 
-    Retorna os códigos IBGE necessários para filtrar buscas por território.
+    Инструмент совместимости с Querido Diário (Бразилия).
+    Возвращает коды IBGE, необходимые для фильтрации поисков по территории.
 
     Args:
-        nome: Nome (ou parte do nome) da cidade.
+        nome: Название (или часть названия) города.
 
     Returns:
-        Lista de cidades encontradas com código IBGE.
+        Список найденных городов с кодом IBGE.
     """
     await ctx.info(f"Buscando cidades '{nome}'...")
     cidades = await client.buscar_cidades(nome)
@@ -161,13 +168,14 @@ async def buscar_cidades(nome: str, ctx: Context) -> str:
 
 
 async def listar_territorios(ctx: Context) -> str:
-    """Lista todos os municípios com diários oficiais no Querido Diário.
+    """(legacy) Список всех муниципалитетов с официальными вестниками в Querido Diário.
 
-    Retorna a lista completa de territórios disponíveis para busca.
-    Use o código IBGE retornado para filtrar buscas em buscar_diarios.
+    Инструмент совместимости с Querido Diário (Бразилия).
+    Возвращает полный список территорий, доступных для поиска.
+    Используйте возвращённый код IBGE для фильтрации поисков в buscar_diarios.
 
     Returns:
-        Lista de municípios disponíveis com código IBGE e UF.
+        Список доступных муниципалитетов с кодом IBGE и штатом.
     """
     await ctx.info("Listando territórios disponíveis...")
     cidades = await client.listar_cidades()

@@ -1,4 +1,4 @@
-"""Pydantic models for TransfereGov API responses."""
+"""Pydantic-схемы для ответов API TransfereGov (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class TransferenciaEspecial(BaseModel):
-    """Transferência especial (emenda pix) — plano de ação."""
+    """Специальный трансфер (поправка pix) -- план действий (legacy -- Brazil)."""
 
     id_plano_acao: int | None = None
     codigo_plano_acao: str | None = None

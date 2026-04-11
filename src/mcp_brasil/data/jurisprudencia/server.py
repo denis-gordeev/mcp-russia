@@ -1,5 +1,6 @@
-"""Jurisprudência feature server — registers tools, resources, and prompts.
+"""Jurisprudencia feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Case Law API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -16,15 +17,15 @@ from .tools import (
     buscar_sumulas,
 )
 
-mcp = FastMCP("mcp-russia-jurisprudencia")
+mcp = FastMCP("mcp-russia-jurisprudencia-legacy")
 
 # Tools (6)
-mcp.tool(buscar_jurisprudencia_stf, tags={"busca", "jurisprudencia", "stf"})
-mcp.tool(buscar_jurisprudencia_stj, tags={"busca", "jurisprudencia", "stj"})
-mcp.tool(buscar_jurisprudencia_tst, tags={"busca", "jurisprudencia", "tst", "trabalhista"})
-mcp.tool(buscar_sumulas, tags={"busca", "sumulas", "stf"})
-mcp.tool(buscar_repercussao_geral, tags={"busca", "repercussao-geral", "stf"})
-mcp.tool(buscar_informativos, tags={"busca", "informativos", "jurisprudencia"})
+mcp.tool(buscar_jurisprudencia_stf, tags={"поиск", "судебная-практика", "stf"})
+mcp.tool(buscar_jurisprudencia_stj, tags={"поиск", "судебная-практика", "stj"})
+mcp.tool(buscar_jurisprudencia_tst, tags={"поиск", "судебная-практика", "tst", "трудовой"})
+mcp.tool(buscar_sumulas, tags={"поиск", "тезаурусы", "stf"})
+mcp.tool(buscar_repercussao_geral, tags={"поиск", "общее-воздействие", "stf"})
+mcp.tool(buscar_informativos, tags={"поиск", "информационные-бюллетени", "судебная-практика"})
 
 # Resources
 mcp.resource("data://tribunais-superiores", mime_type="application/json")(tribunais_superiores)

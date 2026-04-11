@@ -1,4 +1,9 @@
-"""Static reference data for the TCE-CE feature."""
+"""Resources для TCE-CE — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-CE (Счётная палата штата Сеара) сохраняются для обратной
+совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -6,19 +11,19 @@ import json
 
 
 def endpoints_tce_ce() -> str:
-    """Endpoints disponíveis na API de Dados Abertos do TCE-CE (SIM).
+    """Доступные endpoints в API открытых данных TCE-CE (SIM) (legacy, Бразилия).
 
-    Lista os principais módulos com parâmetros obrigatórios.
+    Перечисляет основные модули с обязательными параметрами.
     """
     endpoints = [
         {
             "endpoint": "/municipios",
-            "descricao": "Lista dos 184 municípios cearenses com código e nome",
+            "descricao": "Список 184 муниципалитетов Сеары с кодом и названием (legacy)",
             "parametros_obrigatorios": [],
         },
         {
             "endpoint": "/licitacoes",
-            "descricao": "Processos licitatórios municipais",
+            "descricao": "Процедуры муниципальных закупок (legacy)",
             "parametros_obrigatorios": [
                 "codigo_municipio",
                 "data_realizacao_autuacao_licitacao",
@@ -26,7 +31,7 @@ def endpoints_tce_ce() -> str:
         },
         {
             "endpoint": "/contrato",
-            "descricao": "Contratos municipais (paginado, max 100/página)",
+            "descricao": "Муниципальные контракты (постранично, макс. 100/страница) (legacy)",
             "parametros_obrigatorios": [
                 "codigo_municipio",
                 "data_contrato",
@@ -36,7 +41,7 @@ def endpoints_tce_ce() -> str:
         },
         {
             "endpoint": "/notas_empenhos",
-            "descricao": "Notas de empenho (paginado, max 100/página)",
+            "descricao": "Бюджетные обязательства (постранично, макс. 100/страница) (legacy)",
             "parametros_obrigatorios": [
                 "codigo_municipio",
                 "data_referencia_empenho (yyyymm)",

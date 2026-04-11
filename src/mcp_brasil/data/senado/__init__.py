@@ -1,4 +1,4 @@
-"""Legacy-слой Senado внутри mcp-russia — Senado Federal (compatibility layer)."""
+"""Legacy-слой Senado внутри mcp-russia — Senado Federal (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -11,5 +11,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://legis.senado.leg.br/dadosabertos",
     requires_auth=False,
-    tags=["legislativo", "senadores", "matérias", "votações", "comissões", "agenda"],
+    tags=["законодательный", "сенаторы", "материалы", "голосования", "комиссии", "повестка"],
 )

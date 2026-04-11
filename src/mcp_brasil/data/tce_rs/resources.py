@@ -1,4 +1,9 @@
-"""Static reference data for the TCE-RS feature."""
+"""Resources для TCE-RS — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-RS (Счётная палата штата Риу-Гранди-ду-Сул) сохраняются для
+обратной совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -6,52 +11,52 @@ import json
 
 
 def endpoints_tce_rs() -> str:
-    """Catálogo de endpoints e dados disponíveis no portal TCE-RS."""
+    """Каталог endpoints и доступных данных на портале TCE-RS (legacy, Бразилия)."""
     endpoints = [
         {
-            "grupo": "Dados auxiliares",
+            "grupo": "Вспомогательные данные",
             "url": "dados/auxiliar/municipios.json",
-            "descricao": "Lista de municípios do RS com códigos TCE e IBGE",
+            "descricao": "Список муниципалитетов RS с кодами TCE и IBGE (legacy)",
         },
         {
-            "grupo": "Educação",
+            "grupo": "Образование",
             "url": "dados/municipal/educacao-indice/{ano}.json",
-            "descricao": "Índice de aplicação em educação (MDE) por município e ano",
+            "descricao": "Индекс расходов на образование (MDE) по муниципалитету и году (legacy)",
         },
         {
-            "grupo": "Saúde",
+            "grupo": "Здравоохранение",
             "url": "dados/municipal/saude-indice/{ano}.json",
-            "descricao": "Índice de aplicação em saúde (ASPS) por município e ano",
+            "descricao": "Индекс расходов на здравоохранение (ASPS) по муниципалитету и году (legacy)",
         },
         {
-            "grupo": "Gestão fiscal",
+            "grupo": "Фискальное управление",
             "url": "dados/municipal/gastos-lrf-mde-asps/{ano}.json",
-            "descricao": "Dados de gestão fiscal (LRF) do executivo municipal",
+            "descricao": "Данные фискального управления (LRF) муниципальной исполнительной власти (legacy)",
         },
         {
-            "grupo": "Despesa",
+            "grupo": "Расходы",
             "url": "dados/municipal/balancete-despesa/{ano}.json",
-            "descricao": "Balancete de despesa consolidado (arquivo grande, >100MB)",
+            "descricao": "Сводный баланс расходов (большой файл, >100 МБ) (legacy)",
         },
         {
-            "grupo": "Receita",
+            "grupo": "Доходы",
             "url": "dados/municipal/balancete-receita/{ano}.json",
-            "descricao": "Balancete de receita consolidado (arquivo grande)",
+            "descricao": "Сводный баланс доходов (большой файл) (legacy)",
         },
         {
-            "grupo": "Licitações",
+            "grupo": "Закупки",
             "url": "dados/licitacon/licitacao/ano/{ano}.csv.zip",
-            "descricao": "Licitações consolidadas LicitaCon (ZIP com CSVs)",
+            "descricao": "Сводные закупки LicitaCon (ZIP с CSV) (legacy)",
         },
         {
-            "grupo": "Contratos",
+            "grupo": "Контракты",
             "url": "dados/licitacon/contrato/ano/{ano}.csv.zip",
-            "descricao": "Contratos consolidados LicitaCon (ZIP com CSVs)",
+            "descricao": "Сводные контракты LicitaCon (ZIP с CSV) (legacy)",
         },
         {
             "grupo": "CKAN API",
             "url": "api/3/action/package_search",
-            "descricao": "Busca de datasets por texto e grupo (16 grupos, ~69k datasets)",
+            "descricao": "Поиск наборов данных по тексту и группе (16 групп, ~69 тыс. наборов) (legacy)",
         },
     ]
     return json.dumps(endpoints, ensure_ascii=False, indent=2)

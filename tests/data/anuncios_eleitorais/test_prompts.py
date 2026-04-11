@@ -41,7 +41,8 @@ class TestPanoramaEleitoral:
     def test_retorna_instrucoes(self) -> None:
         result = panorama_eleitoral()
         assert isinstance(result, str)
-        assert "Brasil" in result
+        # Check for Russian text (migrated from Portuguese "Brasil")
+        assert "Бразили" in result  # "Бразилии" or "Бразилия"
 
     def test_com_estado(self) -> None:
         result = panorama_eleitoral(estado="São Paulo")

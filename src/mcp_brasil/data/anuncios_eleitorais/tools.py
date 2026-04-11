@@ -1,9 +1,13 @@
 """Tool functions for the Anuncios Eleitorais feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API библиотеки рекламных объявлений Meta Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -98,25 +102,28 @@ async def buscar_anuncios_eleitorais(
     search_type: str | None = None,
     limit: int = 25,
 ) -> str:
-    """Busca anúncios eleitorais e políticos no Brasil por termos de pesquisa.
+    """(legacy) Поиск избирательных и политических рекламных объявлений в Бразилии.
 
-    Pesquisa na Biblioteca de Anúncios da Meta por anúncios sobre temas sociais,
-    eleições ou política que contenham os termos informados e alcancem público no Brasil.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск в библиотеке рекламных объявлений Meta по объявлениям на социальные темы,
+    выборы или политику, которые содержат указанные термины и охватывают аудиторию в Бразилии.
 
     Args:
-        search_terms: Termos de busca (max 100 chars). Espaço entre palavras = AND.
-            Exemplo: 'educação saúde' busca anúncios com ambas as palavras.
-        ad_active_status: Status do anúncio (ACTIVE, INACTIVE, ALL). Padrão: ACTIVE.
-        ad_delivery_date_min: Data mínima de veiculação no formato YYYY-mm-dd.
-        ad_delivery_date_max: Data máxima de veiculação no formato YYYY-mm-dd.
-        media_type: Tipo de mídia (ALL, IMAGE, MEME, VIDEO, NONE).
-        publisher_platforms: Plataformas (ex: ['FACEBOOK', 'INSTAGRAM']).
-        search_type: Tipo de busca. KEYWORD_UNORDERED (padrão) para palavras em
-            qualquer ordem, KEYWORD_EXACT_PHRASE para frase exata.
-        limit: Número máximo de resultados (1-500). Padrão: 25.
+        search_terms: Поисковые термины (макс. 100 символов). Пробел между словами = AND.
+            Пример: 'educação saúde' ищет объявления с обоими словами.
+        ad_active_status: Статус объявления (ACTIVE, INACTIVE, ALL). По умолчанию: ACTIVE.
+        ad_delivery_date_min: Минимальная дата размещения в формате YYYY-mm-dd.
+        ad_delivery_date_max: Максимальная дата размещения в формате YYYY-mm-dd.
+        media_type: Тип медиа (ALL, IMAGE, MEME, VIDEO, NONE).
+        publisher_platforms: Платформы (напр.: ['FACEBOOK', 'INSTAGRAM']).
+        search_type: Тип поиска. KEYWORD_UNORDERED (по умолчанию) — слова в любом порядке,
+            KEYWORD_EXACT_PHRASE — точная фраза.
+        limit: Максимальное количество результатов (1-500). По умолчанию: 25.
 
     Returns:
-        Lista formatada de anúncios eleitorais com dados de gastos e alcance.
+        Форматированный список избирательных объявлений с данными о расходах и охвате.
     """
     await ctx.info(f"Buscando anúncios eleitorais: '{search_terms}'...")
     kwargs: dict[str, object] = {
@@ -142,21 +149,24 @@ async def buscar_anuncios_por_pagina(
     ad_delivery_date_max: str | None = None,
     limit: int = 25,
 ) -> str:
-    """Busca anúncios eleitorais de páginas específicas do Facebook.
+    """(legacy) Поиск избирательных объявлений конкретных страниц Facebook.
 
-    Use esta tool quando quiser ver todos os anúncios políticos de um candidato,
-    partido ou organização específica, usando o ID da página do Facebook.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Используйте этот инструмент для просмотра всех политических объявлений
+    конкретного кандидата, партии или организации по ID страницы Facebook.
 
     Args:
-        search_page_ids: Lista de IDs de páginas do Facebook (até 10).
-            Exemplo: ['123456789', '987654321'].
-        ad_active_status: Status do anúncio (ACTIVE, INACTIVE, ALL). Padrão: ACTIVE.
-        ad_delivery_date_min: Data mínima de veiculação (YYYY-mm-dd).
-        ad_delivery_date_max: Data máxima de veiculação (YYYY-mm-dd).
-        limit: Número máximo de resultados (1-500). Padrão: 25.
+        search_page_ids: Список ID страниц Facebook (макс. 10).
+            Пример: ['123456789', '987654321'].
+        ad_active_status: Статус объявления (ACTIVE, INACTIVE, ALL). По умолчанию: ACTIVE.
+        ad_delivery_date_min: Минимальная дата размещения (YYYY-mm-dd).
+        ad_delivery_date_max: Максимальная дата размещения (YYYY-mm-dd).
+        limit: Максимальное количество результатов (1-500). По умолчанию: 25.
 
     Returns:
-        Lista formatada de anúncios da(s) página(s) com dados de gastos e alcance.
+        Форматированный список объявлений страницы(страниц) с данными о расходах и охвате.
     """
     await ctx.info(f"Buscando anúncios das páginas: {', '.join(search_page_ids)}...")
     resposta = await client.buscar_anuncios(
@@ -178,22 +188,25 @@ async def buscar_anuncios_por_financiador(
     ad_delivery_date_max: str | None = None,
     limit: int = 25,
 ) -> str:
-    """Busca anúncios eleitorais pelo nome do financiador (quem pagou).
+    """(legacy) Поиск избирательных объявлений по имени спонсора (кто оплатил).
 
-    Filtra anúncios pelo campo 'Pago por' (byline). O nome deve ser o texto
-    completo exibido no disclaimer do anúncio.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Фильтрация объя по полю 'Pago por' (byline). Имя должно быть
+    полным текстом, отображаемым в дисклеймере объявления.
 
     Args:
-        bylines: Nomes dos financiadores. Deve ser o texto exato do disclaimer.
-            Exemplo: ['Partido X', 'Candidato Y para Prefeito'].
-        search_terms: Termos de busca adicionais (opcional).
-        ad_active_status: Status do anúncio (ACTIVE, INACTIVE, ALL). Padrão: ACTIVE.
-        ad_delivery_date_min: Data mínima de veiculação (YYYY-mm-dd).
-        ad_delivery_date_max: Data máxima de veiculação (YYYY-mm-dd).
-        limit: Número máximo de resultados (1-500). Padrão: 25.
+        bylines: Имена спонсоров. Должен быть точный текст дисклеймера.
+            Пример: ['Partido X', 'Candidato Y para Prefeito'].
+        search_terms: Дополнительные поисковые термины (необязательно).
+        ad_active_status: Статус объявления (ACTIVE, INACTIVE, ALL). По умолчанию: ACTIVE.
+        ad_delivery_date_min: Минимальная дата размещения (YYYY-mm-dd).
+        ad_delivery_date_max: Максимальная дата размещения (YYYY-mm-dd).
+        limit: Максимальное количество результатов (1-500). По умолчанию: 25.
 
     Returns:
-        Lista formatada de anúncios do(s) financiador(es).
+        Форматированный список объявлений спонсора(спонсоров).
     """
     await ctx.info(f"Buscando anúncios financiados por: {', '.join(bylines)}...")
     resposta = await client.buscar_anuncios(
@@ -216,24 +229,27 @@ async def buscar_anuncios_por_regiao(
     ad_delivery_date_max: str | None = None,
     limit: int = 50,
 ) -> str:
-    """Busca anúncios eleitorais com alcance em uma região/estado do Brasil.
+    """(legacy) Поиск избирательных объявлений с охватом в регионе/штате Бразилии.
 
-    Busca anúncios políticos e filtra os que tiveram alcance na região informada.
-    A filtragem é feita pós-busca usando o campo delivery_by_region da resposta,
-    pois a API não suporta filtro direto por região na busca.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск политических объявлений с фильтрацией по указанному региону.
+    Фильтрация выполняется после поиска через поле delivery_by_region ответа,
+    так как API не поддерживает прямую фильтрацию по региону.
 
     Args:
-        regiao: Nome do estado brasileiro (ex: 'Piauí', 'São Paulo').
-            Use o nome completo do estado, não a sigla.
-        search_terms: Termos de busca adicionais (opcional). Se vazio, busca
-            pelo nome da região automaticamente.
-        ad_active_status: Status do anúncio (ACTIVE, INACTIVE, ALL). Padrão: ACTIVE.
-        ad_delivery_date_min: Data mínima de veiculação (YYYY-mm-dd).
-        ad_delivery_date_max: Data máxima de veiculação (YYYY-mm-dd).
-        limit: Número de resultados a buscar antes de filtrar (1-500). Padrão: 50.
+        regiao: Название бразильского штата (напр.: 'Piauí', 'São Paulo').
+            Используйте полное название штата, не аббревиатуру.
+        search_terms: Дополнительные поисковые термины (необязательно). Если пусто,
+            автоматически ищет по названию региона.
+        ad_active_status: Статус объявления (ACTIVE, INACTIVE, ALL). По умолчанию: ACTIVE.
+        ad_delivery_date_min: Минимальная дата размещения (YYYY-mm-dd).
+        ad_delivery_date_max: Максимальная дата размещения (YYYY-mm-dd).
+        limit: Количество результатов для поиска перед фильтрацией (1-500). По умолчанию: 50.
 
     Returns:
-        Lista formatada de anúncios com alcance na região.
+        Форматированный список объявлений с охватом в регионе.
     """
     termo = search_terms or regiao
     await ctx.info(f"Buscando anúncios com alcance em {regiao}...")
@@ -277,20 +293,23 @@ async def analisar_demografia_anuncios(
     ad_delivery_date_max: str | None = None,
     limit: int = 25,
 ) -> str:
-    """Analisa a distribuição demográfica e regional dos anúncios eleitorais.
+    """(legacy) Анализ демографического и регионального распредения избирательных объявлений.
 
-    Retorna dados de idade, gênero e região de alcance dos anúncios políticos
-    encontrados. Útil para entender o público-alvo das campanhas.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает данные о возрасте, поле и регионе охвата политических объявлений.
+    Полезно для понимания целевой аудитории кампаний.
 
     Args:
-        search_terms: Termos de busca para filtrar anúncios.
-        search_page_ids: IDs de páginas para filtrar (opcional).
-        ad_delivery_date_min: Data mínima de veiculação (YYYY-mm-dd).
-        ad_delivery_date_max: Data máxima de veiculação (YYYY-mm-dd).
-        limit: Número máximo de anúncios a analisar (1-500). Padrão: 25.
+        search_terms: Поисковые термины для фильтрации объявлений.
+        search_page_ids: ID страниц для фильтрации (необязательно).
+        ad_delivery_date_min: Минимальная дата размещения (YYYY-mm-dd).
+        ad_delivery_date_max: Максимальная дата размещения (YYYY-mm-dd).
+        limit: Максимальное количество объявлений для анализа (1-500). По умолчанию: 25.
 
     Returns:
-        Análise demográfica e regional formatada.
+        Форматированный демографический и региональный анализ.
     """
     await ctx.info(f"Analisando demografia dos anúncios: '{search_terms}'...")
     resposta = await client.buscar_anuncios(
@@ -363,22 +382,25 @@ async def buscar_anuncios_frase_exata(
     ad_delivery_date_max: str | None = None,
     limit: int = 25,
 ) -> str:
-    """Busca anúncios eleitorais por frase exata no Brasil.
+    """(legacy) Поиск избирательных объявлений по точной фразе в Бразилии.
 
-    Diferente da busca padrão (que trata cada palavra separadamente),
-    esta tool busca a frase completa exatamente como informada.
-    Para buscar múltiplas frases, separe-as por vírgula.
+    Примечание: инструмент совместимости для бразильских данных о рекламе Meta.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    В отличие от стандартного поиска (который обрабатывает каждое слово отдельно),
+    этот инструмент ищет полную фразу точно так, как она указана.
+    Для поиска нескольких фраз разделите их запятой.
 
     Args:
-        frase: Frase exata para buscar. Para múltiplas frases, separe por vírgula.
-            Exemplo: 'governo federal' ou 'saúde pública,educação básica'.
-        ad_active_status: Status do anúncio (ACTIVE, INACTIVE, ALL). Padrão: ACTIVE.
-        ad_delivery_date_min: Data mínima de veiculação (YYYY-mm-dd).
-        ad_delivery_date_max: Data máxima de veiculação (YYYY-mm-dd).
-        limit: Número máximo de resultados (1-500). Padrão: 25.
+        frase: Точная фраза для поиска. Для нескольких фраз разделите запятой.
+            Пример: 'governo federal' или 'saúde pública,educação básica'.
+        ad_active_status: Статус объявления (ACTIVE, INACTIVE, ALL). По умолчанию: ACTIVE.
+        ad_delivery_date_min: Минимальная дата размещения (YYYY-mm-dd).
+        ad_delivery_date_max: Максимальная дата размещения (YYYY-mm-dd).
+        limit: Максимальное количество результатов (1-500). По умолчанию: 25.
 
     Returns:
-        Lista formatada de anúncios eleitorais que contêm a frase exata.
+        Форматированный список избирательных объявлений, содержащих точную фразу.
     """
     await ctx.info(f"Buscando anúncios com frase exata: '{frase}'...")
     resposta = await client.buscar_anuncios(

@@ -1,8 +1,12 @@
 """Tool functions for the DataJud (CNJ) feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API DataJud Национального совета юстиции Бразилии (CNJ).
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -20,21 +24,24 @@ async def buscar_processos(
     tribunal: str = "tjsp",
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca processos judiciais na API pública do DataJud (CNJ).
+    """(legacy) Поиск судебных процессов в публичном API DataJud (CNJ).
 
-    Pesquisa por texto livre: CPF, CNPJ, nome da parte, número do processo
-    ou qualquer termo relacionado ao processo.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск по свободному тексту: CPF, CNPJ, имя стороны, номер процесса
+    или любой термин, связанный с процессом.
 
-    Requer a variável de ambiente DATAJUD_API_KEY configurada.
-    Cadastre-se em: https://datajud.cnj.jus.br
+    Требуется переменная окружения DATAJUD_API_KEY.
+    Регистрация: https://datajud.cnj.jus.br
 
     Args:
-        query: Termo de busca (CPF, CNPJ, nome, número do processo).
-        tribunal: Sigla do tribunal (ex: tjsp, trf1, stj). Default: tjsp.
-        tamanho: Quantidade máxima de resultados (1-100). Default: 10.
+        query: Поисковый термин (CPF, CNPJ, имя, номер процесса).
+        tribunal: Аббревиатура трибунала (напр.: tjsp, trf1, stj). По умолчанию: tjsp.
+        tamanho: Максимальное количество результатов (1-100). По умолчанию: 10.
 
     Returns:
-        Tabela com processos encontrados.
+        Таблица с найденными процессами.
     """
     processos = await client.buscar_processos(query, tribunal, tamanho)
     if not processos:
@@ -60,16 +67,19 @@ async def buscar_processo_por_numero(
     numero_processo: str,
     tribunal: str = "tjsp",
 ) -> str:
-    """Busca um processo específico pelo número unificado (NPU).
+    """(legacy) Поиск конкретного процесса по унифицированному номеру (NPU).
 
-    Retorna detalhes completos incluindo partes, assuntos e movimentações.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает полные данные, включая стороны, темы и движения.
 
     Args:
-        numero_processo: Número do processo (formato livre, ex: 0001234-56.2024.8.26.0100).
-        tribunal: Sigla do tribunal (ex: tjsp, trf1, stj). Default: tjsp.
+        numero_processo: Номер процесса (свободный формат, напр.: 0001234-56.2024.8.26.0100).
+        tribunal: Аббревиатура трибунала (напр.: tjsp, trf1, stj). По умолчанию: tjsp.
 
     Returns:
-        Detalhes do processo com partes e movimentações.
+        Подробные данные процесса со сторонами и движениями.
     """
     detalhe = await client.buscar_processo_por_numero(numero_processo, tribunal)
     if detalhe is None:
@@ -112,18 +122,21 @@ async def buscar_processos_por_classe(
     tribunal: str = "tjsp",
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca processos por classe processual.
+    """(legacy) Поиск процессов по процессуальному классу.
 
-    Exemplos de classes: Ação Civil Pública, Mandado de Segurança,
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Примеры классов: Ação Civil Pública, Mandado de Segurança,
     Habeas Corpus, Execução Fiscal, Recurso Extraordinário.
 
     Args:
-        classe: Nome da classe processual (ex: Mandado de Segurança).
-        tribunal: Sigla do tribunal. Default: tjsp.
-        tamanho: Quantidade máxima de resultados (1-100). Default: 10.
+        classe: Название процессуального класса (напр.: Mandado de Segurança).
+        tribunal: Аббревиатура трибунала. По умолчанию: tjsp.
+        tamanho: Максимальное количество результатов (1-100). По умолчанию: 10.
 
     Returns:
-        Tabela com processos da classe informada.
+        Таблица с процессами указанного класса.
     """
     processos = await client.buscar_processos_por_classe(classe, tribunal, tamanho)
     if not processos:
@@ -147,18 +160,21 @@ async def buscar_processos_por_assunto(
     tribunal: str = "tjsp",
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca processos por assunto/tema.
+    """(legacy) Поиск процессов по теме/предмету.
 
-    Exemplos: Direito do Consumidor, Direito Ambiental, Dano Moral,
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Примеры: Direito do Consumidor, Direito Ambiental, Dano Moral,
     Execução de Título Extrajudicial.
 
     Args:
-        assunto: Assunto ou tema do processo.
-        tribunal: Sigla do tribunal. Default: tjsp.
-        tamanho: Quantidade máxima de resultados (1-100). Default: 10.
+        assunto: Тема или предмет процесса.
+        tribunal: Аббревиатура трибунала. По умолчанию: tjsp.
+        tamanho: Максимальное количество результатов (1-100). По умолчанию: 10.
 
     Returns:
-        Tabela com processos do assunto informado.
+        Таблица с процессами по указанной теме.
     """
     processos = await client.buscar_processos_por_assunto(assunto, tribunal, tamanho)
     if not processos:
@@ -184,18 +200,20 @@ async def buscar_processos_por_orgao(
     tribunal: str = "tjsp",
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca processos por órgão julgador (vara, câmara, turma).
+    """(legacy) Поиск процессов по судебному органу (суд, палата, коллегия).
 
-    Exemplos: 1ª Vara Cível, 3ª Câmara de Direito Privado,
-    1ª Turma Recursal.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Примеры: 1ª Vara Cível, 3ª Câmara de Direito Privado, 1ª Turma Recursal.
 
     Args:
-        orgao_julgador: Nome do órgão julgador.
-        tribunal: Sigla do tribunal. Default: tjsp.
-        tamanho: Quantidade máxima de resultados (1-100). Default: 10.
+        orgao_julgador: Название судебного органа.
+        tribunal: Аббревиатура трибунала. По умолчанию: tjsp.
+        tamanho: Максимальное количество результатов (1-100). По умолчанию: 10.
 
     Returns:
-        Tabela com processos do órgão informado.
+        Таблица с процессами указанного органа.
     """
     processos = await client.buscar_processos_por_orgao(orgao_julgador, tribunal, tamanho)
     if not processos:
@@ -223,25 +241,28 @@ async def buscar_processos_avancado(
     tamanho: int = DEFAULT_PAGE_SIZE,
     search_after: str | None = None,
 ) -> str:
-    """Busca avançada de processos com filtros por código e paginação.
+    """(legacy) Расширенный поиск процессов с фильтрацией по коду и пагинацией.
 
-    Permite combinar filtros (classe processual + órgão julgador) e paginar
-    resultados grandes usando search_after (cursor do Elasticsearch).
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Позволяет комбинировать фильтры (процессуальный класс + судебный орган)
+    и paginate большие результаты через search_after (курсор Elasticsearch).
 
-    Use as classes processuais do resource data://classes-processuais
-    e os códigos de órgão retornados pelo campo orgaoJulgador.codigo.
+    Используйте процессуальные классы из ресурса data://classes-processuais
+    и коды органов из поля orgaoJulgador.codigo.
 
-    Para paginar: passe o valor de search_after retornado na resposta anterior.
+    Для пагинации: передайте значение search_after из предыдущего ответа.
 
     Args:
-        tribunal: Sigla do tribunal (ex: tjsp, trf1, tjdft). Default: tjsp.
-        classe_codigo: Código da classe processual (ex: 1116 = Execução Fiscal).
-        orgao_codigo: Código do órgão julgador (ex: 13597).
-        tamanho: Quantidade de resultados por página (1-10000). Default: 10.
-        search_after: Token de paginação retornado pela consulta anterior.
+        tribunal: Аббревиатура трибунала (напр.: tjsp, trf1, tjdft). По умолчанию: tjsp.
+        classe_codigo: Код процессуального класса (напр.: 1116 = Execução Fiscal).
+        orgao_codigo: Код судебного органа (напр.: 13597).
+        tamanho: Количество результатов на страницу (1-10000). По умолчанию: 10.
+        search_after: Токен пагинации, возвращённый предыдущим запросом.
 
     Returns:
-        Tabela com processos e token para próxima página.
+        Таблица с процессами и токеном для следующей страницы.
     """
     token: list[int] | None = None
     if search_after is not None:
@@ -283,16 +304,19 @@ async def consultar_movimentacoes(
     numero_processo: str,
     tribunal: str = "tjsp",
 ) -> str:
-    """Consulta movimentações de um processo judicial.
+    """(legacy) Запрос движений судебного процесса.
 
-    Retorna o histórico de andamentos (despachos, decisões, audiências, etc.).
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает историю движений (распоряжения, решения, слушания и т.д.).
 
     Args:
-        numero_processo: Número do processo (formato livre).
-        tribunal: Sigla do tribunal. Default: tjsp.
+        numero_processo: Номер процесса (свободный формат).
+        tribunal: Аббревиатура трибунала. По умолчанию: tjsp.
 
     Returns:
-        Lista cronológica de movimentações.
+        Хронологический список движений.
     """
     movimentacoes = await client.consultar_movimentacoes(numero_processo, tribunal)
     if not movimentacoes:

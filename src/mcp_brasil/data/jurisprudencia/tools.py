@@ -1,8 +1,12 @@
 """Tool functions for the Jurisprudência feature (STF, STJ, TST).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API судебных решений высших трибуналов Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -26,21 +30,24 @@ async def buscar_jurisprudencia_stf(
     pagina: int = 1,
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca jurisprudência no Supremo Tribunal Federal (STF).
+    """(legacy) Поиск судебной практики в Верховном федеральном трибунале Бразилии (STF).
 
-    Pesquisa acórdãos do STF por ementa, tema ou termos jurídicos.
-    Suporta operadores: E, OU, NÃO, aspas para expressão exata,
-    ~ para busca fuzzy, $ para curinga.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск решений STF по тезису, теме или юридическим терминам.
+    Поддерживает операторы: E, OU, NÃO, кавычки для точного выражения,
+    ~ для нечёткого поиска, $ для подстановочного знака.
 
-    Exemplos: "direito E privacidade", "súmula vinculante", "ADPF 153".
+    Примеры: "direito E privacidade", "súmula vinculante", "ADPF 153".
 
     Args:
-        query: Termos de busca (suporta operadores lógicos).
-        pagina: Página de resultados (default: 1).
-        tamanho: Resultados por página (default: 10).
+        query: Поисковые термины (поддерживает логические операторы).
+        pagina: Страница результатов (по умолчанию: 1).
+        tamanho: Результаты на страницу (по умолчанию: 10).
 
     Returns:
-        Lista de acórdãos com ementa, relator e data.
+        Список решений с тезисом, докладчиком и датой.
     """
     resultados = await client.buscar_stf(query, pagina, tamanho)
     if not resultados:
@@ -68,21 +75,24 @@ async def buscar_jurisprudencia_stj(
     pagina: int = 1,
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca jurisprudência no Superior Tribunal de Justiça (STJ).
+    """(legacy) Поиск судебной практики в Высшем суде справедливости Бразилии (STJ).
 
-    Pesquisa acórdãos do STJ via sistema SCON.
-    Suporta operadores: e, ou, não, mesmo, com, PROX(N), ADJ(N),
-    aspas para expressão exata, $ para curinga.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск решений STJ через систему SCON.
+    Поддерживает операторы: e, ou, não, mesmo, com, PROX(N), ADJ(N),
+    кавычки для точного выражения, $ для подстановочного знака.
 
-    Exemplos: "consumidor e dano moral", "recurso especial e FGTS".
+    Примеры: "consumidor e dano moral", "recurso especial e FGTS".
 
     Args:
-        query: Termos de busca (suporta operadores lógicos).
-        pagina: Página de resultados (default: 1).
-        tamanho: Resultados por página (default: 10).
+        query: Поисковые термины (поддерживает логические операторы).
+        pagina: Страница результатов (по умолчанию: 1).
+        tamanho: Результаты на страницу (по умолчанию: 10).
 
     Returns:
-        Lista de acórdãos com ementa, relator e data.
+        Список решений с тезисом, докладчиком и датой.
     """
     resultados = await client.buscar_stj(query, pagina, tamanho)
     if not resultados:
@@ -110,20 +120,23 @@ async def buscar_jurisprudencia_tst(
     pagina: int = 1,
     tamanho: int = DEFAULT_PAGE_SIZE,
 ) -> str:
-    """Busca jurisprudência no Tribunal Superior do Trabalho (TST).
+    """(legacy) Поиск судебной практики в Высшем трудовом трибунале Бразилии (TST).
 
-    Pesquisa acórdãos do TST por ementa ou termos trabalhistas.
-    Suporta aspas para expressão exata.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск решений TST по тезису или трудовым терминам.
+    Поддерживает кавычки для точного выражения.
 
-    Exemplos: "horas extras", "dano moral trabalhista", "FGTS".
+    Примеры: "horas extras", "dano moral trabalhista", "FGTS".
 
     Args:
-        query: Termos de busca.
-        pagina: Página de resultados (default: 1).
-        tamanho: Resultados por página (default: 10).
+        query: Поисковые термины.
+        pagina: Страница результатов (по умолчанию: 1).
+        tamanho: Результаты на страницу (по умолчанию: 10).
 
     Returns:
-        Lista de acórdãos com ementa, relator e data.
+        Список решений с тезисом, докладчиком и датой.
     """
     resultados = await client.buscar_tst(query, pagina, tamanho)
     if not resultados:
@@ -150,16 +163,19 @@ async def buscar_sumulas(
     tribunal: str = "stf",
     query: str | None = None,
 ) -> str:
-    """Busca súmulas dos tribunais superiores.
+    """(legacy) Поиск сводных тезисов (сумул) высших трибуналов.
 
-    Pesquisa súmulas do STF (incluindo vinculantes).
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск сумул STF (включая обязательные).
 
     Args:
-        tribunal: Tribunal (stf). Default: stf.
-        query: Filtro por texto da súmula (opcional).
+        tribunal: Трибунал (stf). По умолчанию: stf.
+        query: Фильтр по тексту сумулы (необязательно).
 
     Returns:
-        Lista de súmulas com número e enunciado.
+        Список сумул с номером и формулировкой.
     """
     if tribunal.lower() != "stf":
         return "Busca de súmulas atualmente disponível apenas para o STF."
@@ -187,17 +203,20 @@ async def buscar_repercussao_geral(
     query: str | None = None,
     tema: int | None = None,
 ) -> str:
-    """Busca temas de repercussão geral do STF.
+    """(legacy) Поиск тем общей реперкуссии STF.
 
-    Repercussão geral são temas que o STF reconhece como relevantes
-    e cuja decisão se aplica a todos os processos similares.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Общая реперкуссия — темы, которые STF признаёт значимыми
+    и решение по которым применяется ко всем аналогичным делам.
 
     Args:
-        query: Busca por texto no tema (opcional).
-        tema: Número do tema específico (opcional).
+        query: Поиск по тексту темы (необязательно).
+        tema: Номер конкретной темы (необязательно).
 
     Returns:
-        Lista de temas com tese fixada e situação.
+        Список тем с установленным тезисом и статусом.
     """
     temas = await client.buscar_repercussao_geral(query, tema)
     if not temas:
@@ -225,17 +244,20 @@ async def buscar_informativos(
     tribunal: str = "stf",
     query: str | None = None,
 ) -> str:
-    """Busca informativos de jurisprudência dos tribunais superiores.
+    """(legacy) Поиск информационных бюллетеней судебной практики высших трибуналов.
 
-    Informativos são resumos periódicos das decisões mais relevantes.
-    Atualmente busca via acórdãos com filtro por informativo.
+    Примечание: инструмент совместимости для бразильских судебных данных.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Информативы — периодические резюме наиболее важных решений.
+    В настоящее время поиск через решения с фильтром по информативу.
 
     Args:
-        tribunal: Tribunal (stf, stj, tst). Default: stf.
-        query: Termos de busca (opcional).
+        tribunal: Трибунал (stf, stj, tst). По умолчанию: stf.
+        query: Поисковые термины (необязательно).
 
     Returns:
-        Lista de decisões relevantes dos informativos.
+        Список релевантных решений информативов.
     """
     search = query or "informativo"
     tribunal_lower = tribunal.lower()

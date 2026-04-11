@@ -1,4 +1,4 @@
-"""Pydantic models for Jurisprudência feature (STF, STJ, TST)."""
+"""Pydantic-схемы для модуля судебной практики (STF, STJ, TST, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Jurisprudencia(BaseModel):
-    """Resultado de busca de jurisprudência (acórdão)."""
+    """Результат поиска судебной практики (решение коллегии) (legacy -- Brazil)."""
 
     tribunal: str | None = None
     ementa: str | None = None
@@ -21,7 +21,7 @@ class Jurisprudencia(BaseModel):
 
 
 class Sumula(BaseModel):
-    """Súmula de tribunal superior."""
+    """Сумма (сводная правовая позиция) высшего суда (legacy -- Brazil)."""
 
     tribunal: str | None = None
     numero: int | None = None
@@ -33,7 +33,7 @@ class Sumula(BaseModel):
 
 
 class RepercussaoGeral(BaseModel):
-    """Tema de repercussão geral do STF."""
+    """Тема общей реперкуссии STF (legacy -- Brazil)."""
 
     numero_tema: int | None = None
     titulo: str | None = None

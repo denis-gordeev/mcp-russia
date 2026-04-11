@@ -1,5 +1,6 @@
-"""TCE-PE feature server — registers tools, resources, and prompts.
+"""TCE-PE feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian State Court of Accounts (Pernambuco) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -15,7 +16,7 @@ from .tools import (
     buscar_unidades_pe,
 )
 
-mcp = FastMCP("mcp-russia-tce-pe")
+mcp = FastMCP("mcp-russia-tce-pe-legacy")
 
 # Tools
 mcp.tool(buscar_unidades_pe)

@@ -1,9 +1,13 @@
 """Tool functions for the TCE-RN feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Риу-Гранди-ду-Норти (TCE-RN) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -16,16 +20,19 @@ from . import client
 
 
 async def listar_jurisdicionados_rn(ctx: Context) -> str:
-    """Lista entidades jurisdicionadas pelo TCE-RN.
+    """(legacy) Список подведомственных образований TCE-RN.
 
-    Dados do sistema SIAI do TCE-RN. Retorna o identificador da unidade,
-    necessário para as demais consultas (despesas, receitas, licitações).
+    Примечание: инструмент совместимости для бразильских данных TCE-RN.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные системы SIAI TCE-RN. Возвращает идентификатор единицы,
+    необходимый для остальных запросов (расходы, доходы, закупки).
 
     Args:
-        ctx: Contexto MCP.
+        ctx: Контекст MCP.
 
     Returns:
-        Lista de entidades com identificador, nome e CNPJ.
+        Список образований с идентификатором, названием и CNPJ.
     """
     await ctx.info("Buscando jurisdicionados do TCE-RN...")
     entidades = await client.listar_jurisdicionados()
@@ -49,19 +56,22 @@ async def buscar_despesas_rn(
     bimestre: int,
     id_unidade: int,
 ) -> str:
-    """Busca despesas orçamentárias de uma unidade no TCE-RN.
+    """(legacy) Поиск бюджетных расходов единицы в TCE-RN.
 
-    Dados do balanço orçamentário (Anexo 01) com valores de dotação,
-    empenho, liquidação e pagamento por elemento de despesa.
+    Примечание: инструмент совместимости для бразильских данных TCE-RN.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные бюджетного баланса (Приложение 01) со значениями ассигнований,
+    резервирований, ликвидации и платежей по элементу расходов.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        bimestre: Bimestre (1-6).
-        id_unidade: ID da unidade (obtido via listar_jurisdicionados_rn).
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        bimestre: Двухмесячный период (1-6).
+        id_unidade: ID единицы (получен через listar_jurisdicionados_rn).
 
     Returns:
-        Lista de despesas com valores por elemento.
+        Список расходов со значениями по элементу.
     """
     await ctx.info(f"Buscando despesas no TCE-RN (ano={ano}, bim={bimestre})...")
     despesas = await client.buscar_despesas(ano=ano, bimestre=bimestre, id_unidade=id_unidade)
@@ -87,19 +97,22 @@ async def buscar_receitas_rn(
     bimestre: int,
     id_unidade: int,
 ) -> str:
-    """Busca receitas orçamentárias de uma unidade no TCE-RN.
+    """(legacy) Поиск бюджетных доходов единицы в TCE-RN.
 
-    Dados do balanço orçamentário (Anexo 01) com valores previstos
-    e realizados por natureza de receita.
+    Примечание: инструмент совместимости для бразильских данных TCE-RN.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные бюджетного баланса (Приложение 01) с прогнозируемыми
+    и реализованными значениями по природе дохода.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        bimestre: Bimestre (1-6).
-        id_unidade: ID da unidade (obtido via listar_jurisdicionados_rn).
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        bimestre: Двухмесячный период (1-6).
+        id_unidade: ID единицы (получен через listar_jurisdicionados_rn).
 
     Returns:
-        Lista de receitas com valores previstos e realizados.
+        Список доходов с прогнозируемыми и реализованными значениями.
     """
     await ctx.info(f"Buscando receitas no TCE-RN (ano={ano}, bim={bimestre})...")
     receitas = await client.buscar_receitas(ano=ano, bimestre=bimestre, id_unidade=id_unidade)
@@ -127,19 +140,22 @@ async def buscar_licitacoes_rn(
     data_inicio: str,
     data_fim: str,
 ) -> str:
-    """Busca licitações públicas de uma unidade no TCE-RN.
+    """(legacy) Поиск общественных закупок единицы в TCE-RN.
 
-    Dados do Anexo 38 do SIAI. Requer o ID da unidade (obtido via
-    listar_jurisdicionados_rn) e um período de datas.
+    Примечание: инструмент совместимости для бразильских данных TCE-RN.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные Приложения 38 SIAI. Требует ID единицы (получен через
+    listar_jurisdicionados_rn) и период дат.
 
     Args:
-        ctx: Contexto MCP.
-        id_unidade: ID da unidade jurisdicionada.
-        data_inicio: Data inicial (formato yyyy-MM-dd, ex: "2024-01-01").
-        data_fim: Data final (formato yyyy-MM-dd, ex: "2024-12-31").
+        ctx: Контекст MCP.
+        id_unidade: ID подведомственной единицы.
+        data_inicio: Начальная дата (формат yyyy-MM-dd, напр.: "2024-01-01").
+        data_fim: Конечная дата (формат yyyy-MM-dd, напр.: "2024-12-31").
 
     Returns:
-        Lista de licitações com modalidade, objeto e valores.
+        Список закупок с модальностью, объектом и стоимостью.
     """
     await ctx.info(f"Buscando licitações no TCE-RN (unidade={id_unidade})...")
     licitacoes = await client.buscar_licitacoes(
@@ -170,18 +186,21 @@ async def buscar_contratos_rn(
     id_unidade: int,
     considerar_hierarquia: bool = False,
 ) -> str:
-    """Busca contratos de uma unidade no TCE-RN.
+    """(legacy) Поиск контрактов единицы в TCE-RN.
 
-    Dados do Anexo 13 do SIAI. Inclui objeto, valor, contratado
-    e vigência. Use considerar_hierarquia=True para incluir sub-órgãos.
+    Примечание: инструмент совместимости для бразильских данных TCE-RN.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные Приложения 13 SIAI. Включает объект, стоимость, подрядчика
+    и срок действия. Используйте considerar_hierarquia=True для включения под-органов.
 
     Args:
-        ctx: Contexto MCP.
-        id_unidade: ID da unidade jurisdicionada.
-        considerar_hierarquia: Incluir sub-órgãos (padrão: False).
+        ctx: Контекст MCP.
+        id_unidade: ID подведомственной единицы.
+        considerar_hierarquia: Включить под-органы (по умолчанию: False).
 
     Returns:
-        Lista de contratos com objeto, valor e contratado.
+        Список контрактов с объектом, стоимостью и подрядчиком.
     """
     await ctx.info(f"Buscando contratos no TCE-RN (unidade={id_unidade})...")
     contratos = await client.buscar_contratos(

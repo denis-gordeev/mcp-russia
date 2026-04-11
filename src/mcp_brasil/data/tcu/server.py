@@ -1,5 +1,6 @@
-"""TCU feature server — registers tools, resources, and prompts.
+"""TCU feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Federal Court of Accounts API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -18,17 +19,17 @@ from .tools import (
     consultar_inidoneos,
 )
 
-mcp = FastMCP("mcp-russia-tcu")
+mcp = FastMCP("mcp-russia-tcu-legacy")
 
 # Tools
-mcp.tool(buscar_acordaos, tags={"busca", "acordaos", "auditoria"})
-mcp.tool(consultar_inabilitados, tags={"consulta", "inabilitados", "sancoes"})
-mcp.tool(consultar_inidoneos, tags={"consulta", "inidoneos", "sancoes", "licitacoes"})
-mcp.tool(consultar_certidoes_apf, tags={"consulta", "certidoes", "compliance"})
-mcp.tool(calcular_debito_tcu, tags={"calculo", "debito", "correcao-monetaria"})
-mcp.tool(buscar_pedidos_congresso, tags={"busca", "congresso", "fiscalizacao"})
-mcp.tool(buscar_contratos_tcu, tags={"busca", "contratos", "compras"})
-mcp.tool(consultar_cadirreg, tags={"consulta", "contas-irregulares", "sancoes"})
+mcp.tool(buscar_acordaos, tags={"поиск", "решения", "аудит"})
+mcp.tool(consultar_inabilitados, tags={"запрос", "дисквалифицированные", "санкции"})
+mcp.tool(consultar_inidoneos, tags={"запрос", "недобросовестные", "санкции", "тендеры"})
+mcp.tool(consultar_certidoes_apf, tags={"запрос", "сертификаты", "комплаенс"})
+mcp.tool(calcular_debito_tcu, tags={"расчёт", "задолженность", "денежная-коррекция"})
+mcp.tool(buscar_pedidos_congresso, tags={"поиск", "конгресс", "контроль"})
+mcp.tool(buscar_contratos_tcu, tags={"поиск", "контракты", "закупки"})
+mcp.tool(consultar_cadirreg, tags={"запрос", "нерегулярные-счета", "санкции"})
 
 # Resources
 mcp.resource("data://tipos-certidoes-apf", mime_type="application/json")(tipos_certidoes_apf)

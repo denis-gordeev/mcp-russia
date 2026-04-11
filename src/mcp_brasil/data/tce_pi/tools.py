@@ -1,6 +1,11 @@
 """MCP tools for TCE-PI — Portal da Cidadania do Piauí.
 
-Each tool delegates HTTP to client.py and returns LLM-formatted strings.
+Инструмент совместимости с API Счётного трибунала штата Пиауи (TCE-PI) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Каждый инструмент делегирует HTTP клиенту client.py и возвращает
+отформатированные строки для LLM.
 """
 
 from __future__ import annotations
@@ -13,10 +18,13 @@ from . import client
 
 
 async def listar_prefeituras_pi(ctx: Context) -> str:
-    """Lista todas as prefeituras (municípios) do estado do Piauí.
+    """(legacy) Список всех префектур (муниципалитетов) штата Пиауи.
 
-    Retorna nome, código IBGE e links dos 224 municípios piauienses
-    registrados no TCE-PI.
+    Примечание: инструмент совместимости для бразильских данных TCE-PI.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает название, код IBGE и ссылки на 224 муниципалитета Пиауи,
+    зарегистрированных в TCE-PI.
     """
     await ctx.info("Listando prefeituras do Piauí...")
     items = await client.listar_prefeituras()
@@ -37,10 +45,14 @@ async def listar_prefeituras_pi(ctx: Context) -> str:
 
 
 async def buscar_prefeitura_pi(ctx: Context, nome: str) -> str:
-    """Busca prefeituras do Piauí por nome.
+    """(legacy) Поиск префектур Пиауи по названию.
+
+    Примечание: инструмент совместимости для бразильских данных TCE-PI.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
 
     Args:
-        nome: Nome ou parte do nome do município (ex: 'Teresina', 'Picos').
+        nome: Название или часть названия муниципалитета (напр.: 'Teresina', 'Picos').
     """
     await ctx.info(f"Buscando prefeitura: {nome}")
     items = await client.buscar_prefeitura(nome)
@@ -71,14 +83,17 @@ async def consultar_despesas_pi(
     id_prefeitura: int,
     exercicio: int | None = None,
 ) -> str:
-    """Consulta despesas de um município do Piauí.
+    """(legacy) Запрос расходов муниципалитета Пиауи.
 
-    Retorna o histórico anual de despesas (empenhada, liquidada, paga).
-    Se o exercício for informado, também detalha por função de governo.
+    Примечание: инструмент совместимости для бразильских данных TCE-PI.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает годовой истории расходов (зарезервированные, ликвидированные, оплаченные).
+    Если указан финансовый год, также детализирует по функции правительства.
 
     Args:
-        id_prefeitura: ID da prefeitura no TCE-PI (obtido via buscar_prefeitura_pi).
-        exercicio: Ano do exercício (ex: 2024). Se omitido, retorna histórico.
+        id_prefeitura: ID префектуры в TCE-PI (получен через buscar_prefeitura_pi).
+        exercicio: Год (напр.: 2024). Если пропущено, возвращает историю.
     """
     await ctx.info(f"Consultando despesas: prefeitura={id_prefeitura}")
     anuais = await client.consultar_despesas(id_prefeitura)
@@ -109,14 +124,17 @@ async def consultar_receitas_pi(
     id_prefeitura: int,
     exercicio: int,
 ) -> str:
-    """Consulta receitas de um município do Piauí em determinado exercício.
+    """(legacy) Запрос доходов муниципалитета Пиауи за определённый год.
 
-    Retorna receitas detalhadas (categoria, origem, valores previstos e
-    arrecadados).
+    Примечание: инструмент совместимости для бразильских данных TCE-PI.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает детализированные доходы (категория, источник, прогнозируемые и
+    собранные значения).
 
     Args:
-        id_prefeitura: ID da prefeitura no TCE-PI.
-        exercicio: Ano do exercício (ex: 2024).
+        id_prefeitura: ID префектуры в TCE-PI.
+        exercicio: Год (напр.: 2024).
     """
     await ctx.info(f"Consultando receitas: prefeitura={id_prefeitura}, ano={exercicio}")
     items = await client.consultar_receitas(id_prefeitura, exercicio)
@@ -143,12 +161,15 @@ async def consultar_receitas_pi(
 
 
 async def listar_orgaos_pi(ctx: Context, exercicio: int) -> str:
-    """Lista órgãos estaduais do Piauí em determinado exercício.
+    """(legacy) Список органов штата Пиауи за определённый год.
 
-    Retorna a lista de órgãos/entidades estaduais registrados no TCE-PI.
+    Примечание: инструмент совместимости для бразильских данных TCE-PI.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает список органов/образований штата, зарегистрированных в TCE-PI.
 
     Args:
-        exercicio: Ano do exercício (ex: 2024).
+        exercicio: Год (напр.: 2024).
     """
     await ctx.info(f"Listando órgãos do Piauí: exercicio={exercicio}")
     items = await client.listar_orgaos(exercicio)

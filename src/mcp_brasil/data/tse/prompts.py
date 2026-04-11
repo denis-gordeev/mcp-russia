@@ -1,4 +1,10 @@
-"""Prompts for the TSE feature — analysis templates for LLMs."""
+"""Prompts for the TSE feature — analysis templates for LLMs.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian electoral analysis prompts are kept for backward compatibility
+with the historical TSE (Tribunal Superior Eleitoral) integration and are NOT
+part of the target Russian data model.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +16,7 @@ def analise_candidato(
     eleicao_id: int,
     cargo: int,
 ) -> str:
-    """Gera uma análise completa de um candidato.
+    """Генерирует полный анализ кандидата (legacy — Бразилия).
 
     Orienta o LLM a consultar dados do candidato, patrimônio e prestação de contas.
 
@@ -22,24 +28,29 @@ def analise_candidato(
         cargo: Código do cargo.
     """
     return (
-        f"Faça uma análise completa do candidato '{nome}' "
-        f"na eleição {ano} usando os dados do TSE.\n\n"
+        f"Подготовь полный анализ кандидата '{nome}' "
+        f"на выборах {ano} года.\n\n"
+        "Контекст:\n"
+        "- Репозиторий `mcp-russia` всё ещё находится в миграции.\n"
+        "- Данные поступают из исторического бразильского integration-layer\n"
+        "  (TSE — Верховный избирательный суд, Бразилия).\n\n"
         "Passos:\n"
         f"1. Use listar_candidatos(ano={ano}, municipio={municipio}, "
         f"eleicao_id={eleicao_id}, cargo={cargo}) para encontrar o candidato\n"
         "2. Com o ID do candidato, use buscar_candidato() para detalhes completos\n"
         "3. Use consultar_prestacao_contas() para ver as finanças de campanha\n\n"
-        "Apresente:\n"
-        "- Dados pessoais e eleitorais\n"
-        "- Patrimônio declarado (total de bens)\n"
-        "- Receitas e despesas de campanha\n"
-        "- Principais doadores e fornecedores\n"
-        "- Situação da candidatura (apto/inapto, ficha limpa)"
+        "Сформируй отчёт:\n"
+        "- Персональные и избирательные данные\n"
+        "- Декларированное имущество (общая стоимость)\n"
+        "- Доходы и расходы кампании\n"
+        "- Основные спонсоры и поставщики\n"
+        "- Статус кандидатуры (допущен/не допущен, чистая ли справка)\n\n"
+        "Пометка: это legacy-бразильский источник в переходном контуре `mcp-russia`."
     )
 
 
 def comparativo_eleicao(ano: int, municipio: int, eleicao_id: int, cargo: int) -> str:
-    """Gera um comparativo entre candidatos de uma eleição.
+    """Генерирует сравнительный анализ кандидатов выборов (legacy — Бразилия).
 
     Args:
         ano: Ano da eleição.
@@ -48,16 +59,19 @@ def comparativo_eleicao(ano: int, municipio: int, eleicao_id: int, cargo: int) -
         cargo: Código do cargo.
     """
     return (
-        f"Compare os candidatos da eleição {ano} usando os dados do TSE.\n\n"
+        f"Сравни кандидатов на выборах {ano} года.\n\n"
+        "Контекст:\n"
+        "- Данные поступают из исторического бразильского слоя TSE.\n\n"
         "Passos:\n"
         f"1. Use listar_candidatos(ano={ano}, municipio={municipio}, "
         f"eleicao_id={eleicao_id}, cargo={cargo})\n"
         "2. Para cada candidato, use buscar_candidato() para detalhes\n"
         "3. Para cada candidato, use consultar_prestacao_contas()\n\n"
-        "Apresente uma tabela comparativa com:\n"
-        "- Nome, partido, número\n"
-        "- Patrimônio declarado\n"
-        "- Receitas e despesas de campanha\n"
-        "- Situação (apto/inapto)\n"
-        "- Escolaridade e ocupação"
+        "Подготовь сравнительную таблицу:\n"
+        "- Имя, партия, номер\n"
+        "- Декларированное имущество\n"
+        "- Доходы и расходы кампании\n"
+        "- Статус (допущен/не допущен)\n"
+        "- Образование и род занятий\n\n"
+        "Пометка: это legacy-бразильский источник в переходном контуре `mcp-russia`."
     )

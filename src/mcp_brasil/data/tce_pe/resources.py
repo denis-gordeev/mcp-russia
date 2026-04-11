@@ -1,4 +1,9 @@
-"""Static reference data for the TCE-PE feature."""
+"""Resources для TCE-PE — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-PE (Счётная палата штата Пернамбуку) сохраняются для обратной
+совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -6,29 +11,29 @@ import json
 
 
 def endpoints_tce_pe() -> str:
-    """Endpoints disponíveis na API de Dados Abertos do TCE-PE.
+    """Доступные endpoints в API открытых данных TCE-PE (legacy, Бразилия).
 
-    Lista os principais módulos com parâmetros típicos.
+    Перечисляет основные модули с типичными параметрами.
     """
     endpoints = [
         {
             "endpoint": "UnidadesJurisdicionadas",
-            "descricao": "Unidades jurisdicionadas (prefeituras, câmaras, etc.)",
+            "descricao": "Подконтрольные единицы (префектуры, камеры и т.д.) (legacy)",
             "parametros": ["NATUREZA", "MUNICIPIO"],
         },
         {
             "endpoint": "LicitacaoUG",
-            "descricao": "Licitações por unidade gestora",
+            "descricao": "Закупки по управляющей единице (legacy)",
             "parametros": ["ANOLICITACAO", "MUNICIPIO", "MODALIDADE"],
         },
         {
             "endpoint": "Contratos",
-            "descricao": "Contratos municipais e estaduais",
+            "descricao": "Муниципальные и штатные контракты (legacy)",
             "parametros": ["ANOREFERENCIA", "MUNICIPIO", "CPFCNPJ"],
         },
         {
             "endpoint": "DespesasMunicipais",
-            "descricao": "Despesas municipais (empenhos, liquidações, pagamentos)",
+            "descricao": "Муниципальные расходы (бюджетные обязательства, ликвидация, платежи) (legacy)",
             "parametros": [
                 "ANOREFERENCIA",
                 "MESREFERENCIA",
@@ -37,7 +42,7 @@ def endpoints_tce_pe() -> str:
         },
         {
             "endpoint": "Fornecedores",
-            "descricao": "Fornecedores registrados no SAGRES",
+            "descricao": "Поставщики, зарегистрированные в SAGRES (legacy)",
             "parametros": ["NOME", "CPFCNPJ"],
         },
     ]

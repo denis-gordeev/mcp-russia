@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-TO feature."""
+"""Pydantic-схемы для модуля Счётного суда Токантинса (TCE-TO, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Pessoa(BaseModel):
-    """Pessoa com processos no TCE-TO."""
+    """Лицо с делами в TCE-TO (legacy -- Brazil)."""
 
     id: int | None = None
     nome: str | None = None
@@ -15,7 +15,7 @@ class Pessoa(BaseModel):
 
 
 class ProcessoResumo(BaseModel):
-    """Resumo de processo vinculado a uma pessoa."""
+    """Сводка дела, связанного с лицом (legacy -- Brazil)."""
 
     numero_ano: str | None = None
     assunto: str | None = None
@@ -27,7 +27,7 @@ class ProcessoResumo(BaseModel):
 
 
 class Processo(BaseModel):
-    """Processo detalhado do TCE-TO."""
+    """Подробное дело TCE-TO (legacy -- Brazil)."""
 
     numero_ano: str | None = None
     assunto: str | None = None
@@ -44,7 +44,7 @@ class Processo(BaseModel):
 
 
 class Pauta(BaseModel):
-    """Pauta de sessão do TCE-TO."""
+    """Повестка заседания TCE-TO (legacy -- Brazil)."""
 
     data: str | None = None
     hora: str | None = None

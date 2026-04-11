@@ -1,25 +1,36 @@
-"""Analysis prompts for the TCE-TO feature."""
+"""Prompts для модуля TCE-TO — анализ дел Счётной палаты Токантинса (legacy).
+
+NOTE: Это слой обратной совместимости (legacy) в рамках mcp-russia.
+Данные промпты для анализа бразильских дел TCE-TO сохранены
+для обеспечения обратной совместимости и НЕ являются частью
+целевой российской модели данных.
+
+Prompts предоставляют переиспользуемые шаблоны сообщений, направляющие взаимодействие LLM.
+"""
 
 from __future__ import annotations
 
 
 def analisar_pessoa_to(nome: str) -> str:
-    """Análise de processos de uma pessoa no TCE-TO.
+    """Анализ дел, связанных с лицом, в Счётной палате Токантинса (legacy).
 
-    Busca e analisa todos os processos vinculados a uma pessoa
-    no Tribunal de Contas do Tocantins.
+    Ищет и аналиет все дела, связанные с лицом, в Счётной палате штата Токантинс.
 
     Args:
-        nome: Nome da pessoa a pesquisar.
+        nome: Имя лица для поиска.
     """
     return (
-        f"Analise os processos de '{nome}' no TCE-TO.\n\n"
-        "1. Use `buscar_pessoas_to` para encontrar a pessoa.\n"
-        "2. Para cada processo relevante, use `consultar_processo_to` "
-        "para obter detalhes.\n"
-        "3. Apresente um resumo com:\n"
-        "   - Quantidade total de processos\n"
-        "   - Tipos de processos (classes de assunto)\n"
-        "   - Entidades de origem\n"
-        "   - Situação atual (departamento)"
+        f"Выполни анализ дел, связанных с '{nome}', в TCE-TO "
+        "(Счётная палата штата Токантинс).\n"
+        "Это legacy-источник Бразилии внутри mcp-russia: используй его как "
+        "справочный compatibility-layer и явно помечай географические ограничения.\n\n"
+        "1. Используй `buscar_pessoas_to` для поиска лица.\n"
+        "2. Для каждого релевантного дела используй `consultar_processo_to` "
+        "для получения подробностей.\n"
+        "3. Представь сводку:\n"
+        "   - Общее количество дел\n"
+        "   - Типы дел (классы предметов)\n"
+        "   - Исходные органы\n"
+        "   - Текущее состояние (отдел)\n"
+        "4. Примечание: анализ основан на данных TCE-TO (Бразилия)"
     )

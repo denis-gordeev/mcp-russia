@@ -1,5 +1,6 @@
-"""Saúde feature server — registers tools, resources, and prompts.
+"""Saude feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Health Network API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -17,10 +18,10 @@ from .tools import (
 mcp = FastMCP("mcp-russia-saude-legacy")
 
 # Tools (4)
-mcp.tool(buscar_estabelecimentos, tags={"busca", "estabelecimentos", "cnes", "sus"})
-mcp.tool(buscar_profissionais, tags={"busca", "profissionais", "cnes"})
-mcp.tool(listar_tipos_estabelecimento, tags={"listagem", "estabelecimentos", "tipos"})
-mcp.tool(consultar_leitos, tags={"consulta", "leitos", "hospitalares"})
+mcp.tool(buscar_estabelecimentos, tags={"поиск", "учреждения", "cnes", "sus"})
+mcp.tool(buscar_profissionais, tags={"поиск", "специалисты", "cnes"})
+mcp.tool(listar_tipos_estabelecimento, tags={"список", "учреждения", "типы"})
+mcp.tool(consultar_leitos, tags={"запрос", "койки", "больничные"})
 
 # Resources (URIs without namespace prefix — mount adds "saude/" automatically)
 mcp.resource("data://codigos-uf", mime_type="application/json")(codigos_uf_cnes)

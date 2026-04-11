@@ -1,10 +1,16 @@
-"""Prompts for the Senado feature — analysis templates for LLMs."""
+"""Prompts for the Senado feature — analysis templates for LLMs.
+
+NOTE: This is a legacy/compatibility layer within mcp-russia.
+These Brazilian Senate legislative analysis prompts are kept for backward
+compatibility with the historical Senado Federal integration and are NOT part
+of the target Russian data model.
+"""
 
 from __future__ import annotations
 
 
 def acompanhar_materia(sigla_tipo: str, numero: str, ano: str) -> str:
-    """Gera um acompanhamento completo de uma matéria legislativa no Senado.
+    """Генерирует полный обзор законодательного акта в Сенате (legacy — Бразилия).
 
     Cria um template que orienta o LLM a consultar dados da matéria,
     tramitação e votações no Senado Federal.
@@ -16,8 +22,11 @@ def acompanhar_materia(sigla_tipo: str, numero: str, ano: str) -> str:
     """
     materia = f"{sigla_tipo} {numero}/{ano}"
     return (
-        f"Faça um acompanhamento completo da matéria {materia} "
-        "usando os dados do Senado Federal.\n\n"
+        f"Подготовь полный обзор законодательного акта {materia}.\n\n"
+        "Контекст:\n"
+        "- Репозиторий `mcp-russia` всё ещё находится в миграции.\n"
+        "- Данные поступают из исторического бразильского integration-layer\n"
+        "  (Senado Federal, Бразилия).\n\n"
         "Passos:\n"
         f"1. Use buscar_materia(sigla_tipo='{sigla_tipo}', numero='{numero}', "
         f"ano='{ano}') para encontrar a matéria e obter o código\n"
@@ -27,17 +36,18 @@ def acompanhar_materia(sigla_tipo: str, numero: str, ano: str) -> str:
         "para ver o histórico de tramitação\n"
         "4. Use votos_materia(codigo=CÓDIGO) para verificar votações\n"
         "5. Use textos_materia(codigo=CÓDIGO) para obter links dos documentos\n\n"
-        "Apresente:\n"
-        f"- Resumo da {materia}: ementa, autor e situação atual\n"
-        "- Histórico de tramitação (principais eventos)\n"
-        "- Resultado das votações (se houver)\n"
-        "- Links para textos e documentos oficiais\n"
-        "- Próximos passos previstos na tramitação"
+        "Сформируй отчёт:\n"
+        f"- Резюме {materia}: содержание, автор и текущий статус\n"
+        "- История движения (ключевые события)\n"
+        "- Результаты голосований (если есть)\n"
+        "- Ссылки на тексты и официальные документы\n"
+        "- Следующие этапы процедуры\n\n"
+        "Пометка: это legacy-бразильский источник в переходном контуре `mcp-russia`."
     )
 
 
 def perfil_senador(codigo: str) -> str:
-    """Gera um perfil completo de um senador.
+    """Генерирует полный профиль сенатора (legacy — Бразилия).
 
     Cria um template com dados pessoais e votações do senador.
 
@@ -45,22 +55,24 @@ def perfil_senador(codigo: str) -> str:
         codigo: Código do senador na API do Senado.
     """
     return (
-        f"Monte um perfil completo do senador código {codigo} "
-        "usando os dados do Senado Federal.\n\n"
+        f"Составь полный профиль сенатора, код {codigo}.\n\n"
+        "Контекст:\n"
+        "- Данные поступают из исторического бразильского слоя Senado Federal.\n\n"
         "Passos:\n"
         f"1. Use buscar_senador(codigo='{codigo}') "
         "para obter os dados básicos\n"
         f"2. Use votacoes_senador(codigo='{codigo}') "
         "para verificar as votações recentes\n\n"
-        "Apresente:\n"
-        "- Dados do senador: nome, partido, UF, mandato\n"
-        "- Votações recentes: posicionamento em matérias relevantes\n"
-        "- Padrão de votação: alinhamento com governo/oposição"
+        "Сформируй отчёт:\n"
+        "- Данные сенатора: имя, партия, штат, срок полномочий\n"
+        "- Последние голосования: позиция по ключевым актам\n"
+        "- Паттерн голосований: соответствие правительству/оппозиции\n\n"
+        "Пометка: это legacy-бразильский источник в переходном контуре `mcp-russia`."
     )
 
 
 def analise_votacao_senado(codigo_sessao: str) -> str:
-    """Gera uma análise detalhada de uma votação no Senado.
+    """Генерирует детальный анализ голосования в Сенате (legacy — Бразилия).
 
     Cria um template que analisa o resultado e contexto de uma votação.
 
@@ -68,14 +80,16 @@ def analise_votacao_senado(codigo_sessao: str) -> str:
         codigo_sessao: Código da sessão de votação.
     """
     return (
-        f"Analise detalhadamente a votação {codigo_sessao} "
-        "no Senado Federal.\n\n"
+        f"Детально проанализируй голосование {codigo_sessao}.\n\n"
+        "Контекст:\n"
+        "- Данные поступают из исторического бразильского слоя Senado Federal.\n\n"
         "Passos:\n"
         f"1. Use detalhe_votacao(codigo_sessao='{codigo_sessao}') "
         "para obter o resultado e placar\n\n"
-        "Apresente:\n"
-        "- Resultado geral: aprovada ou rejeitada\n"
-        "- Placar: votos Sim, Não e Abstenção\n"
-        "- Matéria votada e seu contexto\n"
-        "- Análise: qual o impacto desta votação?"
+        "Сформируй отчёт:\n"
+        "- Общий результат: принято или отклонено\n"
+        "- Расклад голосов: За, Против, Воздержались\n"
+        "- Рассмотренный акт и его контекст\n"
+        "- Анализ: каково влияние этого голосования?\n\n"
+        "Пометка: это legacy-бразильский источник в переходном контуре `mcp-russia`."
     )

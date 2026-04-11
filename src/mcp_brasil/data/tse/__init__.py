@@ -1,4 +1,4 @@
-"""Legacy-слой TSE внутри mcp-russia — Tribunal Superior Eleitoral (compatibility layer)."""
+"""Legacy-слой TSE внутри mcp-russia — Tribunal Superior Eleitoral (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -12,5 +12,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://divulgacandcontas.tse.jus.br/divulga/rest/v1",
     requires_auth=False,
-    tags=["eleitoral", "candidatos", "eleicoes", "tse", "prestacao-contas"],
+    tags=["избирательный", "кандидаты", "выборы", "tse", "отчёты-о-расходах"],
 )

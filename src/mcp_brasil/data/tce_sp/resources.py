@@ -1,4 +1,9 @@
-"""Static reference data for the TCE-SP feature."""
+"""Resources для TCE-SP — уровень обратной совместимости для бразильских данных аудита.
+
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные TCE-SP (Счётная палата штата Сан-Паулу) сохраняются для
+обратной совместимости с исторической интеграцией и НЕ входят в целевую российскую модель данных.
+"""
 
 from __future__ import annotations
 
@@ -6,25 +11,25 @@ import json
 
 
 def endpoints_tce_sp() -> str:
-    """Endpoints disponíveis na API de Transparência do TCE-SP.
+    """Доступные endpoints в API прозрачности TCE-SP (legacy, Бразилия).
 
-    Descreve os 3 endpoints JSON com parâmetros e formato de dados.
+    Описывает 3 JSON-endpoint'а с параметрами и форматом данных.
     """
     endpoints = [
         {
             "endpoint": "municipios",
-            "descricao": "Lista dos 645 municípios paulistas com slug e nome",
+            "descricao": "Список 645 муниципалитетов Сан-Паулу с slug и названием (legacy)",
             "parametros": [],
         },
         {
             "endpoint": "despesas/{municipio}/{exercicio}/{mes}",
-            "descricao": "Despesas municipais: empenhos, pagamentos, liquidações e anulações",
+            "descricao": "Муниципальные расходы: бюджетные обязательства, платежи, ликвидация и аннулирования (legacy)",
             "parametros": ["municipio (slug)", "exercicio (2014+)", "mes (1-12)"],
             "eventos": ["Empenhado", "Valor Pago", "Valor Liquidado", "Anulação"],
         },
         {
             "endpoint": "receitas/{municipio}/{exercicio}/{mes}",
-            "descricao": "Receitas municipais por fonte de recurso e classificação",
+            "descricao": "Муниципальные доходы по источнику ресурса и классификации (legacy)",
             "parametros": ["municipio (slug)", "exercicio (2014+)", "mes (1-12)"],
         },
     ]

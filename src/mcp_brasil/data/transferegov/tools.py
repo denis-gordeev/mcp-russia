@@ -1,8 +1,12 @@
 """Tool functions for the TransfereGov feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Инструмент совместимости с API TransfereGov (бразильская система федеральных трансфертов).
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
 """
 
 from __future__ import annotations
@@ -59,19 +63,22 @@ async def buscar_emendas_pix(
     uf: str | None = None,
     pagina: int = 1,
 ) -> str:
-    """Lista transferências especiais (emendas pix) do TransfereGov.
+    """(legacy) Список специальных трансфертов (emendas pix) системы TransfereGov.
 
-    Consulta emendas parlamentares do tipo transferência especial
-    (popularmente conhecidas como "emendas pix"), que são repasses
-    diretos da União para estados e municípios sem convênio.
+    Примечание: инструмент совместимости для бразильских данных TransfereGov.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Запрос парламентских поправок типа специального трансферта
+    (в народе известных как "emendas pix") — прямых перечислений
+    Союза штатам и муниципалитетам без соглашения.
 
     Args:
-        ano: Ano do plano de ação (ex: 2024).
-        uf: UF do beneficiário (ex: PI, SP).
-        pagina: Página de resultados (padrão: 1).
+        ano: Год плана действий (напр.: 2024).
+        uf: Аббревиатура штата получателя (напр.: PI, SP).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com emendas pix encontradas.
+        Таблица с найденными emendas pix.
     """
     emendas = await client.buscar_emendas_pix(ano=ano, uf=uf, pagina=pagina)
     if not emendas:
@@ -88,18 +95,21 @@ async def buscar_emenda_por_autor(
     ano: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca emendas pix por nome do parlamentar autor.
+    """(legacy) Поиск emendas pix по имени парламентария-автора.
 
-    Pesquisa emendas parlamentares do tipo transferência especial
-    pelo nome (ou parte do nome) do autor da emenda.
+    Примечание: инструмент совместимости для бразильских данных TransfereGov.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск парламентских поправок типа специального трансферта
+    по имени (или части имени) автора поправки.
 
     Args:
-        nome_autor: Nome ou parte do nome do parlamentar (ex: "Lira").
-        ano: Ano do plano de ação (opcional, ex: 2024).
-        pagina: Página de resultados (padrão: 1).
+        nome_autor: Имя или часть имени парламентария (напр.: "Lira").
+        ano: Год плана действий (необязательно, напр.: 2024).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com emendas do autor encontradas.
+        Таблица с найденными поправками автора.
     """
     emendas = await client.buscar_emenda_por_autor(nome_autor, ano=ano, pagina=pagina)
     if not emendas:
@@ -112,16 +122,19 @@ async def buscar_emenda_por_autor(
 
 
 async def detalhe_emenda(id_plano_acao: int) -> str:
-    """Detalha uma emenda pix (transferência especial) por ID do plano de ação.
+    """(legacy) Подробная информация о emenda pix (специальный трансферт) по ID плана.
 
-    Retorna informações completas de uma transferência especial,
-    incluindo valores de custeio e investimento.
+    Примечание: инструмент совместимости для бразильских данных TransfereGov.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает полную информацию специального трансферта,
+    включая значения на содержание и инвестиции.
 
     Args:
-        id_plano_acao: ID do plano de ação no TransfereGov.
+        id_plano_acao: ID плана действий в TransfereGov.
 
     Returns:
-        Detalhes da emenda.
+        Подробные данные поправки.
     """
     emenda = await client.detalhe_emenda(id_plano_acao)
     if not emenda:
@@ -155,18 +168,21 @@ async def emendas_por_municipio(
     ano: int | None = None,
     pagina: int = 1,
 ) -> str:
-    """Busca emendas pix destinadas a um município específico.
+    """(legacy) Поиск emendas pix, направленных в конкретный муниципалитет.
 
-    Pesquisa transferências especiais (emendas pix) pelo nome
-    do município beneficiário.
+    Примечание: инструмент совместимости для бразильских данных TransfereGov.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Поиск специальных трансфертов (emendas pix) по названию
+    муниципалитета-получателя.
 
     Args:
-        nome_municipio: Nome ou parte do nome do município (ex: "Teresina").
-        ano: Ano do plano de ação (opcional, ex: 2024).
-        pagina: Página de resultados (padrão: 1).
+        nome_municipio: Название или часть названия муниципалитета (напр.: "Teresina").
+        ano: Год плана действий (необязательно, напр.: 2024).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com emendas destinadas ao município.
+        Таблица с поправками, направленными в муниципалитет.
     """
     emendas = await client.emendas_por_municipio(nome_municipio, ano=ano, pagina=pagina)
     if not emendas:
@@ -179,17 +195,20 @@ async def emendas_por_municipio(
 
 
 async def resumo_emendas_ano(ano: int, pagina: int = 1) -> str:
-    """Lista emendas pix de um ano para visão geral.
+    """(legacy) Список emendas pix за год для общего обзора.
 
-    Retorna uma visão geral das transferências especiais (emendas pix)
-    realizadas em um determinado ano.
+    Примечание: инструмент совместимости для бразильских данных TransfereGov.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Возвращает общий обзор специальных трансфертов (emendas pix),
+    выполненных за определённый год.
 
     Args:
-        ano: Ano do plano de ação (ex: 2024).
-        pagina: Página de resultados (padrão: 1).
+        ano: Год плана действий (напр.: 2024).
+        pagina: Страница результатов (по умолчанию: 1).
 
     Returns:
-        Tabela com emendas do ano.
+        Таблица с поправками года.
     """
     emendas = await client.resumo_emendas_ano(ano, pagina=pagina)
     if not emendas:

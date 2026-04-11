@@ -1,10 +1,10 @@
-"""Pydantic models for TCE-PI data."""
+"""Pydantic-схемы для данных Счётного суда Пиауи (TCE-PI, Brazil, legacy)."""
 
 from pydantic import BaseModel
 
 
 class Prefeitura(BaseModel):
-    """Municipality registered at TCE-PI."""
+    """Муниципалитет, зарегистрированный в TCE-PI (legacy -- Brazil)."""
 
     id: int
     nome: str
@@ -14,14 +14,14 @@ class Prefeitura(BaseModel):
 
 
 class Gestor(BaseModel):
-    """Current mayor of a municipality."""
+    """Действующий мэр муниципалитета (legacy -- Brazil)."""
 
     nome: str
     inicio_gestao: str | None = None
 
 
 class DespesaAnual(BaseModel):
-    """Annual expense totals for a municipality or state."""
+    """Годовые итоги расходов муниципалитета или штата (legacy -- Brazil)."""
 
     exercicio: int
     empenhada: float = 0
@@ -30,14 +30,14 @@ class DespesaAnual(BaseModel):
 
 
 class DespesaFuncao(BaseModel):
-    """Expense breakdown by government function."""
+    """Разбивка расходов по государственным функциям (legacy -- Brazil)."""
 
     funcao: str
     paga: float = 0
 
 
 class ReceitaAnual(BaseModel):
-    """Annual revenue totals for a municipality or state."""
+    """Годовые итоги доходов муниципалитета или штата (legacy -- Brazil)."""
 
     exercicio: int | None = None
     prevista: float = 0
@@ -45,7 +45,7 @@ class ReceitaAnual(BaseModel):
 
 
 class ReceitaDetalhe(BaseModel):
-    """Revenue detail for a specific year."""
+    """Детализация доходов за конкретный год (legacy -- Brazil)."""
 
     categoria: str | None = None
     origem: str | None = None
@@ -56,7 +56,7 @@ class ReceitaDetalhe(BaseModel):
 
 
 class Orgao(BaseModel):
-    """State organ/entity registered at TCE-PI."""
+    """Государственный орган/учреждение, зарегистрированное в TCE-PI (legacy -- Brazil)."""
 
     id: str
     nome: str
@@ -64,7 +64,7 @@ class Orgao(BaseModel):
 
 
 class Credor(BaseModel):
-    """Top creditor for a municipality."""
+    """Крупнейший кредитор муниципалитета (legacy -- Brazil)."""
 
     nome: str
     pago: float = 0

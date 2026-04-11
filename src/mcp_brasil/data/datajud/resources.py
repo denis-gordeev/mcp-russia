@@ -1,8 +1,8 @@
-"""Resources for the DataJud feature — legacy compatibility layer for Brazilian judicial data.
+"""Resources для DataJud — уровень обратной совместимости для бразильских судебных данных.
 
-NOTE: This is a legacy/compatibility layer within mcp-russia.
-Brazilian judicial reference data is kept for backward compatibility
-with the historical CNJ DataJud integration and is NOT part of the target Russian data model.
+NOTE: Это уровень обратной совместимости (legacy) в рамках mcp-russia.
+Бразильские справочные данные судебной системы сохраняются для обратной совместимости
+с исторической интеграцией CNJ DataJud и НЕ входят в целевую российскую модель данных.
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from .constants import CLASSES_PROCESSUAIS, DATAJUD_API_BASE, TRIBUNAIS, TRIBUNA
 
 
 def tribunais_disponiveis() -> str:
-    """Lista de tribunais disponíveis na API DataJud com siglas e nomes."""
+    """Список доступных судов в API DataJud с аббревиатурами и названиями (legacy)."""
     data = [
         {"sigla": sigla, "nome": TRIBUNAL_NOMES.get(sigla, sigla.upper())}
         for sigla in sorted(TRIBUNAIS.keys())
@@ -22,19 +22,19 @@ def tribunais_disponiveis() -> str:
 
 
 def classes_processuais() -> str:
-    """Classes processuais comuns para busca no DataJud."""
+    """Распространённые процессуальные классы для поиска в DataJud (legacy)."""
     return json.dumps(CLASSES_PROCESSUAIS, ensure_ascii=False)
 
 
 def info_api() -> str:
-    """Informações gerais sobre a API DataJud (CNJ)."""
+    """Общая информация об API DataJud (Национальный совет юстиции Бразилии, legacy)."""
     data = {
-        "nome": "API Pública DataJud — Conselho Nacional de Justiça",
+        "nome": "Публичное API DataJud — Национальный совет юстиции (Бразилия, legacy)",
         "url_base": DATAJUD_API_BASE,
-        "autenticacao": "Requer API Key (cadastro em datajud.cnj.jus.br)",
-        "formato": "Elasticsearch (POST com body JSON)",
+        "autenticacao": "Требует API Key (регистрация на datajud.cnj.jus.br)",
+        "formato": "Elasticsearch (POST с телом JSON)",
         "documentacao": "https://datajud-wiki.cnj.jus.br/api-publica/",
-        "cobertura": "Processos de todos os tribunais brasileiros (legacy/compatibility layer)",
+        "cobertura": "Дела всех судов Бразилии (уровень обратной совместимости)",
         "total_tribunais": len(TRIBUNAIS),
     }
     return json.dumps(data, ensure_ascii=False)

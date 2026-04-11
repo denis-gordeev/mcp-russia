@@ -1,5 +1,6 @@
-"""TCE-SP feature server — registers tools, resources, and prompts.
+"""TCE-SP feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian State Court of Accounts (Sao Paulo) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -9,7 +10,7 @@ from .prompts import analisar_financas_municipio_sp
 from .resources import endpoints_tce_sp
 from .tools import consultar_despesas_sp, consultar_receitas_sp, listar_municipios_sp
 
-mcp = FastMCP("mcp-russia-tce-sp")
+mcp = FastMCP("mcp-russia-tce-sp-legacy")
 
 # Tools
 mcp.tool(listar_municipios_sp)

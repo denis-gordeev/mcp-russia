@@ -1,5 +1,6 @@
-"""TCE-RJ feature server — registers tools, resources, and prompts.
+"""TCE-RJ feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian State Court of Accounts (Rio de Janeiro) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -17,7 +18,7 @@ from .tools import (
     buscar_prestacao_contas,
 )
 
-mcp = FastMCP("mcp-russia-tce-rj")
+mcp = FastMCP("mcp-russia-tce-rj-legacy")
 
 # Tools
 mcp.tool(buscar_licitacoes)

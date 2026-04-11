@@ -1,4 +1,4 @@
-"""Pydantic schemas for the TCE-CE feature."""
+"""Pydantic-схемы для модуля Счётного суда Сеары (TCE-CE, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,14 +6,14 @@ from pydantic import BaseModel
 
 
 class Municipio(BaseModel):
-    """Município cearense sob jurisdição do TCE-CE."""
+    """Муниципалитет Сеары под юрисдикцией TCE-CE (legacy -- Brazil)."""
 
     codigo_municipio: str | None = None
     nome_municipio: str | None = None
 
 
 class Licitacao(BaseModel):
-    """Licitação municipal no Ceará."""
+    """Муниципальный тендер в Сеаре (legacy -- Brazil)."""
 
     codigo_municipio: str | None = None
     numero_licitacao: str | None = None
@@ -27,7 +27,7 @@ class Licitacao(BaseModel):
 
 
 class Contrato(BaseModel):
-    """Contrato municipal no Ceará."""
+    """Муниципальный контракт в Сеаре (legacy -- Brazil)."""
 
     codigo_municipio: str | None = None
     numero_contrato: str | None = None
@@ -41,14 +41,14 @@ class Contrato(BaseModel):
 
 
 class ContratoResultado(BaseModel):
-    """Resultado paginado de contratos."""
+    """Страничный результат поиска контрактов (legacy -- Brazil)."""
 
     contratos: list[Contrato] = []
     total: int = 0
 
 
 class Empenho(BaseModel):
-    """Nota de empenho municipal no Ceará."""
+    """Муниципальное обязательство (nota de empenho) в Сеаре (legacy -- Brazil)."""
 
     codigo_municipio: int | None = None
     numero_empenho: str | None = None
@@ -62,7 +62,7 @@ class Empenho(BaseModel):
 
 
 class EmpenhoResultado(BaseModel):
-    """Resultado paginado de empenhos."""
+    """Страничный результат поиска обязательств (legacy -- Brazil)."""
 
     empenhos: list[Empenho] = []
     total: int = 0

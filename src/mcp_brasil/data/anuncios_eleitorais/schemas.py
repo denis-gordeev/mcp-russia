@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Anuncios Eleitorais feature."""
+"""Pydantic-схемы для модуля избирательной рекламы (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,115 +6,141 @@ from pydantic import BaseModel, Field
 
 
 class FaixaValor(BaseModel):
-    """Faixa de valor (min/max) usada para impressões e gastos."""
+    """Диапазон значений (мин/макс), используемый для показов и расходов (legacy -- Brazil)."""
 
-    lower_bound: str | None = Field(default=None, description="Limite inferior da faixa")
-    upper_bound: str | None = Field(default=None, description="Limite superior da faixa")
+    lower_bound: str | None = Field(
+        default=None, description="Нижняя граница диапазона (legacy -- Brazil)"
+    )
+    upper_bound: str | None = Field(
+        default=None, description="Верхняя граница диапазона (legacy -- Brazil)"
+    )
 
 
 class DistribuicaoDemografica(BaseModel):
-    """Distribuição demográfica por idade e gênero."""
+    """Демографическое распределение по возрасту и полу (legacy -- Brazil)."""
 
-    age: str | None = Field(default=None, description="Faixa etária (ex: 18-24, 25-34)")
-    gender: str | None = Field(default=None, description="Gênero (Male, Female, Unknown)")
-    percentage: str | None = Field(default=None, description="Percentual do alcance")
+    age: str | None = Field(
+        default=None, description="Возрастная группа (напр.: 18-24, 25-34) (legacy -- Brazil)"
+    )
+    gender: str | None = Field(
+        default=None, description="Пол (Male, Female, Unknown) (legacy -- Brazil)"
+    )
+    percentage: str | None = Field(default=None, description="Процент охвата (legacy -- Brazil)")
 
 
 class DistribuicaoRegional(BaseModel):
-    """Distribuição regional do alcance do anúncio."""
+    """Региональное распределение охвата рекламы (legacy -- Brazil)."""
 
-    region: str | None = Field(default=None, description="Nome da região/estado")
-    percentage: str | None = Field(default=None, description="Percentual do alcance")
+    region: str | None = Field(
+        default=None, description="Название региона/штата (legacy -- Brazil)"
+    )
+    percentage: str | None = Field(default=None, description="Процент охвата (legacy -- Brazil)")
 
 
 class LocalizacaoAlvo(BaseModel):
-    """Localização incluída ou excluída do direcionamento."""
+    """Локация, включённая или исключённая из таргетинга (legacy -- Brazil)."""
 
-    name: str | None = Field(default=None, description="Nome da localização")
+    name: str | None = Field(default=None, description="Название локации (legacy -- Brazil)")
     num_obfuscated: int | None = Field(
-        default=None, description="Número de localizações ofuscadas"
+        default=None, description="Количество скрытых локаций (legacy -- Brazil)"
     )
-    excluded: bool | None = Field(default=None, description="Se é uma exclusão")
+    excluded: bool | None = Field(
+        default=None, description="Является ли исключением (legacy -- Brazil)"
+    )
 
 
 class AnuncioEleitoral(BaseModel):
-    """Anúncio eleitoral/político da Biblioteca de Anúncios da Meta."""
+    """Избирательная/политическая реклама из Библиотеки рекламы Meta (legacy -- Brazil)."""
 
-    id: str = Field(description="ID da biblioteca do anúncio")
+    id: str = Field(description="ID из библиотеки рекламы (legacy -- Brazil)")
     ad_creation_time: str | None = Field(
-        default=None, description="Data/hora de criação do anúncio (UTC)"
+        default=None, description="Дата/время создания рекламы (UTC) (legacy -- Brazil)"
     )
     ad_creative_bodies: list[str] | None = Field(
-        default=None, description="Textos do criativo do anúncio"
+        default=None, description="Тексты креатива рекламы (legacy -- Brazil)"
     )
     ad_creative_link_captions: list[str] | None = Field(
-        default=None, description="Legendas dos links"
+        default=None, description="Подписи к ссылкам (legacy -- Brazil)"
     )
     ad_creative_link_descriptions: list[str] | None = Field(
-        default=None, description="Descrições dos links"
+        default=None, description="Описания ссылок (legacy -- Brazil)"
     )
     ad_creative_link_titles: list[str] | None = Field(
-        default=None, description="Títulos dos links"
+        default=None, description="Заголовки ссылок (legacy -- Brazil)"
     )
     ad_delivery_start_time: str | None = Field(
-        default=None, description="Data/hora de início da veiculação"
+        default=None, description="Дата/время начала показа (legacy -- Brazil)"
     )
     ad_delivery_stop_time: str | None = Field(
-        default=None, description="Data/hora de parada da veiculação"
+        default=None, description="Дата/время окончания показа (legacy -- Brazil)"
     )
     ad_snapshot_url: str | None = Field(
-        default=None, description="URL para visualizar o anúncio arquivado"
+        default=None, description="URL для просмотра архивной рекламы (legacy -- Brazil)"
     )
-    bylines: str | None = Field(default=None, description="Nome do financiador do anúncio")
-    currency: str | None = Field(default=None, description="Moeda (ISO)")
-    spend: FaixaValor | None = Field(default=None, description="Gasto total (faixa)")
-    impressions: FaixaValor | None = Field(default=None, description="Impressões (faixa)")
+    bylines: str | None = Field(
+        default=None, description="Имя спонсора рекламы (legacy -- Brazil)"
+    )
+    currency: str | None = Field(default=None, description="Валюта (ISO) (legacy -- Brazil)")
+    spend: FaixaValor | None = Field(
+        default=None, description="Общие расходы (диапазон) (legacy -- Brazil)"
+    )
+    impressions: FaixaValor | None = Field(
+        default=None, description="Показы (диапазон) (legacy -- Brazil)"
+    )
     demographic_distribution: list[DistribuicaoDemografica] | None = Field(
-        default=None, description="Distribuição demográfica (idade/gênero)"
+        default=None, description="Демографическое распределение (возраст/пол) (legacy -- Brazil)"
     )
     delivery_by_region: list[DistribuicaoRegional] | None = Field(
-        default=None, description="Distribuição regional do alcance"
+        default=None, description="Региональное распределение охвата (legacy -- Brazil)"
     )
     estimated_audience_size: FaixaValor | None = Field(
-        default=None, description="Tamanho estimado da audiência"
+        default=None, description="Оценочный размер аудитории (legacy -- Brazil)"
     )
-    br_total_reach: int | None = Field(default=None, description="Alcance estimado no Brasil")
-    languages: list[str] | None = Field(default=None, description="Idiomas do anúncio")
-    page_id: str | None = Field(default=None, description="ID da página do Facebook")
-    page_name: str | None = Field(default=None, description="Nome da página do Facebook")
+    br_total_reach: int | None = Field(
+        default=None, description="Оценочный охват в Бразилии (legacy -- Brazil)"
+    )
+    languages: list[str] | None = Field(
+        default=None, description="Языки рекламы (legacy -- Brazil)"
+    )
+    page_id: str | None = Field(
+        default=None, description="ID страницы Facebook (legacy -- Brazil)"
+    )
+    page_name: str | None = Field(
+        default=None, description="Название страницы Facebook (legacy -- Brazil)"
+    )
     publisher_platforms: list[str] | None = Field(
-        default=None, description="Plataformas onde o anúncio apareceu"
+        default=None, description="Платформы, на которых показывалась реклама (legacy -- Brazil)"
     )
     target_ages: list[str] | None = Field(
-        default=None, description="Faixas etárias do direcionamento"
+        default=None, description="Возрастные группы таргетинга (legacy -- Brazil)"
     )
     target_gender: str | None = Field(
-        default=None, description="Gênero do direcionamento (Women, Men, All)"
+        default=None, description="Пол таргетинга (Women, Men, All) (legacy -- Brazil)"
     )
     target_locations: list[LocalizacaoAlvo] | None = Field(
-        default=None, description="Localizações do direcionamento"
+        default=None, description="Локации таргетинга (legacy -- Brazil)"
     )
     age_country_gender_reach_breakdown: list[dict[str, object]] | None = Field(
-        default=None, description="Detalhamento do alcance por idade/país/gênero"
+        default=None, description="Разбивка охвата по возрасту/стране/полу (legacy -- Brazil)"
     )
 
 
 class CursorPaginacao(BaseModel):
-    """Cursores para paginação da API."""
+    """Курсоры для постраничной навигации API (legacy -- Brazil)."""
 
     before: str | None = None
     after: str | None = None
 
 
 class Paginacao(BaseModel):
-    """Dados de paginação da resposta."""
+    """Данные постраничной навигации ответа (legacy -- Brazil)."""
 
     cursors: CursorPaginacao | None = None
-    next: str | None = Field(default=None, description="URL da próxima página")
+    next: str | None = Field(default=None, description="URL следующей страницы (legacy -- Brazil)")
 
 
 class RespostaAnuncios(BaseModel):
-    """Resposta paginada da API de anúncios."""
+    """Страничный ответ API рекламы (legacy -- Brazil)."""
 
     data: list[AnuncioEleitoral] = Field(default_factory=list)
     paging: Paginacao | None = None

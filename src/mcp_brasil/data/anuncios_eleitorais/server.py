@@ -1,5 +1,6 @@
-"""Anuncios Eleitorais feature server — registers tools, resources, and prompts.
+"""Anuncios Eleitorais feature server (legacy) — registers tools, resources, and prompts.
 
+Brazilian Electoral Ads API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -16,7 +17,7 @@ from .tools import (
     buscar_anuncios_por_regiao,
 )
 
-mcp = FastMCP("mcp-russia-anuncios_eleitorais")
+mcp = FastMCP("mcp-russia-anuncios_eleitorais-legacy")
 
 # Tools
 mcp.tool(buscar_anuncios_eleitorais)

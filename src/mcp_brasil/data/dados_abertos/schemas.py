@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Dados Abertos feature."""
+"""Pydantic-схемы для модуля открытых данных (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class ConjuntoDados(BaseModel):
-    """Dataset do Portal Dados Abertos."""
+    """Набор данных портала открытых данных (legacy -- Brazil)."""
 
     id: str | None = None
     titulo: str | None = None
@@ -19,14 +19,14 @@ class ConjuntoDados(BaseModel):
 
 
 class ConjuntoResultado(BaseModel):
-    """Resultado paginado de busca de conjuntos."""
+    """Страничный результат поиска наборов данных (legacy -- Brazil)."""
 
     total: int = 0
     conjuntos: list[ConjuntoDados] = []
 
 
 class Organizacao(BaseModel):
-    """Organização publicadora de dados."""
+    """Организация, публикующая данные (legacy -- Brazil)."""
 
     id: str | None = None
     nome: str | None = None
@@ -35,14 +35,14 @@ class Organizacao(BaseModel):
 
 
 class OrganizacaoResultado(BaseModel):
-    """Resultado paginado de organizações."""
+    """Страничный результат поиска организаций (legacy -- Brazil)."""
 
     total: int = 0
     organizacoes: list[Organizacao] = []
 
 
 class RecursoDados(BaseModel):
-    """Recurso (arquivo/API) de um dataset."""
+    """Ресурс (файл/API) набора данных (legacy -- Brazil)."""
 
     id: str | None = None
     titulo: str | None = None
@@ -52,7 +52,7 @@ class RecursoDados(BaseModel):
 
 
 class RecursoResultado(BaseModel):
-    """Resultado paginado de recursos."""
+    """Страничный результат поиска ресурсов (legacy -- Brazil)."""
 
     total: int = 0
     recursos: list[RecursoDados] = []

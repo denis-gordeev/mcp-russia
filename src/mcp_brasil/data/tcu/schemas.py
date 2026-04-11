@@ -1,16 +1,16 @@
-"""Pydantic schemas for the TCU feature."""
+"""Pydantic-схемы для модуля Счётного суда (TCU, Brazil, legacy)."""
 
 from __future__ import annotations
 
 from pydantic import BaseModel
 
 # ---------------------------------------------------------------------------
-# Acórdãos
+# Решения коллегии (Acordaos)
 # ---------------------------------------------------------------------------
 
 
 class Acordao(BaseModel):
-    """Acórdão (decisão colegiada) do TCU."""
+    """Решение коллегии (acordao) Счётного суда (legacy -- Brazil)."""
 
     key: str | None = None
     tipo: str | None = None
@@ -27,12 +27,12 @@ class Acordao(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Inabilitados
+# Недопущенные лица
 # ---------------------------------------------------------------------------
 
 
 class Inabilitado(BaseModel):
-    """Pessoa inabilitada para função pública por decisão do TCU."""
+    """Лицо, недопущенное к государственной должности по решению Счётного суда (legacy -- Brazil)."""
 
     nome: str | None = None
     cpf: str | None = None
@@ -46,7 +46,7 @@ class Inabilitado(BaseModel):
 
 
 class InabilitadoResultado(BaseModel):
-    """Resultado paginado de inabilitados (ORDS)."""
+    """Страничный результат поиска недопущенных лиц (ORDS) (legacy -- Brazil)."""
 
     items: list[Inabilitado] = []
     has_more: bool = False
@@ -56,12 +56,12 @@ class InabilitadoResultado(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Inidôneos
+# Недобросовестные участники
 # ---------------------------------------------------------------------------
 
 
 class Inidoneo(BaseModel):
-    """Licitante declarado inidôneo pelo TCU."""
+    """Участник тендера, признанный недобросовестным Счётным судом (legacy -- Brazil)."""
 
     nome: str | None = None
     cpf_cnpj: str | None = None
@@ -75,7 +75,7 @@ class Inidoneo(BaseModel):
 
 
 class InidoneoResultado(BaseModel):
-    """Resultado paginado de inidôneos (ORDS)."""
+    """Страничный результат поиска недобросовестных участников (ORDS) (legacy -- Brazil)."""
 
     items: list[Inidoneo] = []
     has_more: bool = False
@@ -85,12 +85,12 @@ class InidoneoResultado(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Certidões APF
+# Справки APF
 # ---------------------------------------------------------------------------
 
 
 class TipoCertidao(BaseModel):
-    """Tipo de certidão disponível no sistema APF."""
+    """Тип справки, доступной в системе APF (legacy -- Brazil)."""
 
     orgao_emissor: str
     sigla: str
@@ -98,7 +98,7 @@ class TipoCertidao(BaseModel):
 
 
 class CertidaoItem(BaseModel):
-    """Certidão individual dentro do resultado consolidado."""
+    """Индивидуальная справка в консолидированном результате (legacy -- Brazil)."""
 
     emissor: str | None = None
     tipo: str | None = None
@@ -110,7 +110,7 @@ class CertidaoItem(BaseModel):
 
 
 class CertidaoResultado(BaseModel):
-    """Resultado consolidado de certidões para um CNPJ."""
+    """Консолидированный результат справок для CNPJ (legacy -- Brazil)."""
 
     razao_social: str | None = None
     nome_fantasia: str | None = None
@@ -121,12 +121,12 @@ class CertidaoResultado(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Cálculo de débito
+# Расчёт задолженности
 # ---------------------------------------------------------------------------
 
 
 class ParcelaDebito(BaseModel):
-    """Parcela de débito para cálculo."""
+    """Часть задолженности для расчёта (legacy -- Brazil)."""
 
     data_fato: str
     indicativo_debito_credito: str = "D"
@@ -134,7 +134,7 @@ class ParcelaDebito(BaseModel):
 
 
 class CalculoDebitoResultado(BaseModel):
-    """Resultado do cálculo de débito atualizado."""
+    """Результат расчёта обновлённой задолженности (legacy -- Brazil)."""
 
     data: str | None = None
     saldo_debito: float = 0.0
@@ -144,12 +144,12 @@ class CalculoDebitoResultado(BaseModel):
 
 
 # ---------------------------------------------------------------------------
-# Pedidos do Congresso
+# Запросы Конгресса
 # ---------------------------------------------------------------------------
 
 
 class PedidoCongresso(BaseModel):
-    """Solicitação do Congresso Nacional ao TCU."""
+    """Запрос Национального конгресса в Счётный суд (legacy -- Brazil)."""
 
     tipo: str | None = None
     numero: int | None = None
@@ -161,19 +161,19 @@ class PedidoCongresso(BaseModel):
 
 
 class PedidoCongressoResultado(BaseModel):
-    """Resultado paginado de pedidos do Congresso."""
+    """Страничный результат поиска запросов Конгресса (legacy -- Brazil)."""
 
     items: list[PedidoCongresso] = []
     has_next: bool = False
 
 
 # ---------------------------------------------------------------------------
-# Termos contratuais do TCU
+# Договоры Счётного суда
 # ---------------------------------------------------------------------------
 
 
 class UnidadeFiscalizadora(BaseModel):
-    """Unidade fiscalizadora do TCU."""
+    """Контролирующая единица Счётного суда (legacy -- Brazil)."""
 
     codigo: int | None = None
     sigla: str | None = None
@@ -181,7 +181,7 @@ class UnidadeFiscalizadora(BaseModel):
 
 
 class TermoContratual(BaseModel):
-    """Contrato ou termo contratual firmado pelo TCU."""
+    """Контракт, заключённый Счётным судом (legacy -- Brazil)."""
 
     tipo_contratacao: str | None = None
     numero: int | None = None
@@ -207,7 +207,7 @@ class TermoContratual(BaseModel):
 
 
 class PessoaCadirreg(BaseModel):
-    """Pessoa com contas julgadas irregulares pelo TCU."""
+    """Лицо с нерегулярными счетами, признанными Счётным судом (legacy -- Brazil)."""
 
     nome_responsavel: str | None = None
     cpf: str | None = None

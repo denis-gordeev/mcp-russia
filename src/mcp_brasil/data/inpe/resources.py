@@ -1,8 +1,8 @@
-"""Resources for the INPE feature — legacy compatibility layer for Brazilian environmental data.
+"""Справочные resources для слоя INPE (legacy) — данные для контекста LLM.
 
-NOTE: This is a legacy/compatibility layer within mcp-russia.
-These Brazilian environmental reference datasets are kept for backward compatibility
-with the historical INPE integration and are NOT part of the target Russian data model.
+NOTE: Это слой обратной совместимости (legacy/compatibility layer) в рамках mcp-russia.
+Эти бразильские экологические справочные данные сохранены для обратной совместимости
+с исторической интеграцией INPE и НЕ являются частью целевой российской модели данных.
 """
 
 from __future__ import annotations
@@ -13,12 +13,12 @@ from .constants import BIOMAS, ESTADOS_AMAZONIA_LEGAL
 
 
 def biomas_brasileiros() -> str:
-    """Lista dos 6 biomas brasileiros monitorados pelo INPE."""
+    """(legacy) Список из 6 бразильских биомов, monitored INPE."""
     data = [{"codigo": k, "nome": v} for k, v in BIOMAS.items()]
     return json.dumps(data, ensure_ascii=False)
 
 
 def estados_amazonia_legal() -> str:
-    """Lista dos 9 estados da Amazônia Legal."""
+    """(legacy) Список 9 штатов Legal Amazon (Амазонии) Бразилии."""
     data = [{"sigla": uf} for uf in ESTADOS_AMAZONIA_LEGAL]
     return json.dumps(data, ensure_ascii=False)

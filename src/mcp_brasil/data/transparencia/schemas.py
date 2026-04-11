@@ -1,4 +1,4 @@
-"""Pydantic models for Portal da Transparência API responses."""
+"""Pydantic-схемы для ответов API Портала прозрачности (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class ContratoFornecedor(BaseModel):
-    """Contrato federal por CPF/CNPJ do fornecedor."""
+    """Федеральный контракт по CPF/CNPJ поставщика (legacy -- Brazil)."""
 
     id: int | None = None
     numero: str | None = None
@@ -20,7 +20,7 @@ class ContratoFornecedor(BaseModel):
 
 
 class RecursoRecebido(BaseModel):
-    """Recurso recebido (despesa) por favorecido."""
+    """Полученные средства (расходы) по бенефициару (legacy -- Brazil)."""
 
     ano: int | None = None
     mes: int | None = None
@@ -31,7 +31,7 @@ class RecursoRecebido(BaseModel):
 
 
 class Servidor(BaseModel):
-    """Servidor público federal."""
+    """Федеральный государственный служащий (legacy -- Brazil)."""
 
     id: int | None = None
     cpf: str | None = None
@@ -42,7 +42,7 @@ class Servidor(BaseModel):
 
 
 class Licitacao(BaseModel):
-    """Licitação federal."""
+    """Федеральный тендер (legacy -- Brazil)."""
 
     id: int | None = None
     numero: str | None = None
@@ -55,7 +55,7 @@ class Licitacao(BaseModel):
 
 
 class BolsaFamiliaMunicipio(BaseModel):
-    """Dados do Novo Bolsa Família por município."""
+    """Данные программы Novo Bolsa Familia по муниципалитету (legacy -- Brazil)."""
 
     municipio: str | None = None
     uf: str | None = None
@@ -65,7 +65,7 @@ class BolsaFamiliaMunicipio(BaseModel):
 
 
 class BolsaFamiliaSacado(BaseModel):
-    """Dados do Novo Bolsa Família por NIS do sacado."""
+    """Данные программы Novo Bolsa Familia по NIS получателя (legacy -- Brazil)."""
 
     nis: str | None = None
     nome: str | None = None
@@ -75,7 +75,7 @@ class BolsaFamiliaSacado(BaseModel):
 
 
 class Sancao(BaseModel):
-    """Sanção de pessoa física ou jurídica."""
+    """Санкция в отношении физического или юридического лица (legacy -- Brazil)."""
 
     fonte: str | None = None
     tipo: str | None = None
@@ -88,7 +88,7 @@ class Sancao(BaseModel):
 
 
 class Emenda(BaseModel):
-    """Emenda parlamentar."""
+    """Парламентская поправка (legacy -- Brazil)."""
 
     numero: str | None = None
     autor: str | None = None
@@ -100,7 +100,7 @@ class Emenda(BaseModel):
 
 
 class Viagem(BaseModel):
-    """Viagem a serviço de servidor federal."""
+    """Служебная командировка федерального служащего (legacy -- Brazil)."""
 
     id: int | None = None
     cpf: str | None = None
@@ -115,7 +115,7 @@ class Viagem(BaseModel):
 
 
 class Convenio(BaseModel):
-    """Convênio ou transferência voluntária."""
+    """Соглашение или добровольный трансфер (legacy -- Brazil)."""
 
     numero: str | None = None
     objeto: str | None = None
@@ -129,7 +129,7 @@ class Convenio(BaseModel):
 
 
 class CartaoPagamento(BaseModel):
-    """Pagamento com cartão corporativo / suprimento de fundos."""
+    """Оплата корпоративной картой / авансовым фондом (legacy -- Brazil)."""
 
     portador: str | None = None
     cpf: str | None = None
@@ -141,7 +141,7 @@ class CartaoPagamento(BaseModel):
 
 
 class PessoaExpostaPoliticamente(BaseModel):
-    """Pessoa Exposta Politicamente (PEP)."""
+    """Политически значимое лицо (PEP) (legacy -- Brazil)."""
 
     cpf: str | None = None
     nome: str | None = None
@@ -152,7 +152,7 @@ class PessoaExpostaPoliticamente(BaseModel):
 
 
 class AcordoLeniencia(BaseModel):
-    """Acordo de leniência (anticorrupção)."""
+    """Соглашение о смягчении (антикоррупция) (legacy -- Brazil)."""
 
     empresa: str | None = None
     cnpj: str | None = None
@@ -164,7 +164,7 @@ class AcordoLeniencia(BaseModel):
 
 
 class NotaFiscal(BaseModel):
-    """Nota fiscal eletrônica."""
+    """Электронный фискальный счёт (legacy -- Brazil)."""
 
     numero: str | None = None
     serie: str | None = None
@@ -175,7 +175,7 @@ class NotaFiscal(BaseModel):
 
 
 class BeneficioSocial(BaseModel):
-    """Benefício social (BPC, seguro-desemprego, etc.)."""
+    """Социальное пособие (BPC, пособие по безработице и т.д.) (legacy -- Brazil)."""
 
     tipo: str | None = None
     nome_beneficiario: str | None = None
@@ -188,7 +188,7 @@ class BeneficioSocial(BaseModel):
 
 
 class PessoaFisicaVinculos(BaseModel):
-    """Vínculos e benefícios de pessoa física por CPF."""
+    """Связи и льготы физического лица по CPF (legacy -- Brazil)."""
 
     cpf: str | None = None
     nome: str | None = None
@@ -198,7 +198,7 @@ class PessoaFisicaVinculos(BaseModel):
 
 
 class PessoaJuridicaVinculos(BaseModel):
-    """Sanções e contratos de pessoa jurídica por CNPJ."""
+    """Санкции и контракты юридического лица по CNPJ (legacy -- Brazil)."""
 
     cnpj: str | None = None
     razao_social: str | None = None
@@ -207,7 +207,7 @@ class PessoaJuridicaVinculos(BaseModel):
 
 
 class ContratoDetalhe(BaseModel):
-    """Detalhe completo de um contrato federal."""
+    """Подробная информация о федеральном контракте (legacy -- Brazil)."""
 
     id: int | None = None
     numero: str | None = None
@@ -224,7 +224,7 @@ class ContratoDetalhe(BaseModel):
 
 
 class ServidorDetalhe(BaseModel):
-    """Detalhe completo de servidor com remuneração."""
+    """Полная информация о служащем с указанием заработной платы (legacy -- Brazil)."""
 
     id: int | None = None
     cpf: str | None = None

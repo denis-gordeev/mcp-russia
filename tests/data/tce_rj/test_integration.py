@@ -52,9 +52,10 @@ class TestResourcesRegistered:
         async with Client(mcp) as c:
             content = await c.read_resource("data://endpoints-disponiveis")
             text = content[0].text if isinstance(content, list) else str(content)
-            assert "Licitações" in text
-            assert "Contratos Municipais" in text
-            assert "Obras Paralisadas" in text
+            # Check for Russian text (migrated from Portuguese)
+            assert "Закупки" in text  # "Licitações"
+            assert "Контракты" in text  # "Contratos Municipais"
+            assert "Приостановленные" in text  # "Obras Paralisadas"
 
 
 class TestPromptsRegistered:

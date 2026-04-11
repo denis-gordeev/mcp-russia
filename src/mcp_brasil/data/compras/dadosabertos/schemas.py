@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Dados Abertos Compras.gov.br API."""
+"""Pydantic-схемы для API открытых данных Compras.gov.br (Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Licitacao(BaseModel):
-    """Licitação do sistema legado SIASG/ComprasNet."""
+    """Тендер унаследованной системы SIASG/ComprasNet (legacy -- Brazil)."""
 
     id_compra: str | None = None
     identificador: str | None = None
@@ -29,14 +29,14 @@ class Licitacao(BaseModel):
 
 
 class LicitacaoResultado(BaseModel):
-    """Resultado paginado de busca de licitações."""
+    """Страничный результат поиска тендеров (legacy -- Brazil)."""
 
     total: int = 0
     licitacoes: list[Licitacao] = []
 
 
 class ContratoDA(BaseModel):
-    """Contrato do Compras.gov.br (Dados Abertos)."""
+    """Контракт Compras.gov.br (Открытые данные) (legacy -- Brazil)."""
 
     codigo_orgao: str | None = None
     nome_orgao: str | None = None
@@ -58,14 +58,14 @@ class ContratoDA(BaseModel):
 
 
 class ContratoDAResultado(BaseModel):
-    """Resultado paginado de busca de contratos."""
+    """Страничный результат поиска контрактов (legacy -- Brazil)."""
 
     total: int = 0
     contratos: list[ContratoDA] = []
 
 
 class FornecedorDA(BaseModel):
-    """Fornecedor cadastrado no Compras.gov.br."""
+    """Поставщик, зарегистрированный в Compras.gov.br (legacy -- Brazil)."""
 
     cnpj: str | None = None
     cpf: str | None = None
@@ -80,14 +80,14 @@ class FornecedorDA(BaseModel):
 
 
 class FornecedorDAResultado(BaseModel):
-    """Resultado paginado de busca de fornecedores."""
+    """Страничный результат поиска поставщиков (legacy -- Brazil)."""
 
     total: int = 0
     fornecedores: list[FornecedorDA] = []
 
 
 class GrupoMaterial(BaseModel):
-    """Grupo de material CATMAT."""
+    """Группа материалов CATMAT (legacy -- Brazil)."""
 
     codigo_grupo: int | None = None
     nome_grupo: str | None = None
@@ -95,14 +95,14 @@ class GrupoMaterial(BaseModel):
 
 
 class GrupoMaterialResultado(BaseModel):
-    """Resultado de busca de grupos de material."""
+    """Результат поиска групп материалов (legacy -- Brazil)."""
 
     total: int = 0
     grupos: list[GrupoMaterial] = []
 
 
 class ItemMaterial(BaseModel):
-    """Item de material CATMAT."""
+    """Единица материала CATMAT (legacy -- Brazil)."""
 
     codigo_item: int | None = None
     descricao_item: str | None = None
@@ -113,14 +113,14 @@ class ItemMaterial(BaseModel):
 
 
 class ItemMaterialResultado(BaseModel):
-    """Resultado paginado de busca de itens de material."""
+    """Страничный результат поиска единиц материалов (legacy -- Brazil)."""
 
     total: int = 0
     itens: list[ItemMaterial] = []
 
 
 class ItemServico(BaseModel):
-    """Item de serviço CATSER."""
+    """Единица услуги CATSER (legacy -- Brazil)."""
 
     codigo_servico: int | None = None
     nome_servico: str | None = None
@@ -132,14 +132,14 @@ class ItemServico(BaseModel):
 
 
 class ItemServicoResultado(BaseModel):
-    """Resultado paginado de busca de itens de serviço."""
+    """Страничный результат поиска единиц услуг (legacy -- Brazil)."""
 
     total: int = 0
     itens: list[ItemServico] = []
 
 
 class Uasg(BaseModel):
-    """Unidade Administrativa de Serviços Gerais."""
+    """Административная единица обслуживания общего назначения (legacy -- Brazil)."""
 
     codigo_uasg: str | None = None
     nome_uasg: str | None = None
@@ -151,7 +151,7 @@ class Uasg(BaseModel):
 
 
 class UasgResultado(BaseModel):
-    """Resultado paginado de busca de UASGs."""
+    """Страничный результат поиска UASG (legacy -- Brazil)."""
 
     total: int = 0
     uasgs: list[Uasg] = []

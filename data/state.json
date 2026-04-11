@@ -1,0 +1,91 @@
+{
+  "created_at": "2026-03-30T19:44:42+00:00",
+  "updated_at": "2026-03-30T19:44:55+00:00",
+  "last_telegram_update_id": 0,
+  "projects": [
+    {
+      "slug": "my-ru-coverage",
+      "name": "My-RU-Coverage",
+      "repo_path": "/Users/denis/programming/autowork/My-RU-Coverage",
+      "origin_url": "git@github.com:denis-gordeev/My-RU-Coverage.git",
+      "forge_kind": "github",
+      "default_branch": "master",
+      "current_branch": "master",
+      "is_fork": true,
+      "upstream_url": "git@github.com:Timeverse/My-TW-Coverage.git",
+      "upstream_default_branch": "master",
+      "telegram_topic_id": null,
+      "last_telegram_report_hash": null,
+      "daily_runs_target": 2,
+      "tg_folder": "/Users/denis/programming/autowork/mcp-russia/tg/my-ru-coverage",
+      "notes": [
+        "Telegram is not configured."
+      ],
+      "created_at": "2026-03-30T19:44:46+00:00",
+      "updated_at": "2026-03-30T19:44:48+00:00"
+    },
+    {
+      "slug": "codex-console-english",
+      "name": "codex-console-english",
+      "repo_path": "/Users/denis/programming/autowork/codex-console-english",
+      "origin_url": "git@github.com:denis-gordeev/codex-console-english.git",
+      "forge_kind": "github",
+      "default_branch": "main",
+      "current_branch": "main",
+      "is_fork": true,
+      "upstream_url": "git@github.com:dou-jiang/codex-console.git",
+      "upstream_default_branch": "main",
+      "telegram_topic_id": null,
+      "last_telegram_report_hash": null,
+      "daily_runs_target": 2,
+      "tg_folder": "/Users/denis/programming/autowork/mcp-russia/tg/codex-console-english",
+      "notes": [
+        "Telegram is not configured."
+      ],
+      "created_at": "2026-03-30T19:44:50+00:00",
+      "updated_at": "2026-03-30T19:44:51+00:00"
+    },
+    {
+      "slug": "repo-autowork",
+      "name": "repo-autowork",
+      "repo_path": "/Users/denis/programming/autowork/repo-autowork",
+      "origin_url": "",
+      "forge_kind": "unknown",
+      "default_branch": "main",
+      "current_branch": "main",
+      "is_fork": false,
+      "upstream_url": "",
+      "upstream_default_branch": "",
+      "telegram_topic_id": null,
+      "last_telegram_report_hash": null,
+      "daily_runs_target": 2,
+      "tg_folder": "/Users/denis/programming/autowork/mcp-russia/tg/repo-autowork",
+      "notes": [
+        "Telegram is not configured."
+      ],
+      "created_at": "2026-03-30T19:44:51+00:00",
+      "updated_at": "2026-03-30T19:44:52+00:00"
+    },
+    {
+      "slug": "ru-skill",
+      "name": "ru-skill",
+      "repo_path": "/Users/denis/programming/autowork/ru-skill",
+      "origin_url": "git@github.com:denis-gordeev/ru-skill.git",
+      "forge_kind": "github",
+      "default_branch": "main",
+      "current_branch": "main",
+      "is_fork": true,
+      "upstream_url": "git@github.com:NomaDamas/k-skill.git",
+      "upstream_default_branch": "main",
+      "telegram_topic_id": null,
+      "last_telegram_report_hash": null,
+      "daily_runs_target": 2,
+      "tg_folder": "/Users/denis/programming/autowork/mcp-russia/tg/ru-skill",
+      "notes": [
+        "Telegram is not configured."
+      ],
+      "created_at": "2026-03-30T19:44:53+00:00",
+      "updated_at": "2026-03-30T19:44:55+00:00"
+    }
+  ]
+}

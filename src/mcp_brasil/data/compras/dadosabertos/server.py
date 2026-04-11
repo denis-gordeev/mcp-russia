@@ -1,5 +1,6 @@
-"""Dados Abertos sub-server — registers Compras.gov.br tools.
+"""Dados Abertos sub-server (legacy) — registers Compras.gov.br tools.
 
+Brazilian Open Procurement Data compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
 """
 
@@ -16,14 +17,14 @@ from .tools import (
     consultar_fornecedor,
 )
 
-mcp = FastMCP("dadosabertos")
+mcp = FastMCP("mcp-russia-dadosabertos-legacy")
 
 # Tools
-mcp.tool(buscar_licitacoes, tags={"busca", "licitacoes", "compras"})
-mcp.tool(buscar_pregoes, tags={"busca", "pregoes", "compras"})
-mcp.tool(buscar_dispensas, tags={"busca", "dispensas", "compras"})
-mcp.tool(buscar_contratos, tags={"busca", "contratos", "compras"})
-mcp.tool(consultar_fornecedor, tags={"consulta", "fornecedores", "compras"})
-mcp.tool(buscar_material_catmat, tags={"busca", "catmat", "materiais"})
-mcp.tool(buscar_servico_catser, tags={"busca", "catser", "servicos"})
-mcp.tool(buscar_uasg, tags={"busca", "uasg", "orgaos"})
+mcp.tool(buscar_licitacoes, tags={"поиск", "тендеры", "закупки"})
+mcp.tool(buscar_pregoes, tags={"поиск", "аукционы", "закупки"})
+mcp.tool(buscar_dispensas, tags={"поиск", "освобождения", "закупки"})
+mcp.tool(buscar_contratos, tags={"поиск", "контракты", "закупки"})
+mcp.tool(consultar_fornecedor, tags={"запрос", "поставщики", "закупки"})
+mcp.tool(buscar_material_catmat, tags={"поиск", "catmat", "материалы"})
+mcp.tool(buscar_servico_catser, tags={"поиск", "catser", "услуги"})
+mcp.tool(buscar_uasg, tags={"поиск", "uasg", "органы"})

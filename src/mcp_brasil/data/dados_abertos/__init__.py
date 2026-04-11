@@ -1,5 +1,5 @@
 """Legacy-слой Dados Abertos внутри mcp-russia — каталог данных
-федерального правительства Бразилии (compatibility layer)."""
+федерального правительства Бразилии (compatibility layer, legacy)."""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
@@ -13,5 +13,5 @@ FEATURE_META = FeatureMeta(
     version="0.1.0",
     api_base="https://dados.gov.br/dados/api/publico",
     requires_auth=False,
-    tags=["dados-abertos", "datasets", "governo", "transparencia"],
+    tags=["открытые-данные", "наборы-данных", "правительство", "прозрачность"],
 )

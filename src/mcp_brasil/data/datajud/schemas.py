@@ -1,4 +1,4 @@
-"""Pydantic models for DataJud (CNJ) API responses."""
+"""Pydantic-схемы для ответов API DataJud (CNJ, Brazil, legacy)."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from pydantic import BaseModel
 
 
 class Processo(BaseModel):
-    """Processo judicial retornado pela API DataJud."""
+    """Судебное дело, возвращаемое API DataJud (legacy -- Brazil)."""
 
     numero: str | None = None
     classe: str | None = None
@@ -21,7 +21,7 @@ class Processo(BaseModel):
 
 
 class Movimentacao(BaseModel):
-    """Movimentação de um processo judicial."""
+    """Движение судебного дела (legacy -- Brazil)."""
 
     data: str | None = None
     nome: str | None = None
@@ -30,14 +30,14 @@ class Movimentacao(BaseModel):
 
 
 class Assunto(BaseModel):
-    """Assunto processual."""
+    """Предмет судебного спора (legacy -- Brazil)."""
 
     codigo: int | None = None
     nome: str | None = None
 
 
 class Parte(BaseModel):
-    """Parte de um processo (autor, réu, etc.)."""
+    """Сторона судебного дела (истец, ответчик и т.д.) (legacy -- Brazil)."""
 
     nome: str | None = None
     tipo: str | None = None
@@ -46,7 +46,7 @@ class Parte(BaseModel):
 
 
 class ProcessoDetalhe(BaseModel):
-    """Detalhes completos de um processo judicial."""
+    """Полная информация о судебном деле (legacy -- Brazil)."""
 
     numero: str | None = None
     classe: str | None = None

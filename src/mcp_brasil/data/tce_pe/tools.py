@@ -1,9 +1,13 @@
 """Tool functions for the TCE-PE feature.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Инструмент совместимости с API Счётного трибунала штата Пернамбуку (TCE-PE) Бразилии.
+Эти инструменты обеспечивают устаревший доступ к бразильским данным
+в рамках mcp-russia.
+
+Правила (ADR-001):
+    - tools.py НИКОГДА не выполняет HTTP напрямую — делегирует client.py
+    - Возвращает отформатированные строки для потребления LLM
+    - Использует Context для структурированного логирования и отчёта о прогрессе
 """
 
 from __future__ import annotations
@@ -20,18 +24,21 @@ async def buscar_unidades_pe(
     natureza: str = "prefeitura",
     municipio: str | None = None,
 ) -> str:
-    """Busca unidades jurisdicionadas do TCE-PE (prefeituras, câmaras, etc.).
+    """(legacy) Поиск подведомственных единиц TCE-PE (префектуры, палаты и т.д.).
 
-    Dados do sistema SAGRES do TCE-PE. Retorna código e nome
-    das unidades para uso nas demais consultas.
+    Примечание: инструмент совместимости для бразильских данных TCE-PE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные системы SAGRES TCE-PE. Возвращает код и название
+    единиц для использования в остальных запросах.
 
     Args:
-        ctx: Contexto MCP.
-        natureza: Tipo de unidade (ex: "prefeitura", "câmara").
-        municipio: Filtrar por município (ex: "Recife").
+        ctx: Контекст MCP.
+        natureza: Тип единицы (напр.: "prefeitura", "câmara").
+        municipio: Фильтр по муниципалитету (напр.: "Recife").
 
     Returns:
-        Lista de unidades com código, nome e município.
+        Список единиц с кодом, названием и муниципалитетом.
     """
     await ctx.info(f"Buscando unidades do TCE-PE (natureza={natureza})...")
     unidades = await client.buscar_unidades(natureza=natureza, municipio=municipio)
@@ -56,19 +63,22 @@ async def buscar_licitacoes_pe(
     municipio: str | None = None,
     modalidade: str | None = None,
 ) -> str:
-    """Busca licitações de Pernambuco registradas no TCE-PE.
+    """(legacy) Поиск закупок Пернамбуку, зарегистрированных в TCE-PE.
 
-    Dados do sistema LICON do TCE-PE. Inclui modalidade, objeto,
-    valor estimado e situação da licitação.
+    Примечание: инструмент совместимости для бразильских данных TCE-PE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные системы LICON TCE-PE. Включает модальность, объект,
+    оценочную стоимость и статус закупки.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano da licitação (ex: 2024).
-        municipio: Filtrar por município (ex: "Recife").
-        modalidade: Filtrar por modalidade (ex: "Pregão Eletrônico").
+        ctx: Контекст MCP.
+        ano: Год закупки (напр.: 2024).
+        municipio: Фильтр по муниципалитету (напр.: "Recife").
+        modalidade: Фильтр по модальности (напр.: "Pregão Eletrônico").
 
     Returns:
-        Lista de licitações com objeto, modalidade e valores.
+        Список закупок с объектом, модальностью и стоимостью.
     """
     await ctx.info(f"Buscando licitações no TCE-PE (ano={ano})...")
     licitacoes = await client.buscar_licitacoes(
@@ -101,19 +111,22 @@ async def buscar_contratos_pe(
     municipio: str | None = None,
     cpf_cnpj: str | None = None,
 ) -> str:
-    """Busca contratos de Pernambuco registrados no TCE-PE.
+    """(legacy) Поиск контрактов Пернамбуку, зарегистрированных в TCE-PE.
 
-    Dados do sistema LICON do TCE-PE. Inclui objeto, valor,
-    fornecedor e unidade gestora.
+    Примечание: инструмент совместимости для бразильских данных TCE-PE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные системы LICON TCE-PE. Включает объект, стоимость,
+    поставщика и управляющую единицу.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        municipio: Filtrar por município (ex: "Recife").
-        cpf_cnpj: Filtrar por CPF/CNPJ do fornecedor.
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        municipio: Фильтр по муниципалитету (напр.: "Recife").
+        cpf_cnpj: Фильтр по CPF/CNPJ поставщика.
 
     Returns:
-        Lista de contratos com objeto, valor e fornecedor.
+        Список контрактов с объектом, стоимостью и поставщиком.
     """
     await ctx.info(f"Buscando contratos no TCE-PE (ano={ano})...")
     contratos = await client.buscar_contratos(ano=ano, municipio=municipio, cpf_cnpj=cpf_cnpj)
@@ -144,20 +157,23 @@ async def buscar_despesas_pe(
     municipio: str | None = None,
     codigo_municipio: str | None = None,
 ) -> str:
-    """Busca despesas municipais de Pernambuco registradas no TCE-PE.
+    """(legacy) Поиск муниципальных расходов Пернамбуку, зарегистрированных в TCE-PE.
 
-    Dados de execução orçamentária do sistema SAGRES do TCE-PE.
-    Inclui empenhos com valores empenhados, liquidados e pagos.
+    Примечание: инструмент совместимости для бразильских данных TCE-PE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные бюджетного исполнения системы SAGRES TCE-PE.
+    Включает резервирования со значениями зарезервированных, ликвидированных и оплаченных.
 
     Args:
-        ctx: Contexto MCP.
-        ano: Ano de referência (ex: 2024).
-        mes: Mês de referência (1-12). Se omitido, retorna o ano todo.
-        municipio: Filtrar por nome do município.
-        codigo_municipio: Código SAGRES do município.
+        ctx: Контекст MCP.
+        ano: Год справки (напр.: 2024).
+        mes: Месяц справки (1-12). Если пропущено, возвращает за весь год.
+        municipio: Фильтр по названию муниципалитета.
+        codigo_municipio: Код SAGRES муниципалитета.
 
     Returns:
-        Lista de despesas com empenho, fornecedor e valores.
+        Список расходов с резервированием, поставщиком и стоимостью.
     """
     await ctx.info(f"Buscando despesas no TCE-PE (ano={ano})...")
     despesas = await client.buscar_despesas(
@@ -190,18 +206,21 @@ async def buscar_fornecedores_pe(
     nome: str | None = None,
     cpf_cnpj: str | None = None,
 ) -> str:
-    """Busca fornecedores registrados no TCE-PE.
+    """(legacy) Поиск поставщиков, зарегистрированных в TCE-PE.
 
-    Dados do sistema SAGRES do TCE-PE. Busca parcial por nome ou CPF/CNPJ.
-    Ao menos um filtro é recomendado para evitar resultados excessivos.
+    Примечание: инструмент совместимости для бразильских данных TCE-PE.
+    Эти инструменты обеспечивают устаревший доступ к бразильским данным
+    в рамках mcp-russia.
+    Данные системы SAGRES TCE-PE. Частичный поиск по названию или CPF/CNPJ.
+    Рекомендуется хотя бы один фильтр во избежание избыточных результатов.
 
     Args:
-        ctx: Contexto MCP.
-        nome: Busca parcial por nome do fornecedor.
-        cpf_cnpj: Busca parcial por CPF/CNPJ.
+        ctx: Контекст MCP.
+        nome: Частичный поиск по названию поставщика.
+        cpf_cnpj: Частичный поиск по CPF/CNPJ.
 
     Returns:
-        Lista de fornecedores com nome e CPF/CNPJ.
+        Список поставщиков с названием и CPF/CNPJ.
     """
     await ctx.info("Buscando fornecedores no TCE-PE...")
     fornecedores = await client.buscar_fornecedores(nome=nome, cpf_cnpj=cpf_cnpj)
