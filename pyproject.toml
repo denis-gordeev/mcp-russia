@@ -111,6 +111,10 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "src/mcp_brasil/data/tcu/*" = ["RUF001", "RUF002", "E501"]
 "src/mcp_brasil/data/transparencia/*" = ["RUF001", "RUF002", "E501"]
 "src/mcp_brasil/data/transferegov/*" = ["RUF001", "RUF002", "E501"]
+# New Russian modules with Cyrillic text
+"src/mcp_brasil/data/zakupki/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+"src/mcp_brasil/data/minzdrav/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+"src/mcp_brasil/data/kad_arbitrazh/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "src/mcp_brasil/data/__init__.py" = ["RUF001", "RUF002"]
 
 [tool.mypy]

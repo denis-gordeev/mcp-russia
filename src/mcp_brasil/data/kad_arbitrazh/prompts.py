@@ -1,0 +1,49 @@
+"""Prompts for the Kad Arbitrazh feature."""
+
+from __future__ import annotations
+
+from fastmcp import Context
+
+
+async def analiz_dela(context: str, ctx: Context) -> str:
+    """Анализ арбитражного дела.
+
+    Args:
+        context: Контекст запроса (номер дела или участники).
+
+    Returns:
+        Prompt template for case analysis.
+    """
+    return (
+        f"Выполни анализ арбитражного дела.\n\n"
+        f"Контекст: {context}\n\n"
+        f"Инструкция:\n"
+        f"1. Найди дело через poisk_del() или info_dela()\n"
+        f"2. Определи категорию, статус, сумму иска\n"
+        f"3. Проанализируй стороны дела (storony_dela)\n"
+        f"4. Изучи судебные акты (akty_po_delu)\n"
+        f"5. Оформи как аналитическую справку\n\n"
+        f"Важно: обращай внимание на инстанцию и динамику обжалования."
+    )
+
+
+async def analiz_uchastnika(context: str, ctx: Context) -> str:
+    """Анализ судебного участника (компании или ИП).
+
+    Args:
+        context: Контекст запроса (название или ИНН организации).
+
+    Returns:
+        Prompt template for participant analysis.
+    """
+    return (
+        f"Подготовь анализ участника арбитражных дел.\n\n"
+        f"Контекст: {context}\n\n"
+        f"Инструкция:\n"
+        f"1. Найди дела участника через poisk_del() по ИНН или названию\n"
+        f"2. Оцени количество и категории дел\n"
+        f"3. Определи роль (истец, ответчик, третье лицо)\n"
+        f"4. Отметь ключевые дела и суммы исков\n"
+        f"5. Оформи как досье участника\n\n"
+        f"Важно: обращай внимание на дела о банкротстве и налоговые споры."
+    )

@@ -1,0 +1,49 @@
+"""Prompts for the MinZdrav feature."""
+
+from __future__ import annotations
+
+from fastmcp import Context
+
+
+async def analiz_zdorovya_regiona(context: str, ctx: Context) -> str:
+    """Анализ здоровья населения региона.
+
+    Args:
+        context: Контекст запроса (регион или тема).
+
+    Returns:
+        Prompt template for regional health analysis.
+    """
+    return (
+        f"Выполни анализ здоровья населения региона.\n\n"
+        f"Контекст: {context}\n\n"
+        f"Инструкция:\n"
+        f"1. Получи показатели здоровья через pokazateli_zdorovya()\n"
+        f"2. Оцени ожидаемую продолжительность жизни\n"
+        f"3. Проанализируй заболеваемость по основным классам МКБ-10\n"
+        f"4. Оцени обеспеченность врачами и больничными койками\n"
+        f"5. Оформи как аналитический обзор\n\n"
+        f"Важно: используй только данные из открытых источников Минздрава."
+    )
+
+
+async def obzor_med_organizatsiy(context: str, ctx: Context) -> str:
+    """Обзор медицинских организаций в регионе.
+
+    Args:
+        context: Контекст запроса (регион, город или тип МО).
+
+    Returns:
+        Prompt template for medical organizations overview.
+    """
+    return (
+        f"Подготовь обзор медицинских организаций.\n\n"
+        f"Контекст: {context}\n\n"
+        f"Инструкция:\n"
+        f"1. Определи параметры поиска (регион, тип МО, город)\n"
+        f"2. Получи список организаций через poisk_med_organizatsiy()\n"
+        f"3. Оцени обеспеченность медицинскими организациями\n"
+        f"4. Отметь ключевые организации и их мощность\n"
+        f"5. Оформи как справочный обзор\n\n"
+        f"Важно: обращай внимание на доступность медицинской помощи."
+    )

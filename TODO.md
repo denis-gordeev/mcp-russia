@@ -2,6 +2,51 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-04-12 (девятый проход — модули ЕИС, Минздрава, Кад Арбитраж)
+
+### Выполнено
+
+- **Создан модуль zakupki.gov.ru (ЕИС)**: замена бразильского compras на российскую Единую информационную систему закупок. Включает:
+  - `constants.py`: справочники типов данных, способов закупок, отраслей, статусов, законы 44-ФЗ/223-ФЗ
+  - `schemas.py`: Pydantic-модели (Zakupka, Kontrakt, Zakazchik, Postavshchik, PlanZakupki)
+  - `client.py`: HTTP-клиент с заглушками для API ЕИС (zakupki.gov.ru, data.zakupki.gov.ru)
+  - `tools.py`: 7 инструментов (poisk_zakupok, info_zakupki, info_zakazchika, info_postavshchika, statusy_zakupok, sposoby_zakupok, plany_zakupok)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, структура ЕИС)
+  - `prompts.py`: 2 промпта (analiz_zakupki, obzor_zakupok)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Минздрава (minzdrav)**: замена бразильского saude/DataSUS на российские медицинские источники. Включает:
+  - `constants.py`: показатели здоровья, типы МО, специальности врачей, классы МКБ-10, федеральные округа
+  - `schemas.py`: Pydantic-модели (MedOrganizatsia, VrachebnyyKadr, PokazatelZdorovya, ZabolevanieStat)
+  - `client.py`: HTTP-клиент с заглушками для API Минздрава и Росздравнадзора
+  - `tools.py`: 7 инструментов (poisk_med_organizatsiy, info_med_organizatsii, pokazateli_zdorovya, statistika_zabolevaniy, spravochnik_mo, spravochnik_spetsialnostey, spravochnik_mkb10)
+  - `resources.py`: 3 ресурса (источники данных, классификации, федеральные округа)
+  - `prompts.py`: 2 промпта (analiz_zdorovya_regiona, obzor_med_organizatsiy)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Кад Арбитраж (kad_arbitrazh)**: замена бразильского datajud/CNJ на Картотеку арбитражных дел. Включает:
+  - `constants.py`: инстанции судов, категории дел, статусы, типы актов, арбитражные суды по округам
+  - `schemas.py`: Pydantic-модели (SudebnoeDelo, SudebnyyAkt, SudebnoeZasedanie, Sudy, StoronaDela)
+  - `client.py`: HTTP-клиент с заглушками для КАД (kad.arbitr.ru)
+  - `tools.py`: 8 инструментов (poisk_del, info_dela, akty_po_delu, storony_dela, spravochnik_kategoriy, spravochnik_instantsiy, spravochnik_statusov, spravochnik_aktov)
+  - `resources.py`: 3 ресурса (источники данных, система судов, кодификация дел)
+  - `prompts.py`: 2 промпта (analiz_dela, analiz_uchastnika)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для zakupki, minzdrav, kad_arbitrazh
+- **Прогнаны все проверки**: `pytest` (1623 passed, 1 skipped), `ruff check` для новых модулей — all passed
+
+### Ключевые архитектурные решения
+
+- **Единый паттерн российских модулей**: каждый модуль следует строгой структуре — constants, schemas, client, tools, resources, prompts, server
+- **Заглушки вместо реальных API**: все три модуля созданы как каркасы с placeholder-ами; реальная интеграция требует отдельной работы
+- **Обратная совместимость**: бразильские модули (compras, saude, datajud) сохраняют работоспособность как legacy-слой
+
+### Следующие действия
+
+- **Подключение реальных API ЕИС**: заменить заглушки в zakupki на интеграцию с zakupki.gov.ru / data.zakupki.gov.ru
+- **Подключение реальных API Минздрава**: заменить заглушки в minzdrav на интеграцию с data.minzdrav.gov.ru
+- **Подключение реальных API КАРТ**: заменить заглушки в kad_arbitrazh на парсинг kad.arbitr.ru
+- **Написание тестов**: добавить unit-тесты для всех трёх новых модулей (mock HTTP responses)
+- **Депрекейшн legacy-модулей**: пометить compras, saude, datajud как ⚠️ DEPRECATED с ссылками на российские аналоги
+
 ## Статус раунда 2026-04-11 (восьмой проход — депрекейшн legacy + модуль ЦИК РФ)
 
 ### Выполнено
