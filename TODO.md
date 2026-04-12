@@ -2,6 +2,32 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-04-12 (десятый проход — депрекейшн compras, saude, datajud)
+
+### Выполнено
+
+- **Депрекейт 3 модулей с готовыми российскими аналогами** — добавлены явные пометки `⚠️ DEPRECATED` и ссылки на российские эквиваленты:
+  - `compras` (бразильские закупки PNCP/Compras.gov.br) → используйте `zakupki` (ЕИС zakupki.gov.ru)
+  - `saude` (бразильское здравоохранение DataSUS/CNES) → используйте `minzdrav` (Минздрав РФ)
+  - `datajud` (бразильские судебные данные CNJ) → используйте `kad_arbitrazh` (КАД kad.arbitr.ru)
+- **Обновлены `__init__.py`** всех 3 модулей: docstrings с `.. deprecated::`, description с `⚠️ DEPRECATED`, version суффикс `-deprecated`, теги `⚠️ DEPRECATED`/`бразилия-legacy`
+- **Обновлены `server.py`** всех 3 модулей: FastMCP server names содержат `(⚠️ DEPRECATED — use '...')`, docstrings с указанием на российские аналоги
+- **Обновлены подмодули compras**: `pncp/__init__.py` и `dadosabertos/__init__.py` также помечены как DEPRECATED
+- **Прогнаны все проверки**: `pytest` (1623 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **Стратегия миграции**: модули с готовыми российскими аналогами — депрекейтятся с редиректом, модули без аналогов — сохраняются как legacy compatibility layer
+- **Депрекейт без поломки**: все legacy-функции сохраняют работоспособность, добавлены только docstring/server-name маркеры
+- **Итого депрекейчено модулей**: 8 (bacen, ibge, camara, senado, brasilapi + compras, saude, datajud)
+
+### Следующие действия
+
+- **Депрекейшн остальных legacy-модулей**: оценить остальные 19 бразильских модулей (10 TCE, tse, tcu, inpe, ana, transparencia, transferegov, diario_oficial, dados_abertos, jurisprudencia, tabua_mares, anuncios_eleitorais) — пометить как legacy compatibility layer
+- **Создание модуля Счётной палаты РФ**: российский аналог для TCU
+- **Создание модуля Росгидромета/Росприроднадзора**: российский аналог для INPE
+- **Подключение реальных API** в существующих российских модулях: заменить заглушки на рабочие интеграции
+
 ## Статус раунда 2026-04-12 (девятый проход — модули ЕИС, Минздрава, Кад Арбитраж)
 
 ### Выполнено

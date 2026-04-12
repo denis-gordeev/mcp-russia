@@ -1,4 +1,7 @@
-"""Saude feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Saude feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.minzdrav`` (Минздрав РФ) для российских медицинских данных.
 
 Brazilian Health Network API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -15,7 +18,7 @@ from .tools import (
     listar_tipos_estabelecimento,
 )
 
-mcp = FastMCP("mcp-russia-saude-legacy")
+mcp = FastMCP("mcp-russia-saude-legacy (⚠️ DEPRECATED — use 'minzdrav' for Russian healthcare)")
 
 # Tools (4)
 mcp.tool(buscar_estabelecimentos, tags={"поиск", "учреждения", "cnes", "sus"})

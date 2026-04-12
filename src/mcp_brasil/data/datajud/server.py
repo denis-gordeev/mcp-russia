@@ -1,4 +1,7 @@
-"""DataJud feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — DataJud feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.kad_arbitrazh`` (КАД — kad.arbitr.ru) для российских арбитражных дел.
 
 Brazilian Judicial Data API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -18,7 +21,7 @@ from .tools import (
     consultar_movimentacoes,
 )
 
-mcp = FastMCP("mcp-russia-datajud-legacy")
+mcp = FastMCP("mcp-russia-datajud-legacy (⚠️ DEPRECATED — use 'kad_arbitrazh' for Russian arbitration)")
 
 # Tools (7)
 mcp.tool(buscar_processos, tags={"поиск", "процессы", "судебный"})

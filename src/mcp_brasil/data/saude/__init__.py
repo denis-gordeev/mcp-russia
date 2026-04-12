@@ -1,15 +1,21 @@
-"""Legacy feature Saúde — переходный слой CNES/DataSUS внутри mcp-russia."""
+"""⚠️ DEPRECATED — Legacy feature Saúde — переходный слой CNES/DataSUS внутри mcp-russia.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.minzdrav`` (Минздрав РФ) для российских медицинских данных.
+    Данный модуль сохраняет обратную совместимость для бразильских DataSUS/CNES интеграций.
+"""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="saude",
     description=(
-        "Legacy-слой CNES/DataSUS внутри mcp-russia: учреждения, "
-        "медперсонал, типы организаций и больничные койки в бразильском контуре."
+        "⚠️ DEPRECATED — Legacy-слой CNES/DataSUS внутри mcp-russia: учреждения, "
+        "медперсонал, типы организаций и больничные койки в бразильском контуре. "
+        "Для российских медицинских данных используйте модуль minzdrav (Минздрав РФ)."
     ),
-    version="0.1.0",
+    version="0.1.0-deprecated",
     api_base="https://apidadosabertos.saude.gov.br/cnes",
     requires_auth=False,
-    tags=["saude", "sus", "cnes", "hospitais", "leitos"],
+    tags=["⚠️ DEPRECATED", "saude", "sus", "cnes", "hospitais", "leitos", "бразилия-legacy"],
 )
