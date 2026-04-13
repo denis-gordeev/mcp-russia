@@ -1,4 +1,7 @@
-"""TSE feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — TSE feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.cekrf`` (ЦИК РФ) для российских избирательных данных.
 
 Brazilian Superior Electoral Court API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -26,7 +29,7 @@ from .tools import (
     resultado_por_municipio,
 )
 
-mcp = FastMCP("mcp-russia-tse-legacy")
+mcp = FastMCP("mcp-russia-tse-legacy (⚠️ DEPRECATED — use 'cekrf' for Russian elections)")
 
 # Tools — DivulgaCandContas (9)
 mcp.tool(anos_eleitorais, tags={"список", "выборы"})

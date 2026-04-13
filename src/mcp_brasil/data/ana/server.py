@@ -1,4 +1,8 @@
-"""ANA feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — ANA feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте будущие модули Росводресурсов и Росгидромета
+    для российских гидрологических данных.
 
 Brazilian National Water Agency API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -10,7 +14,7 @@ from .prompts import analise_bacia
 from .resources import tipos_estacao
 from .tools import buscar_estacoes, consultar_telemetria, monitorar_reservatorios
 
-mcp = FastMCP("mcp-russia-ana-legacy")
+mcp = FastMCP("mcp-russia-ana-legacy (⚠️ DEPRECATED — use future Rosvodresursy/Roshydromet)")
 
 # Tools
 mcp.tool(buscar_estacoes, tags={"поиск", "станции", "гидрология"})

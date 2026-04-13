@@ -1,4 +1,8 @@
-"""TCE-PE feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — TCE-PE feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.rosstat`` (Росстат) и ``mcp_brasil.data.zakupki`` (ЕИС)
+    для российских статистических данных и госзакупок.
 
 Brazilian State Court of Accounts (Pernambuco) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -16,7 +20,7 @@ from .tools import (
     buscar_unidades_pe,
 )
 
-mcp = FastMCP("mcp-russia-tce-pe-legacy")
+mcp = FastMCP("mcp-russia-tce-pe-legacy (⚠️ DEPRECATED — use 'rosstat'/'zakupki' for Russian data)")
 
 # Tools
 mcp.tool(buscar_unidades_pe)

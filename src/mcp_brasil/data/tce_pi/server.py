@@ -1,4 +1,8 @@
-"""TCE-PI feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — TCE-PI feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.rosstat`` (Росстат) и ``mcp_brasil.data.zakupki`` (ЕИС)
+    для российских статистических данных и госзакупок.
 
 Brazilian State Court of Accounts (Piaui) API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -16,7 +20,7 @@ from .tools import (
     listar_prefeituras_pi,
 )
 
-mcp = FastMCP("mcp-russia-tce-pi-legacy")
+mcp = FastMCP("mcp-russia-tce-pi-legacy (⚠️ DEPRECATED — use 'rosstat'/'zakupki' for Russian data)")
 
 # Tools
 mcp.tool(listar_prefeituras_pi)

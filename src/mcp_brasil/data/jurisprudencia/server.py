@@ -1,4 +1,8 @@
-"""Jurisprudencia feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Jurisprudencia feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.kad_arbitrazh`` (КАД — kad.arbitr.ru)
+    для российских судебных данных.
 
 Brazilian Case Law API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -17,7 +21,7 @@ from .tools import (
     buscar_sumulas,
 )
 
-mcp = FastMCP("mcp-russia-jurisprudencia-legacy")
+mcp = FastMCP("mcp-russia-jurisprudencia-legacy (⚠️ DEPRECATED — use 'kad_arbitrazh' for Russian courts)")
 
 # Tools (6)
 mcp.tool(buscar_jurisprudencia_stf, tags={"поиск", "судебная-практика", "stf"})

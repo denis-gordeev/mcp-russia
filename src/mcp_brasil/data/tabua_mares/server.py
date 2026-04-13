@@ -1,4 +1,7 @@
-"""Tabua Mares feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Tabua Mares feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте будущий модуль Росгидромета для российских гидрометеорологических данных.
 
 Brazilian Tide Tables API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -18,7 +21,7 @@ from .tools import (
     tabua_mare_por_geolocalizacao,
 )
 
-mcp = FastMCP("mcp-russia-tabua_mares-legacy")
+mcp = FastMCP("mcp-russia-tabua_mares-legacy (⚠️ DEPRECATED — use future Roshydromet)")
 
 # Tools
 mcp.tool(listar_estados_costeiros)

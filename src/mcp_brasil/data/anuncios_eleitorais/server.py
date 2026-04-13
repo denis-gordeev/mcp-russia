@@ -1,4 +1,7 @@
-"""Anuncios Eleitorais feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Anuncios Eleitorais feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.cekrf`` (ЦИК РФ) для российских избирательных данных.
 
 Brazilian Electoral Ads API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -17,7 +20,7 @@ from .tools import (
     buscar_anuncios_por_regiao,
 )
 
-mcp = FastMCP("mcp-russia-anuncios_eleitorais-legacy")
+mcp = FastMCP("mcp-russia-anuncios_eleitorais-legacy (⚠️ DEPRECATED — use 'cekrf' for Russian elections)")
 
 # Tools
 mcp.tool(buscar_anuncios_eleitorais)

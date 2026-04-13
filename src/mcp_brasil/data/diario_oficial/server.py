@@ -1,4 +1,8 @@
-"""Diário Oficial feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Diário Oficial feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте будущий модуль официальных публикаций РФ (pravo.gov.ru, consultant.ru)
+    для российских официальных документов.
 
 Brazilian Official Gazette API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -10,7 +14,7 @@ from .prompts import investigar_empresa
 from .resources import capitais_cobertas
 from .tools import buscar_cidades, buscar_diarios, buscar_trechos, listar_territorios
 
-mcp = FastMCP("mcp-russia-diario-oficial-legacy")
+mcp = FastMCP("mcp-russia-diario-oficial-legacy (⚠️ DEPRECATED — use future pravo.gov.ru)")
 
 # Tools
 mcp.tool(buscar_diarios, tags={"поиск", "официальные-бюллетени", "публикации"})

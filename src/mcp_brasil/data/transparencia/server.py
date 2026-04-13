@@ -1,4 +1,8 @@
-"""Transparência feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Transparência feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.zakupki`` (ЕИС) и будущий модуль Минфина РФ
+    для российских данных о госрасходах и прозрачности.
 
 Brazilian Transparency API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -29,7 +33,7 @@ from .tools import (
     detalhar_servidor,
 )
 
-mcp = FastMCP("mcp-russia-transparencia-legacy")
+mcp = FastMCP("mcp-russia-transparencia-legacy (⚠️ DEPRECATED — use 'zakupki' for Russian procurement)")
 
 # Tools
 mcp.tool(buscar_contratos, tags={"поиск", "контракты", "поставщики"})

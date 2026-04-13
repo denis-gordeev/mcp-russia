@@ -1,4 +1,8 @@
-"""TransfereGov feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — TransfereGov feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.gosduma`` (Госдума) и будущий модуль Минфина РФ
+    для российских бюджетных данных.
 
 Brazilian Transfer Government API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -16,7 +20,7 @@ from .tools import (
     resumo_emendas_ano,
 )
 
-mcp = FastMCP("mcp-russia-transferegov-legacy")
+mcp = FastMCP("mcp-russia-transferegov-legacy (⚠️ DEPRECATED — use 'gosduma' for Russian parliament)")
 
 # Tools
 mcp.tool(buscar_emendas_pix, tags={"поиск", "emendas-pix", "переводы"})

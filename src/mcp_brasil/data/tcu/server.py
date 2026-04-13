@@ -1,4 +1,8 @@
-"""TCU feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — TCU feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.rosstat`` (Росстат) и будущий модуль Счётной палаты РФ
+    для российских аудиторских данных.
 
 Brazilian Federal Court of Accounts API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -19,7 +23,7 @@ from .tools import (
     consultar_inidoneos,
 )
 
-mcp = FastMCP("mcp-russia-tcu-legacy")
+mcp = FastMCP("mcp-russia-tcu-legacy (⚠️ DEPRECATED — use 'rosstat' for Russian statistics)")
 
 # Tools
 mcp.tool(buscar_acordaos, tags={"поиск", "решения", "аудит"})

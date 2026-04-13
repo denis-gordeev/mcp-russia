@@ -1,4 +1,8 @@
-"""INPE feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — INPE feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте будущие модули Росгидромета и Росприроднадзора
+    для российских экологических и метеорологических данных.
 
 Brazilian National Institute for Space Research API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -10,7 +14,7 @@ from .prompts import monitoramento_ambiental
 from .resources import biomas_brasileiros, estados_amazonia_legal
 from .tools import alertas_deter, buscar_focos_queimadas, consultar_desmatamento, dados_satelite
 
-mcp = FastMCP("mcp-russia-inpe-legacy")
+mcp = FastMCP("mcp-russia-inpe-legacy (⚠️ DEPRECATED — use future Roshydromet/Rosprirodnadzor)")
 
 # Tools
 mcp.tool(buscar_focos_queimadas, tags={"поиск", "пожары", "спутник", "окружающая-среда"})

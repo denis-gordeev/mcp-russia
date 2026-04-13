@@ -1,15 +1,21 @@
-"""Переходный слой с данными о приливах для бразильского побережья."""
+"""⚠️ DEPRECATED — Legacy-слой Tabua Mares внутри mcp-russia — данные о приливах для бразильского побережья (compatibility layer, legacy).
+
+.. deprecated::
+    Используйте будущий модуль Росгидромета для российских гидрометеорологических данных.
+    Данный модуль сохраняет обратную совместимость для бразильских данных Tabua Mares.
+"""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="tabua_mares",
     description=(
-        "Переходный data-layer: прогноз приливов для портов бразильского "
-        "побережья, сохраненный как legacy-совместимая feature."
+        "⚠️ DEPRECATED — Legacy-слой Tabua Mares внутри mcp-russia: "
+        "Прогноз приливов для портов бразильского побережья. "
+        "Для российских гидрометеорологических данных используйте будущий модуль Росгидромета."
     ),
-    version="0.1.0",
+    version="0.1.0-deprecated",
     api_base="https://tabuademares.com/api/v2",
     requires_auth=False,
-    tags=["mares", "portos", "litoral", "navegacao", "oceanografia"],
+    tags=["⚠️ DEPRECATED", "mares", "portos", "litoral", "navegacao", "oceanografia", "бразилия-legacy"],
 )

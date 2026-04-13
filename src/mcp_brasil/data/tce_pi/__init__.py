@@ -1,16 +1,23 @@
-"""Legacy-слой TCE-PI внутри mcp-russia — Tribunal de Contas do Piauí (compatibility layer)."""
+"""⚠️ DEPRECATED — Legacy-слой TCE-PI внутри mcp-russia — Tribunal de Contas do Piauí (compatibility layer, legacy).
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.rosstat`` (Росстат) и ``mcp_brasil.data.zakupki`` (ЕИС)
+    для российских статистических данных и госзакупок.
+    Данный модуль сохраняет обратную совместимость для бразильских данных TCE-PI.
+"""
 
 from mcp_brasil._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="tce_pi",
     description=(
-        "Legacy-слой TCE-PI внутри mcp-russia: "
+        "⚠️ DEPRECATED — Legacy-слой TCE-PI внутри mcp-russia: "
         "Префектуры, расходы, доходы и органы штата Пиауи "
-        "через API портала гражданского участия TCE-PI."
+        "через API портала гражданского участия TCE-PI. "
+        "Для российских аналогов используйте модули rosstat и zakupki."
     ),
-    version="0.1.0",
+    version="0.1.0-deprecated",
     api_base="https://sistemas.tce.pi.gov.br/api/portaldacidadania",
     requires_auth=False,
-    tags=["tce", "pi", "prefeituras", "despesas", "receitas", "orgaos"],
+    tags=["⚠️ DEPRECATED", "tce", "pi", "prefeituras", "despesas", "receitas", "orgaos", "бразилия-legacy"],
 )

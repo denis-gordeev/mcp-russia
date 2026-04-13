@@ -1,4 +1,8 @@
-"""Dados Abertos feature server (legacy) — registers tools, resources, and prompts.
+"""⚠️ DEPRECATED — Dados Abertos feature server (legacy) — registers tools, resources, and prompts.
+
+.. deprecated::
+    Используйте модуль ``mcp_brasil.data.rosstat`` (Росстат) и будущий модуль открытых данных РФ
+    для российских статистических и открытых данных.
 
 Brazilian Open Data API compatibility layer within mcp-russia.
 This file only registers components. Zero business logic (ADR-001 rule #4).
@@ -10,7 +14,7 @@ from .prompts import explorar_dados
 from .resources import formatos_disponiveis
 from .tools import buscar_conjuntos, buscar_recursos, detalhar_conjunto, listar_organizacoes
 
-mcp = FastMCP("mcp-russia-dados-abertos-legacy")
+mcp = FastMCP("mcp-russia-dados-abertos-legacy (⚠️ DEPRECATED — use 'rosstat' for Russian statistics)")
 
 # Tools
 mcp.tool(buscar_conjuntos, tags={"поиск", "наборы-данных", "открытые-данные"})
