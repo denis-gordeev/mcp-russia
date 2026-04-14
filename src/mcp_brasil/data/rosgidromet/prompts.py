@@ -1,0 +1,45 @@
+"""Prompts for the Росгидромет feature."""
+
+from __future__ import annotations
+
+from fastmcp import Context
+
+
+async def analiz_pogody_regiona(context: str, ctx: Context) -> str:
+    """Анализ погодных условий в регионе.
+
+    Args:
+        context: Контекст запроса (например, "погода в Москве").
+
+    Returns:
+        Prompt template for weather analysis.
+    """
+    return (
+        f"Выполни анализ погодных условий в регионе.\n\n"
+        f"Контекст: {context}\n\n"
+        f"Инструкция:\n"
+        f"1. Определи код станции через spisok_stanciy()\n"
+        f"2. Получи текущую погоду через pogoda_seychas()\n"
+        f"3. Получи прогноз на ближайшие дни через prognoz_pogody()\n"
+        f"4. Проверь активные предупреждения через preduprezhdeniya()\n"
+        f"5. Дай краткую характеристику погодных условий\n\n"
+        f"Важно: обращай внимание на предупреждения об опасных явлениях."
+    )
+
+
+async def obzor_ekologii(ctx: Context) -> str:
+    """Обзор экологической обстановки в России.
+
+    Returns:
+        Prompt template for environmental overview.
+    """
+    return (
+        "Подготовь обзор экологической обстановки в России.\n\n"
+        "Инструкция:\n"
+        "1. Получи данные о качестве воздуха через ekologiya_regiona()\n"
+        "2. Проверь данные по воде и почвам\n"
+        "3. Отметь все выявленные превышения норм\n"
+        "4. При наличии — изучи спутниковые данные\n"
+        "5. Оформи как аналитическую справку\n\n"
+        "Важно: указывай источники данных и даты измерений."
+    )

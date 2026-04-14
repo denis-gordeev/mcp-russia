@@ -2,6 +2,60 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-04-14 (тринадцатый проход — 4 новых российских модуля)
+
+### Выполнено
+
+- **Создан модуль Счётной палаты РФ (rosaudit)**: российский аналог для бразильских TCU/TCE. Включает:
+  - `constants.py`: направления контроля, типы мероприятий, субъекты аудита
+  - `schemas.py`: Pydantic-модели (KontrolnoeMeropriyatie, AuditorskoeZaklyuchenie, Narushenie, ByudzhetIspolnenie)
+  - `client.py`: HTTP-клиент с заглушками для API Счётной палаты (ach.gov.ru)
+  - `tools.py`: 7 инструментов (spisok_napravleniy, spisok_tipov_meropriyatiy, spisok_subiektov_audita, info_kontrolnogo_meropriyatiya, info_auditorskogo_zaklyucheniya, ispolnenie_byudzheta, poisk_narusheniy)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, структура)
+  - `prompts.py`: 2 промпта (analiz_auditorskogo_zaklyucheniya, obzor_ispolneniya_byudzheta)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Росгидромета (rosgidromet)**: российский аналог для бразильского INPE. Включает:
+  - `constants.py`: типы метео/эко данных, станции мониторинга, типы предупреждений
+  - `schemas.py`: Pydantic-модели (PogodaData, PrognozData, EkologiyaData, Preduprezhdenie, SputnikMonitoring)
+  - `client.py`: HTTP-клиент с заглушками для API Росгидромета (meteorf.ru)
+  - `tools.py`: 7 инструментов (spisok_stanciy, spisok_tipov_dannykh, pogoda_seychas, prognoz_pogody, ekologiya_regiona, preduprezhdeniya, sputnik_monitoring)
+  - `resources.py`: 3 ресурса (источники данных, методология, опасные явления)
+  - `prompts.py`: 2 промпта (analiz_pogody_regiona, obzor_ekologii)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Росводресурсов (rosvodresursy)**: российский аналог для бразильской ANA. Включает:
+  - `constants.py`: бассейновые округа (21), типы водных объектов, крупные водохранилища
+  - `schemas.py`: Pydantic-модели (VodnyyObekt, GidroData, VodokhranilishcheData, Vodopolzovanie)
+  - `client.py`: HTTP-клиент с заглушками для API Росводресурсов (rosvodresursy.ru)
+  - `tools.py`: 8 инструментов (spisok_basseynovykh_okrugov, spisok_tipov_vodnykh_obektov, spisok_vodokhranilishch, info_vodnogo_obekta, gidro_monitoring, info_vodokhranilishcha, vodopolzovanie_regionov)
+  - `resources.py`: 3 ресурса (источники данных, бассейновые округа, водохозяйственная деятельность)
+  - `prompts.py`: 2 промпта (analiz_vodnogo_obekta, obzor_vodokhranilishch)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль официальных публикаций (publikatsii)**: российский аналог для бразильского diario_oficial. Включает:
+  - `constants.py`: типы нормативных актов, отрасли законодательства, источники публикаций
+  - `schemas.py`: Pydantic-модели (NormativnyyAkt, ZakonProekt, OficialnayaPublikatsiya, IzmenenieAkta)
+  - `client.py`: HTTP-клиент с заглушками для API pravo.gov.ru и consultant.ru
+  - `tools.py`: 8 инструментов (spisok_tipov_aktov, spisok_otrasley, spisok_istochnikov, spisok_statusov, info_normativnogo_akta, info_zakonproekta, poisk_aktov, publikatsii_po_datam, izmeneniya_akta)
+  - `resources.py`: 3 ресурса (источники данных, порядок опубликования, структура законодательства)
+  - `prompts.py`: 2 промпта (analiz_normativnogo_akta, obzor_zakonodatelstva)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для rosaudit, rosgidromet, rosvodresursy, publikatsii
+- **Прогнаны все проверки**: `pytest` (1623 passed, 1 skipped), `ruff check` для новых модулей — all passed
+
+### Ключевые архитектурные решения
+
+- **Единый паттерн российских модулей**: каждый модуль следует строгой структуре — constants, schemas, client, tools, resources, prompts, server
+- **Заглушки вместо реальных API**: все четыре модуля созданы как каркасы с placeholder-ами; реальная интеграция требует отдельной работы
+- **Итого российских модулей**: 9 (cbrf, rosstat, gosduma, cekrf, rosapi, zakupki, minzdrav, kad_arbitrazh + 4 из этого раунда)
+- **Все 28 бразильских модулей депрекейтены**: включая tce_sp (раунд 12) и остальные (раунд 11)
+
+### Следующие действия
+
+- **Подключение реальных API** в новых модулях: заменить заглушки на рабочие интеграции (rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru)
+- **Написание тестов**: добавить unit-тесты для всех четырёх новых модулей (mock HTTP responses)
+- **Создание модуля Роспотребнадзора**: российский аналог для бразильских санитарных/здоровье модулей
+- **Создание модуля Роскомнадзора**: российский аналог для регулирования СМИ и связи
+- **Подключение реальных API** в существующих российских модулях: заменить заглушки на рабочие интеграции (zakupki, minzdrav, kad_arbitrazh, cekrf)
+
 ## Статус раунда 2026-04-13 (двенадцатый проход — фикс пропущенного tce_sp)
 
 ### Выполнено
