@@ -94,78 +94,78 @@ build_dispatch(registry)
 # Expose a meta-tool for introspection
 @mcp.tool(tags={"meta", "discovery"})
 def listar_features() -> str:
-    """Lista todas as features (APIs) disponíveis no mcp-russia.
+    """Список всех доступных функций (API) в mcp-russia.
 
-    Use esta tool para saber quais APIs governamentais estão conectadas
-    e quais tools cada uma oferece.
+    Используйте этот инструмент, чтобы узнать, какие государственные API
+    подключены и какие инструменты предоставляет каждая функция.
 
     Returns:
-        Resumo das features ativas com descrição e status de autenticação.
+        Сводка активных функций с описанием и статусом аутентификации.
     """
     return registry.summary()
 
 
-# Expose an LLM-powered recommendation tool
 @mcp.tool(tags={"meta", "discovery"})
 async def recomendar_tools(query: str, ctx: Context) -> str:
-    """Recomenda tools relevantes a partir de uma pergunta em linguagem natural.
+    """Рекомендует релевантные инструменты по запросу на естественном языке.
 
-    Usa IA para entender sua intenção e sugerir as tools mais adequadas
-    do mcp-russia, explicando quando e como usar cada uma.
+    Использует ИИ для понимания намерения и подбора наиболее подходящих
+    инструментов mcp-russia с объяснением, когда и как их применять.
 
     Args:
-        query: Pergunta ou descrição do que você precisa
-               (ex: "quero dados sobre gastos do governo federal").
+        query: Вопрос или описание потребности
+               (напр.: «нужны данные о расходах федерального бюджета»).
     """
     from ._shared.discovery import build_catalog, recomendar_tools_impl
 
-    await ctx.info(f"Buscando recomendações para: {query}")
+    await ctx.info(f"Поиск рекомендаций для: {query}")
     catalog = build_catalog(registry)
     return await recomendar_tools_impl(query, catalog)
 
 
-@mcp.tool(tags={"meta", "discovery", "planejamento"})
+@mcp.tool(tags={"meta", "discovery", "планирование"})
 async def planejar_consulta(query: str, ctx: Context) -> str:
-    """Cria um plano de execução para consultas complexas.
+    """Создаёт план выполнения для сложных запросов.
 
-    Analisa a pergunta, identifica quais tools usar, em que ordem,
-    e quais etapas dependem de outras. Útil para consultas que
-    precisam de múltiplas chamadas combinadas.
+    Анализирует вопрос, определяет, какие инструменты использовать,
+    в каком порядке, и какие этапы зависят от других. Полезно для запросов,
+    требующих нескольких комбинированных вызовов.
 
     Args:
-        query: Pergunta em linguagem natural
-               (ex: "compare os gastos do deputado X com a média").
+        query: Вопрос на естественном языке
+               (напр.: «сравните расходы депутата X со средним значением»).
     """
     from ._shared.discovery import build_catalog
     from ._shared.planner import planejar_consulta_impl
 
-    await ctx.info(f"Planejando consulta: {query}")
+    await ctx.info(f"Планирование запроса: {query}")
     catalog = build_catalog(registry)
     return await planejar_consulta_impl(query, catalog)
 
 
 @mcp.tool(tags={"meta", "batch"})
 async def executar_lote(consultas: list[dict[str, object]], ctx: Context) -> str:
-    """Executa múltiplas tools em uma única chamada, em paralelo.
+    """Выполняет несколько инструментов за один вызов, параллельно.
 
-    Use esta tool para evitar chamadas sequenciais quando precisar de dados
-    de várias fontes ou de vários anos/parâmetros ao mesmo tempo.
+    Используйте для ускорения, когда нужны данные из нескольких источников
+    или с разными параметрами одновременно.
 
-    Cada consulta deve ter o nome completo da tool (com namespace, ex:
-    "camara_buscar_proposicao") e seus argumentos.
+    Каждый запрос должен содержать полное имя инструмента (с пространством
+    имён, напр.: «gosduma_poisk_deputata») и его аргументы.
 
     Args:
-        consultas: Lista de consultas. Cada item é um objeto com:
-                   - "tool": nome completo da tool (ex: "camara_despesas_deputado")
-                   - "args": objeto com os argumentos da tool
-                   Exemplo: [
-                     {"tool": "camara_despesas_deputado",
-                      "args": {"deputado_id": 204554, "ano": 2024}},
-                     {"tool": "camara_despesas_deputado",
-                      "args": {"deputado_id": 204554, "ano": 2023}}
+        consultas: Список запросов. Каждый элемент — объект с:
+                   - "tool": полное имя инструмента
+                     (напр.: «gosduma_info_deputata»)
+                   - "args": объект с аргументами инструмента
+                   Пример: [
+                     {"tool": "gosduma_info_deputata",
+                      "args": {"deputat_id": 99100142}},
+                     {"tool": "cbrf_kursy_valyut",
+                      "args": {}}
                    ]
     """
-    await ctx.info(f"Executando lote de {len(consultas)} consulta(s)...")
+    await ctx.info(f"Выполнение пакета из {len(consultas)} запрос(ов)...")
     return await execute_batch(consultas, ctx)
 
 

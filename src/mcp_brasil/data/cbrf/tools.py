@@ -164,23 +164,25 @@ async def converter_moeda(
     return "\n".join(lines)
 
 
-async def comparar_moedas(ctx: Context, *codigos: str) -> str:
+async def comparar_moedas(codigos: list[str] | None = None, ctx: Context | None = None) -> str:
     """Сравнить курсы нескольких валют ЦБ РФ.
 
     Args:
-        codigos: Коды валют для сравнения (например, 'USD', 'EUR', 'CNY').
+        codigos: Коды валют для сравнения (например, ['USD', 'EUR', 'CNY']).
+                 По умолчанию сравниваются USD, EUR, CNY.
 
     Returns:
         Сравнительная таблица курсов.
     """
     if not codigos:
-        codigos = ("USD", "EUR", "CNY")
+        codigos = ["USD", "EUR", "CNY"]
 
     if len(codigos) > 10:
         return "Можно сравнить не более 10 валют одновременно."
 
-    await ctx.info(f"Сравнение {len(codigos)} валют...")
-    moedas = await client.buscar_moedas_varios(list(codigos))
+    if ctx is not None:
+        await ctx.info(f"Сравнение {len(codigos)} валют...")
+    moedas = await client.buscar_moedas_varios(codigos)
 
     if not moedas:
         return "Не удалось получить данные для указанных валют."

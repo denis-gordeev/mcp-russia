@@ -2,9 +2,58 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-04-14 (тринадцатый проход — 4 новых российских модуля)
+## Статус раунда 2026-05-26 (четырнадцатый проход — модули Роспотребнадзора, Роскомнадзора, тесты, переводы)
 
 ### Выполнено
+
+- **Завершён модуль Роскомнадзора (roskomnadzor)**: добавлены недостающие файлы:
+  - `__init__.py`: FeatureMeta с тегами (роскомнадзор, связь, сми, персональные-данные, реестр)
+  - `prompts.py`: 2 промпта (analiz_narusheniya, obzor_reestrov) — с правильным FastMCP 3.x API
+  - `server.py`: регистрация 11 инструментов, 3 ресурсов, 2 промптов в FastMCP
+- **Обновлён модуль Роспотребнадзора (rospotrebnadzor)**:
+  - `__init__.py`: заменён placeholder на FeatureMeta с тегами (роспотребнадзор, санитарный-надзор, потребители, проверки, санпин)
+  - `prompts.py`: исправлен импорт с несуществующего `fastmcp.prompts.base` на рабочий FastMCP 3.x API (PromptResult, Message, PromptMessage)
+- **Переведены на русский мета-инструменты корневого сервера** (`src/mcp_brasil/server.py`):
+  - `listar_features`: португальский → русский (docstring и примеры)
+  - `recomendar_tools`: португальский → русский
+  - `planejar_consulta`: португальский → русский (включая тег `планирование`)
+  - `executar_lote`: португальский → русский (примеры обновлены на российские инструменты: gosduma, cbrf)
+- **Исправлен баг в cbrf/tools.py**: `comparar_moedas` использовала `*codigos: str`, не поддерживаемое FastMCP — заменено на `codigos: list[str] | None = None`
+- **Исправлен баг в rosapi/prompts.py**: импорт `UserMessage` из `fastmcp` (не существует) — заменён на правильный FastMCP 3.x API
+- **Исправлен тест root server**: проверка португальского `paralelo` заменена на русское `параллельно`
+- **Написаны тесты для всех 13 российских модулей** (ранее тесты были только у cekrf):
+  - cbrf: 11 unit + 6 integration тестов
+  - rosstat: 10 unit + 6 integration тестов
+  - gosduma: 8 unit + 6 integration тестов
+  - rosapi: 10 unit + 6 integration тестов
+  - zakupki: 9 unit + 6 integration тестов
+  - minzdrav: 10 unit + 6 integration тестов
+  - kad_arbitrazh: 9 unit + 6 integration тестов
+  - rosaudit: 7 unit + 6 integration тестов
+  - rosgidromet: 7 unit + 6 integration тестов
+  - rosvodresursy: 7 unit + 6 integration тестов
+  - publikatsii: 9 unit + 6 integration тестов
+  - rospotrebnadzor: 9 unit + 5 integration тестов
+  - roskomnadzor: 11 unit + 5 integration тестов
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для rospotrebnadzor и roskomnadzor, RUF001/RUF002 для server.py
+- **Прогнаны все проверки**: `pytest` (1815 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **Итого российских модулей**: 13 (cbrf, rosstat, gosduma, cekrf, rosapi, zakupki, minzdrav, kad_arbitrazh, rosaudit, rosgidromet, rosvodresursy, publikatsii + rospotrebnadzor, roskomnadzor из этого раунда)
+- **FastMCP 3.x prompts API**: исправлены все промпты, использующие устаревший `fastmcp.prompts.base` — теперь используется `PromptResult` + `Message` + `PromptMessage` + `mcp.types.TextContent`
+- **Все 28 бразильских модулей депрекейтены**: без изменений с раунда 13
+- **Мета-инструменты сервера переведены**: listar_features, recomendar_tools, planejar_consulta, executar_lote — все docstrings теперь на русском
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru)
+- **Создание модуля ФНС (Федеральная налоговая служба)**: данные о налоговых начислениях, проверках, ЕГРЮЛ
+- **Создание модуля Росреестра**: данные о кадастровой стоимости, недвижимости, ЕГРН
+- **Создание модуля ФССП (Федеральная служба судебных приставов)**: данные об исполнительных производствах
+- **Миграция внутренних переменных**: заменить португальские имена переменных (moedas, codigos и т.д.) на русские аналоги в существующих модулях
+
+## Статус раунда 2026-04-14 (тринадцатый проход — 4 новых российских модуля)
 
 - **Создан модуль Счётной палаты РФ (rosaudit)**: российский аналог для бразильских TCU/TCE. Включает:
   - `constants.py`: направления контроля, типы мероприятий, субъекты аудита

@@ -169,7 +169,7 @@ class TestExecutarLote:
             tools = await c.list_tools()
             tool = next(t for t in tools if t.name == "executar_lote")
             assert tool.description
-            assert "paralelo" in tool.description.lower()
+            assert "параллельно" in tool.description.lower()
 
 
 class TestRootServerToolTags:
