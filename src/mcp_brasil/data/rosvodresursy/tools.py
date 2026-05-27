@@ -75,7 +75,7 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
         Информация о водном объекте.
     """
     await ctx.info(f"Запрос информации о водном объекте {code}...")
-    data = await client.buscar_vodnyy_obekt(code)
+    data = await client.poluchit_vodnyy_obekt(code)
 
     if not data:
         return (
@@ -116,7 +116,7 @@ async def gidro_monitoring(post: str = "", ctx: Context | None = None) -> str:
             "Данные доступны на сайте Росводресурсов: rosvodresursy.ru"
         )
 
-    data = await client.buscar_gidro_post(post)
+    data = await client.poluchit_gidro_post(post)
 
     if not data:
         return (
@@ -153,7 +153,7 @@ async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
         Информация о водохранилище.
     """
     await ctx.info(f"Запрос информации о водохранилище {code}...")
-    data = await client.buscar_vodokhranilishche(code)
+    data = await client.poluchit_vodokhranilishche(code)
 
     if not data:
         return (
@@ -192,7 +192,7 @@ async def vodopolzovanie_regionov(
     Returns:
         Данные о водопользовании.
     """
-    data = await client.buscar_vodopolzovanie(region=region, god=god)
+    data = await client.poluchit_vodopolzovanie(region=region, god=god)
 
     if not data:
         filters = []

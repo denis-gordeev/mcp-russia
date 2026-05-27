@@ -25,7 +25,7 @@ async def test_spisok_deputatov_default():
 
 async def test_info_deputata_not_found():
     ctx = _mock_ctx()
-    with patch.object(gosduma_tools.client, "buscar_deputat", return_value=None):
+    with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=None):
         result = await gosduma_tools.info_deputata(99999, ctx)
     assert "не найден" in result
 

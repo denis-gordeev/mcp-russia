@@ -61,7 +61,7 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
         Текущие погодные данные.
     """
     await ctx.info(f"Запрос текущей погоды на станции {stanciya}...")
-    data = await client.buscar_pogoda(stanciya)
+    data = await client.poluchit_pogodu(stanciya)
 
     if not data:
         return (
@@ -107,7 +107,7 @@ async def prognoz_pogody(
         Прогноз погоды.
     """
     await ctx.info(f"Запрос прогноза на {dni} дней для станции {stanciya}...")
-    prognoz = await client.buscar_prognoz(stanciya, dni)
+    prognoz = await client.poluchit_prognoz(stanciya, dni)
 
     if not prognoz:
         return (
@@ -147,7 +147,7 @@ async def ekologiya_regiona(
         Данные об экологической обстановке.
     """
     await ctx.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
-    data = await client.buscar_ekologiya(gorod=gorod, tip=tip)
+    data = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
 
     if not data:
         filters = []
@@ -187,7 +187,7 @@ async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
         Активные предупреждения.
     """
     await ctx.info(f"Запрос предупреждений для региона {region}...")
-    data = await client.buscar_preduprezhdeniya(region)
+    data = await client.poluchit_preduprezhdeniya(region)
 
     if not data:
         region_text = f" для региона '{region}'" if region else ""
@@ -228,7 +228,7 @@ async def sputnik_monitoring(
         Данные спутникового мониторинга.
     """
     await ctx.info(f"Запрос спутниковых данных: регион={region}, тип={tip}")
-    data = await client.buscar_sputnik_dannye(region, tip)
+    data = await client.poluchit_sputnik_dannye(region, tip)
 
     if not data:
         filters = []

@@ -40,7 +40,7 @@ async def test_spisok_vodokhranilishch():
 async def test_info_vodnogo_obekta_not_found():
     """Проверка info_vodnogo_obekta при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosvodresursy_tools.client, "buscar_vodnyy_obekt", return_value=None):
+    with patch.object(rosvodresursy_tools.client, "poluchit_vodnyy_obekt", return_value=None):
         result = await rosvodresursy_tools.info_vodnogo_obekta("nonexistent", ctx)
     assert "не найден" in result
 
@@ -54,13 +54,13 @@ async def test_gidro_monitoring_no_post():
 async def test_info_vodokhranilishcha_not_found():
     """Проверка info_vodokhranilishcha при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosvodresursy_tools.client, "buscar_vodokhranilishche", return_value=None):
+    with patch.object(rosvodresursy_tools.client, "poluchit_vodokhranilishche", return_value=None):
         result = await rosvodresursy_tools.info_vodokhranilishcha("nonexistent", ctx)
     assert "не найдено" in result
 
 
 async def test_vodopolzovanie_regionov_empty():
     """Проверка vodopolzovanie_regionov при отсутствии данных."""
-    with patch.object(rosvodresursy_tools.client, "buscar_vodopolzovanie", return_value=[]):
+    with patch.object(rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=[]):
         result = await rosvodresursy_tools.vodopolzovanie_regionov(region="Тест")
     assert "недоступны" in result

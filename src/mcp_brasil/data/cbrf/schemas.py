@@ -5,18 +5,18 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class ValorMoeda(BaseModel):
+class ZnachenieValyuty(BaseModel):
     """Значение одной валюты на определённую дату."""
 
-    codigo: str
-    nome: str
+    kod: str
+    nazvanie: str
     nominal: int
-    valor: float
-    valor_anterior: float | None = None
+    znachenie: float
+    predydushchee_znachenie: float | None = None
     data: str = ""
 
 
-class DadosMoeda(BaseModel):
+class DannyeValyuty(BaseModel):
     """Полные данные по валюте из API ЦБ РФ."""
 
     code: str
@@ -27,22 +27,22 @@ class DadosMoeda(BaseModel):
     date: str = ""
 
 
-class IndicadorEconomico(BaseModel):
+class EkonomicheskiyIndikator(BaseModel):
     """Экономический показатель ЦБ РФ."""
 
-    nome: str
-    valor: float
+    nazvanie: str
+    znachenie: float
     data: str
-    unidade: str = ""
-    fonte: str = "Центральный банк Российской Федерации"
+    edinitsa: str = ""
+    istochnik: str = "Центральный банк Российской Федерации"
 
 
-class TaxaChave(BaseModel):
+class KlyuchevayaStavka(BaseModel):
     """Ключевая ставка ЦБ РФ."""
 
-    valor: float
+    znachenie: float
     data: str
-    data_anterior: str | None = None
-    valor_anterior: float | None = None
-    diferenca: float | None = None
-    fonte: str = "Центральный банк Российской Федерации"
+    predydushchaya_data: str | None = None
+    predydushchee_znachenie: float | None = None
+    raznitsa: float | None = None
+    istochnik: str = "Центральный банк Российской Федерации"

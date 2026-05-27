@@ -68,7 +68,7 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
         Информация о контрольном мероприятии.
     """
     await ctx.info(f"Запрос информации о контрольном мероприятии {nomer}...")
-    data = await client.buscar_kontrolnoe_meropriyatie(nomer)
+    data = await client.poluchit_kontrolnoe_meropriyatie(nomer)
 
     if not data:
         return (
@@ -105,7 +105,7 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
         Аудиторское заключение.
     """
     await ctx.info(f"Запрос аудиторского заключения {nomer}...")
-    data = await client.buscar_auditorskoe_zaklyuchenie(nomer)
+    data = await client.poluchit_auditorskoe_zaklyuchenie(nomer)
 
     if not data:
         return (
@@ -141,7 +141,7 @@ async def ispolnenie_byudzheta(period: str = "", ctx: Context | None = None) -> 
     Returns:
         Данные об исполнении бюджета.
     """
-    data = await client.buscar_byudzhet_ispolnenie(period)
+    data = await client.poluchit_byudzhet_ispolnenie(period)
 
     if not data:
         period_text = f" за период {period}" if period else ""
@@ -183,7 +183,7 @@ async def poisk_narusheniy(
     Returns:
         Список выявленных нарушений.
     """
-    narusheniya = await client.buscar_narusheniya(organizaciya=organizaciya, tip=tip)
+    narusheniya = await client.poluchit_narusheniya(organizaciya=organizaciya, tip=tip)
 
     if not narusheniya:
         filters = []

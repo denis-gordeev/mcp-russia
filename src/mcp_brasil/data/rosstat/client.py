@@ -16,7 +16,7 @@ from .constants import EMISS_API_BASE, FEDERALNYE_OKRUGA, SUBIEKTY_RF
 from .schemas import PokazatelRosstata, RegionData
 
 
-async def buscar_indikator(code: str, date_range: str = "") -> list[PokazatelRosstata]:
+async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelRosstata]:
     """Fetch a statistical indicator from EMISS/Rosstat.
 
     Args:
@@ -58,7 +58,7 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
     return results
 
 
-async def buscar_region_data(code: str) -> RegionData | None:
+async def poluchit_dannye_regiona(code: str) -> RegionData | None:
     """Fetch regional data for a Russian federal subject.
 
     Args:
@@ -78,7 +78,7 @@ async def buscar_region_data(code: str) -> RegionData | None:
     )
 
 
-async def buscar_federalny_okrug(code: str) -> dict[str, Any]:
+async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
     """Fetch data for a federal district.
 
     Args:

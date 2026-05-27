@@ -13,7 +13,7 @@
 EMISS_API_BASE = "https://fedstat.ru/api"
 
 # Основные показатели для быстрого запроса
-INDICADORES_CHAVE = [
+KLYUCHEVYE_INDIKATORY = [
     {"code": "population", "name": "Численность населения"},
     {"code": "cpi", "name": "Индекс потребительских цен (инфляция)"},
     {"code": "gdp", "name": "ВВП Российской Федерации"},

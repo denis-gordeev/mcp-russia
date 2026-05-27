@@ -14,10 +14,10 @@ from fastmcp import Context
 from mcp_brasil._shared.formatting import format_number_br, markdown_table
 
 from . import client
-from .constants import MOEDAS_POR_PAIS
+from .constants import VALYUTY_PO_STRANAM
 
 
-async def cursos_atuais(ctx: Context) -> str:
+async def tekushchie_kursy(ctx: Context) -> str:
     """Получить официальные курсы основных валют ЦБ РФ на сегодня.
 
     Возвращает курсы: доллар США, евро, китайский юань,
@@ -27,28 +27,28 @@ async def cursos_atuais(ctx: Context) -> str:
         Таблица с курсами валют.
     """
     await ctx.info("Запрос курсов основных валют ЦБ РФ...")
-    moedas = await client.buscar_moedas_principais()
+    valyuty = await client.poluchit_osnovnye_valyuty()
 
-    if not moedas:
+    if not valyuty:
         return "Не удалось получить курсы валют ЦБ РФ."
 
     rows = []
-    for m in moedas:
+    for m in valyuty:
         change = ""
-        if m.valor_anterior is not None and m.valor_anterior > 0:
-            diff = m.valor - m.valor_anterior
-            sinal = "+" if diff >= 0 else ""
-            pct = (diff / m.valor_anterior) * 100
-            change = f"{sinal}{format_number_br(diff, 4)} ({sinal}{format_number_br(pct, 2)}%)"
+        if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
+            diff = m.znachenie - m.predydushchee_znachenie
+            znak = "+" if diff >= 0 else ""
+            pct = (diff / m.predydushchee_znachenie) * 100
+            change = f"{znak}{format_number_br(diff, 4)} ({znak}{format_number_br(pct, 2)}%)"
         else:
             change = "—"
 
         rows.append(
             (
-                m.codigo,
-                m.nome,
+                m.kod,
+                m.nazvanie,
                 str(m.nominal),
-                format_number_br(m.valor, 4),
+                format_number_br(m.znachenie, 4),
                 change,
             )
         )
@@ -60,57 +60,58 @@ async def cursos_atuais(ctx: Context) -> str:
     )
 
 
-async def consultar_moeda(codigo: str, ctx: Context) -> str:
+async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     """Получить курс одной конкретной валюты ЦБ РФ.
 
     Доступные коды: USD, EUR, CNY, GBP, JPY, CHF, KZT, BYN и др.
-    Используйте listar_moedas() для полного списка.
+    Используйте spisok_valyut() для полного списка.
 
     Args:
-        codigo: Код валюты (например, 'USD', 'EUR', 'CNY').
+        kod: Код валюты (например, 'USD', 'EUR', 'CNY').
 
     Returns:
         Подробная информация о курсе валюты.
     """
-    await ctx.info(f"Запрос курса {codigo}...")
-    moeda = await client.buscar_moeda(codigo)
+    await ctx.info(f"Запрос курса {kod}...")
+    valyuta = await client.poluchit_valyutu(kod)
 
-    if not moeda:
+    if not valyuta:
         return (
-            f"Валюта '{codigo}' не найдена в справочнике ЦБ РФ.\n\n"
+            f"Валюта '{kod}' не найдена в справочнике ЦБ РФ.\n\n"
             f"Попробуйте один из основных: USD, EUR, CNY, GBP, JPY, CHF"
         )
 
     lines = [
-        f"**{moeda.nome}** ({moeda.codigo})",
-        f"- Номинал: {moeda.nominal}",
-        f"- Курс: {format_number_br(moeda.valor, 4)} ₽",
+        f"**{valyuta.nazvanie}** ({valyuta.kod})",
+        f"- Номинал: {valyuta.nominal}",
+        f"- Курс: {format_number_br(valyuta.znachenie, 4)} ₽",
     ]
 
-    if moeda.valor_anterior is not None:
-        diff = moeda.valor - moeda.valor_anterior
-        sinal = "+" if diff >= 0 else ""
-        pct = (diff / moeda.valor_anterior) * 100 if moeda.valor_anterior else 0
-        lines.append(f"- Предыдущий: {format_number_br(moeda.valor_anterior, 4)} ₽")
-        pct_str = f"{sinal}{format_number_br(pct, 2)}%"
-        diff_str = f"{sinal}{format_number_br(diff, 4)}"
+    if valyuta.predydushchee_znachenie is not None:
+        diff = valyuta.znachenie - valyuta.predydushchee_znachenie
+        znak = "+" if diff >= 0 else ""
+        prev = valyuta.predydushchee_znachenie
+        pct = (diff / prev) * 100 if prev else 0
+        lines.append(f"- Предыдущий: {format_number_br(valyuta.predydushchee_znachenie, 4)} ₽")
+        pct_str = f"{znak}{format_number_br(pct, 2)}%"
+        diff_str = f"{znak}{format_number_br(diff, 4)}"
         lines.append(f"- Изменение: {diff_str} ({pct_str})")
 
-    if moeda.data:
-        lines.append(f"- Дата: {moeda.data}")
+    if valyuta.data:
+        lines.append(f"- Дата: {valyuta.data}")
 
     lines.append("- Источник: Центральный банк Российской Федерации")
     return "\n".join(lines)
 
 
-async def listar_moedas(ctx: Context) -> str:
+async def spisok_valyut(ctx: Context) -> str:
     """Получить полный список валют, доступных в справочнике ЦБ РФ.
 
     Returns:
         Список всех доступных валют с кодами и названиями.
     """
     await ctx.info("Запрос списка валют ЦБ РФ...")
-    result = await client.buscar_todas_moedas()
+    result = await client.poluchit_vse_valyuty()
     valute_data = result.get("Valute", {})
 
     rows = []
@@ -118,8 +119,8 @@ async def listar_moedas(ctx: Context) -> str:
         name = entry.get("Name", code)
         nominal = entry.get("Nominal", 1)
         value = entry.get("Value", 0)
-        valor_unit = value / nominal if nominal else value
-        rows.append((code, name, str(nominal), format_number_br(valor_unit, 4)))
+        znachenie_za_edinitsu = value / nominal if nominal else value
+        rows.append((code, name, str(nominal), format_number_br(znachenie_za_edinitsu, 4)))
 
     header = f"**Справочник валют ЦБ РФ** — {len(rows)} валют\n\n"
     return header + markdown_table(
@@ -128,74 +129,74 @@ async def listar_moedas(ctx: Context) -> str:
     )
 
 
-async def converter_moeda(
-    moeda: str,
-    quantidade: float,
+async def konvertirovat_valyutu(
+    valyuta: str,
+    kolichestvo: float,
     ctx: Context,
 ) -> str:
     """Конвертировать сумму из иностранной валюты в рубли по курсу ЦБ РФ.
 
     Args:
-        moeda: Код валюты (USD, EUR, CNY и т.д.).
-        quantidade: Сумма в иностранной валюте.
+        valyuta: Код валюты (USD, EUR, CNY и т.д.).
+        kolichestvo: Сумма в иностранной валюте.
 
     Returns:
         Результат конвертации.
     """
-    await ctx.info(f"Конвертация {quantidade} {moeda} в рубли...")
-    dados = await client.buscar_moeda(moeda)
+    await ctx.info(f"Конвертация {kolichestvo} {valyuta} в рубли...")
+    dannye = await client.poluchit_valyutu(valyuta)
 
-    if not dados:
-        return f"Валюта '{moeda}' не найдена в справочнике ЦБ РФ."
+    if not dannye:
+        return f"Валюта '{valyuta}' не найдена в справочнике ЦБ РФ."
 
-    rubles = dados.valor * quantidade
+    rubles = dannye.znachenie * kolichestvo
 
     lines = [
         "**Конвертация валюты**",
-        f"- Сумма: {format_number_br(quantidade, 2)} {dados.codigo} ({dados.nome})",
-        f"- Курс ЦБ РФ: {format_number_br(dados.valor, 4)} ₽ за 1 {dados.codigo}",
-        f"- Номинал: {dados.nominal}",
+        f"- Сумма: {format_number_br(kolichestvo, 2)} {dannye.kod} ({dannye.nazvanie})",
+        f"- Курс ЦБ РФ: {format_number_br(dannye.znachenie, 4)} ₽ за 1 {dannye.kod}",
+        f"- Номинал: {dannye.nominal}",
         f"- **Результат: {format_number_br(rubles, 2)} ₽**",
     ]
 
-    if dados.data:
-        lines.append(f"- Дата курса: {dados.data}")
+    if dannye.data:
+        lines.append(f"- Дата курса: {dannye.data}")
 
     return "\n".join(lines)
 
 
-async def comparar_moedas(codigos: list[str] | None = None, ctx: Context | None = None) -> str:
+async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = None) -> str:
     """Сравнить курсы нескольких валют ЦБ РФ.
 
     Args:
-        codigos: Коды валют для сравнения (например, ['USD', 'EUR', 'CNY']).
-                 По умолчанию сравниваются USD, EUR, CNY.
+        kody: Коды валют для сравнения (например, ['USD', 'EUR', 'CNY']).
+              По умолчанию сравниваются USD, EUR, CNY.
 
     Returns:
         Сравнительная таблица курсов.
     """
-    if not codigos:
-        codigos = ["USD", "EUR", "CNY"]
+    if not kody:
+        kody = ["USD", "EUR", "CNY"]
 
-    if len(codigos) > 10:
+    if len(kody) > 10:
         return "Можно сравнить не более 10 валют одновременно."
 
     if ctx is not None:
-        await ctx.info(f"Сравнение {len(codigos)} валют...")
-    moedas = await client.buscar_moedas_varios(codigos)
+        await ctx.info(f"Сравнение {len(kody)} валют...")
+    valyuty = await client.poluchit_valyuty_spisok(kody)
 
-    if not moedas:
+    if not valyuty:
         return "Не удалось получить данные для указанных валют."
 
     rows = []
-    for m in sorted(moedas, key=lambda x: x.codigo):
+    for m in sorted(valyuty, key=lambda x: x.kod):
         change = "—"
-        if m.valor_anterior is not None and m.valor_anterior > 0:
-            diff = m.valor - m.valor_anterior
-            pct = (diff / m.valor_anterior) * 100
-            sinal = "+" if pct >= 0 else ""
-            change = f"{sinal}{format_number_br(pct, 2)}%"
-        rows.append((m.codigo, m.nome, format_number_br(m.valor, 4), change))
+        if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
+            diff = m.znachenie - m.predydushchee_znachenie
+            pct = (diff / m.predydushchee_znachenie) * 100
+            znak = "+" if pct >= 0 else ""
+            change = f"{znak}{format_number_br(pct, 2)}%"
+        rows.append((m.kod, m.nazvanie, format_number_br(m.znachenie, 4), change))
 
     header = "**Сравнение курсов валют ЦБ РФ**\n\n"
     return header + markdown_table(
@@ -204,22 +205,22 @@ async def comparar_moedas(codigos: list[str] | None = None, ctx: Context | None 
     )
 
 
-async def cursos_por_pais(ctx: Context) -> str:
+async def kursy_po_stranam(ctx: Context) -> str:
     """Получить курсы валют для основных стран-партнёров России.
 
     Returns:
         Таблица с курсами валют по странам.
     """
     await ctx.info("Запрос курсов валют по странам...")
-    moedas = await client.buscar_moedas_varios(list(MOEDAS_POR_PAIS.values()))
+    valyuty = await client.poluchit_valyuty_spisok(list(VALYUTY_PO_STRANAM.values()))
 
-    if not moedas:
+    if not valyuty:
         return "Не удалось получить данные."
 
     rows = []
-    for m in sorted(moedas, key=lambda x: x.codigo):
-        pais = next((p for p, c in MOEDAS_POR_PAIS.items() if c == m.codigo), m.codigo)
-        rows.append((pais, m.codigo, format_number_br(m.valor, 4)))
+    for m in sorted(valyuty, key=lambda x: x.kod):
+        strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == m.kod), m.kod)
+        rows.append((strana, m.kod, format_number_br(m.znachenie, 4)))
 
     header = "**Курсы валют основных стран-партнёров России**\n\n"
     return header + markdown_table(

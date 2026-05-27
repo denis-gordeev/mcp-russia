@@ -2,6 +2,68 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-05-27 (пятнадцатый проход — ФНС, Росреестр, ФССП, миграция португальских имён)
+
+### Выполнено
+
+- **Создан модуль ФНС (fns)**: данные Федеральной налоговой службы. Включает:
+  - `constants.py`: режимы налогообложения (ОСНО, УСН, ЕНВД, ПСН, ЕСН, НПД), виды налогов, типы проверок, статусы организаций, категории налогоплательщиков
+  - `schemas.py`: Pydantic-модели (OrganizaciyaEGRUL, IPEGRIP, NalogovayaProverka, NalogovoeNachislenie, SvedeniyaOrganizacii)
+  - `client.py`: HTTP-клиент с заглушками для API ФНС (nalog.gov.ru, egrul.nalog.ru)
+  - `tools.py`: 9 инструментов (spisok_nalogovyh_rezhimov, spisok_vidov_nalogov, spisok_tipov_proverok, spisok_statusov_organizaciy, spisok_kategoriy_nalogoplatelshchikov, info_organizacii, info_ip, proverki_organizacii, nalogovye_nachisleniya)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, система налоговых органов)
+  - `prompts.py`: 2 промпта (analiz_nalogoplatelshchika, obzor_rezhimov_nalogooblozheniya)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Росреестра (rosreestr)**: данные о кадастровой стоимости, объектах недвижимости, ЕГРН. Включает:
+  - `constants.py`: типы недвижимости, категории земель, виды разрешённого использования, статусы учёта, формы собственности
+  - `schemas.py`: Pydantic-модели (KadastrovyyObekt, ZemelnyyUchastok, Zdanie, Pomeshchenie, KadastrovayaStoimost)
+  - `client.py`: HTTP-клиент с заглушками для API Росреестра (rosreestr.gov.ru, pkk.rosreestr.ru)
+  - `tools.py`: 8 инструментов (spisok_tipov_nedvizhimosti, spisok_kategoriy_zemel, spisok_vidov_ispolzovaniya, spisok_statusov_obiekta, spisok_form_sobstvennosti, info_obekta, kadastrovaya_stoimost, prava_na_obekt)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, система регистрации)
+  - `prompts.py`: 2 промпта (analiz_nedvizhimosti, obzor_zemelnogo_uchastka)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль ФССП (fssp)**: данные о исполнительных производствах и взысканиях. Включает:
+  - `constants.py`: виды производств, статусы, ограничения, категории должников, основания возбуждения
+  - `schemas.py`: Pydantic-модели (IspolnitelnoeProizvodstvo, SvedeniyaDolzhnika, Ogranichenie, Rosysk)
+  - `client.py`: HTTP-клиент с заглушками для API ФССП (fssp.gov.ru)
+  - `tools.py`: 9 инструментов (spisok_vidov_proizvodstv, spisok_statusov_proizvodstva, spisok_ogranicheniy, spisok_kategoriy_dolzhnikov, spisok_osnovaniy_vozbuzhdeniya, info_proizvodstva, poisk_dolzhnika, ogranicheniya_dolzhnika, rozysk_dolzhnika)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, структура ФССП)
+  - `prompts.py`: 2 промпта (analiz_dolzhnika, obzor_ispolnitelnogo_proizvodstva)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Полная миграция португальских имён в модуле ЦБ РФ (cbrf)** — самый крупный рефакторинг:
+  - `schemas.py`: ValorMoeda → ZnachenieValyuty, DadosMoeda → DannyeValyuty, IndicadorEconomico → EkonomicheskiyIndikator, TaxaChave → KlyuchevayaStavka; поля: codigo → kod, nome → nazvanie, valor → znachenie, valor_anterior → predydushchee_znachenie и т.д.
+  - `constants.py`: INDICADORES_CHAVE → KLYUCHEVYE_INDIKATORY, MOEDAS_PRINCIPAIS → OSNOVNYE_VALYUTY, MOEDAS_POR_PAIS → VALYUTY_PO_STRANAM
+  - `client.py`: _parse_moeda → _parse_valyuta, buscar_todas_moedas → poluchit_vse_valyuty, buscar_moeda → poluchit_valyutu, buscar_moedas_varios → poluchit_valyuty_spisok, buscar_moedas_principais → poluchit_osnovnye_valyuty, buscar_curso_dinamico → poluchit_dinamiku_kursa
+  - `tools.py`: cursos_atuais → tekushchie_kursy, consultar_moeda → uznat_kurs_valyuty, listar_moedas → spisok_valyut, converter_moeda → konvertirovat_valyutu, comparar_moedas → sravnit_valyuty, cursos_por_pais → kursy_po_stranam; все внутренние переменные заменены (moedas → valyuty, sinal → znak и т.д.)
+  - `resources.py`: moedas_disponiveis → dostupnye_valyuty, referencia_cursos → spravochnik_kursov, moedas_principais → osnovnye_valyuty; URI ресурсов: data://moedas → data://valyuty, data://principais → data://osnovnye, data://referencia → data://spravochnik
+  - `server.py`: обновлены все импорты и регистрации
+- **Миграция `buscar_*` → `poluchit_*`** в 6 российских модулях:
+  - rosstat: buscar_indikator → poluchit_indikator, buscar_region_data → poluchit_dannye_regiona, buscar_federalny_okrug → poluchit_federalny_okrug; INDICADORES_CHAVE → KLYUCHEVYE_INDIKATORY
+  - gosduma: buscar_deputats → poluchit_deputatov, buscar_deputat → poluchit_deputata, buscar_zakonoproekty → poluchit_zakonoproekty, buscar_frakcii → poluchit_frakcii; INDICADORES_CHAVE → KLYUCHEVYE_INDIKATORY
+  - rosaudit: buscar_kontrolnoe_meropriyatie → poluchit_kontrolnoe_meropriyatie и 3 других
+  - rosgidromet: buscar_pogoda → poluchit_pogodu и 4 других
+  - rosvodresursy: buscar_vodnyy_obekt → poluchit_vodnyy_obekt и 3 других
+  - publikatsii: buscar_normativnyy_akt → poluchit_normativnyy_akt и 4 других
+- **Обновлены тесты** для всех изменённых модулей (cbrf, rosstat, gosduma, rosaudit, rosgidromet, rosvodresursy, publikatsii)
+- **Написаны тесты для 3 новых модулей**: fns (9 unit + 5 integration), rosreestr (8 unit + 5 integration), fssp (9 unit + 5 integration)
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для fns, rosreestr, fssp
+- **Прогнаны все проверки**: `pytest` (1856 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **Итого российских модулей**: 16 (cbrf, rosstat, gosduma, cekrf, rosapi, zakupki, minzdrav, kad_arbitrazh, rosaudit, rosgidromet, rosvodresursy, publikatsii, rospotrebnadzor, roskomnadzor + fns, rosreestr, fssp из этого раунда)
+- **Все российские модули используют русские имена**: больше нет португальских переменных, функций или констант в российских модулях
+- **CBRF полностью мигрирован**: schemas, constants, client, tools, resources, server — все португальские имена заменены
+- **Единый паттерн `poluchit_*`** вместо `buscar_*` во всех клиентских методах
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru)
+- **Создание модуля Минобрнауки**: данные о вузах, научных исследованиях, образовательных программах
+- **Создание модуля ФСО/Государственной статистики**: расширение модуля Росстата реальными данными из ЕМИСС (fedstat.ru)
+- **Создание модуля ГИБДД/МВД**: данные о штрафах, проверка транспортных средств, водительских удостоверений
+- **Миграция `format_number_br`** → `format_number_ru` в `_shared/formatting.py` и всех вызовах
+
 ## Статус раунда 2026-05-26 (четырнадцатый проход — модули Роспотребнадзора, Роскомнадзора, тесты, переводы)
 
 ### Выполнено

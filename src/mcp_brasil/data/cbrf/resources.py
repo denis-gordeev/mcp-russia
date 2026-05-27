@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from .constants import MOEDAS_PRINCIPAIS
+from .constants import OSNOVNYE_VALYUTY
 
 
-def moedas_disponiveis() -> str:
+def dostupnye_valyuty() -> str:
     """Список валют, доступных через API ЦБ РФ."""
     return (
         "Центральный банк Российской Федерации устанавливает официальные курсы "
@@ -14,7 +14,7 @@ def moedas_disponiveis() -> str:
     )
 
 
-def referencia_cursos() -> str:
+def spravochnik_kursov() -> str:
     """Справочная информация об официальных курсах ЦБ РФ."""
     return (
         "**Источники данных ЦБ РФ**\n\n"
@@ -26,10 +26,10 @@ def referencia_cursos() -> str:
     )
 
 
-def moedas_principais() -> str:
+def osnovnye_valyuty() -> str:
     """Основные валюты для быстрого запроса."""
     return (
-        f"Основные коды валют: {', '.join(MOEDAS_PRINCIPAIS[:10])}...\n"
-        f"Всего доступно: {len(MOEDAS_PRINCIPAIS)} валют.\n"
-        "Используйте listar_moedas() для полного списка."
+        f"Основные коды валют: {', '.join(OSNOVNYE_VALYUTY[:10])}...\n"
+        f"Всего доступно: {len(OSNOVNYE_VALYUTY)} валют.\n"
+        "Используйте spisok_valyut() для полного списка."
     )

@@ -30,14 +30,14 @@ async def test_spisok_okrugov():
 async def test_region_info():
     ctx = _mock_ctx()
     region = RegionData(code="77", name="г. Москва")
-    with patch.object(rosstat_tools.client, "buscar_region_data", return_value=region):
+    with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
         result = await rosstat_tools.region_info("77", ctx)
     assert "Москва" in result
 
 
 async def test_region_info_not_found():
     ctx = _mock_ctx()
-    with patch.object(rosstat_tools.client, "buscar_region_data", return_value=None):
+    with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=None):
         result = await rosstat_tools.region_info("999", ctx)
     assert "не найден" in result
 
@@ -46,7 +46,7 @@ async def test_okrug_info():
     ctx = _mock_ctx()
     with patch.object(
         rosstat_tools.client,
-        "buscar_federalny_okrug",
+        "poluchit_federalny_okrug",
         return_value={"code": "CFO", "name": "Центральный федеральный округ", "note": "test"},
     ):
         result = await rosstat_tools.okrug_info("CFO", ctx)
@@ -57,7 +57,7 @@ async def test_okrug_info_not_found():
     ctx = _mock_ctx()
     with patch.object(
         rosstat_tools.client,
-        "buscar_federalny_okrug",
+        "poluchit_federalny_okrug",
         return_value={"error": "не найден"},
     ):
         result = await rosstat_tools.okrug_info("ZZZ", ctx)

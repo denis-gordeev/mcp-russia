@@ -27,7 +27,7 @@ from .schemas import (
 )
 
 
-async def buscar_vodnyy_obekt(code: str) -> VodnyyObekt | None:
+async def poluchit_vodnyy_obekt(code: str) -> VodnyyObekt | None:
     """Fetch a water body by code.
 
     Args:
@@ -44,7 +44,7 @@ async def buscar_vodnyy_obekt(code: str) -> VodnyyObekt | None:
         return None
 
 
-async def buscar_gidro_post(post: str) -> GidroData | None:
+async def poluchit_gidro_post(post: str) -> GidroData | None:
     """Fetch hydrological data from a monitoring post.
 
     Args:
@@ -61,7 +61,7 @@ async def buscar_gidro_post(post: str) -> GidroData | None:
         return None
 
 
-async def buscar_vodokhranilishche(code: str) -> VodokhranilishcheData | None:
+async def poluchit_vodokhranilishche(code: str) -> VodokhranilishcheData | None:
     """Fetch reservoir data by code.
 
     Args:
@@ -78,7 +78,7 @@ async def buscar_vodokhranilishche(code: str) -> VodokhranilishcheData | None:
         return None
 
 
-async def buscar_vodopolzovanie(
+async def poluchit_vodopolzovanie(
     region: str = "",
     god: str = "",
 ) -> list[Vodopolzovanie]:

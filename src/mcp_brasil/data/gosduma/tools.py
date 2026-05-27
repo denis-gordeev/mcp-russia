@@ -46,7 +46,7 @@ async def info_deputata(id_deputata: int, ctx: Context) -> str:
         Подробная информация о депутате.
     """
     await ctx.info(f"Запрос информации о депутате {id_deputata}...")
-    deputat = await client.buscar_deputat(id_deputata)
+    deputat = await client.poluchit_deputata(id_deputata)
 
     if not deputat:
         return (

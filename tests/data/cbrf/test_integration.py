@@ -1,23 +1,13 @@
-"""Интеграционные тесты для модуля ЦБ РФ.
-
-Note: comparar_moedas uses *args which FastMCP does not support.
-If server import fails, tests are skipped.
-"""
+"""Интеграционные тесты для модуля ЦБ РФ."""
 
 import pytest
 from fastmcp import Client
 
-try:
-    from mcp_brasil.data.cbrf.server import mcp
-    _IMPORT_OK = True
-except ValueError:
-    _IMPORT_OK = False
+from mcp_brasil.data.cbrf.server import mcp
 
 
 @pytest.fixture
 def client():
-    if not _IMPORT_OK:
-        pytest.skip("cbrf server has *args tool registration issue")
     return Client(mcp)
 
 
@@ -27,11 +17,11 @@ async def test_has_tools(client):
     tool_names = {t.name for t in tools}
 
     expected = {
-        "cursos_atuais",
-        "consultar_moeda",
-        "listar_moedas",
-        "converter_moeda",
-        "cursos_por_pais",
+        "tekushchie_kursy",
+        "uznat_kurs_valyuty",
+        "spisok_valyut",
+        "konvertirovat_valyutu",
+        "kursy_po_stranam",
     }
     assert expected.issubset(tool_names), (
         f"Отсутствуют инструменты: {expected - tool_names}"
@@ -44,9 +34,9 @@ async def test_has_resources(client):
     uris = {str(r.uri) for r in resources}
 
     expected = {
-        "data://moedas",
-        "data://principais",
-        "data://referencia",
+        "data://valyuty",
+        "data://osnovnye",
+        "data://spravochnik",
     }
     assert expected.issubset(uris), f"Отсутствуют ресурсы: {expected - uris}"
 
@@ -62,23 +52,23 @@ async def test_has_prompts(client):
     )
 
 
-async def test_listar_moedas(client):
+async def test_spisok_valyut(client):
     async with client:
-        result = await client.call_tool("listar_moedas", {})
+        result = await client.call_tool("spisok_valyut", {})
     assert result is not None
     text = str(result)
     assert "USD" in text or "валют" in text
 
 
-async def test_consultar_moeda(client):
+async def test_uznat_kurs_valyuty(client):
     async with client:
-        result = await client.call_tool("consultar_moeda", {"codigo": "USD"})
+        result = await client.call_tool("uznat_kurs_valyuty", {"kod": "USD"})
     assert result is not None
     text = str(result)
     assert "USD" in text or "ЦБ РФ" in text or "не найдена" in text
 
 
-async def test_cursos_por_pais(client):
+async def test_kursy_po_stranam(client):
     async with client:
-        result = await client.call_tool("cursos_por_pais", {})
+        result = await client.call_tool("kursy_po_stranam", {})
     assert result is not None

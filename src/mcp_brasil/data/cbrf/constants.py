@@ -1,19 +1,16 @@
 """Constants for the CBRF (Central Bank of Russia) feature."""
 
-# Основные API endpoint
 CBR_DAILY_JSON = "https://www.cbr-xml-daily.ru/daily_json.js"
 CBR_KEY_RATE_XML = "https://www.cbr-xml-daily.ru/daily_json.js"
 
-# Ключевые показатели для быстрого запроса
-INDICADORES_CHAVE = [
+KLYUCHEVYE_INDIKATORY = [
     {"code": "key_rate", "name": "Ключевая ставка ЦБ РФ"},
     {"code": "USD", "name": "Курс доллара США (официальный)"},
     {"code": "EUR", "name": "Курс евро (официальный)"},
     {"code": "CNY", "name": "Курс китайского юаня (официальный)"},
 ]
 
-# Основные валюты, доступные через API ЦБ РФ
-MOEDAS_PRINCIPAIS = [
+OSNOVNYE_VALYUTY = [
     "AUD",  # Австралийский доллар
     "AZN",  # Азербайджанский манат
     "AMD",  # Армянский драм
@@ -57,8 +54,7 @@ MOEDAS_PRINCIPAIS = [
     "JPY",  # Японская иена
 ]
 
-# Страны и их валюты
-MOEDAS_POR_PAIS = {
+VALYUTY_PO_STRANAM = {
     "США": "USD",
     "Еврозона": "EUR",
     "Китай": "CNY",

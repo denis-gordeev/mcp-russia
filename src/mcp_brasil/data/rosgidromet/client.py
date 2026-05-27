@@ -26,7 +26,7 @@ from .schemas import (
 )
 
 
-async def buscar_pogoda(stanciya: str = "77") -> PogodaData | None:
+async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
     """Fetch current weather data for a monitoring station.
 
     Args:
@@ -43,7 +43,7 @@ async def buscar_pogoda(stanciya: str = "77") -> PogodaData | None:
         return None
 
 
-async def buscar_prognoz(
+async def poluchit_prognoz(
     stanciya: str = "77",
     dni: int = 3,
 ) -> list[PrognozData]:
@@ -65,7 +65,7 @@ async def buscar_prognoz(
         return []
 
 
-async def buscar_ekologiya(
+async def poluchit_ekologiyu(
     gorod: str = "",
     tip: str = "",
 ) -> list[EkologiyaData]:
@@ -91,7 +91,7 @@ async def buscar_ekologiya(
         return []
 
 
-async def buscar_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
+async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
     """Fetch active weather warnings for a region.
 
     Args:
@@ -111,7 +111,7 @@ async def buscar_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
         return []
 
 
-async def buscar_sputnik_dannye(
+async def poluchit_sputnik_dannye(
     region: str = "",
     tip: str = "",
 ) -> list[SputnikMonitoring]:

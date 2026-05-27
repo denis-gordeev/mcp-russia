@@ -26,7 +26,7 @@ from .schemas import (
 )
 
 
-async def buscar_kontrolnoe_meropriyatie(nomer: str) -> KontrolnoeMeropriyatie | None:
+async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> KontrolnoeMeropriyatie | None:
     """Fetch a specific control measure by number.
 
     Args:
@@ -43,7 +43,7 @@ async def buscar_kontrolnoe_meropriyatie(nomer: str) -> KontrolnoeMeropriyatie |
         return None
 
 
-async def buscar_auditorskoe_zaklyuchenie(nomer: str) -> AuditorskoeZaklyuchenie | None:
+async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> AuditorskoeZaklyuchenie | None:
     """Fetch a specific audit conclusion by number.
 
     Args:
@@ -60,7 +60,7 @@ async def buscar_auditorskoe_zaklyuchenie(nomer: str) -> AuditorskoeZaklyuchenie
         return None
 
 
-async def buscar_byudzhet_ispolnenie(
+async def poluchit_byudzhet_ispolnenie(
     period: str = "",
 ) -> ByudzhetIspolnenie | None:
     """Fetch federal budget execution data for a period.
@@ -82,7 +82,7 @@ async def buscar_byudzhet_ispolnenie(
         return None
 
 
-async def buscar_narusheniya(
+async def poluchit_narusheniya(
     organizaciya: str = "",
     tip: str = "",
 ) -> list[Narushenie]:

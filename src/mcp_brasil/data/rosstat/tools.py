@@ -14,7 +14,7 @@ from fastmcp import Context
 from mcp_brasil._shared.formatting import format_number_br, markdown_table
 
 from . import client
-from .constants import INDICADORES_CHAVE
+from .constants import KLYUCHEVYE_INDIKATORY
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -55,7 +55,7 @@ async def region_info(kod: str, ctx: Context) -> str:
         Информация о регионе.
     """
     await ctx.info(f"Запрос информации о регионе {kod}...")
-    data = await client.buscar_region_data(kod)
+    data = await client.poluchit_dannye_regiona(kod)
 
     if not data:
         return (
@@ -89,7 +89,7 @@ async def okrug_info(kod: str, ctx: Context) -> str:
         Информация о федеральном округе.
     """
     await ctx.info(f"Запрос информации о федеральном округе {kod}...")
-    data = await client.buscar_federalny_okrug(kod)
+    data = await client.poluchit_federalny_okrug(kod)
 
     if "error" in data:
         return f"{data['error']}\n\nИспользуйте spisok_okrugov() для списка округов."
@@ -109,7 +109,7 @@ async def pokazateli_rosstata(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка показателей Росстата...")
 
-    rows = [(p["code"], p["name"]) for p in INDICADORES_CHAVE]
+    rows = [(p["code"], p["name"]) for p in KLYUCHEVYE_INDIKATORY]
     header = "**Основные показатели Росстата**\n\n"
     return header + markdown_table(["Код", "Показатель"], rows)
 

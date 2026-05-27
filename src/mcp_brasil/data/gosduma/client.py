@@ -15,7 +15,7 @@ from .constants import DUMA_DEPUTATS, FRAKCII, SOZYVY
 from .schemas import Deputat, Frakciya, Zakonoproekt
 
 
-async def buscar_deputats(sozyv: str = "") -> list[Deputat]:
+async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
     """Fetch list of State Duma deputies.
 
     Args:
@@ -57,7 +57,7 @@ def _parse_deputats(data: Any) -> list[Deputat]:
     ]
 
 
-async def buscar_deputat(id: int) -> Deputat | None:
+async def poluchit_deputata(id: int) -> Deputat | None:
     """Fetch a specific deputy by ID.
 
     Args:
@@ -66,14 +66,14 @@ async def buscar_deputat(id: int) -> Deputat | None:
     Returns:
         Deputy data or None.
     """
-    deputats = await buscar_deputats()
+    deputats = await poluchit_deputatov()
     for d in deputats:
         if d.id == id:
             return d
     return None
 
 
-async def buscar_zakonoproekty(status: str = "", limit: int = 20) -> list[Zakonoproekt]:
+async def poluchit_zakonoproekty(status: str = "", limit: int = 20) -> list[Zakonoproekt]:
     """Fetch legislative bills.
 
     Args:
@@ -87,7 +87,7 @@ async def buscar_zakonoproekty(status: str = "", limit: int = 20) -> list[Zakono
     return []
 
 
-async def buscar_frakcii() -> list[Frakciya]:
+async def poluchit_frakcii() -> list[Frakciya]:
     """Fetch current Duma factions.
 
     Returns:

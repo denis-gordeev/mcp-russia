@@ -28,7 +28,7 @@ from .schemas import (
 )
 
 
-async def buscar_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt | None:
+async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt | None:
     """Fetch a normative legal act by number.
 
     Args:
@@ -49,7 +49,7 @@ async def buscar_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt | 
         return None
 
 
-async def buscar_zakon_proekt(nomer: str) -> ZakonProekt | None:
+async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     """Fetch a bill by number.
 
     Args:
@@ -66,7 +66,7 @@ async def buscar_zakon_proekt(nomer: str) -> ZakonProekt | None:
         return None
 
 
-async def buscar_publikatsii(
+async def poluchit_publikatsii(
     tip: str = "",
     otrysl: str = "",
     data_from: str = "",
@@ -100,7 +100,7 @@ async def buscar_publikatsii(
         return []
 
 
-async def buscar_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
+async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     """Fetch amendments to a legal act.
 
     Args:
@@ -117,7 +117,7 @@ async def buscar_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
         return []
 
 
-async def buscar_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
+async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
     """Search legal acts by text.
 
     Args:

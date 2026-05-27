@@ -87,7 +87,7 @@ async def info_normativnogo_akta(
         Информация о нормативном акте.
     """
     await ctx.info(f"Запрос информации о нормативном акте {nomer}...")
-    data = await client.buscar_normativnyy_akt(nomer, tip)
+    data = await client.poluchit_normativnyy_akt(nomer, tip)
 
     if not data:
         return (
@@ -123,7 +123,7 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
         Информация о законопроекте.
     """
     await ctx.info(f"Запрос информации о законопроекте {nomer}...")
-    data = await client.buscar_zakon_proekt(nomer)
+    data = await client.poluchit_zakon_proekt(nomer)
 
     if not data:
         return (
@@ -161,7 +161,7 @@ async def poisk_aktov(
         Результаты поиска.
     """
     await ctx.info(f"Поиск актов: '{tekst}'...")
-    results = await client.buscar_poisku(tekst, tip)
+    results = await client.poluchit_poisku(tekst, tip)
 
     if not results:
         tip_text = f" (тип: {tip})" if tip else ""
@@ -203,7 +203,7 @@ async def publikatsii_po_datam(
         Список публикаций.
     """
     await ctx.info("Запрос публикаций за период...")
-    data = await client.buscar_publikatsii(
+    data = await client.poluchit_publikatsii(
         tip=tip, otrysl=otrysl, data_from=data_from, data_to=data_to
     )
 
@@ -247,7 +247,7 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
         Список изменений.
     """
     await ctx.info(f"Запрос изменений акта {akt_nomer}...")
-    data = await client.buscar_izmeneniya_akta(akt_nomer)
+    data = await client.poluchit_izmeneniya_akta(akt_nomer)
 
     if not data:
         return (

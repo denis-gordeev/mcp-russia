@@ -6,7 +6,7 @@ DUMA_DEPUTATS = "https://duma.gov.ru/api/deputats"
 DUMA_LAWS = "https://sozd.duma.gov.ru"
 
 # Основные показатели
-INDICADORES_CHAVE = [
+KLYUCHEVYE_INDIKATORY = [
     {"code": "deputats", "name": "Список депутатов"},
     {"code": "laws", "name": "Законопроекты"},
     {"code": "sessions", "name": "Пленарные заседания"},

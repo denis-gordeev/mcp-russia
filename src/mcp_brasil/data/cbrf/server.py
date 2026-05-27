@@ -6,31 +6,28 @@ Zero business logic (ADR-001 rule #4).
 from fastmcp import FastMCP
 
 from .prompts import analise_valyut, obzor_ekonomiki
-from .resources import moedas_disponiveis, moedas_principais, referencia_cursos
+from .resources import dostupnye_valyuty, osnovnye_valyuty, spravochnik_kursov
 from .tools import (
-    comparar_moedas,
-    consultar_moeda,
-    converter_moeda,
-    cursos_atuais,
-    cursos_por_pais,
-    listar_moedas,
+    konvertirovat_valyutu,
+    kursy_po_stranam,
+    spisok_valyut,
+    sravnit_valyuty,
+    tekushchie_kursy,
+    uznat_kurs_valyuty,
 )
 
 mcp = FastMCP("mcp-russia-cbrf")
 
-# Tools
-mcp.tool(cursos_atuais, tags={"курсы-валют", "основные"})
-mcp.tool(consultar_moeda, tags={"курс-валюты", "конкретная"})
-mcp.tool(listar_moedas, tags={"справочник", "все-валюты"})
-mcp.tool(converter_moeda, tags={"конвертация", "рубли"})
-mcp.tool(comparar_moedas, tags={"сравнение", "валюты"})
-mcp.tool(cursos_por_pais, tags={"страны-партнёры", "валюты"})
+mcp.tool(tekushchie_kursy, tags={"курсы-валют", "основные"})
+mcp.tool(uznat_kurs_valyuty, tags={"курс-валюты", "конкретная"})
+mcp.tool(spisok_valyut, tags={"справочник", "все-валюты"})
+mcp.tool(konvertirovat_valyutu, tags={"конвертация", "рубли"})
+mcp.tool(sravnit_valyuty, tags={"сравнение", "валюты"})
+mcp.tool(kursy_po_stranam, tags={"страны-партнёры", "валюты"})
 
-# Resources
-mcp.resource("data://moedas", mime_type="text/plain")(moedas_disponiveis)
-mcp.resource("data://principais", mime_type="text/plain")(moedas_principais)
-mcp.resource("data://referencia", mime_type="text/plain")(referencia_cursos)
+mcp.resource("data://valyuty", mime_type="text/plain")(dostupnye_valyuty)
+mcp.resource("data://osnovnye", mime_type="text/plain")(osnovnye_valyuty)
+mcp.resource("data://spravochnik", mime_type="text/plain")(spravochnik_kursov)
 
-# Prompts
 mcp.prompt(analise_valyut)
 mcp.prompt(obzor_ekonomiki)

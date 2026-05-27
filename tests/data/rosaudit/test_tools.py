@@ -40,7 +40,7 @@ async def test_spisok_subiektov_audita():
 async def test_info_kontrolnogo_meropriyatiya_not_found():
     """Проверка info_kontrolnogo_meropriyatiya при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosaudit_tools.client, "buscar_kontrolnoe_meropriyatie", return_value=None):
+    with patch.object(rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None):
         result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("nonexistent", ctx)
     assert "не найдено" in result
 
@@ -48,20 +48,20 @@ async def test_info_kontrolnogo_meropriyatiya_not_found():
 async def test_info_auditorskogo_zaklyucheniya_not_found():
     """Проверка info_auditorskogo_zaklyucheniya при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosaudit_tools.client, "buscar_auditorskoe_zaklyuchenie", return_value=None):
+    with patch.object(rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None):
         result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("nonexistent", ctx)
     assert "не найдено" in result
 
 
 async def test_ispolnenie_byudzheta_unavailable():
     """Проверка ispolnenie_byudzheta при отсутствии данных."""
-    with patch.object(rosaudit_tools.client, "buscar_byudzhet_ispolnenie", return_value=None):
+    with patch.object(rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=None):
         result = await rosaudit_tools.ispolnenie_byudzheta(period="2024")
     assert "недоступны" in result
 
 
 async def test_poisk_narusheniy_empty():
     """Проверка poisk_narusheniy при отсутствии результатов."""
-    with patch.object(rosaudit_tools.client, "buscar_narusheniya", return_value=[]):
+    with patch.object(rosaudit_tools.client, "poluchit_narusheniya", return_value=[]):
         result = await rosaudit_tools.poisk_narusheniy(organizaciya="Тест")
     assert "не найдены" in result
