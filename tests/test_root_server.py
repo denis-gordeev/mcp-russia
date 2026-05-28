@@ -12,25 +12,25 @@ from mcp_brasil.server import mcp
 
 class TestRootServerTools:
     @pytest.mark.asyncio
-    async def test_listar_features_registered(self) -> None:
+    async def test_spisok_funktsiy_registered(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "listar_features" in names
+            assert "spisok_funktsiy" in names
 
     @pytest.mark.asyncio
-    async def test_recomendar_tools_registered(self) -> None:
+    async def test_rekomendovat_instrumenty_registered(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "recomendar_tools" in names
+            assert "rekomendovat_instrumenty" in names
 
     @pytest.mark.asyncio
-    async def test_planejar_consulta_registered(self) -> None:
+    async def test_splanirovat_zapros_registered(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "planejar_consulta" in names
+            assert "splanirovat_zapros" in names
 
     @pytest.mark.asyncio
     async def test_ibge_tools_namespaced(self) -> None:
@@ -68,15 +68,15 @@ class TestRootServerTools:
             assert "senado_agenda_plenario" in names
 
     @pytest.mark.asyncio
-    async def test_listar_features_returns_summary(self) -> None:
+    async def test_spisok_funktsiy_returns_summary(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool("listar_features", {})
+            result = await c.call_tool("spisok_funktsiy", {})
             assert "ibge" in result.data
             assert "bacen" in result.data
             assert "camara" in result.data
             assert "senado" in result.data
             assert "cekrf" in result.data
-            assert "Legacy-слой BCB dentro mcp-russia" not in result.data
+            assert "Legacy-слой BCB внутри mcp-russia" not in result.data
             assert "DEPRECATED" in result.data
             assert "Legacy-слой CNES/DataSUS внутри mcp-russia" in result.data
 
@@ -155,19 +155,19 @@ class TestRootServerPrompts:
             assert "senado_analise_votacao_senado" in names
 
 
-class TestExecutarLote:
+class TestVypolnitPaket:
     @pytest.mark.asyncio
     async def test_registered(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "executar_lote" in names
+            assert "vypolnit_paket" in names
 
     @pytest.mark.asyncio
     async def test_has_docstring(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
-            tool = next(t for t in tools if t.name == "executar_lote")
+            tool = next(t for t in tools if t.name == "vypolnit_paket")
             assert tool.description
             assert "параллельно" in tool.description.lower()
 
@@ -175,19 +175,14 @@ class TestExecutarLote:
 class TestRootServerToolTags:
     @pytest.mark.asyncio
     async def test_tools_have_tags(self) -> None:
-        """Verify that tools from features have tags after mounting."""
         async with Client(mcp) as c:
             tools = await c.list_tools()
-            # Find a known tool
             ibge_tool = next((t for t in tools if t.name == "ibge_listar_estados"), None)
             assert ibge_tool is not None
-            # Tags should propagate through mount
-            # Note: tags are on the Tool object, accessible via annotations or the tool itself
 
     @pytest.mark.asyncio
     async def test_meta_tools_have_discovery_tag(self) -> None:
-        """Meta tools (listar_features, recomendar_tools) should have discovery tags."""
         async with Client(mcp) as c:
             tools = await c.list_tools()
-            listar = next((t for t in tools if t.name == "listar_features"), None)
-            assert listar is not None
+            spisok = next((t for t in tools if t.name == "spisok_funktsiy"), None)
+            assert spisok is not None

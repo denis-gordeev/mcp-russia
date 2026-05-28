@@ -45,7 +45,7 @@ class TestBuscarEmendasPix:
             result = await tools.buscar_emendas_pix(ano=2024)
         assert "202427070006" in result
         assert "Dep. Fulano" in result
-        assert "R$ 110 000,00" in result  # custeio 30k + investimento 80k
+        assert "110 000,00 ₽" in result  # custeio 30k + investimento 80k
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -92,8 +92,8 @@ class TestDetalheEmenda:
         with patch(f"{MODULE}.detalhe_emenda", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.detalhe_emenda(3221)
         assert "202427070006" in result
-        assert "R$ 30 000,00" in result  # custeio
-        assert "R$ 80 000,00" in result  # investimento
+        assert "30 000,00 ₽" in result  # custeio
+        assert "80 000,00 ₽" in result  # investimento
         assert "Saude" in result
 
     @pytest.mark.asyncio
@@ -117,7 +117,7 @@ class TestEmendasPorMunicipio:
         ):
             result = await tools.emendas_por_municipio("Teresina")
         assert "TERESINA" in result
-        assert "R$ 110 000,00" in result
+        assert "110 000,00 ₽" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:

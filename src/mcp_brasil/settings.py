@@ -1,7 +1,7 @@
-"""Configuração global do mcp-russia.
+"""Глобальная конфигурация mcp-russia.
 
-Valores podem ser sobrescritos via variáveis de ambiente.
-Carrega automaticamente o arquivo .env na raiz do projeto.
+Значения могут быть переопределены через переменные окружения.
+Автоматически загружает файл .env в корне проекта.
 """
 
 from __future__ import annotations
@@ -42,5 +42,5 @@ TOOL_SEARCH: str = os.environ.get(
     os.environ.get("MCP_BRASIL_TOOL_SEARCH", "bm25"),
 )
 
-# --- LLM Discovery (recomendar_tools) ---
+# --- LLM Discovery (rekomendovat_instrumenty) ---
 ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")

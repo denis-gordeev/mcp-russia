@@ -14,8 +14,8 @@ from __future__ import annotations
 from fastmcp import Context
 
 from mcp_brasil._shared.formatting import (
-    format_brl,
     format_number_ru,
+    format_rub,
     markdown_table,
     truncate_list,
 )
@@ -65,7 +65,7 @@ async def consultar_cnpj(cnpj: str, ctx: Context) -> str:
     """
     await ctx.info(f"Consultando CNPJ {cnpj}...")
     emp = await client.consultar_cnpj(cnpj)
-    capital = format_brl(emp.capital_social) if emp.capital_social else "N/A"
+    capital = format_rub(emp.capital_social) if emp.capital_social else "N/A"
     lines = [
         f"**CNPJ:** {emp.cnpj}",
         f"**Razão Social:** {emp.razao_social or 'N/A'}",
@@ -184,8 +184,8 @@ async def consultar_cotacao(moeda: str, data: str, ctx: Context) -> str:
     lines = [
         f"**Moeda:** {cotacao.moeda}",
         f"**Data:** {cotacao.data}",
-        f"**Compra:** R$ {compra}",
-        f"**Venda:** R$ {venda}",
+        f"**Compra:** {compra} ₽",
+        f"**Venda:** {venda} ₽",
     ]
     return "\n".join(lines)
 

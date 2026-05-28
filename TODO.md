@@ -2,54 +2,74 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-05-28 (шестнадцатый проход — миграция форматирования, ГИБДД, Минобрнауки)
+## Статус раунда 2026-05-28 (семнадцатый проход — миграция format_brl/parse_brl_number, португальские имена в инфраструктуре)
 
 ### Выполнено
 
-- **Миграция `format_number_br` → `format_number_ru`** во всём проекте:
-  - `_shared/formatting.py`: `format_number_br` теперь deprecated-алиас для `format_number_ru` (производит пробел как разделитель тысяч вместо точки)
-  - `format_brl`: обновлён для использования пробела вместо точки (выход «R$ 1 234,56» вместо «R$ 1.234,56»)
-  - `format_number_ru`: основная функция форматирования чисел (пробел-тысячи, запятая-десятичные)
-  - `parse_brl_number`: теперь обрабатывает и точку, и пробел как разделитель тысяч
-  - `markdown_table`: сообщение о пустых результатах → «Результаты не найдены.» (было «Nenhum resultado encontrado.»)
-  - `truncate_list`: сообщение об усечении → «... и ещё N результатов.» (было «... e mais N resultados.»)
-  - Docstring модуля переведён на русский
-  - Заменены все 90+ вызовов `format_number_br` → `format_number_ru` в 11 модулях: cbrf, rosgidromet, rosvodresursy, rosaudit, rosstat, cekrf, bacen, saude, ana, tse, ibge, inpe, brasilapi
-  - Обновлены все тесты с бразильским форматом чисел (52 файла)
-- **Создан модуль ГИБДД/МВД (gibdd)**: данные Госавтоинспекции и Министерства внутренних дел. Включает:
-  - `constants.py`: типы ТС, категории ВУ, виды нарушений ПДД, статусы штрафов, типы ДТП, регионы регистрации
-  - `schemas.py`: Pydantic-модели (TransportnoeSredstvo, VoditelskoeUdostoverenie, ShtrafGIBDD, StatistikaDTP, RegistracionnoeDeystvie)
-  - `client.py`: HTTP-клиент с заглушками для API ГИБДД (гибдд.рф, gosuslugi.ru)
-  - `tools.py`: 12 инструментов (spisok_tipov_ts, spisok_kategoriyy_vu, spisok_vidov_narusheniy, spisok_statusov_shtrafov, spisok_tipov_dtp, spisok_regionov_registratsii, info_ts, info_vu, shtrafy_po_ts, shtrafy_po_vu, statistika_dtp, istoriya_registraciy)
-  - `resources.py`: 3 ресурса (источники данных, законодательство, структура ГИБДД)
-  - `prompts.py`: 2 промпта (analiz_transportnogo_sredstva, analiz_voditelya)
-  - `server.py`: регистрация всех компонентов в FastMCP
-- **Создан модуль Минобрнауки (minobrnauki)**: данные о вузах, научных исследованиях, образовательных программах. Включает:
-  - `constants.py`: типы вузов, формы обучения, уровни образования, отрасли науки, типы грантов, статусы аккредитации, федеральные округа
-  - `schemas.py`: Pydantic-модели (VUZ, ObrazovatelnayaProgramma, NauchnoeIssledovanie, Aspirant, ReytingVUZa)
-  - `client.py`: HTTP-клиент с заглушками для API Минобрнауки (minobrnauki.gov.ru)
-  - `tools.py`: 12 инструментов (spisok_tipov_vuzov, spisok_form_obucheniya, spisok_urovney_obrazovaniya, spisok_otrasley_nauki, spisok_tipov_grantov, spisok_statusov_akkreditatsii, spisok_federalnyh_okrugov, info_vuza, programmy_vuza, granty_i_isledovaniya, reyting_vuzov, aspirantura)
-  - `resources.py`: 3 ресурса (источники данных, законодательство, система образования)
-  - `prompts.py`: 2 промпта (analiz_vuza, obzor_nauchnyh_grantov)
-  - `server.py`: регистрация всех компонентов в FastMCP
-- **Написаны тесты** для 2 новых модулей: gibdd (12 unit + 5 integration), minobrnauki (12 unit + 5 integration)
-- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для gibdd, minobrnauki; добавлены RUF001/RUF002 для тестов российских модулей
-- **Прогнаны все проверки**: `pytest` (1893 passed, 1 skipped), `ruff check` — all passed
+- **Миграция `format_brl` → `format_rub`** во всём проекте:
+  - `_shared/formatting.py`: `format_brl` теперь deprecated-алиас для `format_rub` (выход «1 234,56 ₽» вместо «R$ 1 234,56»)
+  - `format_rub`: основная функция форматирования валюты (пробел-тысячи, запятая-десятичные, суффикс «₽»)
+  - Заменены все 90+ вызовов `format_brl` → `format_rub` в 15 legacy-модулях: brasilapi, tse, tce_sp, tce_rs, tce_rn, tce_rj, tce_pi, tce_pe, tce_ce, compras/dadosabertos, compras/pncp, transferegov, tcu, transparencia, camara
+  - Обновлены все 59 тестовых ассертов с «R$» → «₽» в 14 файлах
+- **Миграция `parse_brl_number` → `parse_rub_number`**:
+  - `_shared/formatting.py`: `parse_brl_number` теперь deprecated-алиас для `parse_rub_number`
+  - `parse_rub_number`: расширен для обработки обоих форматов — «1 234,56» (пробел-тысячи) и «348.600,00» (точка-тысячи) для обратной совместимости с legacy API
+  - Заменён единственный вызов в `transparencia/client.py`
+  - Добавлены тесты `TestParseRubNumber` и `TestParseBrlNumberDeprecated`
+- **Миграция португальских имён в `_shared/planner.py`**:
+  - `EtapaPlano` → `EtapPlana`, поля: etapa→etap, descricao→opisanie, parametros→parametry, depende_de→zavisit_ot, justificativa→obosnovanie
+  - `PlanoConsulta` → `PlanZaprosa`, поля: consulta→zapros, complexidade→slozhnost, resumo→svodka, etapas→etapy, observacoes→primechaniya
+  - `planejar_consulta_impl` → `splanirovat_zapros_impl`
+  - Системный промпт полностью переведён: Portuguese schema/examples → Russian (запросы про Госдуму/Росстат вместо Камары/IBGE)
+  - Вывод `to_markdown()`: «Plano de Consulta» → «План запроса», «Etapa» → «Этап», «Depende de» → «Зависит от», «Justificativa» → «Обоснование» и т.д.
+- **Миграция португальских имён в `_shared/discovery.py`**:
+  - `recomendar_tools_impl` → `rekomendovat_instrumenty_impl`
+  - Строки вывода: «Requer autenticação» → «Требуется аутентификация», «Sem autenticação» → «Без аутентификации», «Nome completo da tool» → «Полное имя инструмента»
+- **Миграция португальских строк в `_shared/batch.py`**:
+  - «Nenhuma consulta fornecida.» → «Нет запросов для выполнения.»
+  - «Máximo de 10 consultas por lote.» → «Максимум 10 запросов на пакет.»
+  - «Tool não encontrada.» → «Инструмент не найден.»
+  - «Erro ao executar» → «Ошибка при выполнении»
+- **Миграция `exceptions.py`**:
+  - `McpBrasilError` → `McpRussiaError` (базовый класс исключений)
+  - `McpBrasilError` сохранён как alias для обратной совместимости
+  - Docstrings переведены с португальского на русский
+- **Миграция `settings.py`**:
+  - Португальские комментарии переведены на русский
+  - «recomendar_tools» → «rekomendovat_instrumenty» в комментарии
+- **Миграция MCP-инструментов сервера** (`server.py`):
+  - `listar_features` → `spisok_funktsiy`
+  - `recomendar_tools` → `rekomendovat_instrumenty`
+  - `planejar_consulta` → `splanirovat_zapros`
+  - `executar_lote` → `vypolnit_paket`
+  - Параметр `consultas` → `zaprosy` в `vypolnit_paket`
+  - `_always_visible` список обновлён
+- **Обновлён публичный API** `src/mcp_russia/server.py`:
+  - Все реэкспорты обновлены на новые имена инструментов
+- **Обновлена документация**:
+  - `docs/reference/smart-tools.md`: все 4 имени инструмента
+  - `docs/reference/configuration.md`: recomendar_tools → rekomendovat_instrumenty, planejar_consulta → splanirovat_zapros
+  - `docs/concepts/architecture.md`: все 4 имени в списке meta-tools
+  - `docs/examples/politicas-publicas.md`, `cientista-politico.md`, `jornalista-materias.md`: обновлены ссылки
+  - `_shared/cache.py`, `_shared/feature.py`: примеры в docstrings переведены
+- **Обновлена конфигурация ruff**: добавлен `tests/test_discovery.py` в RUF001/RUF002 ignores
+- **Прогнаны все проверки**: `pytest` (1896 passed, 1 skipped), `ruff check` — all passed
 
 ### Ключевые архитектурные решения
 
-- **Итого российских модулей**: 18 (cbrf, rosstat, gosduma, cekrf, rosapi, zakupki, minzdrav, kad_arbitrazh, rosaudit, rosgidromet, rosvodresursy, publikatsii, rospotrebnadzor, roskomnadzor, fns, rosreestr, fssp + gibdd, minobrnauki из этого раунда)
-- **Единый числовой формат**: все модули теперь используют `format_number_ru` (пробел-тысячи, запятая-десятичные) — бразильский формат с точкой полностью устранён из вывода
-- **format_number_br — deprecated alias**: сохранён для обратной совместимости, но делегирует в format_number_ru
-- **Все тесты приведены к русскому числовому формату**: 52 файла обновлено
+- **Единый валютный формат**: все модули теперь используют `format_rub` (вывод «1 234,56 ₽») — формат «R$» полностью устранён из вывода
+- **format_brl — deprecated alias**: сохранён для обратной совместимости, делегирует в format_rub
+- **parse_rub_number — расширенный парсер**: обрабатывает и русские (пробел), и бразильские (точка) разделители тысяч
+- **parse_brl_number — deprecated alias**: делегирует в parse_rub_number
+- **MCP-инструменты сервера полностью на русском**: spisok_funktsiy, rekomendovat_instrumenty, splanirovat_zapros, vypolnit_paket
+- **Модели планировщика на русском**: PlanZaprosa/EtapPlana с русскими именами полей
+- **McpRussiaError**: новый базовый класс исключений (McpBrasilError сохранён как alias)
 
 ### Следующие действия
 
 - **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
-- **Миграция `parse_brl_number`** → `parse_rub_number` в `_shared/formatting.py` и всех вызовов
-- **Миграция `format_brl`** → `format_rub` в `_shared/formatting.py` и всех вызовов
 - **Создание модуля ФСО/Государственной статистики**: расширение модуля Росстата реальными данными из ЕМИСС (fedstat.ru)
-- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.)
+- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.) — внутрикодовые переменные и имена функций, не являющиеся MCP-инструментами
 
 ### Выполнено
 

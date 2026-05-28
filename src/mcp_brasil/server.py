@@ -87,13 +87,13 @@ registry.mount_all(mcp)
 
 logger.info("\n%s", registry.summary())
 
-# Build batch dispatch table for executar_lote
+# Build batch dispatch table for vypolnit_paket
 build_dispatch(registry)
 
 
 # Expose a meta-tool for introspection
 @mcp.tool(tags={"meta", "discovery"})
-def listar_features() -> str:
+def spisok_funktsiy() -> str:
     """Список всех доступных функций (API) в mcp-russia.
 
     Используйте этот инструмент, чтобы узнать, какие государственные API
@@ -106,7 +106,7 @@ def listar_features() -> str:
 
 
 @mcp.tool(tags={"meta", "discovery"})
-async def recomendar_tools(query: str, ctx: Context) -> str:
+async def rekomendovat_instrumenty(query: str, ctx: Context) -> str:
     """Рекомендует релевантные инструменты по запросу на естественном языке.
 
     Использует ИИ для понимания намерения и подбора наиболее подходящих
@@ -116,15 +116,15 @@ async def recomendar_tools(query: str, ctx: Context) -> str:
         query: Вопрос или описание потребности
                (напр.: «нужны данные о расходах федерального бюджета»).
     """
-    from ._shared.discovery import build_catalog, recomendar_tools_impl
+    from ._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
 
     await ctx.info(f"Поиск рекомендаций для: {query}")
     catalog = build_catalog(registry)
-    return await recomendar_tools_impl(query, catalog)
+    return await rekomendovat_instrumenty_impl(query, catalog)
 
 
 @mcp.tool(tags={"meta", "discovery", "планирование"})
-async def planejar_consulta(query: str, ctx: Context) -> str:
+async def splanirovat_zapros(query: str, ctx: Context) -> str:
     """Создаёт план выполнения для сложных запросов.
 
     Анализирует вопрос, определяет, какие инструменты использовать,
@@ -136,15 +136,15 @@ async def planejar_consulta(query: str, ctx: Context) -> str:
                (напр.: «сравните расходы депутата X со средним значением»).
     """
     from ._shared.discovery import build_catalog
-    from ._shared.planner import planejar_consulta_impl
+    from ._shared.planner import splanirovat_zapros_impl
 
     await ctx.info(f"Планирование запроса: {query}")
     catalog = build_catalog(registry)
-    return await planejar_consulta_impl(query, catalog)
+    return await splanirovat_zapros_impl(query, catalog)
 
 
 @mcp.tool(tags={"meta", "batch"})
-async def executar_lote(consultas: list[dict[str, object]], ctx: Context) -> str:
+async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
     """Выполняет несколько инструментов за один вызов, параллельно.
 
     Используйте для ускорения, когда нужны данные из нескольких источников
@@ -154,29 +154,29 @@ async def executar_lote(consultas: list[dict[str, object]], ctx: Context) -> str
     имён, напр.: «gosduma_poisk_deputata») и его аргументы.
 
     Args:
-        consultas: Список запросов. Каждый элемент — объект с:
-                   - "tool": полное имя инструмента
-                     (напр.: «gosduma_info_deputata»)
-                   - "args": объект с аргументами инструмента
-                   Пример: [
-                     {"tool": "gosduma_info_deputata",
-                      "args": {"deputat_id": 99100142}},
-                     {"tool": "cbrf_kursy_valyut",
-                      "args": {}}
-                   ]
+        zaprosy: Список запросов. Каждый элемент — объект с:
+                 - "tool": полное имя инструмента
+                   (напр.: «gosduma_info_deputata»)
+                 - "args": объект с аргументами инструмента
+                 Пример: [
+                   {"tool": "gosduma_info_deputata",
+                    "args": {"deputat_id": 99100142}},
+                   {"tool": "cbrf_kursy_valyut",
+                    "args": {}}
+                 ]
     """
-    await ctx.info(f"Выполнение пакета из {len(consultas)} запрос(ов)...")
-    return await execute_batch(consultas, ctx)
+    await ctx.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
+    return await execute_batch(zaprosy, ctx)
 
 
 # ---------------------------------------------------------------------------
 # Tool Search Transform — configurable via MCP_RUSSIA_TOOL_SEARCH
 # ---------------------------------------------------------------------------
 _always_visible = [
-    "listar_features",
-    "recomendar_tools",
-    "planejar_consulta",
-    "executar_lote",
+    "spisok_funktsiy",
+    "rekomendovat_instrumenty",
+    "splanirovat_zapros",
+    "vypolnit_paket",
 ]
 
 if TOOL_SEARCH == "bm25":

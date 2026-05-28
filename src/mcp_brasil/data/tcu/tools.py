@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 from .schemas import ParcelaDebito
@@ -279,10 +279,10 @@ async def calcular_debito_tcu(
         "## Cálculo de Débito — TCU\n",
         f"- **Data do fato:** {data_fato}",
         f"- **Data de atualização:** {resultado.data or data_atualizacao}",
-        f"- **Valor original:** {format_brl(valor_original)}",
-        f"- **Correção monetária (SELIC):** {format_brl(resultado.saldo_variacao_selic)}",
-        f"- **Juros de mora:** {format_brl(resultado.saldo_juros)}",
-        f"- **Valor total atualizado:** {format_brl(resultado.saldo_total)}",
+        f"- **Valor original:** {format_rub(valor_original)}",
+        f"- **Correção monetária (SELIC):** {format_rub(resultado.saldo_variacao_selic)}",
+        f"- **Juros de mora:** {format_rub(resultado.saldo_juros)}",
+        f"- **Valor total atualizado:** {format_rub(resultado.saldo_total)}",
     ]
 
     return "\n".join(lines)
@@ -369,7 +369,7 @@ async def buscar_contratos_tcu(ctx: Context) -> str:
         f"**{len(contratos)} contratos do TCU** (mostrando {len(amostra)} mais recentes):\n"
     ]
     for c in amostra:
-        valor = format_brl(c.valor_atualizado) if c.valor_atualizado else "—"
+        valor = format_rub(c.valor_atualizado) if c.valor_atualizado else "—"
         lines.append(f"### {c.numero or '—'}/{c.ano or '—'}")
         lines.append(f"- **Fornecedor:** {c.nome_fornecedor or '—'}")
         lines.append(f"- **Objeto:** {c.objeto or '—'}")

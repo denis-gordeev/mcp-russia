@@ -89,7 +89,7 @@ class TestBuscarLicitacoesCe:
         assert "2024/001" in result
         assert "Pregão Eletrônico" in result
         assert "material escolar" in result
-        assert "R$ 150 000,00" in result
+        assert "150 000,00 ₽" in result
         assert "2024-04-01" in result
         assert "1 licitações" in result or "1 licitaç" in result
 
@@ -156,7 +156,7 @@ class TestBuscarContratosCe:
         assert "CT-2024/001" in result
         assert "Compras" in result
         assert "merenda" in result
-        assert "R$ 500 000,00" in result
+        assert "500 000,00 ₽" in result
         assert "2024-12-31" in result
 
     @pytest.mark.asyncio
@@ -221,7 +221,7 @@ class TestBuscarEmpenhosCe:
             result = await tools.buscar_empenhos_ce(ctx, 57, 202401)
         assert "2024NE000123" in result
         assert "EMPRESA ABC LTDA" in result
-        assert "R$ 25 000,00" in result
+        assert "25 000,00 ₽" in result
         assert "contrato CT-001" in result
 
     @pytest.mark.asyncio

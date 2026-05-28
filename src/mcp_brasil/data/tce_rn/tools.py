@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -81,8 +81,8 @@ async def buscar_despesas_rn(
 
     lines: list[str] = [f"**{len(despesas)} itens de despesa:**\n"]
     for d in despesas[:20]:
-        empenhado = format_brl(d.valor_empenho_ate_periodo) if d.valor_empenho_ate_periodo else "—"
-        pago = format_brl(d.valor_pago_ate_periodo) if d.valor_pago_ate_periodo else "—"
+        empenhado = format_rub(d.valor_empenho_ate_periodo) if d.valor_empenho_ate_periodo else "—"
+        pago = format_rub(d.valor_pago_ate_periodo) if d.valor_pago_ate_periodo else "—"
         lines.append(f"- **{d.descricao_elemento_despesa or '—'}**")
         lines.append(f"  Empenhado: {empenhado} | Pago: {pago}")
 
@@ -122,9 +122,9 @@ async def buscar_receitas_rn(
 
     lines: list[str] = [f"**{len(receitas)} itens de receita:**\n"]
     for r in receitas[:20]:
-        previsto = format_brl(r.valor_previsto_atualizado) if r.valor_previsto_atualizado else "—"
+        previsto = format_rub(r.valor_previsto_atualizado) if r.valor_previsto_atualizado else "—"
         realizado = (
-            format_brl(r.valor_realizado_no_exercicio) if r.valor_realizado_no_exercicio else "—"
+            format_rub(r.valor_realizado_no_exercicio) if r.valor_realizado_no_exercicio else "—"
         )
         lines.append(f"- **{r.descricao_receita or '—'}**")
         lines.append(f"  Previsto: {previsto} | Realizado: {realizado}")
@@ -167,7 +167,7 @@ async def buscar_licitacoes_rn(
 
     lines: list[str] = [f"**{len(licitacoes)} licitações no TCE-RN:**\n"]
     for lic in licitacoes[:20]:
-        valor = format_brl(lic.valor_total_orcado) if lic.valor_total_orcado else "—"
+        valor = format_rub(lic.valor_total_orcado) if lic.valor_total_orcado else "—"
         objeto = (lic.descricao_objeto or "—")[:200]
         lines.append(f"### {lic.numero_licitacao or '—'}/{lic.ano_licitacao or '—'}")
         lines.append(f"- **Modalidade:** {lic.modalidade or '—'}")
@@ -212,7 +212,7 @@ async def buscar_contratos_rn(
 
     lines: list[str] = [f"**{len(contratos)} contratos no TCE-RN:**\n"]
     for c in contratos[:20]:
-        valor = format_brl(c.valor_contrato) if c.valor_contrato else "—"
+        valor = format_rub(c.valor_contrato) if c.valor_contrato else "—"
         objeto = (c.objeto_contrato or "—")[:200]
         lines.append(f"### Contrato {c.numero_contrato or '—'}/{c.ano_contrato or '—'}")
         lines.append(f"- **Contratado:** {c.nome_contratado or '—'}")

@@ -139,6 +139,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "tests/data/rosaudit/*" = ["RUF001", "RUF002", "E501"]
 "tests/data/camara/*" = ["RUF001", "RUF002"]
 "tests/data/senado/*" = ["RUF001", "RUF002"]
+"tests/test_discovery.py" = ["RUF001", "RUF002"]
 
 [tool.mypy]
 python_version = "3.10"

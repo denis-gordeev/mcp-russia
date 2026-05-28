@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl, format_number_ru, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, format_rub, markdown_table
 
 from . import client
 from .constants import CARGO_CODES_CDN
@@ -235,10 +235,10 @@ async def buscar_candidato(
     lines.append(f"  Naturalidade: {cand.municipio_nascimento or '—'}/{cand.uf_nascimento or '—'}")
 
     if cand.total_bens is not None:
-        lines.append(f"\n**Total de bens declarados:** {format_brl(cand.total_bens)}")
+        lines.append(f"\n**Total de bens declarados:** {format_rub(cand.total_bens)}")
 
     if cand.gasto_campanha is not None and cand.gasto_campanha > 0:
-        lines.append(f"**Gasto de campanha:** {format_brl(cand.gasto_campanha)}")
+        lines.append(f"**Gasto de campanha:** {format_rub(cand.gasto_campanha)}")
 
     if cand.candidato_inapto:
         lines.append("\n**CANDIDATO INAPTO**")
@@ -325,15 +325,15 @@ async def consultar_prestacao_contas(
     ]
 
     lines.append("\n**Receitas:**")
-    lines.append(f"  Total recebido: {format_brl(contas.total_recebido or 0)}")
-    lines.append(f"  Pessoa física: {format_brl(contas.total_receita_pf or 0)}")
-    lines.append(f"  Pessoa jurídica: {format_brl(contas.total_receita_pj or 0)}")
-    lines.append(f"  Fundo partidário: {format_brl(contas.total_fundo_partidario or 0)}")
-    lines.append(f"  Fundo especial: {format_brl(contas.total_fundo_especial or 0)}")
+    lines.append(f"  Total recebido: {format_rub(contas.total_recebido or 0)}")
+    lines.append(f"  Pessoa física: {format_rub(contas.total_receita_pf or 0)}")
+    lines.append(f"  Pessoa jurídica: {format_rub(contas.total_receita_pj or 0)}")
+    lines.append(f"  Fundo partidário: {format_rub(contas.total_fundo_partidario or 0)}")
+    lines.append(f"  Fundo especial: {format_rub(contas.total_fundo_especial or 0)}")
 
     lines.append("\n**Despesas:**")
-    lines.append(f"  Total despesas: {format_brl(contas.total_despesas or 0)}")
-    lines.append(f"  Limite de gastos: {format_brl(contas.limite_gastos or 0)}")
+    lines.append(f"  Total despesas: {format_rub(contas.total_despesas or 0)}")
+    lines.append(f"  Limite de gastos: {format_rub(contas.limite_gastos or 0)}")
 
     if contas.divida_campanha:
         lines.append(f"\n**Dívida de campanha:** {contas.divida_campanha}")

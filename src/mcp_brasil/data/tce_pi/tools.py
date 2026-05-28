@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -106,8 +106,8 @@ async def consultar_despesas_pi(
     lines.append("|-----------|-----------|-----------|------|")
     for d in anuais:
         lines.append(
-            f"| {d.exercicio} | {format_brl(d.empenhada)} "
-            f"| {format_brl(d.liquidada)} | {format_brl(d.paga)} |"
+            f"| {d.exercicio} | {format_rub(d.empenhada)} "
+            f"| {format_rub(d.liquidada)} | {format_rub(d.paga)} |"
         )
 
     if exercicio:
@@ -115,7 +115,7 @@ async def consultar_despesas_pi(
         if funcoes:
             lines.append(f"\n### Despesas por função — {exercicio}\n")
             for f in funcoes:
-                lines.append(f"- **{f.funcao}**: {format_brl(f.paga)}")
+                lines.append(f"- **{f.funcao}**: {format_rub(f.paga)}")
     return "\n".join(lines)
 
 
@@ -152,7 +152,7 @@ async def consultar_receitas_pi(
         desc = r.receita or r.detalhamento or "Sem descrição"
         lines.append(f"- **{cat}** — {desc}")
         lines.append(
-            f"  Prevista: {format_brl(r.prevista)} | Arrecadada: {format_brl(r.arrecadada)}"
+            f"  Prevista: {format_rub(r.prevista)} | Arrecadada: {format_rub(r.arrecadada)}"
         )
 
     if len(items) > 30:

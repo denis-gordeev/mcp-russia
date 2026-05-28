@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -90,7 +90,7 @@ async def buscar_licitacoes_pe(
 
     lines: list[str] = [f"**{len(licitacoes)} licitações no TCE-PE:**\n"]
     for lic in licitacoes[:20]:
-        valor = format_brl(lic.valor_estimado) if lic.valor_estimado else "—"
+        valor = format_rub(lic.valor_estimado) if lic.valor_estimado else "—"
         objeto = (lic.objeto or "—")[:200]
         lines.append(f"### {lic.numero_licitacao or '—'}")
         lines.append(f"- **Município:** {lic.municipio or '—'}")
@@ -136,7 +136,7 @@ async def buscar_contratos_pe(
 
     lines: list[str] = [f"**{len(contratos)} contratos no TCE-PE:**\n"]
     for c in contratos[:20]:
-        valor = format_brl(c.valor_contrato) if c.valor_contrato else "—"
+        valor = format_rub(c.valor_contrato) if c.valor_contrato else "—"
         objeto = (c.objeto or "—")[:200]
         lines.append(f"### {c.numero_contrato or '—'}")
         lines.append(f"- **Município:** {c.municipio or '—'}")
@@ -185,8 +185,8 @@ async def buscar_despesas_pe(
 
     lines: list[str] = [f"**{len(despesas)} despesas no TCE-PE:**\n"]
     for d in despesas[:20]:
-        empenhado = format_brl(d.valor_empenhado) if d.valor_empenhado else "—"
-        pago = format_brl(d.valor_pago) if d.valor_pago else "—"
+        empenhado = format_rub(d.valor_empenhado) if d.valor_empenhado else "—"
+        pago = format_rub(d.valor_pago) if d.valor_pago else "—"
         historico = (d.historico or "—")[:150]
         lines.append(f"### Empenho {d.numero_empenho or '—'}")
         lines.append(f"- **Fornecedor:** {d.fornecedor or '—'}")

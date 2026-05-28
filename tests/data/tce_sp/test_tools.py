@@ -79,7 +79,7 @@ class TestConsultarDespesasSp:
         ):
             result = await tools.consultar_despesas_sp(ctx, "balsamo", 2025, 1)
         assert "EMPRESA X LTDA" in result
-        assert "R$ 5 034,11" in result
+        assert "5 034,11 ₽" in result
         assert "110-2025" in result
         assert "Empenhado" in result
 
@@ -119,7 +119,7 @@ class TestConsultarReceitasSp:
             return_value=mock_data,
         ):
             result = await tools.consultar_receitas_sp(ctx, "balsamo", 2025, 1)
-        assert "R$ 2 314,94" in result
+        assert "2 314,94 ₽" in result
         assert "TESOURO" in result
         assert "Juros" in result
 

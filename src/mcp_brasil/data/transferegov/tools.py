@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from mcp_brasil._shared.formatting import format_brl, markdown_table
+from mcp_brasil._shared.formatting import format_rub, markdown_table
 
 from . import client
 from .constants import DEFAULT_PAGE_SIZE
@@ -52,7 +52,7 @@ def _format_rows(
 
 def _fmt_valor(e: TransferenciaEspecial) -> str:
     total = _valor_total(e)
-    return format_brl(total) if total else "—"
+    return format_rub(total) if total else "—"
 
 
 _HEADERS = ["Emenda", "Parlamentar", "Valor", "Beneficiário", "UF"]
@@ -140,10 +140,10 @@ async def detalhe_emenda(id_plano_acao: int) -> str:
     if not emenda:
         return f"Emenda pix com ID {id_plano_acao} não encontrada."
 
-    custeio = format_brl(emenda.valor_custeio) if emenda.valor_custeio else "—"
-    investimento = format_brl(emenda.valor_investimento) if emenda.valor_investimento else "—"
+    custeio = format_rub(emenda.valor_custeio) if emenda.valor_custeio else "—"
+    investimento = format_rub(emenda.valor_investimento) if emenda.valor_investimento else "—"
     total = _valor_total(emenda)
-    total_fmt = format_brl(total) if total else "—"
+    total_fmt = format_rub(total) if total else "—"
 
     lines = [
         f"## Emenda Pix {emenda.numero_emenda or id_plano_acao}\n",

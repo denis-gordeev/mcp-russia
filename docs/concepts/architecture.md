@@ -92,10 +92,10 @@ src/mcp_brasil/data/{feature}/
 
 Поверх feature-инструментов root server регистрирует meta-tools:
 
-- `listar_features`;
-- `recomendar_tools`;
-- `planejar_consulta`;
-- `executar_lote`.
+- `spisok_funktsiy`;
+- `rekomendovat_instrumenty`;
+- `splanirovat_zapros`;
+- `vypolnit_paket`.
 
 Они дают обзор доступных интеграций, помогают подобрать инструменты и собрать составной запрос без ручного перебора feature-модулей.
 

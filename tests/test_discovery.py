@@ -1,4 +1,4 @@
-"""Tests for tool discovery features (BM25 search, recomendar_tools, tags).
+"""Tests for tool discovery features (BM25 search, rekomendovat_instrumenty, tags).
 
 Tests search transforms, LLM-powered recommendations, and tag propagation.
 MCP_BRASIL_TOOL_SEARCH=none is set in conftest.py (before any import).
@@ -12,37 +12,31 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastmcp import Client, FastMCP
 
-from mcp_brasil._shared.discovery import build_catalog, recomendar_tools_impl
-from mcp_brasil._shared.planner import PlanoConsulta, planejar_consulta_impl
+from mcp_brasil._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
+from mcp_brasil._shared.planner import PlanZaprosa, splanirovat_zapros_impl
 
 
-# ---------------------------------------------------------------------------
-# recomendar_tools — mocked Anthropic client
-# ---------------------------------------------------------------------------
-class TestRecomendarTools:
+class TestRekomendovatInstrumenty:
     @pytest.mark.asyncio
     async def test_missing_anthropic_package(self) -> None:
-        """Should return error message when anthropic is not installed."""
         with patch.dict("sys.modules", {"anthropic": None}):
-            result = await recomendar_tools_impl("gastos governo", "catalog text")
+            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "anthropic" in result.lower() or "search_tools" in result
 
     @pytest.mark.asyncio
     async def test_missing_api_key(self) -> None:
-        """Should return error message when ANTHROPIC_API_KEY is empty."""
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", ""),
         ):
-            result = await recomendar_tools_impl("gastos governo", "catalog text")
+            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
 
     @pytest.mark.asyncio
     async def test_successful_recommendation(self) -> None:
-        """Should return LLM recommendations when everything is configured."""
         mock_block = MagicMock()
-        mock_block.text = "Recomendo: transparencia_consultar_despesas"
+        mock_block.text = "Рекомендую: rosstat_poluchit_indikator"
 
         mock_response = MagicMock()
         mock_response.content = [mock_block]
@@ -57,12 +51,11 @@ class TestRecomendarTools:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
         ):
-            result = await recomendar_tools_impl("gastos governo", "catalog text")
-            assert "transparencia_consultar_despesas" in result
+            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
+            assert "rosstat_poluchit_indikator" in result
 
     @pytest.mark.asyncio
     async def test_api_error_handling(self) -> None:
-        """Should return error message when API call fails."""
         mock_client = AsyncMock()
         mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
@@ -73,139 +66,123 @@ class TestRecomendarTools:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
         ):
-            result = await recomendar_tools_impl("gastos governo", "catalog text")
-            assert "Erro" in result
+            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
+            assert "Ошибка" in result
             assert "search_tools" in result
 
 
-# ---------------------------------------------------------------------------
-# build_catalog — tests
-# ---------------------------------------------------------------------------
 class TestBuildCatalog:
     def setup_method(self) -> None:
-        """Reset catalog cache before each test."""
         import mcp_brasil._shared.discovery as disc
 
         disc._catalog_cache = ""
 
     def test_build_catalog_with_empty_registry(self) -> None:
-        """Should return empty string for registry with no features."""
         mock_registry = MagicMock()
         mock_registry.features = {}
         result = build_catalog(mock_registry)
         assert result == ""
 
     def test_build_catalog_caches_result(self) -> None:
-        """Should cache the catalog after first build."""
         import mcp_brasil._shared.discovery as disc
 
         mock_registry = MagicMock()
         mock_registry.features = {}
         build_catalog(mock_registry)
 
-        # Set cache manually
         disc._catalog_cache = "cached"
         result = build_catalog(mock_registry)
         assert result == "cached"
 
 
-# ---------------------------------------------------------------------------
-# BM25SearchTransform — integration test with a simple server
-# ---------------------------------------------------------------------------
 class TestBM25SearchTransform:
     @pytest.mark.asyncio
     async def test_bm25_replaces_tool_listing(self) -> None:
-        """BM25 should replace tool list with search_tools + call_tool."""
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
 
-        @server.tool(tags={"busca", "estados"})
-        def listar_estados() -> str:
-            """Lista estados brasileiros."""
-            return "SP, RJ, MG"
+        @server.tool(tags={"search", "regions"})
+        def spisok_regionov() -> str:
+            """List all regions of Russia."""
+            return "Moscow, Tatarstan, Sverdlovsk"
 
-        @server.tool(tags={"consulta", "serie"})
-        def consultar_serie(codigo: int) -> str:
-            """Consulta série temporal."""
-            return f"Serie {codigo}"
+        @server.tool(tags={"query", "data"})
+        def zaprosit_dannye(kod: int) -> str:
+            """Request data by code."""
+            return f"Data {kod}"
 
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            # Only synthetic tools should be visible
             assert "search_tools" in names
             assert "call_tool" in names
-            assert "listar_estados" not in names
-            assert "consultar_serie" not in names
+            assert "spisok_regionov" not in names
+            assert "zaprosit_dannye" not in names
 
     @pytest.mark.asyncio
     async def test_bm25_search_finds_tools(self) -> None:
-        """BM25 search should find tools by keyword."""
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
 
-        @server.tool(tags={"busca", "estados"})
-        def listar_estados() -> str:
-            """Lista todos os estados brasileiros."""
-            return "SP, RJ, MG"
+        @server.tool(tags={"search", "regions"})
+        def spisok_regionov() -> str:
+            """List all regions of Russia (spisok regionov)."""
+            return "Moscow, Tatarstan"
 
-        @server.tool(tags={"consulta", "serie"})
-        def consultar_serie(codigo: int) -> str:
-            """Consulta série temporal do Banco Central."""
-            return f"Serie {codigo}"
+        @server.tool(tags={"query", "data"})
+        def zaprosit_dannye(kod: int) -> str:
+            """Request time series data from Rosstat."""
+            return f"Data {kod}"
 
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "estados brasileiros"})
-            # Check the text content (result.data may be structured)
+            result = await c.call_tool("search_tools", {"query": "regions russia"})
             text = str(result.content)
-            assert "listar_estados" in text
+            assert "spisok_regionov" in text
 
     @pytest.mark.asyncio
     async def test_bm25_always_visible_pinned(self) -> None:
-        """Always-visible tools should appear in list_tools."""
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
 
         @server.tool(tags={"meta"})
-        def listar_features() -> str:
-            """Lista features."""
-            return "features"
+        def spisok_funktsiy() -> str:
+            """List features."""
+            return "functions"
 
-        @server.tool(tags={"busca"})
+        @server.tool(tags={"search"})
         def hidden_tool() -> str:
-            """Tool escondida."""
+            """Hidden tool."""
             return "hidden"
 
         server.add_transform(
             BM25SearchTransform(
                 max_results=5,
-                always_visible=["listar_features"],
+                always_visible=["spisok_funktsiy"],
             )
         )
 
         async with Client(server) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "listar_features" in names
+            assert "spisok_funktsiy" in names
             assert "hidden_tool" not in names
 
     @pytest.mark.asyncio
     async def test_bm25_call_tool_executes(self) -> None:
-        """call_tool proxy should execute discovered tools."""
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
 
         @server.tool
-        def somar(a: int, b: int) -> int:
-            """Soma dois números."""
+        def slozhit(a: int, b: int) -> int:
+            """Add two numbers."""
             return a + b
 
         server.add_transform(BM25SearchTransform(max_results=5))
@@ -213,130 +190,114 @@ class TestBM25SearchTransform:
         async with Client(server) as c:
             result = await c.call_tool(
                 "call_tool",
-                {"name": "somar", "arguments": {"a": 3, "b": 4}},
+                {"name": "slozhit", "arguments": {"a": 3, "b": 4}},
             )
-            # Result may be structured or text
             text = str(result.content)
             assert "7" in text
 
 
-# ---------------------------------------------------------------------------
-# Tool Search configuration switching
-# ---------------------------------------------------------------------------
 class TestToolSearchConfig:
     @pytest.mark.asyncio
     async def test_none_mode_shows_all_tools(self) -> None:
-        """With TOOL_SEARCH=none (set in conftest.py), all tools should be visible."""
         from mcp_brasil.server import mcp as root_mcp
 
         async with Client(root_mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
-            assert "listar_features" in names
-            assert "recomendar_tools" in names
+            assert "spisok_funktsiy" in names
+            assert "rekomendovat_instrumenty" in names
             assert "ibge_listar_estados" in names
 
 
-# ---------------------------------------------------------------------------
-# Tag propagation through mount
-# ---------------------------------------------------------------------------
 class TestTagPropagation:
     @pytest.mark.asyncio
     async def test_tags_preserved_after_mount(self) -> None:
-        """Tags should be preserved on tools after mounting to parent server."""
         child = FastMCP("child")
 
-        @child.tool(tags={"busca", "estados"})
-        def listar_estados() -> str:
-            """Lista estados."""
-            return "SP"
+        @child.tool(tags={"search", "regions"})
+        def spisok_regionov() -> str:
+            """List regions."""
+            return "Moscow"
 
         parent = FastMCP("parent")
-        parent.mount(child, namespace="ibge")
+        parent.mount(child, namespace="rosstat")
 
         async with Client(parent) as c:
             tools = await c.list_tools()
-            ibge_tool = next((t for t in tools if t.name == "ibge_listar_estados"), None)
-            assert ibge_tool is not None
+            rosstat_tool = next((t for t in tools if t.name == "rosstat_spisok_regionov"), None)
+            assert rosstat_tool is not None
 
     @pytest.mark.asyncio
     async def test_search_finds_by_description(self) -> None:
-        """BM25 should find tools by their description text."""
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
 
-        @server.tool(tags={"ambiental", "queimadas"})
-        def buscar_focos() -> str:
-            """Busca focos de queimadas detectados por satélite no Brasil."""
-            return "focos"
+        @server.tool(tags={"environmental", "fires"})
+        def nayti_ochagi() -> str:
+            """Find fire hotspots detected by satellite in Russia."""
+            return "hotspots"
 
-        @server.tool(tags={"financeiro", "bancos"})
-        def listar_bancos() -> str:
-            """Lista todos os bancos brasileiros registrados no Banco Central."""
-            return "bancos"
+        @server.tool(tags={"financial", "banks"})
+        def spisok_bankov() -> str:
+            """List all Russian banks registered with the Central Bank."""
+            return "banks"
 
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "focos queimadas satélite"})
+            result = await c.call_tool("search_tools", {"query": "fire hotspots satellite"})
             text = str(result.content)
-            assert "buscar_focos" in text
+            assert "nayti_ochagi" in text
 
 
-# ---------------------------------------------------------------------------
-# planejar_consulta — mocked Anthropic client
-# ---------------------------------------------------------------------------
 _VALID_PLAN_JSON = json.dumps(
     {
-        "consulta": "gastos do deputado X",
-        "complexidade": "moderada",
-        "resumo": "Buscar deputado e consultar gastos",
-        "etapas": [
+        "zapros": "расходы депутата X",
+        "slozhnost": "umerennyy",
+        "svodka": "Найти депутата и запросить его расходы",
+        "etapy": [
             {
-                "etapa": 1,
-                "descricao": "Buscar deputado pelo nome",
-                "tool": "camara_listar_deputados",
-                "parametros": {"nome": "X"},
-                "depende_de": [],
-                "justificativa": "Precisamos do ID do deputado",
+                "etap": 1,
+                "opisanie": "Найти депутата по фамилии",
+                "tool": "gosduma_poluchit_deputatov",
+                "parametry": {"familiya": "X"},
+                "zavisit_ot": [],
+                "obosnovanie": "Нужен ID депутата",
             },
             {
-                "etapa": 2,
-                "descricao": "Consultar gastos do deputado",
-                "tool": "camara_despesas_deputado",
-                "parametros": {"id": "{etapa_1.id}"},
-                "depende_de": [1],
-                "justificativa": "Obter despesas usando o ID encontrado",
+                "etap": 2,
+                "opisanie": "Запросить расходы депутата",
+                "tool": "gosduma_raskhody_deputata",
+                "parametry": {"id": "{etap_1.id}"},
+                "zavisit_ot": [1],
+                "obosnovanie": "Получить расходы используя ID",
             },
         ],
-        "observacoes": "",
+        "primechaniya": "",
     }
 )
 
 
-class TestPlanejarConsulta:
+class TestSplanirovatZapros:
     @pytest.mark.asyncio
     async def test_missing_anthropic_package(self) -> None:
-        """Should return error message when anthropic is not installed."""
         with patch.dict("sys.modules", {"anthropic": None}):
-            result = await planejar_consulta_impl("gastos governo", "catalog text")
+            result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
             assert "anthropic" in result.lower() or "search_tools" in result
 
     @pytest.mark.asyncio
     async def test_missing_api_key(self) -> None:
-        """Should return error message when ANTHROPIC_API_KEY is empty."""
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", ""),
         ):
-            result = await planejar_consulta_impl("gastos governo", "catalog text")
+            result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
 
     @pytest.mark.asyncio
     async def test_successful_plan(self) -> None:
-        """Should return markdown plan when everything is configured."""
         mock_block = MagicMock()
         mock_block.text = _VALID_PLAN_JSON
 
@@ -353,18 +314,17 @@ class TestPlanejarConsulta:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
-            result = await planejar_consulta_impl("gastos do deputado X", "catalog")
-            assert "## Plano de Consulta" in result
-            assert "Etapa 1" in result
-            assert "Etapa 2" in result
-            assert "camara_listar_deputados" in result
-            assert "Depende de:** Etapa 1" in result
+            result = await splanirovat_zapros_impl("расходы депутата X", "catalog")
+            assert "## План запроса" in result
+            assert "Этап 1" in result
+            assert "Этап 2" in result
+            assert "gosduma_poluchit_deputatov" in result
+            assert "Зависит от:** Этап 1" in result
 
     @pytest.mark.asyncio
     async def test_invalid_json_fallback(self) -> None:
-        """Should return raw text when API returns non-JSON."""
         mock_block = MagicMock()
-        mock_block.text = "Não consegui gerar um plano estruturado."
+        mock_block.text = "Не удалось построить структурированный план."
 
         mock_response = MagicMock()
         mock_response.content = [mock_block]
@@ -379,12 +339,11 @@ class TestPlanejarConsulta:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
-            result = await planejar_consulta_impl("gastos governo", "catalog")
-            assert "Não consegui gerar um plano estruturado." in result
+            result = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            assert "Не удалось построить структурированный план." in result
 
     @pytest.mark.asyncio
     async def test_api_error_handling(self) -> None:
-        """Should return error message when API call fails."""
         mock_client = AsyncMock()
         mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
@@ -395,42 +354,40 @@ class TestPlanejarConsulta:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
-            result = await planejar_consulta_impl("gastos governo", "catalog")
-            assert "Erro" in result
+            result = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            assert "Ошибка" in result
             assert "search_tools" in result
 
 
-class TestPlanoConsultaMarkdown:
+class TestPlanZaprosaMarkdown:
     def test_to_markdown_renders_steps(self) -> None:
-        """to_markdown should render all steps with dependencies."""
-        plano = PlanoConsulta.model_validate(json.loads(_VALID_PLAN_JSON))
-        md = plano.to_markdown()
-        assert "## Plano de Consulta" in md
-        assert "**Complexidade:** moderada" in md
-        assert "### Etapa 1:" in md
-        assert "### Etapa 2:" in md
-        assert "`camara_listar_deputados`" in md
-        assert "Depende de:** (nenhuma)" in md
-        assert "Depende de:** Etapa 1" in md
+        plan = PlanZaprosa.model_validate(json.loads(_VALID_PLAN_JSON))
+        md = plan.to_markdown()
+        assert "## План запроса" in md
+        assert "**Сложность:** umerennyy" in md
+        assert "### Этап 1:" in md
+        assert "### Этап 2:" in md
+        assert "`gosduma_poluchit_deputatov`" in md
+        assert "Зависит от:** (нет)" in md
+        assert "Зависит от:** Этап 1" in md
 
-    def test_to_markdown_with_observacoes(self) -> None:
-        """to_markdown should include observations when present."""
-        plano = PlanoConsulta(
-            consulta="teste",
-            complexidade="simples",
-            resumo="Plano simples",
-            etapas=[
+    def test_to_markdown_with_primechaniya(self) -> None:
+        plan = PlanZaprosa(
+            zapros="тест",
+            slozhnost="prostoy",
+            svodka="Простой план",
+            etapy=[
                 {
-                    "etapa": 1,
-                    "descricao": "Passo único",
-                    "tool": "ibge_listar_estados",
-                    "parametros": {},
-                    "depende_de": [],
-                    "justificativa": "Necessário",
+                    "etap": 1,
+                    "opisanie": "Единственный шаг",
+                    "tool": "rosstat_poluchit_indikator",
+                    "parametry": {},
+                    "zavisit_ot": [],
+                    "obosnovanie": "Необходимо",
                 }
             ],
-            observacoes="Requer autenticação no Portal da Transparência.",
+            primechaniya="Требуется авторизация на портале Росстата.",
         )
-        md = plano.to_markdown()
-        assert "**Observações:**" in md
-        assert "Portal da Transparência" in md
+        md = plan.to_markdown()
+        assert "**Примечания:**" in md
+        assert "Росстата" in md

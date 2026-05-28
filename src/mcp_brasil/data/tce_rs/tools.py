@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl, format_percent
+from mcp_brasil._shared.formatting import format_percent, format_rub
 
 from . import client
 
@@ -85,8 +85,8 @@ async def buscar_indices_educacao_rs(
     lines: list[str] = [f"**{len(indices)} índices de educação ({ano}):**\n"]
     for idx in indices[:30]:
         indice_fmt = format_percent(idx.indice) if idx.indice is not None else "—"
-        despesa = format_brl(idx.valor_despesa) if idx.valor_despesa else "—"
-        receita = format_brl(idx.valor_receita) if idx.valor_receita else "—"
+        despesa = format_rub(idx.valor_despesa) if idx.valor_despesa else "—"
+        receita = format_rub(idx.valor_receita) if idx.valor_receita else "—"
         lines.append(f"- **{idx.nome_orgao or '—'}** — Índice: {indice_fmt}")
         lines.append(f"  Despesa: {despesa} | Receita: {receita}")
 
@@ -130,8 +130,8 @@ async def buscar_indices_saude_rs(
     lines: list[str] = [f"**{len(indices)} índices de saúde ({ano}):**\n"]
     for idx in indices[:30]:
         indice_fmt = format_percent(idx.indice) if idx.indice is not None else "—"
-        despesa = format_brl(idx.valor_despesa) if idx.valor_despesa else "—"
-        receita = format_brl(idx.valor_receita) if idx.valor_receita else "—"
+        despesa = format_rub(idx.valor_despesa) if idx.valor_despesa else "—"
+        receita = format_rub(idx.valor_receita) if idx.valor_receita else "—"
         lines.append(f"- **{idx.nome_orgao or '—'}** — Índice: {indice_fmt}")
         lines.append(f"  Despesa: {despesa} | Receita: {receita}")
 
@@ -174,9 +174,9 @@ async def buscar_gestao_fiscal_rs(
 
     lines: list[str] = [f"**{len(dados)} registros de gestão fiscal ({ano}):**\n"]
     for d in dados[:20]:
-        rcl = format_brl(d.receita_corrente_liquida) if d.receita_corrente_liquida else "—"
-        pessoal = format_brl(d.despesa_pessoal) if d.despesa_pessoal else "—"
-        divida = format_brl(d.divida_consolidada) if d.divida_consolidada else "—"
+        rcl = format_rub(d.receita_corrente_liquida) if d.receita_corrente_liquida else "—"
+        pessoal = format_rub(d.despesa_pessoal) if d.despesa_pessoal else "—"
+        divida = format_rub(d.divida_consolidada) if d.divida_consolidada else "—"
         lines.append(f"### {d.nome_orgao or '—'}")
         lines.append(f"- **Receita corrente líquida:** {rcl}")
         lines.append(f"- **Despesa com pessoal:** {pessoal}")

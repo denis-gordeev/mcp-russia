@@ -9,7 +9,7 @@ Usage:
     cache = ttl_cache(ttl=300)  # 5 minutes
 
     @cache
-    async def listar_estados() -> list[Estado]:
+    async def spisok_regionov() -> list[Region]:
         ...  # HTTP call only happens if cache miss or expired
 """
 
@@ -88,7 +88,7 @@ def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
 
     Example:
         @ttl_cache(ttl=60)
-        async def buscar_estados() -> list[Estado]:
+        async def poluchit_region() -> list[Region]:
             return await http_get(...)
     """
     cache = TTLCache(ttl=ttl, maxsize=maxsize)

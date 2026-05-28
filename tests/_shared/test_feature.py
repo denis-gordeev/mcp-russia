@@ -206,13 +206,13 @@ class TestRegistryIntegration:
         async with Client(mcp) as client:
             tools = await client.list_tools()
             tool_names = [t.name for t in tools]
-            assert "listar_features" in tool_names
+            assert "spisok_funktsiy" in tool_names
 
     @pytest.mark.asyncio
-    async def test_listar_features_tool(self) -> None:
-        """Meta-tool listar_features retorna summary."""
+    async def test_spisok_funktsiy_tool(self) -> None:
+        """Meta-tool spisok_funktsiy returns summary."""
         from mcp_brasil.server import mcp
 
         async with Client(mcp) as client:
-            result = await client.call_tool("listar_features", {})
+            result = await client.call_tool("spisok_funktsiy", {})
             assert "mcp-russia" in result.data

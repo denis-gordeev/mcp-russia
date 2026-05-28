@@ -47,20 +47,20 @@ class TestExecuteBatch:
     async def test_empty_list(self) -> None:
         ctx = _mock_ctx()
         result = await batch.execute_batch([], ctx)
-        assert "Nenhuma consulta" in result
+        assert "Нет запросов" in result
 
     @pytest.mark.asyncio
     async def test_exceeds_limit(self) -> None:
         ctx = _mock_ctx()
         queries = [{"tool": "x", "args": {}} for _ in range(11)]
         result = await batch.execute_batch(queries, ctx)
-        assert "Máximo de 10" in result
+        assert "Максимум 10" in result
 
     @pytest.mark.asyncio
     async def test_unknown_tool(self) -> None:
         ctx = _mock_ctx()
         result = await batch.execute_batch([{"tool": "nonexistent_tool", "args": {}}], ctx)
-        assert "não encontrada" in result
+        assert "не найден" in result
 
     @pytest.mark.asyncio
     async def test_calls_tool_with_ctx(self) -> None:
@@ -129,7 +129,7 @@ class TestExecuteBatch:
 
         ctx = _mock_ctx()
         result = await batch.execute_batch([{"tool": "fail", "args": {}}], ctx)
-        assert "Erro" in result
+        assert "Ошибка" in result
         assert "timeout" in result.lower()
 
     @pytest.mark.asyncio
@@ -155,7 +155,7 @@ class TestExecuteBatch:
             ctx,
         )
         assert "success" in result
-        assert "Erro" in result
+        assert "Ошибка" in result
 
 
 def _real_registry() -> batch.FeatureRegistry:

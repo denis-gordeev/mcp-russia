@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -54,7 +54,7 @@ async def buscar_licitacoes(
 
     lines: list[str] = [f"**{resultado.total} licitações no TCE-RJ:**\n"]
     for lic in resultado.licitacoes[:20]:
-        valor = format_brl(lic.valor_estimado) if lic.valor_estimado else "—"
+        valor = format_rub(lic.valor_estimado) if lic.valor_estimado else "—"
         lines.append(f"### {lic.numero_edital or lic.processo_licitatorio or '—'}")
         lines.append(f"- **Município:** {lic.ente or '—'}")
         lines.append(f"- **Modalidade:** {lic.modalidade or '—'}")
@@ -107,7 +107,7 @@ async def buscar_contratos_municipio(
 
     lines: list[str] = [f"**{resultado.total} contratos municipais no TCE-RJ:**\n"]
     for c in resultado.contratos[:20]:
-        valor = format_brl(c.valor_contrato) if c.valor_contrato else "—"
+        valor = format_rub(c.valor_contrato) if c.valor_contrato else "—"
         lines.append(f"### {c.numero_contrato or '—'} ({c.ano_contrato or '—'})")
         lines.append(f"- **Município:** {c.ente or '—'}")
         lines.append(f"- **Contratado:** {c.contratado or '—'}")
@@ -159,7 +159,7 @@ async def buscar_compras_diretas(
 
     lines: list[str] = [f"**{len(compras)} compras diretas no TCE-RJ:**\n"]
     for c in compras[:20]:
-        valor = format_brl(c.valor_processo) if c.valor_processo else "—"
+        valor = format_rub(c.valor_processo) if c.valor_processo else "—"
         lines.append(f"### Processo {c.processo or '—'}")
         lines.append(f"- **Unidade:** {c.unidade or '—'}")
         lines.append(f"- **Objeto:** {c.objeto or '—'}")
@@ -195,7 +195,7 @@ async def buscar_obras_paralisadas(ctx: Context) -> str:
 
     lines: list[str] = [f"**{len(obras)} obras paralisadas no RJ:**\n"]
     for o in obras[:20]:
-        valor = format_brl(o.valor_total_contrato) if o.valor_total_contrato else "—"
+        valor = format_rub(o.valor_total_contrato) if o.valor_total_contrato else "—"
         lines.append(f"### {o.nome or '—'}")
         lines.append(f"- **Ente:** {o.ente or '—'} ({o.tipo_ente or '—'})")
         lines.append(f"- **Função:** {o.funcao_governo or '—'}")
@@ -238,7 +238,7 @@ async def buscar_penalidades(
 
     lines: list[str] = [f"**{len(penalidades)} penalidades no TCE-RJ:**\n"]
     for p in penalidades[:20]:
-        valor = format_brl(p.valor_penalidade) if p.valor_penalidade else "—"
+        valor = format_rub(p.valor_penalidade) if p.valor_penalidade else "—"
         lines.append(f"### {p.condenacao or '—'} ({p.ano_condenacao or '—'})")
         lines.append(f"- **Município:** {p.ente or '—'}")
         lines.append(f"- **Órgão:** {p.nome_orgao or '—'}")
@@ -322,7 +322,7 @@ async def buscar_concessoes(
         for c in mun.concessoes:
             if count >= 20:
                 break
-            valor = format_brl(c.valor_total_outorga) if c.valor_total_outorga else "—"
+            valor = format_rub(c.valor_total_outorga) if c.valor_total_outorga else "—"
             lines.append(f"### {c.numero or '—'} — {mun.municipio}")
             lines.append(f"- **Objeto:** {c.objeto or '—'}")
             lines.append(f"- **Concessionário:** {c.nome_razao_social or '—'}")

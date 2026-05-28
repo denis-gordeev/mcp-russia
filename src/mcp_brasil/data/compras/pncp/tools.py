@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 from .constants import MODALIDADES
@@ -94,8 +94,8 @@ async def buscar_contratacoes(
     lines = [f"**Total:** {resultado.total} contratações\n"]
     for i, c in enumerate(resultado.contratacoes, 1):
         modalidade_desc = MODALIDADES.get(c.modalidade_id or 0, c.modalidade_nome or "N/A")
-        valor_est = format_brl(c.valor_estimado) if c.valor_estimado else "N/A"
-        valor_hom = format_brl(c.valor_homologado) if c.valor_homologado else "N/A"
+        valor_est = format_rub(c.valor_estimado) if c.valor_estimado else "N/A"
+        valor_hom = format_rub(c.valor_homologado) if c.valor_homologado else "N/A"
         lines.extend(
             [
                 f"### {i}. {c.objeto or 'Sem descrição'}",
@@ -171,7 +171,7 @@ async def buscar_contratos(
     lines = [f"**Total:** {resultado.total} contratos\n"]
     for i, c in enumerate(resultado.contratos, 1):
         raw_valor = c.valor_final or c.valor_inicial
-        valor = format_brl(raw_valor) if raw_valor else "N/A"
+        valor = format_rub(raw_valor) if raw_valor else "N/A"
         lines.extend(
             [
                 f"### {i}. {c.objeto or 'Sem descrição'}",
@@ -249,7 +249,7 @@ async def buscar_atas(
 
     lines = [f"**Total:** {resultado.total} atas\n"]
     for i, a in enumerate(resultado.atas, 1):
-        valor = format_brl(a.valor_total) if a.valor_total else "N/A"
+        valor = format_rub(a.valor_total) if a.valor_total else "N/A"
         lines.extend(
             [
                 f"### {i}. {a.objeto or 'Sem descrição'}",

@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from mcp_brasil._shared.formatting import format_brl, markdown_table
+from mcp_brasil._shared.formatting import format_rub, markdown_table
 
 from . import client
 from .constants import DEFAULT_PAGE_SIZE
@@ -334,7 +334,7 @@ async def despesas_deputado(
         (
             (d.tipo_despesa or "—")[:40],
             (d.fornecedor or "—")[:30],
-            format_brl(d.valor_liquido) if d.valor_liquido else "—",
+            format_rub(d.valor_liquido) if d.valor_liquido else "—",
             d.data_documento or "—",
             f"{d.mes or '—'}/{d.ano or '—'}",
         )

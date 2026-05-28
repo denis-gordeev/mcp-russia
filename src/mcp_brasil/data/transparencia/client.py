@@ -26,7 +26,7 @@ import os
 import re
 from typing import Any
 
-from mcp_brasil._shared.formatting import parse_brl_number
+from mcp_brasil._shared.formatting import parse_rub_number
 from mcp_brasil._shared.http_client import http_get
 from mcp_brasil._shared.rate_limiter import RateLimiter
 from mcp_brasil.exceptions import AuthError
@@ -256,8 +256,8 @@ def _parse_emenda(raw: dict[str, Any]) -> Emenda:
         else str(localidade)
         if localidade
         else None,
-        valor_empenhado=parse_brl_number(raw.get("valorEmpenhado")),
-        valor_pago=parse_brl_number(raw.get("valorPago")),
+        valor_empenhado=parse_rub_number(raw.get("valorEmpenhado")),
+        valor_pago=parse_rub_number(raw.get("valorPago")),
         ano=raw.get("ano"),
     )
 

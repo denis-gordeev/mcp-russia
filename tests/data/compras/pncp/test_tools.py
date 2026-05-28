@@ -77,8 +77,8 @@ class TestBuscarContratacoes:
         assert "00394460000141" in result
         assert "Pregão - Eletrônico" in result
         assert "Publicada" in result
-        assert "R$ 500 000,00" in result
-        assert "R$ 480 000,00" in result
+        assert "500 000,00 ₽" in result
+        assert "480 000,00 ₽" in result
         assert "Brasília" in result
         assert "DF" in result
         assert "Federal" in result
@@ -147,7 +147,7 @@ class TestBuscarContratos:
         assert "Empresa Pharma LTDA" in result
         assert "12345678000199" in result
         assert "2024/001" in result
-        assert "R$ 95 000,00" in result
+        assert "95 000,00 ₽" in result
         assert "2024-01-01" in result
         assert "2024-12-31" in result
         assert "Vigente" in result
@@ -214,7 +214,7 @@ class TestBuscarAtas:
         assert "Papelaria Central LTDA" in result
         assert "98765432000155" in result
         assert "2024/010" in result
-        assert "R$ 250 000,00" in result
+        assert "250 000,00 ₽" in result
         assert "2024-06-01" in result
         assert "2025-05-31" in result
         assert "Vigente" in result

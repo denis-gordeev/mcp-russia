@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -62,8 +62,8 @@ async def buscar_licitacoes(
 
     lines = [f"**Total:** {resultado.total} licitações\n"]
     for i, lic in enumerate(resultado.licitacoes, 1):
-        val_est = format_brl(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
-        val_hom = format_brl(lic.valor_homologado_total) if lic.valor_homologado_total else "N/A"
+        val_est = format_rub(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
+        val_hom = format_rub(lic.valor_homologado_total) if lic.valor_homologado_total else "N/A"
         lines.extend(
             [
                 f"### {i}. {lic.objeto or 'Sem descrição'}",
@@ -119,8 +119,8 @@ async def buscar_pregoes(
 
     lines = [f"**Total:** {resultado.total} pregões\n"]
     for i, lic in enumerate(resultado.licitacoes, 1):
-        val_est = format_brl(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
-        val_hom = format_brl(lic.valor_homologado_total) if lic.valor_homologado_total else "N/A"
+        val_est = format_rub(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
+        val_hom = format_rub(lic.valor_homologado_total) if lic.valor_homologado_total else "N/A"
         lines.extend(
             [
                 f"### {i}. {lic.objeto or 'Sem descrição'}",
@@ -172,7 +172,7 @@ async def buscar_dispensas(
 
     lines = [f"**Total:** {resultado.total} dispensas\n"]
     for i, lic in enumerate(resultado.licitacoes, 1):
-        val_est = format_brl(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
+        val_est = format_rub(lic.valor_estimado_total) if lic.valor_estimado_total else "N/A"
         lines.extend(
             [
                 f"### {i}. {lic.objeto or 'Sem descrição'}",
@@ -229,7 +229,7 @@ async def buscar_contratos(
 
     lines = [f"**Total:** {resultado.total} contratos\n"]
     for i, c in enumerate(resultado.contratos, 1):
-        valor = format_brl(c.valor_global) if c.valor_global else "N/A"
+        valor = format_rub(c.valor_global) if c.valor_global else "N/A"
         lines.extend(
             [
                 f"### {i}. {c.objeto or 'Sem descrição'}",

@@ -49,20 +49,17 @@ def format_rub(value: float) -> str:
 
 
 def format_brl(value: float) -> str:
-    """Format a number using the historical BRL-compatible style (legacy alias).
+    """Format a number using the Russian RUB style (deprecated alias for format_rub).
+
+    .. deprecated:: Use format_rub instead.
 
     Args:
         value: Numeric value.
 
     Returns:
-        Formatted string like "R$ 1 234,56".
+        Formatted string like "1 234,56 ₽".
     """
-    sign = "-" if value < 0 else ""
-    abs_value = abs(value)
-    integer_part = int(abs_value)
-    decimal_part = round((abs_value - integer_part) * 100)
-    int_str = f"{integer_part:,}".replace(",", " ")
-    return f"R$ {sign}{int_str},{decimal_part:02d}"
+    return format_rub(value)
 
 
 def format_number_ru(value: float, decimals: int = 2) -> str:
@@ -107,9 +104,11 @@ def format_percent(value: float, decimals: int = 2) -> str:
 
 
 def parse_rub_number(value: Any) -> float | None:
-    """Parse a Russian locale-formatted number string into a float.
+    """Parse a locale-formatted number string into a float.
 
-    Handles strings like "1 234,56" (space=thousands, comma=decimal).
+    Handles strings like "1 234,56" (space=thousands, comma=decimal)
+    and "348.600,00" (dot=thousands, comma=decimal) for backward
+    compatibility with legacy Brazilian API responses.
     Passes through int/float values unchanged.
 
     Args:
@@ -123,7 +122,11 @@ def parse_rub_number(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     if isinstance(value, str):
-        cleaned = value.replace(" ", "").replace(",", ".")
+        cleaned = value.replace(" ", "")
+        if "," in cleaned and "." in cleaned:
+            cleaned = cleaned.replace(".", "").replace(",", ".")
+        elif "," in cleaned:
+            cleaned = cleaned.replace(",", ".")
         try:
             return float(cleaned)
         except ValueError:
@@ -132,10 +135,9 @@ def parse_rub_number(value: Any) -> float | None:
 
 
 def parse_brl_number(value: Any) -> float | None:
-    """Parse a legacy locale-formatted number string into a float (legacy alias).
+    """Parse a locale-formatted number string into a float (deprecated alias for parse_rub_number).
 
-    Handles strings like "348.600,00" or "348 600,00".
-    Passes through int/float values unchanged.
+    .. deprecated:: Use parse_rub_number instead.
 
     Args:
         value: Raw value from API (string, int, float, or None).
@@ -143,17 +145,7 @@ def parse_brl_number(value: Any) -> float | None:
     Returns:
         Parsed float or None if unparseable.
     """
-    if value is None:
-        return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, str):
-        cleaned = value.replace(".", "").replace(" ", "").replace(",", ".")
-        try:
-            return float(cleaned)
-        except ValueError:
-            return None
-    return None
+    return parse_rub_number(value)
 
 
 def truncate_list(items: Sequence[str], max_items: int = 50) -> str:

@@ -119,7 +119,7 @@ class TestConsultarCnpj:
         assert "ATIVA" in result
         assert "DF" in result
         assert "BRASILIA" in result
-        assert "R$" in result
+        assert "₽" in result
 
     @pytest.mark.asyncio
     async def test_missing_optional_fields(self) -> None:

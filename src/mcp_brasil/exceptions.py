@@ -1,17 +1,20 @@
-"""Exceções do projeto mcp-brasil."""
+"""Исключения проекта mcp-russia."""
 
 
-class McpBrasilError(Exception):
-    """Exceção base para todas as exceções do mcp-brasil."""
+class McpRussiaError(Exception):
+    """Базовое исключение для всех ошибок mcp-russia."""
 
 
-class FeatureError(McpBrasilError):
-    """Erro relacionado a uma feature (discovery, validação, etc.)."""
+McpBrasilError = McpRussiaError
 
 
-class HttpClientError(McpBrasilError):
-    """Erro de comunicação HTTP com API externa."""
+class FeatureError(McpRussiaError):
+    """Ошибка, связанная с функцией (обнаружение, валидация и т.д.)."""  # noqa: RUF002
 
 
-class AuthError(McpBrasilError):
-    """Credencial ausente ou inválida para acessar API protegida."""
+class HttpClientError(McpRussiaError):
+    """Ошибка HTTP-соединения с внешним API."""  # noqa: RUF002
+
+
+class AuthError(McpRussiaError):
+    """Отсутствует или недействительна учётная запись для доступа к защищённому API."""

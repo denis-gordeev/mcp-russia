@@ -81,10 +81,10 @@ async def execute_batch(
         Formatted markdown with all results.
     """
     if not queries:
-        return "Nenhuma consulta fornecida."
+        return "Нет запросов для выполнения."
 
     if len(queries) > 10:
-        return "Máximo de 10 consultas por lote. Reduza a lista."
+        return "Максимум 10 запросов на пакет. Уменьшите список."
 
     async def _run_one(q: dict[str, Any]) -> tuple[str, str]:
         tool_name = q.get("tool", "")
@@ -92,7 +92,7 @@ async def execute_batch(
         fn = _dispatch.get(tool_name)
 
         if fn is None:
-            return tool_name, f"Tool '{tool_name}' não encontrada."
+            return tool_name, f"Инструмент '{tool_name}' не найден."
 
         try:
             sig = inspect.signature(fn)
@@ -102,7 +102,7 @@ async def execute_batch(
                 result = await fn(**args)
             return tool_name, result
         except Exception as exc:
-            return tool_name, f"Erro ao executar '{tool_name}': {exc}"
+            return tool_name, f"Ошибка при выполнении '{tool_name}': {exc}"
 
     results = await asyncio.gather(*[_run_one(q) for q in queries])
 

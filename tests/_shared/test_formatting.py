@@ -5,8 +5,10 @@ from mcp_brasil._shared.formatting import (
     format_number_br,
     format_number_ru,
     format_percent,
+    format_rub,
     markdown_table,
     parse_brl_number,
+    parse_rub_number,
     truncate_list,
 )
 
@@ -27,18 +29,26 @@ class TestMarkdownTable:
         assert "| Субъект |" in result
 
 
-class TestFormatBrl:
+class TestFormatRub:
     def test_simple_value(self) -> None:
-        assert format_brl(1234.56) == "R$ 1 234,56"
+        assert format_rub(1234.56) == "1 234,56 ₽"
 
     def test_zero(self) -> None:
-        assert format_brl(0) == "R$ 0,00"
+        assert format_rub(0) == "0,00 ₽"
 
     def test_millions(self) -> None:
-        assert format_brl(1_500_000.99) == "R$ 1 500 000,99"
+        assert format_rub(1_500_000.99) == "1 500 000,99 ₽"
 
     def test_negative(self) -> None:
-        assert format_brl(-42.5) == "R$ -42,50"
+        assert format_rub(-42.5) == "-42,50 ₽"
+
+
+class TestFormatBrlDeprecated:
+    def test_is_alias_for_format_rub(self) -> None:
+        assert format_brl(1234.56) == format_rub(1234.56)
+        assert format_brl(0) == format_rub(0)
+        assert format_brl(1_500_000.99) == format_rub(1_500_000.99)
+        assert format_brl(-42.5) == format_rub(-42.5)
 
 
 class TestFormatNumberRu:
@@ -91,30 +101,42 @@ class TestTruncateList:
         assert "... и ещё 7 результатов." in result
 
 
-class TestParseBrlNumber:
+class TestParseRubNumber:
     def test_none(self) -> None:
-        assert parse_brl_number(None) is None
+        assert parse_rub_number(None) is None
 
     def test_int(self) -> None:
-        assert parse_brl_number(42) == 42.0
+        assert parse_rub_number(42) == 42.0
 
     def test_float(self) -> None:
-        assert parse_brl_number(3.14) == 3.14
+        assert parse_rub_number(3.14) == 3.14
 
     def test_simple_string(self) -> None:
-        assert parse_brl_number("0,00") == 0.0
-
-    def test_thousands(self) -> None:
-        assert parse_brl_number("348.600,00") == 348600.0
-
-    def test_millions(self) -> None:
-        assert parse_brl_number("1.234.567,89") == 1234567.89
+        assert parse_rub_number("0,00") == 0.0
 
     def test_space_thousands(self) -> None:
-        assert parse_brl_number("348 600,00") == 348600.0
+        assert parse_rub_number("348 600,00") == 348600.0
+
+    def test_dot_thousands(self) -> None:
+        assert parse_rub_number("348.600,00") == 348600.0
+
+    def test_millions_dot(self) -> None:
+        assert parse_rub_number("1.234.567,89") == 1234567.89
+
+    def test_english_format(self) -> None:
+        assert parse_rub_number("123.45") == 123.45
 
     def test_invalid_string(self) -> None:
-        assert parse_brl_number("abc") is None
+        assert parse_rub_number("abc") is None
 
     def test_non_string_non_number(self) -> None:
-        assert parse_brl_number([]) is None
+        assert parse_rub_number([]) is None
+
+
+class TestParseBrlNumberDeprecated:
+    def test_is_alias_for_parse_rub_number(self) -> None:
+        assert parse_brl_number(None) is None
+        assert parse_brl_number(42) == 42.0
+        assert parse_brl_number("348.600,00") == 348600.0
+        assert parse_brl_number("348 600,00") == 348600.0
+        assert parse_brl_number("abc") is None

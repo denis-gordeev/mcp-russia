@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl
+from mcp_brasil._shared.formatting import format_rub
 
 from . import client
 
@@ -84,10 +84,10 @@ async def consultar_despesas_sp(
         f"**{len(despesas)} registros de despesas em {municipio} ({mes}/{exercicio}):**\n"
     ]
     if total_valor:
-        lines.append(f"**Total empenhado (positivo):** {format_brl(total_valor)}\n")
+        lines.append(f"**Total empenhado (positivo):** {format_rub(total_valor)}\n")
 
     for d in despesas[:30]:
-        valor = format_brl(d.vl_despesa) if d.vl_despesa else "—"
+        valor = format_rub(d.vl_despesa) if d.vl_despesa else "—"
         lines.append(f"- [{d.evento or '—'}] {d.nm_fornecedor or '—'}: {valor}")
         if d.nr_empenho:
             lines[-1] += f" (empenho {d.nr_empenho})"
@@ -132,10 +132,10 @@ async def consultar_receitas_sp(
         f"**{len(receitas)} registros de receitas em {municipio} ({mes}/{exercicio}):**\n"
     ]
     if total_arrecadado:
-        lines.append(f"**Total arrecadado:** {format_brl(total_arrecadado)}\n")
+        lines.append(f"**Total arrecadado:** {format_rub(total_arrecadado)}\n")
 
     for r in receitas[:30]:
-        valor = format_brl(r.vl_arrecadacao) if r.vl_arrecadacao else "—"
+        valor = format_rub(r.vl_arrecadacao) if r.vl_arrecadacao else "—"
         alinea = r.ds_alinea or "—"
         fonte = r.ds_fonte_recurso or "—"
         lines.append(f"- **{alinea}**: {valor}")

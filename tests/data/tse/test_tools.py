@@ -183,7 +183,7 @@ class TestBuscarCandidato:
             result = await tools.buscar_candidato(2020, 35157, 2030402020, 50000867342)
         assert "CANDIDATO TESTE" in result
         assert "Candidato Teste da Silva" in result
-        assert "R$" in result
+        assert "₽" in result
         assert "Superior completo" in result
 
     @pytest.mark.asyncio
@@ -267,7 +267,7 @@ class TestConsultarPrestacaoContas:
                 2030402020, 2020, 35157, 11, 50000867342
             )
         assert "Candidato Teste" in result
-        assert "R$" in result
+        assert "₽" in result
         assert "PT" in result
 
     @pytest.mark.asyncio

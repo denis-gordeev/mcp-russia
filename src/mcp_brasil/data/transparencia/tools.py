@@ -11,7 +11,7 @@
 
 from __future__ import annotations
 
-from mcp_brasil._shared.formatting import format_brl, markdown_table, truncate_list
+from mcp_brasil._shared.formatting import format_rub, markdown_table, truncate_list
 from mcp_brasil.exceptions import HttpClientError
 
 from . import client
@@ -48,7 +48,7 @@ async def buscar_contratos(cpf_cnpj: str, pagina: int = 1) -> str:
         (
             c.numero or "—",
             (c.objeto or "—")[:80],
-            format_brl(c.valor_final) if c.valor_final else "—",
+            format_rub(c.valor_final) if c.valor_final else "—",
             c.data_inicio or "—",
             c.data_fim or "—",
             (c.orgao or "—")[:40],
@@ -92,7 +92,7 @@ async def consultar_despesas(
         (
             f"{d.mes or '—'}/{d.ano or '—'}",
             (d.favorecido_nome or "—")[:50],
-            format_brl(d.valor) if d.valor else "—",
+            format_rub(d.valor) if d.valor else "—",
             (d.orgao_nome or "—")[:40],
             d.uf or "—",
         )
@@ -195,7 +195,7 @@ async def buscar_licitacoes(
             (lc.objeto or "—")[:60],
             lc.modalidade or "—",
             lc.situacao or "—",
-            format_brl(lc.valor_estimado) if lc.valor_estimado else "—",
+            format_rub(lc.valor_estimado) if lc.valor_estimado else "—",
             lc.data_abertura or "—",
         )
         for lc in licitacoes
@@ -241,7 +241,7 @@ async def consultar_bolsa_familia(
                 (s.nome or "—")[:50],
                 s.municipio or "—",
                 s.uf or "—",
-                format_brl(s.valor) if s.valor else "—",
+                format_rub(s.valor) if s.valor else "—",
             )
             for s in sacados
         ]
@@ -259,7 +259,7 @@ async def consultar_bolsa_familia(
             m.municipio or "—",
             m.uf or "—",
             str(m.quantidade) if m.quantidade else "—",
-            format_brl(m.valor) if m.valor else "—",
+            format_rub(m.valor) if m.valor else "—",
             m.data_referencia or "—",
         )
         for m in municipios
@@ -347,8 +347,8 @@ async def buscar_emendas(
             (e.autor or "—")[:40],
             e.tipo or "—",
             (e.localidade or "—")[:30],
-            format_brl(e.valor_empenhado) if e.valor_empenhado else "—",
-            format_brl(e.valor_pago) if e.valor_pago else "—",
+            format_rub(e.valor_empenhado) if e.valor_empenhado else "—",
+            format_rub(e.valor_pago) if e.valor_pago else "—",
         )
         for e in emendas
     ]
@@ -383,8 +383,8 @@ async def consultar_viagens(cpf: str, pagina: int = 1) -> str:
             (v.orgao or "—")[:30],
             v.destino or "—",
             f"{v.data_inicio or '—'} a {v.data_fim or '—'}",
-            format_brl(v.valor_diarias) if v.valor_diarias else "—",
-            format_brl(v.valor_passagens) if v.valor_passagens else "—",
+            format_rub(v.valor_diarias) if v.valor_diarias else "—",
+            format_rub(v.valor_passagens) if v.valor_passagens else "—",
         )
         for v in viagens
     ]
@@ -423,8 +423,8 @@ async def buscar_convenios(
             c.numero or "—",
             (c.objeto or "—")[:60],
             c.situacao or "—",
-            format_brl(c.valor_convenio) if c.valor_convenio else "—",
-            format_brl(c.valor_liberado) if c.valor_liberado else "—",
+            format_rub(c.valor_convenio) if c.valor_convenio else "—",
+            format_rub(c.valor_liberado) if c.valor_liberado else "—",
             (c.orgao or "—")[:30],
             (c.convenente or "—")[:30],
         )
@@ -473,7 +473,7 @@ async def buscar_cartoes_pagamento(
         (
             (c.portador or "—")[:40],
             (c.orgao or "—")[:30],
-            format_brl(c.valor) if c.valor else "—",
+            format_rub(c.valor) if c.valor else "—",
             c.data or "—",
             c.tipo or "—",
             (c.estabelecimento or "—")[:30],
@@ -563,7 +563,7 @@ async def buscar_acordos_leniencia(
             (a.orgao or "—")[:30],
             a.situacao or "—",
             a.data_inicio or "—",
-            format_brl(a.valor) if a.valor else "—",
+            format_rub(a.valor) if a.valor else "—",
         )
         for a in acordos
     ]
@@ -609,7 +609,7 @@ async def buscar_notas_fiscais(
             n.serie or "—",
             (n.emitente or "—")[:40],
             n.cnpj_emitente or "—",
-            format_brl(n.valor) if n.valor else "—",
+            format_rub(n.valor) if n.valor else "—",
             n.data_emissao or "—",
         )
         for n in notas
@@ -655,7 +655,7 @@ async def consultar_beneficio_social(
         (
             b.tipo or "—",
             (b.nome_beneficiario or "—")[:40],
-            format_brl(b.valor) if b.valor else "—",
+            format_rub(b.valor) if b.valor else "—",
             b.mes_referencia or "—",
             b.municipio or "—",
             b.uf or "—",
@@ -769,8 +769,8 @@ async def detalhar_contrato(id_contrato: int) -> str:
         f"- **Modalidade:** {contrato.modalidade or '—'}",
         f"- **Situação:** {contrato.situacao or '—'}",
         f"- **Valor Inicial:** "
-        f"{format_brl(contrato.valor_inicial) if contrato.valor_inicial else '—'}",
-        f"- **Valor Final:** {format_brl(contrato.valor_final) if contrato.valor_final else '—'}",
+        f"{format_rub(contrato.valor_inicial) if contrato.valor_inicial else '—'}",
+        f"- **Valor Final:** {format_rub(contrato.valor_final) if contrato.valor_final else '—'}",
         f"- **Vigência:** {contrato.data_inicio or '—'} a {contrato.data_fim or '—'}",
         f"- **Licitação:** {contrato.licitacao or '—'}",
     ]
@@ -802,18 +802,18 @@ async def detalhar_servidor(id_servidor: int) -> str:
         f"- **Cargo:** {servidor.cargo or '—'}",
         f"- **Função:** {servidor.funcao or '—'}",
         f"- **Remuneração Básica:** "
-        f"{format_brl(servidor.remuneracao_basica) if servidor.remuneracao_basica else '—'}",
+        f"{format_rub(servidor.remuneracao_basica) if servidor.remuneracao_basica else '—'}",
     ]
     if servidor.honorarios:
-        lines.append(f"- **Honorários Advocatícios:** {format_brl(servidor.honorarios)}")
+        lines.append(f"- **Honorários Advocatícios:** {format_rub(servidor.honorarios)}")
     if servidor.outras_remuneracoes:
-        lines.append(f"- **Outras Remunerações:** {format_brl(servidor.outras_remuneracoes)}")
+        lines.append(f"- **Outras Remunerações:** {format_rub(servidor.outras_remuneracoes)}")
     if servidor.jetons:
-        lines.append(f"- **Jetons:** {format_brl(servidor.jetons)}")
+        lines.append(f"- **Jetons:** {format_rub(servidor.jetons)}")
     lines.append(
         "- **Remuneração Líquida:** "
         + (
-            format_brl(servidor.remuneracao_apos_deducoes)
+            format_rub(servidor.remuneracao_apos_deducoes)
             if servidor.remuneracao_apos_deducoes
             else "—"
         )

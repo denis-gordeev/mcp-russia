@@ -46,13 +46,13 @@ class FeatureMeta:
     and runtime decisions (auth gating, feature flags).
 
     Example:
-        # src/mcp_brasil/ibge/__init__.py
+        # src/mcp_brasil/rosstat/__init__.py
         from mcp_brasil._shared.feature import FeatureMeta
 
         FEATURE_META = FeatureMeta(
-            name="ibge",
-            description="IBGE: localidades, população, PIB, nomes",
-            api_base="https://servicodados.ibge.gov.br/api",
+            name="rosstat",
+            description="Росстат: демография, ВРП, социальные показатели",
+            api_base="https://rosstat.gov.ru/api",
         )
     """
 
@@ -196,7 +196,7 @@ class FeatureRegistry:
     def mount_all(self, root_server: FastMCP) -> None:
         """Mount all discovered features on the root server.
 
-        Each feature is namespaced by feature name (e.g., tools become ibge_buscar_*).
+        Each feature is namespaced by feature name (e.g., tools become rosstat_poluchit_*).
 
         Args:
             root_server: The root FastMCP server to mount features on.

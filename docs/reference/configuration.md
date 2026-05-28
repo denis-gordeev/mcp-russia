@@ -10,7 +10,7 @@
 |----------|--------------|----------|
 | `TRANSPARENCIA_API_KEY` | — | Ключ для legacy-интеграции с Portal da Transparencia |
 | `DATAJUD_API_KEY` | — | Ключ для legacy-интеграции с DataJud / CNJ |
-| `ANTHROPIC_API_KEY` | — | Нужен для meta-tools `recomendar_tools` и `planejar_consulta` |
+| `ANTHROPIC_API_KEY` | — | Нужен для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros` |
 
 ### Настройки сервера
 
@@ -55,7 +55,7 @@
 
 ### Anthropic API
 
-Нужен только для meta-tools `recomendar_tools` и `planejar_consulta`. Остальные features продолжают работать без него.
+Нужен только для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros`. Остальные features продолжают работать без него.
 
 Установите `ANTHROPIC_API_KEY=<ваш-ключ>`.
 
