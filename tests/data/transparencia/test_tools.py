@@ -56,7 +56,7 @@ class TestBuscarContratos:
         with patch(f"{MODULE}.buscar_contratos", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.buscar_contratos("12345678000190")
         assert "CT-001" in result
-        assert "R$ 120.000,00" in result
+        assert "R$ 120 000,00" in result
         assert "Empresa XYZ" not in result  # fornecedor is in header, not table
         assert "MEC" in result
 
@@ -87,7 +87,7 @@ class TestConsultarDespesas:
         ]
         with patch(f"{MODULE}.consultar_despesas", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.consultar_despesas("01/2024", "06/2024")
-        assert "R$ 50.000,00" in result
+        assert "R$ 50 000,00" in result
         assert "João Silva" in result
 
     @pytest.mark.asyncio
@@ -153,7 +153,7 @@ class TestBuscarLicitacoes:
         with patch(f"{MODULE}.buscar_licitacoes", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.buscar_licitacoes(codigo_orgao="26246")
         assert "PE-001" in result
-        assert "R$ 500.000,00" in result
+        assert "R$ 500 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -191,7 +191,7 @@ class TestConsultarBolsaFamilia:
         ):
             result = await tools.consultar_bolsa_familia("202401", codigo_ibge="3550308")
         assert "São Paulo" in result
-        assert "R$ 25.000.000,00" in result
+        assert "R$ 25 000 000,00" in result
 
     @pytest.mark.asyncio
     async def test_by_nis(self) -> None:
@@ -281,7 +281,7 @@ class TestBuscarEmendas:
             result = await tools.buscar_emendas(ano=2024)
         assert "EMD-001" in result
         assert "Dep. Fulano" in result
-        assert "R$ 1.000.000,00" in result
+        assert "R$ 1 000 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -313,7 +313,7 @@ class TestConsultarViagens:
         with patch(f"{MODULE}.consultar_viagens", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.consultar_viagens("12345678900")
         assert "Pedro Almeida" in result
-        assert "R$ 2.000,00" in result
+        assert "R$ 2 000,00" in result
         assert "Brasília/DF" in result
 
     @pytest.mark.asyncio
@@ -416,7 +416,7 @@ class TestBuscarConvenios:
         with patch(f"{MODULE}.buscar_convenios", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.buscar_convenios()
         assert "CV-001" in result
-        assert "R$ 500.000,00" in result
+        assert "R$ 500 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -450,7 +450,7 @@ class TestBuscarCartoesPagamento:
         ):
             result = await tools.buscar_cartoes_pagamento()
         assert "João Silva" in result
-        assert "R$ 1.500,00" in result
+        assert "R$ 1 500,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -518,7 +518,7 @@ class TestBuscarAcordosLeniencia:
         ):
             result = await tools.buscar_acordos_leniencia()
         assert "Construtora XYZ" in result
-        assert "R$ 10.000.000,00" in result
+        assert "R$ 10 000 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -550,7 +550,7 @@ class TestBuscarNotasFiscais:
         ):
             result = await tools.buscar_notas_fiscais()
         assert "NF-001" in result
-        assert "R$ 5.000,00" in result
+        assert "R$ 5 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:
@@ -584,7 +584,7 @@ class TestConsultarBeneficioSocial:
         ):
             result = await tools.consultar_beneficio_social(cpf="12345678900")
         assert "BPC" in result
-        assert "R$ 1.412,00" in result
+        assert "R$ 1 412,00" in result
 
     @pytest.mark.asyncio
     async def test_no_params(self) -> None:
@@ -680,7 +680,7 @@ class TestDetalharContrato:
         with patch(f"{MODULE}.detalhar_contrato", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.detalhar_contrato(123)
         assert "CT-DETAIL" in result
-        assert "R$ 150.000,00" in result
+        assert "R$ 150 000,00" in result
         assert "Pregão" in result
 
     @pytest.mark.asyncio
@@ -713,7 +713,7 @@ class TestDetalharServidor:
         with patch(f"{MODULE}.detalhar_servidor", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.detalhar_servidor(42)
         assert "Servidor Completo" in result
-        assert "R$ 12.000,00" in result
+        assert "R$ 12 000,00" in result
         assert "Coordenador" in result
 
     @pytest.mark.asyncio

@@ -221,9 +221,9 @@ class TestCalcularDebitoTcu:
             return_value=mock_data,
         ):
             result = await tools.calcular_debito_tcu("22/03/2026", "01/01/2020", 1000.0, ctx)
-        assert "R$ 1.000,00" in result
+        assert "R$ 1 000,00" in result
         assert "R$ 577,38" in result
-        assert "R$ 1.577,38" in result
+        assert "R$ 1 577,38" in result
 
 
 # ---------------------------------------------------------------------------
@@ -297,7 +297,7 @@ class TestBuscarContratosTcu:
         ):
             result = await tools.buscar_contratos_tcu(ctx)
         assert "LABORATORIO RICHET" in result
-        assert "R$ 5.271,82" in result
+        assert "R$ 5 271,82" in result
         assert "017.866/2025-1" in result
 
     @pytest.mark.asyncio

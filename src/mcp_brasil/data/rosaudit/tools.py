@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 
@@ -89,7 +89,7 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
         lines.append(f"- Статус: {data.status}")
     if data.obiem_sredstv:
         lines.append(
-            f"- Объём средств: {format_number_br(data.obiem_sredstv, 2)} {data.valyuta}"
+            f"- Объём средств: {format_number_ru(data.obiem_sredstv, 2)} {data.valyuta}"
         )
     lines.append("- Источник: Счётная палата РФ (ach.gov.ru)")
     return "\n".join(lines)
@@ -122,7 +122,7 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
     ]
     if data.summa_narusheniy:
         lines.append(
-            f"- Сумма нарушений: {format_number_br(data.summa_narusheniy, 2)} руб."
+            f"- Сумма нарушений: {format_number_ru(data.summa_narusheniy, 2)} руб."
         )
     if data.rekomendacii:
         lines.append(f"- Рекомендации: {', '.join(data.rekomendacii[:5])}")
@@ -155,15 +155,15 @@ async def ispolnenie_byudzheta(period: str = "", ctx: Context | None = None) -> 
     ]
     if data.dohody:
         lines.append(
-            f"- Доходы: {format_number_br(data.dohody, 2)} млрд руб."
+            f"- Доходы: {format_number_ru(data.dohody, 2)} млрд руб."
         )
     if data.raskhody:
         lines.append(
-            f"- Расходы: {format_number_br(data.raskhody, 2)} млрд руб."
+            f"- Расходы: {format_number_ru(data.raskhody, 2)} млрд руб."
         )
     if data.deficit is not None:
         lines.append(
-            f"- Дефицит: {format_number_br(data.deficit, 2)} млрд руб."
+            f"- Дефицит: {format_number_ru(data.deficit, 2)} млрд руб."
         )
     lines.append("- Источник: Счётная палата РФ (ach.gov.ru)")
     return "\n".join(lines)
@@ -203,7 +203,7 @@ async def poisk_narusheniy(
     for i, n in enumerate(narusheniya[:10], 1):
         line = f"{i}. {n.opisanie}"
         if n.summa:
-            line += f" (сумма: {format_number_br(n.summa, 2)} руб.)"
+            line += f" (сумма: {format_number_ru(n.summa, 2)} руб.)"
         if n.organizaciya:
             line += f" — {n.organizaciya}"
         lines.append(line)

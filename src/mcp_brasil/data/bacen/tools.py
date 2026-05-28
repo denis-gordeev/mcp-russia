@@ -19,7 +19,7 @@ from typing import Any
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 from mcp_brasil.exceptions import HttpClientError
 
 from . import client
@@ -78,7 +78,7 @@ async def consultar_serie(
     header += f"Total: {len(valores)} registros | "
     header += f"Período: {valores[0].data} a {valores[-1].data}\n\n"
 
-    rows = [(v.data, format_number_br(v.valor, 4)) for v in valores]
+    rows = [(v.data, format_number_ru(v.valor, 4)) for v in valores]
     return header + markdown_table(["Data", "Valor"], rows)
 
 
@@ -107,7 +107,7 @@ async def ultimos_valores(codigo: int, ctx: Context, quantidade: int = 10) -> st
 
     header = f"**{nome}** (código {codigo}) — últimos {len(valores)} valores\n\n"
 
-    rows = [(v.data, format_number_br(v.valor, 4)) for v in valores]
+    rows = [(v.data, format_number_ru(v.valor, 4)) for v in valores]
     return header + markdown_table(["Data", "Valor"], rows)
 
 
@@ -247,7 +247,7 @@ async def indicadores_atuais(ctx: Context) -> str:
             rows.append(
                 (
                     r["indicador"],
-                    format_number_br(r["valor"], 4),
+                    format_number_ru(r["valor"], 4),
                     r["data"],
                 )
             )
@@ -306,15 +306,15 @@ async def calcular_variacao(
         f"**{nome}** (código {codigo})",
         f"\nPeríodo: {valores[0].data} → {valores[-1].data} ({len(valores)} registros)",
         "\n**Variação:**",
-        f"- Valor inicial: {format_number_br(inicial, 4)}",
-        f"- Valor final: {format_number_br(final, 4)}",
-        f"- Diferença absoluta: {format_number_br(diff, 4)}",
-        f"- Variação percentual: {sinal}{format_number_br(variacao, 2)}%",
+        f"- Valor inicial: {format_number_ru(inicial, 4)}",
+        f"- Valor final: {format_number_ru(final, 4)}",
+        f"- Diferença absoluta: {format_number_ru(diff, 4)}",
+        f"- Variação percentual: {sinal}{format_number_ru(variacao, 2)}%",
         "\n**Estatísticas:**",
-        f"- Máximo: {format_number_br(maximo, 4)}",
-        f"- Mínimo: {format_number_br(minimo, 4)}",
-        f"- Média: {format_number_br(media, 4)}",
-        f"- Amplitude: {format_number_br(maximo - minimo, 4)}",
+        f"- Máximo: {format_number_ru(maximo, 4)}",
+        f"- Mínimo: {format_number_ru(minimo, 4)}",
+        f"- Média: {format_number_ru(media, 4)}",
+        f"- Amplitude: {format_number_ru(maximo - minimo, 4)}",
     ]
     return "\n".join(lines)
 
@@ -389,9 +389,9 @@ async def comparar_series(
                     str(i),
                     r["nome"],
                     str(r["codigo"]),
-                    format_number_br(r["inicial"], 2),
-                    format_number_br(r["final"], 2),
-                    f"{sinal}{format_number_br(r['variacao'], 2)}%",
+                    format_number_ru(r["inicial"], 2),
+                    format_number_ru(r["final"], 2),
+                    f"{sinal}{format_number_ru(r['variacao'], 2)}%",
                 )
             )
         lines.append(
@@ -456,10 +456,10 @@ async def expectativas_focus(
         (
             e.data,
             e.data_referencia,
-            format_number_br(e.mediana, 2) if e.mediana is not None else "N/A",
-            format_number_br(e.media, 2) if e.media is not None else "N/A",
-            format_number_br(e.minimo, 2) if e.minimo is not None else "N/A",
-            format_number_br(e.maximo, 2) if e.maximo is not None else "N/A",
+            format_number_ru(e.mediana, 2) if e.mediana is not None else "N/A",
+            format_number_ru(e.media, 2) if e.media is not None else "N/A",
+            format_number_ru(e.minimo, 2) if e.minimo is not None else "N/A",
+            format_number_ru(e.maximo, 2) if e.maximo is not None else "N/A",
             str(e.base_calculo or "N/A"),
         )
         for e in expectativas

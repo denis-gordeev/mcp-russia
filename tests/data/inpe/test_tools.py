@@ -166,7 +166,7 @@ class TestConsultarDesmatamento:
         assert "São Félix do Xingu" in result
         assert "PA" in result
         assert "2023" in result
-        assert "9.001,00" in result
+        assert "9 001,00" in result
         assert "2 registros" in result
 
     @pytest.mark.asyncio

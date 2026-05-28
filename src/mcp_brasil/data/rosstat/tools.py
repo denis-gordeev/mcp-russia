@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 from .constants import KLYUCHEVYE_INDIKATORY
@@ -69,11 +69,11 @@ async def region_info(kod: str, ctx: Context) -> str:
     if data.federalny_okrug:
         lines.append(f"- Федеральный округ: {data.federalny_okrug}")
     if data.population:
-        lines.append(f"- Население: {format_number_br(data.population, 0)} чел.")
+        lines.append(f"- Население: {format_number_ru(data.population, 0)} чел.")
     if data.vrp:
-        lines.append(f"- ВРП: {format_number_br(data.vrp, 2)} млрд ₽")
+        lines.append(f"- ВРП: {format_number_ru(data.vrp, 2)} млрд ₽")
     if data.srednyaya_zp:
-        lines.append(f"- Средняя зарплата: {format_number_br(data.srednyaya_zp, 2)} ₽")
+        lines.append(f"- Средняя зарплата: {format_number_ru(data.srednyaya_zp, 2)} ₽")
 
     lines.append("- Источник: Росстат / ЕМИСС (fedstat.ru)")
     return "\n".join(lines)

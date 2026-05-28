@@ -99,7 +99,7 @@ class TestBuscarIndicesEducacaoRs:
             result = await tools.buscar_indices_educacao_rs(ctx, 2024)
         assert "PREFEITURA DE PORTO ALEGRE" in result
         assert "27,78%" in result
-        assert "R$ 500.000,00" in result
+        assert "R$ 500 000,00" in result
         assert "1 índices" in result
 
     @pytest.mark.asyncio
@@ -167,7 +167,7 @@ class TestBuscarIndicesSaudeRs:
             result = await tools.buscar_indices_saude_rs(ctx, 2024)
         assert "CAXIAS DO SUL" in result
         assert "20,00%" in result
-        assert "R$ 300.000,00" in result
+        assert "R$ 300 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:
@@ -221,9 +221,9 @@ class TestBuscarGestaoFiscalRs:
         ):
             result = await tools.buscar_gestao_fiscal_rs(ctx, 2024)
         assert "PREFEITURA DE PORTO ALEGRE" in result
-        assert "R$ 10.000.000,00" in result
-        assert "R$ 4.500.000,00" in result
-        assert "R$ 2.000.000,00" in result
+        assert "R$ 10 000 000,00" in result
+        assert "R$ 4 500 000,00" in result
+        assert "R$ 2 000 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:

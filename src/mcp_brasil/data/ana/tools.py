@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 
@@ -113,9 +113,9 @@ async def consultar_telemetria(
     rows = [
         (
             d.data_hora,
-            format_number_br(d.nivel, 2) if d.nivel is not None else "—",
-            format_number_br(d.vazao, 1) if d.vazao is not None else "—",
-            format_number_br(d.chuva, 1) if d.chuva is not None else "—",
+            format_number_ru(d.nivel, 2) if d.nivel is not None else "—",
+            format_number_ru(d.vazao, 1) if d.vazao is not None else "—",
+            format_number_ru(d.chuva, 1) if d.chuva is not None else "—",
         )
         for d in dados
     ]
@@ -164,9 +164,9 @@ async def monitorar_reservatorios(
             r.rio or "—",
             r.estado or "—",
             r.data or "—",
-            f"{format_number_br(r.volume_util, 1)}%" if r.volume_util is not None else "—",
-            format_number_br(r.vazao_afluente, 1) if r.vazao_afluente is not None else "—",
-            format_number_br(r.vazao_defluente, 1) if r.vazao_defluente is not None else "—",
+            f"{format_number_ru(r.volume_util, 1)}%" if r.volume_util is not None else "—",
+            format_number_ru(r.vazao_afluente, 1) if r.vazao_afluente is not None else "—",
+            format_number_ru(r.vazao_defluente, 1) if r.vazao_defluente is not None else "—",
         )
         for r in reservatorios
     ]

@@ -59,7 +59,7 @@ class TestBuscarLicitacoes:
         assert "PE-001/2024" in result
         assert "NITEROI" in result
         assert "Material de escritório" in result
-        assert "R$ 150.000,00" in result
+        assert "R$ 150 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:
@@ -105,7 +105,7 @@ class TestBuscarContratosMunicipio:
             result = await tools.buscar_contratos_municipio(ctx)
         assert "CT-001/2024" in result
         assert "EMPRESA X LTDA" in result
-        assert "R$ 500.000,00" in result
+        assert "R$ 500 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:
@@ -147,7 +147,7 @@ class TestBuscarComprasDiretas:
             result = await tools.buscar_compras_diretas(ctx)
         assert "DL-001/2024" in result
         assert "FARMACIA Y LTDA" in result
-        assert "R$ 25.000,00" in result
+        assert "R$ 25 000,00" in result
         assert "Art. 24, IV" in result
 
     @pytest.mark.asyncio
@@ -192,7 +192,7 @@ class TestBuscarObrasParalisadas:
             result = await tools.buscar_obras_paralisadas(ctx)
         assert "Construção de escola" in result
         assert "CONSTRUTORA ABC LTDA" in result
-        assert "R$ 2.000.000,00" in result
+        assert "R$ 2 000 000,00" in result
         assert "18 meses" in result
         assert "Abandono" in result
 
@@ -236,7 +236,7 @@ class TestBuscarPenalidades:
             result = await tools.buscar_penalidades(ctx)
         assert "Multa" in result
         assert "NITEROI" in result
-        assert "R$ 50.000,00" in result
+        assert "R$ 50 000,00" in result
         assert "TC-001/2023" in result
 
     @pytest.mark.asyncio
@@ -325,7 +325,7 @@ class TestBuscarConcessoes:
         assert "CON-001/2020" in result
         assert "NITEROI" in result
         assert "TRANSPORTE X S.A." in result
-        assert "R$ 10.000.000,00" in result
+        assert "R$ 10 000 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:

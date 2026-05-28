@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 
@@ -196,15 +196,15 @@ async def consultar_leitos(
             leito.codigo_cnes or "—",
             leito.tipo_leito or "—",
             leito.especialidade or "—",
-            format_number_br(float(leito.existente), 0) if leito.existente is not None else "—",
-            format_number_br(float(leito.sus), 0) if leito.sus is not None else "—",
+            format_number_ru(float(leito.existente), 0) if leito.existente is not None else "—",
+            format_number_ru(float(leito.sus), 0) if leito.sus is not None else "—",
         )
         for leito in resultados
     ]
 
     header = (
         f"**Leitos hospitalares** ({len(resultados)} registros)\n"
-        f"Total existentes: {format_number_br(float(total_existente), 0)} | "
-        f"Total SUS: {format_number_br(float(total_sus), 0)}\n\n"
+        f"Total existentes: {format_number_ru(float(total_existente), 0)} | "
+        f"Total SUS: {format_number_ru(float(total_sus), 0)}\n\n"
     )
     return header + markdown_table(["CNES", "Tipo", "Especialidade", "Existentes", "SUS"], rows)

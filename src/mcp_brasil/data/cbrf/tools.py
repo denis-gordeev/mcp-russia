@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 from .constants import VALYUTY_PO_STRANAM
@@ -39,7 +39,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
             diff = m.znachenie - m.predydushchee_znachenie
             znak = "+" if diff >= 0 else ""
             pct = (diff / m.predydushchee_znachenie) * 100
-            change = f"{znak}{format_number_br(diff, 4)} ({znak}{format_number_br(pct, 2)}%)"
+            change = f"{znak}{format_number_ru(diff, 4)} ({znak}{format_number_ru(pct, 2)}%)"
         else:
             change = "—"
 
@@ -48,7 +48,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
                 m.kod,
                 m.nazvanie,
                 str(m.nominal),
-                format_number_br(m.znachenie, 4),
+                format_number_ru(m.znachenie, 4),
                 change,
             )
         )
@@ -84,7 +84,7 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     lines = [
         f"**{valyuta.nazvanie}** ({valyuta.kod})",
         f"- Номинал: {valyuta.nominal}",
-        f"- Курс: {format_number_br(valyuta.znachenie, 4)} ₽",
+        f"- Курс: {format_number_ru(valyuta.znachenie, 4)} ₽",
     ]
 
     if valyuta.predydushchee_znachenie is not None:
@@ -92,9 +92,9 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
         znak = "+" if diff >= 0 else ""
         prev = valyuta.predydushchee_znachenie
         pct = (diff / prev) * 100 if prev else 0
-        lines.append(f"- Предыдущий: {format_number_br(valyuta.predydushchee_znachenie, 4)} ₽")
-        pct_str = f"{znak}{format_number_br(pct, 2)}%"
-        diff_str = f"{znak}{format_number_br(diff, 4)}"
+        lines.append(f"- Предыдущий: {format_number_ru(valyuta.predydushchee_znachenie, 4)} ₽")
+        pct_str = f"{znak}{format_number_ru(pct, 2)}%"
+        diff_str = f"{znak}{format_number_ru(diff, 4)}"
         lines.append(f"- Изменение: {diff_str} ({pct_str})")
 
     if valyuta.data:
@@ -120,7 +120,7 @@ async def spisok_valyut(ctx: Context) -> str:
         nominal = entry.get("Nominal", 1)
         value = entry.get("Value", 0)
         znachenie_za_edinitsu = value / nominal if nominal else value
-        rows.append((code, name, str(nominal), format_number_br(znachenie_za_edinitsu, 4)))
+        rows.append((code, name, str(nominal), format_number_ru(znachenie_za_edinitsu, 4)))
 
     header = f"**Справочник валют ЦБ РФ** — {len(rows)} валют\n\n"
     return header + markdown_table(
@@ -153,10 +153,10 @@ async def konvertirovat_valyutu(
 
     lines = [
         "**Конвертация валюты**",
-        f"- Сумма: {format_number_br(kolichestvo, 2)} {dannye.kod} ({dannye.nazvanie})",
-        f"- Курс ЦБ РФ: {format_number_br(dannye.znachenie, 4)} ₽ за 1 {dannye.kod}",
+        f"- Сумма: {format_number_ru(kolichestvo, 2)} {dannye.kod} ({dannye.nazvanie})",
+        f"- Курс ЦБ РФ: {format_number_ru(dannye.znachenie, 4)} ₽ за 1 {dannye.kod}",
         f"- Номинал: {dannye.nominal}",
-        f"- **Результат: {format_number_br(rubles, 2)} ₽**",
+        f"- **Результат: {format_number_ru(rubles, 2)} ₽**",
     ]
 
     if dannye.data:
@@ -195,8 +195,8 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
             diff = m.znachenie - m.predydushchee_znachenie
             pct = (diff / m.predydushchee_znachenie) * 100
             znak = "+" if pct >= 0 else ""
-            change = f"{znak}{format_number_br(pct, 2)}%"
-        rows.append((m.kod, m.nazvanie, format_number_br(m.znachenie, 4), change))
+            change = f"{znak}{format_number_ru(pct, 2)}%"
+        rows.append((m.kod, m.nazvanie, format_number_ru(m.znachenie, 4), change))
 
     header = "**Сравнение курсов валют ЦБ РФ**\n\n"
     return header + markdown_table(
@@ -220,7 +220,7 @@ async def kursy_po_stranam(ctx: Context) -> str:
     rows = []
     for m in sorted(valyuty, key=lambda x: x.kod):
         strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == m.kod), m.kod)
-        rows.append((strana, m.kod, format_number_br(m.znachenie, 4)))
+        rows.append((strana, m.kod, format_number_ru(m.znachenie, 4)))
 
     header = "**Курсы валют основных стран-партнёров России**\n\n"
     return header + markdown_table(

@@ -131,7 +131,7 @@ class TestConsultarTelemetria:
             result = await tools.consultar_telemetria(ctx, codigo_estacao="60435000")
         assert "60435000" in result
         assert "220,50" in result
-        assert "8.500,0" in result
+        assert "8 500,0" in result
         assert "2 leituras" in result
 
     @pytest.mark.asyncio
@@ -197,7 +197,7 @@ class TestMonitorarReservatorios:
         assert "São Francisco" in result
         assert "BA" in result
         assert "65,3%" in result
-        assert "1.200,0" in result
+        assert "1 200,0" in result
         assert "1 registros" in result
 
     @pytest.mark.asyncio

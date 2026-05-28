@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 
@@ -89,9 +89,9 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
         f"- Бассейн: {data.basseyn}",
     ]
     if data.dlinna_km:
-        lines.append(f"- Длина: {format_number_br(data.dlinna_km, 1)} км")
+        lines.append(f"- Длина: {format_number_ru(data.dlinna_km, 1)} км")
     if data.ploshchad_km2:
-        lines.append(f"- Площадь: {format_number_br(data.ploshchad_km2, 1)} км²")
+        lines.append(f"- Площадь: {format_number_ru(data.ploshchad_km2, 1)} км²")
     if data.region:
         lines.append(f"- Регион: {data.region}")
     if data.opisaniye:
@@ -130,11 +130,11 @@ async def gidro_monitoring(post: str = "", ctx: Context | None = None) -> str:
         f"- Дата измерения: {data.data_izmereniya}",
     ]
     if data.uroven is not None:
-        lines.append(f"- Уровень воды: {format_number_br(data.uroven, 2)} м")
+        lines.append(f"- Уровень воды: {format_number_ru(data.uroven, 2)} м")
     if data.raskhod is not None:
-        lines.append(f"- Расход воды: {format_number_br(data.raskhod, 2)} м³/с")
+        lines.append(f"- Расход воды: {format_number_ru(data.raskhod, 2)} м³/с")
     if data.temperatura is not None:
-        lines.append(f"- Температура воды: {format_number_br(data.temperatura, 1)}°C")
+        lines.append(f"- Температура воды: {format_number_ru(data.temperatura, 1)}°C")
     if data.ledovaya_obstanovka:
         lines.append(f"- Ледовая обстановка: {data.ledovaya_obstanovka}")
     if data.preduprezhdenie:
@@ -165,11 +165,11 @@ async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
         f"**{data.name}** ({data.region})",
     ]
     if data.obiem_km3:
-        lines.append(f"- Объём: {format_number_br(data.obiem_km3, 2)} км³")
+        lines.append(f"- Объём: {format_number_ru(data.obiem_km3, 2)} км³")
     if data.ploshchad_km2:
-        lines.append(f"- Площадь: {format_number_br(data.ploshchad_km2, 1)} км²")
+        lines.append(f"- Площадь: {format_number_ru(data.ploshchad_km2, 1)} км²")
     if data.uroven_m is not None:
-        lines.append(f"- Уровень: {format_number_br(data.uroven_m, 2)} м")
+        lines.append(f"- Уровень: {format_number_ru(data.uroven_m, 2)} м")
     if data.priznak_napolneniya:
         lines.append(f"- Наполнение: {data.priznak_napolneniya}")
     if data.data_izmereniya:
@@ -211,15 +211,15 @@ async def vodopolzovanie_regionov(
         lines.append(f"**{v.region}** ({v.god})")
         if v.zabrano_vody_km3:
             lines.append(
-                f"- Забрано воды: {format_number_br(v.zabrano_vody_km3, 3)} км³"
+                f"- Забрано воды: {format_number_ru(v.zabrano_vody_km3, 3)} км³"
             )
         if v.ispolzovano_vody_km3:
             lines.append(
-                f"- Использовано: {format_number_br(v.ispolzovano_vody_km3, 3)} км³"
+                f"- Использовано: {format_number_ru(v.ispolzovano_vody_km3, 3)} км³"
             )
         if v.sbrosheno_stokov_km3:
             lines.append(
-                f"- Сброшено стоков: {format_number_br(v.sbrosheno_stokov_km3, 3)} км³"
+                f"- Сброшено стоков: {format_number_ru(v.sbrosheno_stokov_km3, 3)} км³"
             )
         if v.istochnik:
             lines.append(f"- Источник: {v.istochnik}")

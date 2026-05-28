@@ -85,7 +85,7 @@ class TestBuscarLicitacoesPe:
             result = await tools.buscar_licitacoes_pe(ctx, 2024)
         assert "001/2024" in result
         assert "Pregão Eletrônico" in result
-        assert "R$ 150.000,00" in result
+        assert "R$ 150 000,00" in result
         assert "Homologada" in result
 
     @pytest.mark.asyncio
@@ -140,7 +140,7 @@ class TestBuscarContratosPe:
             result = await tools.buscar_contratos_pe(ctx, 2024)
         assert "CT-001/2024" in result
         assert "EMPRESA ABC" in result
-        assert "R$ 500.000,00" in result
+        assert "R$ 500 000,00" in result
 
     @pytest.mark.asyncio
     async def test_empty_results(self) -> None:
@@ -181,8 +181,8 @@ class TestBuscarDespesasPe:
             result = await tools.buscar_despesas_pe(ctx, 2024)
         assert "2024NE001" in result
         assert "EMPRESA XYZ" in result
-        assert "R$ 25.000,00" in result
-        assert "R$ 18.000,00" in result
+        assert "R$ 25 000,00" in result
+        assert "R$ 18 000,00" in result
         assert "Educação" in result
 
     @pytest.mark.asyncio

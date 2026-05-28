@@ -63,8 +63,8 @@ class TestBuscarLicitacoes:
         assert "Aquisição de computadores" in result
         assert "PREGÃO" in result
         assert "154047" in result
-        assert "R$ 50.000,00" in result
-        assert "R$ 45.000,00" in result
+        assert "R$ 50 000,00" in result
+        assert "R$ 45 000,00" in result
         assert "1 licitações" in result
 
     @pytest.mark.asyncio
@@ -188,7 +188,7 @@ class TestBuscarContratos:
         assert "AQUISIÇÃO DE ESTUFA" in result
         assert "IFNMG" in result
         assert "KM JUNIOR LTDA" in result
-        assert "R$ 118.800,00" in result
+        assert "R$ 118 800,00" in result
         assert "1 contratos" in result
 
 

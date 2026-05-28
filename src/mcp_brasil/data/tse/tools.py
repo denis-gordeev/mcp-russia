@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_brl, format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_brl, format_number_ru, markdown_table
 
 from . import client
 from .constants import CARGO_CODES_CDN
@@ -224,7 +224,7 @@ async def buscar_candidato(
     if cand.descricao_totalizacao:
         lines.append(f"**Resultado:** {cand.descricao_totalizacao}")
     if cand.total_votos is not None:
-        lines.append(f"**Total de votos:** {format_number_br(cand.total_votos, 0)}")
+        lines.append(f"**Total de votos:** {format_number_ru(cand.total_votos, 0)}")
 
     lines.append("\n**Dados pessoais:**")
     lines.append(f"  Sexo: {cand.sexo or '—'}")
@@ -279,7 +279,7 @@ async def resultado_eleicao(
             (r.nome_urna or "—")[:30],
             str(r.numero or "—"),
             r.partido or "—",
-            format_number_br(r.total_votos, 0) if r.total_votos is not None else "—",
+            format_number_ru(r.total_votos, 0) if r.total_votos is not None else "—",
             r.percentual or "—",
             (r.descricao_totalizacao or "—")[:20],
         )
@@ -393,20 +393,20 @@ async def resultado_nacional(
         f"Apuração: {resultado.pct_apurado}% das seções",
     ]
     if resultado.total_eleitores:
-        header_lines.append(f"Eleitores: {format_number_br(resultado.total_eleitores, 0)}")
+        header_lines.append(f"Eleitores: {format_number_ru(resultado.total_eleitores, 0)}")
     if resultado.total_comparecimento:
         header_lines.append(
-            f"Comparecimento: {format_number_br(resultado.total_comparecimento, 0)}"
+            f"Comparecimento: {format_number_ru(resultado.total_comparecimento, 0)}"
         )
     if resultado.total_abstencoes:
-        header_lines.append(f"Abstenções: {format_number_br(resultado.total_abstencoes, 0)}")
+        header_lines.append(f"Abstenções: {format_number_ru(resultado.total_abstencoes, 0)}")
 
     rows = [
         (
             str(i),
             (c.nome or "—")[:25],
             c.numero or "—",
-            format_number_br(c.votos, 0) if c.votos else "—",
+            format_number_ru(c.votos, 0) if c.votos else "—",
             f"{c.percentual}%" if c.percentual else "—",
             (c.situacao or "—")[:15],
         )
@@ -456,14 +456,14 @@ async def resultado_por_estado(
         f"Apuração: {resultado.pct_apurado}% das seções",
     ]
     if resultado.total_eleitores:
-        header_lines.append(f"Eleitores: {format_number_br(resultado.total_eleitores, 0)}")
+        header_lines.append(f"Eleitores: {format_number_ru(resultado.total_eleitores, 0)}")
 
     rows = [
         (
             str(i),
             (c.nome or "—")[:25],
             c.numero or "—",
-            format_number_br(c.votos, 0) if c.votos else "—",
+            format_number_ru(c.votos, 0) if c.votos else "—",
             f"{c.percentual}%" if c.percentual else "—",
         )
         for i, c in enumerate(resultado.candidatos, 1)
@@ -516,7 +516,7 @@ async def mapa_resultado_estados(
                 (r.uf or "—").upper(),
                 (vencedor.nome or "—")[:20],
                 vencedor.numero or "—",
-                format_number_br(vencedor.votos, 0) if vencedor.votos else "—",
+                format_number_ru(vencedor.votos, 0) if vencedor.votos else "—",
                 f"{vencedor.percentual}%" if vencedor.percentual else "—",
                 f"{r.pct_apurado}%" if r.pct_apurado else "—",
             )
@@ -625,14 +625,14 @@ async def resultado_por_municipio(
         f"Apuração: {resultado.pct_apurado}% das seções",
     ]
     if resultado.total_eleitores:
-        header_lines.append(f"Eleitores: {format_number_br(resultado.total_eleitores, 0)}")
+        header_lines.append(f"Eleitores: {format_number_ru(resultado.total_eleitores, 0)}")
 
     rows = [
         (
             str(i),
             (c.nome or "—")[:25],
             c.numero or "—",
-            format_number_br(c.votos, 0) if c.votos else "—",
+            format_number_ru(c.votos, 0) if c.votos else "—",
             f"{c.percentual}%" if c.percentual else "—",
         )
         for i, c in enumerate(resultado.candidatos, 1)
@@ -682,17 +682,17 @@ async def apuracao_status(
         f"**Status da Apuração — {cargo.replace('_', ' ').title()} {ano} (T{turno})**",
         f"**Região:** {regiao_label}",
         f"**Seções apuradas:** {resultado.pct_apurado}%"
-        + (f" de {format_number_br(resultado.total_secoes, 0)}" if resultado.total_secoes else ""),
+        + (f" de {format_number_ru(resultado.total_secoes, 0)}" if resultado.total_secoes else ""),
     ]
 
     if resultado.total_eleitores:
-        lines.append(f"**Eleitores:** {format_number_br(resultado.total_eleitores, 0)}")
+        lines.append(f"**Eleitores:** {format_number_ru(resultado.total_eleitores, 0)}")
     if resultado.total_comparecimento:
-        lines.append(f"**Comparecimento:** {format_number_br(resultado.total_comparecimento, 0)}")
+        lines.append(f"**Comparecimento:** {format_number_ru(resultado.total_comparecimento, 0)}")
     if resultado.total_abstencoes and resultado.total_eleitores:
         pct_abs = resultado.total_abstencoes / resultado.total_eleitores * 100
         lines.append(
-            f"**Abstenções:** {format_number_br(resultado.total_abstencoes, 0)} ({pct_abs:.1f}%)"
+            f"**Abstenções:** {format_number_ru(resultado.total_abstencoes, 0)} ({pct_abs:.1f}%)"
         )
 
     return "\n".join(lines)

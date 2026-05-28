@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 
@@ -202,8 +202,8 @@ async def rezultaty_vyborov(
         (
             r.fio,
             r.partia,
-            format_number_br(r.golosov, 0),
-            f"{format_number_br(r.procent, 2)}%",
+            format_number_ru(r.golosov, 0),
+            f"{format_number_ru(r.procent, 2)}%",
             "✓" if r.izbrann else "",
         )
         for r in rezultaty
@@ -236,9 +236,9 @@ async def yavka_i_itogi(
 
     lines = [
         f"**Итоги выборов {god} года**",
-        f"- Всего избирателей: {format_number_br(itogi.get('vseh_izbirateley', 0), 0)}",
-        f"- Проголосовало: {format_number_br(itogi.get('progalosovalo', 0), 0)}",
-        f"- Явка: {format_number_br(itogi.get('yavka_procent', 0), 2)}%",
+        f"- Всего избирателей: {format_number_ru(itogi.get('vseh_izbirateley', 0), 0)}",
+        f"- Проголосовало: {format_number_ru(itogi.get('progalosovalo', 0), 0)}",
+        f"- Явка: {format_number_ru(itogi.get('yavka_procent', 0), 2)}%",
         "- Источник: ЦИК РФ / ГАС «Выборы»",
     ]
     return "\n".join(lines)

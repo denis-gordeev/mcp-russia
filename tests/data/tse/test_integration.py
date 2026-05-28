@@ -103,7 +103,7 @@ class TestToolExecution:
                     {"ano": 2020, "municipio": 35157, "eleicao_id": 2030402020, "cargo": 11},
                 )
                 assert "CANDIDATO A" in result.data
-                assert "10.000" in result.data
+                assert "10 000" in result.data
 
     @pytest.mark.asyncio
     async def test_resultado_nacional_e2e(self) -> None:

@@ -1,8 +1,8 @@
-"""Helpers for LLM-friendly textual formatting.
+"""Вспомогательные функции для форматирования текста в LLM-ориентированном виде.
 
-This module provides formatting utilities for Russian locale (RUB currency,
-Russian number formatting) with backward-compatible aliases for legacy
-Brazilian formatting (BRL).
+Модуль предоставляет утилиты форматирования для российской локали (рубли,
+русский формат чисел) с обратной совместимостью для устаревших бразильских
+форматов (BRL).
 """
 
 from __future__ import annotations
@@ -22,8 +22,7 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str
         Markdown-formatted table string.
     """
     if not rows:
-        # Legacy Brazilian message for backward compatibility
-        return "Nenhum resultado encontrado."
+        return "Результаты не найдены."
 
     header_line = "| " + " | ".join(str(h) for h in headers) + " |"
     separator = "| " + " | ".join("---" for _ in headers) + " |"
@@ -41,12 +40,10 @@ def format_rub(value: float) -> str:
     Returns:
         Formatted string like "1 234,56 ₽".
     """
-    # Handle negative values
     sign = "-" if value < 0 else ""
     abs_value = abs(value)
     integer_part = int(abs_value)
     decimal_part = round((abs_value - integer_part) * 100)
-    # Format with space thousands separator
     int_str = f"{integer_part:,}".replace(",", " ")
     return f"{sign}{int_str},{decimal_part:02d} ₽"
 
@@ -58,14 +55,13 @@ def format_brl(value: float) -> str:
         value: Numeric value.
 
     Returns:
-        Formatted string like "R$ 1.234,56".
+        Formatted string like "R$ 1 234,56".
     """
-    # Handle negative values
     sign = "-" if value < 0 else ""
     abs_value = abs(value)
     integer_part = int(abs_value)
     decimal_part = round((abs_value - integer_part) * 100)
-    int_str = f"{integer_part:,}".replace(",", ".")
+    int_str = f"{integer_part:,}".replace(",", " ")
     return f"R$ {sign}{int_str},{decimal_part:02d}"
 
 
@@ -84,17 +80,18 @@ def format_number_ru(value: float, decimals: int = 2) -> str:
 
 
 def format_number_br(value: float, decimals: int = 2) -> str:
-    """Format a number with the project's legacy decimal style (legacy alias).
+    """Format a number with Russian locale style (deprecated alias for format_number_ru).
+
+    .. deprecated:: Use format_number_ru instead.
 
     Args:
         value: Numeric value.
         decimals: Number of decimal places.
 
     Returns:
-        Formatted string like "1.234,56".
+        Formatted string like "1 234,56".
     """
-    formatted = f"{value:,.{decimals}f}"
-    return formatted.replace(",", "X").replace(".", ",").replace("X", ".")
+    return format_number_ru(value, decimals)
 
 
 def format_percent(value: float, decimals: int = 2) -> str:
@@ -137,7 +134,7 @@ def parse_rub_number(value: Any) -> float | None:
 def parse_brl_number(value: Any) -> float | None:
     """Parse a legacy locale-formatted number string into a float (legacy alias).
 
-    Handles strings like "348.600,00" (dot=thousands, comma=decimal).
+    Handles strings like "348.600,00" or "348 600,00".
     Passes through int/float values unchanged.
 
     Args:
@@ -151,7 +148,7 @@ def parse_brl_number(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     if isinstance(value, str):
-        cleaned = value.replace(".", "").replace(",", ".")
+        cleaned = value.replace(".", "").replace(" ", "").replace(",", ".")
         try:
             return float(cleaned)
         except ValueError:
@@ -174,5 +171,4 @@ def truncate_list(items: Sequence[str], max_items: int = 50) -> str:
 
     shown = items[:max_items]
     remaining = len(items) - max_items
-    # Legacy Brazilian message for backward compatibility
-    return "\n".join(shown) + f"\n\n... e mais {remaining} resultados."
+    return "\n".join(shown) + f"\n\n... и ещё {remaining} результатов."

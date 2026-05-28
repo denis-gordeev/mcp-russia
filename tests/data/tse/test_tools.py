@@ -207,7 +207,7 @@ class TestBuscarCandidatoTotalizacao:
         with patch(f"{MODULE}.buscar_candidato", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.buscar_candidato(2020, 35157, 2030402020, 123)
         assert "Eleito" in result
-        assert "25.000" in result
+        assert "25 000" in result
 
 
 class TestResultadoEleicao:
@@ -235,7 +235,7 @@ class TestResultadoEleicao:
             result = await tools.resultado_eleicao(2020, 35157, 2030402020, 11)
         assert "CANDIDATO A" in result
         assert "CANDIDATO B" in result
-        assert "10.000" in result
+        assert "10 000" in result
         assert "60,00%" in result
         assert "Eleito" in result
 

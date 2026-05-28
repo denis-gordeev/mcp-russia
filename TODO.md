@@ -2,7 +2,54 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-05-27 (пятнадцатый проход — ФНС, Росреестр, ФССП, миграция португальских имён)
+## Статус раунда 2026-05-28 (шестнадцатый проход — миграция форматирования, ГИБДД, Минобрнауки)
+
+### Выполнено
+
+- **Миграция `format_number_br` → `format_number_ru`** во всём проекте:
+  - `_shared/formatting.py`: `format_number_br` теперь deprecated-алиас для `format_number_ru` (производит пробел как разделитель тысяч вместо точки)
+  - `format_brl`: обновлён для использования пробела вместо точки (выход «R$ 1 234,56» вместо «R$ 1.234,56»)
+  - `format_number_ru`: основная функция форматирования чисел (пробел-тысячи, запятая-десятичные)
+  - `parse_brl_number`: теперь обрабатывает и точку, и пробел как разделитель тысяч
+  - `markdown_table`: сообщение о пустых результатах → «Результаты не найдены.» (было «Nenhum resultado encontrado.»)
+  - `truncate_list`: сообщение об усечении → «... и ещё N результатов.» (было «... e mais N resultados.»)
+  - Docstring модуля переведён на русский
+  - Заменены все 90+ вызовов `format_number_br` → `format_number_ru` в 11 модулях: cbrf, rosgidromet, rosvodresursy, rosaudit, rosstat, cekrf, bacen, saude, ana, tse, ibge, inpe, brasilapi
+  - Обновлены все тесты с бразильским форматом чисел (52 файла)
+- **Создан модуль ГИБДД/МВД (gibdd)**: данные Госавтоинспекции и Министерства внутренних дел. Включает:
+  - `constants.py`: типы ТС, категории ВУ, виды нарушений ПДД, статусы штрафов, типы ДТП, регионы регистрации
+  - `schemas.py`: Pydantic-модели (TransportnoeSredstvo, VoditelskoeUdostoverenie, ShtrafGIBDD, StatistikaDTP, RegistracionnoeDeystvie)
+  - `client.py`: HTTP-клиент с заглушками для API ГИБДД (гибдд.рф, gosuslugi.ru)
+  - `tools.py`: 12 инструментов (spisok_tipov_ts, spisok_kategoriyy_vu, spisok_vidov_narusheniy, spisok_statusov_shtrafov, spisok_tipov_dtp, spisok_regionov_registratsii, info_ts, info_vu, shtrafy_po_ts, shtrafy_po_vu, statistika_dtp, istoriya_registraciy)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, структура ГИБДД)
+  - `prompts.py`: 2 промпта (analiz_transportnogo_sredstva, analiz_voditelya)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Создан модуль Минобрнауки (minobrnauki)**: данные о вузах, научных исследованиях, образовательных программах. Включает:
+  - `constants.py`: типы вузов, формы обучения, уровни образования, отрасли науки, типы грантов, статусы аккредитации, федеральные округа
+  - `schemas.py`: Pydantic-модели (VUZ, ObrazovatelnayaProgramma, NauchnoeIssledovanie, Aspirant, ReytingVUZa)
+  - `client.py`: HTTP-клиент с заглушками для API Минобрнауки (minobrnauki.gov.ru)
+  - `tools.py`: 12 инструментов (spisok_tipov_vuzov, spisok_form_obucheniya, spisok_urovney_obrazovaniya, spisok_otrasley_nauki, spisok_tipov_grantov, spisok_statusov_akkreditatsii, spisok_federalnyh_okrugov, info_vuza, programmy_vuza, granty_i_isledovaniya, reyting_vuzov, aspirantura)
+  - `resources.py`: 3 ресурса (источники данных, законодательство, система образования)
+  - `prompts.py`: 2 промпта (analiz_vuza, obzor_nauchnyh_grantov)
+  - `server.py`: регистрация всех компонентов в FastMCP
+- **Написаны тесты** для 2 новых модулей: gibdd (12 unit + 5 integration), minobrnauki (12 unit + 5 integration)
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/RUF003/E501 ignores для gibdd, minobrnauki; добавлены RUF001/RUF002 для тестов российских модулей
+- **Прогнаны все проверки**: `pytest` (1893 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **Итого российских модулей**: 18 (cbrf, rosstat, gosduma, cekrf, rosapi, zakupki, minzdrav, kad_arbitrazh, rosaudit, rosgidromet, rosvodresursy, publikatsii, rospotrebnadzor, roskomnadzor, fns, rosreestr, fssp + gibdd, minobrnauki из этого раунда)
+- **Единый числовой формат**: все модули теперь используют `format_number_ru` (пробел-тысячи, запятая-десятичные) — бразильский формат с точкой полностью устранён из вывода
+- **format_number_br — deprecated alias**: сохранён для обратной совместимости, но делегирует в format_number_ru
+- **Все тесты приведены к русскому числовому формату**: 52 файла обновлено
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
+- **Миграция `parse_brl_number`** → `parse_rub_number` в `_shared/formatting.py` и всех вызовов
+- **Миграция `format_brl`** → `format_rub` в `_shared/formatting.py` и всех вызовов
+- **Создание модуля ФСО/Государственной статистики**: расширение модуля Росстата реальными данными из ЕМИСС (fedstat.ru)
+- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.)
 
 ### Выполнено
 

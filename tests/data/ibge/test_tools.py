@@ -316,7 +316,7 @@ class TestObterMalha:
             result = await tools.obter_malha("35", ctx)
         assert "Estado" in result
         assert "-22,1900" in result or "-22.1900" in result
-        assert "248.219,48" in result
+        assert "248 219,48" in result
         assert "GeoJSON" in result
 
     @pytest.mark.asyncio

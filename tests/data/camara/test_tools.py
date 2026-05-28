@@ -265,7 +265,7 @@ class TestDespesasDeputado:
         with patch(f"{MODULE}.listar_despesas", new_callable=AsyncMock, return_value=mock_data):
             result = await tools.despesas_deputado(204554)
         assert "PASSAGENS" in result
-        assert "R$ 1.200,00" in result
+        assert "R$ 1 200,00" in result
 
     @pytest.mark.asyncio
     async def test_empty(self) -> None:

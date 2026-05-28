@@ -15,7 +15,7 @@ from fastmcp import Context
 
 from mcp_brasil._shared.formatting import (
     format_brl,
-    format_number_br,
+    format_number_ru,
     markdown_table,
     truncate_list,
 )
@@ -179,8 +179,8 @@ async def consultar_cotacao(moeda: str, data: str, ctx: Context) -> str:
     """
     await ctx.info(f"Consultando cotação {moeda} em {data}...")
     cotacao = await client.consultar_cotacao(moeda, data)
-    compra = format_number_br(cotacao.valor_compra, 4) if cotacao.valor_compra else "N/A"
-    venda = format_number_br(cotacao.valor_venda, 4) if cotacao.valor_venda else "N/A"
+    compra = format_number_ru(cotacao.valor_compra, 4) if cotacao.valor_compra else "N/A"
+    venda = format_number_ru(cotacao.valor_venda, 4) if cotacao.valor_venda else "N/A"
     lines = [
         f"**Moeda:** {cotacao.moeda}",
         f"**Data:** {cotacao.data}",
@@ -223,7 +223,7 @@ async def consultar_taxa(sigla: str, ctx: Context) -> str:
     """
     await ctx.info(f"Consultando taxa {sigla.upper()}...")
     taxa = await client.consultar_taxa(sigla)
-    valor = format_number_br(taxa.valor, 2) if taxa.valor is not None else "N/A"
+    valor = format_number_ru(taxa.valor, 2) if taxa.valor is not None else "N/A"
     desc = TAXAS_CONHECIDAS.get(sigla.upper(), "")
     lines = [
         f"**Taxa:** {taxa.nome}",

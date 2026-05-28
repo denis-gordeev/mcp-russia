@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table, truncate_list
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table, truncate_list
 
 from . import client
 from .constants import AGREGADOS_POPULARES, MALHAS_URL
@@ -264,7 +264,7 @@ async def obter_malha(codigo: str, ctx: Context) -> str:
     ]
 
     if meta.area_km2:
-        lines.append(f"- Área: {format_number_br(meta.area_km2, 2)} km²")
+        lines.append(f"- Área: {format_number_ru(meta.area_km2, 2)} km²")
 
     if meta.bbox_min_lon is not None:
         lines.append(

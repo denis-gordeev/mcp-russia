@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_brasil._shared.formatting import format_number_br, markdown_table
+from mcp_brasil._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 from .constants import BIOMAS, DEFAULT_LIMIT
@@ -78,7 +78,7 @@ async def buscar_focos_queimadas(
             f"{f.longitude:.4f}",
             f.satelite,
             f.data_hora,
-            format_number_br(f.risco_fogo, 2) if f.risco_fogo is not None else "—",
+            format_number_ru(f.risco_fogo, 2) if f.risco_fogo is not None else "—",
         )
         for f in focos
     ]
@@ -143,7 +143,7 @@ async def consultar_desmatamento(
             d.bioma,
             d.estado,
             d.municipio,
-            format_number_br(d.area_km2, 2),
+            format_number_ru(d.area_km2, 2),
         )
         for d in dados
     ]
@@ -211,7 +211,7 @@ async def alertas_deter(
             a.estado,
             a.bioma,
             a.classe,
-            format_number_br(a.area_km2, 2),
+            format_number_ru(a.area_km2, 2),
             a.satelite,
         )
         for a in alertas

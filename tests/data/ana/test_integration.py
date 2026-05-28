@@ -93,7 +93,7 @@ class TestToolExecution:
             async with Client(mcp) as c:
                 result = await c.call_tool("consultar_telemetria", {"codigo_estacao": "60435000"})
                 assert "220,50" in result.data
-                assert "8.500,0" in result.data
+                assert "8 500,0" in result.data
 
     @pytest.mark.asyncio
     async def test_monitorar_reservatorios_e2e(self) -> None:
