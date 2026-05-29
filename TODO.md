@@ -2,6 +2,37 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-05-29 (двадцатый проход — зачистка документации от устаревших ссылок на mcp_brasil)
+
+### Выполнено
+
+- **Полная актуализация `docs/index.md`**: удалены все ссылки на `src/mcp_brasil/` как на существующий internal-слой. Документация теперь отражает реальное состояние: пакет `mcp_russia` — единая точка входа, `mcp_brasil` полностью устранён.
+- **Полная актуализация `docs/guide/quickstart.md`**: удалены устаревшие API-ключи (`TRANSPARENCIA_API_KEY`, `DATAJUD_API_KEY`), удалены утверждения о присутствии `mcp_brasil` в кодовой базе.
+- **Полная актуализация `docs/reference/configuration.md`**: удалено утверждение о fallback на `MCP_BRASIL_*` (fallback был удалён ранее). Переменные окружения `MCP_RUSSIA_*` указаны как единственный формат.
+- **Полная переработка `docs/reference/features.md`**:
+  - Все 19 российских модулей описаны с актуальными русскими именами инструментов
+  - CBRF: `cursos_atuais` → `tekushchie_kursy`, `consultar_moeda` → `uznat_kurs_valyuty` и т.д.
+  - Добавлены модули, отсутствовавшие в предыдущей версии: rospotrebnadzor (9 tools), roskomnadzor (11 tools), fns (9 tools), rosreestr (8 tools), fssp (9 tools), gibdd (12 tools), minobrnauki (12 tools)
+  - Legacy-модули сгруппированы по категориям с DEPRECATED-пометками и ссылками на российские аналоги
+  - Подсчёт: 19 российских модулей, 148 инструментов, 54 ресурса, 38 промптов
+- **Обновление `docs/reference/smart-tools.md`**: поля моделей `EtapPlana` и `PlanZaprosa` приведены в соответствие с кодом (`etap`, `opisanie`, `parametry`, `zavisit_ot`, `obosnovanie`, `zapros`, `slozhnost`, `svodka`, `etapy`, `primechaniya`). Примеры вызовов обновлены на российские инструменты.
+- **Перевод `CHANGELOG.md` на русский**: весь текст changelog переведён с португальского на русский.
+- **Обновление `docs/examples/panorama-economico.md`**: удалена ссылка на `mcp-brasil`.
+- **Прогнаны все проверки**: `pytest` (1896 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **Документация синхронизирована с кодом**: устранены все утверждения о существовании `mcp_brasil` как internal-слоя, о поддержке `MCP_BRASIL_*` переменных окружения, о португальских именах инструментов в российских модулях.
+- **features.md теперь полное руководство**: все 19 российских модулей с актуальными инструментами, ресурсами и промптами.
+- **CHANGELOG.md на русском**: язык ведения changelog приведён в соответствие с остальной документацией.
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
+- **Создание модуля ЕМИСС/Фedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.) — внутрикодовые переменные и имена функций, не являющиеся MCP-инструментами
+- **Обновление примеров docs/examples/**: заменить бразильские tool IDs (`bacen_*`, `ibge_*`, `datajud_buscar_processos`) на российские (`cbrf_*`, `rosstat_*`, `kad_arbitrazh_poisk_del`) в сценариях
+
 ## Статус раунда 2026-05-29 (девятнадцатый проход — полная миграция пакета mcp_brasil → mcp_russia)
 
 ### Выполнено

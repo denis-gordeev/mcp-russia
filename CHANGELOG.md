@@ -1,195 +1,190 @@
 # Changelog
 
-Todas as mudanças notáveis do mcp-brasil estão documentadas neste arquivo.
+Все заметные изменения mcp-russia документируются в этом файле.
 
 ## [0.5.0] - 2026-03-27
 
-### Bug Fixes
+### Исправления
 
-- **anuncios_eleitorais:** Align client with Meta Graph API format
+- **anuncios_eleitorais:** Синхронизация клиента с форматом Meta Graph API
 
-### Documentation
+### Документация
 
-- Remove ADR references and documentation section from CONTRIBUTING
-- Update README with tabua_mares feature and correct counts
-- Remove raio-x-parlamentar example
+- Удалены ссылки на ADR и раздел документации из CONTRIBUTING
+- Обновление README: добавлен модуль tabua_mares и исправлены подсчёты
+- Удалён пример raio-x-parlamentar
 
-### Features
+### Новые функции
 
-- **anuncios_eleitorais:** Add Meta Ad Library feature with 6 tools, 3 resources, and 3 prompts
+- **anuncios_eleitorais:** Модуль Meta Ad Library с 6 инструментами, 3 ресурсами и 3 промптами
 
 ## [0.4.0] - 2026-03-26
 
-### Features
+### Новые функции
 
-- **tabua_mares:** Add tide table feature with 7 tools, resource, and prompts
+- **tabua_mares:** Модуль таблиц приливов с 7 инструментами, ресурсами и промптами
 
 ## [0.3.4] - 2026-03-26
 
-### Features
+### Новые функции
 
-- **camara:** Add detalhar_proposicao tool and improve buscar_proposicao
+- **camara:** Инструмент detalhar_proposicao и улучшение buscar_proposicao
 
 ## [0.3.3] - 2026-03-26
 
-### Bug Fixes
+### Исправления
 
-- **transparencia,dados_abertos,diario_oficial:** Address API limitations
+- **transparencia,dados_abertos,diario_oficial:** Учёт ограничений API
 
 ## [0.3.2] - 2026-03-26
 
-### Miscellaneous
+### Прочее
 
-- Add PyPI keywords and classifiers
+- Добавлены PyPI-ключевые слова и классификаторы
 
 ## [0.3.1] - 2026-03-26
 
-### Bug Fixes
+### Исправления
 
-- **code-mode:** Graceful fallback to BM25 when pydantic-monty missing
-- **pncp:** Rewrite client to match real API spec
-- **.gitignore:** Remove temporary files from Claude directory
-- **batch:** Fix AsyncMock spec for ctx inspection in test
+- **code-mode:** Корректный fallback на BM25 при отсутствии pydantic-monty
+- **pncp:** Перепись клиента под реальную спецификацию API
+- **.gitignore:** Удаление временных файлов из каталога Claude
+- **batch:** Исправление AsyncMock-спецификации для ctx inspection в тесте
 
-### Build
+### Сборка
 
-- **deps:** Add fastmcp[code-mode] extra to dependencies
-- **deps:** Move anthropic to main dependencies
+- **deps:** Добавлен fastmcp[code-mode] extra в зависимости
+- **deps:** Перенос anthropic в основные зависимости
 
-### Documentation
+### Документация
 
-- Rewrite README for public launch and add MIT license
-- **examples:** Add 11 use case guides for different professional contexts
-- **readme:** Update tool count from 205 to 204
+- Перепись README для публичного запуска и добавление лицензии MIT
+- **examples:** Добавлено 11 руководств по использованию для разных профессий
+- **readme:** Обновлён подсчёт инструментов с 205 до 204
 
-### Features
+### Новые функции
 
-- **batch:** Add executar_lote tool for parallel multi-query execution
-- **planner:** Add planejar_consulta tool with structured execution plans
+- **batch:** Инструмент executar_lote для параллельного выполнения нескольких запросов
+- **planner:** Инструмент planejar_consulta со структурированными планами выполнения
 
-### Miscellaneous
+### Прочее
 
-- Update build config and architecture docs
-- Add logo, update README and gitignore
-- Remove internal files from git tracking
-- Add white logo variant
+- Обновление конфигурации сборки и документации по архитектуре
+- Добавление логотипа, обновление README и .gitignore
+- Удаление внутренних файлов из отслеживания git
+- Добавление белого варианта логотипа
 
-### Performance
+### Производительность
 
-- **tse:** Cache state data in _enrich_candidate_names
+- **tse:** Кеширование данных штатов в _enrich_candidate_names
 
 ## [0.3.0] - 2026-03-23
 
-### Bug Fixes
+### Исправления
 
-- **tse:** Resolve CDN election codes per cargo type
-- **tests:** Set TOOL_SEARCH=none in conftest.py before any import
+- **tse:** Разрешение CDN-кодов выборов по типу должности
+- **tests:** Установка TOOL_SEARCH=none в conftest.py до любого импорта
 
-### Documentation
+### Документация
 
-- **contributing:** Add release, CI/CD, testing patterns and stack info
-- Add tool search and LLM discovery env vars to .env.example
-- **tech-debt:** Add comprasnet deprecation and TCE features status
+- **contributing:** Добавлены правила релиза, CI/CD, шаблоны тестирования и информация о стеке
+- Добавлены переменные tool search и LLM discovery в .env.example
+- **tech-debt:** Добавлена депрекация comprasnet и статус TCE-модулей
 
-### Features
+### Новые функции
 
-- **compras:** Add Dados Abertos Compras.gov.br with 8 tools
-- **tse:** Add CDN election results with 4 new tools
-- **tcu:** Add TCU with 8 tools, 1 resource, 1 prompt
-- **tce_rj:** Add TCE-RJ with 7 tools, 1 resource, 1 prompt
-- **tools:** Add semantic tags to all tool registrations
-- **tools:** Add semantic tags to brasilapi and datajud tools
-- **tools:** Add semantic tags to compras, jurisprudencia, tcu tools
-- **tools:** Add semantic tags to pncp and transferegov tools
-- **tools:** Add semantic tags to dados_abertos, diario_oficial, saude
-- **tools:** Add semantic tags to redator, ana, inpe tools
-- **tce_sp:** Add TCE-SP with 3 tools, 1 resource, 1 prompt
-- **tse:** Add federal election results via CDN -v.json format
-- **discovery:** Add BM25 search, code_mode, and recomendar_tools
-- **tce_ce:** Add TCE-CE with 4 tools, 1 resource, 1 prompt
-- **tce_pe:** Add TCE-PE with 5 tools, 1 resource, 1 prompt
-- **tce_rs:** Add TCE-RS with 5 tools, 1 resource, 1 prompt
-- **tce_sc:** Add TCE-SC with 2 tools, 1 resource, 1 prompt
-- **tce_rn:** Add TCE-RN with 5 tools, 1 resource, 1 prompt
-- **tce_to:** Add TCE-TO with 3 tools, 1 resource, 1 prompt
-- **tce_pi:** Add TCE-PI with 5 tools, 1 resource, 1 prompt
+- **compras:** Dados Abertos Compras.gov.br с 8 инструментами
+- **tse:** Результаты выборов через CDN с 4 новыми инструментами
+- **tcu:** TCU с 8 инструментами, 1 ресурсом и 1 промптом
+- **tce_rj:** TCE-RJ с 7 инструментами, 1 ресурсом и 1 промптом
+- **tools:** Добавлены семантические теги ко всем инструментам
+- **tce_sp:** TCE-SP с 3 инструментами, 1 ресурсом и 1 промптом
+- **tse:** Результаты федеральных выборов через формат CDN -v.json
+- **discovery:** BM25-поиск, code_mode и recomendar_tools
+- **tce_ce:** TCE-CE с 4 инструментами, 1 ресурсом и 1 промптом
+- **tce_pe:** TCE-PE с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_rs:** TCE-RS с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_sc:** TCE-SC с 2 инструментами, 1 ресурсом и 1 промптом
+- **tce_rn:** TCE-RN с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_to:** TCE-TO с 3 инструментами, 1 ресурсом и 1 промптом
+- **tce_pi:** TCE-PI с 5 инструментами, 1 ресурсом и 1 промптом
 
 ## [0.2.2] - 2026-03-23
 
-### Documentation
+### Документация
 
-- **release:** Add release rules to CLAUDE.md and AGENTS.md
+- **release:** Добавлены правила релиза в CLAUDE.md и AGENTS.md
 
-### Testing
+### Тестирование
 
-- **compras:** Update tests for pncp subpackage
+- **compras:** Обновление тестов для подмодуля pncp
 
 ## [0.2.0] - 2026-03-23
 
-### Bug Fixes
+### Исправления
 
-- **transparencia:** Add safe parsing, rate limiting, and bolsa guards
-- **senado:** Migrate votação endpoints to new API
-- **datajud:** Replace try-except-pass with contextlib.suppress
-- **transferegov,transparencia:** Correct API mapping and number parsing
-- **diario_oficial:** Strip HTML tags from excerpts
-- **ibge:** Correct aggregate IDs for pib_per_capita and area_territorial
-- **datajud,transparencia:** Remove STF from DataJud, fix PEP endpoint
+- **transparencia:** Безопасный парсинг, rate limiting и защита от bolsa-запросов
+- **senado:** Миграция эндпоинтов votação на новый API
+- **datajud:** Замена try-except-pass на contextlib.suppress
+- **transferegov,transparencia:** Исправление маппинга API и парсинга чисел
+- **diario_oficial:** Очистка HTML-тегов из выдержек
+- **ibge:** Исправление ID агрегатов для pib_per_capita и area_territorial
+- **datajud,transparencia:** Удаление STF из DataJud, исправление эндпоинта PEP
 
-### Documentation
+### Документация
 
-- **tech-debt:** Update resolved items and fix header typo
-- Add commit-on-green and tech-debt rules
-- **adrs,skills:** Update patterns with resources, prompts, context, and middleware
-- Add CONTRIBUTING.md
+- **tech-debt:** Обновление решённых позиций и исправление опечатки в заголовке
+- Добавлены правила commit-on-green и tech-debt
+- **adrs,skills:** Обновление шаблонов с ресурсами, промптами, контекстом и middleware
+- Добавлен CONTRIBUTING.md
 
-### Features
+### Новые функции
 
-- **shared:** Add http client and formatting utilities
-- **core:** Add TTL cache and migrate to dependency-groups
-- **ibge,bacen:** Add ibge feature and bacen scaffold
-- **ibge,bacen,transparencia:** Add malha, CNAE, bacen client, and transparencia feature
-- Add lifespan, context, resources, prompts, and middleware
-- **transparencia:** Add resources, prompts, and integration tests
-- **_shared:** Add async RateLimiter with sliding window
-- **transparencia:** Add pagination hints to tool responses
-- **camara:** Add deputies and legislation tools
-- **senado:** Add senators and legislation tools
-- **legislativo:** Add rate limiting to camara and senado clients
-- **senado:** Add partidos_senado and ufs_senado tools
-- **judiciario:** Add datajud, tse and jurisprudencia features
-- **phase4:** Add brasilapi, diario_oficial and compras features
-- **tse:** Add supplementary elections tools
-- **datajud:** Add TREs, TJMs, bool queries and search_after pagination
-- **transparencia,transferegov:** Expand to 18 tools + new transferegov feature
-- **senado:** Add 4 dados_abertos tools (emendas, blocos, liderancas, relatorias)
-- **tse:** Add resultado_eleicao tool with vote totalization
-- Complete mcp-brasil with 4 new features + expand 3 existing
-- **tse:** Add CDN election results with 4 new tools
-- **release:** Add release management infrastructure
+- **shared:** HTTP-клиент и утилиты форматирования
+- **core:** TTL-cache и миграция на dependency-groups
+- **ibge,bacen:** Модули ibge и bacen
+- **ibge,bacen,transparencia:** Malha, CNAE, клиент bacen и модуль transparencia
+- Добавлены lifespan, context, resources, prompts и middleware
+- **transparencia:** Ресурсы, промпты и интеграционные тесты
+- **_shared:** Асинхронный RateLimiter со скользящим окном
+- **transparencia:** Подсказки по пагинации в ответах инструментов
+- **camara:** Инструменты для депутатов и законодательства
+- **senado:** Инструменты для сенаторов и законодательства
+- **legislativo:** Rate limiting для клиентов camara и senado
+- **senado:** Инструменты partidos_senado и ufs_senado
+- **judiciario:** Модули datajud, tse и jurisprudencia
+- **phase4:** Модули brasilapi, diario_oficial и compras
+- **tse:** Дополнительные инструменты выборов
+- **datajud:** TREs, TJMs, логические запросы и пагинация search_after
+- **transparencia,transferegov:** Расширение до 18 инструментов + новый модуль transferegov
+- **senado:** 4 инструмента dados_abertos (emendas, blocos, liderancas, relatorias)
+- **tse:** Инструмент resultado_eleicao с тотализацией голосов
+- Завершение mcp-brasil с 4 новыми модулями + расширение 3 существующих
+- **tse:** Результаты выборов через CDN с 4 новыми инструментами
+- **release:** Инфраструктура управления релизами
 
-### Miscellaneous
+### Прочее
 
-- Bootstrap project structure
-- Add claude code skills (commit, fastmcp, skill-creator)
-- **config:** Switch from justfile to Makefile
-- Update Makefile, README, gitignore, and env example
-- Mark all transparencia tech debt as resolved
-- Add ibge tests, drop cursor config
-- Resolve pagination tech debt as by-design
-- **transparencia:** Add new schemas and constants
-- Load .env file automatically via dotenv
+- Начальная структура проекта
+- Добавлены claude code skills (commit, fastmcp, skill-creator)
+- **config:** Переход с justfile на Makefile
+- Обновление Makefile, README, .gitignore и .env.example
+- Все tech-debt позиции transparencia отмечены как решённые
+- Добавлены тесты ibge, удалена конфигурация cursor
+- Позиция пагинации tech-debt отмечена как by-design
+- **transparencia:** Новые схемы и константы
+- Автоматическая загрузка .env через dotenv
 
-### Refactoring
+### Рефакторинг
 
-- Rename docs/ to plan/ and create empty docs/
-- **registry:** Fix mount API and add core modules
-- Reorganize features into data/ and agentes/ packages
+- Переименование docs/ в plan/ и создание пустого docs/
+- **registry:** Исправление mount API и добавление базовых модулей
+- Реорганизация features в пакеты data/ и agentes/
 
-### Testing
+### Тестирование
 
-- **shared:** Add test suite for core and shared modules
-- Add integration tests for resources, prompts, and full server
-- **redator:** Add 3ª edição integration tests for ofício and pronomes
+- **shared:** Набор тестов для базовых и общих модулей
+- Добавлены интеграционные тесты для ресурсов, промптов и полного сервера
+- **redator:** Интеграционные тесты 3ª edição для ofício и pronomes
 
 <!-- generated by git-cliff -->

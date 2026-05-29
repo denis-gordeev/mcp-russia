@@ -25,8 +25,7 @@ uv add mcp-russia
       "command": "uvx",
       "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "your-key-here",
-        "DATAJUD_API_KEY": "your-key-here"
+        "MCP_RUSSIA_TOOL_SEARCH": "bm25"
       }
     }
   }
@@ -44,8 +43,7 @@ uv add mcp-russia
       "command": "uvx",
       "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "your-key-here",
-        "DATAJUD_API_KEY": "your-key-here"
+        "MCP_RUSSIA_TOOL_SEARCH": "bm25"
       }
     }
   }
@@ -81,22 +79,21 @@ make serve
 
 > "Составь план запроса для анализа расходов ведомства по нескольким источникам."
 
-На этапе миграции ответы все еще могут ссылаться на исторические feature-имена и бразильские датасеты. Это связано с тем, что внутреннее дерево `mcp_brasil` пока не заменено полностью.
+Российские модули данных (ЦБ РФ, Росстат, Госдума и др.) возвращают структурированные ответы на русском языке. Legacy-модули (бразильские данные) помечены как DEPRECATED.
 
 ## Ключи API
 
-Часть интеграций работает без ключей, а часть использует legacy-настройки исходного проекта. Для переходного периода ориентируйтесь на:
+Часть интеграций работает без ключей, а часть требует аутентификации:
 
 | Переменная | Назначение |
 |------------|------------|
-| `TRANSPARENCIA_API_KEY` | Доступ к legacy-интеграции Portal da Transparência |
-| `DATAJUD_API_KEY` | Доступ к legacy-интеграции DataJud/CNJ |
+| `ANTHROPIC_API_KEY` | Нужен для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros` |
 
-## Важно про совместимость
+## Совместимость
 
 - Для установки и запуска используйте `mcp-russia` и `mcp_russia`.
-- Для внутренних импортов и части тестов в кодовой базе пока остается `mcp_brasil`.
-- Это не конфликт, а сознательный переходный слой.
+- Переменные окружения используют формат `MCP_RUSSIA_*`.
+- Legacy-модули данных (бразильские) помечены как DEPRECATED и будут заменены российскими аналогами.
 
 ## Дальше
 

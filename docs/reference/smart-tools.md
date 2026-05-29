@@ -1,6 +1,6 @@
 # Smart tools
 
-Корневой сервер публикует 4 meta-tools, которые помогают находить нужные integrations, строить план запроса и выполнять несколько вызовов за один проход. Публично это часть `mcp-russia`, хотя внутри каталог пока включает legacy features исходного проекта.
+Корневой сервер публикует 4 meta-tools, которые помогают находить нужные интеграции, строить план запроса и выполнять несколько вызовов за один проход.
 
 ## `spisok_funktsiy`
 
@@ -9,9 +9,9 @@
 ```text
 → spisok_funktsiy()
 ← 27 активных features:
-   ibge (9 tools) ✓
-   bacen (9 tools) ✓
-   transparencia (18 tools) ✓ (с ключом)
+   cbrf (6 tools) ✓
+   rosstat (7 tools) ✓
+   gosduma (6 tools) ✓
    ...
 ```
 
@@ -22,11 +22,11 @@
 Принимает вопрос на естественном языке и предлагает 3-5 наиболее релевантных tools.
 
 ```text
-→ rekomendovat_instrumenty("Какие крупнейшие расходы федерального бюджета доступны за 2024 год?")
+→ rekomendovat_instrumenty("Какие данные по инфляции и ключевой ставке доступны?")
 ← Рекомендация:
-   1. transparencia_consultar_despesas
-   2. transparencia_buscar_contratos
-   3. tcu_buscar_acordaos
+   1. cbrf_tekushchie_kursy
+   2. rosstat_inflyaciya
+   3. cbrf_sravnit_valyuty
 ```
 
 Как работает:
@@ -52,20 +52,20 @@
 Модель данных:
 
 ```python
-class EtapaPlano(BaseModel):
-    etapa: int
-    descricao: str
+class EtapPlana(BaseModel):
+    etap: int
+    opisanie: str
     tool: str
-    parametros: dict[str, str]
-    depende_de: list[int]
-    justificativa: str
+    parametry: dict[str, str]
+    zavisit_ot: list[int]
+    obosnovanie: str
 
-class PlanoConsulta(BaseModel):
-    consulta: str
-    complexidade: str
-    resumo: str
-    etapas: list[EtapaPlano]
-    observacoes: str
+class PlanZaprosa(BaseModel):
+    zapros: str
+    slozhnost: str
+    svodka: str
+    etapy: list[EtapPlana]
+    primechaniya: str
 ```
 
 Типичные стратегии:
@@ -73,7 +73,7 @@ class PlanoConsulta(BaseModel):
 - `enriquecimento`: добавить контекст из другой feature
 - `comparacao`: сопоставить одну и ту же метрику по разным регионам или источникам
 - `contextualizacao`: подтянуть справочные, демографические или макроэкономические данные
-- `paralelismo`: выполнить независимые шаги одновременно
+- `параллельно`: выполнить независимые шаги одновременно
 
 **Требует:** `ANTHROPIC_API_KEY`
 
@@ -83,11 +83,11 @@ class PlanoConsulta(BaseModel):
 
 ```text
 → vypolnit_paket([
-    {"tool": "bacen_indicadores_atuais", "params": {}},
-    {"tool": "ibge_listar_estados", "params": {}},
-    {"tool": "brasilapi_consultar_taxa", "params": {"sigla": "SELIC"}}
+    {"tool": "cbrf_tekushchie_kursy", "params": {}},
+    {"tool": "rosstat_spisok_regionov", "params": {}},
+    {"tool": "gosduma_spisok_deputatov", "params": {}}
   ])
-← [resultado1, resultado2, resultado3]
+← [результат1, результат2, результат3]
 ```
 
 Как работает:

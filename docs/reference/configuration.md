@@ -1,6 +1,6 @@
 # Конфигурация
 
-Эта страница описывает публичную конфигурацию `mcp-russia`. Часть интеграций пока остается legacy-слоем исходного проекта, поэтому рядом с новыми переменными еще поддерживаются исторические алиасы `MCP_BRASIL_*`.
+Эта страница описывает публичную конфигурацию `mcp-russia`.
 
 ## Переменные окружения
 
@@ -8,8 +8,6 @@
 
 | Переменная | По умолчанию | Описание |
 |----------|--------------|----------|
-| `TRANSPARENCIA_API_KEY` | — | Ключ для legacy-интеграции с Portal da Transparencia |
-| `DATAJUD_API_KEY` | — | Ключ для legacy-интеграции с DataJud / CNJ |
 | `ANTHROPIC_API_KEY` | — | Нужен для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros` |
 
 ### Настройки сервера
@@ -22,8 +20,6 @@
 | `MCP_RUSSIA_HTTP_BACKOFF_BASE` | `1.0` | Базовая задержка для экспоненциального backoff |
 | `MCP_RUSSIA_USER_AGENT` | `mcp-russia/<version>` | Значение `User-Agent` для исходящих HTTP-запросов |
 
-Исторические алиасы `MCP_BRASIL_*` пока работают как fallback и нужны только для совместимости со старой конфигурацией.
-
 ## `MCP_RUSSIA_TOOL_SEARCH`
 
 Переменная управляет тем, как набор tools показывается модели:
@@ -33,25 +29,6 @@
 | `bm25` | Показывает только top-N релевантных tools, meta-tools остаются доступными всегда | Базовый режим |
 | `none` | Публикует весь каталог tools без фильтрации | Отладка, ручная проверка, очень большой контекст |
 | `code_mode` | Экспериментальный режим discovery через `get_tags`, `search` и `GetSchemas` | Продвинутые сценарии и внутренние тесты |
-
-## API-ключи
-
-### Portal da Transparencia
-
-Бесплатный ключ повышает rate limit. Без него feature `transparencia` отключается.
-
-1. Откройте `http://portaldatransparencia.gov.br/api-de-dados/cadastrar-email`
-2. Зарегистрируйте email
-3. Скопируйте выданный ключ
-4. Установите `TRANSPARENCIA_API_KEY=<ваш-ключ>`
-
-### DataJud / CNJ
-
-Бесплатный ключ дает доступ к судебным данным. Без него feature `datajud` отключается.
-
-1. Откройте `https://datajud-wiki.cnj.jus.br/api-publica/acesso`
-2. Пройдите процедуру регистрации
-3. Установите `DATAJUD_API_KEY=<ваш-ключ>`
 
 ### Anthropic API
 
@@ -70,8 +47,6 @@
       "command": "uvx",
       "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "your-key",
-        "DATAJUD_API_KEY": "your-key",
         "ANTHROPIC_API_KEY": "your-key",
         "MCP_RUSSIA_TOOL_SEARCH": "bm25"
       }
@@ -89,8 +64,7 @@
       "command": "uvx",
       "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "TRANSPARENCIA_API_KEY": "your-key",
-        "DATAJUD_API_KEY": "your-key"
+        "MCP_RUSSIA_TOOL_SEARCH": "bm25"
       }
     }
   }
@@ -107,15 +81,14 @@ claude mcp add mcp-russia -- uvx --from mcp-russia python -m mcp_russia.server
 
 ```bash
 claude mcp add mcp-russia \
-  -e TRANSPARENCIA_API_KEY=your-key \
-  -e DATAJUD_API_KEY=your-key \
+  -e ANTHROPIC_API_KEY=your-key \
   -- uvx --from mcp-russia python -m mcp_russia.server
 ```
 
 ### HTTP transport
 
 ```bash
-TRANSPARENCIA_API_KEY=xxx DATAJUD_API_KEY=yyy \
+ANTHROPIC_API_KEY=xxx \
   fastmcp run mcp_russia.server:mcp --transport http --port 8000
 ```
 
