@@ -3,7 +3,7 @@
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.cekrf.server import mcp
+from mcp_russia.data.cekrf.server import mcp
 
 
 @pytest.fixture
@@ -28,9 +28,7 @@ async def test_has_tools(client):
         "rezultaty_vyborov",
         "yavka_i_itogi",
     }
-    assert expected.issubset(tool_names), (
-        f"Отсутствуют инструменты: {expected - tool_names}"
-    )
+    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
 
 async def test_has_resources(client):
@@ -55,9 +53,7 @@ async def test_has_prompts(client):
     prompt_names = {p.name for p in prompts}
 
     expected = {"analiz_kandidata", "sravnenie_partiy"}
-    assert expected.issubset(prompt_names), (
-        f"Отсутствуют промпты: {expected - prompt_names}"
-    )
+    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
 
 
 async def test_tipy_vyborov(client):
@@ -65,7 +61,7 @@ async def test_tipy_vyborov(client):
     async with client:
         result = await client.call_tool("tipy_vyborov", {})
     assert result is not None
-    text = str(result.content) if hasattr(result, 'content') else str(result)
+    text = str(result.content) if hasattr(result, "content") else str(result)
     assert "Президент" in text or "Государственная" in text
 
 

@@ -4,7 +4,7 @@ import contextlib
 
 import pytest
 
-from mcp_brasil._shared.lifespan import http_lifespan
+from mcp_russia._shared.lifespan import http_lifespan
 
 
 class TestHttpLifespan:

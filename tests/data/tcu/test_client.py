@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.tcu import client
-from mcp_brasil.data.tcu.constants import (
+from mcp_russia.data.tcu import client
+from mcp_russia.data.tcu.constants import (
     ACORDAOS_URL,
     CADIRREG_URL,
     CALCULO_DEBITO_URL,
@@ -16,7 +16,7 @@ from mcp_brasil.data.tcu.constants import (
     TERMOS_CONTRATUAIS_URL,
     TIPOS_CERTIDOES_URL,
 )
-from mcp_brasil.data.tcu.schemas import ParcelaDebito
+from mcp_russia.data.tcu.schemas import ParcelaDebito
 
 # ---------------------------------------------------------------------------
 # buscar_acordaos

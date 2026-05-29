@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil.data.bacen.prompts import analise_economica, comparar_indicadores
+from mcp_russia.data.bacen.prompts import analise_economica, comparar_indicadores
 
 
 class TestAnaliseEconomica:
@@ -55,7 +55,7 @@ class TestPromptsIntegration:
     async def test_prompts_registered(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.bacen.server import mcp
+        from mcp_russia.data.bacen.server import mcp
 
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
@@ -67,7 +67,7 @@ class TestPromptsIntegration:
     async def test_get_analise_economica_prompt(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.bacen.server import mcp
+        from mcp_russia.data.bacen.server import mcp
 
         async with Client(mcp) as c:
             result = await c.get_prompt("analise_economica", {})

@@ -6,7 +6,7 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tabua_mares.client import (
+from mcp_russia.data.tabua_mares.client import (
     buscar_portos,
     consultar_tabua_mare,
     listar_estados,
@@ -15,7 +15,7 @@ from mcp_brasil.data.tabua_mares.client import (
     porto_mais_proximo_geral,
     tabua_mare_por_geolocalizacao,
 )
-from mcp_brasil.data.tabua_mares.constants import (
+from mcp_russia.data.tabua_mares.constants import (
     GEO_TABUA_MARE_URL,
     HARBOR_NAMES_URL,
     HARBORS_URL,

@@ -8,8 +8,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.ibge import tools
-from mcp_brasil.data.ibge.schemas import (
+from mcp_russia.data.ibge import tools
+from mcp_russia.data.ibge.schemas import (
     AgregadoValor,
     CnaeSecao,
     CnaeSubclasse,
@@ -23,7 +23,7 @@ from mcp_brasil.data.ibge.schemas import (
     Regiao,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.ibge.client"
+CLIENT_MODULE = "mcp_russia.data.ibge.client"
 
 
 def _mock_ctx() -> MagicMock:

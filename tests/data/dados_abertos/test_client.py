@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.dados_abertos import client
-from mcp_brasil.data.dados_abertos.constants import CONJUNTOS_URL, ORGANIZACOES_URL, RECURSOS_URL
+from mcp_russia.data.dados_abertos import client
+from mcp_russia.data.dados_abertos.constants import CONJUNTOS_URL, ORGANIZACOES_URL, RECURSOS_URL
 
 # ---------------------------------------------------------------------------
 # buscar_conjuntos

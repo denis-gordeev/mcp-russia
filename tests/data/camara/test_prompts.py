@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil.data.camara.prompts import acompanhar_proposicao, analise_votacao, perfil_deputado
+from mcp_russia.data.camara.prompts import acompanhar_proposicao, analise_votacao, perfil_deputado
 
 
 class TestAcompanharProposicao:
@@ -56,7 +56,7 @@ class TestPromptsIntegration:
     async def test_prompts_registered(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.camara.server import mcp
+        from mcp_russia.data.camara.server import mcp
 
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
@@ -69,7 +69,7 @@ class TestPromptsIntegration:
     async def test_get_acompanhar_prompt(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.camara.server import mcp
+        from mcp_russia.data.camara.server import mcp
 
         async with Client(mcp) as c:
             result = await c.get_prompt(

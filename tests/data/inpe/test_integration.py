@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.inpe.schemas import FocoQueimada, Satelite
-from mcp_brasil.data.inpe.server import mcp
+from mcp_russia.data.inpe.schemas import FocoQueimada, Satelite
+from mcp_russia.data.inpe.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.inpe.client"
+CLIENT_MODULE = "mcp_russia.data.inpe.client"
 
 
 class TestToolsRegistered:

@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.rosapi import tools as rosapi_tools
+from mcp_russia.data.rosapi import tools as rosapi_tools
 
 
 def _mock_ctx():

@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 from fastmcp import Client, FastMCP
 
-from mcp_brasil._shared.feature import FeatureMeta, FeatureRegistry, RegisteredFeature
+from mcp_russia._shared.feature import FeatureMeta, FeatureRegistry, RegisteredFeature
 
 # ---------------------------------------------------------------------------
 # FeatureMeta
@@ -89,19 +89,19 @@ class TestFeatureRegistry:
     def test_discover_returns_self_for_chaining(self) -> None:
         """discover() retorna self para permitir chaining."""
         registry = FeatureRegistry()
-        result = registry.discover("mcp_brasil.data")
+        result = registry.discover("mcp_russia.data")
         assert result is registry
 
     def test_discover_finds_ibge(self) -> None:
         """Discovery encontra a feature ibge in data package."""
         registry = FeatureRegistry()
-        registry.discover("mcp_brasil.data")
+        registry.discover("mcp_russia.data")
         assert "ibge" in registry.features
 
     def test_discover_finds_redator(self) -> None:
         """Discovery encontra a feature redator in agentes package."""
         registry = FeatureRegistry()
-        registry.discover("mcp_brasil.agentes")
+        registry.discover("mcp_russia.agenty")
         assert "redator" in registry.features
 
     def test_summary_empty(self) -> None:
@@ -201,7 +201,7 @@ class TestRegistryIntegration:
     @pytest.mark.asyncio
     async def test_root_server_starts_empty(self) -> None:
         """Root server sem features montadas funciona."""
-        from mcp_brasil.server import mcp
+        from mcp_russia.server import mcp
 
         async with Client(mcp) as client:
             tools = await client.list_tools()
@@ -211,7 +211,7 @@ class TestRegistryIntegration:
     @pytest.mark.asyncio
     async def test_spisok_funktsiy_tool(self) -> None:
         """Meta-tool spisok_funktsiy returns summary."""
-        from mcp_brasil.server import mcp
+        from mcp_russia.server import mcp
 
         async with Client(mcp) as client:
             result = await client.call_tool("spisok_funktsiy", {})

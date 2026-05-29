@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.compras.dadosabertos import tools
-from mcp_brasil.data.compras.dadosabertos.schemas import (
+from mcp_russia.data.compras.dadosabertos import tools
+from mcp_russia.data.compras.dadosabertos.schemas import (
     ContratoDA,
     ContratoDAResultado,
     FornecedorDA,
@@ -20,7 +20,7 @@ from mcp_brasil.data.compras.dadosabertos.schemas import (
     UasgResultado,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.compras.dadosabertos.client"
+CLIENT_MODULE = "mcp_russia.data.compras.dadosabertos.client"
 
 
 def _mock_ctx() -> MagicMock:

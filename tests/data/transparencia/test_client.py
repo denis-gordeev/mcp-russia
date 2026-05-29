@@ -7,8 +7,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.transparencia import client
-from mcp_brasil.data.transparencia.constants import (
+from mcp_russia.data.transparencia import client
+from mcp_russia.data.transparencia.constants import (
     ACORDOS_LENIENCIA_URL,
     AUTH_ENV_VAR,
     BENEFICIOS_CIDADAO_URL,
@@ -30,7 +30,7 @@ from mcp_brasil.data.transparencia.constants import (
     SERVIDORES_URL,
     VIAGENS_URL,
 )
-from mcp_brasil.exceptions import AuthError
+from mcp_russia.exceptions import AuthError
 
 
 @pytest.fixture(autouse=True)
@@ -342,7 +342,7 @@ class TestBuscarSancoes:
         respx.get(cepim["url"]).mock(return_value=httpx.Response(200, json=[]))
         respx.get(ceaf["url"]).mock(return_value=httpx.Response(200, json=[]))
 
-        with patch("mcp_brasil._shared.http_client.asyncio.sleep"):
+        with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             result = await client.buscar_sancoes("12345678000190", pagina=1)
         assert len(result) == 1
 
@@ -423,7 +423,7 @@ class TestSafeParseListLogging:
     @respx.mock
     async def test_non_list_despesas_logs_warning(self, caplog: pytest.LogCaptureFixture) -> None:
         respx.get(DESPESAS_URL).mock(return_value=httpx.Response(200, json={"error": "invalid"}))
-        with caplog.at_level(logging.WARNING, logger="mcp_brasil.data.transparencia.client"):
+        with caplog.at_level(logging.WARNING, logger="mcp_russia.data.transparencia.client"):
             result = await client.consultar_despesas("01/2024", "06/2024")
         assert result == []
         assert "Resposta inesperada" in caplog.text
@@ -434,7 +434,7 @@ class TestSafeParseListLogging:
         self, caplog: pytest.LogCaptureFixture
     ) -> None:
         respx.get(SERVIDORES_URL).mock(return_value=httpx.Response(200, json="plain string"))
-        with caplog.at_level(logging.WARNING, logger="mcp_brasil.data.transparencia.client"):
+        with caplog.at_level(logging.WARNING, logger="mcp_russia.data.transparencia.client"):
             result = await client.buscar_servidores(nome="Test")
         assert result == []
         assert "Resposta inesperada" in caplog.text

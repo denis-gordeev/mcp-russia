@@ -4,8 +4,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tce_pi import client
-from mcp_brasil.data.tce_pi.constants import (
+from mcp_russia.data.tce_pi import client
+from mcp_russia.data.tce_pi.constants import (
     CREDORES_URL,
     DESPESAS_TOTAL_URL,
     DESPESAS_URL,

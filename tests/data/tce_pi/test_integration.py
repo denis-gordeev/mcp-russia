@@ -5,10 +5,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.tce_pi.schemas import Prefeitura
-from mcp_brasil.data.tce_pi.server import mcp
+from mcp_russia.data.tce_pi.schemas import Prefeitura
+from mcp_russia.data.tce_pi.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.tce_pi.client"
+CLIENT_MODULE = "mcp_russia.data.tce_pi.client"
 
 
 class TestToolsRegistered:

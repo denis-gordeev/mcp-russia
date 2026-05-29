@@ -8,14 +8,14 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.diario_oficial.schemas import (
+from mcp_russia.data.diario_oficial.schemas import (
     CidadeQueridoDiario,
     DiarioOficial,
     DiarioResultado,
 )
-from mcp_brasil.data.diario_oficial.server import mcp
+from mcp_russia.data.diario_oficial.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.diario_oficial.client"
+CLIENT_MODULE = "mcp_russia.data.diario_oficial.client"
 
 
 class TestToolsRegistered:

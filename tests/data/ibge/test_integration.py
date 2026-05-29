@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.ibge.schemas import Estado, Municipio, Regiao
-from mcp_brasil.data.ibge.server import mcp
+from mcp_russia.data.ibge.schemas import Estado, Municipio, Regiao
+from mcp_russia.data.ibge.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.ibge.client"
+CLIENT_MODULE = "mcp_russia.data.ibge.client"
 
 
 class TestToolsRegistered:
@@ -96,7 +96,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_buscar_cnae_sections(self) -> None:
-        from mcp_brasil.data.ibge.schemas import CnaeSecao
+        from mcp_russia.data.ibge.schemas import CnaeSecao
 
         mock_data = [CnaeSecao(id="A", descricao="AGRICULTURA")]
         with patch(

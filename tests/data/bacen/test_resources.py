@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from mcp_brasil.data.bacen.resources import catalogo_series, categorias_series, indicadores_chave
+from mcp_russia.data.bacen.resources import catalogo_series, categorias_series, indicadores_chave
 
 
 class TestCatalogoSeries:
@@ -68,7 +68,7 @@ class TestResourcesIntegration:
     async def test_resources_accessible_via_client(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.bacen.server import mcp
+        from mcp_russia.data.bacen.server import mcp
 
         async with Client(mcp) as c:
             resources = await c.list_resources()
@@ -81,7 +81,7 @@ class TestResourcesIntegration:
     async def test_read_indicadores_resource(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.bacen.server import mcp
+        from mcp_russia.data.bacen.server import mcp
 
         async with Client(mcp) as c:
             contents = await c.read_resource("data://indicadores-chave")

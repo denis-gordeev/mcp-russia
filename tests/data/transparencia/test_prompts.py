@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil.data.transparencia.prompts import (
+from mcp_russia.data.transparencia.prompts import (
     analise_despesas,
     auditoria_fornecedor,
     verificacao_compliance,
@@ -71,7 +71,7 @@ class TestPromptsIntegration:
     async def test_prompts_registered(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.transparencia.server import mcp
+        from mcp_russia.data.transparencia.server import mcp
 
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
@@ -84,7 +84,7 @@ class TestPromptsIntegration:
     async def test_get_auditoria_prompt(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.transparencia.server import mcp
+        from mcp_russia.data.transparencia.server import mcp
 
         async with Client(mcp) as c:
             result = await c.get_prompt("auditoria_fornecedor", {"cpf_cnpj": "12345678000190"})

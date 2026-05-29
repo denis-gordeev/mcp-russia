@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.transparencia import tools
-from mcp_brasil.data.transparencia.constants import DEFAULT_PAGE_SIZE
-from mcp_brasil.data.transparencia.schemas import (
+from mcp_russia.data.transparencia import tools
+from mcp_russia.data.transparencia.constants import DEFAULT_PAGE_SIZE
+from mcp_russia.data.transparencia.schemas import (
     AcordoLeniencia,
     BeneficioSocial,
     BolsaFamiliaMunicipio,
@@ -31,7 +31,7 @@ from mcp_brasil.data.transparencia.schemas import (
     Viagem,
 )
 
-MODULE = "mcp_brasil.data.transparencia.client"
+MODULE = "mcp_russia.data.transparencia.client"
 
 
 # ---------------------------------------------------------------------------

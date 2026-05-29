@@ -9,8 +9,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.anuncios_eleitorais.client import buscar_anuncios, buscar_proxima_pagina
-from mcp_brasil.data.anuncios_eleitorais.constants import ADS_ARCHIVE_URL
+from mcp_russia.data.anuncios_eleitorais.client import buscar_anuncios, buscar_proxima_pagina
+from mcp_russia.data.anuncios_eleitorais.constants import ADS_ARCHIVE_URL
 
 MOCK_TOKEN = "test_access_token_123"
 
@@ -238,7 +238,7 @@ async def test_buscar_anuncios_com_audiencia() -> None:
 def test_get_access_token_missing() -> None:
     """Test error when no Meta token is set."""
     with patch.dict(os.environ, {}, clear=True):
-        from mcp_brasil.data.anuncios_eleitorais.client import _get_access_token
+        from mcp_russia.data.anuncios_eleitorais.client import _get_access_token
 
         with pytest.raises(RuntimeError, match="Token da Meta"):
             _get_access_token()

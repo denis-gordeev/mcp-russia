@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.inpe import client
-from mcp_brasil.data.inpe.constants import DETER_URL, FOCOS_URL, PRODES_URL, SATELITES_URL
+from mcp_russia.data.inpe import client
+from mcp_russia.data.inpe.constants import DETER_URL, FOCOS_URL, PRODES_URL, SATELITES_URL
 
 # ---------------------------------------------------------------------------
 # buscar_focos

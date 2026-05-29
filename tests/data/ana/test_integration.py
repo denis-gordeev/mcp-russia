@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.ana.schemas import DadoTelemetria, Estacao, Reservatorio
-from mcp_brasil.data.ana.server import mcp
+from mcp_russia.data.ana.schemas import DadoTelemetria, Estacao, Reservatorio
+from mcp_russia.data.ana.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.ana.client"
+CLIENT_MODULE = "mcp_russia.data.ana.client"
 
 
 class TestToolsRegistered:

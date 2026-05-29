@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.tce_sp import client
-from mcp_brasil.data.tce_sp.constants import DESPESAS_URL, MUNICIPIOS_URL, RECEITAS_URL
+from mcp_russia.data.tce_sp import client
+from mcp_russia.data.tce_sp.constants import DESPESAS_URL, MUNICIPIOS_URL, RECEITAS_URL
 
 # ---------------------------------------------------------------------------
 # _parse_brl_string

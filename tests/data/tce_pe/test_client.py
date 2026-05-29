@@ -6,8 +6,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.tce_pe import client
-from mcp_brasil.data.tce_pe.constants import API_BASE, RESPONSE_ENCODING
+from mcp_russia.data.tce_pe import client
+from mcp_russia.data.tce_pe.constants import API_BASE, RESPONSE_ENCODING
 
 
 def _mock_response(entity: str, items: list[dict], status: str = "OK") -> bytes:

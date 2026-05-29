@@ -4,8 +4,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tce_rn import client
-from mcp_brasil.data.tce_rn.constants import (
+from mcp_russia.data.tce_rn import client
+from mcp_russia.data.tce_rn.constants import (
     CONTRATOS_PATH,
     DESPESA_PATH,
     JURISDICIONADOS_PATH,

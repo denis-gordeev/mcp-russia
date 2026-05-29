@@ -1,6 +1,6 @@
 """Тесты инструментов модуля ФССП."""
 
-from mcp_brasil.data.fssp import tools as fssp_tools
+from mcp_russia.data.fssp import tools as fssp_tools
 
 
 def test_spisok_vidov_proizvodstv():

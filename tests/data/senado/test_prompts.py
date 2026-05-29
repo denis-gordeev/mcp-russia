@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil.data.senado.prompts import (
+from mcp_russia.data.senado.prompts import (
     acompanhar_materia,
     analise_votacao_senado,
     perfil_senador,
@@ -61,7 +61,7 @@ class TestPromptsIntegration:
     async def test_prompts_registered(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.senado.server import mcp
+        from mcp_russia.data.senado.server import mcp
 
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
@@ -74,7 +74,7 @@ class TestPromptsIntegration:
     async def test_get_acompanhar_prompt(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.senado.server import mcp
+        from mcp_russia.data.senado.server import mcp
 
         async with Client(mcp) as c:
             result = await c.get_prompt(

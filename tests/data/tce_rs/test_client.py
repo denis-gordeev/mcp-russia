@@ -4,8 +4,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tce_rs import client
-from mcp_brasil.data.tce_rs.constants import (
+from mcp_russia.data.tce_rs import client
+from mcp_russia.data.tce_rs.constants import (
     EDUCACAO_INDICE_URL,
     GESTAO_FISCAL_URL,
     MUNICIPIOS_URL,

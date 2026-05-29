@@ -7,9 +7,9 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil._shared.rate_limiter import RateLimiter
-from mcp_brasil.data.brasilapi import client
-from mcp_brasil.data.brasilapi.constants import (
+from mcp_russia._shared.rate_limiter import RateLimiter
+from mcp_russia.data.brasilapi import client
+from mcp_russia.data.brasilapi.constants import (
     BANKS_URL,
     CEP_URL,
     CNPJ_URL,

@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.minzdrav import tools as minzdrav_tools
+from mcp_russia.data.minzdrav import tools as minzdrav_tools
 
 
 def _mock_ctx():

@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock
 
-from mcp_brasil.data.gibdd import tools as gibdd_tools
+from mcp_russia.data.gibdd import tools as gibdd_tools
 
 
 def _mock_ctx():

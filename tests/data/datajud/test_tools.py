@@ -7,10 +7,10 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.datajud import tools
-from mcp_brasil.data.datajud.schemas import Movimentacao, Processo, ProcessoDetalhe
+from mcp_russia.data.datajud import tools
+from mcp_russia.data.datajud.schemas import Movimentacao, Processo, ProcessoDetalhe
 
-MODULE = "mcp_brasil.data.datajud.client"
+MODULE = "mcp_russia.data.datajud.client"
 
 
 class TestBuscarProcessos:

@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from mcp_brasil.data.ibge.resources import (
+from mcp_russia.data.ibge.resources import (
     estados_brasileiros,
     niveis_territoriais,
     regioes_brasileiras,
@@ -69,7 +69,7 @@ class TestResourcesIntegration:
     async def test_resources_accessible_via_client(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.ibge.server import mcp
+        from mcp_russia.data.ibge.server import mcp
 
         async with Client(mcp) as c:
             resources = await c.list_resources()
@@ -82,7 +82,7 @@ class TestResourcesIntegration:
     async def test_read_estados_resource(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.ibge.server import mcp
+        from mcp_russia.data.ibge.server import mcp
 
         async with Client(mcp) as c:
             contents = await c.read_resource("data://estados")

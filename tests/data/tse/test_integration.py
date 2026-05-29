@@ -5,9 +5,9 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.tse.server import mcp
+from mcp_russia.data.tse.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.tse.client"
+CLIENT_MODULE = "mcp_russia.data.tse.client"
 
 
 class TestToolsRegistered:
@@ -80,7 +80,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_resultado_eleicao_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import ResultadoCandidato
+        from mcp_russia.data.tse.schemas import ResultadoCandidato
 
         mock_data = [
             ResultadoCandidato(
@@ -107,7 +107,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_resultado_nacional_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import ResultadoCDN, ResultadoRegiao
+        from mcp_russia.data.tse.schemas import ResultadoCDN, ResultadoRegiao
 
         mock_data = ResultadoRegiao(
             uf="BR",
@@ -132,7 +132,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_resultado_por_estado_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import ResultadoCDN, ResultadoRegiao
+        from mcp_russia.data.tse.schemas import ResultadoCDN, ResultadoRegiao
 
         mock_data = ResultadoRegiao(
             uf="SP",
@@ -157,7 +157,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_apuracao_status_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import ResultadoRegiao
+        from mcp_russia.data.tse.schemas import ResultadoRegiao
 
         mock_data = ResultadoRegiao(
             uf="BR",
@@ -182,7 +182,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_listar_municipios_eleitorais_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import MunicipioEleitoral
+        from mcp_russia.data.tse.schemas import MunicipioEleitoral
 
         mock_data = [
             MunicipioEleitoral(
@@ -208,7 +208,7 @@ class TestToolExecution:
 
     @pytest.mark.asyncio
     async def test_resultado_por_municipio_e2e(self) -> None:
-        from mcp_brasil.data.tse.schemas import ResultadoCDN, ResultadoRegiao
+        from mcp_russia.data.tse.schemas import ResultadoCDN, ResultadoRegiao
 
         mock_data = ResultadoRegiao(
             codigo="71072",

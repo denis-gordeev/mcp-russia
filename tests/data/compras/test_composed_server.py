@@ -6,7 +6,7 @@ Verifies that sub-servers are mounted with correct namespacing.
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.compras.server import mcp
+from mcp_russia.data.compras.server import mcp
 
 
 class TestComposedServer:

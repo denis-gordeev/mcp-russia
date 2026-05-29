@@ -5,12 +5,12 @@ from __future__ import annotations
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.anuncios_eleitorais.prompts import (
+from mcp_russia.data.anuncios_eleitorais.prompts import (
     analise_candidato,
     comparar_candidatos,
     panorama_eleitoral,
 )
-from mcp_brasil.data.anuncios_eleitorais.server import mcp
+from mcp_russia.data.anuncios_eleitorais.server import mcp
 
 
 class TestAnaliseCandidato:

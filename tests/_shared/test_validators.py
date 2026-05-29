@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil._shared.validators import (
+from mcp_russia._shared.validators import (
     format_cep,
     format_cnpj,
     format_cpf,

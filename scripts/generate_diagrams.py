@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate architecture diagrams for mcp-brasil documentation.
+"""Generate architecture diagrams for mcp-russia documentation.
 
 Produces 4 PNG diagrams in docs/concepts/img/:
   - system_overview.png
@@ -33,7 +33,7 @@ EDGE_ATTR = {"fontsize": "10"}
 def system_overview() -> None:
     """Diagram 1: High-level system architecture."""
     with Diagram(
-        "mcp-brasil — System Overview",
+        "mcp-russia — System Overview",
         filename=str(OUTPUT_DIR / "system_overview"),
         direction="TB",
         show=False,
@@ -43,7 +43,7 @@ def system_overview() -> None:
     ):
         client = Client("MCP Client\n(Claude, GPT, ...)")
 
-        with Cluster("mcp-brasil Root Server"):
+        with Cluster("mcp-russia Root Server"):
             root = FastAPI("FastMCP\nserver.py")
             registry = Python("FeatureRegistry")
             meta = Python("Meta-Tools\n(listar, recomendar,\nplanejar, lote)")
@@ -187,7 +187,7 @@ def data_flow() -> None:
         mcp_client = Client("MCP Client")
         bm25 = Python("BM25 Filter\n(top-10 tools)")
 
-        with Cluster("mcp-brasil"):
+        with Cluster("mcp-russia"):
             tools = Python("tools.py\norquestra")
             client = Python("client.py\nhttpx async")
             rate = Python("Rate Limiter\nsliding window")

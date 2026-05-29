@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.transferegov import client
-from mcp_brasil.data.transferegov.constants import PLANO_ACAO_URL
+from mcp_russia.data.transferegov import client
+from mcp_russia.data.transferegov.constants import PLANO_ACAO_URL
 
 _SAMPLE_EMENDA = {
     "id_plano_acao": 3221,

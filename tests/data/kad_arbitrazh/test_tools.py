@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.kad_arbitrazh import tools as kad_tools
+from mcp_russia.data.kad_arbitrazh import tools as kad_tools
 
 
 def _mock_ctx():
@@ -24,9 +24,7 @@ async def test_poisk_del():
 async def test_poisk_del_with_filters():
     """Проверка poisk_del с фильтрами."""
     ctx = _mock_ctx()
-    result = await kad_tools.poisk_del(
-        nomer="А40-12345/2024", istorcz="ООО Ромашка", ctx=ctx
-    )
+    result = await kad_tools.poisk_del(nomer="А40-12345/2024", istorcz="ООО Ромашка", ctx=ctx)
     assert "А40-12345/2024" in result
     assert "Ромашка" in result
 

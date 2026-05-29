@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.gosduma import tools as gosduma_tools
+from mcp_russia.data.gosduma import tools as gosduma_tools
 
 
 def _mock_ctx():

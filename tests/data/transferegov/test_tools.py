@@ -7,11 +7,11 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.transferegov import tools
-from mcp_brasil.data.transferegov.constants import DEFAULT_PAGE_SIZE
-from mcp_brasil.data.transferegov.schemas import TransferenciaEspecial
+from mcp_russia.data.transferegov import tools
+from mcp_russia.data.transferegov.constants import DEFAULT_PAGE_SIZE
+from mcp_russia.data.transferegov.schemas import TransferenciaEspecial
 
-MODULE = "mcp_brasil.data.transferegov.client"
+MODULE = "mcp_russia.data.transferegov.client"
 
 
 def _make_emenda(**kwargs: object) -> TransferenciaEspecial:

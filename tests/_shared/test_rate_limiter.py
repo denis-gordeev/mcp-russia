@@ -7,7 +7,7 @@ import time
 
 import pytest
 
-from mcp_brasil._shared.rate_limiter import RateLimiter
+from mcp_russia._shared.rate_limiter import RateLimiter
 
 
 class TestRateLimiter:

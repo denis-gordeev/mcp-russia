@@ -12,8 +12,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastmcp import Client, FastMCP
 
-from mcp_brasil._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
-from mcp_brasil._shared.planner import PlanZaprosa, splanirovat_zapros_impl
+from mcp_russia._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
+from mcp_russia._shared.planner import PlanZaprosa, splanirovat_zapros_impl
 
 
 class TestRekomendovatInstrumenty:
@@ -28,7 +28,7 @@ class TestRekomendovatInstrumenty:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", ""),
+            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", ""),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
@@ -49,7 +49,7 @@ class TestRekomendovatInstrumenty:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "rosstat_poluchit_indikator" in result
@@ -64,7 +64,7 @@ class TestRekomendovatInstrumenty:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "Ошибка" in result
@@ -73,7 +73,7 @@ class TestRekomendovatInstrumenty:
 
 class TestBuildCatalog:
     def setup_method(self) -> None:
-        import mcp_brasil._shared.discovery as disc
+        import mcp_russia._shared.discovery as disc
 
         disc._catalog_cache = ""
 
@@ -84,7 +84,7 @@ class TestBuildCatalog:
         assert result == ""
 
     def test_build_catalog_caches_result(self) -> None:
-        import mcp_brasil._shared.discovery as disc
+        import mcp_russia._shared.discovery as disc
 
         mock_registry = MagicMock()
         mock_registry.features = {}
@@ -199,7 +199,7 @@ class TestBM25SearchTransform:
 class TestToolSearchConfig:
     @pytest.mark.asyncio
     async def test_none_mode_shows_all_tools(self) -> None:
-        from mcp_brasil.server import mcp as root_mcp
+        from mcp_russia.server import mcp as root_mcp
 
         async with Client(root_mcp) as c:
             tools = await c.list_tools()
@@ -291,7 +291,7 @@ class TestSplanirovatZapros:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", ""),
+            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", ""),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
@@ -312,7 +312,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы депутата X", "catalog")
             assert "## План запроса" in result
@@ -337,7 +337,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog")
             assert "Не удалось построить структурированный план." in result
@@ -352,7 +352,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_brasil._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog")
             assert "Ошибка" in result

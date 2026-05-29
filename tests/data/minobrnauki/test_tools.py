@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock
 
-from mcp_brasil.data.minobrnauki import tools as minobrnauki_tools
+from mcp_russia.data.minobrnauki import tools as minobrnauki_tools
 
 
 def _mock_ctx():

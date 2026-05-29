@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.tabua_mares.schemas import (
+from mcp_russia.data.tabua_mares.schemas import (
     DiaMare,
     GeoLocalizacao,
     HoraMare,
@@ -15,7 +15,7 @@ from mcp_brasil.data.tabua_mares.schemas import (
     PortoResumo,
     TabuaMare,
 )
-from mcp_brasil.data.tabua_mares.tools import (
+from mcp_russia.data.tabua_mares.tools import (
     buscar_portos,
     consultar_tabua_mare,
     listar_estados_costeiros,
@@ -25,7 +25,7 @@ from mcp_brasil.data.tabua_mares.tools import (
     tabua_mare_por_geolocalizacao,
 )
 
-MODULE = "mcp_brasil.data.tabua_mares.client"
+MODULE = "mcp_russia.data.tabua_mares.client"
 
 
 @pytest.fixture()

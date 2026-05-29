@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.saude import client
-from mcp_brasil.data.saude.constants import (
+from mcp_russia.data.saude import client
+from mcp_russia.data.saude.constants import (
     ESTABELECIMENTOS_URL,
     LEITOS_URL,
     PROFISSIONAIS_URL,

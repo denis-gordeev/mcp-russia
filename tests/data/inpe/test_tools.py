@@ -8,15 +8,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.inpe import tools
-from mcp_brasil.data.inpe.schemas import (
+from mcp_russia.data.inpe import tools
+from mcp_russia.data.inpe.schemas import (
     AlertaDeter,
     DadosProdes,
     FocoQueimada,
     Satelite,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.inpe.client"
+CLIENT_MODULE = "mcp_russia.data.inpe.client"
 
 
 def _mock_ctx() -> MagicMock:

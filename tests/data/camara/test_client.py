@@ -6,8 +6,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.camara import client
-from mcp_brasil.data.camara.constants import (
+from mcp_russia.data.camara import client
+from mcp_russia.data.camara.constants import (
     DEPUTADOS_URL,
     EVENTOS_URL,
     FRENTES_URL,
@@ -94,7 +94,7 @@ class TestListarDeputados:
         respx.get(DEPUTADOS_URL).mock(
             return_value=httpx.Response(200, json={"dados": "invalid", "links": []})
         )
-        with caplog.at_level(logging.WARNING, logger="mcp_brasil.data.camara.client"):
+        with caplog.at_level(logging.WARNING, logger="mcp_russia.data.camara.client"):
             result = await client.listar_deputados()
         assert result == []
         assert "Resposta inesperada" in caplog.text

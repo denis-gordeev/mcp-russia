@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from mcp_brasil.data.tabua_mares.prompts import analise_navegacao, consulta_mares
+from mcp_russia.data.tabua_mares.prompts import analise_navegacao, consulta_mares
 
 
 def test_consulta_mares_returns_instructions() -> None:

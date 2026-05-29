@@ -4,7 +4,7 @@ import time
 
 import pytest
 
-from mcp_brasil._shared.cache import TTLCache, ttl_cache
+from mcp_russia._shared.cache import TTLCache, ttl_cache
 
 
 class TestTTLCache:

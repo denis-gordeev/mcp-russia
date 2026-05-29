@@ -3,7 +3,7 @@
 import os
 from unittest.mock import patch
 
-from mcp_brasil import settings
+from mcp_russia import settings
 
 
 class TestSettings:

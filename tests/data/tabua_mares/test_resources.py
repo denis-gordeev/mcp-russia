@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 
-from mcp_brasil.data.tabua_mares.resources import estados_costeiros
+from mcp_russia.data.tabua_mares.resources import estados_costeiros
 
 
 def test_estados_costeiros_returns_valid_json() -> None:

@@ -1,6 +1,6 @@
 """Тесты инструментов модуля Роскомнадзора."""
 
-from mcp_brasil.data.roskomnadzor import tools as rkn_tools
+from mcp_russia.data.roskomnadzor import tools as rkn_tools
 
 
 def test_spisok_napravleniy():

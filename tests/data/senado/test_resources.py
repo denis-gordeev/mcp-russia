@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from mcp_brasil.data.senado.resources import comissoes_permanentes, info_api, tipos_materia
+from mcp_russia.data.senado.resources import comissoes_permanentes, info_api, tipos_materia
 
 
 class TestTiposMateria:
@@ -72,7 +72,7 @@ class TestResourcesIntegration:
     async def test_resources_accessible_via_client(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.senado.server import mcp
+        from mcp_russia.data.senado.server import mcp
 
         async with Client(mcp) as c:
             resources = await c.list_resources()
@@ -85,7 +85,7 @@ class TestResourcesIntegration:
     async def test_read_tipos_materia_resource(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.senado.server import mcp
+        from mcp_russia.data.senado.server import mcp
 
         async with Client(mcp) as c:
             contents = await c.read_resource("data://tipos-materia")

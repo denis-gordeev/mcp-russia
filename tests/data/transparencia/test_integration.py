@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.transparencia.schemas import ContratoFornecedor, Sancao, Servidor
-from mcp_brasil.data.transparencia.server import mcp
+from mcp_russia.data.transparencia.schemas import ContratoFornecedor, Sancao, Servidor
+from mcp_russia.data.transparencia.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.transparencia.client"
+CLIENT_MODULE = "mcp_russia.data.transparencia.client"
 
 
 @pytest.fixture(autouse=True)

@@ -1,6 +1,6 @@
 """Тесты вспомогательных функций форматирования."""
 
-from mcp_brasil._shared.formatting import (
+from mcp_russia._shared.formatting import (
     format_brl,
     format_number_br,
     format_number_ru,

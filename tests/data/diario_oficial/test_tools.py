@@ -8,8 +8,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.diario_oficial import tools
-from mcp_brasil.data.diario_oficial.schemas import (
+from mcp_russia.data.diario_oficial import tools
+from mcp_russia.data.diario_oficial.schemas import (
     CidadeQueridoDiario,
     DiarioOficial,
     DiarioResultado,
@@ -17,7 +17,7 @@ from mcp_brasil.data.diario_oficial.schemas import (
     ExcertoResultado,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.diario_oficial.client"
+CLIENT_MODULE = "mcp_russia.data.diario_oficial.client"
 
 
 def _mock_ctx() -> MagicMock:

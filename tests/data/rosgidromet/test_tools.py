@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.rosgidromet import tools as rosgidromet_tools
+from mcp_russia.data.rosgidromet import tools as rosgidromet_tools
 
 
 def _mock_ctx():

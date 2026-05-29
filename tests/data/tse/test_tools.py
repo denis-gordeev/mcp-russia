@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.tse import tools
-from mcp_brasil.data.tse.schemas import (
+from mcp_russia.data.tse import tools
+from mcp_russia.data.tse.schemas import (
     Candidato,
     CandidatoResumo,
     Cargo,
@@ -20,7 +20,7 @@ from mcp_brasil.data.tse.schemas import (
     ResultadoRegiao,
 )
 
-MODULE = "mcp_brasil.data.tse.client"
+MODULE = "mcp_russia.data.tse.client"
 
 
 class TestAnosEleitorais:

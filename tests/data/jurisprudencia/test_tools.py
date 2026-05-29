@@ -7,10 +7,10 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.jurisprudencia import tools
-from mcp_brasil.data.jurisprudencia.schemas import Jurisprudencia, RepercussaoGeral, Sumula
+from mcp_russia.data.jurisprudencia import tools
+from mcp_russia.data.jurisprudencia.schemas import Jurisprudencia, RepercussaoGeral, Sumula
 
-MODULE = "mcp_brasil.data.jurisprudencia.client"
+MODULE = "mcp_russia.data.jurisprudencia.client"
 
 
 class TestBuscarJurisprudenciaSTF:

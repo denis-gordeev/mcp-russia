@@ -4,8 +4,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tce_sc import client
-from mcp_brasil.data.tce_sc.constants import MUNICIPIOS_URL, UNIDADES_GESTORAS_URL
+from mcp_russia.data.tce_sc import client
+from mcp_russia.data.tce_sc.constants import MUNICIPIOS_URL, UNIDADES_GESTORAS_URL
 
 
 class TestListarMunicipios:

@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.compras.pncp import client
-from mcp_brasil.data.compras.pncp.constants import (
+from mcp_russia.data.compras.pncp import client
+from mcp_russia.data.compras.pncp.constants import (
     ATAS_URL,
     CONTRATACOES_URL,
     CONTRATOS_URL,

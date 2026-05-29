@@ -4,8 +4,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.tce_pe import tools
-from mcp_brasil.data.tce_pe.schemas import (
+from mcp_russia.data.tce_pe import tools
+from mcp_russia.data.tce_pe.schemas import (
     Contrato,
     Despesa,
     Fornecedor,
@@ -13,7 +13,7 @@ from mcp_brasil.data.tce_pe.schemas import (
     UnidadeJurisdicionada,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.tce_pe.client"
+CLIENT_MODULE = "mcp_russia.data.tce_pe.client"
 
 
 def _mock_ctx() -> MagicMock:

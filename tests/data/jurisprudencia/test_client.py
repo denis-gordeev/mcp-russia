@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.jurisprudencia import client
-from mcp_brasil.data.jurisprudencia.constants import STF_API_BASE, STJ_API_BASE, TST_API_BASE
+from mcp_russia.data.jurisprudencia import client
+from mcp_russia.data.jurisprudencia.constants import STF_API_BASE, STJ_API_BASE, TST_API_BASE
 
 
 class TestBuscarSTF:

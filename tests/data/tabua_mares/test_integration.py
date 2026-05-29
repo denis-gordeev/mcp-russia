@@ -7,7 +7,7 @@ import json
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.tabua_mares.server import mcp
+from mcp_russia.data.tabua_mares.server import mcp
 
 
 @pytest.fixture()

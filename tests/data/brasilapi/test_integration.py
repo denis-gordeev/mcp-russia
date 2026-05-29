@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.brasilapi.schemas import (
+from mcp_russia.data.brasilapi.schemas import (
     Banco,
     DddInfo,
     Endereco,
@@ -17,9 +17,9 @@ from mcp_brasil.data.brasilapi.schemas import (
     RegistroBrDominio,
     TaxaOficial,
 )
-from mcp_brasil.data.brasilapi.server import mcp
+from mcp_russia.data.brasilapi.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.brasilapi.client"
+CLIENT_MODULE = "mcp_russia.data.brasilapi.client"
 
 
 class TestToolsRegistered:

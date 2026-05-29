@@ -6,8 +6,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.bacen import client
-from mcp_brasil.data.bacen.constants import BCB_API_BASE
+from mcp_russia.data.bacen import client
+from mcp_russia.data.bacen.constants import BCB_API_BASE
 
 # ---------------------------------------------------------------------------
 # _format_date
@@ -198,7 +198,7 @@ class TestBuscarIndicadoresAtuais:
             url = f"{BCB_API_BASE}.{ind['codigo']}/dados/ultimos/1"
             respx.get(url).mock(return_value=httpx.Response(500, text="Error"))
 
-        with patch("mcp_brasil._shared.http_client.asyncio.sleep"):
+        with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             result = await client.buscar_indicadores_atuais()
         assert len(result) == 5
         assert all("erro" in r for r in result)
@@ -223,7 +223,7 @@ class TestBuscarExpectativasFocus:
     @pytest.mark.asyncio
     @respx.mock
     async def test_returns_parsed_expectations(self) -> None:
-        from mcp_brasil.data.bacen.constants import FOCUS_ENDPOINT
+        from mcp_russia.data.bacen.constants import FOCUS_ENDPOINT
 
         respx.get(FOCUS_ENDPOINT).mock(
             return_value=httpx.Response(
@@ -268,7 +268,7 @@ class TestBuscarExpectativasFocus:
     @pytest.mark.asyncio
     @respx.mock
     async def test_with_data_inicio(self) -> None:
-        from mcp_brasil.data.bacen.constants import FOCUS_ENDPOINT
+        from mcp_russia.data.bacen.constants import FOCUS_ENDPOINT
 
         route = respx.get(FOCUS_ENDPOINT).mock(
             return_value=httpx.Response(200, json={"value": []})
@@ -287,7 +287,7 @@ class TestBuscarExpectativasFocus:
     @pytest.mark.asyncio
     @respx.mock
     async def test_non_list_value_returns_empty(self) -> None:
-        from mcp_brasil.data.bacen.constants import FOCUS_ENDPOINT
+        from mcp_russia.data.bacen.constants import FOCUS_ENDPOINT
 
         respx.get(FOCUS_ENDPOINT).mock(
             return_value=httpx.Response(200, json={"value": "not a list"})

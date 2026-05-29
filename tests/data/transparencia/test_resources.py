@@ -4,7 +4,7 @@ import json
 
 import pytest
 
-from mcp_brasil.data.transparencia.resources import bases_sancoes, endpoints_disponiveis, info_api
+from mcp_russia.data.transparencia.resources import bases_sancoes, endpoints_disponiveis, info_api
 
 
 class TestEndpointsDisponiveis:
@@ -76,7 +76,7 @@ class TestResourcesIntegration:
     async def test_resources_accessible_via_client(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.transparencia.server import mcp
+        from mcp_russia.data.transparencia.server import mcp
 
         async with Client(mcp) as c:
             resources = await c.list_resources()
@@ -89,7 +89,7 @@ class TestResourcesIntegration:
     async def test_read_endpoints_resource(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.transparencia.server import mcp
+        from mcp_russia.data.transparencia.server import mcp
 
         async with Client(mcp) as c:
             contents = await c.read_resource("data://endpoints")

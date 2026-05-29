@@ -7,8 +7,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.senado import client
-from mcp_brasil.data.senado.constants import (
+from mcp_russia.data.senado import client
+from mcp_russia.data.senado.constants import (
     BLOCOS_URL,
     COMISSAO_URL,
     COMISSOES_URL,

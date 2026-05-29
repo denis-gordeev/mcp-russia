@@ -7,9 +7,9 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.camara import tools
-from mcp_brasil.data.camara.constants import DEFAULT_PAGE_SIZE
-from mcp_brasil.data.camara.schemas import (
+from mcp_russia.data.camara import tools
+from mcp_russia.data.camara.constants import DEFAULT_PAGE_SIZE
+from mcp_russia.data.camara.schemas import (
     Deputado,
     DespesaDeputado,
     Evento,
@@ -21,7 +21,7 @@ from mcp_brasil.data.camara.schemas import (
     VotoNominal,
 )
 
-MODULE = "mcp_brasil.data.camara.client"
+MODULE = "mcp_russia.data.camara.client"
 
 
 # ---------------------------------------------------------------------------

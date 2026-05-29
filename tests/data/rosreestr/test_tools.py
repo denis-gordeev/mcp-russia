@@ -1,6 +1,6 @@
 """Тесты инструментов модуля Росреестра."""
 
-from mcp_brasil.data.rosreestr import tools as rre_tools
+from mcp_russia.data.rosreestr import tools as rre_tools
 
 
 def test_spisok_tipov_nedvizhimosti():

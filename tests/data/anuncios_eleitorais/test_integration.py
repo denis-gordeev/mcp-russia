@@ -8,12 +8,12 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.anuncios_eleitorais.schemas import (
+from mcp_russia.data.anuncios_eleitorais.schemas import (
     AnuncioEleitoral,
     FaixaValor,
     RespostaAnuncios,
 )
-from mcp_brasil.data.anuncios_eleitorais.server import mcp
+from mcp_russia.data.anuncios_eleitorais.server import mcp
 
 
 def _mock_response() -> RespostaAnuncios:
@@ -72,7 +72,7 @@ class TestToolExecution:
     @pytest.mark.asyncio
     async def test_buscar_anuncios_eleitorais(self) -> None:
         with patch(
-            "mcp_brasil.data.anuncios_eleitorais.client.buscar_anuncios",
+            "mcp_russia.data.anuncios_eleitorais.client.buscar_anuncios",
             new_callable=AsyncMock,
             return_value=_mock_response(),
         ):
@@ -87,7 +87,7 @@ class TestToolExecution:
     @pytest.mark.asyncio
     async def test_buscar_anuncios_por_pagina(self) -> None:
         with patch(
-            "mcp_brasil.data.anuncios_eleitorais.client.buscar_anuncios",
+            "mcp_russia.data.anuncios_eleitorais.client.buscar_anuncios",
             new_callable=AsyncMock,
             return_value=_mock_response(),
         ):
@@ -102,7 +102,7 @@ class TestToolExecution:
     @pytest.mark.asyncio
     async def test_buscar_anuncios_frase_exata(self) -> None:
         with patch(
-            "mcp_brasil.data.anuncios_eleitorais.client.buscar_anuncios",
+            "mcp_russia.data.anuncios_eleitorais.client.buscar_anuncios",
             new_callable=AsyncMock,
             return_value=_mock_response(),
         ):

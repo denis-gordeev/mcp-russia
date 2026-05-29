@@ -7,8 +7,8 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.senado import tools
-from mcp_brasil.data.senado.schemas import (
+from mcp_russia.data.senado import tools
+from mcp_russia.data.senado.schemas import (
     BlocoParlamentar,
     ComissaoDetalhe,
     ComissaoResumo,
@@ -28,7 +28,7 @@ from mcp_brasil.data.senado.schemas import (
     VotacaoResumo,
 )
 
-MODULE = "mcp_brasil.data.senado.client"
+MODULE = "mcp_russia.data.senado.client"
 
 
 # ---------------------------------------------------------------------------

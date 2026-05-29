@@ -7,7 +7,7 @@ MCP_BRASIL_TOOL_SEARCH=none is set in conftest.py (before any import).
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.server import mcp
+from mcp_russia.server import mcp
 
 
 class TestRootServerTools:

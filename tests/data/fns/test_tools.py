@@ -1,6 +1,6 @@
 """Тесты инструментов модуля ФНС."""
 
-from mcp_brasil.data.fns import tools as fns_tools
+from mcp_russia.data.fns import tools as fns_tools
 
 
 def test_spisok_nalogovyh_rezhimov():

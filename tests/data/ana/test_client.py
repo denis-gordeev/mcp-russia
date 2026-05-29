@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.ana import client
-from mcp_brasil.data.ana.constants import ESTACOES_URL, RESERVATORIOS_URL, TELEMETRIA_URL
+from mcp_russia.data.ana import client
+from mcp_russia.data.ana.constants import ESTACOES_URL, RESERVATORIOS_URL, TELEMETRIA_URL
 
 # ---------------------------------------------------------------------------
 # buscar_estacoes

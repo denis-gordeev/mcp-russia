@@ -6,14 +6,14 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from mcp_brasil.data.anuncios_eleitorais.schemas import (
+from mcp_russia.data.anuncios_eleitorais.schemas import (
     AnuncioEleitoral,
     DistribuicaoDemografica,
     DistribuicaoRegional,
     FaixaValor,
     RespostaAnuncios,
 )
-from mcp_brasil.data.anuncios_eleitorais.tools import (
+from mcp_russia.data.anuncios_eleitorais.tools import (
     analisar_demografia_anuncios,
     buscar_anuncios_eleitorais,
     buscar_anuncios_frase_exata,
@@ -58,7 +58,7 @@ def mock_ctx() -> AsyncMock:
     return ctx
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_eleitorais(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test buscar_anuncios_eleitorais formats results correctly."""
@@ -74,7 +74,7 @@ async def test_buscar_anuncios_eleitorais(mock_client: AsyncMock, mock_ctx: Asyn
     mock_client.buscar_anuncios.assert_called_once()
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_eleitorais_vazio(
     mock_client: AsyncMock, mock_ctx: AsyncMock
@@ -87,7 +87,7 @@ async def test_buscar_anuncios_eleitorais_vazio(
     assert "Nenhum anúncio encontrado" in result
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_por_pagina(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test search by page IDs."""
@@ -101,7 +101,7 @@ async def test_buscar_anuncios_por_pagina(mock_client: AsyncMock, mock_ctx: Asyn
     assert call_kwargs["search_page_ids"] == ["444555666"]
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_por_financiador(
     mock_client: AsyncMock, mock_ctx: AsyncMock
@@ -116,7 +116,7 @@ async def test_buscar_anuncios_por_financiador(
     assert call_kwargs["bylines"] == ["Partido Teste"]
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_por_regiao(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test search by region with post-filtering."""
@@ -143,7 +143,7 @@ async def test_buscar_anuncios_por_regiao(mock_client: AsyncMock, mock_ctx: Asyn
     assert call_kwargs["search_terms"] == "São Paulo"
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_frase_exata(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test exact phrase search."""
@@ -156,7 +156,7 @@ async def test_buscar_anuncios_frase_exata(mock_client: AsyncMock, mock_ctx: Asy
     assert call_kwargs["search_type"] == "KEYWORD_EXACT_PHRASE"
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_analisar_demografia_anuncios(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test demographic analysis."""
@@ -181,7 +181,7 @@ async def test_analisar_demografia_anuncios(mock_client: AsyncMock, mock_ctx: As
     assert "25-34" in result
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_analisar_demografia_sem_dados(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test demographic analysis with no demographic data."""
@@ -193,7 +193,7 @@ async def test_analisar_demografia_sem_dados(mock_client: AsyncMock, mock_ctx: A
     assert "não disponíveis" in result
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_formatar_anuncio_sem_stop_time(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test formatting an ad without stop time (still running)."""
@@ -205,7 +205,7 @@ async def test_formatar_anuncio_sem_stop_time(mock_client: AsyncMock, mock_ctx: 
     assert "em veiculação" in result
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_formatar_anuncio_texto_longo(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test formatting an ad with long text (should truncate)."""
@@ -220,7 +220,7 @@ async def test_formatar_anuncio_texto_longo(mock_client: AsyncMock, mock_ctx: As
     assert "A" * 300 in result
 
 
-@patch("mcp_brasil.data.anuncios_eleitorais.tools.client")
+@patch("mcp_russia.data.anuncios_eleitorais.tools.client")
 @pytest.mark.asyncio
 async def test_buscar_anuncios_com_filtros(mock_client: AsyncMock, mock_ctx: AsyncMock) -> None:
     """Test that tool passes filters to client correctly."""

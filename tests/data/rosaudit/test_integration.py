@@ -3,7 +3,7 @@
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.rosaudit.server import mcp
+from mcp_russia.data.rosaudit.server import mcp
 
 
 @pytest.fixture
@@ -26,9 +26,7 @@ async def test_has_tools(client):
         "ispolnenie_byudzheta",
         "poisk_narusheniy",
     }
-    assert expected.issubset(tool_names), (
-        f"Отсутствуют инструменты: {expected - tool_names}"
-    )
+    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
 
 async def test_has_resources(client):
@@ -52,9 +50,7 @@ async def test_has_prompts(client):
     prompt_names = {p.name for p in prompts}
 
     expected = {"analiz_auditorskogo_zaklyucheniya", "obzor_ispolneniya_byudzheta"}
-    assert expected.issubset(prompt_names), (
-        f"Отсутствуют промпты: {expected - prompt_names}"
-    )
+    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
 
 
 async def test_spisok_napravleniy(client):

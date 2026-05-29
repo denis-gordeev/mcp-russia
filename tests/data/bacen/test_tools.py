@@ -8,12 +8,12 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.bacen import tools
-from mcp_brasil.data.bacen.catalog import SerieBCB
-from mcp_brasil.data.bacen.schemas import SerieMetadados, SerieValor
+from mcp_russia.data.bacen import tools
+from mcp_russia.data.bacen.catalog import SerieBCB
+from mcp_russia.data.bacen.schemas import SerieMetadados, SerieValor
 
-CLIENT_MODULE = "mcp_brasil.data.bacen.client"
-CATALOG_MODULE = "mcp_brasil.data.bacen.tools"
+CLIENT_MODULE = "mcp_russia.data.bacen.client"
+CATALOG_MODULE = "mcp_russia.data.bacen.tools"
 
 
 def _mock_ctx() -> MagicMock:
@@ -112,7 +112,7 @@ class TestMetadadosSerie:
 
     @pytest.mark.asyncio
     async def test_fallback_to_catalog(self) -> None:
-        from mcp_brasil.exceptions import HttpClientError
+        from mcp_russia.exceptions import HttpClientError
 
         ctx = _mock_ctx()
         with (
@@ -129,7 +129,7 @@ class TestMetadadosSerie:
 
     @pytest.mark.asyncio
     async def test_not_found(self) -> None:
-        from mcp_brasil.exceptions import HttpClientError
+        from mcp_russia.exceptions import HttpClientError
 
         ctx = _mock_ctx()
         with (
@@ -359,7 +359,7 @@ class TestCalculateVariation:
 class TestExpectativasFocus:
     @pytest.mark.asyncio
     async def test_formats_results(self) -> None:
-        from mcp_brasil.data.bacen.schemas import ExpectativaFocus
+        from mcp_russia.data.bacen.schemas import ExpectativaFocus
 
         expectativas = [
             ExpectativaFocus(

@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.zakupki import tools as zakupki_tools
+from mcp_russia.data.zakupki import tools as zakupki_tools
 
 
 def _mock_ctx():

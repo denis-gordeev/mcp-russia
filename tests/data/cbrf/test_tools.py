@@ -2,8 +2,8 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.cbrf import tools as cbrf_tools
-from mcp_brasil.data.cbrf.schemas import ZnachenieValyuty
+from mcp_russia.data.cbrf import tools as cbrf_tools
+from mcp_russia.data.cbrf.schemas import ZnachenieValyuty
 
 
 def _mock_ctx():

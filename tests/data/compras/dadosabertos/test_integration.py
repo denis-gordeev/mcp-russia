@@ -5,13 +5,13 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.compras.dadosabertos.schemas import (
+from mcp_russia.data.compras.dadosabertos.schemas import (
     Licitacao,
     LicitacaoResultado,
 )
-from mcp_brasil.data.compras.dadosabertos.server import mcp
+from mcp_russia.data.compras.dadosabertos.server import mcp
 
-CLIENT_MODULE = "mcp_brasil.data.compras.dadosabertos.client"
+CLIENT_MODULE = "mcp_russia.data.compras.dadosabertos.client"
 
 
 class TestToolsRegistered:

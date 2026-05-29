@@ -8,8 +8,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.compras.pncp import tools
-from mcp_brasil.data.compras.pncp.schemas import (
+from mcp_russia.data.compras.pncp import tools
+from mcp_russia.data.compras.pncp.schemas import (
     AtaRegistroPreco,
     AtaResultado,
     Contratacao,
@@ -22,7 +22,7 @@ from mcp_brasil.data.compras.pncp.schemas import (
     OrgaoResultado,
 )
 
-CLIENT_MODULE = "mcp_brasil.data.compras.pncp.client"
+CLIENT_MODULE = "mcp_russia.data.compras.pncp.client"
 
 # Common test dates
 DATE_INI = "20240101"

@@ -2,7 +2,7 @@
 
 import pytest
 
-from mcp_brasil.data.ibge.prompts import comparativo_regional, resumo_estado
+from mcp_russia.data.ibge.prompts import comparativo_regional, resumo_estado
 
 
 class TestResumoEstado:
@@ -41,7 +41,7 @@ class TestPromptsIntegration:
     async def test_prompts_registered(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.ibge.server import mcp
+        from mcp_russia.data.ibge.server import mcp
 
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
@@ -53,7 +53,7 @@ class TestPromptsIntegration:
     async def test_get_resumo_estado_prompt(self) -> None:
         from fastmcp import Client
 
-        from mcp_brasil.data.ibge.server import mcp
+        from mcp_russia.data.ibge.server import mcp
 
         async with Client(mcp) as c:
             result = await c.get_prompt("resumo_estado", {"uf": "BA"})

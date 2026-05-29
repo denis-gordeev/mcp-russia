@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.publikatsii import tools as publikatsii_tools
+from mcp_russia.data.publikatsii import tools as publikatsii_tools
 
 
 def _mock_ctx():

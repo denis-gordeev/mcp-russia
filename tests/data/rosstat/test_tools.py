@@ -2,8 +2,8 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.rosstat import tools as rosstat_tools
-from mcp_brasil.data.rosstat.schemas import RegionData
+from mcp_russia.data.rosstat import tools as rosstat_tools
+from mcp_russia.data.rosstat.schemas import RegionData
 
 
 def _mock_ctx():

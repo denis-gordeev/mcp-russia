@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.cekrf import tools as cekrf_tools
+from mcp_russia.data.cekrf import tools as cekrf_tools
 
 
 def _mock_ctx():

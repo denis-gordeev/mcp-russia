@@ -7,12 +7,12 @@ import json
 import pytest
 from fastmcp import Client
 
-from mcp_brasil.data.anuncios_eleitorais.resources import (
+from mcp_russia.data.anuncios_eleitorais.resources import (
     campos_disponiveis,
     estados_brasileiros,
     parametros_busca,
 )
-from mcp_brasil.data.anuncios_eleitorais.server import mcp
+from mcp_russia.data.anuncios_eleitorais.server import mcp
 
 
 class TestEstadosBrasileiros:

@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.datajud import client
-from mcp_brasil.data.datajud.constants import DATAJUD_API_BASE
+from mcp_russia.data.datajud import client
+from mcp_russia.data.datajud.constants import DATAJUD_API_BASE
 
 TJSP_URL = f"{DATAJUD_API_BASE}tjsp/_search"
 

@@ -2,36 +2,51 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-05-29 (восемнадцатый проход — выравнивание `mcp_russia/agenty` в инфраструктуре и базовой документации)
+## Статус раунда 2026-05-29 (девятнадцатый проход — полная миграция пакета mcp_brasil → mcp_russia)
 
 ### Выполнено
 
-- **Подтверждено текущее runtime-состояние**:
-  - корневой сервер реально собирается из `src/mcp_russia/server.py`;
-  - auto-discovery идет по `mcp_russia.data` и `mcp_russia.agenty`;
-  - быстрые проверки корневого namespace зелёные: `tests/test_public_namespace.py`, `tests/test_root_server.py`, `tests/test_discovery.py` (`42 passed`);
-  - `uv run python -m compileall src/mcp_russia tests` проходит успешно.
-- **Исправлена dev-инфраструктура под новое дерево пакетов**:
-  - `Makefile`: `make test-feature` теперь ищет агентные тесты в `tests/agenty/`, а не в несуществующем `tests/agentes/`;
-  - `pyproject.toml`: пути в `ruff` `per-file-ignores` обновлены на `src/mcp_russia/agenty/*` и `tests/agenty/*`.
-- **Актуализирована корневая и базовая developer-документация**:
-  - `README.md`: зафиксировано, что рабочая кодовая база уже живёт в `src/mcp_russia/`, добавлен список уже выполненных шагов и обновлена архитектурная схема;
-  - `CONTRIBUTING.md`: структура проекта, примеры импортов и пути для новых features переведены на `mcp_russia`/`agenty`;
-  - `docs/concepts/architecture.md`: убрано устаревшее описание runtime через `mcp_brasil`, обновлены discovery-path и package tree;
-  - `docs/guide/adding-features.md`: новые features теперь документированы как `src/mcp_russia/data/...` и `src/mcp_russia/agenty/...`;
-  - `docs/guide/development.md`, `docs/reference/configuration.md`: выровнены пути `mcp_russia` и `tests/agenty`.
+- **Полный переименование Python-пакета `mcp_brasil` → `mcp_russia`**:
+  - Директория `src/mcp_brasil/` переименована в `src/mcp_russia/`
+  - Старый тонкий wrapper `src/mcp_russia/` (реэкспорт) удалён — пакет теперь единый
+  - Все 150+ `from mcp_brasil.*` импортов в `src/` заменены на `from mcp_russia.*`
+  - Все 292+ `from mcp_brasil.*` импорта в `tests/` заменены на `from mcp_russia.*`
+  - `pyproject.toml`: `packages = ["src/mcp_russia"]` (удалён `src/mcp_brasil`)
+  - Все пути в `ruff per-file-ignores` обновлены на `src/mcp_russia/*`
+  - `Makefile`: `mypy src/mcp_russia/`
+  - `scripts/generate_diagrams.py`: `mcp-brasil` → `mcp-russia`
+- **Удалены backward-compat fallback на `MCP_BRASIL_*`** из `settings.py`:
+  - `MCP_BRASIL_HTTP_TIMEOUT`, `MCP_BRASIL_HTTP_MAX_RETRIES`, `MCP_BRASIL_HTTP_BACKOFF_BASE`, `MCP_BRASIL_USER_AGENT`, `MCP_BRASIL_TOOL_SEARCH` — все удалены
+  - Единый формат: `MCP_RUSSIA_*`
+- **Удалён `McpBrasilError` alias** из `exceptions.py`:
+  - Единственный базовый класс исключений: `McpRussiaError`
+- **Переименовано `agentes/` → `agenty/`**:
+  - `src/mcp_russia/agentes/` → `src/mcp_russia/agenty/`
+  - `tests/agentes/` → `tests/agenty/`
+  - Все импорты обновлены
+- **Миграция `KandidatResumo` → `KandidatKratko`** в модуле ЦИК РФ:
+  - `schemas.py`: класс переименован
+  - `client.py`: обновлены импорт и type hint
+- **`.env.example` переведён на русский**:
+  - Все комментарии и переменные на русском
+  - Устранены все португальские формулировки и `MCP_BRASIL_*` переменные
+- **Обновлён `rosapi/__init__.py`**: убрана ссылка на «BrasilAPI»
+- **Обновлён `README.md`**: зафиксировано завершение миграции пакета
+- **Прогнаны все проверки**: `pytest` (1896 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
 
 ### Ключевые архитектурные решения
 
-- **`mcp_russia` — уже не только публичный alias, а рабочее дерево проекта**: дальнейшие задачи миграции должны исходить из этого как из источника правды.
-- **`agenty` фиксируется как целевое имя agent-пакета**: и в runtime, и в тестовой структуре, и в базовой документации.
-- **Следующий слой миграции — документационный и содержательный**: после физического переноса пакета основной долг сместился в legacy narrative, changelog, диаграммы и замену источников данных.
+- **Единый Python-пакет `mcp_russia`**: исторический `mcp_brasil` полностью устранён из импортов, конфигурации и переменных окружения
+- **Нет backward-compat fallback**: все `MCP_BRASIL_*` переменные окружения удалены — проект использует только `MCP_RUSSIA_*`
+- **`McpRussiaError` — единственный базовый класс**: `McpBrasilError` больше не существует
+- **`agenty` — целевое имя**: пакет агентов и тестов использует русскую транслитерацию
 
 ### Следующие действия
 
-- **Дочистить оставшиеся docs-артефакты**: `CHANGELOG.md`, `docs/index.md`, `docs/guide/quickstart.md`, вспомогательные сценарии и примеры, где еще фигурируют `mcp-brasil`/`mcp_brasil`.
-- **Обновить скрипты и производные артефакты документации**: в первую очередь `scripts/generate_diagrams.py` и связанные диаграммы, чтобы они отражали `mcp-russia`, а не старый бренд.
-- **Продолжить содержательную миграцию features**: заменить legacy-бразильские narrative и интеграции на российские API, не ограничиваясь переименованием пакетов.
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
+- **Дочистить docs-артефакты**: `CHANGELOG.md`, `docs/index.md`, `docs/guide/quickstart.md`, где ещё фигурируют `mcp-brasil`/`mcp_brasil`
+- **Создание модуля ЕМИСС/Фedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.) — внутрикодовые переменные и имена функций, не являющиеся MCP-инструментами
 
 ## Статус раунда 2026-05-28 (семнадцатый проход — миграция format_brl/parse_brl_number, португальские имена в инфраструктуре)
 

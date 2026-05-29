@@ -6,8 +6,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil._shared.http_client import create_client, http_get
-from mcp_brasil.exceptions import HttpClientError
+from mcp_russia._shared.http_client import create_client, http_get
+from mcp_russia.exceptions import HttpClientError
 
 
 class TestCreateClient:
@@ -76,7 +76,7 @@ class TestHttpGet:
             httpx.Response(500, text="Internal Server Error"),
             httpx.Response(200, json={"recovered": True}),
         ]
-        with patch("mcp_brasil._shared.http_client.asyncio.sleep"):
+        with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             result = await http_get("https://api.example.com/flaky", max_retries=2)
         assert result == {"recovered": True}
 
@@ -89,7 +89,7 @@ class TestHttpGet:
             httpx.Response(429, text="Too Many Requests"),
             httpx.Response(200, json={"ok": True}),
         ]
-        with patch("mcp_brasil._shared.http_client.asyncio.sleep"):
+        with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             result = await http_get("https://api.example.com/limited", max_retries=2)
         assert result == {"ok": True}
 
@@ -101,7 +101,7 @@ class TestHttpGet:
             return_value=httpx.Response(503, text="Service Unavailable")
         )
         with (
-            patch("mcp_brasil._shared.http_client.asyncio.sleep"),
+            patch("mcp_russia._shared.http_client.asyncio.sleep"),
             pytest.raises(HttpClientError, match="failed after"),
         ):
             await http_get("https://api.example.com/down", max_retries=1)
@@ -115,7 +115,7 @@ class TestHttpGet:
             httpx.ReadTimeout("timeout"),
             httpx.Response(200, json={"ok": True}),
         ]
-        with patch("mcp_brasil._shared.http_client.asyncio.sleep"):
+        with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             result = await http_get("https://api.example.com/slow", max_retries=2)
         assert result == {"ok": True}
 

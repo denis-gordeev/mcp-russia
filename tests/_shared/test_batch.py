@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock
 
 import pytest
 
-from mcp_brasil._shared import batch
+from mcp_russia._shared import batch
 
 
 def _mock_ctx() -> MagicMock:
@@ -160,9 +160,9 @@ class TestExecuteBatch:
 
 def _real_registry() -> batch.FeatureRegistry:
     """Build a real registry from the project for integration testing."""
-    from mcp_brasil._shared.feature import FeatureRegistry
+    from mcp_russia._shared.feature import FeatureRegistry
 
     reg = FeatureRegistry()
-    reg.discover("mcp_brasil.data")
-    reg.discover("mcp_brasil.agentes")
+    reg.discover("mcp_russia.data")
+    reg.discover("mcp_russia.agenty")
     return reg

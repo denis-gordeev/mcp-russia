@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.diario_oficial import client
-from mcp_brasil.data.diario_oficial.constants import CITIES_URL, EXCERPTS_URL, GAZETTES_URL
+from mcp_russia.data.diario_oficial import client
+from mcp_russia.data.diario_oficial.constants import CITIES_URL, EXCERPTS_URL, GAZETTES_URL
 
 # ---------------------------------------------------------------------------
 # buscar_diarios

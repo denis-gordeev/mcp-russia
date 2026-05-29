@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_brasil.data.rosaudit import tools as rosaudit_tools
+from mcp_russia.data.rosaudit import tools as rosaudit_tools
 
 
 def _mock_ctx():
@@ -40,7 +40,9 @@ async def test_spisok_subiektov_audita():
 async def test_info_kontrolnogo_meropriyatiya_not_found():
     """Проверка info_kontrolnogo_meropriyatiya при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None):
+    with patch.object(
+        rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None
+    ):
         result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("nonexistent", ctx)
     assert "не найдено" in result
 
@@ -48,7 +50,9 @@ async def test_info_kontrolnogo_meropriyatiya_not_found():
 async def test_info_auditorskogo_zaklyucheniya_not_found():
     """Проверка info_auditorskogo_zaklyucheniya при отсутствии данных."""
     ctx = _mock_ctx()
-    with patch.object(rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None):
+    with patch.object(
+        rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None
+    ):
         result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("nonexistent", ctx)
     assert "не найдено" in result
 

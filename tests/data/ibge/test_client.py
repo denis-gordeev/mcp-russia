@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.ibge import client
-from mcp_brasil.data.ibge.constants import (
+from mcp_russia.data.ibge import client
+from mcp_russia.data.ibge.constants import (
     AGREGADOS_URL,
     CNAE_URL,
     LOCALIDADES_URL,

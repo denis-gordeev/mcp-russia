@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.compras.dadosabertos import client
-from mcp_brasil.data.compras.dadosabertos.constants import (
+from mcp_russia.data.compras.dadosabertos import client
+from mcp_russia.data.compras.dadosabertos.constants import (
     COMPRAS_SEM_LICITACAO_URL,
     CONTRATOS_URL,
     FORNECEDOR_URL,

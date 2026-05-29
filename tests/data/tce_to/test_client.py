@@ -4,8 +4,8 @@ import pytest
 import respx
 from httpx import Response
 
-from mcp_brasil.data.tce_to import client
-from mcp_brasil.data.tce_to.constants import PAUTAS_URL, PESSOAS_URL, PROCESSO_URL
+from mcp_russia.data.tce_to import client
+from mcp_russia.data.tce_to.constants import PAUTAS_URL, PESSOAS_URL, PROCESSO_URL
 
 
 class TestBuscarPessoas:

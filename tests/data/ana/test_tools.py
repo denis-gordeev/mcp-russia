@@ -8,10 +8,10 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from mcp_brasil.data.ana import tools
-from mcp_brasil.data.ana.schemas import DadoTelemetria, Estacao, Reservatorio
+from mcp_russia.data.ana import tools
+from mcp_russia.data.ana.schemas import DadoTelemetria, Estacao, Reservatorio
 
-CLIENT_MODULE = "mcp_brasil.data.ana.client"
+CLIENT_MODULE = "mcp_russia.data.ana.client"
 
 
 def _mock_ctx() -> MagicMock:

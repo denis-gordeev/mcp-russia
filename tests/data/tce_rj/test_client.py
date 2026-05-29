@@ -4,8 +4,8 @@ import httpx
 import pytest
 import respx
 
-from mcp_brasil.data.tce_rj import client
-from mcp_brasil.data.tce_rj.constants import (
+from mcp_russia.data.tce_rj import client
+from mcp_russia.data.tce_rj.constants import (
     COMPRAS_DIRETAS_ESTADO_URL,
     COMPRAS_DIRETAS_MUNICIPIO_URL,
     CONCESSOES_PUBLICAS_URL,
