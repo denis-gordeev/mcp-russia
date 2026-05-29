@@ -136,7 +136,7 @@ TRANSPARENCIA_API_KEY=xxx DATAJUD_API_KEY=yyy \
 
 ### Rate limiting
 
-Отдельные features могут использовать общий `RateLimiter` из `src/mcp_brasil/_shared/rate_limiter.py`:
+Отдельные features могут использовать общий `RateLimiter` из `src/mcp_russia/_shared/rate_limiter.py`:
 
 ```python
 limiter = RateLimiter(max_requests=5, period=1.0)

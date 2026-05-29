@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-from mcp_brasil.server import mcp as legacy_mcp
-from mcp_brasil.server import registry as legacy_registry
 from mcp_russia import __version__
 from mcp_russia.server import mcp, registry
+from mcp_russia.server import mcp as legacy_mcp
+from mcp_russia.server import registry as legacy_registry
 
 
 def test_public_namespace_reexports_root_server() -> None:

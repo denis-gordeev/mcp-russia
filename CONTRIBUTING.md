@@ -14,25 +14,27 @@ make ci         # Запустить lint + mypy + тесты
 ## Структура проекта
 
 ```
-src/mcp_brasil/
+src/mcp_russia/
 ├── server.py           # Корневой сервер (auto-registry, вручную обычно не правится)
+├── settings.py         # Конфигурация через env vars
+├── exceptions.py       # Общие исключения проекта
 ├── _shared/            # Общий код (http_client, formatting, cache, rate_limiter)
 ├── data/               # Features для внешних API
 │   ├── ibge/           # Историческая feature исходного проекта
 │   ├── transparencia/  # Историческая feature исходного проекта
 │   └── {nova_feature}/ # Новая feature данных
-└── agentes/            # Features для агентных сценариев
+└── agenty/             # Features для агентных сценариев
     └── redator/        # Исторический агент официальных документов
 ```
 
-Публичный namespace для запуска и импорта теперь `mcp_russia`, но внутреннее дерево `src/mcp_brasil/` пока сохранено ради совместимости.
+Рабочий namespace для запуска и импорта: `mcp_russia`. Исторические упоминания `mcp_brasil` в документации следует считать техническим долгом, если речь не идет о backward-compatibility заметках.
 
 ## Как добавить новую feature
 
-1. Создайте каталог `src/mcp_brasil/data/{feature}/` (API) или `src/mcp_brasil/agentes/{feature}/` (агенты) с обязательными файлами:
+1. Создайте каталог `src/mcp_russia/data/{feature}/` (API) или `src/mcp_russia/agenty/{feature}/` (агенты) с обязательными файлами:
 
 ```
-src/mcp_brasil/data/{feature}/      # или agentes/{feature}/
+src/mcp_russia/data/{feature}/      # или agenty/{feature}/
 ├── __init__.py     # FEATURE_META (обязательно для auto-discovery)
 ├── server.py       # mcp: FastMCP (обязательно)
 ├── tools.py        # Функции MCP tools
@@ -44,7 +46,7 @@ src/mcp_brasil/data/{feature}/      # или agentes/{feature}/
 2. В `__init__.py` определите `FEATURE_META`:
 
 ```python
-from mcp_brasil._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="minha-feature",
@@ -66,10 +68,10 @@ mcp = FastMCP("mcp-russia-minha-feature")
 mcp.tool(minha_tool)
 ```
 
-4. Добавьте тесты в `tests/data/{feature}/` (или `tests/agentes/{feature}/`):
+4. Добавьте тесты в `tests/data/{feature}/` (или `tests/agenty/{feature}/`):
 
 ```
-tests/data/{feature}/         # или tests/agentes/{feature}/
+tests/data/{feature}/         # или tests/agenty/{feature}/
 ├── test_tools.py             # Mock client, testa lógica
 ├── test_client.py            # respx mock HTTP
 └── test_integration.py       # fastmcp.Client e2e
@@ -148,11 +150,11 @@ make ci                   # lint + types + test
 ```python
 from unittest.mock import AsyncMock, patch
 import pytest
-from mcp_brasil.data.{feature}.tools import buscar_{feature}
+from mcp_russia.data.{feature}.tools import buscar_{feature}
 
 @pytest.mark.asyncio
 async def test_buscar_retorna_formatado():
-    with patch("mcp_brasil.data.{feature}.tools.buscar_exemplo", new_callable=AsyncMock) as mock:
+    with patch("mcp_russia.data.{feature}.tools.buscar_exemplo", new_callable=AsyncMock) as mock:
         mock.return_value = [...]
         resultado = await buscar_{feature}("query")
         assert "ожидаемое" in resultado
@@ -164,7 +166,7 @@ async def test_buscar_retorna_formatado():
 import httpx
 import pytest
 import respx
-from mcp_brasil.data.{feature}.client import buscar_exemplo
+from mcp_russia.data.{feature}.client import buscar_exemplo
 
 @pytest.mark.asyncio
 @respx.mock
@@ -181,7 +183,7 @@ async def test_buscar_sucesso():
 ```python
 import pytest
 from fastmcp import Client
-from mcp_brasil.data.{feature}.server import mcp
+from mcp_russia.data.{feature}.server import mcp
 
 @pytest.mark.asyncio
 async def test_tool_via_mcp_client():

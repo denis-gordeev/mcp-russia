@@ -2,6 +2,37 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-05-29 (восемнадцатый проход — выравнивание `mcp_russia/agenty` в инфраструктуре и базовой документации)
+
+### Выполнено
+
+- **Подтверждено текущее runtime-состояние**:
+  - корневой сервер реально собирается из `src/mcp_russia/server.py`;
+  - auto-discovery идет по `mcp_russia.data` и `mcp_russia.agenty`;
+  - быстрые проверки корневого namespace зелёные: `tests/test_public_namespace.py`, `tests/test_root_server.py`, `tests/test_discovery.py` (`42 passed`);
+  - `uv run python -m compileall src/mcp_russia tests` проходит успешно.
+- **Исправлена dev-инфраструктура под новое дерево пакетов**:
+  - `Makefile`: `make test-feature` теперь ищет агентные тесты в `tests/agenty/`, а не в несуществующем `tests/agentes/`;
+  - `pyproject.toml`: пути в `ruff` `per-file-ignores` обновлены на `src/mcp_russia/agenty/*` и `tests/agenty/*`.
+- **Актуализирована корневая и базовая developer-документация**:
+  - `README.md`: зафиксировано, что рабочая кодовая база уже живёт в `src/mcp_russia/`, добавлен список уже выполненных шагов и обновлена архитектурная схема;
+  - `CONTRIBUTING.md`: структура проекта, примеры импортов и пути для новых features переведены на `mcp_russia`/`agenty`;
+  - `docs/concepts/architecture.md`: убрано устаревшее описание runtime через `mcp_brasil`, обновлены discovery-path и package tree;
+  - `docs/guide/adding-features.md`: новые features теперь документированы как `src/mcp_russia/data/...` и `src/mcp_russia/agenty/...`;
+  - `docs/guide/development.md`, `docs/reference/configuration.md`: выровнены пути `mcp_russia` и `tests/agenty`.
+
+### Ключевые архитектурные решения
+
+- **`mcp_russia` — уже не только публичный alias, а рабочее дерево проекта**: дальнейшие задачи миграции должны исходить из этого как из источника правды.
+- **`agenty` фиксируется как целевое имя agent-пакета**: и в runtime, и в тестовой структуре, и в базовой документации.
+- **Следующий слой миграции — документационный и содержательный**: после физического переноса пакета основной долг сместился в legacy narrative, changelog, диаграммы и замену источников данных.
+
+### Следующие действия
+
+- **Дочистить оставшиеся docs-артефакты**: `CHANGELOG.md`, `docs/index.md`, `docs/guide/quickstart.md`, вспомогательные сценарии и примеры, где еще фигурируют `mcp-brasil`/`mcp_brasil`.
+- **Обновить скрипты и производные артефакты документации**: в первую очередь `scripts/generate_diagrams.py` и связанные диаграммы, чтобы они отражали `mcp-russia`, а не старый бренд.
+- **Продолжить содержательную миграцию features**: заменить legacy-бразильские narrative и интеграции на российские API, не ограничиваясь переименованием пакетов.
+
 ## Статус раунда 2026-05-28 (семнадцатый проход — миграция format_brl/parse_brl_number, португальские имена в инфраструктуре)
 
 ### Выполнено

@@ -1,25 +1,25 @@
 # Добавление feature
 
-Этот гид описывает текущее переходное состояние `mcp-russia`: публичный namespace уже русифицирован, но новые feature пока добавляются в internal-дерево `src/mcp_brasil/`, потому что auto-discovery все еще смотрит туда.
+Этот гид описывает текущее состояние `mcp-russia`: новые feature нужно добавлять напрямую в `src/mcp_russia/`, потому что auto-discovery уже смотрит в актуальный namespace проекта.
 
 ## Где создавать новую feature
 
 Для data-feature используйте:
 
 ```text
-src/mcp_brasil/data/{feature}/
+src/mcp_russia/data/{feature}/
 ```
 
 Для agent-feature используйте:
 
 ```text
-src/mcp_brasil/agentes/{feature}/
+src/mcp_russia/agenty/{feature}/
 ```
 
 Минимальная структура пакета:
 
 ```text
-src/mcp_brasil/data/{feature}/
+src/mcp_russia/data/{feature}/
 ├── __init__.py
 ├── server.py
 ├── tools.py
@@ -33,10 +33,10 @@ src/mcp_brasil/data/{feature}/
 Сейчас root server:
 
 - публикуется как `mcp_russia.server`;
-- автоматически обнаруживает features в `mcp_brasil.data` и `mcp_brasil.agentes`;
+- автоматически обнаруживает features в `mcp_russia.data` и `mcp_russia.agenty`;
 - монтирует их в единый публичный сервер `mcp-russia`.
 
-Поэтому добавление новой feature пока не требует переноса дерева в `mcp_russia`.
+Поэтому новая feature сразу создается в целевом дереве и не требует дополнительного переноса.
 
 ## Шаг 1. Описать constants
 
@@ -78,7 +78,7 @@ class PrimerZapisi(BaseModel):
 - не форматируйте ответ под LLM.
 
 ```python
-from mcp_brasil._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_get
 
 from .constants import EXEMPLO_API_BASE
 from .schemas import PrimerZapisi
@@ -130,7 +130,7 @@ mcp.tool(tools.list_items)
 В `__init__.py`:
 
 ```python
-from mcp_brasil._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import FeatureMeta
 
 
 FEATURE_META = FeatureMeta(
@@ -177,5 +177,5 @@ make inspect
 
 - Новый публичный бренд проекта: `mcp-russia`.
 - Новый публичный импорт: `mcp_russia`.
-- Текущее место добавления feature: `src/mcp_brasil/...`.
+- Текущее место добавления feature: `src/mcp_russia/...`.
 - Если вы переводите feature на российские реалии, обновляйте не только код, но и пользовательские тексты, ресурсы, prompts и тестовые ожидания.

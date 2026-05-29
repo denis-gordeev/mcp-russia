@@ -23,13 +23,13 @@ fix: ## Auto-fix lint + format
 	uv run ruff check --fix src/ tests/ && uv run ruff format src/ tests/
 
 types: ## Run mypy strict type checking
-	uv run mypy src/mcp_brasil/
+	uv run mypy src/mcp_russia/
 
 test: ## Run all tests
 	uv run pytest -v
 
 test-feature: ## Run tests for a specific feature (usage: make test-feature F=ibge)
-	uv run pytest tests/data/$(F)/ -v 2>/dev/null || uv run pytest tests/agentes/$(F)/ -v
+	uv run pytest tests/data/$(F)/ -v 2>/dev/null || uv run pytest tests/agenty/$(F)/ -v
 
 ci: lint types test ## Full CI pipeline: lint + types + test
 

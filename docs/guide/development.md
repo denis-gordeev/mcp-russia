@@ -23,7 +23,7 @@ make dev
 | `make test-feature F=ibge` | прогнать тесты одной feature |
 | `make lint` | `ruff check` + `ruff format --check` |
 | `make fix` | auto-fix для lint и форматирования |
-| `make types` | `mypy` по internal-дереву |
+| `make types` | `mypy` по `src/mcp_russia/` |
 | `make ci` | полный локальный quality gate |
 | `make run` | запуск MCP-сервера по stdio |
 | `make serve` | запуск MCP-сервера по HTTP |
@@ -32,12 +32,12 @@ make dev
 
 ## Переходная особенность кодовой базы
 
-Публичный namespace проекта уже `mcp_russia`, но большая часть исходников и тестов остается в `src/mcp_brasil/` и импортирует именно его. Для разработки сейчас это норма.
+Основной runtime и исходники уже переведены в `src/mcp_russia/`. Переходный слой теперь проявляется в основном в документации, historical narrative и части legacy-названий внутри features.
 
 Практическое правило:
 
 - пользовательские сценарии и документация должны двигаться к `mcp_russia`;
-- внутренние refactor-изменения допускаются в `mcp_brasil`, пока совместимость не нарушена.
+- новые кодовые изменения и новые features должны добавляться в `mcp_russia`.
 
 ## Структура тестов
 
@@ -51,7 +51,7 @@ tests/
 ├── test_public_namespace.py
 ├── _shared/
 ├── data/
-└── agentes/
+└── agenty/
 ```
 
 Типовой расклад внутри feature:

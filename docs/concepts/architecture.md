@@ -2,20 +2,18 @@
 
 ## Общая схема
 
-На публичном уровне проект позиционируется как `mcp-russia`, но внутренняя feature-структура пока остается в `src/mcp_brasil/`.
+Текущая рабочая структура проекта уже находится в `src/mcp_russia/`. Исторические упоминания `mcp_brasil` в документации относятся к предыдущему этапу миграции и не описывают актуальный runtime.
 
 ```text
 src/
-├── mcp_russia/
-│   ├── __init__.py         # публичный namespace
-│   └── server.py           # стабильная точка входа для запуска
-└── mcp_brasil/
+└── mcp_russia/
+    ├── __init__.py         # публичный namespace
     ├── server.py           # root server с auto-registry
     ├── settings.py         # конфигурация через env vars
     ├── exceptions.py       # общие исключения
     ├── _shared/            # общая инфраструктура
     ├── data/               # data features
-    └── agentes/            # agent features
+    └── agenty/             # agent features
 ```
 
 ## Что считается публичным API
@@ -26,36 +24,36 @@ src/
 
 ## Что пока считается internal-слоем
 
-- discovery feature-пакетов в `mcp_brasil.data` и `mcp_brasil.agentes`;
-- значительная часть schemas, tools, resources и prompts;
-- ряд env-переменных и исторических идентификаторов.
+- shared-инфраструктура и feature-дерево внутри `mcp_russia`;
+- значительная часть schemas, tools, resources и prompts, унаследованных от исходного проекта;
+- ряд narrative-артефактов и справочных текстов, где еще встречаются старые имена и бразильский контекст.
 
 ## Root server
 
-Публичная точка входа `mcp_russia.server` просто экспортирует совместимый сервер из internal-дерева. Это позволяет менять внутреннюю структуру постепенно, не ломая внешний импорт.
+Публичная точка входа `mcp_russia.server` является и фактическим root server, и стабильным импортом для внешних клиентов.
 
 Фактическая сборка root server сейчас устроена так:
 
 ```python
 mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
 registry = FeatureRegistry()
-registry.discover("mcp_brasil.data")
-registry.discover("mcp_brasil.agentes")
+registry.discover("mcp_russia.data")
+registry.discover("mcp_russia.agenty")
 registry.mount_all(mcp)
 ```
 
 Следствие простое:
 
 - внешние клиенты работают через `mcp_russia`;
-- новые feature пока по-прежнему подключаются в дереве `mcp_brasil`;
-- полная физическая миграция может происходить по частям.
+- новые feature должны добавляться сразу в `mcp_russia`;
+- дальнейшая миграция сместилась из физического переноса пакета в зачистку документации, legacy narrative и источников данных.
 
 ## Анатомия feature
 
 Каждая feature остается изолированным пакетом с предсказуемой структурой:
 
 ```text
-src/mcp_brasil/data/{feature}/
+src/mcp_russia/data/{feature}/
 ├── __init__.py
 ├── server.py
 ├── tools.py
@@ -74,7 +72,7 @@ src/mcp_brasil/data/{feature}/
 
 ## Shared-инфраструктура
 
-Ключевые модули в `mcp_brasil/_shared/`:
+Ключевые модули в `mcp_russia/_shared/`:
 
 | Модуль | Назначение |
 |--------|------------|
@@ -104,5 +102,5 @@ src/mcp_brasil/data/{feature}/
 Текущее устройство специально разделяет внешний и внутренний слой:
 
 1. Пользователи уже работают с `mcp-russia`.
-2. Разработчики могут мигрировать содержимое `mcp_brasil` по частям.
-3. Совместимость сохраняется до тех пор, пока не будет готов полный перенос feature-дерева и идентификаторов.
+2. Разработчики продолжают поэтапно очищать legacy-слой без смены публичной точки входа.
+3. Совместимость сохраняется до тех пор, пока не будут убраны оставшиеся исторические идентификаторы и narrative-ссылки.
