@@ -2,6 +2,32 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-05-30 (двадцать первый проход — замена Brazilian tool IDs в примерах, фикс CI/CD)
+
+### Выполнено
+
+- **Замена Brazilian tool IDs на российские в docs/examples/**:
+  - `panorama-economico.md`: `bacen_indicadores_atuais` → `cbrf_tekushchie_kursy`, `bacen_consultar_serie` → `cbrf_uznat_kurs_valyuty`, `bacen_comparar_series` → `cbrf_sravnit_valyuty`, `bacen_calcular_variacao` → `cbrf_uznat_kurs_valyuty`, `ibge_listar_estados` → `rosstat_spisok_regionov`, `ibge_consultar_agregado` → `rosstat_region_info`. Файл полностью переписан с российскими инструментами.
+  - `economista.md`: аналогичная замена всех `bacen_*` → `cbrf_*` и `ibge_*` → `rosstat_*`. Добавлены инструменты `zakupki_*` для бюджетных сценариев.
+  - `cientista-politico.md`: `duma_*` → `gosduma_*`, `senado_*` → `gosduma_*` (Госдума), `cik_*` → `cekrf_*`, `transparencia_*` → `zakupki_*`, `transferegov_*` → `zakupki_*`, `datajud_buscar_processos` → `kad_arbitrazh_poisk_del`, `saude_buscar_estabelecimentos` → `minzdrav_poisk_med_organizatsiy`, `ecologia_fokus` → `rosaudit_poisk_narusheniy`, `water_monitorar_reservuarios` → `rosvodresursy_info_vodnogo_obekta`, `eis_buscar_zakupki` → `zakupki_poisk_zakupok`, `kro_*_despesas` → `rosstat_region_info`. Таблицы переменных обновлены на российские инструменты.
+  - `jornalista-investigativo.md`: `datajud_buscar_processos` → `kad_arbitrazh_poisk_del`, `transparencia_*` → `zakupki_*`, `otkryte_dannye_*` → `rosstat_*`/`zakupki_*`, `reestr_nedobrosovestnykh_postavshchikov` → `rospotrebnadzor_proverki_organizaciy`, `ofitsialnyy_byulleten_poisk` → `publikatsii_poisk_aktov`, `zdravookhranenie_uchrezhdeniya` → `minzdrav_poisk_med_organizatsiy`. Чеклист и планы расследований обновлены.
+- **Фикс CI/CD workflows**: удалена ссылка на несуществующий `src/mcp_brasil/` из mypy-команд в `.github/workflows/ci.yml` и `.github/workflows/release.yml`. Команда `uv run mypy src/mcp_brasil/ src/mcp_russia/` → `uv run mypy src/mcp_russia/`.
+- **Подтверждено**: `format_number_br` уже является deprecated-алиасом для `format_number_ru`, вызовов в кодовой базе нет (только тест deprecated-алиаса).
+- **Прогнаны все проверки**: `pytest` (1896 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Все 4 основных примера docs/examples/ теперь используют российские tool IDs**: `cbrf_*`, `rosstat_*`, `gosduma_*`, `cekrf_*`, `zakupki_*`, `kad_arbitrazh_*`, `rosaudit_*`, `minzdrav_*`, `rospotrebnadzor_*`, `publikatsii_*`, `rosapi_*`, `rosvodresursy_*`
+- **CI/CD не ссылается на mcp_brasil**: mypy-команды в обоих workflow-файлах используют только `src/mcp_russia/`
+- **Нет вызовов format_number_br в рабочем коде**: deprecated-алиас существует только для backward compatibility, реальных вызовов нет
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
+- **Создание модуля ЕМИСС/Фedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Миграция оставшихся португальских имён переменных** в legacy-модулях (compras, saude, datajud и др.) — внутрикодовые переменные и имена функций, не являющиеся MCP-инструментами
+- **Дочистить CHANGELOG.md от бразильских формулировок**: частично переведён, но могут оставаться португальские термины
+
 ## Статус раунда 2026-05-29 (двадцатый проход — зачистка документации от устаревших ссылок на mcp_brasil)
 
 ### Выполнено
