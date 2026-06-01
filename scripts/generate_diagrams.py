@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# ruff: noqa: F841, RUF001
 """Generate architecture diagrams for mcp-russia documentation.
 
 Produces 4 PNG diagrams in docs/concepts/img/:
@@ -46,72 +47,70 @@ def system_overview() -> None:
         with Cluster("mcp-russia Root Server"):
             root = FastAPI("FastMCP\nserver.py")
             registry = Python("FeatureRegistry")
-            meta = Python("Meta-Tools\n(listar, recomendar,\nplanejar, lote)")
+            meta = Python("Мета-инструменты\n(spisok, rekomendovat,\nsplanirovat, paket)")
             root - registry
             root - meta
 
         client >> root
 
-        with Cluster("Econômico"):
-            bacen = Python("bacen")
-            ibge = Python("ibge")
-            transparencia = Python("transparência")
-            transferegov = Python("transferegov")
+        with Cluster("Экономика и финансы"):
+            cbrf = Python("cbrf")
+            rosstat = Python("rosstat")
+            zakupki = Python("zakupki")
+            fns = Python("fns")
 
-        with Cluster("Legislativo"):
-            camara = Python("câmara")
-            senado = Python("senado")
+        with Cluster("Законодательство и выборы"):
+            gosduma = Python("gosduma")
+            cekrf = Python("cekrf")
+            publikatsii = Python("publikatsii")
 
-        with Cluster("Judiciário"):
-            datajud = Python("datajud")
-            jurisprudencia = Python("jurisprudência")
+        with Cluster("Судебная система и надзор"):
+            kad_arbitrazh = Python("kad_arbitrazh")
+            rosaudit = Python("rosaudit")
+            rospotrebnadzor = Python("rospotrebnadzor")
+            roskomnadzor = Python("roskomnadzor")
+            fssp = Python("fssp")
 
-        with Cluster("Eleitoral"):
-            tse = Python("tse")
+        with Cluster("Экология и здравоохранение"):
+            rosgidromet = Python("rosgidromet")
+            rosvodresursy = Python("rosvodresursy")
+            minzdrav = Python("minzdrav")
 
-        with Cluster("Fiscalização"):
-            tcu = Python("tcu")
-            tces = Python("TCEs (9)")
+        with Cluster("Реестры и справочники"):
+            rosapi = Python("rosapi")
+            rosreestr = Python("rosreestr")
+            gibdd = Python("gibdd")
+            minobrnauki = Python("minobrnauki")
 
-        with Cluster("Ambiental & Saúde"):
-            inpe = Python("inpe")
-            ana = Python("ana")
-            saude = Python("saúde")
-
-        with Cluster("Outros"):
-            compras = Python("compras")
-            brasilapi = Python("brasilapi")
-            dados_ab = Python("dados_abertos")
-            diario = Python("diário_oficial")
-
-        with Cluster("Agentes"):
+        with Cluster("Агенты"):
             redator = Python("redator")
 
-        registry >> Edge(style="dashed") >> bacen
-        registry >> Edge(style="dashed") >> camara
-        registry >> Edge(style="dashed") >> datajud
-        registry >> Edge(style="dashed") >> tse
-        registry >> Edge(style="dashed") >> tcu
-        registry >> Edge(style="dashed") >> inpe
-        registry >> Edge(style="dashed") >> compras
+        registry >> Edge(style="dashed") >> cbrf
+        registry >> Edge(style="dashed") >> gosduma
+        registry >> Edge(style="dashed") >> kad_arbitrazh
+        registry >> Edge(style="dashed") >> cekrf
+        registry >> Edge(style="dashed") >> rosaudit
+        registry >> Edge(style="dashed") >> rosgidromet
+        registry >> Edge(style="dashed") >> zakupki
         registry >> Edge(style="dashed") >> redator
+        registry >> Edge(style="dashed") >> rosapi
 
-        apis = Server("APIs Governamentais\n(gov.br, ibge.gov.br,\nbcb.gov.br, ...)")
+        apis = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")
 
-        bacen >> apis
-        ibge >> apis
-        camara >> apis
-        datajud >> apis
-        tse >> apis
-        tcu >> apis
-        inpe >> apis
-        compras >> apis
+        cbrf >> apis
+        rosstat >> apis
+        gosduma >> apis
+        kad_arbitrazh >> apis
+        cekrf >> apis
+        rosaudit >> apis
+        rosgidromet >> apis
+        zakupki >> apis
 
 
 def feature_anatomy() -> None:
     """Diagram 2: Internal structure of a feature package."""
     with Diagram(
-        "Anatomia de uma Feature (data/ibge/)",
+        "Анатомия feature-пакета (data/rosstat/)",
         filename=str(OUTPUT_DIR / "feature_anatomy"),
         direction="LR",
         show=False,
@@ -119,30 +118,30 @@ def feature_anatomy() -> None:
         node_attr=NODE_ATTR,
         edge_attr=EDGE_ATTR,
     ):
-        with Cluster("data/ibge/"):
+        with Cluster("data/rosstat/"):
             init = Python("__init__.py\nFEATURE_META")
             server = FastAPI("server.py\nmcp: FastMCP")
-            tools = Python("tools.py\nbuscar_localidades()\nconsultar_populacao()")
+            tools = Python("tools.py\nspisok_regionov()\npoluchit_indikator()")
             client = Python("client.py\nhttp_get() async")
             schemas = Python("schemas.py\nBaseModel")
-            constants = Python("constants.py\nIBGE_API_BASE")
+            constants = Python("constants.py\nROSSTAT_API_BASE")
 
-            server >> Edge(label="registra") >> tools
-            tools >> Edge(label="delega HTTP") >> client
-            client >> Edge(label="retorna") >> schemas
+            server >> Edge(label="регистрирует") >> tools
+            tools >> Edge(label="делегирует HTTP") >> client
+            client >> Edge(label="возвращает") >> schemas
 
         shared = Python("_shared/\nhttp_client\ncache\nformatting")
-        api = Server("API IBGE\nibge.gov.br")
+        api = Server("API Росстата\nrosstat.gov.ru")
 
-        tools >> Edge(style="dashed", label="usa") >> shared
-        client >> Edge(style="dashed", label="usa") >> shared
+        tools >> Edge(style="dashed", label="использует") >> shared
+        client >> Edge(style="dashed", label="использует") >> shared
         client >> api
 
 
 def auto_registry_flow() -> None:
     """Diagram 3: Auto-registry discovery flowchart."""
     with Diagram(
-        "Auto-Registry — Fluxo de Discovery",
+        "Auto-Registry — Поток обнаружения",
         filename=str(OUTPUT_DIR / "auto_registry_flow"),
         direction="TB",
         show=False,
@@ -152,30 +151,30 @@ def auto_registry_flow() -> None:
     ):
         start = StartEnd("discover(pkg)")
         iter_mod = Action("iter_modules(pkg)")
-        skip_check = Decision("nome começa\ncom '_'?")
-        skip = Action("pular")
+        skip_check = Decision("имя начинается\nс '_'?")
+        skip = Action("пропустить")
         import_init = Action("import __init__.py")
-        meta_check = Decision("FEATURE_META\nexiste?")
-        skip2 = Action("pular")
-        auth_check = Decision("requires_auth\ne env var OK?")
-        skip3 = Action("pular\n(silencioso)")
+        meta_check = Decision("FEATURE_META\nсуществует?")
+        skip2 = Action("пропустить")
+        auth_check = Decision("requires_auth\nи env var OK?")
+        skip3 = Action("пропустить\n(молча)")
         import_server = Action("import server.py")
         mount = Action("mount(mcp,\nnamespace=name)")
-        end = StartEnd("próximo módulo\nou fim")
+        end = StartEnd("следующий модуль\nили конец")
 
         start >> iter_mod >> skip_check
-        skip_check >> Edge(label="sim") >> skip >> end
-        skip_check >> Edge(label="não") >> import_init >> meta_check
-        meta_check >> Edge(label="não") >> skip2 >> end
-        meta_check >> Edge(label="sim") >> auth_check
-        auth_check >> Edge(label="não") >> skip3 >> end
-        auth_check >> Edge(label="sim") >> import_server >> mount >> end
+        skip_check >> Edge(label="да") >> skip >> end
+        skip_check >> Edge(label="нет") >> import_init >> meta_check
+        meta_check >> Edge(label="нет") >> skip2 >> end
+        meta_check >> Edge(label="да") >> auth_check
+        auth_check >> Edge(label="нет") >> skip3 >> end
+        auth_check >> Edge(label="да") >> import_server >> mount >> end
 
 
 def data_flow() -> None:
     """Diagram 4: Request/response data flow pipeline."""
     with Diagram(
-        "Fluxo de Dados — Request & Response",
+        "Поток данных — Запрос и ответ",
         filename=str(OUTPUT_DIR / "data_flow"),
         direction="LR",
         show=False,
@@ -183,19 +182,19 @@ def data_flow() -> None:
         node_attr=NODE_ATTR,
         edge_attr=EDGE_ATTR,
     ):
-        user = Client("Usuário")
+        user = Client("Пользователь")
         mcp_client = Client("MCP Client")
         bm25 = Python("BM25 Filter\n(top-10 tools)")
 
         with Cluster("mcp-russia"):
-            tools = Python("tools.py\norquestra")
+            tools = Python("tools.py\nоркестрирует")
             client = Python("client.py\nhttpx async")
             rate = Python("Rate Limiter\nsliding window")
 
-        api = Server("API Gov\n(JSON)")
+        api = Server("Гос. API\n(JSON)")
 
         # Request path
-        user >> Edge(label="pergunta") >> mcp_client
+        user >> Edge(label="вопрос") >> mcp_client
         mcp_client >> Edge(label="tool call") >> bm25
         bm25 >> Edge(label="dispatch") >> tools
         tools >> client >> rate >> api
@@ -204,7 +203,7 @@ def data_flow() -> None:
         api >> Edge(label="JSON", style="dashed", color="darkgreen") >> client
         client >> Edge(label="Pydantic", style="dashed", color="darkgreen") >> tools
         tools >> Edge(label="Markdown", style="dashed", color="darkgreen") >> mcp_client
-        mcp_client >> Edge(label="resposta", style="dashed", color="darkgreen") >> user
+        mcp_client >> Edge(label="ответ", style="dashed", color="darkgreen") >> user
 
         # Retry annotation
         _ = Blank("")

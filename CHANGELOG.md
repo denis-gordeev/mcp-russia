@@ -65,7 +65,7 @@
 ### Новые функции
 
 - **batch:** Инструмент executar_lote для параллельного выполнения нескольких запросов
-- **planner:** Инструмент planejar_consulta со структурированными планами выполнения
+- **planner:** Инструмент splanirovat_zapros со структурированными планами выполнения
 
 ### Прочее
 
@@ -93,7 +93,7 @@
 
 ### Новые функции
 
-- **compras:** Dados Abertos Compras.gov.br с 8 инструментами
+- **compras:** Модуль открытых данных Compras.gov.br с 8 инструментами
 - **tse:** Результаты выборов через CDN с 4 новыми инструментами
 - **tcu:** TCU с 8 инструментами, 1 ресурсом и 1 промптом
 - **tce_rj:** TCE-RJ с 7 инструментами, 1 ресурсом и 1 промптом
@@ -143,7 +143,7 @@
 - **shared:** HTTP-клиент и утилиты форматирования
 - **core:** TTL-cache и миграция на dependency-groups
 - **ibge,bacen:** Модули ibge и bacen
-- **ibge,bacen,transparencia:** Malha, CNAE, клиент bacen и модуль transparencia
+- **ibge,bacen,transparencia:** Сетка территорий, CNAE, клиент bacen и модуль transparencia
 - Добавлены lifespan, context, resources, prompts и middleware
 - **transparencia:** Ресурсы, промпты и интеграционные тесты
 - **_shared:** Асинхронный RateLimiter со скользящим окном
@@ -157,8 +157,8 @@
 - **tse:** Дополнительные инструменты выборов
 - **datajud:** TREs, TJMs, логические запросы и пагинация search_after
 - **transparencia,transferegov:** Расширение до 18 инструментов + новый модуль transferegov
-- **senado:** 4 инструмента dados_abertos (emendas, blocos, liderancas, relatorias)
-- **tse:** Инструмент resultado_eleicao с тотализацией голосов
+- **senado:** 4 инструмента открытых данных (поправки, блоки, лидерства, доклады)
+- **tse:** Инструмент итогов выборов с тотализацией голосов
 - Завершение mcp-brasil с 4 новыми модулями + расширение 3 существующих
 - **tse:** Результаты выборов через CDN с 4 новыми инструментами
 - **release:** Инфраструктура управления релизами

@@ -43,7 +43,7 @@ src/mcp_russia/data/{feature}/
 В `constants.py` храните URL, коды, enum-подобные словари и прочие фиксированные значения.
 
 ```python
-EXEMPLO_API_BASE = "https://api.example.gov/v1"
+PRIMER_API_BASE = "https://api.example.gov/v1"
 
 TIPOS_ZAPROSA = {
     "1": "Базовый",
@@ -80,12 +80,12 @@ class PrimerZapisi(BaseModel):
 ```python
 from mcp_russia._shared.http_client import http_get
 
-from .constants import EXEMPLO_API_BASE
+from .constants import PRIMER_API_BASE
 from .schemas import PrimerZapisi
 
 
 async def list_items(page: int = 1) -> list[PrimerZapisi]:
-    data = await http_get(f"{EXEMPLO_API_BASE}/items", params={"page": page})
+    data = await http_get(f"{PRIMER_API_BASE}/items", params={"page": page})
     return [PrimerZapisi(**item) for item in data]
 ```
 

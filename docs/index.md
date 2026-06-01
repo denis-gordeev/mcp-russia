@@ -37,13 +37,13 @@
 
 | Страница | Что внутри |
 |----------|------------|
-| [Quick Start](guide/quickstart.md) | Установка и подключение `mcp-russia` к MCP-клиентам |
+| [Быстрый старт](guide/quickstart.md) | Установка и подключение `mcp-russia` к MCP-клиентам |
 | [Архитектура](concepts/architecture.md) | Как устроены root server, auto-registry и feature-пакеты |
 | [Каталог features](reference/features.md) | Текущий каталог интеграций и инструментов |
-| [Smart Tools](reference/smart-tools.md) | Meta-tools: discovery, planner, batch |
+| [Умные инструменты](reference/smart-tools.md) | Мета-инструменты: обнаружение, планирование, пакетное выполнение |
 | [Добавление features](guide/adding-features.md) | Как добавлять новую feature |
 | [Конфигурация](reference/configuration.md) | Переменные окружения и режимы запуска |
-| [Разработка](guide/development.md) | Setup, проверки, CI и contribution workflow |
+| [Разработка](guide/development.md) | Setup, проверки, CI и процесс участия |
 
 ## Практическая оговорка
 

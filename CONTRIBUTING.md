@@ -22,7 +22,7 @@ src/mcp_russia/
 ├── data/               # Features для внешних API
 │   ├── ibge/           # Историческая feature исходного проекта
 │   ├── transparencia/  # Историческая feature исходного проекта
-│   └── {nova_feature}/ # Новая feature данных
+│   └── {novaya_feature}/ # Новая feature данных
 └── agenty/             # Features для агентных сценариев
     └── redator/        # Исторический агент официальных документов
 ```
@@ -49,10 +49,10 @@ src/mcp_russia/data/{feature}/      # или agenty/{feature}/
 from mcp_russia._shared.feature import FeatureMeta
 
 FEATURE_META = FeatureMeta(
-    name="minha-feature",
+    name="primer-feature",
     description="Короткое описание API",
     version="0.1.0",
-    api_base="https://api.exemplo.gov.br",
+    api_base="https://api.example.gov.ru",
     requires_auth=False,
 )
 ```
@@ -61,18 +61,18 @@ FEATURE_META = FeatureMeta(
 
 ```python
 from fastmcp import FastMCP
-from .tools import minha_tool
+from .tools import primer_tool
 
-mcp = FastMCP("mcp-russia-minha-feature")
+mcp = FastMCP("mcp-russia-primer-feature")
 
-mcp.tool(minha_tool)
+mcp.tool(primer_tool)
 ```
 
 4. Добавьте тесты в `tests/data/{feature}/` (или `tests/agenty/{feature}/`):
 
 ```
 tests/data/{feature}/         # или tests/agenty/{feature}/
-├── test_tools.py             # Mock client, testa lógica
+├── test_tools.py             # Mock client, проверяет логику
 ├── test_client.py            # respx mock HTTP
 └── test_integration.py       # fastmcp.Client e2e
 ```
@@ -99,10 +99,10 @@ server.py → tools.py → client.py → schemas.py
 | Область | Правило | Пример |
 |--------|-----------|---------|
 | Модули | snake_case | `client.py` |
-| Classes | PascalCase | `class Estado(BaseModel)` |
-| Функции/tools | snake_case, глагол | `buscar_localidades()` |
-| Константы | UPPER_SNAKE | `IBGE_API_BASE` |
-| Приватные элементы | `_prefixo` | `_shared/`, `_cache` |
+| Classes | PascalCase | `class Subjekt(BaseModel)` |
+| Функции/tools | snake_case, глагол | `poisk_mestopolozheniy()` |
+| Константы | UPPER_SNAKE | `ROSSTAT_API_BASE` |
+| Приватные элементы | `_prefiks` | `_shared/`, `_cache` |
 
 ### Инварианты
 
@@ -150,14 +150,14 @@ make ci                   # lint + types + test
 ```python
 from unittest.mock import AsyncMock, patch
 import pytest
-from mcp_russia.data.{feature}.tools import buscar_{feature}
+from mcp_russia.data.{feature}.tools import poisk_{feature}
 
 @pytest.mark.asyncio
-async def test_buscar_retorna_formatado():
-    with patch("mcp_russia.data.{feature}.tools.buscar_exemplo", new_callable=AsyncMock) as mock:
+async def test_poisk_vozvrashaet_otformatirovannoe():
+    with patch("mcp_russia.data.{feature}.tools.poisk_primera", new_callable=AsyncMock) as mock:
         mock.return_value = [...]
-        resultado = await buscar_{feature}("query")
-        assert "ожидаемое" in resultado
+        rezultat = await poisk_{feature}("zapros")
+        assert "ozhidaemoe" in rezultat
 ```
 
 #### `test_client.py` — HTTP-мок через `respx`
@@ -166,16 +166,16 @@ async def test_buscar_retorna_formatado():
 import httpx
 import pytest
 import respx
-from mcp_russia.data.{feature}.client import buscar_exemplo
+from mcp_russia.data.{feature}.client import poisk_primera
 
 @pytest.mark.asyncio
 @respx.mock
-async def test_buscar_sucesso():
-    respx.get("https://api.exemplo.gov.br/endpoint").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "nome": "Teste"}])
+async def test_poisk_uspeshen():
+    respx.get("https://api.example.gov.ru/endpoint").mock(
+        return_value=httpx.Response(200, json=[{"id": 1, "nazvanie": "Test"}])
     )
-    resultado = await buscar_exemplo("query")
-    assert len(resultado) == 1
+    rezultat = await poisk_primera("zapros")
+    assert len(rezultat) == 1
 ```
 
 #### `test_integration.py` — end-to-end через `fastmcp.Client`
@@ -188,7 +188,7 @@ from mcp_russia.data.{feature}.server import mcp
 @pytest.mark.asyncio
 async def test_tool_via_mcp_client():
     async with Client(mcp) as client:
-        result = await client.call_tool("buscar_{feature}", {"query": "teste"})
+        result = await client.call_tool("poisk_{feature}", {"zapros": "test"})
         assert result is not None
 ```
 
@@ -228,7 +228,7 @@ make release-patch    # Повысить patch (сначала запускае�
 make release-minor    # Bump minor
 make release-major    # Bump major
 make changelog        # Сгенерировать CHANGELOG.md вручную
-make build            # Build do pacote (sdist + wheel)
+make build            # Сборка пакета (sdist + wheel)
 ```
 
 ### CI/CD

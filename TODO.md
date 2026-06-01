@@ -2,6 +2,51 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-01 (двадцать второй проход — зачистка документации и скриптов от португальских/английских формулировок)
+
+### Выполнено
+
+- **Полная русификация `CONTRIBUTING.md`**:
+  - Заменены португальские примеры кода на русские: `minha-feature` → `primer-feature`, `exemplo.gov.br` → `example.gov.ru`, `minha_tool` → `primer_tool`, `Estado` → `Subjekt`, `buscar_localidades` → `poisk_mestopolozheniy`, `IBGE_API_BASE` → `ROSSTAT_API_BASE`, `_prefixo` → `_prefiks`, `testa lógica` → `проверяет логику`, `Build do pacote` → `Сборка пакета`, `nova_feature` → `novaya_feature`
+  - Шаблоны тестов: `buscar_{feature}` → `poisk_{feature}`, `test_buscar_retorna_formatado` → `test_poisk_vozvrashaet_otformatirovannoe`, `test_buscar_sucesso` → `test_poisk_uspeshen`, `.gov.br` → `.gov.ru`, `nome/Teste` → `nazvanie/Test`, `query/teste` → `zapros/test`
+- **Полная русификация `scripts/generate_diagrams.py`** (~25 замен):
+  - Диаграмма system_overview: кластеры `Econômico` → `Экономика и финансы`, `Legislativo` → `Законодательство и выборы`, `Judiciário` → `Судебная система и надзор`, `Eleitoral` удалён (cekrf в законодательстве), `Fiscalização` удалён (rosaudit в судебной системе), `Ambiental & Saúde` → `Экология и здравоохранение`, `Outros` → `Реестры и справочники`, `Agentes` → `Агенты`
+  - Узлы заменены с бразильских модулей на российские: `bacen/ibge/transparencia` → `cbrf/rosstat/zakupki/fns`, `câmara/senado` → `gosduma/cekrf`, `datajud/jurisprudência` → `kad_arbitrazh`, `TCEs(9)` → `rosaudit`, `inpe/ana/saúde` → `rosgidromet/rosvodresursy/minzdrav`, `brasilapi/dados_abertos/diário_oficial` → `rosapi/publikatsii/fns/rosreestr/fssp/gibdd/minobrnauki/rospotrebnadzor/roskomnadzor`
+  - Мета-инструменты: `listar, recomendar, planejar, lote` → `spisok, rekomendovat, splanirovat, paket`
+  - API-сервер: `APIs Governamentais (gov.br, ibge.gov.br, bcb.gov.br)` → `Государственные API (gosuslugi.ru, rosstat.gov.ru, cbr.ru)`
+  - Диаграмма feature_anatomy: `data/ibge/` → `data/rosstat/`, `buscar_localidades/consultar_populacao` → `spisok_regionov/poluchit_indikator`, `IBGE_API_BASE` → `ROSSTAT_API_BASE`, `registra` → `регистрирует`, `delega HTTP` → `делегирует HTTP`, `retorna` → `возвращает`, `usa` → `использует`, `API IBGE ibge.gov.br` → `API Росстата rosstat.gov.ru`
+  - Диаграмма auto_registry_flow: `Fluxo de Discovery` → `Поток обнаружения`, `nome começa com '_'?` → `имя начинается с '_'?`, `pular` → `пропустить`, `existe?` → `существует?`, `silencioso` → `молча`, `próximo módulo ou fim` → `следующий модуль или конец`, `sim/não` → `да/нет`
+  - Диаграмма data_flow: `Fluxo de Dados` → `Поток данных`, `Usuário` → `Пользователь`, `orquestra` → `оркестрирует`, `pergunta` → `вопрос`, `resposta` → `ответ`, `API Gov` → `Гос. API`
+  - Добавлен `# ruff: noqa: F841, RUF001` для диаграммного скрипта
+- **Русификация `docs/reference/smart-tools.md`**:
+  - Стратегии планировщика: `enriquecimento` → `obogashchenie`, `comparacao` → `sravnenie`, `contextualizacao` → `kontekstualizatsiya`
+- **Русификация `docs/index.md`**:
+  - Навигация: `Quick Start` → `Быстрый старт`, `Smart Tools` → `Умные инструменты`, `Meta-tools: discovery, planner, batch` → `Мета-инструменты: обнаружение, планирование, пакетное выполнение`, `contribution workflow` → `процесс участия`
+- **Русификация `docs/guide/development.md`**: `Contribution workflow` → `Процесс участия`
+- **Русификация `docs/guide/adding-features.md`**: `EXEMPLO_API_BASE` → `PRIMER_API_BASE` (2 места)
+- **Исправление битых имён инструментов в docs/examples/**:
+  - `parlamentar-report.md`: `zaplaniravat_zapros` → `splanirovat_zapros`, `batah_zapros` → `vypolnit_paket`, `DataJud` → `Картотека арбитражных дел`
+  - `fiscalizacao-municipal.md`: `batah_zapros` → `vypolnit_paket` (2 места)
+- **Замена списка бразильских источников в `docs/examples/politicas-publicas.md`**: полностью заменён параграф с перечислением IBGE, Banco Central, Portal da Transparência и т.д. на актуальный список российских источников
+- **Исправление англо-русского смешения в `docs/examples/economista.md`**: `growing reflects` → корректное русское предложение
+- **Зачистка `CHANGELOG.md`**: `Dados Abertos` → `открытых данных`, `Malha, CNAE` → `Сетка территорий, CNAE`, `dados_abertos (emendas, blocos, liderancas, relatorias)` → `открытых данных (поправки, блоки, лидерства, доклады)`, `resultado_eleicao` → `итогов выборов`, `planejar_consulta` → `splanirovat_zapros`
+- **Подтверждено**: во всех 19 российских модулях нет португальских имён переменных, функций, классов или констант — полная миграция завершена
+- **Прогнаны все проверки**: `pytest` (1896 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Диаграммы генерируются из российских модулей**: system_overview показывает актуальные 19 российских модулей, сгруппированных по функциональным кластерам
+- **CONTRIBUTING.md полностью русифицирован**: примеры кода, имена переменных, URL-адреса — всё на русском/транслитерации
+- **Битые имена инструментов исправлены**: `zaplaniravat_zapros` и `batah_zapros` — опечатки в документации, исправлены на `splanirovat_zapros` и `vypolnit_paket`
+- **Список источников в politicas-publicas.md актуализирован**: убраны бразильские названия, оставлены только российские
+
+### Следующие действия
+
+- **Подключение реальных API** в российских модулях: заменить заглушки на рабочие интеграции (cbrf→cbr-xml-daily.ru уже частично работает, rosaudit→ach.gov.ru, rosgidromet→meteorf.ru, rosvodresursy→rosvodresursy.ru, publikatsii→pravo.gov.ru, zakupki→zakupki.gov.ru, minzdrav→data.minzdrav.gov.ru, kad_arbitrazh→kad.arbitr.ru, cekrf→vybory.izbirkom.ru, fns→api.nalog.ru, rosreestr→rosreestr.gov.ru, fssp→fssp.gov.ru, gibdd→гибдд.рф, minobrnauki→minobrnauki.gov.ru)
+- **Создание модуля ЕМИСС/Fedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Миграция португальских имён переменных** в legacy-модулях — ~800+ имён (client.py ~110 функций + ~40 _parse_* helpers + ~150 параметров, schemas.py ~110 классов + ~300 полей, constants.py ~150 констант, tools.py ~80 переменных)
+- **Переименование файлов примеров docs/examples/** с португальских на русские транслитерации (10 файлов)
+
 ## Статус раунда 2026-05-30 (двадцать первый проход — замена Brazilian tool IDs в примерах, фикс CI/CD)
 
 ### Выполнено
