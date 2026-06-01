@@ -1,11 +1,16 @@
 """Tools for the ФНС feature.
 
-All tool docstrings are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
+Tools for accessing tax data, EGRUL/EGRIP organization lookups,
+and reference information about tax regimes and inspection types.
 """
 
 from __future__ import annotations
 
+from fastmcp import Context
+
+from mcp_russia._shared.formatting import format_number_ru, markdown_table
+
+from . import client
 from .constants import (
     KategoriiNalogoplatelshchikov,
     NalogovyeRezhimy,
@@ -16,7 +21,7 @@ from .constants import (
 
 
 def spisok_nalogovyh_rezhimov() -> list[dict]:
-    """Список режимов налогообложения в РФ. (legacy — placeholder)
+    """Список режимов налогообложения в РФ.
 
     Returns:
         Список режимов (ОСНО, УСН, ЕНВД, ПСН, ЕСН, НПД).
@@ -25,7 +30,7 @@ def spisok_nalogovyh_rezhimov() -> list[dict]:
 
 
 def spisok_vidov_nalogov() -> list[dict]:
-    """Список основных видов налогов в РФ. (legacy — placeholder)
+    """Список основных видов налогов в РФ.
 
     Returns:
         Список видов налогов (НДС, НДФЛ, налог на прибыль и др.).
@@ -34,7 +39,7 @@ def spisok_vidov_nalogov() -> list[dict]:
 
 
 def spisok_tipov_proverok() -> list[dict]:
-    """Список типов налоговых проверок. (legacy — placeholder)
+    """Список типов налоговых проверок.
 
     Returns:
         Список типов проверок (выездная, камеральная, документарная).
@@ -43,7 +48,7 @@ def spisok_tipov_proverok() -> list[dict]:
 
 
 def spisok_statusov_organizaciy() -> list[dict]:
-    """Список статусов организаций в ЕГРЮЛ. (legacy — placeholder)
+    """Список статусов организаций в ЕГРЮЛ.
 
     Returns:
         Список статусов (действующая, ликвидирована и т.д.).
@@ -52,7 +57,7 @@ def spisok_statusov_organizaciy() -> list[dict]:
 
 
 def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
-    """Список категорий налогоплательщиков. (legacy — placeholder)
+    """Список категорий налогоплательщиков.
 
     Returns:
         Список категорий (юрлицо, ИП, самозанятый, физлицо).
@@ -60,8 +65,10 @@ def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
     return KategoriiNalogoplatelshchikov
 
 
-def info_organizacii(inn: str) -> dict:
-    """Подробная информация об организации из ЕГРЮЛ. (legacy — placeholder)
+async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
+    """Подробная информация об организации из ЕГРЮЛ.
+
+    Использует публичный API egrul.nalog.ru для получения данных.
 
     Args:
         inn: ИНН организации (10 цифр).
@@ -69,22 +76,42 @@ def info_organizacii(inn: str) -> dict:
     Returns:
         Сведения об организации (название, адрес, руководитель, статус).
     """
-    return {
-        "inn": inn,
-        "ogrn": "",
-        "nazvanie": "",
-        "polnoe_nazvanie": "",
-        "yuridicheskiy_adres": "",
-        "data_registracii": "",
-        "status": "placeholder — API integration pending",
-        "vid_deyatelnosti": "",
-        "ustroyennyy_kapital": "",
-        "rukovoditel": "",
-    }
+    if ctx:
+        await ctx.info(f"Запрос данных ЕГРЮЛ по ИНН {inn}...")
+    data = await client.poluchit_organizaciyu(inn)
+
+    if not data:
+        return (
+            f"Организация с ИНН '{inn}' не найдена.\n\n"
+            f"Проверьте корректность ИНН на egrul.nalog.ru"
+        )
+
+    lines = [f"**{data.nazvanie}**\n"]
+    lines.append(f"- ИНН: {data.inn}")
+    if data.ogrn:
+        lines.append(f"- ОГРН: {data.ogrn}")
+    if data.polnoe_nazvanie and data.polnoe_nazvanie != data.nazvanie:
+        lines.append(f"- Полное название: {data.polnoe_nazvanie}")
+    if data.yuridicheskiy_adres:
+        lines.append(f"- Юридический адрес: {data.yuridicheskiy_adres}")
+    if data.data_registracii:
+        lines.append(f"- Дата регистрации: {data.data_registracii}")
+    if data.status:
+        lines.append(f"- Статус: {data.status}")
+    if data.vid_deyatelnosti:
+        lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
+    if data.rukovoditel:
+        lines.append(f"- Руководитель: {data.rukovoditel}")
+    if data.ustroyennyy_kapital:
+        lines.append(f"- Уставный капитал: {data.ustroyennyy_kapital}")
+    lines.append("- Источник: ФНС / ЕГРЮЛ (egrul.nalog.ru)")
+    return "\n".join(lines)
 
 
-def info_ip(inn: str) -> dict:
-    """Подробная информация об ИП из ЕГРИП. (legacy — placeholder)
+async def info_ip(inn: str, ctx: Context | None = None) -> str:
+    """Подробная информация об ИП из ЕГРИП.
+
+    Использует публичный API egrul.nalog.ru для получения данных.
 
     Args:
         inn: ИНН индивидуального предпринимателя (12 цифр).
@@ -92,36 +119,81 @@ def info_ip(inn: str) -> dict:
     Returns:
         Сведения об ИП (ФИО, дата регистрации, статус, вид деятельности).
     """
-    return {
-        "inn": inn,
-        "ogrnip": "",
-        "fio": "",
-        "data_registracii": "",
-        "status": "placeholder — API integration pending",
-        "vid_deyatelnosti": "",
-    }
+    if ctx:
+        await ctx.info(f"Запрос данных ЕГРИП по ИНН {inn}...")
+    data = await client.poluchit_ip(inn)
+
+    if not data:
+        return f"ИП с ИНН '{inn}' не найден.\n\nПроверьте корректность ИНН на egrul.nalog.ru"
+
+    lines = [f"**{data.fio}** (ИП)\n"]
+    lines.append(f"- ИНН: {data.inn}")
+    if data.ogrnip:
+        lines.append(f"- ОГРНИП: {data.ogrnip}")
+    if data.data_registracii:
+        lines.append(f"- Дата регистрации: {data.data_registracii}")
+    if data.status:
+        lines.append(f"- Статус: {data.status}")
+    if data.vid_deyatelnosti:
+        lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
+    lines.append("- Источник: ФНС / ЕГРИП (egrul.nalog.ru)")
+    return "\n".join(lines)
 
 
-def proverki_organizacii(inn: str) -> list[dict]:
-    """Список налоговых проверок организации. (legacy — placeholder)
+async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
+    """Список налоговых проверок организации.
+
+    Данные о проверках требуют авторизованный доступ к API ФНС.
+    Возвращается справочная информация.
 
     Args:
         inn: ИНН организации.
 
     Returns:
-        Список проверок с типом, периодом, статусом и результатами.
+        Информация о проверках или справка.
     """
-    return []
+    if ctx:
+        await ctx.info(f"Запрос данных о проверках по ИНН {inn}...")
+    data = await client.poluchit_proverki(inn)
+
+    if not data:
+        return (
+            f"Данные о налоговых проверках для ИНН '{inn}' недоступны.\n\n"
+            f"Информация о проверках доступна через Личный кабинет налогоплательщика: lkfl2.nalog.ru\n\n"
+            f"Планы проверок: pb.nalog.ru"
+        )
+
+    rows = [(p.tip_proverki, p.period_proverki, p.status) for p in data]
+    header = f"**Налоговые проверки** — ИНН {inn}\n\n"
+    return header + markdown_table(["Тип", "Период", "Статус"], rows)
 
 
-def nalogovye_nachisleniya(inn: str, period: str = "") -> list[dict]:
-    """Налоговые начисления организации или ИП. (legacy — placeholder)
+async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None = None) -> str:
+    """Налоговые начисления организации или ИП.
+
+    Данные о начислениях требуют авторизованный доступ к API ФНС.
+    Возвращается справочная информация.
 
     Args:
         inn: ИНН организации или ИП.
         period: Налоговый период (необязательно, напр. «2025»).
 
     Returns:
-        Список начислений по видам налогов с суммами и статусами оплаты.
+        Информация о начислениях или справка.
     """
-    return []
+    if ctx:
+        await ctx.info(f"Запрос данных о начислениях по ИНН {inn}...")
+    data = await client.poluchit_nachisleniya(inn, period)
+
+    if not data:
+        period_text = f" за период {period}" if period else ""
+        return (
+            f"Данные о налоговых начислениях для ИНН '{inn}'{period_text} недоступны.\n\n"
+            f"Начисления доступны через Личный кабинет налогоплательщика: lkfl2.nalog.ru"
+        )
+
+    rows = [
+        (n.vid_naloga, n.period, format_number_ru(n.summa, 2) if n.summa else "—") for n in data
+    ]
+    header = f"**Налоговые начисления** — ИНН {inn}\n\n"
+    return header + markdown_table(["Вид налога", "Период", "Сумма"], rows)

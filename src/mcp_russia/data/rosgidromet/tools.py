@@ -88,7 +88,7 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
         lines.append(f"- Описание: {data.opisaniye}")
     if data.data_vremya:
         lines.append(f"- Данные на: {data.data_vremya}")
-    lines.append("- Источник: Росгидромет (meteorf.ru)")
+    lines.append("- Источник: Open-Meteo / Росгидромет")
     return "\n".join(lines)
 
 
@@ -128,7 +128,7 @@ async def prognoz_pogody(
             lines.append(f"- {p.opisaniye}")
         lines.append("")
 
-    lines.append("- Источник: Росгидромет (meteorf.ru)")
+    lines.append("- Источник: Open-Meteo / Росгидромет")
     return "\n".join(lines)
 
 
@@ -173,7 +173,7 @@ async def ekologiya_regiona(
     if len(data) > 10:
         lines.append(f"\n... и ещё {len(data) - 10} измерений")
 
-    lines.append("- Источник: Росгидромет / Росприроднадзор")
+    lines.append("- Источник: Open-Meteo Air Quality")
     return "\n".join(lines)
 
 
@@ -193,7 +193,7 @@ async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
         region_text = f" для региона '{region}'" if region else ""
         return (
             f"Активные предупреждения{region_text} отсутствуют.\n\n"
-            f"Метеорологические данные: meteorf.ru"
+            f"Метеорологические данные: open-meteo.com / meteorf.ru"
         )
 
     lines = [f"**Активные предупреждения** — {len(data)}\n"]
@@ -207,7 +207,7 @@ async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
         lines.append(f"   Уровень опасности: {p.uroven_opasnosti}")
         lines.append("")
 
-    lines.append("- Источник: Росгидромет (meteorf.ru)")
+    lines.append("- Источник: Open-Meteo / Росгидромет")
     return "\n".join(lines)
 
 

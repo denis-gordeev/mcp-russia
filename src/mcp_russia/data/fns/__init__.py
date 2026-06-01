@@ -8,8 +8,8 @@ FEATURE_META = FeatureMeta(
         "Данные ФНС России: налоговые начисления, проверки, ЕГРЮЛ/ЕГРИП, "
         "сведения об организациях и ИП, налоговые ставки и режимы"
     ),
-    version="0.1.0",
-    api_base="https://api.nalog.ru",
+    version="0.2.0",
+    api_base="https://egrul.nalog.ru",
     requires_auth=False,
     tags=["фнс", "налоги", "егрюл", "проверки", "бизнес"],
 )

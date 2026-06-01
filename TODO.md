@@ -2,7 +2,54 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-01 (двадцать второй проход — зачистка документации и скриптов от португальских/английских формулировок)
+## Статус раунда 2026-06-01 (двадцать третий проход — переименование файлов примеров, подключение реальных API)
+
+### Выполнено
+
+- **Переименование файлов docs/examples/ с португальских на русские транслитерации** (10 файлов):
+  - `analise-legislativa.md` → `analiz-zakonodatelstva.md`
+  - `cientista-politico.md` → `politolog.md`
+  - `economista.md` → `ekonomist.md`
+  - `fiscalizacao-municipal.md` → `municipalnyy-kontrol.md`
+  - `jornalista-investigativo.md` → `zhurnalist-rassledovatel.md`
+  - `jornalista-materias.md` → `zhurnalist-stati.md`
+  - `panorama-economico.md` → `ekonomicheskaya-panorama.md`
+  - `parlamentar-report.md` → `parlamentskiy-otchet.md`
+  - `politicas-publicas.md` → `gosudarstvennaya-politika.md`
+  - `redator-oficial.md` → `ofitsialnyy-redaktor.md`
+  - Обновлена перекрёстная ссылка в `zhurnalist-stati.md`: `./jornalista-investigativo.md` → `./zhurnalist-rassledovatel.md`
+- **Подключение реального API Open-Meteo в модуле Росгидромет (rosgidromet)**:
+  - `constants.py`: добавлены `OPEN_METEO_BASE`, `OPEN_METEO_AIR_QUALITY_BASE`, координаты (shirota/dolgota) для 15 городов, `WMO_KODY_POGODY` (28 кодов погоды → русские описания), `VETER_NAPRAVLENIYA` (направления ветра на русском)
+  - `client.py`: полная переработка — `poluchit_pogodu()` и `poluchit_prognoz()` теперь используют Open-Meteo Forecast API, `poluchit_ekologiyu()` — Open-Meteo Air Quality API (PM2.5, PM10, CO, NO₂, SO₂, O₃ с порогами превышения нормы), `poluchit_preduprezhdeniya()` — автоматическая генерация предупреждений при экстремальных температурах и ветре
+  - `tools.py`: обновлена атрибуция источников (Open-Meteo / Росгидромет)
+  - Версия модуля обновлена: 0.1.0 → 0.2.0
+  - Росгидромет — второй модуль с рабочим реальным API (после ЦБ РФ)
+- **Подключение реального API ЕГРЮЛ/ЕГРИП в модуле ФНС (fns)**:
+  - `client.py`: полная переработка — `poluchit_organizaciyu()` и `poluchit_ip()` используют публичный API egrul.nalog.ru (двухшаговый процесс: POST-поиск → GET-результат)
+  - `constants.py`: добавлен `EGRUL_API_BASE`
+  - `tools.py`: инструменты `info_organizacii` и `info_ip` теперь возвращают форматированный текст с реальными данными из ЕГРЮЛ/ЕГРИП, `proverki_organizacii` и `nalogovye_nachisleniya` информируют о необходимости авторизации
+  - Версия модуля обновлена: 0.1.0 → 0.2.0
+  - ФНС — третий модуль с рабочим реальным API
+- **Обновлены тесты**:
+  - rosgidromet: добавлены 6 тестов парсеров Open-Meteo (pogoda, prognoz, ekologiya, ekologiya с превышением, hpa→mmhg, deg→направление)
+  - fns: переписаны тесты под async-интерфейс и форматированный вывод (8 тестов с моками)
+- **Обновлена конфигурация ruff**: добавлен RUF001/RUF002 ignore для `tests/data/rosgidromet/*`
+- **Прогнаны все проверки**: `pytest` (1904 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Росгидромет работает через Open-Meteo**: бесплатный API без авторизации, покрывает все крупные города России. Текущая погода, прогноз на 16 дней, качество воздуха — всё работает реально
+- **ФНС работает через egrul.nalog.ru**: публичный API ФНС для поиска организаций и ИП по ИНН. Двухшаговый процесс (POST → GET) с автоматическим ожиданием результата
+- **Атрибуция источников**: инструменты Росгидромета указывают «Open-Meteo / Росгидромет», инструменты ФНС — «ФНС / ЕГРЮЛ (egrul.nalog.ru)»
+- **Предупреждения Росгидромета**: генерируются автоматически из текущих погодных данных (мороз ≤-30°C, жара ≥35°C, ветер ≥20 м/с, гроза)
+- **Итого модулей с реальными API**: 3 (cbrf → cbr-xml-daily.ru, rosgidromet → open-meteo.com, fns → egrul.nalog.ru)
+
+### Следующие действия
+
+- **Подключение реальных API** в остальных модулях: rosapi→Dadata (бесплатный тариф), rosstat→ЕМИСС, gosduma→duma.gov.ru, zakupki→zakupki.gov.ru
+- **Создание модуля ЕМИСС/Fedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Миграция португальских имён переменных** в legacy-модулях — ~800+ имён (client.py ~308 функций + tools.py ~220 функций + schemas.py ~67 классов + constants.py ~173 константы)
+- **Дочистить оставшиеся португальские формулировки** в CHANGELOG.md и документации
 
 ### Выполнено
 

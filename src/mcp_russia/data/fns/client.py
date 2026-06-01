@@ -1,34 +1,203 @@
-"""HTTP client stubs for the ФНС feature.
+"""HTTP client for the ФНС feature.
 
-All functions are placeholders — real API integration with
-nalog.gov.ru / egrul.nalog.ru requires separate work.
+Real API integration with:
+    - ЕГРЮЛ/ЕГРИП: https://egrul.nalog.ru (публичные данные о юрлицах и ИП)
+
+The EGRUL API uses a two-step process:
+    1. POST to start a search → receive task ID
+    2. GET search result by task ID → receive organization data
 """
 
 from __future__ import annotations
 
+import asyncio
+from typing import Any
 
-class FnsClient:
-    """HTTP client stub for ФНС API."""
+from mcp_russia._shared.http_client import http_get, http_post
 
-    def __init__(self, base_url: str = "https://api.nalog.ru"):
-        self.base_url = base_url
+from .constants import EGRUL_API_BASE
+from .schemas import (
+    IPEGRIP,
+    NalogovayaProverka,
+    NalogovoeNachislenie,
+    OrganizaciyaEGRUL,
+    SvedeniyaOrganizacii,
+)
 
-    def poluchit_organizaciyu(self, inn: str) -> dict | None:
-        """Return данные организации из ЕГРЮЛ (placeholder)."""
+
+async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
+    """Fetch organization data from ЕГРЮЛ via egrul.nalog.ru.
+
+    Args:
+        inn: ИНН организации (10 цифр).
+
+    Returns:
+        Organization data or None.
+    """
+    try:
+        result = await _egrul_search(inn)
+        if not result:
+            return None
+
+        entries = result.get("rows", []) if isinstance(result, dict) else []
+        if not entries:
+            return None
+
+        entry = entries[0]
+        return _parse_egrul_organization(entry)
+    except Exception:
         return None
 
-    def poluchit_ip(self, inn: str) -> dict | None:
-        """Return данные ИП из ЕГРИП (placeholder)."""
+
+async def poluchit_ip(inn: str) -> IPEGRIP | None:
+    """Fetch individual entrepreneur data from ЕГРИП via egrul.nalog.ru.
+
+    Args:
+        inn: ИНН ИП (12 цифр).
+
+    Returns:
+        IP data or None.
+    """
+    try:
+        result = await _egrul_search(inn)
+        if not result:
+            return None
+
+        entries = result.get("rows", []) if isinstance(result, dict) else []
+        if not entries:
+            return None
+
+        entry = entries[0]
+        return _parse_egrul_ip(entry)
+    except Exception:
         return None
 
-    def poluchit_proverki(self, inn: str) -> list[dict]:
-        """Return список проверок организации (placeholder)."""
-        return []
 
-    def poluchit_nachisleniya(self, inn: str, period: str = "") -> list[dict]:
-        """Return налоговые начисления (placeholder)."""
-        return []
+async def poluchit_proverki(inn: str) -> list[NalogovayaProverka]:
+    """Fetch tax inspection data (placeholder — requires authenticated API).
 
-    def poluchit_svedeniya(self, inn: str) -> dict | None:
-        """Return сводные сведения об организации (placeholder)."""
+    Args:
+        inn: ИНН организации.
+
+    Returns:
+        Empty list — real integration requires FNS API token.
+    """
+    return []
+
+
+async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNachislenie]:
+    """Fetch tax accruals (placeholder — requires authenticated API).
+
+    Args:
+        inn: ИНН организации или ИП.
+        period: Налоговый период.
+
+    Returns:
+        Empty list — real integration requires FNS API token.
+    """
+    return []
+
+
+async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
+    """Fetch summary information about an organization.
+
+    Args:
+        inn: ИНН организации.
+
+    Returns:
+        Summary data or None.
+    """
+    org = await poluchit_organizaciyu(inn)
+    if not org:
         return None
+
+    return SvedeniyaOrganizacii(
+        inn=org.inn,
+        nazvanie=org.nazvanie,
+        registracionnyy_nomer=org.ogrn,
+        data_postanovki_na_uchet=org.data_registracii,
+        nalogovyy_organ="",
+        rezhim_nalogooblozheniya="",
+        srednespisochnaya_chislennost=None,
+    )
+
+
+async def _egrul_search(query: str) -> dict[str, Any] | None:
+    """Perform a two-step search via the EGRUL nalog.ru API.
+
+    Step 1: POST search request → get task ID.
+    Step 2: GET search result by task ID.
+
+    Args:
+        query: INN, OGRN, or organization name to search.
+
+    Returns:
+        Search result data or None.
+    """
+    search_url = EGRUL_API_BASE
+    result_url = f"{EGRUL_API_BASE}/search-result/"
+
+    task_data = await http_post(
+        search_url,
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        json_body=None,
+        params={"query": query},
+    )
+
+    token = task_data.get("t") if isinstance(task_data, dict) else None
+    if not token:
+        return None
+
+    await asyncio.sleep(0.5)
+
+    result = await http_get(f"{result_url}{token}")
+    return result
+
+
+def _parse_egrul_organization(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
+    """Parse an EGRUL entry into OrganizaciyaEGRUL schema."""
+    return OrganizaciyaEGRUL(
+        inn=entry.get("inn", "") or entry.get("t", ""),
+        ogrn=entry.get("ogrn", "") or entry.get("o", ""),
+        nazvanie=entry.get("n", "") or entry.get("c", ""),
+        polnoe_nazvanie=entry.get("n", ""),
+        yuridicheskiy_adres=entry.get("a", ""),
+        data_registracii=entry.get("r", "") or entry.get("g", ""),
+        status=_parse_status(entry.get("s", "")),
+        vid_deyatelnosti=entry.get("k", ""),
+        ustroyennyy_kapital="",
+        rukovoditel="",
+    )
+
+
+def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
+    """Parse an EGRIP entry into IPEGRIP schema."""
+    return IPEGRIP(
+        inn=entry.get("inn", "") or entry.get("t", ""),
+        ogrnip=entry.get("ogrn", "") or entry.get("o", ""),
+        fio=entry.get("n", "") or entry.get("c", ""),
+        data_registracii=entry.get("r", "") or entry.get("g", ""),
+        status=_parse_status(entry.get("s", "")),
+        vid_deyatelnosti=entry.get("k", ""),
+    )
+
+
+def _parse_status(status_code: Any) -> str:
+    """Convert EGRUL status code to Russian description."""
+    status_map = {
+        "01": "Действующая",
+        "02": "В процессе ликвидации",
+        "03": "Ликвидирована",
+        "04": "Исключение из ЕГРЮЛ",
+        "05": "В процессе реорганизации",
+        "06": "Прекратила деятельность",
+        "07": "Прекратила деятельность через реорганизацию",
+        "08": "Прекратила деятельность через присоединение",
+        "09": "Прекратила деятельность через слияние",
+        "10": "Прекратила деятельность через разделение",
+        "11": "Прекратила деятельность через выделение",
+        "12": "Прекратила деятельность через преобразование",
+    }
+    if isinstance(status_code, str):
+        return status_map.get(status_code, status_code)
+    return str(status_code) if status_code else ""

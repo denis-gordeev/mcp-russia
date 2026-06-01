@@ -1,7 +1,11 @@
 """HTTP client for the Росгидромет data sources.
 
-Rosgidromet provides weather, climate, and environmental monitoring data.
-This module provides placeholder client functions for future API integration.
+Real API integration via Open-Meteo (https://open-meteo.com):
+    - Текущая погода: /v1/forecast?current_weather=true
+    - Прогноз: /v1/forecast?daily=...
+    - Качество воздуха: /v1/air-quality?current=...
+
+Open-Meteo is free, no API key required, and covers Russian cities.
 """
 
 from __future__ import annotations
@@ -11,11 +15,13 @@ from typing import Any
 from mcp_russia._shared.http_client import http_get
 
 from .constants import (
-    ROSGIDROMET_API_BASE,
+    OPEN_METEO_AIR_QUALITY_BASE,
+    OPEN_METEO_BASE,
     STANCII_MONITORINGA,
     TIPY_EKODANNYKH,
     TIPY_METEODANNYKH,
     TIPY_PREDUPREZHDENIY,
+    WMO_KODY_POGODY,
 )
 from .schemas import (
     EkologiyaData,
@@ -26,19 +32,35 @@ from .schemas import (
 )
 
 
+def _find_stanciya(code: str) -> dict[str, Any] | None:
+    for s in STANCII_MONITORINGA:
+        if s["code"] == code:
+            return s
+    return None
+
+
 async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
-    """Fetch current weather data for a monitoring station.
+    """Fetch current weather data via Open-Meteo API.
 
     Args:
-        stanciya: Station code (default: Moscow).
+        stanciya: Station code (default: Moscow — 77).
 
     Returns:
         Current weather data or None.
     """
-    url = f"{ROSGIDROMET_API_BASE}/pogoda/{stanciya}"
+    info = _find_stanciya(stanciya)
+    if not info:
+        return None
+
+    params = {
+        "latitude": info["shirota"],
+        "longitude": info["dolgota"],
+        "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure",
+        "timezone": "Europe/Moscow",
+    }
     try:
-        data = await http_get(url)
-        return _parse_pogoda(data)
+        data = await http_get(OPEN_METEO_BASE, params=params)
+        return _parse_openmeteo_pogoda(data, info)
     except Exception:
         return None
 
@@ -47,20 +69,29 @@ async def poluchit_prognoz(
     stanciya: str = "77",
     dni: int = 3,
 ) -> list[PrognozData]:
-    """Fetch weather forecast for a station.
+    """Fetch weather forecast via Open-Meteo API.
 
     Args:
         stanciya: Station code.
-        dni: Number of forecast days.
+        dni: Number of forecast days (1-16).
 
     Returns:
         List of forecast data.
     """
-    url = f"{ROSGIDROMET_API_BASE}/prognoz/{stanciya}"
-    params = {"dni": str(dni)}
+    info = _find_stanciya(stanciya)
+    if not info:
+        return []
+
+    params = {
+        "latitude": info["shirota"],
+        "longitude": info["dolgota"],
+        "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max",
+        "timezone": "Europe/Moscow",
+        "forecast_days": min(max(dni, 1), 16),
+    }
     try:
-        data = await http_get(url, params=params)
-        return _parse_prognoz(data)
+        data = await http_get(OPEN_METEO_BASE, params=params)
+        return _parse_openmeteo_prognoz(data, info)
     except Exception:
         return []
 
@@ -69,30 +100,47 @@ async def poluchit_ekologiyu(
     gorod: str = "",
     tip: str = "",
 ) -> list[EkologiyaData]:
-    """Fetch environmental monitoring data.
+    """Fetch air quality data via Open-Meteo Air Quality API.
 
     Args:
-        gorod: City name filter.
-        tip: Data type (vozdukh, voda, pochva, radiaciya, shum).
+        gorod: City name filter (matched against station names).
+        tip: Data type filter (only 'vozdukh' supported for now).
 
     Returns:
         List of environmental data.
     """
-    url = f"{ROSGIDROMET_API_BASE}/ekologiya"
-    params: dict[str, str] = {}
+    stations = STANCII_MONITORINGA
     if gorod:
-        params["gorod"] = gorod
+        stations = [s for s in stations if gorod.lower() in s["name"].lower()]
+    if not stations:
+        stations = STANCII_MONITORINGA[:5]
+
+    results = []
+    for station in stations[:5]:
+        params = {
+            "latitude": station["shirota"],
+            "longitude": station["dolgota"],
+            "current": "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone",
+            "timezone": "Europe/Moscow",
+        }
+        try:
+            data = await http_get(OPEN_METEO_AIR_QUALITY_BASE, params=params)
+            parsed = _parse_openmeteo_ekologiya(data, station)
+            results.extend(parsed)
+        except Exception:
+            continue
+
     if tip:
-        params["tip"] = tip
-    try:
-        data = await http_get(url, params=params)
-        return _parse_ekologiya(data)
-    except Exception:
-        return []
+        results = [r for r in results if r.tip == tip]
+
+    return results
 
 
 async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
-    """Fetch active weather warnings for a region.
+    """Fetch active weather warnings.
+
+    Open-Meteo does not provide warning data. This function checks
+    current weather conditions and generates warnings for extreme values.
 
     Args:
         region: Region code or name.
@@ -100,44 +148,99 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
     Returns:
         List of active warnings.
     """
-    url = f"{ROSGIDROMET_API_BASE}/preduprezhdeniya"
-    params: dict[str, str] = {}
+    stations = STANCII_MONITORINGA
     if region:
-        params["region"] = region
-    try:
-        data = await http_get(url, params=params)
-        return _parse_preduprezhdeniya(data)
-    except Exception:
-        return []
+        stations = [
+            s
+            for s in stations
+            if region.lower() in s.get("region", "").lower()
+            or region.lower() in s.get("name", "").lower()
+        ]
+    if not stations:
+        stations = STANCII_MONITORINGA
+
+    warnings = []
+    for station in stations[:3]:
+        params = {
+            "latitude": station["shirota"],
+            "longitude": station["dolgota"],
+            "current": "temperature_2m,wind_speed_10m,weather_code",
+            "timezone": "Europe/Moscow",
+        }
+        try:
+            data = await http_get(OPEN_METEO_BASE, params=params)
+            current = data.get("current", {})
+            temp = current.get("temperature_2m")
+            wind = current.get("wind_speed_10m")
+            wmo = current.get("weather_code", 0)
+
+            if temp is not None and temp <= -30:
+                warnings.append(
+                    Preduprezhdenie(
+                        tip="moroz",
+                        region=station.get("region", ""),
+                        gorod=station["name"],
+                        opisanie=f"Сильный мороз: {temp}°C",
+                        uroven_opasnosti="vysokiy",
+                    )
+                )
+            elif temp is not None and temp >= 35:
+                warnings.append(
+                    Preduprezhdenie(
+                        tip="zhara",
+                        region=station.get("region", ""),
+                        gorod=station["name"],
+                        opisanie=f"Сильная жара: {temp}°C",
+                        uroven_opasnosti="sredniy",
+                    )
+                )
+
+            if wind is not None and wind >= 20:
+                warnings.append(
+                    Preduprezhdenie(
+                        tip="shtorm",
+                        region=station.get("region", ""),
+                        gorod=station["name"],
+                        opisanie=f"Сильный ветер: {wind:.1f} м/с",
+                        uroven_opasnosti="vysokiy" if wind >= 30 else "sredniy",
+                    )
+                )
+
+            if wmo in (95, 96, 99):
+                warnings.append(
+                    Preduprezhdenie(
+                        tip="urogan",
+                        region=station.get("region", ""),
+                        gorod=station["name"],
+                        opisanie=f"Гроза ({WMO_KODY_POGODY.get(wmo, '')})",
+                        uroven_opasnosti="sredniy" if wmo == 95 else "vysokiy",
+                    )
+                )
+        except Exception:
+            continue
+
+    return warnings
 
 
 async def poluchit_sputnik_dannye(
     region: str = "",
     tip: str = "",
 ) -> list[SputnikMonitoring]:
-    """Fetch satellite monitoring data.
+    """Satellite monitoring data placeholder.
+
+    Open-Meteo does not provide satellite imagery. This remains a stub.
 
     Args:
         region: Region filter.
         tip: Data type (lesa, voda, pozhary, snezhnyy_pokrov).
 
     Returns:
-        List of satellite monitoring data.
+        Empty list — satellite data not available via current API.
     """
-    url = f"{ROSGIDROMET_API_BASE}/sputnik"
-    params: dict[str, str] = {}
-    if region:
-        params["region"] = region
-    if tip:
-        params["tip"] = tip
-    try:
-        data = await http_get(url, params=params)
-        return _parse_sputnik(data)
-    except Exception:
-        return []
+    return []
 
 
-def get_stancii_list() -> list[dict[str, str]]:
+def get_stancii_list() -> list[dict[str, Any]]:
     """Get list of monitoring stations."""
     return STANCII_MONITORINGA
 
@@ -157,106 +260,121 @@ def get_tipy_preduprezhdeniy_list() -> list[dict[str, str]]:
     return TIPY_PREDUPREZHDENIY
 
 
-# --- Response parsers ---
+# --- Open-Meteo response parsers ---
 
 
-def _parse_pogoda(data: Any) -> PogodaData | None:
-    """Parse API response into PogodaData."""
-    if not isinstance(data, dict):
-        return None
+def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> PogodaData:
+    """Parse Open-Meteo forecast response into PogodaData."""
+    current = data.get("current", {})
+    wmo_code = current.get("weather_code", 0)
+    wind_dir_deg = current.get("wind_direction_10m", 0)
+    opisaniye = WMO_KODY_POGODY.get(wmo_code, "")
+
     return PogodaData(
-        stanciya=data.get("stanciya", ""),
-        gorod=data.get("gorod", ""),
-        region=data.get("region", ""),
-        temperatura=data.get("temperatura"),
-        feels_like=data.get("feels_like"),
-        vlazhnost=data.get("vlazhnost"),
-        davlenie=data.get("davlenie"),
-        veter_skorost=data.get("veter_skorost"),
-        veter_napravlenie=data.get("veter_napravlenie", ""),
-        osadki=data.get("osadki"),
-        vidimost=data.get("vidimost"),
-        opisaniye=data.get("opisaniye", ""),
-        data_vremya=data.get("data_vremya", ""),
+        stanciya=info["code"],
+        gorod=info["name"],
+        region=info.get("region", ""),
+        temperatura=current.get("temperature_2m"),
+        feels_like=current.get("apparent_temperature"),
+        vlazhnost=current.get("relative_humidity_2m"),
+        davlenie=_hpa_to_mmhg(current.get("surface_pressure")),
+        veter_skorost=current.get("wind_speed_10m"),
+        veter_napravlenie=_deg_to_napravlenie(wind_dir_deg),
+        osadki=current.get("precipitation"),
+        vidimost=None,
+        opisaniye=opisaniye,
+        data_vremya=current.get("time", ""),
     )
 
 
-def _parse_prognoz(data: Any) -> list[PrognozData]:
-    """Parse API response into list of PrognozData."""
-    if not isinstance(data, list):
-        return []
+def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozData]:
+    """Parse Open-Meteo daily forecast into list of PrognozData."""
+    daily = data.get("daily", {})
+    dates = daily.get("time", [])
+    t_max = daily.get("temperature_2m_max", [])
+    t_min = daily.get("temperature_2m_min", [])
+    precip_prob = daily.get("precipitation_probability_max", [])
+    wind_max = daily.get("wind_speed_10m_max", [])
+    wmo_codes = daily.get("weather_code", [])
+
     results = []
-    for item in data:
+    for i, date_str in enumerate(dates):
+        wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
         results.append(
             PrognozData(
-                gorod=item.get("gorod", ""),
-                data=item.get("data", ""),
-                temperatura_dnem=item.get("temperatura_dnem"),
-                temperatura_nochyu=item.get("temperatura_nochyu"),
-                osadki_veroyatnost=item.get("osadki_veroyatnost"),
-                veter_skorost=item.get("veter_skorost"),
-                opisaniye=item.get("opisaniye", ""),
+                gorod=info["name"],
+                data=date_str,
+                temperatura_dnem=t_max[i] if i < len(t_max) else None,
+                temperatura_nochyu=t_min[i] if i < len(t_min) else None,
+                osadki_veroyatnost=precip_prob[i] if i < len(precip_prob) else None,
+                veter_skorost=wind_max[i] if i < len(wind_max) else None,
+                opisaniye=WMO_KODY_POGODY.get(wmo_code, ""),
             )
         )
     return results
 
 
-def _parse_ekologiya(data: Any) -> list[EkologiyaData]:
-    """Parse API response into list of EkologiyaData."""
-    if not isinstance(data, list):
-        return []
+def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> list[EkologiyaData]:
+    """Parse Open-Meteo air quality response into list of EkologiyaData."""
+    current = data.get("current", {})
+    time_str = current.get("time", "")
+
+    indicators = [
+        ("pm2_5", "PM2.5", 25.0),
+        ("pm10", "PM10", 50.0),
+        ("carbon_monoxide", "CO", 4.0),
+        ("nitrogen_dioxide", "NO₂", 40.0),
+        ("sulphur_dioxide", "SO₂", 20.0),
+        ("ozone", "O₃", 120.0),
+    ]
+
     results = []
-    for item in data:
-        results.append(
-            EkologiyaData(
-                gorod=item.get("gorod", ""),
-                stanciya=item.get("stanciya", ""),
-                tip=item.get("tip", ""),
-                pokazatel=item.get("pokazatel", ""),
-                znachenie=item.get("znachenie"),
-                norma_max=item.get("norma_max"),
-                norma_min=item.get("norma_min"),
-                prevyshenie=item.get("prevyshenie", False),
-                data_izmereniya=item.get("data_izmereniya", ""),
+    for key, name, norma in indicators:
+        value = current.get(key)
+        if value is not None:
+            prevyshenie = value > norma
+            results.append(
+                EkologiyaData(
+                    gorod=info["name"],
+                    stanciya=info["code"],
+                    tip="vozdukh",
+                    pokazatel=name,
+                    znachenie=round(value, 2),
+                    norma_max=norma,
+                    norma_min=None,
+                    prevyshenie=prevyshenie,
+                    data_izmereniya=time_str,
+                )
             )
-        )
     return results
 
 
-def _parse_preduprezhdeniya(data: Any) -> list[Preduprezhdenie]:
-    """Parse API response into list of Preduprezhdenie."""
-    if not isinstance(data, list):
-        return []
-    results = []
-    for item in data:
-        results.append(
-            Preduprezhdenie(
-                tip=item.get("tip", ""),
-                region=item.get("region", ""),
-                gorod=item.get("gorod", ""),
-                opisanie=item.get("opisanie", ""),
-                data_nachala=item.get("data_nachala", ""),
-                data_okonchaniya=item.get("data_okonchaniya", ""),
-                uroven_opasnosti=item.get("uroven_opasnosti", ""),
-            )
-        )
-    return results
+def _hpa_to_mmhg(hpa: float | None) -> float | None:
+    """Convert hectopascals to mmHg."""
+    if hpa is None:
+        return None
+    return round(hpa * 0.750062, 1)
 
 
-def _parse_sputnik(data: Any) -> list[SputnikMonitoring]:
-    """Parse API response into list of SputnikMonitoring."""
-    if not isinstance(data, list):
-        return []
-    results = []
-    for item in data:
-        results.append(
-            SputnikMonitoring(
-                sputnik=item.get("sputnik", ""),
-                data_syomki=item.get("data_syomki", ""),
-                region=item.get("region", ""),
-                tip_dannykh=item.get("tip_dannykh", ""),
-                razreshenie=item.get("razreshenie", ""),
-                izobrazhenie_url=item.get("izobrazhenie_url", ""),
-            )
-        )
-    return results
+def _deg_to_napravlenie(deg: float) -> str:
+    """Convert wind direction degrees to Russian compass direction."""
+    directions = [
+        "С",
+        "ССВ",
+        "СВ",
+        "ВСВ",
+        "В",
+        "ВЮВ",
+        "ЮВ",
+        "ЮЮВ",
+        "Ю",
+        "ЮЮЗ",
+        "ЮЗ",
+        "ЗЮЗ",
+        "З",
+        "ЗСЗ",
+        "СЗ",
+        "ССЗ",
+    ]
+    idx = round(deg / 22.5) % 16
+    return directions[idx]

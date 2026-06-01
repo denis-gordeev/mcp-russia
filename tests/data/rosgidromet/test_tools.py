@@ -3,10 +3,17 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosgidromet import tools as rosgidromet_tools
+from mcp_russia.data.rosgidromet.client import (
+    _deg_to_napravlenie,
+    _hpa_to_mmhg,
+    _parse_openmeteo_ekologiya,
+    _parse_openmeteo_pogoda,
+    _parse_openmeteo_prognoz,
+)
+from mcp_russia.data.rosgidromet.constants import STANCII_MONITORINGA
 
 
 def _mock_ctx():
-    """Создать мок контекста."""
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -14,7 +21,6 @@ def _mock_ctx():
 
 
 async def test_spisok_stanciy():
-    """Проверка spisok_stanciy."""
     ctx = _mock_ctx()
     result = await rosgidromet_tools.spisok_stanciy(ctx)
     assert "Станции мониторинга" in result
@@ -22,7 +28,6 @@ async def test_spisok_stanciy():
 
 
 async def test_spisok_tipov_dannykh():
-    """Проверка spisok_tipov_dannykh."""
     ctx = _mock_ctx()
     result = await rosgidromet_tools.spisok_tipov_dannykh(ctx)
     assert "метеорологических данных" in result
@@ -30,7 +35,6 @@ async def test_spisok_tipov_dannykh():
 
 
 async def test_pogoda_seychas_unavailable():
-    """Проверка pogoda_seychas при отсутствии данных."""
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_pogodu", return_value=None):
         result = await rosgidromet_tools.pogoda_seychas(stanciya="99", ctx=ctx)
@@ -38,7 +42,6 @@ async def test_pogoda_seychas_unavailable():
 
 
 async def test_prognoz_pogody_unavailable():
-    """Проверка prognoz_pogody при отсутствии данных."""
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_prognoz", return_value=[]):
         result = await rosgidromet_tools.prognoz_pogody(stanciya="99", ctx=ctx)
@@ -46,7 +49,6 @@ async def test_prognoz_pogody_unavailable():
 
 
 async def test_ekologiya_regiona_empty():
-    """Проверка ekologiya_regiona при отсутствии данных."""
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_ekologiyu", return_value=[]):
         result = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", ctx=ctx)
@@ -54,7 +56,6 @@ async def test_ekologiya_regiona_empty():
 
 
 async def test_preduprezhdeniya_empty():
-    """Проверка preduprezhdeniya при отсутствии предупреждений."""
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_preduprezhdeniya", return_value=[]):
         result = await rosgidromet_tools.preduprezhdeniya(region="Тест", ctx=ctx)
@@ -62,8 +63,109 @@ async def test_preduprezhdeniya_empty():
 
 
 async def test_sputnik_monitoring_empty():
-    """Проверка sputnik_monitoring при отсутствии данных."""
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_sputnik_dannye", return_value=[]):
         result = await rosgidromet_tools.sputnik_monitoring(region="Тест", ctx=ctx)
     assert "недоступны" in result
+
+
+def test_parse_openmeteo_pogoda():
+    data = {
+        "current": {
+            "temperature_2m": 5.3,
+            "relative_humidity_2m": 72,
+            "apparent_temperature": 2.1,
+            "precipitation": 0.0,
+            "weather_code": 3,
+            "wind_speed_10m": 4.5,
+            "wind_direction_10m": 180,
+            "surface_pressure": 1013.2,
+            "time": "2026-06-01T12:00",
+        }
+    }
+    info = STANCII_MONITORINGA[0]
+    result = _parse_openmeteo_pogoda(data, info)
+    assert result.gorod == "Москва"
+    assert result.temperatura == 5.3
+    assert result.feels_like == 2.1
+    assert result.vlazhnost == 72
+    assert result.opisaniye == "Пасмурно"
+    assert result.veter_napravlenie == "Ю"
+
+
+def test_parse_openmeteo_prognoz():
+    data = {
+        "daily": {
+            "time": ["2026-06-01", "2026-06-02"],
+            "temperature_2m_max": [22.0, 24.0],
+            "temperature_2m_min": [10.0, 12.0],
+            "precipitation_probability_max": [30, 10],
+            "wind_speed_10m_max": [5.0, 3.0],
+            "weather_code": [1, 0],
+        }
+    }
+    info = STANCII_MONITORINGA[0]
+    result = _parse_openmeteo_prognoz(data, info)
+    assert len(result) == 2
+    assert result[0].gorod == "Москва"
+    assert result[0].temperatura_dnem == 22.0
+    assert result[0].temperatura_nochyu == 10.0
+    assert result[0].opisaniye == "Преимущественно ясно"
+    assert result[1].opisaniye == "Ясно"
+
+
+def test_parse_openmeteo_ekologiya():
+    data = {
+        "current": {
+            "pm2_5": 12.5,
+            "pm10": 35.0,
+            "carbon_monoxide": 200.0,
+            "nitrogen_dioxide": 15.0,
+            "sulphur_dioxide": 5.0,
+            "ozone": 80.0,
+            "time": "2026-06-01T12:00",
+        }
+    }
+    info = STANCII_MONITORINGA[0]
+    result = _parse_openmeteo_ekologiya(data, info)
+    assert len(result) == 6
+    assert result[0].pokazatel == "PM2.5"
+    assert result[0].znachenie == 12.5
+    assert result[0].prevyshenie is False
+    assert result[1].pokazatel == "PM10"
+    assert result[1].znachenie == 35.0
+    assert result[1].prevyshenie is False
+
+
+def test_parse_openmeteo_ekologiya_prevyshenie():
+    data = {
+        "current": {
+            "pm2_5": 55.0,
+            "pm10": 80.0,
+            "carbon_monoxide": 5.0,
+            "nitrogen_dioxide": 50.0,
+            "sulphur_dioxide": 25.0,
+            "ozone": 150.0,
+            "time": "2026-06-01T12:00",
+        }
+    }
+    info = STANCII_MONITORINGA[0]
+    result = _parse_openmeteo_ekologiya(data, info)
+    assert result[0].prevyshenie is True
+    assert result[1].prevyshenie is True
+    assert result[3].prevyshenie is True
+    assert result[4].prevyshenie is True
+    assert result[5].prevyshenie is True
+
+
+def test_hpa_to_mmhg():
+    assert _hpa_to_mmhg(None) is None
+    assert _hpa_to_mmhg(1013.25) == 760.0
+    assert _hpa_to_mmhg(1000.0) == 750.1
+
+
+def test_deg_to_napravlenie():
+    assert _deg_to_napravlenie(0) == "С"
+    assert _deg_to_napravlenie(90) == "В"
+    assert _deg_to_napravlenie(180) == "Ю"
+    assert _deg_to_napravlenie(270) == "З"
