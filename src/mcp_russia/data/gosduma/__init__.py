@@ -8,8 +8,8 @@ FEATURE_META = FeatureMeta(
         "Данные Государственной Думы: депутаты, законопроекты, пленарные заседания, "
         "голосования, комитеты, фракции"
     ),
-    version="0.1.0",
-    api_base="https://download.data.duma.gov.ru",
+    version="0.2.0",
+    api_base="https://api.duma.gov.ru",
     requires_auth=False,
     tags=["госдума", "депутаты", "законопроекты", "парламент", "голосования"],
 )

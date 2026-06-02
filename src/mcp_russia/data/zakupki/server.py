@@ -12,6 +12,7 @@ from .tools import (
     info_zakazchika,
     info_zakupki,
     plany_zakupok,
+    poisk_kontraktov,
     poisk_zakupok,
     sposoby_zakupok,
     statusy_zakupok,
@@ -22,6 +23,7 @@ mcp = FastMCP("mcp-russia-zakupki")
 # Tools
 mcp.tool(poisk_zakupok, tags={"закупки", "поиск"})
 mcp.tool(info_zakupki, tags={"закупка", "подробности"})
+mcp.tool(poisk_kontraktov, tags={"контракты", "поиск"})
 mcp.tool(info_zakazchika, tags={"заказчик", "информация"})
 mcp.tool(info_postavshchika, tags={"поставщик", "информация"})
 mcp.tool(statusy_zakupok, tags={"статусы", "справочник"})

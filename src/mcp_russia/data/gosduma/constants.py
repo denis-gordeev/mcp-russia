@@ -1,11 +1,13 @@
 """Constants for the Gosduma (State Duma) feature."""
 
 # API Государственной Думы (открытые данные)
-DUMA_API_BASE = "https://download.data.duma.gov.ru"
-DUMA_DEPUTATS = "https://duma.gov.ru/api/deputats"
-DUMA_LAWS = "https://sozd.duma.gov.ru"
+DUMA_API_BASE = "https://api.duma.gov.ru/api/v1"
+DUMA_DEPUTATS = "https://api.duma.gov.ru/api/v1/deputies"
+DUMA_LAWS = "https://sozd.duma.gov.ru/api/open-api"
+DUMA_VOTES = "https://api.duma.gov.ru/api/v1/votes"
+DUMA_TRANSCRIPTS = "https://api.duma.gov.ru/api/v1/transcripts"
 
-# Основные показатели
+# Ключевые показатели
 KLYUCHEVYE_INDIKATORY = [
     {"code": "deputats", "name": "Список депутатов"},
     {"code": "laws", "name": "Законопроекты"},
@@ -48,3 +50,27 @@ KOMITETY = [
     {"code": "education", "name": "Комитет по просвещению"},
     {"code": "energy", "name": "Комитет по энергетике"},
 ]
+
+# Статусы законопроектов
+STATUSY_ZAKONOPROEKTOV = [
+    {"code": "introduced", "name": "Внесён в ГД"},
+    {"code": "committee", "name": "На рассмотрении комитета"},
+    {"code": "first_reading", "name": "Прошёл первое чтение"},
+    {"code": "second_reading", "name": "Прошёл второе чтение"},
+    {"code": "third_reading", "name": "Прошёл третье чтение"},
+    {"code": "approved", "name": "Одобрен Советом Федерации"},
+    {"code": "signed", "name": "Подписан Президентом"},
+    {"code": "rejected", "name": "Отклонён"},
+    {"code": "withdrawn", "name": "Отозван инициатором"},
+]
+
+# Фракции — маппинг кодов API → русские названия
+FRAKCIYA_API_MAP = {
+    "ЕР": "Единая Россия",
+    "НЛ": "Новые люди",
+    "Единая Россия": "Единая Россия",
+    "КПРФ": "КПРФ",
+    "Справедливая Россия - За правду": "Справедливая Россия — За правду",
+    "ЛДПР": "ЛДПР",
+    "Новые люди": "Новые люди",
+}

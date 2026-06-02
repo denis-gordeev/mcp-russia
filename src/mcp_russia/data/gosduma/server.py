@@ -8,6 +8,7 @@ from fastmcp import FastMCP
 from .prompts import analiz_deputata, obzor_zakonodatelstva
 from .resources import istochniki_dannyh, struktura_dumy
 from .tools import (
+    golosovaniya,
     info_deputata,
     spisok_deputatov,
     spisok_frakcii,
@@ -25,6 +26,7 @@ mcp.tool(spisok_frakcii, tags={"фракции", "справочник"})
 mcp.tool(spisok_komitetov, tags={"комитеты", "справочник"})
 mcp.tool(spisok_sozyvov, tags={"созывы", "справочник"})
 mcp.tool(zakonoproekty, tags={"законопроекты", "активность"})
+mcp.tool(golosovaniya, tags={"голосования", "активность"})
 
 # Resources
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)

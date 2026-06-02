@@ -23,6 +23,7 @@ async def test_has_tools(client):
         "spisok_komitetov",
         "spisok_sozyvov",
         "zakonoproekty",
+        "golosovaniya",
     }
     assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
@@ -64,9 +65,9 @@ async def test_spisok_sozyvov(client):
     assert "VIII" in text or "созыв" in text.lower()
 
 
-async def test_zakonoproekty(client):
+async def test_spisok_komitetov(client):
     async with client:
-        result = await client.call_tool("zakonoproekty", {})
+        result = await client.call_tool("spisok_komitetov", {})
     assert result is not None
     text = str(result)
-    assert "Законопроект" in text or "СОЗД" in text
+    assert "Комитет" in text

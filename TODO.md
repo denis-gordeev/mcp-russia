@@ -2,6 +2,52 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-02 (двадцать четвёртый проход — реальные API Госдумы и Закупок, зачистка CHANGELOG)
+
+### Выполнено
+
+- **Подключение реального API Государственной Думы в модуле gosduma**:
+  - `constants.py`: обновлены API-эндпоинты (`api.duma.gov.ru/api/v1`), добавлены `DUMA_VOTES`, `DUMA_TRANSCRIPTS`, `STATUSY_ZAKONOPROEKTOV`, `FRAKCIYA_API_MAP`
+  - `client.py`: полная переработка — `poluchit_deputatov()` использует api.duma.gov.ru, `poluchit_zakonoproekty()` — СОЗД API, `poluchit_golosovaniya()` — API голосований, добавлена поддержка `DUMA_API_TOKEN`, парсеры `_parse_deputats()`, `_parse_zakonoproekty()`, `_parse_golosovaniya()`, `_parse_one_deputat()`
+  - `tools.py`: обновлены все инструменты для форматированного вывода с реальными данными, добавлен инструмент `golosovaniya()` (результаты голосований)
+  - `server.py`: зарегистрирован новый инструмент `golosovaniya` (теги: голосования, активность)
+  - `resources.py`: обновлены источники данных (api.duma.gov.ru)
+  - `__init__.py`: версия 0.1.0 → 0.2.0, обновлён api_base
+  - Госдума — четвёртый модуль с реальным API-интерфейсом (после ЦБ РФ, Росгидромета, ФНС)
+- **Подключение реального API ЕИС Закупок в модуле zakupki**:
+  - `client.py`: полная переработка — `poisk_zakupok()` использует API ЕИС, `poluchit_zakupku()` — карточка закупки, `poisk_kontraktov()` — реестр контрактов, `info_zakazchika()` и `info_postavshchika()` используют ЕГРЮЛ/ЕГРИП через модуль ФНС, `plany_zakupok()` — планы-графики, парсеры `_parse_zakupki_search()`, `_parse_kontrakty()`, `_parse_plany()`, добавлена поддержка `ZAKUPKI_API_TOKEN`
+  - `tools.py`: обновлены все инструменты для форматированного вывода, добавлен инструмент `poisk_kontraktov()`, исправлена опечатка «Deadline подачи заявок» → «Срок подачи заявок»
+  - `server.py`: зарегистрирован новый инструмент `poisk_kontraktov` (теги: контракты, поиск)
+  - `__init__.py`: версия 0.1.0 → 0.2.0, исправлена опечатка «закуровок» → «закупок»
+  - Закупки — пятый модуль с реальным API-интерфейсом
+- **Обновлены тесты**:
+  - gosduma: добавлены 12 тестов (парсеры deputats/zakonoproekty/golosovaniya/one_deputat, инструменты с моками и реальными данными, golosovaniya)
+  - zakupki: переписаны тесты под async-интерфейс (18 тестов — парсеры zakupki/kontrakty/determine_zakon/safe_float, инструменты с моками)
+  - Обновлены интеграционные тесты (новые инструменты golosovaniya и poisk_kontraktov)
+- **Дочистка CHANGELOG.md**:
+  - `detalhar_proposicao` → `detal_zakonoproekta`, `buscar_proposicao` → `poisk_zakonoproekta`
+  - `executar_lote` → `vypolnit_paket`
+  - `votação` → `голосование`
+  - `Перепись` → `Переработка`, `TCE-модулей` → `модулей ТСЕ`
+  - `штатов` → `регионов`, `mcp-brasil` → `mcp-russia`
+  - Добавлена пометка `(legacy-модули)` для модулей с португальскими именами
+- **Исправлена опечатка в pyproject.toml**: «закуровок» → «закупок» в описании модуля zakupki
+- **Прогнаны все проверки**: `pytest` (1527 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Госдума работает через api.duma.gov.ru**: поддерживается токен DUMA_API_TOKEN (опционально), парсеры обрабатывают оба варианта ключей API (surname/lastName, factionName/faction)
+- **Закупки работают через zakupki.gov.ru API + ЕГРЮЛ**: поиск закупок и контрактов через API ЕИС, информация о заказчиках/поставщиках — через модуль ФНС (egrul.nalog.ru)
+- **Кросс-модульная интеграция**: zakupki/client.py импортирует ФНС-клиент для получения данных о организациях по ИНН
+- **Итого модулей с реальными API-интерфейсами**: 5 (cbrf, rosgidromet, fns, gosduma, zakupki)
+
+### Следующие действия
+
+- **Миграция португальских имён переменных** в legacy-модулях — ~800+ имён (camara: 202 идентификатора, senado, datajud, saude и др.)
+- **Подключение реальных API** в остальных модулях: rosapi→Dadata, rosstat→ЕМИСС, cekrf→vybory.izbirkom.ru, kad_arbitrazh→kad.arbitr.ru, publikatsii→pravo.gov.ru, minzdrav→data.minzdrav.gov.ru
+- **Создание модуля ЕМИСС/Fedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Дочистить оставшиеся португальские формулировки** в документации и коде
+
 ## Статус раунда 2026-06-01 (двадцать третий проход — переименование файлов примеров, подключение реальных API)
 
 ### Выполнено

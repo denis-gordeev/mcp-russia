@@ -37,32 +37,47 @@ async def poisk_zakupok(
     if ctx:
         await ctx.info(f"Поиск закупок: {zapros or 'все'}...")
 
-    header = "**Результаты поиска в ЕИС закупок**\n\n"
-
-    filters = []
-    if zapros:
-        filters.append(f"Запрос: {zapros}")
-    if zakon:
-        filters.append(f"Закон: {zakon}")
-    if region:
-        filters.append(f"Регион: {region}")
-    if status:
-        filters.append(f"Статус: {status}")
-
-    if filters:
-        header += "Фильтры: " + ", ".join(filters) + "\n\n"
-
-    header += (
-        "Данные о закупках доступны через ЕИС:\n"
-        "- Портал ЕИС: https://zakupki.gov.ru\n"
-        "- Открытые данные: https://data.zakupki.gov.ru\n\n"
-        "Для полноценного поиска используйте API ЕИС с параметрами:\n"
-        "- `zapros` — предмет закупки\n"
-        "- `zakon` — 44-ФЗ или 223-ФЗ\n"
-        "- `region` — субъект РФ\n"
-        "- `status` — статус закупки"
+    zakupki = await client.poisk_zakupok(
+        query=zapros,
+        zakon=zakon,
+        region=region,
+        status=status,
     )
-    return header
+
+    if not zakupki:
+        header = "**Результаты поиска в ЕИС закупок**\n\n"
+        filters = []
+        if zapros:
+            filters.append(f"Запрос: {zapros}")
+        if zakon:
+            filters.append(f"Закон: {zakon}")
+        if region:
+            filters.append(f"Регион: {region}")
+        if status:
+            filters.append(f"Статус: {status}")
+        if filters:
+            header += "Фильтры: " + ", ".join(filters) + "\n\n"
+
+        header += (
+            "Не удалось получить данные через API ЕИС.\n\n"
+            "Данные о закупках доступны через:\n"
+            "- Портал ЕИС: https://zakupki.gov.ru\n"
+            "- Открытые данные: https://data.zakupki.gov.ru\n\n"
+            "Для поиска используйте параметры:\n"
+            "- `zapros` — предмет закупки\n"
+            "- `zakon` — 44-ФЗ или 223-ФЗ\n"
+            "- `region` — субъект РФ\n"
+            "- `status` — статус закупки"
+        )
+        return header
+
+    rows = [
+        (z.number, z.title[:60], z.zakon, z.status, format_rub(z.initial_price))
+        for z in zakupki[:30]
+    ]
+    header = "**Результаты поиска в ЕИС закупок**\n\n"
+    header += f"Найдено: {len(zakupki)} закупок\n\n"
+    return header + markdown_table(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
 
 
 async def info_zakupki(
@@ -89,16 +104,63 @@ async def info_zakupki(
     lines = [
         f"**Закупка {zakupka.number}**",
         f"- Название: {zakupka.title}",
-        f"- Закон: {zakupka.zakon}",
-        f"- Способ: {zakupka.sposob}",
-        f"- Статус: {zakupka.status}",
-        f"- Начальная цена: {format_rub(zakupka.initial_price)}",
-        f"- Дата публикации: {zakupka.publish_date}",
-        f"-Deadline подачи заявок: {zakupka.deadline}",
-        f"- Заказчик: {zakupka.organizer_name}",
-        f"- ИНН заказчика: {zakupka.organizer_inn}",
     ]
+    if zakupka.zakon:
+        lines.append(f"- Закон: {zakupka.zakon}")
+    if zakupka.sposob:
+        lines.append(f"- Способ: {zakupka.sposob}")
+    if zakupka.status:
+        lines.append(f"- Статус: {zakupka.status}")
+    if zakupka.initial_price:
+        lines.append(f"- Начальная цена: {format_rub(zakupka.initial_price)}")
+    if zakupka.publish_date:
+        lines.append(f"- Дата публикации: {zakupka.publish_date}")
+    if zakupka.deadline:
+        lines.append(f"- Срок подачи заявок: {zakupka.deadline}")
+    if zakupka.organizer_name:
+        lines.append(f"- Заказчик: {zakupka.organizer_name}")
+    if zakupka.organizer_inn:
+        lines.append(f"- ИНН заказчика: {zakupka.organizer_inn}")
+
+    lines.append("\nИсточник: ЕИС закупок / zakupki.gov.ru")
     return "\n".join(lines)
+
+
+async def poisk_kontraktov(
+    inn_postavshchika: str = "",
+    inn_zakazchika: str = "",
+    ctx: Context | None = None,
+) -> str:
+    """Поиск контрактов в реестре контрактов.
+
+    Args:
+        inn_postavshchika: ИНН поставщика.
+        inn_zakazchika: ИНН заказчика.
+
+    Returns:
+        Результаты поиска контрактов.
+    """
+    if ctx:
+        await ctx.info("Поиск контрактов в ЕИС...")
+
+    kontrakty = await client.poisk_kontraktov(
+        contractor_inn=inn_postavshchika,
+        zakazchik_inn=inn_zakazchika,
+    )
+
+    if not kontrakty:
+        return (
+            "**Результаты поиска контрактов**\n\n"
+            "Не удалось получить данные через API ЕИС.\n\n"
+            "Реестр контрактов доступен на: https://zakupki.gov.ru"
+        )
+
+    rows = [
+        (k.number, k.contractor_name[:40], format_rub(k.price), k.status, k.sign_date)
+        for k in kontrakty[:30]
+    ]
+    header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
+    return header + markdown_table(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
 
 
 async def info_zakazchika(
@@ -122,12 +184,19 @@ async def info_zakazchika(
     lines = [
         f"**Заказчик: {zakazchik.name}**",
         f"- ИНН: {zakazchik.inn}",
-        f"- КПП: {zakazchik.kpp}",
-        f"- Регион: {zakazchik.region}",
-        f"- Адрес: {zakazchik.adres}",
-        f"- Количество закупок: {zakazchik.zakupki_count}",
-        f"- Общая сумма контрактов: {format_rub(zakazchik.total_spent)}",
     ]
+    if zakazchik.kpp:
+        lines.append(f"- КПП: {zakazchik.kpp}")
+    if zakazchik.region:
+        lines.append(f"- Регион: {zakazchik.region}")
+    if zakazchik.adres:
+        lines.append(f"- Адрес: {zakazchik.adres}")
+    if zakazchik.zakupki_count:
+        lines.append(f"- Количество закупок: {zakazchik.zakupki_count}")
+    if zakazchik.total_spent:
+        lines.append(f"- Общая сумма контрактов: {format_rub(zakazchik.total_spent)}")
+
+    lines.append("\nИсточник: ЕГРЮЛ / egrul.nalog.ru")
     return "\n".join(lines)
 
 
@@ -147,18 +216,24 @@ async def info_postavshchika(
     postavshchik = await client.info_postavshchika(inn)
 
     if not postavshchik:
-        return f"Поставщик с ИНН {inn} не найден в ЕИС.\n\nПроверьте корректность ИНН."
+        return f"Поставщик с ИНН {inn} не найден.\n\nПроверьте корректность ИНН."
 
     status = "Добросовестный" if postavshchik.is_dobrosovestny else "В реестре недобросовестных"
     lines = [
         f"**Поставщик: {postavshchik.name}**",
         f"- ИНН: {postavshchik.inn}",
-        f"- Регион: {postavshchik.region}",
-        f"- Статус: {status}",
-        f"- Выиграно контрактов: {postavshchik.contracts_won}",
-        f"- Исполнено контрактов: {postavshchik.contracts_executed}",
-        f"- Общая выручка: {format_rub(postavshchik.total_revenue)}",
     ]
+    if postavshchik.region:
+        lines.append(f"- Регион: {postavshchik.region}")
+    lines.append(f"- Статус: {status}")
+    if postavshchik.contracts_won:
+        lines.append(f"- Выиграно контрактов: {postavshchik.contracts_won}")
+    if postavshchik.contracts_executed:
+        lines.append(f"- Исполнено контрактов: {postavshchik.contracts_executed}")
+    if postavshchik.total_revenue:
+        lines.append(f"- Общая выручка: {format_rub(postavshchik.total_revenue)}")
+
+    lines.append("\nИсточник: ЕГРЮЛ/ЕГРИП / egrul.nalog.ru")
     return "\n".join(lines)
 
 
@@ -202,9 +277,24 @@ async def plany_zakupok(
     Returns:
         Информация о планах-графиках.
     """
-    return (
-        f"**Планы-графики закупок на {god} год**\n\n"
-        f"Планы-графики формируются заказчиками до начала финансового года.\n"
-        f"Доступны через ЕИС: https://zakupki.gov.ru\n\n"
-        f"Для поиска планов по конкретному заказчику укажите ИНН организатора."
-    )
+    if ctx:
+        await ctx.info(f"Запрос планов закупок на {god} год...")
+
+    plany = await client.plany_zakupok(year=god)
+
+    if not plany:
+        return (
+            f"**Планы-графики закупок на {god} год**\n\n"
+            f"Не удалось получить данные через API ЕИС.\n\n"
+            f"Планы-графики формируются заказчиками до начала финансового года.\n"
+            f"Доступны через ЕИС: https://zakupki.gov.ru\n\n"
+            f"Для поиска планов по конкретному заказчику укажите ИНН организатора."
+        )
+
+    rows = [
+        (p.organizer_name[:40], p.organizer_inn, str(p.items_count), format_rub(p.total_budget))
+        for p in plany[:30]
+    ]
+    header = f"**Планы-графики закупок на {god} год**\n\n"
+    header += f"Найдено: {len(plany)}\n\n"
+    return header + markdown_table(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows)

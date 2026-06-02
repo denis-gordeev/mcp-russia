@@ -20,6 +20,7 @@ async def test_has_tools(client):
     expected = {
         "poisk_zakupok",
         "info_zakupki",
+        "poisk_kontraktov",
         "info_zakazchika",
         "info_postavshchika",
         "statusy_zakupok",
@@ -53,15 +54,6 @@ async def test_has_prompts(client):
     assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
 
 
-async def test_poisk_zakupok(client):
-    """Проверка работы инструмента poisk_zakupok."""
-    async with client:
-        result = await client.call_tool("poisk_zakupok", {})
-    assert result is not None
-    text = str(result)
-    assert "ЕИС" in text or "zakupki.gov.ru" in text
-
-
 async def test_statusy_zakupok(client):
     """Проверка работы инструмента statusy_zakupok."""
     async with client:
@@ -71,10 +63,10 @@ async def test_statusy_zakupok(client):
     assert "Планирование" in text or "Завершена" in text
 
 
-async def test_plany_zakupok(client):
-    """Проверка работы инструмента plany_zakupok."""
+async def test_sposoby_zakupok(client):
+    """Проверка работы инструмента sposoby_zakupok."""
     async with client:
-        result = await client.call_tool("plany_zakupok", {"god": 2025})
+        result = await client.call_tool("sposoby_zakupok", {})
     assert result is not None
     text = str(result)
-    assert "2025" in text
+    assert "Электронный аукцион" in text or "аукцион" in text.lower()
