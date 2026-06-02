@@ -20,7 +20,7 @@ make dev
 | `make sync` | установить production-зависимости |
 | `make dev` | установить production + dev зависимости |
 | `make test` | запустить весь test suite |
-| `make test-feature F=ibge` | прогнать тесты одной feature |
+| `make test-feature F=cbrf` | прогнать тесты одной feature |
 | `make lint` | `ruff check` + `ruff format --check` |
 | `make fix` | auto-fix для lint и форматирования |
 | `make types` | `mypy` по `src/mcp_russia/` |

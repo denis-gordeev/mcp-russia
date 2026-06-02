@@ -28,13 +28,13 @@
 
 ### Новые функции
 
-- **camara:** Инструмент detal_zakonoproekta и улучшение poisk_zakonoproekta
+- **legacy-модуль (camara):** Инструмент detal_zakonoproekta и улучшение poisk_zakonoproekta
 
 ## [0.3.3] - 2026-03-26
 
 ### Исправления
 
-- **transparencia,dados_abertos,diario_oficial:** Учёт ограничений API (legacy-модули)
+- **legacy-модули (transparencia,dados_abertos,diario_oficial):** Учёт ограничений API
 
 ## [0.3.2] - 2026-03-26
 
@@ -47,7 +47,7 @@
 ### Исправления
 
 - **code-mode:** Корректный fallback на BM25 при отсутствии pydantic-monty
-- **pncp:** Переработка клиента под реальную спецификацию API
+- **legacy-модуль compras/pncp:** Переработка клиента под реальную спецификацию API
 - **.gitignore:** Удаление временных файлов из каталога Claude
 - **batch:** Исправление AsyncMock-спецификации для ctx inspection в тесте
 
@@ -58,7 +58,7 @@
 
 ### Документация
 
-- Перепись README для публичного запуска и добавление лицензии MIT
+- Переработка README для публичного запуска и добавление лицензии MIT
 - **examples:** Добавлено 11 руководств по использованию для разных профессий
 - **readme:** Обновлён подсчёт инструментов с 205 до 204
 
@@ -82,32 +82,33 @@
 
 ### Исправления
 
-- **tse:** Разрешение CDN-кодов выборов по типу должности
+- **legacy-модуль tse:** Разрешение CDN-кодов выборов по типу должности
 - **tests:** Установка TOOL_SEARCH=none в conftest.py до любого импорта
 
 ### Документация
 
 - **contributing:** Добавлены правила релиза, CI/CD, шаблоны тестирования и информация о стеке
 - Добавлены переменные tool search и LLM discovery в .env.example
-- **tech-debt:** Добавлена депрекация comprasnet и статус модулей ТСЕ
+- **tech-debt:** Добавлена депрекация comprasnet и статус модулей ТСЕ (legacy)
 
 ### Новые функции
 
-- **compras:** Модуль открытых данных Compras.gov.br с 8 инструментами
+- **compras (legacy):** Модуль открытых данных Compras.gov.br с 8 инструментами
 - **tse:** Результаты выборов через CDN с 4 новыми инструментами
-- **tcu:** TCU с 8 инструментами, 1 ресурсом и 1 промптом
-- **tce_rj:** TCE-RJ с 7 инструментами, 1 ресурсом и 1 промптом
+- **tcu (legacy):** TCU с 8 инструментами, 1 ресурсом и 1 промптом
+- **tce_rj (legacy):** TCE-RJ с 7 инструментами, 1 ресурсом и 1 промптом
 - **tools:** Добавлены семантические теги ко всем инструментам
 - **tce_sp:** TCE-SP с 3 инструментами, 1 ресурсом и 1 промптом
-- **tse:** Результаты федеральных выборов через формат CDN (legacy-модуль)
+- **tce_sp (legacy):** TCE-SP с 3 инструментами, 1 ресурсом и 1 промптом
+- **legacy-модуль tse:** Результаты федеральных выборов через формат CDN
 - **discovery:** BM25-поиск, code_mode и recomendar_tools
-- **tce_ce:** TCE-CE с 4 инструментами, 1 ресурсом и 1 промптом
-- **tce_pe:** TCE-PE с 5 инструментами, 1 ресурсом и 1 промптом
-- **tce_rs:** TCE-RS с 5 инструментами, 1 ресурсом и 1 промптом
-- **tce_sc:** TCE-SC с 2 инструментами, 1 ресурсом и 1 промптом
-- **tce_rn:** TCE-RN с 5 инструментами, 1 ресурсом и 1 промптом
-- **tce_to:** TCE-TO с 3 инструментами, 1 ресурсом и 1 промптом
-- **tce_pi:** TCE-PI с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_ce (legacy):** TCE-CE с 4 инструментами, 1 ресурсом и 1 промптом
+- **tce_pe (legacy):** TCE-PE с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_rs (legacy):** TCE-RS с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_sc (legacy):** TCE-SC с 2 инструментами, 1 ресурсом и 1 промптом
+- **tce_rn (legacy):** TCE-RN с 5 инструментами, 1 ресурсом и 1 промптом
+- **tce_to (legacy):** TCE-TO с 3 инструментами, 1 ресурсом и 1 промптом
+- **tce_pi (legacy):** TCE-PI с 5 инструментами, 1 ресурсом и 1 промптом
 
 ## [0.2.2] - 2026-03-23
 
@@ -117,19 +118,19 @@
 
 ### Тестирование
 
-- **compras:** Обновление тестов для подмодуля pncp
+- **compras (legacy):** Обновление тестов для подмодуля pncp
 
 ## [0.2.0] - 2026-03-23
 
 ### Исправления
 
-- **transparencia:** Безопасный парсинг, rate limiting и защита от bolsa-запросов
-- **senado:** Миграция эндпоинтов голосования на новый API
-- **datajud:** Замена try-except-pass на contextlib.suppress
-- **transferegov,transparencia:** Исправление маппинга API и парсинга чисел
-- **diario_oficial:** Очистка HTML-тегов из выдержек
-- **ibge:** Исправление ID агрегатов для pib_per_capita и area_territorial
-- **datajud,transparencia:** Удаление STF из DataJud, исправление эндпоинта PEP
+- **transparencia (legacy):** Безопасный парсинг, rate limiting и защита от bolsa-запросов
+- **senado (legacy):** Миграция эндпоинтов голосования на новый API
+- **datajud (legacy):** Замена try-except-pass на contextlib.suppress
+- **transferegov,transparencia (legacy):** Исправление маппинга API и парсинга чисел
+- **diario_oficial (legacy):** Очистка HTML-тегов из выдержек
+- **ibge (legacy):** Исправление ID агрегатов для pib_per_capita и area_territorial
+- **datajud,transparencia (legacy):** Удаление STF из DataJud, исправление эндпоинта PEP
 
 ### Документация
 
@@ -142,25 +143,25 @@
 
 - **shared:** HTTP-клиент и утилиты форматирования
 - **core:** TTL-cache и миграция на dependency-groups
-- **ibge,bacen:** Модули ibge и bacen
-- **ibge,bacen,transparencia:** Сетка территорий, CNAE, клиент bacen и модуль transparencia
+- **ibge,bacen (legacy):** Модули ibge и bacen
+- **ibge,bacen,transparencia (legacy):** Сетка территорий, CNAE, клиент bacen и модуль transparencia
 - Добавлены lifespan, context, resources, prompts и middleware
-- **transparencia:** Ресурсы, промпты и интеграционные тесты
+- **transparencia (legacy):** Ресурсы, промпты и интеграционные тесты
 - **_shared:** Асинхронный RateLimiter со скользящим окном
 - **transparencia:** Подсказки по пагинации в ответах инструментов
-- **camara:** Инструменты для депутатов и законодательства
-- **senado:** Инструменты для сенаторов и законодательства
-- **legislativo:** Rate limiting для клиентов camara и senado
-- **senado:** Инструменты partidos_senado и ufs_senado
-- **judiciario:** Модули datajud, tse и jurisprudencia
-- **phase4:** Модули brasilapi, diario_oficial и compras
-- **tse:** Дополнительные инструменты выборов
-- **datajud:** TREs, TJMs, логические запросы и пагинация search_after
-- **transparencia,transferegov:** Расширение до 18 инструментов + новый модуль transferegov
-- **senado:** 4 инструмента открытых данных (поправки, блоки, лидерства, доклады)
-- **tse:** Инструмент итогов выборов с тотализацией голосов
+- **camara (legacy):** Инструменты для депутатов и законодательства
+- **senado (legacy):** Инструменты для сенаторов и законодательства
+- **legislativo (legacy):** Rate limiting для клиентов camara и senado
+- **senado (legacy):** Инструменты partidos_senado и ufs_senado
+- **judiciario (legacy):** Модули datajud, tse и jurisprudencia
+- **phase4 (legacy):** Модули brasilapi, diario_oficial и compras
+- **tse (legacy):** Дополнительные инструменты выборов
+- **datajud (legacy):** TREs, TJMs, логические запросы и пагинация search_after
+- **transparencia,transferegov (legacy):** Расширение до 18 инструментов + новый модуль transferegov
+- **senado (legacy):** 4 инструмента открытых данных (поправки, блоки, лидерства, доклады)
+- **tse (legacy):** Инструмент итогов выборов с тотализацией голосов
 - Завершение mcp-russia с 4 новыми модулями + расширение 3 существующих
-- **tse:** Результаты выборов через CDN с 4 новыми инструментами
+- **tse (legacy):** Результаты выборов через CDN с 4 новыми инструментами
 - **release:** Инфраструктура управления релизами
 
 ### Прочее
@@ -169,10 +170,10 @@
 - Добавлены claude code skills (commit, fastmcp, skill-creator)
 - **config:** Переход с justfile на Makefile
 - Обновление Makefile, README, .gitignore и .env.example
-- Все tech-debt позиции transparencia отмечены как решённые
+- Все tech-debt позиции transparencia (legacy) отмечены как решённые
 - Добавлены тесты ibge, удалена конфигурация cursor
 - Позиция пагинации tech-debt отмечена как by-design
-- **transparencia:** Новые схемы и константы
+- **transparencia (legacy):** Новые схемы и константы
 - Автоматическая загрузка .env через dotenv
 
 ### Рефакторинг
@@ -185,6 +186,6 @@
 
 - **shared:** Набор тестов для базовых и общих модулей
 - Добавлены интеграционные тесты для ресурсов, промптов и полного сервера
-- **redator:** Интеграционные тесты 3ª edição для ofício и pronomes
+- **redator:** Интеграционные тесты для официальных документов (письмо, обращения)
 
 <!-- generated by git-cliff -->

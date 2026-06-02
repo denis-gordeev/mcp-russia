@@ -1,23 +1,22 @@
-"""Pydantic models for the Redator Oficial feature."""
+"""Pydantic-модели для модуля делопроизводства."""
 
 from __future__ import annotations
 
 from pydantic import BaseModel
 
 
-class PronomeTratamento(BaseModel):
-    """Pronome de tratamento oficial."""
+class ObrashchenieDolzhnostnogoLitsa(BaseModel):
+    """Форма обращения к должностному лицу."""
 
-    cargo: str
-    tratamento: str
-    vocativo: str
-    abreviatura: str
-    enderecamento: str
+    dolzhnost: str
+    obrashchenie: str
+    titulovanie: str
+    adresatsiya: str
 
 
-class ValidacaoDocumento(BaseModel):
-    """Resultado da validação de um documento oficial."""
+class RezultatValidatsii(BaseModel):
+    """Результат валидации официального документа."""
 
-    valido: bool
-    problemas: list[str]
-    sugestoes: list[str]
+    korrektno: bool
+    problemy: list[str]
+    rekomendatsii: list[str]

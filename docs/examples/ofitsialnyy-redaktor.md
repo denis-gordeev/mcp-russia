@@ -216,15 +216,16 @@
 
 | Resource | Содержимое |
 |----------|------------|
-| `redator://manual/structure` | Структура каждого типа документа |
-| `redator://manual/forms_of_address` | Формы обращения (Уважаемый, Господин Министр) |
-| `redator://manual/closings` | Стандартные завершения (С уважением, С почтением) |
-| `redator://templates/letter` | Шаблон письма |
-| `redator://templates/order` | Шаблон распоряжения |
-| `redator://templates/decree` | Шаблон приказа |
-| `redator://templates/opinion` | Шаблон заключения |
-| `redator://templates/brief` | Шаблон справки |
-| `redator://manual/rules` | Общие правила оформления документов |
+| `template://pismo` | Шаблон официального письма |
+| `template://prikaz` | Шаблон приказа |
+| `template://rasporyazhenie` | Шаблон распоряжения |
+| `template://akt` | Шаблон акта |
+| `template://spravka` | Шаблон справки |
+| `template://protokol` | Шаблон протокола |
+| `template://dokladnaya_zapiska` | Шаблон докладной записки |
+| `normas://manual` | Правила оформления документов (ГОСТ Р 7.0.97-2016) |
+| `normas://obrashcheniya` | Формы обращения к должностным лицам |
+| `normas://zaklyuchitelnye` | Заключительные формулы в документах |
 
 LLM автоматически обращается к relevant resource перед генерацией документа.
 

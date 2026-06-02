@@ -2,7 +2,43 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-02 (двадцать четвёртый проход — реальные API Госдумы и Закупок, зачистка CHANGELOG)
+## Статус раунда 2026-06-02 (двадцать пятый проход — redator русификация, КАД API, зачистка документации)
+
+### Выполнено
+
+- **Полная русификация модуля agenty/redator/**:
+  - `schemas.py`: `PronomeTratamento` → `ObrashchenieDolzhnostnogoLitsa`, поля: cargo→dolzhnost, tratamento→obrashchenie, vocativo→titulovanie, abreviatura→adresatsiya, enderecamento удалено; `ValidacaoDocumento` → `RezultatValidatsii`, поля: valido→korrektno, problemas→problemy, sugestoes→rekomendatsii
+  - `constants.py`: удалён весь legacy-раздел с португальскими константами (строки 141-257): `MESES` (португальские месяцы), `TIPOS_DOCUMENTO`, `PREFIXOS_DOCUMENTO`, `PRONOMES_TRATAMENTO` (12 бразильских обращений — Vossa Excelência, Vossa Senhoria и т.д.)
+  - `resources.py`: переименованы файлы: `oficio.md` → `pismo.md`, `manual_redacao.md` → `manual_deloproizvodstvo.md`, `pronomes.md` → `obrashcheniya.md`, `fechos.md` → `zaklyuchitelnye_formuly.md`
+  - Файлы шаблонов/норм переименованы на диске (содержимое уже русское)
+  - `__init__.py`: удалена ссылка на «Manual de Redacao da Presidencia»
+- **Подключение реального API Картотеки арбитражных дел в модуле kad_arbitrazh**:
+  - `constants.py`: обновлены эндпоинты (KAD_SEARCH_URL, KAD_INSTANCE_URL), добавлен справочник судов по кодам `SUDY_PRYAMYE` (49 судов), категории дел по букве номера `KATEGORII_KAD`, удалён дублирующийся `ARBITRAZHNYE_SUDY`
+  - `client.py`: полная переработка — `poisk_del()` использует POST kad.arbitr.ru/Kad/Search, `info_dela()` — GET kad.arbitr.ru/Kad/Case/{number}, `akty_po_delu()` — GET kad.arbitr.ru/Kad/Documents/{number}, `storony_dela()` — GET kad.arbitr.ru/Kad/Sides/{number}, `zasedaniya_po_delu()` — GET kad.arbitr.ru/Kad/Sessions/{number}, добавлены парсеры `_parse_rezultaty_poiska()`, `_parse_kartochka_dela()`, `_parse_akty()`, `_parse_storony()`, вспомогательные функции `_opredelit_sud_po_nomeru()`, `_opredelit_kategoriyu()`
+  - `tools.py`: `poisk_del()` теперь выводит реальные данные из КАД в таблице (номер, категория, статус, суд, сумма иска)
+  - `resources.py`: добавлено описание реальных API-эндпоинтов
+  - `__init__.py`: версия 0.1.0 → 0.2.0
+  - КАД — шестой модуль с реальным API-интерфейсом
+- **Обновлены тесты kad_arbitrazh**: добавлены 16 тестов — парсеры (rezultaty_poiska, kartochka_dela, akty, storony), opredelit_sud_po_nomeru, opredelit_kategoriyu, инструменты с моками реальных данных
+- **Зачистка CHANGELOG.md**: все 30 записей с португальскими именами модулей помечены как `(legacy)` — camara, senado, datajud, jurisprudencia, tse, tcu, transparencia, ibge, bacen, compras, diario_oficial, transferegov, tce_*
+- **Исправлена таблица resource URI в docs/examples/ofitsialnyy-redaktor.md**: 9 устаревших английных URI (`redator://manual/structure` и т.д.) заменены на актуальные русские (`template://pismo`, `normas://manual` и т.д.)
+- **Исправлен пример в docs/guide/development.md и Makefile**: `make test-feature F=ibge` → `F=cbrf`
+- **Очищены португальские комментарии в _shared/batch.py**: `compras/pncp, compras/dadosabertos` → нейтральные формулировки
+- **Прогнаны все проверки**: `pytest` (1935 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Модуль redator полностью русифицирован**: нет португальских имён классов, полей, констант, файлов шаблонов/норм
+- **КАД работает через kad.arbitr.ru**: публичный API без авторизации, POST-поиск по делам, GET-запросы карточки/актов/сторон/заседаний
+- **Справочник судов по кодам**: 49 арбитражных судов определяются по первым символам номера дела (А40 → АС г. Москвы, А77 → АС г. Санкт-Петербурга и т.д.)
+- **Итого модулей с реальными API-интерфейсами**: 6 (cbrf, rosgidromet, fns, gosduma, zakupki, kad_arbitrazh)
+
+### Следующие действия
+
+- **Миграция португальских имён переменных** в legacy-модулях — ~800+ имён (camara: 202 идентификатора, senado, datajud, saude и др.)
+- **Подключение реальных API** в остальных модулях: rosapi→Dadata, rosstat→ЕМИСС, cekrf→vybory.izbirkom.ru, publikatsii→pravo.gov.ru, minzdrav→data.minzdrav.gov.ru
+- **Создание модуля ЕМИСС/Fedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Дочистить оставшиеся португальские формулировки** в документации и коде
 
 ### Выполнено
 

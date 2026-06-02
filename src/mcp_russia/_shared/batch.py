@@ -29,7 +29,7 @@ def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
     """Build a mapping of namespaced tool names → async functions.
 
     Scans tools.py modules from all registered features, including
-    nested sub-packages (e.g., compras/pncp, compras/dadosabertos).
+    nested sub-packages (e.g., zakupki/sub-module).
     """
     global _dispatch
     if _dispatch:
@@ -39,7 +39,7 @@ def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
         base = feat.module_path
         _scan_tools_module(base, name)
 
-        # Sub-packages (e.g., compras → compras/pncp, compras/dadosabertos)
+        # Sub-packages (e.g., data module with sub-features)
         try:
             pkg = importlib.import_module(base)
             if hasattr(pkg, "__path__"):

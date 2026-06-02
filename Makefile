@@ -28,7 +28,7 @@ types: ## Run mypy strict type checking
 test: ## Run all tests
 	uv run pytest -v
 
-test-feature: ## Run tests for a specific feature (usage: make test-feature F=ibge)
+test-feature: ## Run tests for a specific feature (usage: make test-feature F=cbrf)
 	uv run pytest tests/data/$(F)/ -v 2>/dev/null || uv run pytest tests/agenty/$(F)/ -v
 
 ci: lint types test ## Full CI pipeline: lint + types + test

@@ -24,7 +24,7 @@ def _load_file(directory: Path, filename: str) -> str:
 
 def get_template_pismo() -> str:
     """Шаблон официального письма."""
-    return _load_file(TEMPLATES_DIR, "oficio.md")
+    return _load_file(TEMPLATES_DIR, "pismo.md")
 
 
 def get_template_prikaz() -> str:
@@ -62,14 +62,14 @@ def get_template_dokladnaya_zapiska() -> str:
 
 def get_manual_deloproizvodstvo() -> str:
     """Сводка правил оформления документов (ГОСТ Р 7.0.97-2016)."""
-    return _load_file(NORMAS_DIR, "manual_redacao.md")
+    return _load_file(NORMAS_DIR, "manual_deloproizvodstvo.md")
 
 
 def get_obrashcheniya() -> str:
     """Формы обращения к должностным лицам."""
-    return _load_file(NORMAS_DIR, "pronomes.md")
+    return _load_file(NORMAS_DIR, "obrashcheniya.md")
 
 
 def get_zaklyuchitelnye_formuly() -> str:
     """Заключительные формулы в официальных документах."""
-    return _load_file(NORMAS_DIR, "fechos.md")
+    return _load_file(NORMAS_DIR, "zaklyuchitelnye_formuly.md")

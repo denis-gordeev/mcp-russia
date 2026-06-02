@@ -39,6 +39,14 @@ async def poisk_del(
     if ctx:
         await ctx.info(f"Поиск дел: {nomer or istorcz or otvetchik or 'все'}...")
 
+    dela = await client.poisk_del(
+        number=nomer,
+        istorcz=istorcz,
+        otvetchik=otvetchik,
+        inn=inn,
+        category=kategoriya,
+    )
+
     header = "**Картотека арбитражных дел**\n\n"
 
     filters = []
@@ -56,17 +64,33 @@ async def poisk_del(
     if filters:
         header += "Фильтры: " + ", ".join(filters) + "\n\n"
 
-    header += (
-        "Данные об арбитражных делах доступны через Картотеку арбитражных дел:\n"
-        "- КАД: https://kad.arbitr.ru\n\n"
-        "Картотека включает дела арбитражных судов РФ:\n"
-        "- Банкротство\n"
-        "- Споры из договоров\n"
-        "- Налоговые споры\n"
-        "- Корпоративные споры\n"
-        "- Имущественные споры\n"
-        "- Интеллектуальная собственность"
+    if not dela:
+        header += (
+            "Дела не найдены.\n\n"
+            "Источник: Картотека арбитражных дел (kad.arbitr.ru)\n"
+            "Попробуйте уточнить параметры поиска."
+        )
+        return header
+
+    rows = []
+    for d in dela[:20]:
+        summa = format_rub(d.summa_iska) if d.summa_iska > 0 else "—"
+        rows.append(
+            (
+                d.number,
+                d.category or "—",
+                d.status or "—",
+                d.sud_name or "—",
+                summa,
+            )
+        )
+
+    header += f"Найдено дел: {len(dela)}\n\n"
+    header += markdown_table(
+        ["Номер дела", "Категория", "Статус", "Суд", "Сумма иска"],
+        rows,
     )
+    header += "\n\nИсточник: Картотека арбитражных дел (kad.arbitr.ru)"
     return header
 
 

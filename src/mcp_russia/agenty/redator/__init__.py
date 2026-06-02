@@ -1,11 +1,9 @@
 """Russian official document generation layer within mcp-russia.
 
 This module provides tools for generating official Russian documents
-(pismo, rasporyazhenie, prikaz, akt, spravka) based on Russian official
-document standards (GOST R 7.0.97-2016, Deloproizvodstvo RF).
-
-The historical Brazilian redator (Manual de Redacao da Presidencia) is
-preserved as a legacy compatibility layer.
+(pismo, rasporyazhenie, prikaz, akt, spravka, protokol, dokladnaya_zapiska)
+based on Russian official document standards (GOST R 7.0.97-2016,
+Deloproizvodstvo RF).
 """
 
 from mcp_russia._shared.feature import FeatureMeta
