@@ -8,8 +8,8 @@ FEATURE_META = FeatureMeta(
         "Данные ЦИК РФ: выборы, кандидаты, референдумы, "
         "результаты голосования, избирательные округа"
     ),
-    version="0.1.0",
-    api_base="https://cikrf.ru/api",
+    version="0.2.0",
+    api_base="https://vybory.izbirkom.ru",
     requires_auth=False,
     tags=[
         "выборы",

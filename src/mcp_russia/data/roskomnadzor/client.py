@@ -6,50 +6,132 @@ rkn.gov.ru requires separate work.
 
 from __future__ import annotations
 
+import logging
+from typing import Any
 
-class RoskomnadzorClient:
-    """HTTP client stub for Роскомнадзор API."""
+from mcp_russia._shared.http_client import http_get
 
-    def __init__(self, base_url: str = "https://rkn.gov.ru/api"):
-        self.base_url = base_url
+from .constants import RKN_API_BASE
 
-    # stubs — real integration pending
-    def get_napravleniya(self) -> list[dict]:
-        """Return направления деятельности (placeholder)."""
+logger = logging.getLogger(__name__)
+
+API_BASE = RKN_API_BASE
+
+
+async def get_napravleniya() -> list[dict[str, Any]]:
+    """Return направления деятельности (placeholder)."""
+    url = f"{API_BASE}/napravleniya"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении направлений деятельности")
         return []
 
-    def get_tipy_licenziy(self) -> list[dict]:
-        """Return типы лицензий связи (placeholder)."""
+
+async def get_tipy_licenziy() -> list[dict[str, Any]]:
+    """Return типы лицензий связи (placeholder)."""
+    url = f"{API_BASE}/tipy-licenziy"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении типов лицензий")
         return []
 
-    def get_kategorii_narusheniy(self) -> list[dict]:
-        """Return категории нарушений (placeholder)."""
+
+async def get_kategorii_narusheniy() -> list[dict[str, Any]]:
+    """Return категории нарушений (placeholder)."""
+    url = f"{API_BASE}/kategorii-narusheniy"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении категорий нарушений")
         return []
 
-    def get_reestry(self) -> list[dict]:
-        """Return список реестров (placeholder)."""
+
+async def get_reestry() -> list[dict[str, Any]]:
+    """Return список реестров (placeholder)."""
+    url = f"{API_BASE}/reestry"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении списка реестров")
         return []
 
-    def get_tipy_smi(self) -> list[dict]:
-        """Return типы СМИ (placeholder)."""
+
+async def get_tipy_smi() -> list[dict[str, Any]]:
+    """Return типы СМИ (placeholder)."""
+    url = f"{API_BASE}/tipy-smi"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении типов СМИ")
         return []
 
-    def get_licenziya(self, nomer: str) -> dict | None:
-        """Return info лицензии (placeholder)."""
+
+async def get_licenziya(nomer: str) -> dict[str, Any] | None:
+    """Return info лицензии (placeholder)."""
+    url = f"{API_BASE}/licenziya/{nomer}"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        logger.exception("Ошибка при получении лицензии №%s", nomer)
         return None
 
-    def get_smi(self, registracionnyy_nomer: str = "") -> list[dict]:
-        """Return список СМИ (placeholder)."""
+
+async def get_smi(registracionnyy_nomer: str = "") -> list[dict[str, Any]]:
+    """Return список СМИ (placeholder)."""
+    url = f"{API_BASE}/smi"
+    try:
+        params: dict[str, Any] = {}
+        if registracionnyy_nomer:
+            params["registracionnyy_nomer"] = registracionnyy_nomer
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении списка СМИ")
         return []
 
-    def get_operator_pd(self, inn: str = "") -> list[dict]:
-        """Return операторы персональных данных (placeholder)."""
+
+async def get_operator_pd(inn: str = "") -> list[dict[str, Any]]:
+    """Return операторы персональных данных (placeholder)."""
+    url = f"{API_BASE}/operator-pd"
+    try:
+        params: dict[str, Any] = {}
+        if inn:
+            params["inn"] = inn
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении операторов ПД")
         return []
 
-    def get_narusheniya(self, organizaciya: str = "") -> list[dict]:
-        """Return список нарушений (placeholder)."""
+
+async def get_narusheniya(organizaciya: str = "") -> list[dict[str, Any]]:
+    """Return список нарушений (placeholder)."""
+    url = f"{API_BASE}/narusheniya"
+    try:
+        params: dict[str, Any] = {}
+        if organizaciya:
+            params["organizaciya"] = organizaciya
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении нарушений")
         return []
 
-    def get_zapis_reestra(self, reestr_code: str, zapisi_id: str) -> dict | None:
-        """Return запись из реестра (placeholder)."""
+
+async def get_zapis_reestra(reestr_code: str, zapisi_id: str) -> dict[str, Any] | None:
+    """Return запись из реестра (placeholder)."""
+    url = f"{API_BASE}/reestr/{reestr_code}/{zapisi_id}"
+    try:
+        data = await http_get(url)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        logger.exception("Ошибка при получении записи реестра %s/%s", reestr_code, zapisi_id)
         return None

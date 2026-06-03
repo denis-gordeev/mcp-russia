@@ -1,14 +1,8 @@
-"""Resources for the ГИБДД/МВД feature.
-
-All resource descriptions are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
-
-from __future__ import annotations
+"""Resources for the ГИБДД/МВД feature."""
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных ГИБДД/МВД. (legacy — placeholder)"""
+    """Источники данных ГИБДД/МВД."""
     return """\
 Источники данных ГИБДД/МВД:
 
@@ -24,7 +18,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство о дорожном движении. (legacy — placeholder)"""
+    """Законодательство о дорожном движении."""
     return """\
 Основные нормативные акты:
 
@@ -39,7 +33,7 @@ def zakonodatelstvo() -> str:
 
 
 def sistema_gibdd() -> str:
-    """Структура ГИБДД МВД России. (legacy — placeholder)"""
+    """Структура ГИБДД МВД России."""
     return """\
 Структура ГИБДД МВД России:
 

@@ -1,14 +1,10 @@
-"""Resources for the ФССП feature.
-
-All resource descriptions are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Resources for the ФССП feature."""
 
 from __future__ import annotations
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных ФССП. (legacy — placeholder)"""
+    """Источники данных ФССП."""
     return """\
 Источники данных ФССП:
 
@@ -22,7 +18,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство об исполнительном производстве. (legacy — placeholder)"""
+    """Законодательство об исполнительном производстве."""
     return """\
 Основные нормативные акты:
 
@@ -38,7 +34,7 @@ def zakonodatelstvo() -> str:
 
 
 def struktura_fssp() -> str:
-    """Структура Федеральной службы судебных приставов. (legacy — placeholder)"""
+    """Структура Федеральной службы судебных приставов."""
     return """\
 Структура ФССП России:
 

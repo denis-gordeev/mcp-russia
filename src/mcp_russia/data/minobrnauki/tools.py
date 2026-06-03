@@ -1,8 +1,4 @@
-"""Tools for the Минобрнауки feature.
-
-All tool docstrings are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Tools for the Минобрнауки feature."""
 
 from __future__ import annotations
 
@@ -23,7 +19,7 @@ from .constants import (
 
 
 async def spisok_tipov_vuzov(ctx: Context) -> str:
-    """Список типов высших учебных заведений. (legacy — placeholder)
+    """Список типов высших учебных заведений.
 
     Returns:
         Список типов вузов (университет, академия, институт и т.д.).
@@ -33,7 +29,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
 
 
 async def spisok_form_obucheniya(ctx: Context) -> str:
-    """Список форм обучения. (legacy — placeholder)
+    """Список форм обучения.
 
     Returns:
         Список форм (очная, заочная, очно-заочная, дистанционная).
@@ -43,7 +39,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
 
 
 async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
-    """Список уровней образования. (legacy — placeholder)
+    """Список уровней образования.
 
     Returns:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
@@ -53,7 +49,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
 
 
 async def spisok_otrasley_nauki(ctx: Context) -> str:
-    """Список отраслей науки. (legacy — placeholder)
+    """Список отраслей науки.
 
     Returns:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
@@ -63,7 +59,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
 
 
 async def spisok_tipov_grantov(ctx: Context) -> str:
-    """Список типов научных грантов. (legacy — placeholder)
+    """Список типов научных грантов.
 
     Returns:
         Список грантовых фондов и программ.
@@ -73,7 +69,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
 
 
 async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
-    """Список статусов аккредитации вузов. (legacy — placeholder)
+    """Список статусов аккредитации вузов.
 
     Returns:
         Список статусов (действует, приостановлена, отменена).
@@ -83,7 +79,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
 
 
 async def spisok_federalnyh_okrugov(ctx: Context) -> str:
-    """Список федеральных округов РФ. (legacy — placeholder)
+    """Список федеральных округов РФ.
 
     Returns:
         Список федеральных округов.
@@ -93,7 +89,7 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
 
 
 async def info_vuza(ctx: Context, nazvanie: str) -> str:
-    """Информация о высшем учебном заведении. (legacy — placeholder)
+    """Информация о высшем учебном заведении.
 
     Args:
         nazvanie: Название вуза (напр. «МГУ», «МФТИ»).
@@ -101,10 +97,9 @@ async def info_vuza(ctx: Context, nazvanie: str) -> str:
     Returns:
         Сведения о вузе (тип, город, ректор, студенты, аккредитация).
     """
-    c = client.MinobrnaukiClient()
-    data = c.poluchit_vuz(nazvanie)
+    data = await client.poluchit_vuz(nazvanie)
     if not data:
-        return f"Информация о вузе «{nazvanie}» не найдена (API integration pending)."
+        return f"Информация о вузе «{nazvanie}» не найдена."
     lines = [
         f"**{data.get('nazvanie', nazvanie)}**",
         f"- Тип: {data.get('tip', '')}",
@@ -121,7 +116,7 @@ async def info_vuza(ctx: Context, nazvanie: str) -> str:
 
 
 async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
-    """Образовательные программы вуза. (legacy — placeholder)
+    """Образовательные программы вуза.
 
     Args:
         vuz: Название вуза.
@@ -130,10 +125,9 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
     Returns:
         Список программ с кодами направлений и проходными баллами.
     """
-    c = client.MinobrnaukiClient()
-    programmy = c.poluchit_programmy(vuz, uroven)
+    programmy = await client.poluchit_programmy(vuz, uroven)
     if not programmy:
-        return f"Программы вуза «{vuz}» не найдены (API integration pending)."
+        return f"Программы вуза «{vuz}» не найдены."
     rows = []
     for p in programmy:
         rows.append(
@@ -152,7 +146,7 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
 
 
 async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
-    """Научные гранты и исследования. (legacy — placeholder)
+    """Научные гранты и исследования.
 
     Args:
         organizatsiya: Организация-заявитель (необязательно).
@@ -160,10 +154,9 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     Returns:
         Список грантов с суммами финансирования и сроками.
     """
-    c = client.MinobrnaukiClient()
-    granty = c.poluchit_granty(organizatsiya)
+    granty = await client.poluchit_granty(organizatsiya)
     if not granty:
-        return "Гранты не найдены (API integration pending)."
+        return "Гранты не найдены."
     rows = []
     for g in granty:
         summ = (
@@ -187,7 +180,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
 
 
 async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -> str:
-    """Рейтинг высших учебных заведений. (legacy — placeholder)
+    """Рейтинг высших учебных заведений.
 
     Args:
         tip_reytinga: Тип рейтинга (необязательно).
@@ -196,10 +189,9 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
     Returns:
         Таблица рейтинга вузов с баллами по категориям.
     """
-    c = client.MinobrnaukiClient()
-    reyting = c.poluchit_reyting(tip_reytinga, god)
+    reyting = await client.poluchit_reyting(tip_reytinga, god)
     if not reyting:
-        return f"Рейтинг вузов за {god} г. не найден (API integration pending)."
+        return f"Рейтинг вузов за {god} г. не найден."
     rows = []
     for r in reyting:
         rows.append(
@@ -217,7 +209,7 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
 
 
 async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
-    """Данные об аспирантах и докторантах. (legacy — placeholder)
+    """Данные об аспирантах и докторантах.
 
     Args:
         organizatsiya: Организация (необязательно).
@@ -225,10 +217,9 @@ async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
     Returns:
         Сведения об аспирантах, направлениях и научных руководителях.
     """
-    c = client.MinobrnaukiClient()
-    aspiranty = c.poluchit_aspirantov(organizatsiya)
+    aspiranty = await client.poluchit_aspirantov(organizatsiya)
     if not aspiranty:
-        return "Данные об аспирантах не найдены (API integration pending)."
+        return "Данные об аспирантах не найдены."
     rows = []
     for a in aspiranty:
         rows.append(

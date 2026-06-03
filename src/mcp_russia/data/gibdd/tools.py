@@ -1,8 +1,4 @@
-"""Tools for the ГИБДД/МВД feature.
-
-All tool docstrings are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Tools for the ГИБДД/МВД feature."""
 
 from __future__ import annotations
 
@@ -20,9 +16,11 @@ from .constants import (
     VidyNarusheniy,
 )
 
+_ATTRIBUTION = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
+
 
 async def spisok_tipov_ts(ctx: Context) -> str:
-    """Список типов транспортных средств. (legacy — placeholder)
+    """Список типов транспортных средств.
 
     Returns:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
@@ -32,7 +30,7 @@ async def spisok_tipov_ts(ctx: Context) -> str:
 
 
 async def spisok_kategoriyy_vu(ctx: Context) -> str:
-    """Список категорий водительских удостоверений. (legacy — placeholder)
+    """Список категорий водительских удостоверений.
 
     Returns:
         Список категорий ВУ (A, B, C, D, M и т.д.).
@@ -42,7 +40,7 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
 
 
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
-    """Список видов нарушений ПДД. (legacy — placeholder)
+    """Список видов нарушений ПДД.
 
     Returns:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
@@ -52,7 +50,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
 
 
 async def spisok_statusov_shtrafov(ctx: Context) -> str:
-    """Список статусов штрафов ГИБДД. (legacy — placeholder)
+    """Список статусов штрафов ГИБДД.
 
     Returns:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
@@ -62,7 +60,7 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
 
 
 async def spisok_tipov_dtp(ctx: Context) -> str:
-    """Список типов ДТП. (legacy — placeholder)
+    """Список типов ДТП.
 
     Returns:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
@@ -72,7 +70,7 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
 
 
 async def spisok_regionov_registratsii(ctx: Context) -> str:
-    """Список основных регионов регистрации ТС. (legacy — placeholder)
+    """Список основных регионов регистрации ТС.
 
     Returns:
         Список регионов с кодами.
@@ -82,31 +80,67 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
 
 
 async def info_ts(ctx: Context, vin: str) -> str:
-    """Проверка транспортного средства по VIN. (legacy — placeholder)
+    """Проверка транспортного средства по VIN.
 
     Args:
         vin: VIN-номер транспортного средства (17 символов).
 
     Returns:
-        Сведения о ТС (марка, модель, год, мощность, регистрации).
+        Сведения о ТС: история регистраций, розыск, ограничения, ДТП.
     """
-    c = client.GibddClient()
-    data = c.poluchit_info_ts(vin)
-    if not data:
-        return f"Информация по VIN {vin} не найдена (API integration pending)."
-    lines = [
-        f"**Транспортное средство** (VIN: {vin})",
-        f"- Марка/модель: {data.get('marka_model', '')}",
-        f"- Год выпуска: {data.get('god_vypuska', '')}",
-        f"- Тип: {data.get('tip_ts', '')}",
-        f"- Мощность: {data.get('moshchnost_ls', '')} л.с.",
-        f"- Объём: {data.get('obiem_sm3', '')} см³",
-    ]
-    return "\n".join(lines)
+    history, dtp, wanted, restrict = await _proverka_ts_full(vin)
+
+    lines = [f"**Транспортное средство** (VIN: {vin})"]
+
+    if history:
+        lines.append(f"\n**История регистраций** ({len(history)} записей)")
+        rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in history]
+        lines.append(markdown_table(["Дата", "Действие", "Госномер", "Регион"], rows))
+    else:
+        lines.append("\nИстория регистраций: данные не найдены.")
+
+    if dtp:
+        lines.append(f"\n**ДТП** ({len(dtp)} записей)")
+        rows = [(d["data_dtp"], d["tip_dtp"], d["region_dtp"], d["model_ts"]) for d in dtp]
+        lines.append(markdown_table(["Дата ДТП", "Тип", "Регион", "Модель ТС"], rows))
+    else:
+        lines.append("\nДТП: данные не найдены.")
+
+    if wanted:
+        lines.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
+        rows = [(w["data_rozyska"], w["region"], w["initiator"], w["model_ts"]) for w in wanted]
+        lines.append(markdown_table(["Дата", "Регион", "Инициатор", "Модель ТС"], rows))
+    else:
+        lines.append("\nРозыск: не числится.")
+
+    if restrict:
+        lines.append(f"\n**⚠ Ограничения** ({len(restrict)} записей)")
+        rows = [
+            (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["region"], r["initiator"])
+            for r in restrict
+        ]
+        lines.append(markdown_table(["Дата", "Тип ограничения", "Регион", "Инициатор"], rows))
+    else:
+        lines.append("\nОграничения: не найдены.")
+
+    return "\n".join(lines) + _ATTRIBUTION
+
+
+async def _proverka_ts_full(vin: str) -> tuple:
+    """Run all vehicle checks in parallel."""
+    import asyncio
+
+    results = await asyncio.gather(
+        client.proverka_istorii_ts(vin),
+        client.proverka_dtp_ts(vin),
+        client.proverka_rozysk_ts(vin),
+        client.proverka_ogranicheniy_ts(vin),
+    )
+    return results
 
 
 async def info_vu(ctx: Context, nomer_vu: str) -> str:
-    """Проверка водительского удостоверения. (legacy — placeholder)
+    """Проверка водительского удостоверения.
 
     Args:
         nomer_vu: Серия и номер ВУ (10 цифр, без пробелов).
@@ -114,82 +148,64 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
     Returns:
         Сведения о ВУ (категория, срок, статус, ограничения).
     """
-    c = client.GibddClient()
-    data = c.poluchit_info_vu(nomer_vu)
-    if not data:
-        return f"Информация по ВУ {nomer_vu} не найдена (API integration pending)."
+    vu = await client.proverka_vu(nomer_vu)
+    if not vu:
+        return f"Информация по ВУ {nomer_vu} не найдена." + _ATTRIBUTION
+
     lines = [
         f"**Водительское удостоверение** (№ {nomer_vu})",
-        f"- Категория: {data.get('kategoriya', '')}",
-        f"- Дата выдачи: {data.get('data_vydachi', '')}",
-        f"- Срок действия: {data.get('srok_deystviya', '')}",
-        f"- Статус: {data.get('status', '')}",
+        f"- ФИО: {vu.fio}",
+        f"- Категория: {vu.kategoriya}",
+        f"- Дата выдачи: {vu.data_vydachi}",
+        f"- Срок действия: {vu.srok_deystviya}",
+        f"- Статус: {vu.status or 'действительно'}",
+        f"- Место рождения: {vu.mesto_rozhdeniya}",
+        f"- Ограничения: {vu.ograniceniya or 'нет'}",
+        f"- Особые отметки: {vu.osoboie_otmetki or 'нет'}",
     ]
-    return "\n".join(lines)
+    return "\n".join(lines) + _ATTRIBUTION
 
 
 async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
-    """Штрафы ГИБДД по госномеру транспортного средства. (legacy — placeholder)
+    """Штрафы ГИБДД по госномеру транспортного средства.
+
+    Проверка штрафов требует авторизованный доступ через Госуслуги.
 
     Args:
         gos_nomer: Государственный регистрационный номер ТС (напр. «А123АА77»).
 
     Returns:
-        Список штрафов с суммами, статьями КоАП и статусами оплаты.
+        Информация о штрафах или указание использовать Госуслуги.
     """
-    c = client.GibddClient()
-    shtrafy = c.poluchit_shtrafy_po_ts(gos_nomer)
-    if not shtrafy:
-        return f"Штрафы по госномеру {gos_nomer} не найдены (API integration pending)."
-    rows = []
-    for s in shtrafy:
-        rows.append(
-            (
-                s.get("postanovlenie_nomer", ""),
-                s.get("data_narusheniya", ""),
-                s.get("opisanie_narusheniya", ""),
-                format_number_ru(s.get("summa_shtrafa", 0), 0),
-                s.get("status_oplaty", ""),
-            )
-        )
-    return markdown_table(
-        ["Постановление", "Дата", "Нарушение", "Сумма (₽)", "Статус"],
-        rows,
-    )
+    return (
+        f"Проверка штрафов по госномеру {gos_nomer} требует авторизацию "
+        f"через Госуслуги: https://www.gosuslugi.ru/10001/1\n\n"
+        f"Публичный API ГИБДД не предоставляет данные о штрафах без "
+        f"авторизации. Используйте сайт Госуслуг или портал ГИБДД."
+    ) + _ATTRIBUTION
 
 
 async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
-    """Штрафы ГИБДД по номеру водительского удостоверения. (legacy — placeholder)
+    """Штрафы ГИБДД по номеру водительского удостоверения.
+
+    Проверка штрафов требует авторизованный доступ через Госуслуги.
 
     Args:
         nomer_vu: Серия и номер ВУ (10 цифр).
 
     Returns:
-        Список штрафов с суммами и статусами.
+        Информация о штрафах или указание использовать Госуслуги.
     """
-    c = client.GibddClient()
-    shtrafy = c.poluchit_shtrafy_po_vu(nomer_vu)
-    if not shtrafy:
-        return f"Штрафы по ВУ {nomer_vu} не найдены (API integration pending)."
-    rows = []
-    for s in shtrafy:
-        rows.append(
-            (
-                s.get("postanovlenie_nomer", ""),
-                s.get("data_narusheniya", ""),
-                s.get("opisanie_narusheniya", ""),
-                format_number_ru(s.get("summa_shtrafa", 0), 0),
-                s.get("status_oplaty", ""),
-            )
-        )
-    return markdown_table(
-        ["Постановление", "Дата", "Нарушение", "Сумма (₽)", "Статус"],
-        rows,
-    )
+    return (
+        f"Проверка штрафов по ВУ {nomer_vu} требует авторизацию "
+        f"через Госуслуги: https://www.gosuslugi.ru/10001/1\n\n"
+        f"Публичный API ГИБДД не предоставляет данные о штрафах без "
+        f"авторизации. Используйте сайт Госуслуг или портал ГИБДД."
+    ) + _ATTRIBUTION
 
 
 async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
-    """Статистика ДТП по региону. (legacy — placeholder)
+    """Статистика ДТП по региону.
 
     Args:
         region: Название субъекта РФ.
@@ -198,24 +214,24 @@ async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
     Returns:
         Статистика ДТП: количество, погибшие, раненые, пешеходы, дети.
     """
-    c = client.GibddClient()
-    data = c.poluchit_statistiku_dtp(region, god)
+    data = await client.statistika_dtp_region(region, god)
     if not data:
-        return f"Статистика ДТП по региону «{region}» за {god} год не найдена (API integration pending)."
+        return f"Статистика ДТП по региону «{region}» за {god} год не найдена." + _ATTRIBUTION
+
     lines = [
-        f"**Статистика ДТП** — {region}, {god} г.",
-        f"- Всего ДТП: {format_number_ru(data.get('kolichestvo_dtp', 0), 0)}",
-        f"- Погибшие: {format_number_ru(data.get('pogibshie', 0), 0)}",
-        f"- Раненые: {format_number_ru(data.get('ranennye', 0), 0)}",
-        f"- ДТП с пешеходами: {format_number_ru(data.get('dtp_s_peshchodami', 0), 0)}",
-        f"- ДТП с участием детей: {format_number_ru(data.get('dtp_s_detmi', 0), 0)}",
-        f"- ДТП по вине нетрезвых: {format_number_ru(data.get('alco_gibdd', 0), 0)}",
+        f"**Статистика ДТП** — {data.region}, {data.god} г.",
+        f"- Всего ДТП: {format_number_ru(data.kolichestvo_dtp, 0)}",
+        f"- Погибшие: {format_number_ru(data.pogibshie, 0)}",
+        f"- Раненые: {format_number_ru(data.ranennye, 0)}",
+        f"- ДТП с пешеходами: {format_number_ru(data.dtp_s_peshchodami, 0)}",
+        f"- ДТП с участием детей: {format_number_ru(data.dtp_s_detmi, 0)}",
+        f"- ДТП по вине нетрезвых: {format_number_ru(data.alco_gibdd, 0)}",
     ]
-    return "\n".join(lines)
+    return "\n".join(lines) + _ATTRIBUTION
 
 
 async def istoriya_registraciy(ctx: Context, vin: str) -> str:
-    """История регистрационных действий транспортного средства. (legacy — placeholder)
+    """История регистрационных действий транспортного средства.
 
     Args:
         vin: VIN-номер транспортного средства (17 символов).
@@ -223,17 +239,9 @@ async def istoriya_registraciy(ctx: Context, vin: str) -> str:
     Returns:
         Список регистрационных действий (постановка/снятие с учёта, смена собственника).
     """
-    c = client.GibddClient()
-    records = c.poluchit_istoriyu_registraciy(vin)
+    records = await client.proverka_istorii_ts(vin)
     if not records:
-        return f"История регистраций по VIN {vin} не найдена (API integration pending)."
-    rows = []
-    for r in records:
-        rows.append(
-            (
-                r.get("data_deystviya", ""),
-                r.get("tip_deystviya", ""),
-                r.get("region", ""),
-            )
-        )
-    return markdown_table(["Дата", "Действие", "Регион"], rows)
+        return f"История регистраций по VIN {vin} не найдена." + _ATTRIBUTION
+
+    rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in records]
+    return markdown_table(["Дата", "Действие", "Госномер", "Регион"], rows) + _ATTRIBUTION

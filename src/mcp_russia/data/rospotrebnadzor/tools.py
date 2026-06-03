@@ -1,11 +1,12 @@
-"""Tools for the Роспотребнадзор feature.
-
-All tool docstrings are in Russian with "(legacy)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Tools for the Роспотребнадзор feature."""
 
 from __future__ import annotations
 
+from fastmcp import Context
+
+from mcp_russia._shared.formatting import markdown_table
+
+from . import client
 from .constants import (
     KATEGORII_OBIEKTOV,
     NAPRAVLENIYA_DEYATELNOSTI,
@@ -15,44 +16,48 @@ from .constants import (
 )
 
 
-def spisok_napravleniy() -> list[dict]:
-    """Список направлений деятельности Роспотребнадзора. (legacy — placeholder)
+async def spisok_napravleniy(ctx: Context) -> str:
+    """Список направлений деятельности Роспотребнадзора.
 
     Returns:
         Список направлений с кодами и названиями.
     """
-    return NAPRAVLENIYA_DEYATELNOSTI
+    rows = [(n["code"], n["name"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    return markdown_table(["Код", "Направление"], rows)
 
 
-def spisok_tipov_proverok() -> list[dict]:
-    """Список типов проверок Роспотребнадзора. (legacy — placeholder)
+async def spisok_tipov_proverok(ctx: Context) -> str:
+    """Список типов проверок Роспотребнадзора.
 
     Returns:
         Список типов проверок (плановая, внеплановая и т.д.).
     """
-    return TIPY_PROVEROK
+    rows = [(t["code"], t["name"]) for t in TIPY_PROVEROK]
+    return markdown_table(["Код", "Тип проверки"], rows)
 
 
-def spisok_kategoriy_obiektov() -> list[dict]:
-    """Список категорий объектов надзора. (legacy — placeholder)
+async def spisok_kategoriy_obiektov(ctx: Context) -> str:
+    """Список категорий объектов надзора.
 
     Returns:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
-    return KATEGORII_OBIEKTOV
+    rows = [(k["code"], k["name"]) for k in KATEGORII_OBIEKTOV]
+    return markdown_table(["Код", "Категория объекта"], rows)
 
 
-def spisok_regionalnyh_upravleniy() -> list[dict]:
-    """Список региональных управлений Роспотребнадзора. (legacy — placeholder)
+async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
+    """Список региональных управлений Роспотребнадзора.
 
     Returns:
         Список управлений по федеральным округам.
     """
-    return REGIONALNYE_UPRAVLENIYA
+    rows = [(r["code"], r["name"]) for r in REGIONALNYE_UPRAVLENIYA]
+    return markdown_table(["Код", "Управление"], rows)
 
 
-def info_proverki(nomer_proverki: str) -> dict:
-    """Подробная информация о проверке. (legacy — placeholder)
+async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
+    """Подробная информация о проверке.
 
     Args:
         nomer_proverki: Номер проверки.
@@ -60,20 +65,24 @@ def info_proverki(nomer_proverki: str) -> dict:
     Returns:
         Информация о проверке (тип, объект, даты, статус, результат).
     """
-    return {
-        "nomer": nomer_proverki,
-        "tip_proverki": "",
-        "organizaciya": "",
-        "data_nachala": "",
-        "data_okonchaniya": "",
-        "status": "placeholder — API integration pending",
-        "vyavleno_narusheniy": 0,
-        "rezulstat": "",
-    }
+    data = await client.get_proverka(nomer_proverki)
+    if not data:
+        return f"Проверка № {nomer_proverki} не найдена."
+    lines = [
+        f"**Проверка** № {data.get('nomer', nomer_proverki)}",
+        f"- Тип проверки: {data.get('tip_proverki', '')}",
+        f"- Организация: {data.get('organizaciya', '')}",
+        f"- Дата начала: {data.get('data_nachala', '')}",
+        f"- Дата окончания: {data.get('data_okonchaniya', '')}",
+        f"- Статус: {data.get('status', '')}",
+        f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
+        f"- Результат: {data.get('rezulstat', '')}",
+    ]
+    return "\n".join(lines)
 
 
-def poisk_narusheniy(organizaciya: str = "") -> list[dict]:
-    """Поиск санитарных нарушений по организации. (legacy — placeholder)
+async def poisk_narusheniy(ctx: Context, organizaciya: str = "") -> str:
+    """Поиск санитарных нарушений по организации.
 
     Args:
         organizaciya: Название организации (необязательно).
@@ -81,20 +90,37 @@ def poisk_narusheniy(organizaciya: str = "") -> list[dict]:
     Returns:
         Список выявленных нарушений с описанием и ссылками на нормативы.
     """
-    return []
+    narusheniya = await client.get_narusheniya(organizaciya)
+    if not narusheniya:
+        return "Нарушения не найдены."
+    rows = [
+        (
+            n.get("tip_narusheniya", ""),
+            n.get("opisanie", ""),
+            n.get("normativ", ""),
+            n.get("data_vyyavleniya", ""),
+            n.get("status", ""),
+        )
+        for n in narusheniya
+    ]
+    return markdown_table(
+        ["Тип нарушения", "Описание", "Норматив", "Дата выявления", "Статус"],
+        rows,
+    )
 
 
-def spisok_sanpinov() -> list[dict]:
-    """Список основных санитарных правил и нормативов (СанПиН). (legacy — placeholder)
+async def spisok_sanpinov(ctx: Context) -> str:
+    """Список основных санитарных правил и нормативов (СанПиН).
 
     Returns:
         Справочник основных СанПиН с кодами и названиями.
     """
-    return SANPIN_OSNOVNYE
+    rows = [(s["code"], s["name"]) for s in SANPIN_OSNOVNYE]
+    return markdown_table(["Код", "СанПиН"], rows)
 
 
-def zhaloby_potrebiteley(organizaciya: str = "") -> list[dict]:
-    """Жалобы потребителей, зарегистрированные в Роспотребнадзоре. (legacy — placeholder)
+async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "") -> str:
+    """Жалобы потребителей, зарегистрированные в Роспотребнадзоре.
 
     Args:
         organizaciya: Название организации (необязательно).
@@ -102,11 +128,26 @@ def zhaloby_potrebiteley(organizaciya: str = "") -> list[dict]:
     Returns:
         Список жалоб с темой, статусом рассмотрения и результатом.
     """
-    return []
+    zhaloby = await client.get_zhaloby(organizaciya)
+    if not zhaloby:
+        return "Жалобы не найдены."
+    rows = [
+        (
+            z.get("tema", ""),
+            z.get("data_podachi", ""),
+            z.get("status_rassmotreniya", ""),
+            z.get("rezultat", ""),
+        )
+        for z in zhaloby
+    ]
+    return markdown_table(
+        ["Тема", "Дата подачи", "Статус", "Результат"],
+        rows,
+    )
 
 
-def pokazateli_bezopasnosti(kod_pokazatelya: str = "") -> list[dict]:
-    """Показатели эпидемиологической и санитарной безопасности. (legacy — placeholder)
+async def pokazateli_bezopasnosti(ctx: Context, kod_pokazatelya: str = "") -> str:
+    """Показатели эпидемиологической и санитарной безопасности.
 
     Args:
         kod_pokazatelya: Код показателя (необязательно).
@@ -114,4 +155,20 @@ def pokazateli_bezopasnosti(kod_pokazatelya: str = "") -> list[dict]:
     Returns:
         Список показателей со значениями и предельно допустимыми уровнями.
     """
-    return []
+    pokazateli = await client.get_pokazateli(kod_pokazatelya)
+    if not pokazateli:
+        return "Показатели безопасности не найдены."
+    rows = [
+        (
+            p.get("kod", ""),
+            p.get("nazvanie", ""),
+            str(p.get("znachenie", "")),
+            str(p.get("pdk", "")),
+            p.get("edinitsa", ""),
+        )
+        for p in pokazateli
+    ]
+    return markdown_table(
+        ["Код", "Показатель", "Значение", "ПДК", "Единица"],
+        rows,
+    )

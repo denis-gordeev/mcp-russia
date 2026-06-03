@@ -1,8 +1,4 @@
-"""Prompts for the ГИБДД/МВД feature.
-
-All prompts are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Prompts for the ГИБДД/МВД feature."""
 
 from __future__ import annotations
 
@@ -11,7 +7,7 @@ from fastmcp.prompts import Message, PromptMessage, PromptResult
 
 
 def analiz_transportnogo_sredstva() -> PromptResult:
-    """Анализ транспортного средства по VIN. (legacy — placeholder)
+    """Анализ транспортного средства по VIN.
 
     Используйте этот промпт для проверки транспортного средства перед покупкой.
     """
@@ -26,11 +22,10 @@ def analiz_transportnogo_sredstva() -> PromptResult:
                             "Выполните проверку транспортного средства по VIN:\n\n"
                             "1. Получите основные сведения о ТС (марка, модель, год).\n"
                             "2. Проверьте историю регистрационных действий.\n"
-                            "3. Проверьте наличие неоплаченных штрафов.\n"
-                            "4. Проверьте ограничения (розыск, залог, арест).\n"
+                            "3. Проверьте ДТП с участием ТС.\n"
+                            "4. Проверьте розыск и ограничения.\n"
                             "5. Оцените общую историю ТС и риски.\n\n"
-                            "Используйте tools: info_ts, istoriya_registraciy, "
-                            "shtrafy_po_ts."
+                            "Используйте tools: info_ts, istoriya_registraciy."
                         ),
                     ),
                 )
@@ -40,7 +35,7 @@ def analiz_transportnogo_sredstva() -> PromptResult:
 
 
 def analiz_voditelya() -> PromptResult:
-    """Анализ водительского удостоверения и штрафов. (legacy — placeholder)
+    """Анализ водительского удостоверения.
 
     Используйте этот промпт для проверки статуса ВУ и наличия штрафов.
     """

@@ -23,7 +23,7 @@
 > Prompt: «Выведи 10 депутатов Госдумы с наибольшими расходами по компенсациям за 2024 год»
 
 ```
-API: duma_deputy_expenses (vypolnit_paket для Top 10)
+API: gosduma_info_deputata (vypolnit_paket для Top 10) *(расходы депутатов — планируемый инструмент)*
 ```
 
 **2. Сравнение по фракциям**
@@ -31,7 +31,7 @@ API: duma_deputy_expenses (vypolnit_paket для Top 10)
 > Prompt: «Какова средняя сумма расходов аппарата по фракциям? Какая фракция тратит больше всего в пересчёте на одного депутата?»
 
 ```
-APIs: duma_list_deputies (все) + duma_deputy_expenses (пакетно)
+APIs: gosduma_spisok_deputatov (все) + gosduma_info_deputata (пакетно) *(расходы депутатов — планируемый инструмент)*
 ```
 
 **3. Детализация по категориям**
@@ -80,7 +80,7 @@ LLM агрегирует данные и формирует:
 > Prompt: «Сравни количество больничных коек на 1000 жителей во всех субъектах РФ»
 
 ```
-APIs: rosstat_healthcare_facilities (по субъекту) + rosstat_population (численность)
+APIs: minzdrav_poisk_med_organizatsiy (по субъекту) + rosstat_demografiya (численность)
 ```
 
 **2. Расходы на здравоохранение**
@@ -88,7 +88,7 @@ APIs: rosstat_healthcare_facilities (по субъекту) + rosstat_population
 > Prompt: «Сколько каждый субъект РФ тратит на здравоохранение в расчёте на душу населения?»
 
 ```
-APIs: regional_budget_expenses (по субъекту) + rosstat_population (численность)
+APIs: rosaudit_ispolnenie_byudzheta (по субъекту) + rosstat_demografiya (численность)
 ```
 
 **3. Итоговые показатели**
@@ -96,7 +96,7 @@ APIs: regional_budget_expenses (по субъекту) + rosstat_population (ч�
 > Prompt: «Какова ожидаемая продолжительность жизни в каждом субъекте РФ? Каков уровень младенческой смертности?»
 
 ```
-API: rosstat_demographic_indicators
+API: rosstat_demografiya
 ```
 
 ### Инфографика
@@ -130,7 +130,7 @@ API: rosstat_demographic_indicators
 > Prompt: «Покажи динамику ключевой ставки за последние 5 лет и сравни с инфляцией»
 
 ```
-APIs: cbr_compare_series(codes=[key_rate, cpi], last=60)
+APIs: cbrf_sravnit_valyuty(codes=[key_rate, cpi], last=60)
 ```
 
 **2. Влияние на кредитование**
@@ -138,7 +138,7 @@ APIs: cbr_compare_series(codes=[key_rate, cpi], last=60)
 > Prompt: «Какова стоимость ипотеки на ₽ 10 млн при текущей ключевой ставке по сравнению со ставкой 2 года назад?»
 
 ```
-API: cbr_credit_series (ряды по кредитованию)
+API: cbr_credit_series *(планируемый — ряды по кредитованию)*
 ```
 
 **3. Международное сравнение**
@@ -178,7 +178,7 @@ LLM рассчитывает: ключевая ставка (21,00 %) − инф
 > Prompt: «Сколько очагов природных пожаров зарегистрировано в Сибирском федеральном округе в 2024 году? Сравни с предыдущими 5 годами»
 
 ```
-API: rosgidromet_fires(region="siberian_fd", year=2024)
+API: rosgidromet_preduprezhdeniya(region="siberian_fd", year=2024)
 ```
 
 **2. Вырубка лесов**
@@ -186,7 +186,7 @@ API: rosgidromet_fires(region="siberian_fd", year=2024)
 > Prompt: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_deforestation(region="siberian_fd")
+API: rosprirodnadzor_deforestation(region="siberian_fd") *(планируемый модуль «Росприроднадзор»)*
 ```
 
 **3. Водные ресурсы**
@@ -194,7 +194,7 @@ API: rosprirodnadzor_deforestation(region="siberian_fd")
 > Prompt: «Каков уровень водохранилищ в регионах с наибольшим числом пожаров?»
 
 ```
-API: rosvoдресурсы_reservoirs
+API: rosvodresursy_info_vodokhranilishcha
 ```
 
 **4. Официальные публикации**
@@ -202,7 +202,7 @@ API: rosvoдресурсы_reservoirs
 > Prompt: «Найди официальные публикации о введении режима ЧС из-за природных пожаров в 2024 году»
 
 ```
-API: official_publications_search(term="режим ЧС природные пожары 2024")
+API: publikatsii_poisk_aktov(term="режим ЧС природные пожары 2024")
 ```
 
 ---
@@ -218,15 +218,15 @@ API: official_publications_search(term="режим ЧС природные по�
 > Prompt: «Выведи кандидатов на пост губернатора Московской области с зарегистрированными финансовыми отчётами в ЦИК»
 
 ```
-APIs: cik_search_candidates(position="governor", region="Moscow_oblast", year=2026)
-      cik_candidate_revenue (для каждого кандидата)
-      cik_candidate_expenses (для каждого кандидата)
+APIs: cekrf_poisk_kandidata(position="governor", region="Moscow_oblast", year=2026)
+      cekrf_kandidat_podrobno (для каждого кандидата)
+      cekrf_kandidat_podrobno (для каждого кандидата)
 ```
 
 > Prompt: «Кто крупнейшие спонсоры губернаторских кампаний по всей России?»
 
 ```
-API: cik_search_candidates + cik_candidate_revenue (пакетно)
+API: cekrf_poisk_kandidata + cekrf_kandidat_podrobno (пакетно)
 ```
 
 ---
@@ -246,9 +246,9 @@ API: cik_search_candidates + cik_candidate_revenue (пакетно)
 
 ```json
 [
-  {"tool": "rosstat_get_municipalities", "args": {"region": "Moscow_oblast"}},
-  {"tool": "rosstat_get_municipalities", "args": {"region": "Leningrad_oblast"}},
-  {"tool": "rosstat_get_municipalities", "args": {"region": "Tatarstan"}}
+  {"tool": "rosstat_spisok_regionov", "args": {"region": "Moscow_oblast"}},
+  {"tool": "rosstat_spisok_regionov", "args": {"region": "Leningrad_oblast"}},
+  {"tool": "rosstat_spisok_regionov", "args": {"region": "Tatarstan"}}
 ]
 ```
 

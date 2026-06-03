@@ -1,14 +1,10 @@
-"""Resources for the Роспотребнадзор feature.
-
-All resource descriptions are in Russian with "(legacy)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Resources for the Роспотребнадзор feature."""
 
 from __future__ import annotations
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных Роспотребнадзора. (legacy — placeholder)"""
+    """Источники данных Роспотребнадзора."""
     return """\
 Источники данных Роспотребнадзора:
 
@@ -24,7 +20,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство в сфере санитарного надзора. (legacy — placeholder)"""
+    """Законодательство в сфере санитарного надзора."""
     return """\
 Основные нормативные акты:
 
@@ -39,7 +35,7 @@ def zakonodatelstvo() -> str:
 
 
 def struktura_rospotrebnadzora() -> str:
-    """Структура Роспотребнадзора. (legacy — placeholder)"""
+    """Структура Роспотребнадзора."""
     return """\
 Структура Роспотребнадзора:
 

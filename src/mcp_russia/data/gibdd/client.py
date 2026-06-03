@@ -1,38 +1,293 @@
-"""HTTP client stubs for the ГИБДД/МВД feature.
+"""HTTP client for the ГИБДД/МВД feature.
 
-All functions are placeholders — real API integration with
-гибдд.рф / gosuslugi.ru requires separate work.
+Real API integration with:
+    - Проверка ТС: https://гибдд.рф/check/auto
+    - Проверка ВУ: https://гибдд.рф/check/driver
+    - Статистика ДТП: https://stat.gibdd.ru
 """
 
 from __future__ import annotations
 
+import logging
+from typing import Any
 
-class GibddClient:
-    """HTTP client stub for ГИБДД API."""
+from mcp_russia._shared.http_client import http_get
 
-    def __init__(self, base_url: str = "https://гибдд.рф"):
-        self.base_url = base_url
+from .constants import GIBDD_CHECK_BASE, GIBDD_STAT_BASE
+from .schemas import (
+    RegistracionnoeDeystvie,
+    StatistikaDTP,
+    VoditelskoeUdostoverenie,
+)
 
-    def poluchit_info_ts(self, vin: str) -> dict | None:
-        """Return данные транспортного средства по VIN (placeholder)."""
-        return None
+logger = logging.getLogger(__name__)
 
-    def poluchit_info_vu(self, nomer_vu: str) -> dict | None:
-        """Return данные водительского удостоверения (placeholder)."""
-        return None
 
-    def poluchit_shtrafy_po_ts(self, gos_nomer: str) -> list[dict]:
-        """Return штрафы по госномеру ТС (placeholder)."""
+async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
+    """Check vehicle registration history via ГИБДД API.
+
+    Args:
+        vin: VIN number (17 characters).
+
+    Returns:
+        List of registration actions.
+    """
+    url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
+    try:
+        data = await http_get(url)
+        return _parse_history(data, vin)
+    except Exception:
+        logger.exception("Ошибка при проверке истории ТС по VIN %s", vin)
         return []
 
-    def poluchit_shtrafy_po_vu(self, nomer_vu: str) -> list[dict]:
-        """Return штрафы по номеру ВУ (placeholder)."""
+
+async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
+    """Check vehicle accident history via ГИБДД API.
+
+    Args:
+        vin: VIN number (17 characters).
+
+    Returns:
+        List of accident records.
+    """
+    url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
+    try:
+        data = await http_get(url)
+        return _parse_dtp(data)
+    except Exception:
+        logger.exception("Ошибка при проверке ДТП по VIN %s", vin)
         return []
 
-    def poluchit_statistiku_dtp(self, region: str, god: int = 0) -> dict | None:
-        """Return статистику ДТП по региону (placeholder)."""
+
+async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
+    """Check if vehicle is wanted via ГИБДД API.
+
+    Args:
+        vin: VIN number (17 characters).
+
+    Returns:
+        List of wanted records.
+    """
+    url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
+    try:
+        data = await http_get(url)
+        return _parse_wanted(data)
+    except Exception:
+        logger.exception("Ошибка при проверке розыска ТС по VIN %s", vin)
+        return []
+
+
+async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
+    """Check vehicle registration restrictions via ГИБДД API.
+
+    Args:
+        vin: VIN number (17 characters).
+
+    Returns:
+        List of restriction records.
+    """
+    url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
+    try:
+        data = await http_get(url)
+        return _parse_restrict(data)
+    except Exception:
+        logger.exception("Ошибка при проверке ограничений ТС по VIN %s", vin)
+        return []
+
+
+async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
+    """Check driver license validity via ГИБДД API.
+
+    Args:
+        nomer_vu: Driver license number (10 digits, no spaces).
+
+    Returns:
+        Driver license data or None.
+    """
+    url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
+    try:
+        data = await http_get(url)
+        return _parse_driver(data, nomer_vu)
+    except Exception:
+        logger.exception("Ошибка при проверке ВУ %s", nomer_vu)
         return None
 
-    def poluchit_istoriyu_registraciy(self, vin: str) -> list[dict]:
-        """Return историю регистрационных действий ТС (placeholder)."""
+
+async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
+    """Fetch DTP crash statistics from stat.gibdd.ru.
+
+    Args:
+        region: Region name (subject of the Russian Federation).
+        god: Year for statistics.
+
+    Returns:
+        Crash statistics or None.
+    """
+    url = f"{GIBDD_STAT_BASE}/map/dtp"
+    params = {"region": region, "year": str(god)}
+    try:
+        data = await http_get(url, params=params)
+        return _parse_statistika(data, region, god)
+    except Exception:
+        logger.exception("Ошибка при получении статистики ДТП для %s, %d", region, god)
+        return None
+
+
+def _extract_result(data: Any, key: str) -> dict[str, Any]:
+    """Extract a result section from a ГИБДД check API response.
+
+    Typical format: {"RequestResult": {"result": {<key>: {...}}}}
+    """
+    if not isinstance(data, dict):
+        return {}
+    request_result = data.get("RequestResult", {})
+    if not isinstance(request_result, dict):
+        return {}
+    result = request_result.get("result", {})
+    if not isinstance(result, dict):
+        return {}
+    return result.get(key, {})
+
+
+def _parse_history(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
+    """Parse vehicle registration history response."""
+    history = _extract_result(data, "history")
+    if not isinstance(history, dict):
         return []
+
+    records = []
+    for item in history.get("records", []) or []:
+        if not isinstance(item, dict):
+            continue
+        records.append(
+            RegistracionnoeDeystvie(
+                vin=vin,
+                gos_nomer=item.get("regNumber", ""),
+                tip_deystviya=item.get("regAction", ""),
+                data_deystviya=item.get("regDate", ""),
+                region=item.get("regRegion", ""),
+            )
+        )
+    return records
+
+
+def _parse_dtp(data: Any) -> list[dict[str, Any]]:
+    """Parse vehicle accident history response."""
+    dtp = _extract_result(data, "dtp")
+    if not isinstance(dtp, dict):
+        return []
+
+    records = []
+    for item in dtp.get("records", []) or []:
+        if not isinstance(item, dict):
+            continue
+        records.append(
+            {
+                "data_dtp": item.get("accidentDate", ""),
+                "tip_dtp": item.get("accidentType", ""),
+                "region_dtp": item.get("regionName", ""),
+                "model_ts": item.get("vehicleModel", ""),
+                "god_vypuska": item.get("vehicleYear", ""),
+                "status_ts": item.get("damageState", ""),
+            }
+        )
+    return records
+
+
+def _parse_wanted(data: Any) -> list[dict[str, Any]]:
+    """Parse vehicle wanted status response."""
+    wanted = _extract_result(data, "wanted")
+    if not isinstance(wanted, dict):
+        return []
+
+    records = []
+    for item in wanted.get("records", []) or []:
+        if not isinstance(item, dict):
+            continue
+        records.append(
+            {
+                "data_rozyska": item.get("wantedDate", ""),
+                "region": item.get("wantedRegion", ""),
+                "initiator": item.get("wantedInitiator", ""),
+                "model_ts": item.get("vehicleModel", ""),
+                "god_vypuska": item.get("vehicleYear", ""),
+                "nomer_dela": item.get("wantedNumpkio", ""),
+            }
+        )
+    return records
+
+
+def _parse_restrict(data: Any) -> list[dict[str, Any]]:
+    """Parse vehicle restrictions response."""
+    restrict = _extract_result(data, "restrict")
+    if not isinstance(restrict, dict):
+        return []
+
+    records = []
+    for item in restrict.get("records", []) or []:
+        if not isinstance(item, dict):
+            continue
+        records.append(
+            {
+                "data_ogranicheniya": item.get("dateadd", ""),
+                "region": item.get("regname", ""),
+                "tip_ogranicheniya": item.get("restrictType", ""),
+                "osnovanie": item.get("restrictBasis", ""),
+                "initiator": item.get("restrictInitiator", ""),
+                "nomer_dela": item.get("restrictNumber", ""),
+            }
+        )
+    return records
+
+
+def _parse_driver(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
+    """Parse driver license check response."""
+    driver = _extract_result(data, "driver")
+    if not isinstance(driver, dict):
+        return None
+
+    fio_parts = []
+    if driver.get("lastName"):
+        fio_parts.append(driver["lastName"])
+    if driver.get("firstName"):
+        fio_parts.append(driver["firstName"])
+    if driver.get("middleName"):
+        fio_parts.append(driver["middleName"])
+
+    categories = []
+    for cat in driver.get("categories", []) or []:
+        if isinstance(cat, dict):
+            categories.append(cat.get("category", ""))
+
+    return VoditelskoeUdostoverenie(
+        nomer_vu=nomer_vu,
+        kategoriya=", ".join(categories),
+        data_vydachi=driver.get("dateIssue", ""),
+        srok_deystviya=driver.get("dateExpiry", ""),
+        fio=" ".join(fio_parts),
+        mesto_rozhdeniya=driver.get("birthPlace", ""),
+        ograniceniya=driver.get("restriction", ""),
+        osoboie_otmetki=driver.get("specialNote", ""),
+        status=driver.get("status", ""),
+    )
+
+
+def _parse_statistika(data: Any, region: str, god: int) -> StatistikaDTP | None:
+    """Parse DTP crash statistics response."""
+    if not isinstance(data, dict):
+        return None
+
+    stats = data.get("data", data)
+    if not isinstance(stats, dict):
+        return None
+
+    return StatistikaDTP(
+        region=region,
+        god=god,
+        kolichestvo_dtp=int(stats.get("dtpCount", 0) or 0),
+        pogibshie=int(stats.get("deadCount", 0) or 0),
+        ranennye=int(stats.get("injuredCount", 0) or 0),
+        dtp_s_peshchodami=int(stats.get("pedestrianDtpCount", 0) or 0),
+        dtp_s_detmi=int(stats.get("childDtpCount", 0) or 0),
+        alco_gibdd=int(stats.get("drunkDtpCount", 0) or 0),
+    )

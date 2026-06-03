@@ -6,6 +6,8 @@ def istochniki_dannyh() -> str:
     return (
         "**Источники официальных публикаций Российской Федерации**\n\n"
         "- Официальный интернет-портал правовой информации: https://pravo.gov.ru\n"
+        "  - Открытые данные: https://pravo.gov.ru/opendata/7700748144-prfgi\n"
+        "  - Поиск документов: https://pravo.gov.ru/opendata/7700748144-prfgi/search\n"
         "- Российская газета: https://rg.ru\n"
         "- КонсультантПлюс: https://consultant.ru\n"
         "- ГАРАНТ: https://garant.ru\n"

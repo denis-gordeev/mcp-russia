@@ -1,55 +1,70 @@
 """Тесты инструментов модуля Роспотребнадзора."""
 
+from unittest.mock import AsyncMock, patch
+
 from mcp_russia.data.rospotrebnadzor import tools as rpn_tools
 
 
-def test_spisok_napravleniy():
-    result = rpn_tools.spisok_napravleniy()
-    assert isinstance(result, list)
-    assert len(result) > 0
-    assert any(n["code"] == "sanitary" for n in result)
+def _mock_ctx():
+    ctx = AsyncMock()
+    ctx.info = AsyncMock()
+    ctx.warning = AsyncMock()
+    return ctx
 
 
-def test_spisok_tipov_proverok():
-    result = rpn_tools.spisok_tipov_proverok()
-    assert isinstance(result, list)
-    assert any(t["code"] == "planovaya" for t in result)
+async def test_spisok_napravleniy():
+    ctx = _mock_ctx()
+    result = await rpn_tools.spisok_napravleniy(ctx)
+    assert "Санитарно-эпидемиологический надзор" in result
 
 
-def test_spisok_kategoriy_obiektov():
-    result = rpn_tools.spisok_kategoriy_obiektov()
-    assert isinstance(result, list)
-    assert any(k["code"] == "food_enterprise" for k in result)
+async def test_spisok_tipov_proverok():
+    ctx = _mock_ctx()
+    result = await rpn_tools.spisok_tipov_proverok(ctx)
+    assert "Плановая проверка" in result
 
 
-def test_spisok_regionalnyh_upravleniy():
-    result = rpn_tools.spisok_regionalnyh_upravleniy()
-    assert isinstance(result, list)
-    assert any(r["code"] == "CFD" for r in result)
+async def test_spisok_kategoriy_obiektov():
+    ctx = _mock_ctx()
+    result = await rpn_tools.spisok_kategoriy_obiektov(ctx)
+    assert "Предприятия пищевой промышленности" in result
 
 
-def test_info_proverki():
-    result = rpn_tools.info_proverki("12345")
-    assert result["nomer"] == "12345"
-    assert "placeholder" in result["status"]
+async def test_spisok_regionalnyh_upravleniy():
+    ctx = _mock_ctx()
+    result = await rpn_tools.spisok_regionalnyh_upravleniy(ctx)
+    assert "Центральному федеральному округу" in result
 
 
-def test_poisk_narusheniy():
-    result = rpn_tools.poisk_narusheniy()
-    assert isinstance(result, list)
+async def test_info_proverki_not_found():
+    ctx = _mock_ctx()
+    with patch.object(rpn_tools.client, "get_proverka", return_value=None):
+        result = await rpn_tools.info_proverki(ctx, nomer_proverki="12345")
+    assert "не найдена" in result
 
 
-def test_spisok_sanpinov():
-    result = rpn_tools.spisok_sanpinov()
-    assert isinstance(result, list)
-    assert any(s["code"] == "2.1.3684-21" for s in result)
+async def test_poisk_narusheniy_empty():
+    ctx = _mock_ctx()
+    with patch.object(rpn_tools.client, "get_narusheniya", return_value=[]):
+        result = await rpn_tools.poisk_narusheniy(ctx)
+    assert "не найдены" in result
 
 
-def test_zhaloby_potrebiteley():
-    result = rpn_tools.zhaloby_potrebiteley()
-    assert isinstance(result, list)
+async def test_spisok_sanpinov():
+    ctx = _mock_ctx()
+    result = await rpn_tools.spisok_sanpinov(ctx)
+    assert "2.1.3684-21" in result
 
 
-def test_pokazateli_bezopasnosti():
-    result = rpn_tools.pokazateli_bezopasnosti()
-    assert isinstance(result, list)
+async def test_zhaloby_potrebiteley_empty():
+    ctx = _mock_ctx()
+    with patch.object(rpn_tools.client, "get_zhaloby", return_value=[]):
+        result = await rpn_tools.zhaloby_potrebiteley(ctx)
+    assert "не найдены" in result
+
+
+async def test_pokazateli_bezopasnosti_empty():
+    ctx = _mock_ctx()
+    with patch.object(rpn_tools.client, "get_pokazateli", return_value=[]):
+        result = await rpn_tools.pokazateli_bezopasnosti(ctx)
+    assert "не найдены" in result

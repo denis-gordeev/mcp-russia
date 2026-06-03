@@ -1,14 +1,10 @@
-"""Resources for the Роскомнадзор feature.
-
-All resource descriptions are in Russian with "(legacy)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Resources for the Роскомнадзор feature."""
 
 from __future__ import annotations
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных Роскомнадзора. (legacy — placeholder)"""
+    """Источники данных Роскомнадзора."""
     return """\
 Источники данных Роскомнадзора:
 
@@ -26,7 +22,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство в сфере связи и информации. (legacy — placeholder)"""
+    """Законодательство в сфере связи и информации."""
     return """\
 Основные нормативные акты:
 
@@ -44,7 +40,7 @@ def zakonodatelstvo() -> str:
 
 
 def struktura_roskomnadzora() -> str:
-    """Структура Роскомнадзора. (legacy — placeholder)"""
+    """Структура Роскомнадзора."""
     return """\
 Структура Роскомнадзора:
 

@@ -1,5 +1,4 @@
-"""Официальные публикации РФ — нормативные акты и публикации на pravo.gov.ru
-и consultant.ru."""
+"""Официальные публикации РФ — нормативные акты и публикации на pravo.gov.ru."""
 
 from mcp_russia._shared.feature import FeatureMeta
 
@@ -10,7 +9,7 @@ FEATURE_META = FeatureMeta(
         "указы Президента, постановления Правительства, нормативные акты, "
         "официальные публикации в Российская газете и на портале pravo.gov.ru"
     ),
-    version="0.1.0",
+    version="0.2.0",
     api_base="https://pravo.gov.ru",
     requires_auth=False,
     tags=[

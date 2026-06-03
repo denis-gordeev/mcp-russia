@@ -1,5 +1,7 @@
 """Интеграционные тесты для модуля ГИБДД/МВД."""
 
+from unittest.mock import patch
+
 import pytest
 from fastmcp import Client
 
@@ -64,8 +66,11 @@ async def test_tool_spisok_tipov_ts(client):
 
 
 async def test_tool_info_ts(client):
-    async with client:
-        result = await client.call_tool("info_ts", {"vin": "XTA21140052XXXXXX"})
+    from mcp_russia.data.gibdd import tools as gibdd_tools
+
+    with patch.object(gibdd_tools, "_proverka_ts_full", return_value=([], [], [], [])):
+        async with client:
+            result = await client.call_tool("info_ts", {"vin": "XTA21140052XXXXXX"})
     assert result is not None
     text = str(result)
-    assert "не найдена" in text or "placeholder" in text.lower()
+    assert "не найден" in text

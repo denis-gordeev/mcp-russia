@@ -1,12 +1,14 @@
-"""Tools for the ФССП feature.
-
-All tool docstrings are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Tools for the ФССП feature."""
 
 from __future__ import annotations
 
+from fastmcp import Context
+
+from mcp_russia._shared.formatting import markdown_table
+
+from . import client
 from .constants import (
+    KODY_REGIONOV_FSSP,
     KategoriiDolzhnikov,
     Ogranicheniya,
     OsnovaniyaVozbuzhdeniya,
@@ -14,54 +16,73 @@ from .constants import (
     VidyIspolnitelnyhProizvodstv,
 )
 
+_ATTRIBUTION = "\n\n_Источник: ФССП России (fssp.gov.ru)_"
 
-def spisok_vidov_proizvodstv() -> list[dict]:
-    """Список видов исполнительных производств. (legacy — placeholder)
+
+async def spisok_vidov_proizvodstv(ctx: Context) -> str:
+    """Список видов исполнительных производств.
 
     Returns:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
-    return VidyIspolnitelnyhProizvodstv
+    rows = [(v["code"], v["name"]) for v in VidyIspolnitelnyhProizvodstv]
+    return markdown_table(["Код", "Вид производства"], rows) + _ATTRIBUTION
 
 
-def spisok_statusov_proizvodstva() -> list[dict]:
-    """Список статусов исполнительного производства. (legacy — placeholder)
+async def spisok_statusov_proizvodstva(ctx: Context) -> str:
+    """Список статусов исполнительного производства.
 
     Returns:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
-    return StatusyProizvodstva
+    rows = [(s["code"], s["name"]) for s in StatusyProizvodstva]
+    return markdown_table(["Код", "Статус"], rows) + _ATTRIBUTION
 
 
-def spisok_ogranicheniy() -> list[dict]:
-    """Список видов ограничений, налагаемых судебными приставами. (legacy — placeholder)
+async def spisok_ogranicheniy(ctx: Context) -> str:
+    """Список видов ограничений, налагаемых судебными приставами.
 
     Returns:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
-    return Ogranicheniya
+    rows = [(o["code"], o["name"]) for o in Ogranicheniya]
+    return markdown_table(["Код", "Ограничение"], rows) + _ATTRIBUTION
 
 
-def spisok_kategoriy_dolzhnikov() -> list[dict]:
-    """Список категорий должников. (legacy — placeholder)
+async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
+    """Список категорий должников.
 
     Returns:
         Список категорий (физлицо, юрлицо, ИП).
     """
-    return KategoriiDolzhnikov
+    rows = [(k["code"], k["name"]) for k in KategoriiDolzhnikov]
+    return markdown_table(["Код", "Категория"], rows) + _ATTRIBUTION
 
 
-def spisok_osnovaniy_vozbuzhdeniya() -> list[dict]:
-    """Список оснований возбуждения исполнительного производства. (legacy — placeholder)
+async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
+    """Список оснований возбуждения исполнительного производства.
 
     Returns:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
-    return OsnovaniyaVozbuzhdeniya
+    rows = [(o["code"], o["name"]) for o in OsnovaniyaVozbuzhdeniya]
+    return markdown_table(["Код", "Основание"], rows) + _ATTRIBUTION
 
 
-def info_proizvodstva(nomer: str) -> dict:
-    """Подробная информация об исполнительном производстве. (legacy — placeholder)
+async def spisok_regionov(ctx: Context) -> str:
+    """Список кодов регионов для поиска в Банке данных ФССП.
+
+    Returns:
+        Список регионов и их кодов.
+    """
+    rows = [
+        (str(code), name) for name, code in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
+    ]
+    return markdown_table(["Код", "Регион"], rows) + _ATTRIBUTION
+
+
+async def info_proizvodstva(ctx: Context, nomer: str) -> str:
+    """Подробная информация об исполнительном производстве.
 
     Args:
         nomer: Номер исполнительного производства
@@ -70,47 +91,103 @@ def info_proizvodstva(nomer: str) -> dict:
     Returns:
         Сведения о производстве (должник, взыскатель, сумма, статус).
     """
-    return {
-        "nomer": nomer,
-        "tip_proizvodstva": "",
-        "dolzhnik": "",
-        "vzyskatel": "",
-        "summa_vzyskaniya": None,
-        "ostatok_dolga": None,
-        "status": "placeholder — API integration pending",
-        "data_vozbuzhdeniya": "",
-        "osnovanie": "",
-        "otdel_pristavov": "",
-    }
+    result = await client.info_proizvodstva(nomer)
+    if not result:
+        return f"Исполнительное производство № {nomer} не найдено." + _ATTRIBUTION
+
+    lines = [
+        f"**Исполнительное производство** № {result.get('nomer', nomer)}",
+        f"- Должник: {result.get('dolzhnik', '')}",
+        f"- Дата возбуждения: {result.get('data_vozbuzhdeniya', '')}",
+        f"- Предмет исполнения: {result.get('subject', '')}",
+        f"- Сума взыскания: {result.get('summa', '')}",
+        f"- Отдел судебных приставов: {result.get('otdel_pristavov', '')}",
+        f"- Судебный пристав: {result.get('pristav', '')}",
+        f"- Дата окончания: {result.get('ip_end', '') or 'в производстве'}",
+        f"- Основание: {result.get('osnovanie', '')}",
+        f"- Регион: {result.get('region', '')}",
+    ]
+    return "\n".join(lines) + _ATTRIBUTION
 
 
-def poisk_dolzhnika(fio: str, data_rozhdeniya: str = "") -> list[dict]:
-    """Поиск исполнительных производств по должнику. (legacy — placeholder)
+async def poisk_dolzhnika(
+    ctx: Context,
+    fio: str,
+    data_rozhdeniya: str = "",
+    region: str = "",
+) -> str:
+    """Поиск исполнительных производств по должнику.
+
+    Args:
+        fio: ФИО должника или название организации.
+        data_rozhdeniya: Дата рождения (необязательно, напр.: «01.01.1990»).
+        region: Код региона (необязательно, напр.: «77» — Москва).
+
+    Returns:
+        Список исполнительных производств с суммами и статусами.
+    """
+    results = await client.poisk_proizvodstv(fio, data_rozhdeniya, region)
+    if not results:
+        return f"Исполнительные производства по «{fio}» не найдены." + _ATTRIBUTION
+
+    rows = [
+        (
+            r.get("nomer", ""),
+            r.get("dolzhnik", ""),
+            r.get("subject", ""),
+            r.get("summa", ""),
+            r.get("otdel_pristavov", ""),
+            r.get("ip_end", "") or "в производстве",
+        )
+        for r in results
+    ]
+    return (
+        markdown_table(
+            ["Номер", "Должник", "Предмет", "Сумма", "Отдел", "Статус"],
+            rows,
+        )
+        + _ATTRIBUTION
+    )
+
+
+async def ogranicheniya_dolzhnika(
+    ctx: Context,
+    fio: str,
+    data_rozhdeniya: str = "",
+) -> str:
+    """Ограничения, наложенные на должника.
 
     Args:
         fio: ФИО должника или название организации.
         data_rozhdeniya: Дата рождения (необязательно, напр.: «01.01.1990»).
 
     Returns:
-        Список исполнительных производств с суммами и статусами.
-    """
-    return []
-
-
-def ogranicheniya_dolzhnika(fio: str) -> list[dict]:
-    """Ограничения, наложенные на должника. (legacy — placeholder)
-
-    Args:
-        fio: ФИО должника или название организации.
-
-    Returns:
         Список ограничений (запрет на выезд, арест счетов и т.д.).
     """
-    return []
+    results = await client.ogranicheniya_dolzhnika(fio, data_rozhdeniya)
+    if not results:
+        return f"Ограничения по «{fio}» не найдены." + _ATTRIBUTION
+
+    rows = [
+        (
+            r.get("nomer", ""),
+            r.get("dolzhnik", ""),
+            r.get("subject", ""),
+            r.get("ip_end", "") or "действует",
+        )
+        for r in results
+    ]
+    return (
+        markdown_table(
+            ["Номер ИП", "Должник", "Ограничение", "Статус"],
+            rows,
+        )
+        + _ATTRIBUTION
+    )
 
 
-def rozysk_dolzhnika(fio: str) -> list[dict]:
-    """Сведения о розыске должника или имущества. (legacy — placeholder)
+async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
+    """Сведения о розыске должника или имущества.
 
     Args:
         fio: ФИО разыскиваемого лица.
@@ -118,4 +195,23 @@ def rozysk_dolzhnika(fio: str) -> list[dict]:
     Returns:
         Сведения о розыске (тип, основание, кто объявил).
     """
-    return []
+    results = await client.rozysk_dolzhnika(fio)
+    if not results:
+        return f"Сведения о розыске по «{fio}» не найдены." + _ATTRIBUTION
+
+    rows = [
+        (
+            r.get("nomer", ""),
+            r.get("dolzhnik", ""),
+            r.get("subject", ""),
+            r.get("otdel_pristavov", ""),
+        )
+        for r in results
+    ]
+    return (
+        markdown_table(
+            ["Номер ИП", "Должник", "Предмет розыска", "Отдел"],
+            rows,
+        )
+        + _ATTRIBUTION
+    )

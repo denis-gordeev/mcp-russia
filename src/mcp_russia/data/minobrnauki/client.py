@@ -6,29 +6,82 @@ minobrnauki.gov.ru / vuz.minobrnauki.gov.ru requires separate work.
 
 from __future__ import annotations
 
+import logging
+from typing import Any
 
-class MinobrnaukiClient:
-    """HTTP client stub for Минобрнауки API."""
+from mcp_russia._shared.http_client import http_get
 
-    def __init__(self, base_url: str = "https://minobrnauki.gov.ru"):
-        self.base_url = base_url
+from .constants import MINOBRNAUKI_API_BASE
 
-    def poluchit_vuz(self, nazvanie: str) -> dict | None:
-        """Return данные вуза (placeholder)."""
+logger = logging.getLogger(__name__)
+
+API_BASE = MINOBRNAUKI_API_BASE
+
+
+async def poluchit_vuz(nazvanie: str) -> dict[str, Any] | None:
+    """Return данные вуза (placeholder)."""
+    url = f"{API_BASE}/vuz"
+    try:
+        data = await http_get(url, params={"nazvanie": nazvanie})
+        return data if isinstance(data, dict) else None
+    except Exception:
+        logger.exception("Ошибка при получении данных вуза «%s»", nazvanie)
         return None
 
-    def poluchit_programmy(self, vuz: str, uroven: str = "") -> list[dict]:
-        """Return образовательные программы вуза (placeholder)."""
+
+async def poluchit_programmy(vuz: str, uroven: str = "") -> list[dict[str, Any]]:
+    """Return образовательные программы вуза (placeholder)."""
+    url = f"{API_BASE}/programmy"
+    try:
+        params: dict[str, Any] = {"vuz": vuz}
+        if uroven:
+            params["uroven"] = uroven
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении программ вуза «%s»", vuz)
         return []
 
-    def poluchit_granty(self, organizatsiya: str = "") -> list[dict]:
-        """Return гранты и научные исследования (placeholder)."""
+
+async def poluchit_granty(organizatsiya: str = "") -> list[dict[str, Any]]:
+    """Return гранты и научные исследования (placeholder)."""
+    url = f"{API_BASE}/granty"
+    try:
+        params: dict[str, Any] = {}
+        if organizatsiya:
+            params["organizatsiya"] = organizatsiya
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении грантов")
         return []
 
-    def poluchit_reyting(self, tip_reytinga: str = "", god: int = 0) -> list[dict]:
-        """Return рейтинг вузов (placeholder)."""
+
+async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[str, Any]]:
+    """Return рейтинг вузов (placeholder)."""
+    url = f"{API_BASE}/reyting"
+    try:
+        params: dict[str, Any] = {}
+        if tip_reytinga:
+            params["tip_reytinga"] = tip_reytinga
+        if god:
+            params["god"] = god
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении рейтинга вузов")
         return []
 
-    def poluchit_aspirantov(self, organizatsiya: str = "") -> list[dict]:
-        """Return данные об аспирантах (placeholder)."""
+
+async def poluchit_aspirantov(organizatsiya: str = "") -> list[dict[str, Any]]:
+    """Return данные об аспирантах (placeholder)."""
+    url = f"{API_BASE}/aspiranty"
+    try:
+        params: dict[str, Any] = {}
+        if organizatsiya:
+            params["organizatsiya"] = organizatsiya
+        data = await http_get(url, params=params)
+        return data if isinstance(data, list) else []
+    except Exception:
+        logger.exception("Ошибка при получении данных об аспирантах")
         return []

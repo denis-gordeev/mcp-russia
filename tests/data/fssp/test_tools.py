@@ -1,55 +1,70 @@
 """Тесты инструментов модуля ФССП."""
 
+from unittest.mock import AsyncMock, patch
+
 from mcp_russia.data.fssp import tools as fssp_tools
 
 
-def test_spisok_vidov_proizvodstv():
-    result = fssp_tools.spisok_vidov_proizvodstv()
-    assert isinstance(result, list)
-    assert len(result) > 0
-    assert any(v["code"] == "shtrafy_gibdd" for v in result)
+def _mock_ctx():
+    ctx = AsyncMock()
+    ctx.info = AsyncMock()
+    ctx.warning = AsyncMock()
+    return ctx
 
 
-def test_spisok_statusov_proizvodstva():
-    result = fssp_tools.spisok_statusov_proizvodstva()
-    assert isinstance(result, list)
-    assert any(s["code"] == "v_proizvodstve" for s in result)
+async def test_spisok_vidov_proizvodstv():
+    ctx = _mock_ctx()
+    result = await fssp_tools.spisok_vidov_proizvodstv(ctx)
+    assert "Штрафы ГИБДД" in result
 
 
-def test_spisok_ogranicheniy():
-    result = fssp_tools.spisok_ogranicheniy()
-    assert isinstance(result, list)
-    assert any(o["code"] == "vyezd" for o in result)
+async def test_spisok_statusov_proizvodstva():
+    ctx = _mock_ctx()
+    result = await fssp_tools.spisok_statusov_proizvodstva(ctx)
+    assert "производстве" in result
 
 
-def test_spisok_kategoriy_dolzhnikov():
-    result = fssp_tools.spisok_kategoriy_dolzhnikov()
-    assert isinstance(result, list)
-    assert any(k["code"] == "ip" for k in result)
+async def test_spisok_ogranicheniy():
+    ctx = _mock_ctx()
+    result = await fssp_tools.spisok_ogranicheniy(ctx)
+    assert "выезд" in result.lower()
 
 
-def test_spisok_osnovaniy_vozbuzhdeniya():
-    result = fssp_tools.spisok_osnovaniy_vozbuzhdeniya()
-    assert isinstance(result, list)
-    assert any(o["code"] == "sudebnyy_akt" for o in result)
+async def test_spisok_kategoriy_dolzhnikov():
+    ctx = _mock_ctx()
+    result = await fssp_tools.spisok_kategoriy_dolzhnikov(ctx)
+    assert "Индивидуальный предприниматель" in result
 
 
-def test_info_proizvodstva():
-    result = fssp_tools.info_proizvodstva("12345/23/77001-ИП")
-    assert result["nomer"] == "12345/23/77001-ИП"
-    assert "placeholder" in result["status"]
+async def test_spisok_osnovaniy_vozbuzhdeniya():
+    ctx = _mock_ctx()
+    result = await fssp_tools.spisok_osnovaniy_vozbuzhdeniya(ctx)
+    assert "Судебный акт" in result
 
 
-def test_poisk_dolzhnika():
-    result = fssp_tools.poisk_dolzhnika("Иванов Иван Иванович")
-    assert isinstance(result, list)
+async def test_info_proizvodstva_not_found():
+    ctx = _mock_ctx()
+    with patch.object(fssp_tools.client, "info_proizvodstva", return_value=None):
+        result = await fssp_tools.info_proizvodstva(ctx, nomer="12345/23/77001-ИП")
+    assert "не найдено" in result
 
 
-def test_ogranicheniya_dolzhnika():
-    result = fssp_tools.ogranicheniya_dolzhnika("Иванов Иван Иванович")
-    assert isinstance(result, list)
+async def test_poisk_dolzhnika_empty():
+    ctx = _mock_ctx()
+    with patch.object(fssp_tools.client, "poisk_proizvodstv", return_value=[]):
+        result = await fssp_tools.poisk_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in result
 
 
-def test_rozysk_dolzhnika():
-    result = fssp_tools.rozysk_dolzhnika("Иванов Иван Иванович")
-    assert isinstance(result, list)
+async def test_ogranicheniya_dolzhnika_empty():
+    ctx = _mock_ctx()
+    with patch.object(fssp_tools.client, "ogranicheniya_dolzhnika", return_value=[]):
+        result = await fssp_tools.ogranicheniya_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in result
+
+
+async def test_rozysk_dolzhnika_empty():
+    ctx = _mock_ctx()
+    with patch.object(fssp_tools.client, "rozysk_dolzhnika", return_value=[]):
+        result = await fssp_tools.rozysk_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in result

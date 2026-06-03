@@ -1,14 +1,10 @@
-"""Resources for the Минобрнауки feature.
-
-All resource descriptions are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Resources for the Минобрнауки feature."""
 
 from __future__ import annotations
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных Минобрнауки. (legacy — placeholder)"""
+    """Источники данных Минобрнауки."""
     return """\
 Источники данных Минобрнауки:
 
@@ -25,7 +21,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство об образовании и науке. (legacy — placeholder)"""
+    """Законодательство об образовании и науке."""
     return """\
 Основные нормативные акты:
 
@@ -41,7 +37,7 @@ def zakonodatelstvo() -> str:
 
 
 def sistema_obrazovaniya() -> str:
-    """Структура системы высшего образования и науки РФ. (legacy — placeholder)"""
+    """Структура системы высшего образования и науки РФ."""
     return """\
 Структура системы высшего образования и науки РФ:
 

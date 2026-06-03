@@ -1,6 +1,7 @@
 """Tool functions for the Официальные публикации РФ feature.
 
-Tools for accessing legal acts, bills, publications, and amendments.
+Tools for accessing legal acts, bills, publications, and amendments
+from the Официальный портал правовой информации (pravo.gov.ru).
 
 Rules (ADR-001):
     - tools.py NEVER makes HTTP directly — delegates to client.py
@@ -15,6 +16,8 @@ from mcp_russia._shared.formatting import markdown_table
 
 from . import client
 
+_PRAVO_ATTRIBUTION = "\n\n_Источник: Официальный портал правовой информации (pravo.gov.ru)_"
+
 
 async def spisok_tipov_aktov(ctx: Context) -> str:
     """Получить список типов нормативных актов.
@@ -27,7 +30,7 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
 
     rows = [(t["code"], t["name"]) for t in tipy]
     header = "**Типы нормативных актов РФ**\n\n"
-    return header + markdown_table(["Код", "Тип"], rows)
+    return header + markdown_table(["Код", "Тип"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_otrasley(ctx: Context) -> str:
@@ -41,7 +44,7 @@ async def spisok_otrasley(ctx: Context) -> str:
 
     rows = [(o["code"], o["name"]) for o in otrsli]
     header = "**Отрасли законодательства РФ**\n\n"
-    return header + markdown_table(["Код", "Отрасль"], rows)
+    return header + markdown_table(["Код", "Отрасль"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_istochnikov(ctx: Context) -> str:
@@ -55,7 +58,7 @@ async def spisok_istochnikov(ctx: Context) -> str:
 
     rows = [(i["code"], i["name"]) for i in istochniki]
     header = "**Источники официальных публикаций**\n\n"
-    return header + markdown_table(["Код", "Источник"], rows)
+    return header + markdown_table(["Код", "Источник"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_statusov(ctx: Context) -> str:
@@ -69,7 +72,7 @@ async def spisok_statusov(ctx: Context) -> str:
 
     rows = [(s["code"], s["name"]) for s in statusy]
     header = "**Статусы документов**\n\n"
-    return header + markdown_table(["Код", "Статус"], rows)
+    return header + markdown_table(["Код", "Статус"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def info_normativnogo_akta(
@@ -86,13 +89,14 @@ async def info_normativnogo_akta(
     Returns:
         Информация о нормативном акте.
     """
-    await ctx.info(f"Запрос информации о нормативном акте {nomer}...")
+    if ctx:
+        await ctx.info(f"Запрос информации о нормативном акте {nomer}...")
     data = await client.poluchit_normativnyy_akt(nomer, tip)
 
     if not data:
         return (
             f"Нормативный акт '{nomer}' не найден.\n\n"
-            f"Проверьте номер на официальном портале: pravo.gov.ru"
+            f"Проверьте номер на портале: https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
     lines = [
@@ -110,6 +114,7 @@ async def info_normativnogo_akta(
     if data.tekst_url:
         lines.append(f"- Текст: {data.tekst_url}")
     lines.append(f"- Источник: {data.istochnik}")
+    lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
 
 
@@ -122,11 +127,12 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
     Returns:
         Информация о законопроекте.
     """
-    await ctx.info(f"Запрос информации о законопроекте {nomer}...")
+    if ctx:
+        await ctx.info(f"Запрос информации о законопроекте {nomer}...")
     data = await client.poluchit_zakon_proekt(nomer)
 
     if not data:
-        return f"Законопроект '{nomer}' не найден.\n\nПроверьте номер на сайте sozd.duma.gov.ru"
+        return f"Законопроект '{nomer}' не найден.\n\nПроверьте на https://sozd.duma.gov.ru или https://pravo.gov.ru"
 
     lines = [
         f"**{data.nazvanie}**",
@@ -140,6 +146,7 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
         lines.append(f"- Чтений: {len(data.chteniya)}")
     if data.tekst_url:
         lines.append(f"- Текст: {data.tekst_url}")
+    lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
 
 
@@ -157,14 +164,15 @@ async def poisk_aktov(
     Returns:
         Результаты поиска.
     """
-    await ctx.info(f"Поиск актов: '{tekst}'...")
+    if ctx:
+        await ctx.info(f"Поиск актов: '{tekst}'...")
     results = await client.poluchit_poisku(tekst, tip)
 
     if not results:
         tip_text = f" (тип: {tip})" if tip else ""
         return (
             f"Нормативные акты по запросу '{tekst}'{tip_text} не найдены.\n\n"
-            f"Попробуйте изменить запрос или используйте pravo.gov.ru"
+            f"Попробуйте изменить запрос или используйте https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
     lines = [f"**Результаты поиска: '{tekst}'** — найдено: {len(results)}\n"]
@@ -178,6 +186,7 @@ async def poisk_aktov(
     if len(results) > 10:
         lines.append(f"\n... и ещё {len(results) - 10} результатов")
 
+    lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
 
 
@@ -199,7 +208,8 @@ async def publikatsii_po_datam(
     Returns:
         Список публикаций.
     """
-    await ctx.info("Запрос публикаций за период...")
+    if ctx:
+        await ctx.info("Запрос публикаций за период...")
     data = await client.poluchit_publikatsii(
         tip=tip, otrysl=otrysl, data_from=data_from, data_to=data_to
     )
@@ -216,7 +226,8 @@ async def publikatsii_po_datam(
             filters.append(f"по {data_to}")
         filter_text = f" ({', '.join(filters)})" if filters else ""
         return (
-            f"Публикации{filter_text} не найдены.\n\nПубликации доступны на портале pravo.gov.ru"
+            f"Публикации{filter_text} не найдены.\n\n"
+            f"Публикации доступны на https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
     lines = [f"**Официальные публикации** — найдено: {len(data)}\n"]
@@ -230,6 +241,7 @@ async def publikatsii_po_datam(
     if len(data) > 10:
         lines.append(f"\n... и ещё {len(data) - 10} публикаций")
 
+    lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
 
 
@@ -242,13 +254,14 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
     Returns:
         Список изменений.
     """
-    await ctx.info(f"Запрос изменений акта {akt_nomer}...")
+    if ctx:
+        await ctx.info(f"Запрос изменений акта {akt_nomer}...")
     data = await client.poluchit_izmeneniya_akta(akt_nomer)
 
     if not data:
         return (
             f"Изменений акта '{akt_nomer}' не найдено.\n\n"
-            f"Проверьте номер акта на портале pravo.gov.ru"
+            f"Проверьте номер акта на https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
     lines = [f"**Изменения акта {akt_nomer}** — изменений: {len(data)}\n"]
@@ -259,4 +272,5 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
             lines.append(f"  Вступил в силу: {izm.data_vstupleniya_v_silu}")
         lines.append("")
 
+    lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)

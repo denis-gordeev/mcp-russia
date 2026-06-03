@@ -1,6 +1,7 @@
 """Инструменты модуля ЦИК РФ.
 
 Инструменты для работы с данными Центральной избирательной комиссии РФ.
+Источник: ЦИК РФ / ГАС «Выборы» (vybory.izbirkom.ru)
 
 Правила (ADR-001):
     - tools.py НЕ выполняет HTTP-запросы напрямую — делегирует client.py
@@ -14,6 +15,8 @@ from fastmcp import Context
 from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
+
+_ATTRIBUTION = "ЦИК РФ / ГАС «Выборы» (vybory.izbirkom.ru)"
 
 
 async def tipy_vyborov(ctx: Context) -> str:
@@ -95,6 +98,36 @@ async def gody_vyborov(ctx: Context) -> str:
     return "\n".join(lines)
 
 
+async def spisok_vyborov(
+    ctx: Context,
+    god: int | None = None,
+    tip: int | None = None,
+    region: int | None = None,
+) -> str:
+    """Получить список выборов из ГАС «Выборы».
+
+    Args:
+        god: Год выборов (необязательно).
+        tip: Код типа выборов (необязательно).
+        region: Номер региона (необязательно).
+
+    Returns:
+        Таблица с выборами.
+    """
+    await ctx.info("Запрос списка выборов...")
+    vybory = await client.spisok_vyborov(god=god, tip=tip, region=region)
+
+    if not vybory:
+        return "Выборы не найдены. Уточните параметры запроса."
+
+    rows = [
+        (v.get("name", ""), str(v.get("god", "")), v.get("data", ""), v.get("key", ""))
+        for v in vybory
+    ]
+    header = f"**Найдено выборов: {len(vybory)}**\n\n"
+    return header + markdown_table(["Наименование", "Год", "Дата", "Ключ"], rows)
+
+
 async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str:
     """Поиск кандидата по ФИО в базе ЦИК РФ.
 
@@ -105,15 +138,11 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     Returns:
         Результаты поиска.
     """
-    await ctx.info(f"Поиск кандида: '{fio}'...")
+    await ctx.info(f"Поиск кандидата: '{fio}'...")
     kandidaty = await client.poisk_kandidata(fio, god=god)
 
     if not kandidaty:
-        return (
-            f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\n"
-            "Примечание: для полноценного поиска используйте ГАС «Выборы»: "
-            "https://vybory.izbirkom.ru"
-        )
+        return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ATTRIBUTION}"
 
     rows = [(k.id, k.fio, k.partia, k.dolzhnost, k.status) for k in kandidaty]
     header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
@@ -165,7 +194,7 @@ async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = No
     if kandidat.dokhod:
         lines.append(f"- Доход: {kandidat.dokhod}")
 
-    lines.append("- Источник: Центральная избирательная комиссия РФ")
+    lines.append(f"- Источник: {_ATTRIBUTION}")
     return "\n".join(lines)
 
 
@@ -189,11 +218,7 @@ async def rezultaty_vyborov(
     rezultaty = await client.rezultaty_vyborov(god, tip=tip, region=region)
 
     if not rezultaty:
-        return (
-            f"Результаты выборов {god} года недоступны.\n\n"
-            "Для получения результатов используйте ГАС «Выборы»: "
-            "https://vybory.izbirkom.ru"
-        )
+        return f"Результаты выборов {god} года недоступны.\n\nИсточник: {_ATTRIBUTION}"
 
     rows = [
         (
@@ -233,9 +258,20 @@ async def yavka_i_itogi(
 
     lines = [
         f"**Итоги выборов {god} года**",
-        f"- Всего избирателей: {format_number_ru(itogi.get('vseh_izbirateley', 0), 0)}",
-        f"- Проголосовало: {format_number_ru(itogi.get('progalosovalo', 0), 0)}",
-        f"- Явка: {format_number_ru(itogi.get('yavka_procent', 0), 2)}%",
-        "- Источник: ЦИК РФ / ГАС «Выборы»",
     ]
+    if itogi.get("name"):
+        lines.append(f"- Выборы: {itogi['name']}")
+    if itogi.get("data"):
+        lines.append(f"- Дата: {itogi['data']}")
+
+    lines.extend(
+        [
+            f"- Всего избирателей: {format_number_ru(itogi.get('vseh_izbirateley', 0), 0)}",
+            f"- Проголосовало: {format_number_ru(itogi.get('progalosovalo', 0), 0)}",
+            f"- Явка: {format_number_ru(itogi.get('yavka_procent', 0), 2)}%",
+            f"- Действительных бюллетеней: {format_number_ru(itogi.get('deystvitelnykh_byulleteney', 0), 0)}",
+            f"- Недействительных бюллетеней: {format_number_ru(itogi.get('nedeystvitelnykh_byulleteney', 0), 0)}",
+            f"- Источник: {_ATTRIBUTION}",
+        ]
+    )
     return "\n".join(lines)

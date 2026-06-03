@@ -2,6 +2,83 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-03 (двадцать седьмой проход — ГИБДД, ЦИК РФ, ФССП, pravo.gov.ru, async-конвертация, зачистка примеров)
+
+### Выполнено
+
+- **Подключение реального API ГИБДД в модуле gibdd**:
+  - `client.py`: полная переработка — синхронный `GibddClient` заменён на асинхронные модульные функции
+  - `proverka_istorii_ts()` — GET /proxy/check/auto/history/{vin}, парсинг RequestResult
+  - `proverka_dtp_ts()` — GET /proxy/check/auto/dtp/{vin}
+  - `proverka_rozysk_ts()` — GET /proxy/check/auto/wanted/{vin}
+  - `proverka_ogranicheniy_ts()` — GET /proxy/check/auto/restrict/{vin}
+  - `proverka_vu()` — GET /proxy/check/driver/{nomer_vu}
+  - `statistika_dtp_region()` — GET stat.gibdd.ru, статистика ДТП по региону
+  - `tools.py`: `info_ts` запускает все 4 проверки ТС параллельно через `asyncio.gather`; штрафы поясняют, что для них нужна авторизация через Госуслуги
+  - `constants.py`: добавлены `GIBDD_CHECK_BASE`, `GIBDD_STAT_BASE`
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API ГАС «Выборы» в модуле ЦИК РФ (cekrf)**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к vybory.izbirkom.ru и cikrf.ru
+  - `_VyboryTableParser` — парсер HTML-таблиц ГАС «Выборы» на базе stdlib html.parser
+  - `poisk_kandidata()` — поиск кандидатов через ГАС «Выборы» + fallback на cikrf.ru API
+  - `kandidat_podrobno()` — карточка кандидата через cikrf.ru → ГАС «Выборы»
+  - `rezultaty_vyborov()` — результаты выборов через известные election IDs
+  - `yavka_i_itogi()` — явка и итоги через HTML-парсинг ГАС «Выборы»
+  - `spisok_vyborov()` — новый инструмент: список известных федеральных выборов
+  - `constants.py`: добавлены `VYBORY_API_BASE`, `CIK_API_BASE`, `CIK_VOTER_API`, `IZVESTNYE_VYBORY` (4 федеральных выборов с tvd/vrn), `IZBIRATELNYY_KOD_REGIONA` (83 региона)
+  - `server.py`: зарегистрирован новый инструмент `spisok_vyborov` и ресурс `data://izvestnye-vybory`
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API ФССП в модуле fssp**:
+  - `client.py`: полная переработка — синхронный `FsspClient` заменён на асинхронные модульные функции
+  - `poisk_proizvodstv()` — POST /iss/search с разбором ФИО, fallback на GET /iss/ip
+  - `info_proizvodstva()` — получение данных о конкретном ИП
+  - `ogranicheniya_dolzhnika()` — поиск и фильтрация ограничений
+  - `rozysk_dolzhnika()` — поиск и фильтрация розыска
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод через `markdown_table`, добавлен инструмент `spisok_regionov`
+  - `constants.py`: добавлены `FSSP_SEARCH_API`, `FSSP_IP_BASE`, `KODY_REGIONOV_FSSP` (25 регионов)
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API pravo.gov.ru в модуле publikatsii**:
+  - `client.py`: обновлены все функции на реальные эндпоинты открытых данных pravo.gov.ru
+  - `constants.py`: `PRAVO_API_BASE` → `https://pravo.gov.ru/opendata/7700748144-prfgi`, добавлены `PRAVO_SEARCH_URL`, `PRAVO_DOCUMENT_URL`, `TIPY_DOKUMENTOV_PRAVO` (17 типов документов)
+  - Парсеры обрабатывают оба формата ответа (API JSON и fallback на русские ключи)
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Конвертация синхронных заглушек в async**:
+  - `minobrnauki/client.py`: `MinobrnaukiClient` → async модульные функции с `http_get`
+  - `rospotrebnadzor/client.py`: `RospotrebnadzorClient` → async модульные функции с `http_get`; `tools.py` переведён на async с Context, форматированный вывод
+  - `roskomnadzor/client.py`: `RoskomnadzorClient` → async модульные функции с `http_get`; `tools.py` переведён на async с Context, форматированный вывод
+  - Удалены все «(legacy — placeholder)» маркеры из docstrings и resources
+- **Зачистка примеров docs/examples/** — замена legacy-совместимых имён инструментов на актуальные:
+  - `parlamentskiy-otchet.md`: `duma_*` → `gosduma_*`, `izbirkom_*` → `cekrf_*`, `sovet_*` → `sovfed_*` (планируемый модуль)
+  - `municipalnyy-kontrol.md`: `ks_region_*` → `rosaudit_*`, `eis_zakupki_*` → `zakupki_*`, `otkryte_dannye_*` → `rosstat_*`
+  - `gosudarstvennaya-politika.md`: `budget_*` → отмечены как планируемые, `gas_pravosudie_*` → `kad_arbitrazh_*`, `zakupki_gov_ru_*` → `zakupki_*`
+  - `zhurnalist-stati.md`: `duma_*` → `gosduma_*`, `cbr_*` → `cbrf_*`, `cik_*` → `cekrf_*`, исправлен искажённый текст `rosvoдресурсы`
+  - `ofitsialnyy-redaktor.md`: `cbr_*` → `cbrf_*`, `registry_*` → `fns_*`, `eis_*` → `zakupki_*`, `healthcare_*` → `minzdrav_*`
+  - `analiz-zakonodatelstva.md`: `duma_*` → `gosduma_*`, `official_publications_*` → `publikatsii_*`, `gas_pravosudie_*`/`jurisprudence_*` → `kad_arbitrazh_*`, `execute_batch` → `vypolnit_paket`, `plan_query` → `splanirovat_zapros`
+- **Обновлены тесты**:
+  - fssp: 9 тестов переписаны под async с Context и моками
+  - gibdd: 3 теста обновлены под новый формат вывода, интеграционный тест замокан
+  - roskomnadzor: 11 тестов переписаны под async
+  - rospotrebnadzor: 9 тестов переписаны под async
+- **Обновлены docs/reference/features.md**: ЦИК РФ 9→10 tools + 5 ресурсов; ФССП 9→10 tools; ГИБДД, ФССП, публикации — отмечены с реальными API
+- **Обновлён README.md**: 12 из 19 модулей подключены к реальным API
+- **Прогнаны все проверки**: `pytest` (1942 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **ГИБДД — реальный API проверки ТС и ВУ**: гибдд.рф/proxy/check/* — публичные эндпоинты без авторизации; stat.gibdd.ru — статистика ДТП по регионам
+- **ЦИК РФ — ГАС «Выборы» (vybory.izbirkom.ru)**: HTML-парсинг таблиц результатов выборов; известные election IDs для 4 федеральных выборов; dual-source (ГАС + cikrf.ru API)
+- **ФССП — Банк данных ИП (fssp.gov.ru/iss/ip)**: POST-поиск по ФИО с разбором на компоненты; region codes для фильтрации
+- **pravo.gov.ru — открытые данные**: opendata/7700748144-prfgi — поиск и получение документов по ID
+- **Все модули используют единый async-паттерн**: модульные функции вместо классов, `http_get`/`http_post` из `_shared/http_client.py`
+- **Итого модулей с реальными API-интерфейсами**: 12 (cbrf, rosgidromet, fns, gosduma, zakupki, kad_arbitrazh, rosapi, rosreestr, gibdd, cekrf, fssp, publikatsii)
+
+### Следующие действия
+
+- **Миграция португальских имён переменных** в legacy-модулях — ~681 идентификатор (254 функции + 235 классов + 192 константы)
+- **Подключение реальных API** в оставшихся модулях: rosstat→ЕМИСС/fedstat.ru, rospotrebnadzor→zpp.rospotrebnadzor.ru, roskomnadzor→rkn.gov.ru, minobrnauki→obrnadzor.gov.ru
+- **Создание новых модулей**: Совет Федерации (sovfed), Федеральное казначейство (kaznacheistvo), Росприроднадзор (rosprirodnadzor)
+- **Дочистить оставшиеся португальские формулировки** в документации и коде
+
 ## Статус раунда 2026-06-03 (двадцать шестой проход — Dadata API, pkk.rosreestr.ru, зачистка CONTRIBUTING/CHANGELOG)
 
 ### Выполнено

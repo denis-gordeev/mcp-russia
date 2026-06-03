@@ -2,7 +2,14 @@
 
 import json
 
-from .constants import PARTII_RF, SUBYEKTY_RF, TIPOVY_VYBORY
+from .constants import (
+    CIK_API_BASE,
+    IZVESTNYE_VYBORY,
+    PARTII_RF,
+    SUBYEKTY_RF,
+    TIPOVY_VYBORY,
+    VYBORY_API_BASE,
+)
 
 
 def tipy_vyborov_resource() -> str:
@@ -32,20 +39,31 @@ def partii_rf_resource() -> str:
     )
 
 
+def izvestnye_vybory_resource() -> str:
+    """Справочник известных выборов (JSON)."""
+    return json.dumps(
+        {"izvestnye_vybory": IZVESTNYE_VYBORY},
+        ensure_ascii=False,
+        indent=2,
+    )
+
+
 def info_api() -> str:
     """Информация об API ЦИК РФ."""
     return json.dumps(
         {
             "name": "ЦИК РФ / ГАС «Выборы»",
-            "base_url": "https://cikrf.ru",
-            "vybory_url": "https://vybory.izbirkom.ru",
+            "base_url": CIK_API_BASE,
+            "vybory_url": VYBORY_API_BASE,
             "auth_required": False,
             "format": "HTML / REST (частично документирован)",
             "coverage": "Федеральные и региональные выборы РФ",
+            "known_elections": len(IZVESTNYE_VYBORY),
             "note": (
-                "Для программного доступа рекомендуется "
-                "парсинг ГАС «Выборы» или использование "
-                "публичных данных cikrf.ru"
+                "Данные извлекаются парсингом ГАС «Выборы» "
+                "(vybory.izbirkom.ru) и публичных данных cikrf.ru. "
+                "Для известных федеральных выборов используются "
+                "предопределённые идентификаторы (tvd/vrn)."
             ),
         },
         ensure_ascii=False,
