@@ -24,5 +24,14 @@ USER_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/0.5.0")
 # "none": Без трансформации — все 154+ инструментов доступны сразу
 TOOL_SEARCH: str = os.environ.get("MCP_RUSSIA_TOOL_SEARCH", "bm25")
 
+# --- Dadata API (rosapi) ---
+DADATA_API_KEY: str = os.environ.get("MCP_RUSSIA_DADATA_API_KEY", "")
+
+# --- Госдума API ---
+DUMA_API_TOKEN: str = os.environ.get("MCP_RUSSIA_DUMA_API_TOKEN", "")
+
+# --- ЕИС Закупки API ---
+ZAKUPKI_API_TOKEN: str = os.environ.get("MCP_RUSSIA_ZAKUPKI_API_TOKEN", "")
+
 # --- ИИ-рекомендации (rekomendovat_instrumenty) ---
 ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")

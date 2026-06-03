@@ -9,6 +9,7 @@
 # 4. Справочная информация: https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services
 
 ROSREESTR_API_BASE = "https://rosreestr.gov.ru/api"
+PKK_API_BASE = "https://pkk.rosreestr.ru/api/features"
 
 TipyNedvizhimosti = [
     {"code": "zemelnyy_uchastok", "name": "Земельный участок"},
@@ -57,3 +58,9 @@ FormySobstvennosti = [
     {"code": "obschaya_dolevaya", "name": "Общая долевая собственность"},
     {"code": "obschaya_sovmestnaya", "name": "Общая совместная собственность"},
 ]
+
+TIPY_NEDVIZIMOSTI_MAP = {t["code"]: t["name"] for t in TipyNedvizhimosti}
+KATEGORII_ZEMEL_MAP = {k["code"]: k["name"] for k in KategoriiZemel}
+VIDY_ISPOLZOVANIYA_MAP = {v["code"]: v["name"] for v in VidyIspolzovaniya}
+STATUSY_UCHE_TA_MAP = {s["code"]: s["name"] for s in StatusyObiekta}
+FORMY_SOBSTVENNOSTI_MAP = {f["code"]: f["name"] for f in FormySobstvennosti}

@@ -1,161 +1,178 @@
 """HTTP client for the RosAPI feature.
 
-Provides access to Russian reference data via various public APIs:
-- FIAS (Федеральная информационная адресная система) for addresses
-- DADATA for INN/OGRN organization lookups
-- CBR for bank directories
-- Public holiday APIs
+Provides access to Russian reference data via Dadata API:
+- Address suggestions (ФИАС)
+- Organization lookup by INN/OGRN (ЕГРЮЛ/ЕГРИП)
+- Bank directory (ЦБ РФ)
 
-Note: This module uses free public APIs where possible.
-For production use, consider registering for API keys at:
-- https://dadata.ru/api/ (generous free tier)
-- https://fias.nalog.ru/ (official FIAS)
+Dadata free tier: 10,000 requests/day.
+Register at https://dadata.ru/api/ for an API key.
+Set MCP_RUSSIA_DADATA_API_KEY in environment.
 """
 
 from __future__ import annotations
 
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_post
+from mcp_russia.settings import DADATA_API_KEY
 
 from .constants import PRAZDNIKI_RF
 from .schemas import AdresRF, BankRF, Organizatsiya
 
-# ─── Address / FIAS helpers ───────────────────────────────────────────
-
-# Public API for Russian postal codes (open source alternative)
-# Using dadata.ru suggestions API (free tier: 10k requests/day)
-DADATA_SUGGEST_URL = "https://suggestions.dadata.ru/api/v4/suggest"
-DADATA_FIND_URL = "https://suggestions.dadata.ru/api/v4/find"
-
-# Alternative: use open public APIs without auth
-FIAS_PUBLIC = "https://fias.nalog.ru/api"
-POSTAL_PUBLIC = "https://api.postal-api.ru/v1"
+DADATA_SUGGEST_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest"
+DADATA_FIND_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
 
 
-async def _suggest_address(query: str, token: str | None = None) -> dict[str, Any]:
-    """Query Dadata suggestions API for addresses."""
+def _dadata_headers(token: str | None = None) -> dict[str, str]:
     headers: dict[str, str] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
     }
-    if token:
-        headers["Authorization"] = f"Token {token}"
+    key = token or DADATA_API_KEY
+    if key:
+        headers["Authorization"] = f"Token {key}"
+    return headers
 
+
+def _nested_get(data: dict, *keys: str, default: Any = None) -> Any:
+    for key in keys:
+        if not isinstance(data, dict):
+            return default
+        data = data.get(key, default)
+    return data
+
+
+def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
+    name_obj = data.get("name")
+    name_full = name_obj.get("full") if isinstance(name_obj, dict) else None
+    name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
+    state_obj = data.get("state")
+    status = state_obj.get("status") if isinstance(state_obj, dict) else None
+    addr_obj = data.get("address")
+    address = addr_obj.get("value") if isinstance(addr_obj, dict) else None
+    mgmt_obj = data.get("management")
+    director = mgmt_obj.get("name") if isinstance(mgmt_obj, dict) else None
+    reg_date = state_obj.get("registration_date") if isinstance(state_obj, dict) else None
+    return {
+        "name_full": name_full,
+        "name_short": name_short,
+        "status": status,
+        "address": address,
+        "director": director,
+        "registration_date": reg_date,
+    }
+
+
+def _parse_bank_data(data: dict[str, Any], fallback_name: str = "") -> dict[str, Any]:
+    name_obj = data.get("name")
+    name_full = name_obj.get("full") if isinstance(name_obj, dict) else fallback_name
+    name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
+    addr_obj = data.get("address")
+    city = _nested_get(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
+    return {
+        "name_full": name_full,
+        "name_short": name_short,
+        "city": city,
+    }
+
+
+async def _suggest_address(query: str, token: str | None = None) -> dict[str, Any]:
     body = {"query": query, "count": 10}
     try:
-        return await http_get(f"{DADATA_SUGGEST_URL}/address", json=body, headers=headers)
+        return await http_post(
+            f"{DADATA_SUGGEST_URL}/address",
+            json_body=body,
+            headers=_dadata_headers(token),
+        )
     except Exception:
-        # Fallback: return empty result if API unavailable
         return {"suggestions": []}
 
 
 async def _find_by_fias(fias_id: str, token: str | None = None) -> dict[str, Any]:
-    """Find address by FIAS ID."""
-    headers: dict[str, str] = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-    }
-    if token:
-        headers["Authorization"] = f"Token {token}"
-
     body = {"query": fias_id}
     try:
-        return await http_get(f"{DADATA_FIND_URL}/address", json=body, headers=headers)
+        return await http_post(
+            f"{DADATA_FIND_URL}/address",
+            json_body=body,
+            headers=_dadata_headers(token),
+        )
     except Exception:
         return {"suggestions": []}
 
 
-# ─── Public postal code API (no auth required) ───────────────────────
-
-
-async def _postal_by_index(index: str) -> dict[str, Any]:
-    """Look up postal office by index using public API.
-
-    Uses api.postal-api.ru or similar open service.
-    """
-    # Note: This is a placeholder. Replace with actual working API.
-    # For now, we provide a reference implementation structure.
-    return {
-        "error": (
-            "Требуется интеграция с API почтовых индексов РФ.\n"
-            "Рекомендуемые источники:\n"
-            "- Dadata (бесплатный тариф): https://dadata.ru/api/address\n"
-            "- Почта России API: https://www.pochta.ru/api\n"
-            "- FIAS: https://fias.nalog.ru/"
-        ),
-        "index": index,
-    }
-
-
-# ─── Organization lookup (INN/OGRN) ─────────────────────────────────
+async def _postal_by_index(index: str, token: str | None = None) -> dict[str, Any]:
+    body = {"query": index, "count": 1}
+    try:
+        return await http_post(
+            f"{DADATA_SUGGEST_URL}/address",
+            json_body=body,
+            headers=_dadata_headers(token),
+        )
+    except Exception:
+        return {"suggestions": []}
 
 
 async def _find_org_by_inn(inn: str, token: str | None = None) -> dict[str, Any]:
-    """Find organization by INN via Dadata."""
-    headers: dict[str, str] = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-    }
-    if token:
-        headers["Authorization"] = f"Token {token}"
-
     body = {"query": inn}
     try:
-        return await http_get(
+        return await http_post(
             f"{DADATA_SUGGEST_URL}/party",
-            json=body,
-            headers=headers,
+            json_body=body,
+            headers=_dadata_headers(token),
         )
     except Exception:
         return {
+            "suggestions": [],
             "error": (
-                "Требуется API-ключ Dadata для поиска организаций.\n"
-                "Регистрация: https://dadata.ru/api/ (бесплатный тариф: 10k/день)"
+                "Не удалось подключиться к API Dadata.\n"
+                "Проверьте MCP_RUSSIA_DADATA_API_KEY или зарегистрируйтесь: "
+                "https://dadata.ru/api/"
             ),
-            "inn": inn,
         }
 
 
 async def _find_org_by_ogrn(ogrn: str, token: str | None = None) -> dict[str, Any]:
-    """Find organization by OGRN via Dadata."""
-    return await _find_org_by_inn(ogrn, token)
-
-
-# ─── Bank directory ──────────────────────────────────────────────────
+    body = {"query": ogrn}
+    try:
+        return await http_post(
+            f"{DADATA_SUGGEST_URL}/party",
+            json_body=body,
+            headers=_dadata_headers(token),
+        )
+    except Exception:
+        return {
+            "suggestions": [],
+            "error": "Не удалось подключиться к API Dadata.",
+        }
 
 
 async def _list_banks(token: str | None = None) -> list[dict[str, Any]]:
-    """List all Russian banks via Dadata suggestions."""
-    headers: dict[str, str] = {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-    }
-    if token:
-        headers["Authorization"] = f"Token {token}"
-
-    body = {"query": "", "count": 1000}
+    body = {"query": "", "count": 100}
     try:
-        result = await http_get(
+        result = await http_post(
             f"{DADATA_SUGGEST_URL}/bank",
-            json=body,
-            headers=headers,
+            json_body=body,
+            headers=_dadata_headers(token),
         )
         return result.get("suggestions", [])
     except Exception:
         return []
 
 
-# ─── Holidays ────────────────────────────────────────────────────────
+async def _find_bank_by_bik(bik: str, token: str | None = None) -> dict[str, Any]:
+    body = {"query": bik}
+    try:
+        return await http_post(
+            f"{DADATA_SUGGEST_URL}/bank",
+            json_body=body,
+            headers=_dadata_headers(token),
+        )
+    except Exception:
+        return {"suggestions": []}
 
 
 def get_holidays(year: int) -> list[dict[str, str]]:
-    """Generate Russian national holidays for a given year.
-
-    Uses built-in reference data. Does not require API call.
-    Note: This does not account for official government decrees
-    that may shift weekend days for a specific year.
-    """
     holidays = []
     for date_str, name in PRAZDNIKI_RF.items():
         full_date = f"{year}-{date_str}"
@@ -181,54 +198,46 @@ def get_holidays(year: int) -> list[dict[str, str]]:
     return holidays
 
 
-# ─── Public API wrappers (no auth) ───────────────────────────────────
-
-
 async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str]:
-    """Look up address by Russian postal code.
-
-    Args:
-        postal_code: 6-digit postal code.
-
-    Returns:
-        Address data or error message.
-    """
     result = await _postal_by_index(postal_code)
-    if "error" in result:
-        return {"error": result["error"]}
+    suggestions = result.get("suggestions", [])
 
+    if not suggestions:
+        return {
+            "error": (
+                f"Адрес по индексу {postal_code} не найден.\n"
+                "Для работы с адресами подключите API Dadata:\n"
+                "https://dadata.ru/api/address/"
+            ),
+        }
+
+    s = suggestions[0]
+    data = s.get("data", {})
     return AdresRF(
-        postal_code=result.get("postal_code", postal_code),
-        region=result.get("region", ""),
-        city=result.get("city", ""),
-        street=result.get("street"),
-        house=result.get("house"),
-        full_address=result.get("full_address", ""),
+        postal_code=data.get("postal_code", postal_code),
+        region=data.get("region_with_type", ""),
+        city=data.get("city_with_type") or data.get("settlement_with_type", ""),
+        street=data.get("street_with_type"),
+        house=data.get("house"),
+        full_address=s.get("unrestricted_value") or s.get("value", ""),
     )
 
 
 async def search_address(query: str) -> list[dict[str, str]]:
-    """Search Russian addresses via FIAS/Dadata.
-
-    Args:
-        query: Free-form address query string.
-
-    Returns:
-        List of address suggestions.
-    """
     result = await _suggest_address(query)
     suggestions = result.get("suggestions", [])
 
     results = []
     for s in suggestions:
         data = s.get("data", {})
+        city = data.get("city_with_type") or data.get("settlement_with_type", "")
         results.append(
             {
                 "value": s.get("value", ""),
                 "postal_code": data.get("postal_code", ""),
-                "region": data.get("region", ""),
-                "city": data.get("city", ""),
-                "street": data.get("street", ""),
+                "region": data.get("region_with_type", ""),
+                "city": city,
+                "street": data.get("street_with_type", ""),
                 "house": data.get("house", ""),
                 "fias_id": data.get("fias_id", ""),
             }
@@ -237,53 +246,64 @@ async def search_address(query: str) -> list[dict[str, str]]:
 
 
 async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
-    """Find organization by INN.
-
-    Args:
-        inn: INN (10 or 12 digits).
-
-    Returns:
-        Organization data or error message.
-    """
     result = await _find_org_by_inn(inn)
-    if "error" in result:
+    if "error" in result and not result.get("suggestions"):
         return {"error": result["error"]}
 
     suggestions = result.get("suggestions", [])
     if not suggestions:
         return {"error": f"Организация с ИНН {inn} не найдена"}
 
-    s = suggestions[0]
-    data = s.get("data", {})
+    data = suggestions[0].get("data", {})
+    parsed = _parse_org_data(data)
     return Organizatsiya(
         inn=data.get("inn", inn),
         kpp=data.get("kpp"),
         ogrn=data.get("ogrn"),
-        name_full=data.get("name", {}).get("full"),
-        name_short=data.get("name", {}).get("short"),
-        status=data.get("state", {}).get("status"),
-        address=data.get("address", {}).get("value"),
-        registration_date=data.get("state", {}).get("registration_date"),
+        name_full=parsed["name_full"],
+        name_short=parsed["name_short"],
+        status=parsed["status"],
+        address=parsed["address"],
+        director=parsed["director"],
+        registration_date=parsed["registration_date"],
+    )
+
+
+async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
+    result = await _find_org_by_ogrn(ogrn)
+    if "error" in result and not result.get("suggestions"):
+        return {"error": result["error"]}
+
+    suggestions = result.get("suggestions", [])
+    if not suggestions:
+        return {"error": f"Организация с ОГРН {ogrn} не найдена"}
+
+    data = suggestions[0].get("data", {})
+    parsed = _parse_org_data(data)
+    return Organizatsiya(
+        inn=data.get("inn", ""),
+        kpp=data.get("kpp"),
+        ogrn=data.get("ogrn", ogrn),
+        name_full=parsed["name_full"],
+        name_short=parsed["name_short"],
+        status=parsed["status"],
+        address=parsed["address"],
     )
 
 
 async def list_banks_public() -> list[BankRF]:
-    """List Russian banks from reference data.
-
-    Returns:
-        List of banks with BIK, name, city.
-    """
     banks_raw = await _list_banks()
     banks = []
     for b in banks_raw:
         data = b.get("data", {})
+        parsed = _parse_bank_data(data, b.get("value", ""))
         banks.append(
             BankRF(
-                bik=data.get("bic", b.get("value", "")),
-                name=data.get("name", b.get("value", "")),
-                name_short=data.get("short_name"),
-                city=data.get("city"),
-                region=data.get("region"),
+                bik=data.get("bic", ""),
+                name=parsed["name_full"],
+                name_short=parsed["name_short"],
+                city=parsed["city"],
+                region=None,
                 swift=data.get("swift"),
             )
         )
@@ -291,13 +311,19 @@ async def list_banks_public() -> list[BankRF]:
 
 
 async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
-    """Find bank by BIK.
+    result = await _find_bank_by_bik(bik)
+    suggestions = result.get("suggestions", [])
 
-    Args:
-        bik: 9-digit BIK code.
+    if not suggestions:
+        return {"error": f"Банк с БИК {bik} не найден"}
 
-    Returns:
-        Bank data or error message.
-    """
-    # Note: proper implementation would call /suggest/bank endpoint
-    return {"error": "Поиск банка по БИК требует отдельной интеграции"}
+    data = suggestions[0].get("data", {})
+    parsed = _parse_bank_data(data, suggestions[0].get("value", ""))
+    return BankRF(
+        bik=data.get("bic", bik),
+        name=parsed["name_full"],
+        name_short=parsed["name_short"],
+        city=parsed["city"],
+        region=None,
+        swift=data.get("swift"),
+    )

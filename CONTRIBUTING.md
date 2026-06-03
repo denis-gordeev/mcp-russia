@@ -197,11 +197,11 @@ async def test_tool_via_mcp_client():
 Используйте **Conventional Commits** (на русском или английском):
 
 ```
-feat(ibge): add tool consultar_populacao
-fix(bacen): handle empty response from SGS
-test(transparencia): add edge-case tests for client
+feat(cbrf): add tool poluchit_dinamiku_kursa
+fix(fns): handle empty response from EGRUL
+test(zakupki): add edge-case tests for client
 docs: update README with new feature
-refactor(camara): simplify pagination logic
+refactor(gosduma): simplify pagination logic
 ```
 
 - Перед коммитом убедитесь, что `make ci` проходит
@@ -215,8 +215,8 @@ refactor(camara): simplify pagination logic
 
 | Ситуация | Bump | Пример |
 |----------|------|---------|
-| Новая feature (новое API, новый агент) | **minor** | `feat(saude): add 5 tools` |
-| Исправление бага, корректировка endpoint | **patch** | `fix(bacen): handle timeout` |
+| Новая feature (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
+| Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): handle timeout` |
 | Breaking change (переименование tools, изменение API) | **major** | refactor, ломающий клиентов |
 | Только docs, тесты, внутренний refactor | **нет** | Релиз не обязателен |
 

@@ -1,19 +1,15 @@
-"""Resources for the Росреестр feature.
-
-All resource descriptions are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
-"""
+"""Resources for the Росреестр feature."""
 
 from __future__ import annotations
 
 
 def istochniki_dannyh() -> str:
-    """Источники данных Росреестра. (legacy — placeholder)"""
+    """Источники данных Росреестра."""
     return """\
 Источники данных Росреестра:
 
-1. Официальный сайт: https://rosreestr.gov.ru
-2. Публичная кадастровая карта: https://pkk.rosreestr.ru
+1. Публичная кадастровая карта: https://pkk.rosreestr.ru (API pkk.rosreestr.ru)
+2. Официальный сайт: https://rosreestr.gov.ru
 3. ФГИС ЕГРН: https://fgis.egrn.reestr.ru
 4. Справочная информация по объектам недвижимости: https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services
 5. Определение кадастровой стоимости: https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services/cc_ib_ucadastr/kadastrovaya_stoimost
@@ -24,7 +20,7 @@ def istochniki_dannyh() -> str:
 
 
 def zakonodatelstvo() -> str:
-    """Законодательство о регистрации прав и кадастре. (legacy — placeholder)"""
+    """Законодательство о регистрации прав и кадастре."""
     return """\
 Основные нормативные акты:
 
@@ -38,7 +34,7 @@ def zakonodatelstvo() -> str:
 
 
 def sistema_rogistracii() -> str:
-    """Структура системы государственной регистрации. (legacy — placeholder)"""
+    """Структура системы государственной регистрации."""
     return """\
 Структура Росреестра:
 

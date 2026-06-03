@@ -3,6 +3,7 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosapi import tools as rosapi_tools
+from mcp_russia.data.rosapi.schemas import AdresRF, BankRF, Organizatsiya
 
 
 def _mock_ctx():
@@ -12,23 +13,88 @@ def _mock_ctx():
     return ctx
 
 
+async def test_konsul_adres_po_indeksu_success():
+    ctx = _mock_ctx()
+    with patch.object(
+        rosapi_tools.client,
+        "consult_address_by_postal",
+        return_value=AdresRF(
+            postal_code="101000",
+            region="г Москва",
+            city="Москва",
+            street="Красная площадь",
+            house="1",
+            full_address="г Москва, Красная площадь, д 1",
+        ),
+    ):
+        result = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
+    assert "101000" in result
+    assert "Москва" in result
+    assert "Dadata" in result
+
+
 async def test_konsul_adres_po_indeksu_error():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
         "consult_address_by_postal",
-        return_value={"error": "Требуется интеграция"},
+        return_value={"error": "Адрес по индексу 000000 не найден"},
     ):
-        result = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
-    assert "101000" in result
-    assert "интеграци" in result.lower() or "API" in result
+        result = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
+    assert "000000" in result
+    assert "Dadata" in result or "API" in result
 
 
 async def test_poisk_adresa_empty():
     ctx = _mock_ctx()
     with patch.object(rosapi_tools.client, "search_address", return_value=[]):
-        result = await rosapi_tools.poisk_adresa("Москва, Красная площадь", ctx)
+        result = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
     assert "не найден" in result
+
+
+async def test_poisk_adresa_success():
+    ctx = _mock_ctx()
+    with patch.object(
+        rosapi_tools.client,
+        "search_address",
+        return_value=[
+            {
+                "value": "г Москва, Красная площадь",
+                "postal_code": "101000",
+                "region": "г Москва",
+                "city": "Москва",
+                "street": "Красная площадь",
+                "house": "",
+                "fias_id": "abc123",
+            }
+        ],
+    ):
+        result = await rosapi_tools.poisk_adresa("Красная площадь", ctx)
+    assert "Красная площадь" in result
+    assert "Dadata" in result
+
+
+async def test_poisk_org_po_inn_success():
+    ctx = _mock_ctx()
+    with patch.object(
+        rosapi_tools.client,
+        "find_org_by_inn",
+        return_value=Organizatsiya(
+            inn="7707083893",
+            kpp="773601001",
+            ogrn="1027700132195",
+            name_full="Публичное акционерное общество «Сбербанк России»",
+            name_short="ПАО Сбербанк",
+            status="ACTIVE",
+            address="г Москва, ул Вавилова, д 19",
+            director="Греф Герман Оскарович",
+            registration_date="2002-08-23",
+        ),
+    ):
+        result = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
+    assert "7707083893" in result
+    assert "Сбербанк" in result
+    assert "Действующая" in result
 
 
 async def test_poisk_org_po_inn_error():
@@ -36,22 +102,21 @@ async def test_poisk_org_po_inn_error():
     with patch.object(
         rosapi_tools.client,
         "find_org_by_inn",
-        return_value={"error": "Требуется API-ключ"},
+        return_value={"error": "Не удалось подключиться к API Dadata"},
     ):
-        result = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
-    assert "7707083893" in result
-    assert "API" in result or "ключ" in result.lower()
+        result = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
+    assert "Dadata" in result or "API" in result
 
 
 async def test_poisk_org_po_ogrn_error():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_org_by_inn",
+        "find_org_by_ogrn",
         return_value={"error": "не найдена"},
     ):
-        result = await rosapi_tools.poisk_org_po_ogrn("1027700132195", ctx)
-    assert "1027700132195" in result
+        result = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
+    assert "0000000000000" in result
 
 
 async def test_spisok_bankov():
@@ -62,15 +127,32 @@ async def test_spisok_bankov():
     assert "БИК" in result
 
 
-async def test_konsul_bank_po_bik_found():
+async def test_konsul_bank_po_bik_dadata():
     ctx = _mock_ctx()
-    result = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)
-    assert "Центральн" in result or "Сбербанк" in result
+    with patch.object(
+        rosapi_tools.client,
+        "find_bank_by_bik",
+        return_value=BankRF(
+            bik="044525225",
+            name="Публичное акционерное общество «Сбербанк России»",
+            name_short="ПАО Сбербанк",
+            city="Москва",
+            swift="SABRRUMM",
+        ),
+    ):
+        result = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)
+    assert "Сбербанк" in result
+    assert "Dadata" in result
 
 
 async def test_konsul_bank_po_bik_not_found():
     ctx = _mock_ctx()
-    result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
+    with patch.object(
+        rosapi_tools.client,
+        "find_bank_by_bik",
+        return_value={"error": "Банк с БИК 000000000 не найден"},
+    ):
+        result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
     assert "не найден" in result
 
 

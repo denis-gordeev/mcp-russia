@@ -1,10 +1,11 @@
 """Tool functions for the RosAPI feature.
 
 Tools for accessing Russian reference data:
-- Address lookup via postal code / FIAS
-- Organization lookup by INN/OGRN
-- Bank directory
+- Address lookup via postal code / ФИАС (Dadata)
+- Organization lookup by INN/OGRN (ЕГРЮЛ/ЕГРИП через Dadata)
+- Bank directory (ЦБ РФ через Dadata)
 - Russian national holidays
+- Tax rates
 
 Rules (ADR-001):
     - tools.py NEVER makes HTTP directly — delegates to client.py
@@ -40,8 +41,8 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
         return (
             f"**Почтовый индекс: {indeks}**\n\n"
             f"{result['error']}\n\n"
-            f"Для получения данных подключите API Dadata:\n"
-            f"https://dadata.ru/api/address"
+            f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
+            f"https://dadata.ru/api/address/"
         )
 
     lines = [
@@ -57,6 +58,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
     if result.house:
         lines.append(f"**Дом:** {result.house}")
 
+    lines.append("\nИсточник: ФИАС / Dadata")
     return "\n".join(lines)
 
 
@@ -73,7 +75,10 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
     results = await client.search_address(zapros)
 
     if not results:
-        return f"Адреса по запросу '{zapros}' не найдены.\n\nИспользуйте более точный запрос."
+        return (
+            f"Адреса по запросу '{zapros}' не найдены.\n\n"
+            "Используйте более точный запрос или проверьте MCP_RUSSIA_DADATA_API_KEY."
+        )
 
     rows = []
     for i, addr in enumerate(results[:10], 1):
@@ -86,6 +91,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
         )
 
     header = f"**Результаты поиска: {zapros}**\n\n"
+    header += "Источник: ФИАС / Dadata\n\n"
     return header + markdown_table(["#", "Адрес", "Индекс"], rows)
 
 
@@ -105,8 +111,8 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         return (
             f"**ИНН: {inn}**\n\n"
             f"{result['error']}\n\n"
-            f"Для получения данных подключите API Dadata:\n"
-            f"https://dadata.ru/api/party"
+            f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
+            f"https://dadata.ru/api/party/"
         )
 
     lines = [
@@ -146,7 +152,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
-    result = await client.find_org_by_inn(ogrn)  # Same API endpoint
+    result = await client.find_org_by_ogrn(ogrn)
 
     if isinstance(result, dict) and "error" in result:
         return f"**ОГРН: {ogrn}**\n\n{result['error']}"
@@ -162,6 +168,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     if result.address:
         lines.append(f"- Адрес: {result.address}")
 
+    lines.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
     return "\n".join(lines)
 
 
@@ -173,7 +180,6 @@ async def spisok_bankov(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника банков...")
 
-    # Use built-in reference list (always works, no API key needed)
     rows = []
     for bank in OSNOVNYE_BANKI:
         rows.append(
@@ -186,7 +192,7 @@ async def spisok_bankov(ctx: Context) -> str:
     header = "**Основные банки России** (справочник)\n\n"
     header += (
         "Для полного справочника всех банков ЦБ РФ "
-        "подключите API Dadata или загрузите справочник с cbr.ru\n\n"
+        "используйте konsul_bank_po_bik или подключите API Dadata.\n\n"
     )
     return header + markdown_table(["БИК", "Название"], rows)
 
@@ -202,21 +208,37 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     """
     await ctx.info(f"Поиск банка по БИК {bik}...")
 
-    # Search built-in reference
-    found = None
-    for bank in OSNOVNYE_BANKI:
-        if bank["bik"] == bik:
-            found = bank
-            break
+    result = await client.find_bank_by_bik(bik)
 
-    if found:
-        return f"**{found['name']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
+    if isinstance(result, dict) and "error" in result:
+        found = None
+        for bank in OSNOVNYE_BANKI:
+            if bank["bik"] == bik:
+                found = bank
+                break
 
-    return (
-        f"Банк с БИК {bik} не найден в справочнике.\n\n"
-        f"Проверьте БИК на сайте ЦБ РФ:\n"
-        f"https://www.cbr.ru/credit/coinsbank.asp"
-    )
+        if found:
+            return f"**{found['name']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
+
+        return (
+            f"Банк с БИК {bik} не найден.\n\n"
+            f"Для поиска подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
+            f"https://dadata.ru/api/bank/"
+        )
+
+    lines = [
+        f"**{result.name}**",
+        f"- БИК: {result.bik}",
+    ]
+    if result.name_short:
+        lines.append(f"- Краткое название: {result.name_short}")
+    if result.city:
+        lines.append(f"- Город: {result.city}")
+    if result.swift:
+        lines.append(f"- SWIFT: {result.swift}")
+
+    lines.append("- Источник: ЦБ РФ через Dadata")
+    return "\n".join(lines)
 
 
 async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> str:
@@ -236,7 +258,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
 
     rows = []
     for h in holidays:
-        date_str = h["date"][5:]  # Remove year, keep MM-DD
+        date_str = h["date"][5:]
         rows.append((date_str, h["name"], h["type"]))
 
     header = f"**Национальные праздники РФ ({god})**\n\n"

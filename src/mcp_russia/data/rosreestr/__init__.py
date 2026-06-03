@@ -8,8 +8,8 @@ FEATURE_META = FeatureMeta(
         "Данные Росреестра: кадастровая стоимость, объекты недвижимости, "
         "ЕГРН, земельные участки, здания, помещения, границы территорий"
     ),
-    version="0.1.0",
-    api_base="https://rosreestr.gov.ru",
+    version="0.2.0",
+    api_base="https://pkk.rosreestr.ru",
     requires_auth=False,
     tags=["росреестр", "кадастр", "недвижимость", "егрн", "земля"],
 )

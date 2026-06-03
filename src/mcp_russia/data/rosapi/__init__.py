@@ -16,9 +16,9 @@ FEATURE_META = FeatureMeta(
         "Справочные данные для России: адреса (ФИАС), организации (ИНН/ОГРН), "
         "банки, праздники, почтовые индексы"
     ),
-    version="0.1.0",
-    api_base="https://suggestions.dadata.ru/api/v4",
-    requires_auth=False,
+    version="0.2.0",
+    api_base="https://dadata.ru/api",
+    requires_auth=True,
     tags=[
         "адрес",
         "фиаc",

@@ -1,11 +1,24 @@
 """Tools for the Росреестр feature.
 
-All tool docstrings are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
+Tools for accessing Russian real estate data:
+- Reference lists (property types, land categories, usage types, statuses, ownership forms)
+- Object info by cadastral number (via pkk.rosreestr.ru)
+- Cadastral value lookup
+- Rights information
+
+Rules (ADR-001):
+    - tools.py NEVER makes HTTP directly — delegates to client.py
+    - Returns formatted strings for LLM consumption
+    - Uses Context for structured logging and progress reporting
 """
 
 from __future__ import annotations
 
+from fastmcp import Context
+
+from mcp_russia._shared.formatting import format_rub, markdown_table
+
+from . import client
 from .constants import (
     FormySobstvennosti,
     KategoriiZemel,
@@ -16,7 +29,7 @@ from .constants import (
 
 
 def spisok_tipov_nedvizhimosti() -> list[dict]:
-    """Список типов объектов недвижимости. (legacy — placeholder)
+    """Список типов объектов недвижимости.
 
     Returns:
         Список типов (земельный участок, здание, помещение и т.д.).
@@ -25,7 +38,7 @@ def spisok_tipov_nedvizhimosti() -> list[dict]:
 
 
 def spisok_kategoriy_zemel() -> list[dict]:
-    """Список категорий земель по целевому назначению. (legacy — placeholder)
+    """Список категорий земель по целевому назначению.
 
     Returns:
         Список категорий земель (сельскохозяйственные, населённых пунктов и др.).
@@ -34,7 +47,7 @@ def spisok_kategoriy_zemel() -> list[dict]:
 
 
 def spisok_vidov_ispolzovaniya() -> list[dict]:
-    """Список видов разрешённого использования земельных участков. (legacy — placeholder)
+    """Список видов разрешённого использования земельных участков.
 
     Returns:
         Список видов использования (жилое, общественное, промышленное и др.).
@@ -43,7 +56,7 @@ def spisok_vidov_ispolzovaniya() -> list[dict]:
 
 
 def spisok_statusov_obiekta() -> list[dict]:
-    """Список статусов учёта объектов недвижимости. (legacy — placeholder)
+    """Список статусов учёта объектов недвижимости.
 
     Returns:
         Список статусов (учтённый, ранее учтённый, временный и др.).
@@ -52,7 +65,7 @@ def spisok_statusov_obiekta() -> list[dict]:
 
 
 def spisok_form_sobstvennosti() -> list[dict]:
-    """Список форм собственности на недвижимость. (legacy — placeholder)
+    """Список форм собственности на недвижимость.
 
     Returns:
         Список форм собственности (частная, государственная, муниципальная и др.).
@@ -60,8 +73,8 @@ def spisok_form_sobstvennosti() -> list[dict]:
     return FormySobstvennosti
 
 
-def info_obekta(kadastrovyy_nomer: str) -> dict:
-    """Подробная информация об объекте недвижимости. (legacy — placeholder)
+async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
+    """Подробная информация об объекте недвижимости по кадастровому номеру.
 
     Args:
         kadastrovyy_nomer: Кадастровый номер объекта
@@ -70,20 +83,53 @@ def info_obekta(kadastrovyy_nomer: str) -> dict:
     Returns:
         Сведения об объекте (тип, адрес, площадь, кадастровая стоимость, статус).
     """
-    return {
-        "kadastrovyy_nomer": kadastrovyy_nomer,
-        "tip_obekta": "",
-        "adreshnye_svedeniya": "",
-        "ploshchad": "",
-        "kadastrovaya_stoimost": "",
-        "data_opredeleniya_stoimosti": "",
-        "status_ucheta": "placeholder — API integration pending",
-        "kategoriya_zemel": "",
-    }
+    await ctx.info(f"Запрос объекта {kadastrovyy_nomer}...")
+    obekt = await client.poluchit_obekt(kadastrovyy_nomer)
+
+    if obekt is None:
+        return (
+            f"**Объект {kadastrovyy_nomer}**\n\n"
+            "Объект не найден на публичной кадастровой карте.\n"
+            "Проверьте кадастровый номер или воспользуйтесь:\n"
+            "https://pkk.rosreestr.ru"
+        )
+
+    tip_name = {
+        "zemelnyy_uchastok": "Земельный участок",
+        "zdanie": "Здание",
+        "pomeshchenie": "Помещение",
+        "sooruzhenie": "Сооружение",
+        "obekt_nedostroenny": "Объект незавершённого строительства",
+        "mnogokvartirnyy_dom": "Многоквартирный дом",
+    }.get(obekt.tip_obekta, obekt.tip_obekta)
+
+    lines = [
+        f"**Кадастровый номер:** {obekt.kadastrovyy_nomer}",
+        f"**Тип:** {tip_name}",
+    ]
+    if obekt.adreshnye_svedeniya:
+        lines.append(f"**Адрес:** {obekt.adreshnye_svedeniya}")
+    if obekt.ploshchad:
+        lines.append(f"**Площадь:** {obekt.ploshchad} кв.м")
+    if obekt.kadastrovaya_stoimost:
+        try:
+            stoimost_val = float(obekt.kadastrovaya_stoimost)
+            lines.append(f"**Кадастровая стоимость:** {format_rub(stoimost_val)}")
+        except (ValueError, TypeError):
+            lines.append(f"**Кадастровая стоимость:** {obekt.kadastrovaya_stoimost}")
+    if obekt.data_opredeleniya_stoimosti:
+        lines.append(f"**Дата определения стоимости:** {obekt.data_opredeleniya_stoimosti}")
+    if obekt.status_ucheta:
+        lines.append(f"**Статус учёта:** {obekt.status_ucheta}")
+    if obekt.kategoriya_zemel:
+        lines.append(f"**Категория земель:** {obekt.kategoriya_zemel}")
+
+    lines.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
+    return "\n".join(lines)
 
 
-def kadastrovaya_stoimost(kadastrovyy_nomer: str) -> dict:
-    """Кадастровая стоимость объекта недвижимости. (legacy — placeholder)
+async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
+    """Кадастровая стоимость объекта недвижимости.
 
     Args:
         kadastrovyy_nomer: Кадастровый номер объекта.
@@ -91,17 +137,36 @@ def kadastrovaya_stoimost(kadastrovyy_nomer: str) -> dict:
     Returns:
         Кадастровая стоимость, дата определения, основание.
     """
-    return {
-        "kadastrovyy_nomer": kadastrovyy_nomer,
-        "stoimost": None,
-        "data_opredeleniya": "",
-        "data_vneseniya_v_egrn": "",
-        "osnovanie": "placeholder — API integration pending",
-    }
+    await ctx.info(f"Запрос кадастровой стоимости {kadastrovyy_nomer}...")
+    result = await client.poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer)
+
+    if result is None:
+        return (
+            f"**Кадастровый номер:** {kadastrovyy_nomer}\n\n"
+            "Кадастровая стоимость не найдена.\n"
+            "Проверьте кадастровый номер на https://pkk.rosreestr.ru"
+        )
+
+    lines = [f"**Кадастровый номер:** {result.kadastrovyy_nomer}"]
+
+    if result.stoimost is not None:
+        lines.append(f"**Кадастровая стоимость:** {format_rub(result.stoimost)}")
+    else:
+        lines.append("**Кадастровая стоимость:** Не определена")
+
+    if result.data_opredeleniya:
+        lines.append(f"**Дата определения:** {result.data_opredeleniya}")
+    if result.data_vneseniya_v_egrn:
+        lines.append(f"**Дата внесения в ЕГРН:** {result.data_vneseniya_v_egrn}")
+    if result.osnovanie:
+        lines.append(f"**Основание:** {result.osnovanie}")
+
+    lines.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
+    return "\n".join(lines)
 
 
-def prava_na_obekt(kadastrovyy_nomer: str) -> list[dict]:
-    """Сведения о зарегистрированных правах на объект. (legacy — placeholder)
+async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
+    """Сведения о зарегистрированных правах на объект.
 
     Args:
         kadastrovyy_nomer: Кадастровый номер объекта.
@@ -109,4 +174,31 @@ def prava_na_obekt(kadastrovyy_nomer: str) -> list[dict]:
     Returns:
         Список зарегистрированных прав (собственность, аренда и т.д.).
     """
-    return []
+    await ctx.info(f"Запрос прав на объект {kadastrovyy_nomer}...")
+    rights = await client.poluchit_prava(kadastrovyy_nomer)
+
+    if not rights:
+        return (
+            f"**Кадастровый номер:** {kadastrovyy_nomer}\n\n"
+            "Сведения о правах отсутствуют или не опубликованы.\n"
+            "Полная информация доступна через выписку из ЕГРН:\n"
+            "https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services"
+        )
+
+    rows = []
+    for r in rights:
+        rows.append(
+            (
+                r.get("tip_prava", ""),
+                r.get("sobstvennik", "Не указан"),
+                r.get("data_registratsii", ""),
+                r.get("nomer_registratsii", ""),
+            )
+        )
+
+    header = f"**Зарегистрированные права на объект {kadastrovyy_nomer}**\n\n"
+    header += "Источник: Росреестр / pkk.rosreestr.ru\n\n"
+    return header + markdown_table(
+        ["Тип права", "Правообладатель", "Дата регистрации", "Номер регистрации"],
+        rows,
+    )

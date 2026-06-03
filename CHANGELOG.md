@@ -124,7 +124,7 @@
 
 ### Исправления
 
-- **transparencia (legacy):** Безопасный парсинг, rate limiting и защита от bolsa-запросов
+- **transparencia (legacy):** Безопасный парсинг, rate limiting и защита от массовых запросов
 - **senado (legacy):** Миграция эндпоинтов голосования на новый API
 - **datajud (legacy):** Замена try-except-pass на contextlib.suppress
 - **transferegov,transparencia (legacy):** Исправление маппинга API и парсинга чисел

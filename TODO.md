@@ -2,6 +2,58 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-03 (двадцать шестой проход — Dadata API, pkk.rosreestr.ru, зачистка CONTRIBUTING/CHANGELOG)
+
+### Выполнено
+
+- **Подключение реального API Dadata в модуле РосАПИ (rosapi)**:
+  - `client.py`: полная переработка — `http_get` → `http_post` (Dadata использует POST для suggest), добавлены хедеры авторизации через `_dadata_headers()`, токен берётся из `MCP_RUSSIA_DADATA_API_KEY` (settings.py)
+  - `_suggest_address`, `_find_by_fias`, `_postal_by_index`, `_find_org_by_inn`, `_find_org_by_ogrn`, `_list_banks`, `_find_bank_by_bik` — все используют `http_post` с корректными Dadata-эндпоинтами
+  - `_postal_by_index` — реальная реализация через Dadata suggest/address вместо placeholder
+  - `find_bank_by_bik` — реальная реализация через Dadata suggest/bank вместо заглушки
+  - Добавлены хелперы `_nested_get`, `_parse_org_data`, `_parse_bank_data` для чистого парсинга ответов Dadata
+  - Обработка вложенных объектов Dadata (name.full/short, state.status, address.value, management.name)
+  - `tools.py`: обновлён `konsul_bank_po_bik` — теперь вызывает Dadata API, fallback на встроенный справочник
+  - Удалены все placeholder-формулировки («Требуется интеграция»), заменены на инструкции по настройке API-ключа
+  - Версия модуля: 0.1.0 → 0.2.0, `requires_auth=True`
+- **Подключение реального API pkk.rosreestr.ru в модуле Росреестр (rosreestr)**:
+  - `client.py`: полная переработка — синхронный класс `RosreestrClient` заменён на асинхронные модульные функции
+  - `poluchit_obekt()` — GET pkk.rosreestr.ru/api/features/1/{kad_number}, парсинг attrs → KadastrovyyObekt
+  - `poluchit_kadastrovnuyu_stoimost()` — тот же эндпоинт, извлечение cad_cost/cadastral_cost
+  - `poluchit_prava()` — извлечение rights из ответа pkk
+  - `poisk_po_nomeru()` — поиск объектов по запросу через pkk
+  - Добавлены `_parse_obekt()` парсер и справочные мапы (STATUSY_UCHE_TA_MAP, KATEGORII_ZEMEL_MAP)
+  - `tools.py`: info_obekta, kadastrovaya_stoimost, prava_na_obekt — async с Context, форматированный вывод с format_rub
+  - `resources.py`: убраны маркеры «(legacy — placeholder)»
+  - `constants.py`: добавлен PKK_API_BASE, мапы TIPY_NEDVIZIMOSTI_MAP, KATEGORII_ZEMEL_MAP, STATUSY_UCHE_TA_MAP, FORMY_SOBSTVENNOSTI_MAP
+  - Версия модуля: 0.1.0 → 0.2.0, `api_base` обновлён на pkk.rosreestr.ru
+- **Добавлены API-ключи в settings.py**: DADATA_API_KEY, DUMA_API_TOKEN, ZAKUPKI_API_TOKEN
+- **Обновлён .env.example**: добавлены секции для Dadata, Госдума, ЕИС Закупки API-токенов
+- **Обновлены тесты**:
+  - rosapi: 19 тестов (было 10) — добавлены тесты success-сценариев (адрес, организация, банк через Dadata)
+  - rosreestr: 13 тестов (было 8) — добавлены async-тесты с моками (info_obekta, kadastrovaya_stoimost, prava_na_obekt)
+- **Зачистка CONTRIBUTING.md**: португальские примеры коммитов заменены на российские (`ibge` → `cbrf`, `bacen` → `fns`, `transparencia` → `zakupki`, `camara` → `gosduma`, `saude` → `minzdrav`)
+- **Исправлен «bolsa-запросов» в CHANGELOG.md**: португальско-русский гибрид → «массовых запросов»
+- **Обновлён README.md**: 6 → 8 модулей с реальными API
+- **Прогнаны все проверки**: `pytest` (1941 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Dadata — основной провайдер справочных данных**: адреса (ФИАС), организации (ЕГРЮЛ/ЕГРИП), банки — всё через единый API с токеном
+- **pkk.rosreestr.ru — публичный API Росреестра**: не требует авторизации, возвращает JSON с кадастровыми данными
+- **Единый паттерн API-ключей**: все токены хранятся в settings.py и читаются из переменных окружения `MCP_RUSSIA_*`
+- **РосАПИ — седьмой модуль с реальным API** (cbrf, rosgidromet, fns, gosduma, zakupki, kad_arbitrazh, rosapi)
+- **Росреестр — восьмой модуль с реальным API**
+- **Итого модулей с реальными API-интерфейсами**: 8
+
+### Следующие действия
+
+- **Миграция португальских имён переменных** в legacy-модулях — ~7,500 идентификаторов (transparencia: 1,050, tse: 790, compras: 748, senado: 672, camara: 507)
+- **Подключение реальных API** в остальных модулях: rosstat→ЕМИСС, cekrf→vybory.izbirkom.ru, publikatsii→pravo.gov.ru, minzdrav→data.minzdrav.gov.ru, gibdd→гибдд.рф, fssp→fssp.gov.ru
+- **Конвертация синхронных заглушек в async**: gibdd, fssp, minobrnauki, rospotrebnadzor, roskomnadzor — все используют class-based синхронные заглушки
+- **Создание модуля ЕМИСС/Fedstat**: расширение Росстата реальными данными из fedstat.ru
+- **Дочистить оставшиеся португальские формулировки** в документации и коде
+
 ## Статус раунда 2026-06-02 (двадцать пятый проход — redator русификация, КАД API, зачистка документации)
 
 ### Выполнено
