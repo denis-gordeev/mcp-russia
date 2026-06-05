@@ -8,13 +8,13 @@ from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
 from .constants import (
-    FederalnyeOkruga,
-    FormyObucheniya,
-    OtrasliNauki,
-    StatusyAkkreditatsii,
-    TipyGrantov,
-    TipyVUZov,
-    UrovniObrazovaniya,
+    FEDERALNYE_OKRUGA,
+    FORMY_OBUCHENIYA,
+    OTRASLI_NAUKI,
+    STATUSY_AKKREDITATSII,
+    TIPY_GRANTOV,
+    TIPY_VUZOV,
+    UROVNI_OBRAZOVANIYA,
 )
 
 
@@ -24,7 +24,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
     Returns:
         Список типов вузов (университет, академия, институт и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TipyVUZov]
+    rows = [(t["code"], t["name"]) for t in TIPY_VUZOV]
     return markdown_table(["Код", "Тип вуза"], rows)
 
 
@@ -34,7 +34,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
     Returns:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
-    rows = [(f["code"], f["name"]) for f in FormyObucheniya]
+    rows = [(f["code"], f["name"]) for f in FORMY_OBUCHENIYA]
     return markdown_table(["Код", "Форма обучения"], rows)
 
 
@@ -44,7 +44,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
     Returns:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
-    rows = [(u["code"], u["name"]) for u in UrovniObrazovaniya]
+    rows = [(u["code"], u["name"]) for u in UROVNI_OBRAZOVANIYA]
     return markdown_table(["Код", "Уровень образования"], rows)
 
 
@@ -54,7 +54,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
     Returns:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
-    rows = [(o["code"], o["name"]) for o in OtrasliNauki]
+    rows = [(o["code"], o["name"]) for o in OTRASLI_NAUKI]
     return markdown_table(["Код", "Отрасль науки"], rows)
 
 
@@ -64,7 +64,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
     Returns:
         Список грантовых фондов и программ.
     """
-    rows = [(g["code"], g["name"]) for g in TipyGrantov]
+    rows = [(g["code"], g["name"]) for g in TIPY_GRANTOV]
     return markdown_table(["Код", "Тип гранта"], rows)
 
 
@@ -74,7 +74,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
     Returns:
         Список статусов (действует, приостановлена, отменена).
     """
-    rows = [(s["code"], s["name"]) for s in StatusyAkkreditatsii]
+    rows = [(s["code"], s["name"]) for s in STATUSY_AKKREDITATSII]
     return markdown_table(["Код", "Статус аккредитации"], rows)
 
 
@@ -84,33 +84,42 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
     Returns:
         Список федеральных округов.
     """
-    rows = [(f["code"], f["name"]) for f in FederalnyeOkruga]
+    rows = [(f["code"], f["name"]) for f in FEDERALNYE_OKRUGA]
     return markdown_table(["Код", "Федеральный округ"], rows)
 
 
-async def info_vuza(ctx: Context, nazvanie: str) -> str:
-    """Информация о высшем учебном заведении.
+async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+    """Информация о высшем учебном заведении (аккредитация Рособрнадзора).
 
     Args:
         nazvanie: Название вуза (напр. «МГУ», «МФТИ»).
+        inn: ИНН вуза.
 
     Returns:
-        Сведения о вузе (тип, город, ректор, студенты, аккредитация).
+        Сведения о вузе (тип, город, регион, аккредитация).
     """
-    data = await client.poluchit_vuz(nazvanie)
+    await ctx.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
+    if inn:
+        data = await client.info_akkreditacii(inn)
+    else:
+        results = await client.poisk_akreditovannyh_vuzov(nazvanie=nazvanie)
+        data = results[0] if results else None
+
     if not data:
-        return f"Информация о вузе «{nazvanie}» не найдена."
+        return f"Информация о вузе «{nazvanie or inn}» не найдена в реестре Рособрнадзора."
     lines = [
-        f"**{data.get('nazvanie', nazvanie)}**",
+        f"**{data.get('nazvanie', nazvanie or inn)}**",
+        f"- ИНН: {data.get('inn', '')}",
         f"- Тип: {data.get('tip', '')}",
         f"- Город: {data.get('gorod', '')}",
         f"- Регион: {data.get('region', '')}",
-        f"- Ректор: {data.get('rektor', '')}",
-        f"- Год основания: {data.get('god_osnovaniya', '')}",
-        f"- Студенты: {format_number_ru(data.get('kolichestvo_studentov', 0), 0)}",
-        f"- Преподаватели: {format_number_ru(data.get('kolichestvo_prepodavateley', 0), 0)}",
         f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
-        f"- Сайт: {data.get('sajt', '')}",
+        f"- Дата аккредитации: {data.get('data_akkreditatsii', '')}",
+        f"- Срок действия: {data.get('srok_deystviya', '')}",
+        f"- № свидетельства: {data.get('nomer_svidetelstva', '')}",
+        f"- Адрес: {data.get('adres', '')}",
+        f"- Сайт: {data.get('sayt', '')}",
+        f"- Источник: {data.get('istochnik', 'Рособрнадзор')}",
     ]
     return "\n".join(lines)
 
@@ -123,26 +132,24 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
         uroven: Уровень образования (необязательно).
 
     Returns:
-        Список программ с кодами направлений и проходными баллами.
+        Список программ с кодами направлений.
     """
-    programmy = await client.poluchit_programmy(vuz, uroven)
-    if not programmy:
-        return f"Программы вуза «{vuz}» не найдены."
-    rows = []
-    for p in programmy:
-        rows.append(
-            (
-                p.get("kod_napravleniya", ""),
-                p.get("nazvanie", ""),
-                p.get("uroven", ""),
-                p.get("forma_obucheniya", ""),
-                str(p.get("byudzhetnye_mesta", "")),
-            )
-        )
-    return markdown_table(
-        ["Код", "Программа", "Уровень", "Форма", "Бюдж. места"],
-        rows,
-    )
+    await ctx.info(f"Запрос программ вуза «{vuz}»...")
+    results = await client.poisk_akreditovannyh_vuzov(nazvanie=vuz)
+    if not results:
+        return f"Вуз «{vuz}» не найден в реестре Рособрнадзора."
+
+    data = results[0]
+    lines = [
+        f"**{data.get('nazvanie', vuz)}**",
+        f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
+        f"- № свидетельства: {data.get('nomer_svidetelstva', '')}",
+        "",
+        "Подробная информация об образовательных программах доступна на:",
+        f"- {data.get('sayt', 'сайте вуза')}",
+        "- Рособрнадзор: https://obrnadzor.gov.ru/ru/registry_accreditation",
+    ]
+    return "\n".join(lines)
 
 
 async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
@@ -152,8 +159,9 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
         organizatsiya: Организация-заявитель (необязательно).
 
     Returns:
-        Список грантов с суммами финансирования и сроками.
+        Список грантовых фондов и программ.
     """
+    await ctx.info("Запрос информации о грантах...")
     granty = await client.poluchit_granty(organizatsiya)
     if not granty:
         return "Гранты не найдены."
@@ -189,9 +197,15 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
     Returns:
         Таблица рейтинга вузов с баллами по категориям.
     """
+    await ctx.info(f"Запрос рейтинга вузов за {god} г....")
     reyting = await client.poluchit_reyting(tip_reytinga, god)
     if not reyting:
-        return f"Рейтинг вузов за {god} г. не найден."
+        return (
+            f"Рейтинг вузов за {god} г. не получен.\n\n"
+            f"Актуальные рейтинги доступны на:\n"
+            f"- https://vuz.minobrnauki.gov.ru\n"
+            f"- https://obrnadzor.gov.ru"
+        )
     rows = []
     for r in reyting:
         rows.append(
@@ -217,21 +231,42 @@ async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
     Returns:
         Сведения об аспирантах, направлениях и научных руководителях.
     """
-    aspiranty = await client.poluchit_aspirantov(organizatsiya)
-    if not aspiranty:
-        return "Данные об аспирантах не найдены."
+    return (
+        "**Данные об аспирантуре**\n\n"
+        "Информация об аспирантах и докторантах доступна через:\n"
+        "- ЕГИСУ науки: https://esu.minobrnauki.gov.ru\n"
+        "- Рособрнадзор: https://obrnadzor.gov.ru\n"
+        "- Мониторинг образования: https://vuz.minobrnauki.gov.ru\n\n"
+        "Для получения данных по конкретной организации "
+        "укажите ИНН через инструмент info_vuza."
+    )
+
+
+async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+    """Поиск лицензий на образовательную деятельность.
+
+    Args:
+        nazvanie: Название вуза (необязательно).
+        inn: ИНН организации (необязательно).
+
+    Returns:
+        Список лицензий с номерами и статусами.
+    """
+    await ctx.info("Запрос лицензий из реестра Рособрнадзора...")
+    results = await client.poisk_licenziy(nazvanie=nazvanie, inn=inn)
+    if not results:
+        return "Лицензии не найдены."
     rows = []
-    for a in aspiranty:
+    for r in results:
         rows.append(
             (
-                a.get("fio", ""),
-                a.get("napravlenie", ""),
-                a.get("forma_obucheniya", ""),
-                a.get("nauchny_rukovoditel", ""),
-                a.get("status", ""),
+                r.get("nomer_licenzii", ""),
+                r.get("nazvanie", ""),
+                r.get("status_licenzii", ""),
+                r.get("srok_deystviya", ""),
             )
         )
     return markdown_table(
-        ["ФИО", "Направление", "Форма", "Руководитель", "Статус"],
+        ["№ лицензии", "Организация", "Статус", "Срок действия"],
         rows,
     )

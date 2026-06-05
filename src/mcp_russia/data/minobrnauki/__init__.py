@@ -8,8 +8,8 @@ FEATURE_META = FeatureMeta(
         "Данные Минобрнауки России: вузы, научные исследования, "
         "образовательные программы, рейтинги, гранты, аспирантура"
     ),
-    version="0.1.0",
-    api_base="https://minobrnauki.gov.ru",
+    version="0.2.0",
+    api_base="https://obrnadzor.gov.ru",
     requires_auth=False,
     tags=["минобрнауки", "образование", "наука", "вузы", "исследования"],
 )

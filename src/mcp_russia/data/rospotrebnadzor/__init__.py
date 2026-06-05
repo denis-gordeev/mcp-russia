@@ -9,8 +9,8 @@ FEATURE_META = FeatureMeta(
         "Данные Роспотребнадзора: санитарно-эпидемиологический надзор, "
         "защита прав потребителей, проверки объектов, нарушения, показатели безопасности"
     ),
-    version="0.1.0",
-    api_base="https://rospotrebnadzor.ru",
+    version="0.2.0",
+    api_base="https://proverki.rospotrebnadzor.ru",
     requires_auth=False,
     tags=["роспотребнадзор", "санитарный-надзор", "потребители", "проверки", "санпин"],
 )

@@ -11,6 +11,7 @@ from .tools import (
     aspirantura,
     granty_i_isledovaniya,
     info_vuza,
+    poisk_licenziy,
     programmy_vuza,
     reyting_vuzov,
     spisok_federalnyh_okrugov,
@@ -36,6 +37,7 @@ mcp.tool(programmy_vuza, tags={"программы", "информация"})
 mcp.tool(granty_i_isledovaniya, tags={"гранты", "поиск"})
 mcp.tool(reyting_vuzov, tags={"рейтинг", "информация"})
 mcp.tool(aspirantura, tags={"аспирантура", "информация"})
+mcp.tool(poisk_licenziy, tags={"лицензии", "поиск"})
 
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)

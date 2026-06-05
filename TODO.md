@@ -2,6 +2,74 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-05 (двадцать восьмой проход — Минобрнауки, Роспотребнадзор, Роскомнадзор, Росстат, зачистка ссылок)
+
+### Выполнено
+
+- **Подключение реального API Рособрнадзора в модуле Минобрнауки (minobrnauki)**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к obrnadzor.gov.ru
+  - `poisk_akreditovannyh_vuzov()` — поиск аккредитованных вузов через открытые данные Рособрнадзора (7710542907-FS_ACCRED)
+  - `info_akkreditacii()` — карточка аккредитации по ИНН
+  - `poisk_licenziy()` — поиск лицензий через открытые данные Рособрнадзора (7710542907-FS_LICENSE)
+  - `poluchit_reyting()` — рейтинг вузов через vuz.minobrnauki.gov.ru API
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлен инструмент `poisk_licenziy`
+  - `constants.py`: добавлены `OBRNADZOR_ACCRED_URL`, `OBRNADZOR_LICENSE_URL`, `VUZ_RATING_URL`
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API реестра проверок в модуле Роспотребнадзор (rospotrebnadzor)**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к proverki.rospotrebnadzor.ru и zpp.rospotrebnadzor.ru
+  - `poisk_proverok()` — поиск проверок в реестре proverki.rospotrebnadzor.ru
+  - `info_proverki()` — карточка проверки по номеру
+  - `plan_proverok()` — план проверок по году и региону
+  - `poisk_zhalob()` — поиск жалоб потребителей через zpp.rospotrebnadzor.ru
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлены инструменты `poisk_proverok`, `plan_proverok`
+  - `constants.py`: добавлены `PROVERKI_API_BASE`, `ZPP_API_BASE`, `STATUSY_PROVEROK`, `VIDY_NARUSHENIY`
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реальных API реестров Роскомнадзора в модуле roskomnadzor**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к rkn.gov.ru и eais.rkn.gov.ru
+  - `poisk_operatora_pd()` — поиск оператора ПД в реестре rkn.gov.ru/pdn
+  - `poisk_ori()` — поиск ОРИ в реестре rkn.gov.ru/registry-ori
+  - `proverka_blokirovki()` — проверка домена в реестре запрещённых сайтов eais.rkn.gov.ru
+  - `poisk_licenziy()` — поиск лицензий связи в реестре rkn.gov.ru/licenses
+  - `poisk_smi()` — поиск СМИ в реестре rkn.gov.ru/mass-media
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлены инструменты `proverka_blokirovki`, `poisk_ori`
+  - `constants.py`: добавлены `RKN_OPENDATA_BASE`, `EAIS_API_BASE`, `PDN_REGISTRY_URL`, `ORI_REGISTRY_URL`, `OSNOVANIYA_BLOKIROVKI`; реестры дополнены URL-адресами
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API ЕМИСС в модуле Росстат (rosstat)**:
+  - `client.py`: полная переработка — placeholder-функции заменены на реальные запросы к fedstat.ru/api
+  - `poluchit_indikator()` — запрос статистического показателя через ЕМИСС с использованием кодов показателей
+  - `poluchit_inflyaciyu()` — получение данных об инфляции (ИПЦ) через ЕМИСС
+  - `poluchit_demografiyu()` — получение демографических данных через ЕМИСС
+  - `poluchit_dannye_regiona()` — получение данных по региону через ЕМИСС с fallback на статический справочник
+  - `poluchit_federalny_okrug()` — информация о федеральном округе с перечнем субъектов
+  - `tools.py`: `inflyaciya()` и `demografiya()` теперь возвращают реальные данные из ЕМИСС (с fallback)
+  - `constants.py`: добавлены `EMISS_KODY_POKAZATELEY` (8 показателей), `ROSSTAT_BASE`; расширен список субъектов с 10 до 93 (все субъекты РФ); добавлен столбец «ФО» для каждого субъекта; добавлены новые показатели (retail_trade, investments, agrarian, construction)
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Зачистка устаревших ссылок**:
+  - `rosstat/constants.py`: удалена ссылка на «Бразильский IBGE»
+  - `agenty/redator/constants.py`: удалена misleading-строка о «legacy section of Brazilian constants»
+- **Обновлены тесты**:
+  - minobrnauki: 14 тестов (было 12) — добавлены тесты с моками (info_vuza by inn, poisk_licenziy)
+  - rospotrebnadzor: 13 тестов (было 9) — добавлены тесты с моками (info_proverki found, poisk_proverok found/empty, plan_proverok, zhaloby found)
+  - roskomnadzor: 14 тестов (было 11) — добавлены тесты с моками (proverka_blokirovki blocked/not blocked, poisk_ori, info_licenzii found, zapisi_reestra found)
+  - rosstat: 14 тестов (было 10) — добавлены тесты с моками (inflyaciya with data, demografiya with data, constants subiekty count, emiss kody)
+- **Обновлён README.md**: 16 из 19 модулей подключены к реальным API
+- **Прогнаны все проверки**: `pytest` (1959 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Минобрнауки работает через obrnadzor.gov.ru**: открытые данные аккредитации (7710542907-FS_ACCRED) и лицензирования (7710542907-FS_LICENSE); рейтинги через vuz.minobrnauki.gov.ru
+- **Роспотребнадзор работает через proverki.rospotrebnadzor.ru**: реестр проверок с поиском по ИНН/названию; жалобы потребителей через zpp.rospotrebnadzor.ru
+- **Роскомнадзор работает через rkn.gov.ru**: реестр операторов ПД, реестр ОРИ, реестр лицензий связи, реестр СМИ, проверка блокировок через eais.rkn.gov.ru
+- **Росстат работает через fedstat.ru/api (ЕМИСС)**: статистические показатели с кодами (ИПЦ: 31088, население: 24133 и т.д.); все 93 субъекта РФ в справочнике
+- **Итого модулей с реальными API-интерфейсами**: 16 (cbrf, rosgidromet, fns, gosduma, zakupki, kad_arbitrazh, rosapi, rosreestr, gibdd, cekrf, fssp, publikatsii, minobrnauki, rospotrebnadzor, roskomnadzor, rosstat)
+
+### Следующие действия
+
+- **Подключение реальных API** в оставшихся модулях: rosvodresursy→Росводресурсы, minzdrav→Росздравнадзор, rosaudit→Счётная палата
+- **Создание новых модулей**: Совет Федерации (sovfed), Федеральное казначейство (kaznacheistvo), Росприроднадзор (rosprirodnadzor)
+- **Дочистить оставшиеся португальские формулировки** в документации и коде
+- **Углубление интеграций**: расширение данных по регионам (Росстат), добавление EMISS-кодов для ВРП/зарплат
+
 ## Статус раунда 2026-06-03 (двадцать седьмой проход — ГИБДД, ЦИК РФ, ФССП, pravo.gov.ru, async-конвертация, зачистка примеров)
 
 ### Выполнено

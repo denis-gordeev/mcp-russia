@@ -1,6 +1,6 @@
 # Каталог features
 
-19 российских модулей · 151 инструмент · 56 ресурсов · 38 промптов
+19 российских модулей · 158 инструментов · 56 ресурсов · 38 промптов
 
 Этот каталог описывает текущее содержимое сервера. Российские модули используют русские имена переменных и функций. Legacy-модули (28 бразильских) помечены как DEPRECATED.
 
@@ -31,17 +31,17 @@
 
 ### `rosstat` — Федеральная служба государственной статистики (7 tools, 2 resources, 2 prompts)
 
-Демография, экономика, региональная статистика, федеральные округа.
+Демография, экономика, региональная статистика, федеральные округа. Реальные API: fedstat.ru (ЕМИСС). 93 субъекта РФ.
 
 | Tool | Описание |
 |------|----------|
-| `spisok_regionov` | Список субъектов Российской Федерации с кодами OKATO |
+| `spisok_regionov` | Список субъектов Российской Федерации (93 субъекта) с кодами OKATO |
 | `spisok_okrugov` | Список федеральных округов РФ |
-| `region_info` | Детальная информация о регионе: население, ВРП, средняя зарплата |
-| `okrug_info` | Информация о федеральном округе |
-| `pokazateli_rosstata` | Справочник основных показателей Росстата |
-| `inflyaciya` | Данные об инфляции (ИПЦ) по России |
-| `demografiya` | Демографические данные (рождаемость, смертность, численность) |
+| `region_info` | Детальная информация о регионе: население, ВРП, средняя зарплата (ЕМИСС) |
+| `okrug_info` | Информация о федеральном округе с перечнем субъектов |
+| `pokazateli_rosstata` | Справочник основных показателей Росстата (10 показателей) |
+| `inflyaciya` | Данные об инфляции (ИПЦ) из ЕМИСС |
+| `demografiya` | Демографические данные из ЕМИСС (рождаемость, смертность, численность) |
 
 **Resources:** `data://istochniki` (источники данных), `data://metodologiya`
 
@@ -255,9 +255,9 @@
 
 **Авторизация:** не требуется
 
-### `rospotrebnadzor` — Роспотребнадзор (9 tools, 3 resources, 2 prompts)
+### `rospotrebnadzor` — Роспотребнадзор (11 tools, 3 resources, 2 prompts)
 
-Проверки, нарушения, санитарные нормы, потребительские жалобы.
+Проверки, нарушения, санитарные нормы, потребительские жалобы. Реальные API: proverki.rospotrebnadzor.ru, zpp.rospotrebnadzor.ru.
 
 | Tool | Описание |
 |------|----------|
@@ -265,10 +265,12 @@
 | `spisok_tipov_proverok` | Справочник типов проверок |
 | `spisok_kategoriy_obiektov` | Справочник категорий объектов |
 | `spisok_regionalnyh_upravleniy` | Справочник региональных управлений |
-| `info_proverki` | Информация о проверке |
-| `poisk_narusheniy` | Поиск нарушений |
+| `info_proverki` | Информация о проверке из реестра proverki.rospotrebnadzor.ru |
+| `poisk_proverok` | Поиск проверок по ИНН/названию/региону |
+| `plan_proverok` | План проверок Роспотребнадзора |
+| `poisk_narusheniy` | Поиск нарушений в реестре проверок |
 | `spisok_sanpinov` | Справочник СанПиН |
-| `zhaloby_potrebiteley` | Потребительские жалобы |
+| `zhaloby_potrebiteley` | Потребительские жалобы (zpp.rospotrebnadzor.ru) |
 | `pokazateli_bezopasnosti` | Показатели безопасности |
 
 **Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
@@ -277,9 +279,9 @@
 
 **Авторизация:** не требуется
 
-### `roskomnadzor` — Роскомнадзор (11 tools, 3 resources, 2 prompts)
+### `roskomnadzor` — Роскомнадзор (13 tools, 3 resources, 2 prompts)
 
-Лицензии, СМИ, персональные данные, реестры, нарушения.
+Лицензии, СМИ, персональные данные, реестры, нарушения. Реальные API: rkn.gov.ru, eais.rkn.gov.ru.
 
 | Tool | Описание |
 |------|----------|
@@ -289,11 +291,13 @@
 | `spisok_reestrov` | Справочник реестров |
 | `spisok_tipov_smi` | Справочник типов СМИ |
 | `spisok_kategoriy_pd_operatorov` | Справочник категорий операторов ПД |
-| `info_licenzii` | Информация о лицензии |
-| `poisk_smi` | Поиск СМИ |
-| `info_operatora_pd` | Информация об операторе персональных данных |
+| `info_licenzii` | Информация о лицензии из реестра rkn.gov.ru |
+| `poisk_smi` | Поиск СМИ в реестре Роскомнадзора |
+| `info_operatora_pd` | Информация об операторе ПД (rkn.gov.ru/pdn) |
 | `poisk_narusheniy` | Поиск нарушений |
-| `zapisi_reestra` | Записи реестра |
+| `proverka_blokirovki` | Проверка домена в реестре запрещённых сайтов (eais.rkn.gov.ru) |
+| `poisk_ori` | Поиск организаторов распространения информации (rkn.gov.ru/registry-ori) |
+| `zapisi_reestra` | Информация о реестре |
 
 **Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
@@ -392,9 +396,9 @@
 
 **Авторизация:** не требуется
 
-### `minobrnauki` — Минобрнауки (12 tools, 3 resources, 2 prompts)
+### `minobrnauki` — Минобрнауки (13 tools, 3 resources, 2 prompts)
 
-Вузы, образовательные программы, научные гранты, аспирантура.
+Вузы, образовательные программы, научные гранты, аспирантура. Реальные API: obrnadzor.gov.ru (аккредитация и лицензии), vuz.minobrnauki.gov.ru (рейтинги).
 
 | Tool | Описание |
 |------|----------|
@@ -405,11 +409,12 @@
 | `spisok_tipov_grantov` | Справочник типов грантов |
 | `spisok_statusov_akkreditatsii` | Справочник статусов аккредитации |
 | `spisok_federalnyh_okrugov` | Справочник федеральных округов |
-| `info_vuza` | Информация о вузе |
+| `info_vuza` | Информация о вузе из реестра аккредитации Рособрнадзора |
 | `programmy_vuza` | Образовательные программы вуза |
-| `granty_i_isselovaniya` | Гранты и исследования |
-| `reyting_vuzov` | Рейтинг вузов |
+| `granty_i_isledovaniya` | Гранты и исследования |
+| `reyting_vuzov` | Рейтинг вузов (vuz.minobrnauki.gov.ru) |
 | `aspirantura` | Данные об аспирантуре |
+| `poisk_licenziy` | Поиск лицензий в реестре Рособрнадзора |
 
 **Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 

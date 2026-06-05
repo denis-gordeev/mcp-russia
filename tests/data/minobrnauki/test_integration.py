@@ -29,6 +29,7 @@ async def test_has_tools(client):
         "granty_i_isledovaniya",
         "reyting_vuzov",
         "aspirantura",
+        "poisk_licenziy",
     }
     assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
@@ -68,4 +69,4 @@ async def test_tool_info_vuza(client):
         result = await client.call_tool("info_vuza", {"nazvanie": "МГУ"})
     assert result is not None
     text = str(result)
-    assert "не найдена" in text or "placeholder" in text.lower()
+    assert "не найден" in text or "не найдена" in text or "placeholder" in text.lower()

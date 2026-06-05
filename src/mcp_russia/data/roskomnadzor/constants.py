@@ -7,35 +7,22 @@
 # 2. Реестр запрещённых сайтов: https://eais.rkn.gov.ru
 # 3. Реестр операторов персональных данных: https://rkn.gov.ru/pdn
 # 4. Реестр организаторов распространения информации: https://rkn.gov.ru/registry-ori
+# 5. Открытые данные: https://rkn.gov.ru/it/opendata
 
-RKN_API_BASE = "https://rkn.gov.ru/api"
+RKN_API_BASE = "https://rkn.gov.ru"
+RKN_OPENDATA_BASE = "https://rkn.gov.ru/it/opendata"
+EAIS_API_BASE = "https://eais.rkn.gov.ru"
+PDN_REGISTRY_URL = "https://rkn.gov.ru/pdn"
+ORI_REGISTRY_URL = "https://rkn.gov.ru/registry-ori"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {
-        "code": "media_supervision",
-        "name": "Надзор в сфере СМИ",
-    },
-    {
-        "code": "telecom_supervision",
-        "name": "Надзор в сфере связи (телекоммуникации)",
-    },
-    {
-        "code": "it_supervision",
-        "name": "Надзор в сфере информационных технологий",
-    },
-    {
-        "code": "personal_data",
-        "name": "Защита персональных данных",
-    },
-    {
-        "code": "internet_control",
-        "name": "Контроль информационного пространства в сети Интернет",
-    },
-    {
-        "code": "copyright",
-        "name": "Защита авторских прав в сети",
-    },
+    {"code": "media_supervision", "name": "Надзор в сфере СМИ"},
+    {"code": "telecom_supervision", "name": "Надзор в сфере связи (телекоммуникации)"},
+    {"code": "it_supervision", "name": "Надзор в сфере информационных технологий"},
+    {"code": "personal_data", "name": "Защита персональных данных"},
+    {"code": "internet_control", "name": "Контроль информационного пространства в сети Интернет"},
+    {"code": "copyright", "name": "Защита авторских прав в сети"},
 ]
 
 # Типы лицензий связи
@@ -60,12 +47,32 @@ KATEGORII_NARUSHENIY = [
 
 # Реестры Роскомнадзора
 REGISTRY_RKN = [
-    {"code": "blocked_sites", "name": "Единый реестр запрещённых сайтов"},
-    {"code": "pd_operators", "name": "Реестр операторов персональных данных"},
-    {"code": "ori", "name": "Реестр организаторов распространения информации"},
-    {"code": "it_companies", "name": "Реестр иностранных IT-компаний"},
-    {"code": "license_holders", "name": "Реестр лицензиатов связи"},
-    {"code": "media_registry", "name": "Реестр СМИ"},
+    {
+        "code": "blocked_sites",
+        "name": "Единый реестр запрещённых сайтов",
+        "url": "https://eais.rkn.gov.ru",
+    },
+    {
+        "code": "pd_operators",
+        "name": "Реестр операторов персональных данных",
+        "url": "https://rkn.gov.ru/pdn",
+    },
+    {
+        "code": "ori",
+        "name": "Реестр организаторов распространения информации",
+        "url": "https://rkn.gov.ru/registry-ori",
+    },
+    {
+        "code": "it_companies",
+        "name": "Реестр иностранных IT-компаний",
+        "url": "https://rkn.gov.ru/it-companies",
+    },
+    {
+        "code": "license_holders",
+        "name": "Реестр лицензиатов связи",
+        "url": "https://rkn.gov.ru/licenses",
+    },
+    {"code": "media_registry", "name": "Реестр СМИ", "url": "https://rkn.gov.ru/mass-media"},
 ]
 
 # Типы СМИ
@@ -86,3 +93,16 @@ KATEGORII_PD_OPERATOROV = [
     {"code": "education", "name": "Образовательные учреждения"},
     {"code": "healthcare", "name": "Медицинские организации"},
 ]
+
+# Основания включения в реестр запрещённых сайтов
+OSNOVANIYA_BLOKIROVKI = {
+    "drug": "Наркотические средства",
+    "suicide": "Пропаганда самоубийств",
+    "pornography": "Детская порнография",
+    "extremism": "Экстремистские материалы",
+    "gambling": "Нелегальные азартные игры",
+    "copyright": "Нарушение авторских прав",
+    "dangerous": "Опасная информация для детей",
+    "fake": "Недостоверная информация",
+    "personal_data": "Утечка персональных данных",
+}

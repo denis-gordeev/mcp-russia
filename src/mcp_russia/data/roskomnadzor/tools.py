@@ -77,40 +77,49 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
     return markdown_table(["Код", "Категория оператора"], rows)
 
 
-async def info_licenzii(ctx: Context, nomer_licenzii: str) -> str:
-    """Подробная информация о лицензии связи.
+async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -> str:
+    """Информация о лицензии связи.
 
     Args:
-        nomer_licenzii: Номер лицензии.
+        nomer_licenzii: Номер лицензии (необязательно).
+        inn: ИНН лицензиата (необязательно).
 
     Returns:
         Информация о лицензии (тип, организация, даты, статус, территория).
     """
-    data = await client.get_licenziya(nomer_licenzii)
-    if not data:
-        return f"Лицензия № {nomer_licenzii} не найдена."
+    await ctx.info("Запрос информации о лицензии связи...")
+    licenzii = await client.poisk_licenziy(nomer=nomer_licenzii, inn=inn)
+    if not licenzii:
+        return "Лицензия не найдена.\n\nРеестр лицензий связи: https://rkn.gov.ru/licenses"
+    data = licenzii[0]
     lines = [
         f"**Лицензия связи** № {data.get('nomer', nomer_licenzii)}",
-        f"- Тип лицензии: {data.get('tip_licenzii', '')}",
         f"- Организация: {data.get('organizaciya', '')}",
+        f"- Тип лицензии: {data.get('tip_licenzii', '')}",
         f"- Дата выдачи: {data.get('data_vydachi', '')}",
         f"- Дата окончания: {data.get('data_okonchaniya', '')}",
         f"- Статус: {data.get('status', '')}",
         f"- Территория: {data.get('territoriya', '')}",
+        f"- Источник: {data.get('istochnik', 'Роскомнадзор')}",
     ]
     return "\n".join(lines)
 
 
-async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "") -> str:
+async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
     """Поиск СМИ по регистрационному номеру или названию.
 
     Args:
         registracionnyy_nomer: Регистрационный номер СМИ (необязательно).
+        nazvanie: Название СМИ (необязательно).
 
     Returns:
         Список СМИ с информацией о типе, учредителе, языке.
     """
-    smi = await client.get_smi(registracionnyy_nomer)
+    await ctx.info("Поиск СМИ в реестре Роскомнадзора...")
+    smi = await client.poisk_smi(
+        registracionnyy_nomer=registracionnyy_nomer,
+        nazvanie=nazvanie,
+    )
     if not smi:
         return "СМИ не найдены."
     rows = [
@@ -129,18 +138,23 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "") -> str:
     )
 
 
-async def info_operatora_pd(ctx: Context, inn: str = "") -> str:
+async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> str:
     """Информация об операторе персональных данных.
 
     Args:
         inn: ИНН организации (необязательно).
+        nazvanie: Название организации (необязательно).
 
     Returns:
         Список операторов ПД с типом, целями обработки, статусом.
     """
-    operatory = await client.get_operator_pd(inn)
+    await ctx.info("Поиск оператора ПД в реестре Роскомнадзора...")
+    operatory = await client.poisk_operatora_pd(inn=inn, nazvanie=nazvanie)
     if not operatory:
-        return "Операторы персональных данных не найдены."
+        return (
+            "Операторы персональных данных не найдены.\n\n"
+            "Реестр операторов ПД: https://rkn.gov.ru/pdn"
+        )
     rows = [
         (
             o.get("naimenovanie", ""),
@@ -157,53 +171,102 @@ async def info_operatora_pd(ctx: Context, inn: str = "") -> str:
     )
 
 
-async def poisk_narusheniy(ctx: Context, organizaciya: str = "") -> str:
+async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
     """Поиск нарушений в сфере связи/ИТ.
 
     Args:
-        organizaciya: Название организации (необязательно).
+        организационный: Название организации (необязательно).
+        inn: ИНН организации (необязательно).
 
     Returns:
-        Список нарушений с описанием, ссылками на законы, штрафами.
+        Информация о реестрах нарушений Роскомнадзора.
     """
-    narusheniya = await client.get_narusheniya(organizaciya)
-    if not narusheniya:
-        return "Нарушения не найдены."
+    return (
+        "**Нарушения в сфере связи и ИТ**\n\n"
+        "Данные о нарушениях доступны через:\n"
+        "- Открытые данные Роскомнадзора: https://rkn.gov.ru/it/opendata\n"
+        "- Реестр запрещённых сайтов: https://eais.rkn.gov.ru\n"
+        "- Реестр ПД: https://rkn.gov.ru/pdn\n\n"
+        "Для проверки конкретного домена используйте инструмент proverka_blokirovki."
+    )
+
+
+async def proverka_blokirovki(ctx: Context, domain: str) -> str:
+    """Проверка наличия сайта в реестре запрещённых сайтов.
+
+    Args:
+        domain: Доменное имя для проверки (напр. «example.com»).
+
+    Returns:
+        Информация о наличии сайта в реестре блокировок.
+    """
+    await ctx.info(f"Проверка блокировки {domain}...")
+    data = await client.proverka_blokirovki(domain)
+    if data.get("blokirovka"):
+        lines = [
+            f"**Домен {domain} — ЗАБЛОКИРОВАН**",
+            f"- Основание: {data.get('osnovanie', '')}",
+            f"- Дата включения: {data.get('data_vklyucheniya', '')}",
+            f"- Решившие органы: {data.get('organy', '')}",
+            f"- Источник: {data.get('istochnik', 'ЕАИС')}",
+        ]
+    else:
+        lines = [
+            f"**Домен {domain} — НЕ найден** в реестре запрещённых сайтов",
+            f"- Источник: {data.get('istochnik', 'ЕАИС (eais.rkn.gov.ru)')}",
+        ]
+    return "\n".join(lines)
+
+
+async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+    """Поиск организаторов распространения информации (ОРИ).
+
+    Args:
+        nazvanie: Название организации (необязательно).
+        inn: ИНН организации (необязательно).
+
+    Returns:
+        Список ОРИ с типом, статусом, основанием включения.
+    """
+    await ctx.info("Поиск ОРИ в реестре Роскомнадзора...")
+    ori = await client.poisk_ori(nazvanie=nazvanie, inn=inn)
+    if not ori:
+        return (
+            "Организаторы распространения информации не найдены.\n\n"
+            "Реестр ОРИ: https://rkn.gov.ru/registry-ori"
+        )
     rows = [
         (
-            n.get("kategoriya_narusheniya", ""),
-            n.get("opisanie", ""),
-            n.get("normativ", ""),
-            str(n.get("shtraf", "")),
-            n.get("data_vyyavleniya", ""),
+            o.get("naimenovanie", ""),
+            o.get("inn", ""),
+            o.get("tip", ""),
+            o.get("status", ""),
+            o.get("data_vklyucheniya", ""),
         )
-        for n in narusheniya
+        for o in ori
     ]
     return markdown_table(
-        ["Категория", "Описание", "Норматив", "Штраф (₽)", "Дата выявления"],
+        ["Наименование", "ИНН", "Тип ОРИ", "Статус", "Дата включения"],
         rows,
     )
 
 
 async def zapisi_reestra(ctx: Context, reestr_code: str, zapisi_id: str = "") -> str:
-    """Записи из реестра Роскомнадзора.
+    """Информация о реестре Роскомнадзора.
 
     Args:
         reestr_code: Код реестра (blocked_sites, pd_operators, ori и т.д.).
         zapisi_id: ID конкретной записи (необязательно).
 
     Returns:
-        Список записей реестра с основаниями и датами.
+        Описание реестра и ссылка на источник.
     """
-    if zapisi_id:
-        data = await client.get_zapis_reestra(reestr_code, zapisi_id)
-        if not data:
-            return f"Запись {zapisi_id} в реестре «{reestr_code}» не найдена."
-        lines = [
-            f"**Запись реестра** {reestr_code}/{zapisi_id}",
-        ]
-        for key, value in data.items():
-            lines.append(f"- {key}: {value}")
-        return "\n".join(lines)
-
-    return f"Укажите ID записи для поиска в реестре «{reestr_code}»."
+    reestr = next((r for r in REGISTRY_RKN if r["code"] == reestr_code), None)
+    if not reestr:
+        return f"Реестр «{reestr_code}» не найден. Используйте spisok_reestrov()."
+    lines = [
+        f"**{reestr['name']}**",
+        f"- Код: {reestr['code']}",
+        f"- URL: {reestr['url']}",
+    ]
+    return "\n".join(lines)

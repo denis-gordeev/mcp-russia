@@ -1,9 +1,6 @@
 """Constants for Russian official document generation.
 
 Based on GOST R 7.0.97-2016 and Russian deloproizvodstvo standards.
-
-The historical Brazilian constants are preserved in a legacy section
-for backward compatibility during migration.
 """
 
 # Russian months for official documents

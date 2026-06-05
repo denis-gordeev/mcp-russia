@@ -22,6 +22,8 @@ async def test_has_tools(client):
         "spisok_kategoriy_obiektov",
         "spisok_regionalnyh_upravleniy",
         "info_proverki",
+        "poisk_proverok",
+        "plan_proverok",
         "poisk_narusheniy",
         "spisok_sanpinov",
         "zhaloby_potrebiteley",

@@ -15,7 +15,9 @@ from .tools import (
     info_licenzii,
     info_operatora_pd,
     poisk_narusheniy,
+    poisk_ori,
     poisk_smi,
+    proverka_blokirovki,
     spisok_kategoriy_narusheniy,
     spisok_kategoriy_pd_operatorov,
     spisok_napravleniy,
@@ -38,6 +40,8 @@ mcp.tool(info_licenzii, tags={"лицензия", "информация"})
 mcp.tool(poisk_smi, tags={"сми", "поиск"})
 mcp.tool(info_operatora_pd, tags={"оператор-пд", "информация"})
 mcp.tool(poisk_narusheniy, tags={"нарушения", "поиск"})
+mcp.tool(proverka_blokirovki, tags={"блокировка", "проверка"})
+mcp.tool(poisk_ori, tags={"ори", "поиск"})
 mcp.tool(zapisi_reestra, tags={"реестр", "записи"})
 
 # Resources

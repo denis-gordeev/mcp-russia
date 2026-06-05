@@ -26,9 +26,9 @@ async def spisok_regionov(ctx: Context) -> str:
     await ctx.info("Запрос списка субъектов РФ...")
     regiony = client.get_subiekty_list()
 
-    rows = [(r["code"], r["name"]) for r in regiony]
-    header = f"**Субъекты Российской Федерации** — {len(regiony)} основных\n\n"
-    return header + markdown_table(["Код", "Регион"], rows)
+    rows = [(r["code"], r["name"], r.get("okrug", "")) for r in regiony]
+    header = f"**Субъекты Российской Федерации** — {len(regiony)} субъектов\n\n"
+    return header + markdown_table(["Код", "Регион", "ФО"], rows)
 
 
 async def spisok_okrugov(ctx: Context) -> str:
@@ -96,8 +96,14 @@ async def okrug_info(kod: str, ctx: Context) -> str:
 
     lines = [
         f"**{data['name']}** (код {data['code']})",
-        f"- {data['note']}",
+        f"- Субъектов в округе: {data.get('kolichestvo_subiektov', 0)}",
     ]
+    subiekty = data.get("subiekty", [])
+    if subiekty:
+        lines.append(f"- Субъекты: {', '.join(subiekty[:5])}")
+        if len(subiekty) > 5:
+            lines.append(f"  и ещё {len(subiekty) - 5} субъектов")
+
     return "\n".join(lines)
 
 
@@ -123,14 +129,29 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
     Returns:
         Данные об инфляции.
     """
-    # Placeholder — EMISS API integration would go here
-    return (
-        f"**Инфляция в России (ИПЦ)**\n\n"
-        f"Данные об индексе потребительских цен доступны через:\n"
-        f"- ЕМИСС: https://fedstat.ru\n"
-        f"- Росстат: https://rosstat.gov.ru\n\n"
-        f"Для запроса данных за {god or 'текущий период'} "
-        f"используйте показатель 'cpi' через API ЕМИСС."
+    if ctx:
+        await ctx.info("Запрос данных об инфляции...")
+    data = await client.poluchit_inflyaciyu(god)
+    if not data:
+        return (
+            f"**Инфляция в России (ИПЦ)**\n\n"
+            f"Данные об индексе потребительских цен доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/31088\n"
+            f"- Росстат: https://rosstat.gov.ru/statistics/price\n\n"
+            f"Для запроса данных за {god or 'текущий период'} "
+            f"используйте показатель 'cpi' через API ЕМИСС."
+        )
+    rows = []
+    for d in data:
+        ipcz_m = f"{d.get('ipcz_mesyac', '')}%" if d.get("ipcz_mesyac") else "—"
+        ipcz_n = f"{d.get('ipcz_nakoplenny', '')}%" if d.get("ipcz_nakoplenny") else "—"
+        ipcz_g = f"{d.get('ipcz_god', '')}%" if d.get("ipcz_god") else "—"
+        rows.append((d.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
+    header = "**Инфляция в России (ИПЦ)**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["Период", "К мес.", "Накопл.", "К г/г"],
+        rows,
     )
 
 
@@ -143,13 +164,28 @@ async def demografiya(region: str = "", ctx: Context | None = None) -> str:
     Returns:
         Демографические данные.
     """
-    # Placeholder — EMISS API integration would go here
+    if ctx:
+        await ctx.info("Запрос демографических данных...")
+    data = await client.poluchit_demografiyu(region)
     filter_text = f" по региону {region}" if region else " по России"
-    return (
-        f"**Демографические данные{filter_text}**\n\n"
-        f"Демографическая статистика (рождаемость, смертность, "
-        f"численность населения) доступна через:\n"
-        f"- ЕМИСС: https://fedstat.ru\n"
-        f"- Росстат: https://rosstat.gov.ru/statistics/population\n\n"
-        f"Для получения конкретных данных используйте API ЕМИСС."
+    if not data:
+        return (
+            f"**Демографические данные{filter_text}**\n\n"
+            f"Демографическая статистика (рождаемость, смертность, "
+            f"численность населения) доступна через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/24133\n"
+            f"- Росстат: https://rosstat.gov.ru/statistics/population\n\n"
+            f"Для получения конкретных данных используйте API ЕМИСС."
+        )
+    rows = []
+    for d in data:
+        nas = format_number_ru(d["naselenie"], 0) if d.get("naselenie") else "—"
+        rozh = f"{d.get('rozhdaemost', '')}‰" if d.get("rozhdaemost") else "—"
+        sm = f"{d.get('smertnost', '')}‰" if d.get("smertnost") else "—"
+        rows.append((d.get("period", ""), nas, rozh, sm))
+    header = f"**Демографические данные{filter_text}**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["Период", "Население", "Рожд.", "Смерт."],
+        rows,
     )

@@ -4,41 +4,23 @@
 # потребителей и благополучия человека)
 # Основные источники данных:
 # 1. Официальный сайт: https://rospotrebnadzor.ru
-# 2. Открытые данные: https://rospotrebnadzor.ru/open-data
-# 3. Портал санитарного надзора: https://rospotrebnadzor.ru/sanitary
+# 2. Открытые данные: https://rospotrebnadzor.ru/opendata
+# 3. Реестр проверок: https://proverki.rospotrebnadzor.ru
+# 4. Защита прав потребителей: https://zpp.rospotrebnadzor.ru
 
 ROSPOTREBNADZOR_API_BASE = "https://rospotrebnadzor.ru/api"
+PROVERKI_API_BASE = "https://proverki.rospotrebnadzor.ru"
+ZPP_API_BASE = "https://zpp.rospotrebnadzor.ru"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {
-        "code": "sanitary",
-        "name": "Санитарно-эпидемиологический надзор",
-    },
-    {
-        "code": "consumer_protection",
-        "name": "Защита прав потребителей",
-    },
-    {
-        "code": "radiation_safety",
-        "name": "Радиационная безопасность",
-    },
-    {
-        "code": "water_safety",
-        "name": "Безопасность водных объектов",
-    },
-    {
-        "code": "air_quality",
-        "name": "Контроль качества атмосферного воздуха",
-    },
-    {
-        "code": "food_safety",
-        "name": "Безопасность пищевых продуктов",
-    },
-    {
-        "code": "product_safety",
-        "name": "Безопасность непродовольственных товаров",
-    },
+    {"code": "sanitary", "name": "Санитарно-эпидемиологический надзор"},
+    {"code": "consumer_protection", "name": "Защита прав потребителей"},
+    {"code": "radiation_safety", "name": "Радиационная безопасность"},
+    {"code": "water_safety", "name": "Безопасность водных объектов"},
+    {"code": "air_quality", "name": "Контроль качества атмосферного воздуха"},
+    {"code": "food_safety", "name": "Безопасность пищевых продуктов"},
+    {"code": "product_safety", "name": "Безопасность непродовольственных товаров"},
 ]
 
 # Типы проверок
@@ -82,3 +64,19 @@ SANPIN_OSNOVNYE = [
     {"code": "2.4.3648-20", "name": "СанПиН к организациям воспитания и обучения"},
     {"code": "2.1.4.1074-01", "name": "СанПиН по питьевой воде"},
 ]
+
+# Статусы проверок
+STATUSY_PROVEROK = {
+    "planned": "Запланирована",
+    "in_progress": "Проводится",
+    "completed": "Завершена",
+    "canceled": "Отменена",
+}
+
+# Виды нарушений
+VIDY_NARUSHENIY = {
+    "sanitary": "Санитарно-эпидемиологическое",
+    "consumer": "Защита прав потребителей",
+    "radiation": "Радиационная безопасность",
+    "food": "Безопасность пищевых продуктов",
+}

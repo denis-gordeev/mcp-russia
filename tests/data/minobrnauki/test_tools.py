@@ -1,6 +1,6 @@
 """Тесты инструментов модуля Минобрнауки."""
 
-from unittest.mock import AsyncMock
+from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.minobrnauki import tools as minobrnauki_tools
 
@@ -54,31 +54,93 @@ async def test_spisok_federalnyh_okrugov():
     assert "Центральный" in result
 
 
-async def test_info_vuza_placeholder():
+async def test_info_vuza_by_name():
     ctx = _mock_ctx()
-    result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="МГУ")
-    assert "не найдена" in result or "placeholder" in result.lower()
+    mock_data = {
+        "nazvanie": "МГУ имени М.В. Ломоносова",
+        "inn": "7710563663",
+        "tip": "университет",
+        "gorod": "Москва",
+        "region": "г. Москва",
+        "status_akkreditatsii": "Действует",
+        "data_akkreditatsii": "2020-01-01",
+        "srok_deystviya": "2026-01-01",
+        "nomer_svidetelstva": "1234",
+        "adres": "Москва, Ленинские горы",
+        "sayt": "https://msu.ru",
+        "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
+    }
+    with patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[mock_data]):
+        result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="МГУ")
+    assert "МГУ" in result
+    assert "Действует" in result
 
 
-async def test_programmy_vuza_placeholder():
+async def test_info_vuza_by_inn():
     ctx = _mock_ctx()
-    result = await minobrnauki_tools.programmy_vuza(ctx=ctx, vuz="МГУ")
-    assert "не найдены" in result or "placeholder" in result.lower()
+    mock_data = {
+        "nazvanie": "МФТИ",
+        "inn": "5032003607",
+        "tip": "университет",
+        "status_akkreditatsii": "Действует",
+    }
+    with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=mock_data):
+        result = await minobrnauki_tools.info_vuza(ctx=ctx, inn="5032003607")
+    assert "МФТИ" in result
 
 
-async def test_granty_i_isledovaniya_placeholder():
+async def test_info_vuza_not_found():
+    ctx = _mock_ctx()
+    with patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[]):
+        with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=None):
+            result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="НесуществующийВУЗ")
+    assert "не найден" in result
+
+
+async def test_programmy_vuza_not_found():
+    ctx = _mock_ctx()
+    with patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[]):
+        result = await minobrnauki_tools.programmy_vuza(ctx=ctx, vuz="НесуществующийВУЗ")
+    assert "не найден" in result
+
+
+async def test_granty_i_isledovaniya():
     ctx = _mock_ctx()
     result = await minobrnauki_tools.granty_i_isledovaniya(ctx=ctx)
-    assert "не найдены" in result or "placeholder" in result.lower()
+    assert "РНФ" in result
 
 
-async def test_reyting_vuzov_placeholder():
+async def test_reyting_vuzov_empty():
     ctx = _mock_ctx()
-    result = await minobrnauki_tools.reyting_vuzov(ctx=ctx, god=2024)
-    assert "не найден" in result or "placeholder" in result.lower()
+    with patch.object(minobrnauki_tools.client, "poluchit_reyting", return_value=[]):
+        result = await minobrnauki_tools.reyting_vuzov(ctx=ctx, god=2024)
+    assert "не получен" in result or "vuz.minobrnauki" in result
 
 
-async def test_aspirantura_placeholder():
+async def test_aspirantura():
     ctx = _mock_ctx()
     result = await minobrnauki_tools.aspirantura(ctx=ctx)
-    assert "не найдены" in result or "placeholder" in result.lower()
+    assert "аспирант" in result.lower()
+
+
+async def test_poisk_licenziy_empty():
+    ctx = _mock_ctx()
+    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=[]):
+        result = await minobrnauki_tools.poisk_licenziy(ctx=ctx, inn="1234567890")
+    assert "не найдены" in result
+
+
+async def test_poisk_licenziy_found():
+    ctx = _mock_ctx()
+    mock_data = [
+        {
+            "nomer_licenzii": "1234",
+            "nazvanie": "МГУ",
+            "status_licenzii": "Действует",
+            "srok_deystviya": "2026-01-01",
+        }
+    ]
+    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=mock_data):
+        result = await minobrnauki_tools.poisk_licenziy(ctx=ctx, inn="7710563663")
+    assert "МГУ" in result
+    assert "1234" in result

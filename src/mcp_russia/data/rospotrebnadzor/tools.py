@@ -57,7 +57,7 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
 
 
 async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
-    """Подробная информация о проверке.
+    """Подробная информация о проверке Роспотребнадзора.
 
     Args:
         nomer_proverki: Номер проверки.
@@ -65,46 +65,100 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
     Returns:
         Информация о проверке (тип, объект, даты, статус, результат).
     """
-    data = await client.get_proverka(nomer_proverki)
+    await ctx.info(f"Запрос проверки № {nomer_proverki}...")
+    data = await client.info_proverki(nomer_proverki)
     if not data:
         return f"Проверка № {nomer_proverki} не найдена."
     lines = [
         f"**Проверка** № {data.get('nomer', nomer_proverki)}",
         f"- Тип проверки: {data.get('tip_proverki', '')}",
-        f"- Организация: {data.get('organizaciya', '')}",
+        f"- Организация: {data.get('obekt', '')}",
+        f"- ИНН: {data.get('inn', '')}",
         f"- Дата начала: {data.get('data_nachala', '')}",
         f"- Дата окончания: {data.get('data_okonchaniya', '')}",
         f"- Статус: {data.get('status', '')}",
         f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
-        f"- Результат: {data.get('rezulstat', '')}",
+        f"- Результат: {data.get('rezultat', '')}",
+        f"- Источник: {data.get('istochnik', 'proverki.rospotrebnadzor.ru')}",
     ]
     return "\n".join(lines)
 
 
-async def poisk_narusheniy(ctx: Context, organizaciya: str = "") -> str:
-    """Поиск санитарных нарушений по организации.
+async def poisk_proverok(
+    ctx: Context,
+    inn: str = "",
+    nazvanie: str = "",
+    region: str = "",
+) -> str:
+    """Поиск проверок в реестре Роспотребнадзора.
 
     Args:
-        organizaciya: Название организации (необязательно).
+        inn: ИНН проверяемого лица (необязательно).
+        nazvanie: Название проверяемого лица (необязательно).
+        region: Код региона (необязательно).
 
     Returns:
-        Список выявленных нарушений с описанием и ссылками на нормативы.
+        Список проверок с типом, датами и статусом.
     """
-    narusheniya = await client.get_narusheniya(organizaciya)
-    if not narusheniya:
-        return "Нарушения не найдены."
+    await ctx.info("Поиск проверок в реестре Роспотребнадзора...")
+    proverki = await client.poisk_proverok(
+        target_inn=inn,
+        target_name=nazvanie,
+        region=region,
+    )
+    if not proverki:
+        return "Проверки не найдены."
     rows = [
         (
-            n.get("tip_narusheniya", ""),
-            n.get("opisanie", ""),
-            n.get("normativ", ""),
-            n.get("data_vyyavleniya", ""),
-            n.get("status", ""),
+            p.get("nomer", ""),
+            p.get("tip_proverki", ""),
+            p.get("obekt", ""),
+            p.get("data_nachala", ""),
+            p.get("status", ""),
+            str(p.get("vyavleno_narusheniy", 0)),
         )
-        for n in narusheniya
+        for p in proverki
     ]
     return markdown_table(
-        ["Тип нарушения", "Описание", "Норматив", "Дата выявления", "Статус"],
+        ["№", "Тип", "Организация", "Дата начала", "Статус", "Нарушений"],
+        rows,
+    )
+
+
+async def plan_proverok(
+    ctx: Context,
+    god: int = 0,
+    region: str = "",
+) -> str:
+    """План проверок Роспотребнадзора.
+
+    Args:
+        god: Год плана проверок.
+        region: Код региона (необязательно).
+
+    Returns:
+        Список запланированных проверок.
+    """
+    await ctx.info("Запрос плана проверок Роспотребнадзора...")
+    proverki = await client.plan_proverok(god=god, region=region)
+    if not proverki:
+        return (
+            "План проверок не получен.\n\n"
+            "Актуальный план проверок доступен на:\n"
+            "https://proverki.rospotrebnadzor.ru"
+        )
+    rows = [
+        (
+            p.get("nomer", ""),
+            p.get("obekt", ""),
+            p.get("tip_proverki", ""),
+            p.get("data_nachala", ""),
+            p.get("data_okonchaniya", ""),
+        )
+        for p in proverki
+    ]
+    return markdown_table(
+        ["№", "Организация", "Тип проверки", "Начало", "Окончание"],
         rows,
     )
 
@@ -119,21 +173,24 @@ async def spisok_sanpinov(ctx: Context) -> str:
     return markdown_table(["Код", "СанПиН"], rows)
 
 
-async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "") -> str:
-    """Жалобы потребителей, зарегистрированные в Роспотребнадзоре.
+async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
+    """Жалобы потребителей, зарегистрированные через ЗПП Роспотребнадзора.
 
     Args:
         organizaciya: Название организации (необязательно).
+        inn: ИНН организации (необязательно).
 
     Returns:
         Список жалоб с темой, статусом рассмотрения и результатом.
     """
-    zhaloby = await client.get_zhaloby(organizaciya)
+    await ctx.info("Поиск жалоб потребителей...")
+    zhaloby = await client.poisk_zhalob(organizaciya=organizaciya, inn=inn)
     if not zhaloby:
         return "Жалобы не найдены."
     rows = [
         (
             z.get("tema", ""),
+            z.get("organizaciya", ""),
             z.get("data_podachi", ""),
             z.get("status_rassmotreniya", ""),
             z.get("rezultat", ""),
@@ -141,7 +198,41 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "") -> str:
         for z in zhaloby
     ]
     return markdown_table(
-        ["Тема", "Дата подачи", "Статус", "Результат"],
+        ["Тема", "Организация", "Дата подачи", "Статус", "Результат"],
+        rows,
+    )
+
+
+async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
+    """Поиск санитарных нарушений по организации.
+
+    Args:
+        organizaciya: Название организации (необязательно).
+        inn: ИНН организации (необязательно).
+
+    Returns:
+        Список выявленных нарушений.
+    """
+    await ctx.info("Поиск нарушений в реестре проверок...")
+    proverki = await client.poisk_proverok(
+        target_inn=inn,
+        target_name=organizaciya,
+    )
+    narusheniya = [p for p in proverki if p.get("vyavleno_narusheniy", 0) > 0]
+    if not narusheniya:
+        return "Нарушения не найдены."
+    rows = [
+        (
+            p.get("nomer", ""),
+            p.get("obekt", ""),
+            str(p.get("vyavleno_narusheniy", 0)),
+            p.get("data_okonchaniya", ""),
+            p.get("rezultat", ""),
+        )
+        for p in narusheniya
+    ]
+    return markdown_table(
+        ["№ проверки", "Организация", "Нарушений", "Дата", "Результат"],
         rows,
     )
 
@@ -153,22 +244,13 @@ async def pokazateli_bezopasnosti(ctx: Context, kod_pokazatelya: str = "") -> st
         kod_pokazatelya: Код показателя (необязательно).
 
     Returns:
-        Список показателей со значениями и предельно допустимыми уровнями.
+        Информация об источниках показателей безопасности.
     """
-    pokazateli = await client.get_pokazateli(kod_pokazatelya)
-    if not pokazateli:
-        return "Показатели безопасности не найдены."
-    rows = [
-        (
-            p.get("kod", ""),
-            p.get("nazvanie", ""),
-            str(p.get("znachenie", "")),
-            str(p.get("pdk", "")),
-            p.get("edinitsa", ""),
-        )
-        for p in pokazateli
-    ]
-    return markdown_table(
-        ["Код", "Показатель", "Значение", "ПДК", "Единица"],
-        rows,
+    return (
+        "**Показатели эпидемиологической и санитарной безопасности**\n\n"
+        "Данные доступны через:\n"
+        "- Открытые данные Роспотребнадзора: https://rospotrebnadzor.ru/opendata\n"
+        "- ЕМИСС: https://fedstat.ru\n"
+        "- Статистика заболеваемости: https://rospotrebnadzor.ru/activities/statistical-data\n\n"
+        "Для получения конкретных данных используйте API ЕМИСС."
     )

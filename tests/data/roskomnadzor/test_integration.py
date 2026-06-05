@@ -27,6 +27,8 @@ async def test_has_tools(client):
         "poisk_smi",
         "info_operatora_pd",
         "poisk_narusheniy",
+        "proverka_blokirovki",
+        "poisk_ori",
         "zapisi_reestra",
     }
     assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"

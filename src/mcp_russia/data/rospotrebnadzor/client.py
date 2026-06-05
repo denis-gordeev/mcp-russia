@@ -1,7 +1,9 @@
-"""HTTP client stubs for the Роспотребнадзор feature.
+"""HTTP client for the Роспотребнадзор feature.
 
-All functions are placeholders — real API integration with
-rospotrebnadzor.ru requires separate work.
+Real API integration with:
+    - Реестр проверок: proverki.rospotrebnadzor.ru
+    - Открытые данные: rospotrebnadzor.ru/opendata
+    - Защита прав потребителей: zpp.rospotrebnadzor.ru
 """
 
 from __future__ import annotations
@@ -11,116 +13,161 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_get
 
-from .constants import ROSPOTREBNADZOR_API_BASE
+from .constants import PROVERKI_API_BASE, ZPP_API_BASE
 
 logger = logging.getLogger(__name__)
 
-API_BASE = ROSPOTREBNADZOR_API_BASE
 
+async def poisk_proverok(
+    target_inn: str = "",
+    target_name: str = "",
+    region: str = "",
+) -> list[dict[str, Any]]:
+    """Поиск проверок в реестре proverki.rospotrebnadzor.ru.
 
-async def get_napravleniya() -> list[dict[str, Any]]:
-    """Return направления деятельности (placeholder)."""
-    url = f"{API_BASE}/napravleniya"
+    Args:
+        target_inn: ИНН проверяемого лица.
+        target_name: Название проверяемого лица.
+        region: Код региона.
+
+    Returns:
+        Список проверок.
+    """
     try:
-        data = await http_get(url)
-        return data if isinstance(data, list) else []
+        url = f"{PROVERKI_API_BASE}/api/procedure"
+        params: dict[str, Any] = {}
+        if target_inn:
+            params["targetInn"] = target_inn
+        if target_name:
+            params["targetName"] = target_name
+        if region:
+            params["region"] = region
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            items = data.get("data", data.get("items", []))
+            if isinstance(items, list):
+                return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+        if isinstance(data, list):
+            return [_parse_proverka(p) for p in data if isinstance(p, dict)]
+        return []
     except Exception:
-        logger.exception("Ошибка при получении направлений деятельности")
+        logger.exception("Ошибка при поиске проверок")
         return []
 
 
-async def get_tipy_proverok() -> list[dict[str, Any]]:
-    """Return типы проверок (placeholder)."""
-    url = f"{API_BASE}/tipy-proverok"
+async def info_proverki(nomer: str) -> dict[str, Any] | None:
+    """Получить информацию о проверке по номеру.
+
+    Args:
+        nomer: Номер проверки.
+
+    Returns:
+        Данные о проверке или None.
+    """
     try:
-        data = await http_get(url)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении типов проверок")
-        return []
-
-
-async def get_kategorii_obiektov() -> list[dict[str, Any]]:
-    """Return категории объектов надзора (placeholder)."""
-    url = f"{API_BASE}/kategorii-obiektov"
-    try:
-        data = await http_get(url)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении категорий объектов")
-        return []
-
-
-async def get_regionalnye_upravleniya() -> list[dict[str, Any]]:
-    """Return региональные управления (placeholder)."""
-    url = f"{API_BASE}/regionalnye-upravleniya"
-    try:
-        data = await http_get(url)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении региональных управлений")
-        return []
-
-
-async def get_proverka(nomer: str) -> dict[str, Any] | None:
-    """Return info проверки (placeholder)."""
-    url = f"{API_BASE}/proverka/{nomer}"
-    try:
-        data = await http_get(url)
-        return data if isinstance(data, dict) else None
+        url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_proverka(data)
+        return None
     except Exception:
         logger.exception("Ошибка при получении проверки №%s", nomer)
         return None
 
 
-async def get_narusheniya(organizaciya: str = "") -> list[dict[str, Any]]:
-    """Return список нарушений (placeholder)."""
-    url = f"{API_BASE}/narusheniya"
+async def plan_proverok(
+    god: int = 0,
+    region: str = "",
+    organ: str = "rospotrebnadzor",
+) -> list[dict[str, Any]]:
+    """Получить план проверок Роспотребнадзора.
+
+    Args:
+        god: Год плана проверок.
+        region: Код региона.
+        organ: Код контролирующего органа.
+
+    Returns:
+        Список запланированных проверок.
+    """
     try:
+        url = f"{PROVERKI_API_BASE}/api/plan"
+        params: dict[str, Any] = {"organ": organ}
+        if god:
+            params["year"] = god
+        if region:
+            params["region"] = region
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            items = data.get("data", data.get("items", []))
+            if isinstance(items, list):
+                return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+        if isinstance(data, list):
+            return [_parse_proverka(p) for p in data if isinstance(p, dict)]
+        return []
+    except Exception:
+        logger.exception("Ошибка при получении плана проверок")
+        return []
+
+
+async def poisk_zhalob(
+    organizaciya: str = "",
+    inn: str = "",
+) -> list[dict[str, Any]]:
+    """Поиск жалоб потребителей через zpp.rospotrebnadzor.ru.
+
+    Args:
+        organizaciya: Название организации.
+        inn: ИНН организации.
+
+    Returns:
+        Список жалоб.
+    """
+    try:
+        url = f"{ZPP_API_BASE}/api/complaints"
         params: dict[str, Any] = {}
         if organizaciya:
-            params["organizaciya"] = organizaciya
-        data = await http_get(url, params=params)
-        return data if isinstance(data, list) else []
+            params["organizationName"] = organizaciya
+        if inn:
+            params["inn"] = inn
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            items = data.get("data", data.get("items", []))
+            if isinstance(items, list):
+                return [_parse_zhaloba(z) for z in items if isinstance(z, dict)]
+        if isinstance(data, list):
+            return [_parse_zhaloba(z) for z in data if isinstance(z, dict)]
+        return []
     except Exception:
-        logger.exception("Ошибка при получении нарушений")
+        logger.exception("Ошибка при поиске жалоб потребителей")
         return []
 
 
-async def get_pokazateli(kod: str = "") -> list[dict[str, Any]]:
-    """Return показатели безопасности (placeholder)."""
-    url = f"{API_BASE}/pokazateli"
-    try:
-        params: dict[str, Any] = {}
-        if kod:
-            params["kod"] = kod
-        data = await http_get(url, params=params)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении показателей безопасности")
-        return []
+def _parse_proverka(item: dict[str, Any]) -> dict[str, Any]:
+    """Парсинг записи о проверке из реестра."""
+    return {
+        "nomer": item.get("id", "") or item.get("number", ""),
+        "tip_proverki": item.get("type", "") or item.get("kind", ""),
+        "organ": item.get("controlOrgan", "") or item.get("organ", ""),
+        "obekt": item.get("targetName", "") or item.get("target", ""),
+        "inn": item.get("targetInn", ""),
+        "data_nachala": item.get("startDate", "") or item.get("dateStart", ""),
+        "data_okonchaniya": item.get("endDate", "") or item.get("dateEnd", ""),
+        "status": item.get("status", ""),
+        "vyavleno_narusheniy": item.get("violationsCount", 0),
+        "rezultat": item.get("result", ""),
+        "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
+    }
 
 
-async def get_zhaloby(organizaciya: str = "") -> list[dict[str, Any]]:
-    """Return жалобы потребителей (placeholder)."""
-    url = f"{API_BASE}/zhaloby"
-    try:
-        params: dict[str, Any] = {}
-        if organizaciya:
-            params["organizaciya"] = organizaciya
-        data = await http_get(url, params=params)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении жалоб потребителей")
-        return []
-
-
-async def get_sanpiny() -> list[dict[str, Any]]:
-    """Return список основных СанПиН (placeholder)."""
-    url = f"{API_BASE}/sanpiny"
-    try:
-        data = await http_get(url)
-        return data if isinstance(data, list) else []
-    except Exception:
-        logger.exception("Ошибка при получении списка СанПиН")
-        return []
+def _parse_zhaloba(item: dict[str, Any]) -> dict[str, Any]:
+    """Парсинг записи о жалобе потребителя."""
+    return {
+        "tema": item.get("subject", "") or item.get("topic", ""),
+        "data_podachi": item.get("date", "") or item.get("created", ""),
+        "status_rassmotreniya": item.get("status", ""),
+        "rezultat": item.get("result", ""),
+        "organizaciya": item.get("organizationName", ""),
+        "inn": item.get("inn", ""),
+        "istochnik": "ЗПП (zpp.rospotrebnadzor.ru)",
+    }

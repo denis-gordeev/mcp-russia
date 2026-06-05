@@ -13,7 +13,9 @@ from .resources import (
 )
 from .tools import (
     info_proverki,
+    plan_proverok,
     poisk_narusheniy,
+    poisk_proverok,
     pokazateli_bezopasnosti,
     spisok_kategoriy_obiektov,
     spisok_napravleniy,
@@ -31,6 +33,8 @@ mcp.tool(spisok_tipov_proverok, tags={"типы-проверок", "справо
 mcp.tool(spisok_kategoriy_obiektov, tags={"категории-объектов", "справочник"})
 mcp.tool(spisok_regionalnyh_upravleniy, tags={"региональные-управления", "справочник"})
 mcp.tool(info_proverki, tags={"проверка", "информация"})
+mcp.tool(poisk_proverok, tags={"проверки", "поиск"})
+mcp.tool(plan_proverok, tags={"план-проверок", "информация"})
 mcp.tool(poisk_narusheniy, tags={"нарушения", "поиск"})
 mcp.tool(spisok_sanpinov, tags={"санпин", "справочник"})
 mcp.tool(zhaloby_potrebiteley, tags={"жалобы", "потребители"})
