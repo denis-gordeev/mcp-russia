@@ -5,8 +5,10 @@
 # 1. Официальный сайт: https://ach.gov.ru
 # 2. Открытые данные: https://ach.gov.ru/open-data
 # 3. Портал бюджетных данных: https://budget.gov.ru
+# 4. Контрольные мероприятия: https://ach.gov.ru/controls
 
 ACH_API_BASE = "https://ach.gov.ru/api"
+BUDGET_GOV_RU_BASE = "https://budget.gov.ru/api"
 
 # Направления контрольной деятельности
 NAPRAVLENIYA_KONTROLYA = [
@@ -31,7 +33,7 @@ NAPRAVLENIYA_KONTROLYA = [
         "name": "Стратегический анализ и прогнозирование",
     },
     {
-        "code": "antiкоррупция",
+        "code": "antikorruptsiya",
         "name": "Антикоррупционная экспертиза",
     },
 ]
@@ -44,6 +46,8 @@ TIPY_MEROPRIYATIY = [
     {"code": "ekspertiza", "name": "Экспертиза"},
     {"code": "monitoring", "name": "Мониторинг"},
     {"code": "spravka", "name": "Справка"},
+    {"code": "reviziya", "name": "Ревизия"},
+    {"code": "obsledovanie", "name": "Обследование"},
 ]
 
 # Субъекты внешнего государственного аудита
@@ -53,4 +57,24 @@ SUBIEKTY_AUDITA = [
     {"code": "gk", "name": "Государственные корпорации и компании"},
     {"code": "ak", "name": "Акционерные общества с госучастием"},
     {"code": "bk", "name": "Бюджеты бюджетной системы РФ"},
+    {"code": "fn", "name": "Федеральные назначения"},
+    {"code": "mb", "name": "Межбюджетные трансферты субъектам РФ"},
 ]
+
+# Статусы контрольных мероприятий
+STATUSY_KONTROLYA = {
+    "planned": "Запланировано",
+    "in_progress": "Проводится",
+    "completed": "Завершено",
+    "cancelled": "Отменено",
+    "approved": "Утверждено",
+}
+
+# Виды нарушений
+VIDY_NARUSHENIY = {
+    "financial": "Финансовое нарушение",
+    "budget": "Бюджетное нарушение",
+    "procurement": "Нарушение в сфере закупок",
+    "property": "Нарушение при использовании госсобственности",
+    "program": "Нарушение при реализации госпрограмм",
+}

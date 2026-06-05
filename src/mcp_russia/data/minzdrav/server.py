@@ -9,6 +9,7 @@ from .prompts import analiz_zdorovya_regiona, obzor_med_organizatsiy
 from .resources import federalnyye_okruga, istochniki_dannyh, klassifikatsii
 from .tools import (
     info_med_organizatsii,
+    poisk_litsenziy,
     poisk_med_organizatsiy,
     pokazateli_zdorovya,
     spravochnik_mkb10,
@@ -22,6 +23,7 @@ mcp = FastMCP("mcp-russia-minzdrav")
 # Tools
 mcp.tool(poisk_med_organizatsiy, tags={"медицинские-организации", "поиск"})
 mcp.tool(info_med_organizatsii, tags={"медицинская-организация", "информация"})
+mcp.tool(poisk_litsenziy, tags={"лицензии", "поиск"})
 mcp.tool(pokazateli_zdorovya, tags={"здоровье", "показатели"})
 mcp.tool(statistika_zabolevaniy, tags={"заболеваемость", "статистика"})
 mcp.tool(spravochnik_mo, tags={"типы-мо", "справочник"})

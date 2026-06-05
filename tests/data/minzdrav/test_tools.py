@@ -6,75 +6,127 @@ from mcp_russia.data.minzdrav import tools as minzdrav_tools
 
 
 def _mock_ctx():
-    """Создать мок контекста."""
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
     return ctx
 
 
-async def test_poisk_med_organizatsiy():
-    """Проверка poisk_med_organizatsiy."""
+async def test_poisk_med_organizatsiy_empty():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.poisk_med_organizatsiy(ctx=ctx)
-    assert "Медицинские организации" in result
-    assert "minzdrav.gov.ru" in result
+    with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=[]):
+        result = await minzdrav_tools.poisk_med_organizatsiy(ctx=ctx)
+    assert "не найдены" in result
 
 
-async def test_poisk_med_organizatsiy_with_filters():
-    """Проверка poisk_med_organizatsiy с фильтрами."""
+async def test_poisk_med_organizatsiy_found():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.poisk_med_organizatsiy(
-        region="Москва", tip="больница", gorod="Москва", ctx=ctx
-    )
-    assert "Москва" in result
-    assert "больница" in result
+    mock_data = [
+        {"name": "Городская больница №1", "tip": "Больница", "region": "Москва", "city": "Москва"},
+    ]
+    with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
+        result = await minzdrav_tools.poisk_med_organizatsiy(
+            region="Москва", tip="больница", ctx=ctx
+        )
+    assert "Городская больница" in result
 
 
 async def test_info_med_organizatsii_not_found():
-    """Проверка info_med_organizatsii при отсутствии организации."""
     ctx = _mock_ctx()
     with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=None):
-        result = await minzdrav_tools.info_med_organizatsii("nonexistent", ctx)
+        result = await minzdrav_tools.info_med_organizatsii(ctx, "nonexistent")
     assert "не найдена" in result
 
 
-async def test_pokazateli_zdorovya():
-    """Проверка pokazateli_zdorovya."""
+async def test_info_med_organizatsii_found():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.pokazateli_zdorovya(god=2024, ctx=ctx)
-    assert "2024" in result
-    assert "продолжительность жизни" in result
+    mock_data = {
+        "name": "Городская больница №1",
+        "tip": "Больница",
+        "adres": "г. Москва, ул. Примерная, д.1",
+        "region": "Москва",
+        "city": "Москва",
+        "telefon": "+7 (495) 123-45-67",
+        "litsenzia": "Л041-01137-77/00368123",
+        "krovatey": 500,
+        "vrachey": 200,
+    }
+    with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=mock_data):
+        result = await minzdrav_tools.info_med_organizatsii(ctx, "12345")
+    assert "Городская больница" in result
+    assert "500" in result
 
 
-async def test_pokazateli_zdorovya_with_region():
-    """Проверка pokazateli_zdorovya с регионом."""
+async def test_poisk_litsenziy_empty():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.pokazateli_zdorovya(region="Москва", god=2025, ctx=ctx)
-    assert "Москва" in result
-    assert "2025" in result
+    with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=[]):
+        result = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
+    assert "не найдены" in result
 
 
-async def test_statistika_zabolevaniy():
-    """Проверка statistika_zabolevaniy."""
+async def test_poisk_litsenziy_found():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.statistika_zabolevaniy(ctx=ctx)
-    assert "Статистика заболеваний" in result
-    assert "МКБ-10" in result
+    mock_data = [
+        {
+            "nomer": "Л041-01137",
+            "organizaciya": "Городская больница №1",
+            "vid_deyatelnosti": "Медицинская деятельность",
+            "status": "Действует",
+            "data_okonchaniya": "2030-01-01",
+        },
+    ]
+    with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=mock_data):
+        result = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
+    assert "Л041" in result
 
 
-async def test_statistika_zabolevaniy_with_mkb():
-    """Проверка statistika_zabolevaniy с кодом МКБ."""
+async def test_pokazateli_zdorovya_empty():
     ctx = _mock_ctx()
-    result = await minzdrav_tools.statistika_zabolevaniy(
-        mkb_code="I00-I99", region="Москва", ctx=ctx
-    )
-    assert "I00-I99" in result
+    with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=[]):
+        result = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
+    assert "Минздрав" in result
+
+
+async def test_pokazateli_zdorovya_found():
+    ctx = _mock_ctx()
+    mock_data = [
+        {
+            "name": "Ожидаемая продолжительность жизни",
+            "znachenie": 73.5,
+            "ed_izm": "лет",
+            "god": 2024,
+            "region": "РФ",
+        },
+    ]
+    with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=mock_data):
+        result = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
+    assert "73.5" in result
+
+
+async def test_statistika_zabolevaniy_empty():
+    ctx = _mock_ctx()
+    with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=[]):
+        result = await minzdrav_tools.statistika_zabolevaniy(ctx)
+    assert "заболеваемости" in result or "Минздрав" in result
+
+
+async def test_statistika_zabolevaniy_found():
+    ctx = _mock_ctx()
+    mock_data = [
+        {
+            "mkb_code": "I00-I99",
+            "name": "Болезни системы кровообращения",
+            "chelovek_zabolelo": 500000,
+            "letalnykh_sluchaev": 10000,
+            "god": 2024,
+        },
+    ]
+    with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=mock_data):
+        result = await minzdrav_tools.statistika_zabolevaniy(ctx, mkb_code="I00-I99")
     assert "кровообращения" in result
 
 
 async def test_spravochnik_mo():
-    """Проверка spravochnik_mo."""
     ctx = _mock_ctx()
     result = await minzdrav_tools.spravochnik_mo(ctx)
     assert "Типы медицинских организаций" in result
@@ -82,7 +134,6 @@ async def test_spravochnik_mo():
 
 
 async def test_spravochnik_spetsialnostey():
-    """Проверка spravochnik_spetsialnostey."""
     ctx = _mock_ctx()
     result = await minzdrav_tools.spravochnik_spetsialnostey(ctx)
     assert "Врачебные специальности" in result
@@ -90,7 +141,6 @@ async def test_spravochnik_spetsialnostey():
 
 
 async def test_spravochnik_mkb10():
-    """Проверка spravochnik_mkb10."""
     ctx = _mock_ctx()
     result = await minzdrav_tools.spravochnik_mkb10(ctx)
     assert "МКБ-10" in result

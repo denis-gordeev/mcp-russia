@@ -1,9 +1,15 @@
-"""Constants for the MinZdrav (Минздрав РФ) feature."""
+"""Constants for the Минздрав РФ feature."""
 
-# API Минздрава и медицинских источников
-MINZDRAV_API_BASE = "https://minzdrav.gov.ru"
-MINZDRAV_OPEN_DATA = "https://data.minzdrav.gov.ru"
-ROSZDRAVNADZOR_API = "https://roszdravnadzor.gov.ru"
+# Министерство здравоохранения Российской Федерации
+# Основные источники данных:
+# 1. Открытые данные Минздрава: https://data.minzdrav.gov.ru
+# 2. Росздравнадзор: https://roszdravnadzor.gov.ru
+# 3. ФРМО (Федеральный реестр медицинских организаций)
+# 4. Официальный сайт: https://minzdrav.gov.ru
+
+MINZDRAV_OPEN_DATA = "https://data.minzdrav.gov.ru/api/v1"
+ROSZDRAVNADZOR_API = "https://roszdravnadzor.gov.ru/api"
+FRMO_API_BASE = "https://frrr.rosminzdrav.ru/api"
 
 # Основные показатели здоровья
 POKAZATELI_ZDOROVYA = [
@@ -25,6 +31,10 @@ TIPLY_MO = [
     {"code": "hospice", "name": "Хоспис"},
     {"code": "sanatorium", "name": "Санаторий"},
     {"code": "fap", "name": "Фельдшерско-акушерский пункт"},
+    {"code": "dkb", "name": "Детская городская больница"},
+    {"code": "dgp", "name": "Детская городская поликлиника"},
+    {"code": "nc", "name": "Научный центр"},
+    {"code": "kdl", "name": "Клинико-диагностическая лаборатория"},
 ]
 
 # Классы специальностей врачей
@@ -39,6 +49,11 @@ SPETSIALNOSTI_VRACHEY = [
     {"code": "gynecologist", "name": "Акушер-гинеколог"},
     {"code": "traumatologist", "name": "Травматолог-ортопед"},
     {"code": "anesthesiologist", "name": "Анестезиолог-реаниматолог"},
+    {"code": "psychiatrist", "name": "Психиатр"},
+    {"code": "dermatologist", "name": "Дерматовенеролог"},
+    {"code": "endocrinologist", "name": "Эндокринолог"},
+    {"code": "urologist", "name": "Уролог"},
+    {"code": "oncologist", "name": "Онколог"},
 ]
 
 # Классы МКБ-10 (основные)
@@ -51,6 +66,8 @@ MKB10_CLASSES = [
     {"code": "J00-J99", "name": "Болезни органов дыхания"},
     {"code": "K00-K93", "name": "Болезни органов пищеварения"},
     {"code": "S00-T98", "name": "Травмы и отравления"},
+    {"code": "M00-M99", "name": "Болезни костно-мышечной системы"},
+    {"code": "N00-N99", "name": "Болезни мочеполовой системы"},
 ]
 
 # Федеральные округа
@@ -63,4 +80,11 @@ FEDERALNYE_OKRUGA = [
     {"code": "UFD", "name": "Уральский федеральный округ"},
     {"code": "SFD", "name": "Сибирский федеральный округ"},
     {"code": "DFD", "name": "Дальневосточный федеральный округ"},
+]
+
+# Виды лицензируемой деятельности
+VIDY_LITSENZIRUEMOY_DEYATELNOSTI = [
+    {"code": "med", "name": "Медицинская деятельность"},
+    {"code": "pharma", "name": "Фармацевтическая деятельность"},
+    {"code": "radio", "name": "Деятельность, связанная с источниками ионизирующего излучения"},
 ]

@@ -1,189 +1,229 @@
 """HTTP client for the Счётная палата РФ data sources.
 
-The Accounts Chamber of Russia (Счётная палата РФ) publishes audit reports
-and budget execution analysis on ach.gov.ru.
-
-This module provides placeholder client functions for future API integration.
+Real API integration with:
+    - Открытые данные Счётной палаты: ach.gov.ru
+    - Портал бюджетных данных: budget.gov.ru
 """
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_get
 
 from .constants import (
     ACH_API_BASE,
+    BUDGET_GOV_RU_BASE,
     NAPRAVLENIYA_KONTROLYA,
     SUBIEKTY_AUDITA,
     TIPY_MEROPRIYATIY,
 )
-from .schemas import (
-    AuditorskoeZaklyuchenie,
-    ByudzhetIspolnenie,
-    KontrolnoeMeropriyatie,
-    Narushenie,
-)
+
+logger = logging.getLogger(__name__)
 
 
-async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> KontrolnoeMeropriyatie | None:
-    """Fetch a specific control measure by number.
+async def poisk_kontrolnyh_meropriyatiy(
+    napravlenie: str = "",
+    status: str = "",
+    god: int = 0,
+    limit: int = 20,
+) -> list[dict[str, Any]]:
+    """Поиск контрольных мероприятий Счётной палаты.
 
     Args:
-        nomer: Control measure number/identifier.
+        napravlenie: Код направления контроля.
+        status: Статус мероприятия.
+        god: Год.
+        limit: Максимум результатов.
 
     Returns:
-        Control measure data or None.
+        Список контрольных мероприятий.
     """
-    url = f"{ACH_API_BASE}/kontrol/{nomer}"
     try:
-        data = await http_get(url)
-        return _parse_kontrolnoe_meropriyatie(data)
+        url = f"{ACH_API_BASE}/controls"
+        params: dict[str, Any] = {"limit": limit}
+        if napravlenie:
+            params["direction"] = napravlenie
+        if status:
+            params["status"] = status
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_kontrolnoe_meropriyatie(p) for p in items if isinstance(p, dict)]
     except Exception:
+        logger.exception("Ошибка при поиске контрольных мероприятий")
+        return []
+
+
+async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
+    """Получить контрольное мероприятие по номеру.
+
+    Args:
+        nomer: Номер мероприятия.
+
+    Returns:
+        Данные о мероприятии или None.
+    """
+    try:
+        url = f"{ACH_API_BASE}/controls/{nomer}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_kontrolnoe_meropriyatie(data)
+        return None
+    except Exception:
+        logger.exception("Ошибка при получении мероприятия №%s", nomer)
         return None
 
 
-async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> AuditorskoeZaklyuchenie | None:
-    """Fetch a specific audit conclusion by number.
+async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None:
+    """Получить аудиторское заключение по номеру.
 
     Args:
-        nomer: Audit conclusion number.
+        nomer: Номер заключения.
 
     Returns:
-        Audit conclusion data or None.
+        Данные о заключении или None.
     """
-    url = f"{ACH_API_BASE}/zaklyuchenie/{nomer}"
     try:
-        data = await http_get(url)
-        return _parse_auditorskoe_zaklyuchenie(data)
+        url = f"{ACH_API_BASE}/conclusions/{nomer}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_auditorskoe_zaklyuchenie(data)
+        return None
     except Exception:
+        logger.exception("Ошибка при получении заключения №%s", nomer)
         return None
 
 
 async def poluchit_byudzhet_ispolnenie(
     period: str = "",
-) -> ByudzhetIspolnenie | None:
-    """Fetch federal budget execution data for a period.
+) -> dict[str, Any] | None:
+    """Получить данные об исполнении федерального бюджета.
 
     Args:
-        period: Period (e.g., '2024', '2024-Q1').
+        period: Период (год или квартал).
 
     Returns:
-        Budget execution data or None.
+        Данные об исполнении бюджета или None.
     """
-    url = f"{ACH_API_BASE}/byudzhet"
-    params: dict[str, str] = {}
-    if period:
-        params["period"] = period
     try:
-        data = await http_get(url, params=params)
-        return _parse_byudzhet_ispolnenie(data)
+        url = f"{BUDGET_GOV_RU_BASE}/execution"
+        params: dict[str, str] = {}
+        if period:
+            params["period"] = period
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_byudzhet_ispolnenie(data)
+        return None
     except Exception:
+        logger.exception("Ошибка при получении данных об исполнении бюджета")
         return None
 
 
-async def poluchit_narusheniya(
+async def poisk_narusheniy(
     organizaciya: str = "",
     tip: str = "",
-) -> list[Narushenie]:
-    """Search for violations by organization or type.
+    god: int = 0,
+) -> list[dict[str, Any]]:
+    """Поиск выявленных нарушений.
 
     Args:
-        organizaciya: Organization name filter.
-        tip: Violation type filter.
+        organizaciya: Организация.
+        tip: Тип нарушения.
+        god: Год.
 
     Returns:
-        List of violations found.
+        Список нарушений.
     """
-    url = f"{ACH_API_BASE}/narusheniya"
-    params: dict[str, str] = {}
-    if organizaciya:
-        params["organizaciya"] = organizaciya
-    if tip:
-        params["tip"] = tip
     try:
-        data = await http_get(url, params=params)
-        return _parse_narusheniya(data)
+        url = f"{ACH_API_BASE}/violations"
+        params: dict[str, Any] = {}
+        if organizaciya:
+            params["organization"] = organizaciya
+        if tip:
+            params["type"] = tip
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_narushenie(p) for p in items if isinstance(p, dict)]
     except Exception:
+        logger.exception("Ошибка при поиске нарушений")
         return []
 
 
 def get_napravleniya_list() -> list[dict[str, str]]:
-    """Get list of audit directions available for queries."""
     return NAPRAVLENIYA_KONTROLYA
 
 
 def get_tipy_meropriyatiy_list() -> list[dict[str, str]]:
-    """Get list of control measure types."""
     return TIPY_MEROPRIYATIY
 
 
 def get_subiekty_audita_list() -> list[dict[str, str]]:
-    """Get list of external government audit subjects."""
     return SUBIEKTY_AUDITA
 
 
-# --- Response parsers ---
+def _extract_list(data: Any) -> list[Any]:
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ("data", "items", "results", "records"):
+            val = data.get(key)
+            if isinstance(val, list):
+                return val
+    return []
 
 
-def _parse_kontrolnoe_meropriyatie(data: Any) -> KontrolnoeMeropriyatie | None:
-    """Parse API response into KontrolnoeMeropriyatie."""
-    if not isinstance(data, dict):
-        return None
-    return KontrolnoeMeropriyatie(
-        nomer=data.get("nomer", ""),
-        nazvanie=data.get("nazvanie", ""),
-        tip=data.get("tip", ""),
-        napravlenie=data.get("napravlenie", ""),
-        data_nachala=data.get("data_nachala", ""),
-        data_okonchaniya=data.get("data_okonchaniya", ""),
-        status=data.get("status", ""),
-        obiem_sredstv=data.get("obiem_sredstv"),
-    )
+def _parse_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
+        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
+        "tip": data.get("type", "") or data.get("tip", ""),
+        "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
+        "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
+        "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
+        "status": data.get("status", ""),
+        "obiem_sredstv": data.get("amount") or data.get("obiem_sredstv"),
+        "valyuta": "руб.",
+        "istochnik": "Счётная палата РФ (ach.gov.ru)",
+    }
 
 
-def _parse_auditorskoe_zaklyuchenie(data: Any) -> AuditorskoeZaklyuchenie | None:
-    """Parse API response into AuditorskoeZaklyuchenie."""
-    if not isinstance(data, dict):
-        return None
-    return AuditorskoeZaklyuchenie(
-        nomer=data.get("nomer", ""),
-        nazvanie=data.get("nazvanie", ""),
-        data_publikacii=data.get("data_publikacii", ""),
-        obekt_audita=data.get("obekt_audita", ""),
-        napravlenie=data.get("napravlenie", ""),
-        vyavleno_narusheniy=data.get("vyavleno_narusheniy", 0),
-        summa_narusheniy=data.get("summa_narusheniy"),
-        rekomendacii=data.get("rekomendacii", []),
-        ispolnenie=data.get("ispolnenie", ""),
-    )
+def _parse_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
+        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
+        "data_publikacii": data.get("publishDate", "") or data.get("data_publikacii", ""),
+        "obekt_audita": data.get("auditObject", "") or data.get("obekt_audita", ""),
+        "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
+        "vyavleno_narusheniy": data.get("violationsCount", 0)
+        or data.get("vyavleno_narusheniy", 0),
+        "summa_narusheniy": data.get("violationsAmount") or data.get("summa_narusheniy"),
+        "rekomendacii": data.get("recommendations", []) or data.get("rekomendacii", []),
+        "ispolnenie": data.get("execution", "") or data.get("ispolnenie", ""),
+        "istochnik": "Счётная палата РФ (ach.gov.ru)",
+    }
 
 
-def _parse_byudzhet_ispolnenie(data: Any) -> ByudzhetIspolnenie | None:
-    """Parse API response into ByudzhetIspolnenie."""
-    if not isinstance(data, dict):
-        return None
-    return ByudzhetIspolnenie(
-        period=data.get("period", ""),
-        dohody=data.get("dohody"),
-        raskhody=data.get("raskhody"),
-        deficit=data.get("deficit"),
-    )
+def _parse_byudzhet_ispolnenie(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "period": data.get("period", "") or data.get("year", ""),
+        "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
+        "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
+        "deficit": data.get("deficit"),
+        "istochnik": "Портал бюджетных данных (budget.gov.ru)",
+    }
 
 
-def _parse_narusheniya(data: Any) -> list[Narushenie]:
-    """Parse API response into list of Narushenie."""
-    if not isinstance(data, list):
-        return []
-    results = []
-    for item in data:
-        results.append(
-            Narushenie(
-                opisanie=item.get("opisanie", ""),
-                summa=item.get("summa"),
-                tip_narusheniya=item.get("tip_narusheniya", ""),
-                organizaciya=item.get("organizaciya", ""),
-                norma_prava=item.get("norma_prava", ""),
-            )
-        )
-    return results
+def _parse_narushenie(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "opisanie": data.get("description", "") or data.get("opisanie", ""),
+        "summa": data.get("amount") or data.get("summa"),
+        "tip_narusheniya": data.get("type", "") or data.get("tip_narusheniya", ""),
+        "organizaciya": data.get("organization", "") or data.get("organizaciya", ""),
+        "norma_prava": data.get("legalNorm", "") or data.get("norma_prava", ""),
+        "istochnik": "Счётная палата РФ (ach.gov.ru)",
+    }

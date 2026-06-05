@@ -15,6 +15,7 @@ from .tools import (
     info_auditorskogo_zaklyucheniya,
     info_kontrolnogo_meropriyatiya,
     ispolnenie_byudzheta,
+    poisk_kontrolnyh_meropriyatiy,
     poisk_narusheniy,
     spisok_napravleniy,
     spisok_subiektov_audita,
@@ -27,6 +28,7 @@ mcp = FastMCP("mcp-russia-rosaudit")
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
 mcp.tool(spisok_tipov_meropriyatiy, tags={"типы-мероприятий", "справочник"})
 mcp.tool(spisok_subiektov_audita, tags={"субъекты-аудита", "справочник"})
+mcp.tool(poisk_kontrolnyh_meropriyatiy, tags={"контрольное-мероприятие", "поиск"})
 mcp.tool(info_kontrolnogo_meropriyatiya, tags={"контрольное-мероприятие", "информация"})
 mcp.tool(info_auditorskogo_zaklyucheniya, tags={"аудиторское-заключение", "информация"})
 mcp.tool(ispolnenie_byudzheta, tags={"бюджет", "исполнение"})

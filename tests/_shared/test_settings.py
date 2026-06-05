@@ -1,4 +1,4 @@
-"""Testes do módulo de configuração."""
+"""Тесты модуля конфигурации."""
 
 import os
 from unittest.mock import patch
@@ -21,7 +21,6 @@ class TestSettings:
 
     def test_env_override_timeout(self) -> None:
         """Settings can be overridden via env vars (at import time)."""
-        with patch.dict(os.environ, {"MCP_BRASIL_HTTP_TIMEOUT": "10.0"}):
-            # Re-evaluate the expression the same way settings.py does
-            val = float(os.environ.get("MCP_BRASIL_HTTP_TIMEOUT", "30.0"))
+        with patch.dict(os.environ, {"MCP_RUSSIA_HTTP_TIMEOUT": "10.0"}):
+            val = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
             assert val == 10.0

@@ -1,195 +1,251 @@
 """HTTP client for the Росводресурсы data sources.
 
-Federal Agency for Water Resources manages water bodies, hydrological monitoring,
-and water usage data in Russia.
-
-This module provides placeholder client functions for future API integration.
+Real API integration with:
+    - Государственный водный реестр: text.water.ru
+    - ГМВО (гидромониторинг): gmvo.skniigkh.ru
+    - Открытые данные data.gov.ru
 """
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_get
 
 from .constants import (
     BASSEYNOVYE_OKRUGA,
+    GMVO_API_BASE,
     KRUPNYE_VODOKHRANILISHCHA,
-    ROSVODRESURSY_API_BASE,
     TIPY_GIDRO_DANNYKH,
     TIPY_VODNYKH_OBIEKTOV,
-)
-from .schemas import (
-    GidroData,
-    VodnyyObekt,
-    VodokhranilishcheData,
-    Vodopolzovanie,
+    VODNYY_REESTR_BASE,
 )
 
+logger = logging.getLogger(__name__)
 
-async def poluchit_vodnyy_obekt(code: str) -> VodnyyObekt | None:
-    """Fetch a water body by code.
+
+async def poisk_vodnykh_obektov(
+    zapros: str = "",
+    tip: str = "",
+    basseyn: str = "",
+    region: str = "",
+    limit: int = 20,
+) -> list[dict[str, Any]]:
+    """Поиск водных объектов в Государственном водном реестре.
 
     Args:
-        code: Water body code from the State Water Registry.
+        zapros: Поисковый запрос (название водного объекта).
+        tip: Тип водного объекта (reka, ozero и т.д.).
+        basseyn: Код бассейнового округа.
+        region: Регион.
+        limit: Максимум результатов.
 
     Returns:
-        Water body data or None.
+        Список водных объектов.
     """
-    url = f"{ROSVODRESURSY_API_BASE}/vodnyy_obekt/{code}"
     try:
-        data = await http_get(url)
-        return _parse_vodnyy_obekt(data)
+        url = f"{VODNYY_REESTR_BASE}/api/objects"
+        params: dict[str, Any] = {}
+        if zapros:
+            params["query"] = zapros
+        if tip:
+            params["type"] = tip
+        if basseyn:
+            params["basin"] = basseyn
+        if region:
+            params["region"] = region
+        params["limit"] = limit
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
     except Exception:
+        logger.exception("Ошибка при поиске водных объектов")
+        return []
+
+
+async def info_vodnogo_obekta(code: str) -> dict[str, Any] | None:
+    """Получить информацию о водном объекте из Государственного водного реестра.
+
+    Args:
+        code: Код водного объекта.
+
+    Returns:
+        Данные о водном объекте или None.
+    """
+    try:
+        url = f"{VODNYY_REESTR_BASE}/api/objects/{code}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_vodnyy_obekt(data)
+        return None
+    except Exception:
+        logger.exception("Ошибка при получении водного объекта %s", code)
         return None
 
 
-async def poluchit_gidro_post(post: str) -> GidroData | None:
-    """Fetch hydrological data from a monitoring post.
+async def poluchit_gidro_dannye(
+    post_id: str = "",
+    region: str = "",
+    tip_dannykh: str = "uroven",
+) -> list[dict[str, Any]]:
+    """Получить гидрологические данные с мониторинговых постов ГМВО.
 
     Args:
-        post: Hydrological post code.
+        post_id: Идентификатор гидрологического поста.
+        region: Регион.
+        tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
     Returns:
-        Hydrological data or None.
+        Список гидрологических данных.
     """
-    url = f"{ROSVODRESURSY_API_BASE}/gidro/{post}"
     try:
-        data = await http_get(url)
-        return _parse_gidro(data)
+        url = f"{GMVO_API_BASE}/api/data"
+        params: dict[str, Any] = {"type": tip_dannykh}
+        if post_id:
+            params["post"] = post_id
+        if region:
+            params["region"] = region
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_gidro_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
+        logger.exception("Ошибка при получении гидрологических данных")
+        return []
+
+
+async def poluchit_dannye_vodokhranilishcha(code: str) -> dict[str, Any] | None:
+    """Получить актуальные данные о водохранилище.
+
+    Args:
+        code: Код водохранилища.
+
+    Returns:
+        Данные о водохранилище или None.
+    """
+    try:
+        url = f"{GMVO_API_BASE}/api/reservoirs/{code}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_vodokhranilishche(data)
         return None
-
-
-async def poluchit_vodokhranilishche(code: str) -> VodokhranilishcheData | None:
-    """Fetch reservoir data by code.
-
-    Args:
-        code: Reservoir code.
-
-    Returns:
-        Reservoir data or None.
-    """
-    url = f"{ROSVODRESURSY_API_BASE}/vodokhranilishche/{code}"
-    try:
-        data = await http_get(url)
-        return _parse_vodokhranilishche(data)
     except Exception:
+        logger.exception("Ошибка при получении данных водохранилища %s", code)
         return None
 
 
 async def poluchit_vodopolzovanie(
     region: str = "",
     god: str = "",
-) -> list[Vodopolzovanie]:
-    """Fetch water usage data by region and year.
+) -> list[dict[str, Any]]:
+    """Получить данные о водопользовании из открытых данных.
 
     Args:
-        region: Region filter.
-        god: Year filter.
+        region: Регион.
+        god: Год.
 
     Returns:
-        List of water usage data.
+        Список данных о водопользовании.
     """
-    url = f"{ROSVODRESURSY_API_BASE}/vodopolzovanie"
-    params: dict[str, str] = {}
-    if region:
-        params["region"] = region
-    if god:
-        params["god"] = god
     try:
-        data = await http_get(url, params=params)
-        return _parse_vodopolzovanie(data)
+        url = f"{VODNYY_REESTR_BASE}/api/water-use"
+        params: dict[str, Any] = {}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_vodopolzovanie_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
+        logger.exception("Ошибка при получении данных о водопользовании")
         return []
 
 
 def get_basseynovye_okruga_list() -> list[dict[str, str]]:
-    """Get list of basin districts."""
     return BASSEYNOVYE_OKRUGA
 
 
 def get_tipy_vodnykh_obektov_list() -> list[dict[str, str]]:
-    """Get list of water body types."""
     return TIPY_VODNYKH_OBIEKTOV
 
 
 def get_tipy_gidro_list() -> list[dict[str, str]]:
-    """Get list of hydrological data types."""
     return TIPY_GIDRO_DANNYKH
 
 
 def get_vodokhranilishcha_list() -> list[dict[str, str]]:
-    """Get list of major reservoirs."""
+    return [
+        {"code": v["code"], "name": v["name"], "region": v["region"]}
+        for v in KRUPNYE_VODOKHRANILISHCHA
+    ]
+
+
+def get_vodokhranilishcha_detailed() -> list[dict[str, Any]]:
     return KRUPNYE_VODOKHRANILISHCHA
 
 
-# --- Response parsers ---
+def _extract_list(data: Any) -> list[Any]:
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ("data", "items", "results", "records"):
+            val = data.get(key)
+            if isinstance(val, list):
+                return val
+    return []
 
 
-def _parse_vodnyy_obekt(data: Any) -> VodnyyObekt | None:
-    """Parse API response into VodnyyObekt."""
-    if not isinstance(data, dict):
-        return None
-    return VodnyyObekt(
-        code=data.get("code", ""),
-        name=data.get("name", ""),
-        tip=data.get("tip", ""),
-        basseyn=data.get("basseyn", ""),
-        dlinna_km=data.get("dlinna_km"),
-        ploshchad_km2=data.get("ploshchad_km2"),
-        region=data.get("region", ""),
-        opisaniye=data.get("opisaniye", ""),
-    )
+def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "code": item.get("code", "") or item.get("id", ""),
+        "name": item.get("name", "") or item.get("title", ""),
+        "tip": item.get("type", "") or item.get("tip", ""),
+        "basseyn": item.get("basin", "") or item.get("basseyn", ""),
+        "dlinna_km": item.get("length") or item.get("dlinna_km"),
+        "ploshchad_km2": item.get("area") or item.get("ploshchad_km2"),
+        "region": item.get("region", ""),
+        "opisaniye": item.get("description", "") or item.get("opisaniye", ""),
+        "istochnik": "Государственный водный реестр (text.water.ru)",
+    }
 
 
-def _parse_gidro(data: Any) -> GidroData | None:
-    """Parse API response into GidroData."""
-    if not isinstance(data, dict):
-        return None
-    return GidroData(
-        post=data.get("post", ""),
-        vodnyy_obekt=data.get("vodnyy_obekt", ""),
-        data_izmereniya=data.get("data_izmereniya", ""),
-        uroven=data.get("uroven"),
-        raskhod=data.get("raskhod"),
-        temperatura=data.get("temperatura"),
-        ledovaya_obstanovka=data.get("ledovaya_obstanovka", ""),
-        preduprezhdenie=data.get("preduprezhdenie", ""),
-    )
+def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "post": item.get("post", "") or item.get("postName", ""),
+        "post_id": item.get("postId", "") or item.get("post_id", ""),
+        "vodnyy_obekt": item.get("waterObject", "") or item.get("vodnyy_obekt", ""),
+        "data_izmereniya": item.get("date", "") or item.get("data_izmereniya", ""),
+        "uroven": item.get("level") or item.get("uroven"),
+        "raskhod": item.get("discharge") or item.get("raskhod"),
+        "temperatura": item.get("temperature") or item.get("temperatura"),
+        "ledovaya_obstanovka": item.get("iceCondition", "") or item.get("ledovaya_obstanovka", ""),
+        "preduprezhdenie": item.get("warning", "") or item.get("preduprezhdenie", ""),
+        "istochnik": "ГМВО (gmvo.skniigkh.ru)",
+    }
 
 
-def _parse_vodokhranilishche(data: Any) -> VodokhranilishcheData | None:
-    """Parse API response into VodokhranilishcheData."""
-    if not isinstance(data, dict):
-        return None
-    return VodokhranilishcheData(
-        code=data.get("code", ""),
-        name=data.get("name", ""),
-        region=data.get("region", ""),
-        obiem_km3=data.get("obiem_km3"),
-        ploshchad_km2=data.get("ploshchad_km2"),
-        uroven_m=data.get("uroven_m"),
-        priznak_napolneniya=data.get("priznak_napolneniya", ""),
-        data_izmereniya=data.get("data_izmereniya", ""),
-    )
+def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "code": item.get("code", "") or item.get("id", ""),
+        "name": item.get("name", "") or item.get("title", ""),
+        "region": item.get("region", ""),
+        "obiem_km3": item.get("volume") or item.get("obiem_km3"),
+        "ploshchad_km2": item.get("area") or item.get("ploshchad_km2"),
+        "uroven_m": item.get("level") or item.get("uroven_m"),
+        "priznak_napolneniya": item.get("fillStatus", "") or item.get("priznak_napolneniya", ""),
+        "data_izmereniya": item.get("date", "") or item.get("data_izmereniya", ""),
+        "istochnik": "ГМВО (gmvo.skniigkh.ru)",
+    }
 
 
-def _parse_vodopolzovanie(data: Any) -> list[Vodopolzovanie]:
-    """Parse API response into list of Vodopolzovanie."""
-    if not isinstance(data, list):
-        return []
-    results = []
-    for item in data:
-        results.append(
-            Vodopolzovanie(
-                region=item.get("region", ""),
-                god=item.get("god", ""),
-                zabrano_vody_km3=item.get("zabrano_vody_km3"),
-                ispolzovano_vody_km3=item.get("ispolzovano_vody_km3"),
-                sbrosheno_stokov_km3=item.get("sbrosheno_stokov_km3"),
-                istochnik=item.get("istochnik", ""),
-                naznachenie=item.get("naznachenie", ""),
-            )
-        )
-    return results
+def _parse_vodopolzovanie_zapis(item: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "region": item.get("region", ""),
+        "god": str(item.get("year", item.get("god", ""))),
+        "zabrano_vody_km3": item.get("withdrawn") or item.get("zabrano_vody_km3"),
+        "ispolzovano_vody_km3": item.get("used") or item.get("ispolzovano_vody_km3"),
+        "sbrosheno_stokov_km3": item.get("discharged") or item.get("sbrosheno_stokov_km3"),
+        "istochnik": item.get("source", "") or item.get("istochnik", ""),
+        "naznachenie": item.get("purpose", "") or item.get("naznachenie", ""),
+    }

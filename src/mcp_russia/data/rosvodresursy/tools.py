@@ -1,6 +1,4 @@
-"""Tool functions for the Росводресурсы feature.
-
-Tools for accessing water resources, hydrological, and reservoir data.
+"""Tools for the Росводресурсы feature.
 
 Rules (ADR-001):
     - tools.py NEVER makes HTTP directly — delegates to client.py
@@ -14,6 +12,7 @@ from fastmcp import Context
 from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
+from .constants import PRIZNAKI_NAPOLNENIYA
 
 
 async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
@@ -24,7 +23,6 @@ async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка бассейновых округов...")
     okruga = client.get_basseynovye_okruga_list()
-
     rows = [(o["code"], o["name"]) for o in okruga]
     header = "**Бассейновые округа Российской Федерации**\n\n"
     return header + markdown_table(["Код", "Бассейновый округ"], rows)
@@ -34,7 +32,7 @@ async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
     """Получить список типов водных объектов.
 
     Returns:
-        Список типов водных объектов.
+        Список типов водных объектов и гидрологических данных.
     """
     await ctx.info("Запрос списка типов водных объектов...")
     tipy = client.get_tipy_vodnykh_obektov_list()
@@ -55,14 +53,62 @@ async def spisok_vodokhranilishch(ctx: Context) -> str:
     """Получить список крупных водохранилищ.
 
     Returns:
-        Список крупных водохранилищ.
+        Список крупных водохранилищ с объёмом и площадью.
     """
     await ctx.info("Запрос списка водохранилищ...")
-    vodokhr = client.get_vodokhranilishcha_list()
+    vodokhr = client.get_vodokhranilishcha_detailed()
 
-    rows = [(v["code"], v["name"], v["region"]) for v in vodokhr]
+    rows = [
+        (v["name"], v["region"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
+        for v in vodokhr
+    ]
     header = "**Крупные водохранилища РФ**\n\n"
-    return header + markdown_table(["Код", "Водохранилище", "Регион"], rows)
+    return header + markdown_table(
+        ["Водохранилище", "Регион", "Объём (км³)", "Площадь (км²)"],
+        rows,
+    )
+
+
+async def poisk_vodnykh_obektov(
+    ctx: Context,
+    zapros: str = "",
+    tip: str = "",
+    basseyn: str = "",
+    region: str = "",
+) -> str:
+    """Поиск водных объектов в Государственном водном реестре.
+
+    Args:
+        zapros: Название или часть названия водного объекта.
+        tip: Тип водного объекта (reka, ozero, vodokhranilishche и т.д.).
+        basseyn: Код бассейнового округа.
+        region: Регион.
+
+    Returns:
+        Список найденных водных объектов.
+    """
+    await ctx.info(f"Поиск водных объектов: {zapros or 'все'}...")
+    obekty = await client.poisk_vodnykh_obektov(
+        zapros=zapros,
+        tip=tip,
+        basseyn=basseyn,
+        region=region,
+    )
+    if not obekty:
+        return "Водные объекты не найдены. Попробуйте изменить параметры поиска."
+    rows = [
+        (
+            o.get("name", ""),
+            o.get("tip", ""),
+            o.get("basseyn", ""),
+            o.get("region", ""),
+        )
+        for o in obekty
+    ]
+    return markdown_table(
+        ["Название", "Тип", "Бассейн", "Регион"],
+        rows,
+    )
 
 
 async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
@@ -75,7 +121,7 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
         Информация о водном объекте.
     """
     await ctx.info(f"Запрос информации о водном объекте {code}...")
-    data = await client.poluchit_vodnyy_obekt(code)
+    data = await client.info_vodnogo_obekta(code)
 
     if not data:
         return (
@@ -84,63 +130,68 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{data.name}**",
-        f"- Тип: {data.tip}",
-        f"- Бассейн: {data.basseyn}",
+        f"**{data.get('name', '')}**",
+        f"- Тип: {data.get('tip', '')}",
+        f"- Бассейн: {data.get('basseyn', '')}",
     ]
-    if data.dlinna_km:
-        lines.append(f"- Длина: {format_number_ru(data.dlinna_km, 1)} км")
-    if data.ploshchad_km2:
-        lines.append(f"- Площадь: {format_number_ru(data.ploshchad_km2, 1)} км²")
-    if data.region:
-        lines.append(f"- Регион: {data.region}")
-    if data.opisaniye:
-        lines.append(f"- Описание: {data.opisaniye}")
-    lines.append("- Источник: Росводресурсы (rosvodresursy.ru)")
+    if data.get("dlinna_km"):
+        lines.append(f"- Длина: {format_number_ru(data['dlinna_km'], 1)} км")
+    if data.get("ploshchad_km2"):
+        lines.append(f"- Площадь: {format_number_ru(data['ploshchad_km2'], 1)} км²")
+    if data.get("region"):
+        lines.append(f"- Регион: {data['region']}")
+    if data.get("opisaniye"):
+        lines.append(f"- Описание: {data['opisaniye']}")
+    lines.append(f"- Источник: {data.get('istochnik', 'Государственный водный реестр')}")
     return "\n".join(lines)
 
 
-async def gidro_monitoring(post: str = "", ctx: Context | None = None) -> str:
-    """Получить данные гидрологического мониторинга.
+async def gidro_monitoring(
+    ctx: Context,
+    post_id: str = "",
+    region: str = "",
+    tip_dannykh: str = "uroven",
+) -> str:
+    """Получить данные гидрологического мониторинга с постов ГМВО.
 
     Args:
-        post: Код гидрологического поста (необязательно).
+        post_id: Идентификатор гидрологического поста (необязательно).
+        region: Регион (необязательно).
+        tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
     Returns:
         Гидрологические данные.
     """
-    if not post:
+    await ctx.info("Запрос данных гидрологического мониторинга...")
+    zapisi = await client.poluchit_gidro_dannye(
+        post_id=post_id,
+        region=region,
+        tip_dannykh=tip_dannykh,
+    )
+    if not zapisi:
         return (
             "**Гидрологический мониторинг**\n\n"
-            "Для получения данных укажите код гидрологического поста.\n"
-            "Данные доступны на сайте Росводресурсов: rosvodresursy.ru"
+            "Данные не получены.\n"
+            "Мониторинговые данные доступны на:\n"
+            "- ГМВО: https://gmvo.skniigkh.ru\n"
+            "- Росводресурсы: https://rosvodresursy.ru"
         )
 
-    data = await client.poluchit_gidro_post(post)
-
-    if not data:
-        return (
-            f"Данные гидрологического поста '{post}' недоступны.\n\n"
-            f"Проверьте код поста на сайте Росводресурсов."
+    rows = [
+        (
+            z.get("post", ""),
+            z.get("vodnyy_obekt", ""),
+            z.get("data_izmereniya", ""),
+            str(z.get("uroven", "")),
+            str(z.get("raskhod", "")),
         )
-
-    lines = [
-        f"**Гидрологический пост: {data.post}**",
-        f"- Водный объект: {data.vodnyy_obekt}",
-        f"- Дата измерения: {data.data_izmereniya}",
+        for z in zapisi
     ]
-    if data.uroven is not None:
-        lines.append(f"- Уровень воды: {format_number_ru(data.uroven, 2)} м")
-    if data.raskhod is not None:
-        lines.append(f"- Расход воды: {format_number_ru(data.raskhod, 2)} м³/с")
-    if data.temperatura is not None:
-        lines.append(f"- Температура воды: {format_number_ru(data.temperatura, 1)}°C")
-    if data.ledovaya_obstanovka:
-        lines.append(f"- Ледовая обстановка: {data.ledovaya_obstanovka}")
-    if data.preduprezhdenie:
-        lines.append(f"- ⚠️ Предупреждение: {data.preduprezhdenie}")
-    lines.append("- Источник: Росводресурсы / Гидромониторинг")
-    return "\n".join(lines)
+    header = f"**Данные гидрологического мониторинга** ({tip_dannykh})\n\n"
+    return header + markdown_table(
+        ["Пост", "Водный объект", "Дата", "Уровень (м)", "Расход (м³/с)"],
+        rows,
+    )
 
 
 async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
@@ -153,35 +204,47 @@ async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
         Информация о водохранилище.
     """
     await ctx.info(f"Запрос информации о водохранилище {code}...")
-    data = await client.poluchit_vodokhranilishche(code)
+    data = await client.poluchit_dannye_vodokhranilishcha(code)
 
     if not data:
+        vodokhr_list = client.get_vodokhranilishcha_detailed()
+        static = next((v for v in vodokhr_list if v["code"] == code), None)
+        if static:
+            lines = [f"**{static['name']}** ({static['region']})"]
+            if static.get("obiem_km3"):
+                lines.append(f"- Объём: {format_number_ru(static['obiem_km3'], 2)} км³")
+            if static.get("ploshchad_km2"):
+                lines.append(f"- Площадь: {format_number_ru(static['ploshchad_km2'], 1)} км²")
+            lines.append("- Источник: Справочник Росводресурсов")
+            return "\n".join(lines)
         return (
             f"Водохранилище с кодом '{code}' не найдено.\n\n"
             f"Используйте spisok_vodokhranilishch() для списка водохранилищ."
         )
 
     lines = [
-        f"**{data.name}** ({data.region})",
+        f"**{data.get('name', '')}** ({data.get('region', '')})",
     ]
-    if data.obiem_km3:
-        lines.append(f"- Объём: {format_number_ru(data.obiem_km3, 2)} км³")
-    if data.ploshchad_km2:
-        lines.append(f"- Площадь: {format_number_ru(data.ploshchad_km2, 1)} км²")
-    if data.uroven_m is not None:
-        lines.append(f"- Уровень: {format_number_ru(data.uroven_m, 2)} м")
-    if data.priznak_napolneniya:
-        lines.append(f"- Наполнение: {data.priznak_napolneniya}")
-    if data.data_izmereniya:
-        lines.append(f"- Дата измерения: {data.data_izmereniya}")
-    lines.append("- Источник: Росводресурсы (rosvodresursy.ru)")
+    if data.get("obiem_km3"):
+        lines.append(f"- Объём: {format_number_ru(data['obiem_km3'], 2)} км³")
+    if data.get("ploshchad_km2"):
+        lines.append(f"- Площадь: {format_number_ru(data['ploshchad_km2'], 1)} км²")
+    if data.get("uroven_m") is not None:
+        lines.append(f"- Уровень: {format_number_ru(data['uroven_m'], 2)} м")
+    nap = data.get("priznak_napolneniya", "")
+    if nap:
+        nap_name = PRIZNAKI_NAPOLNENIYA.get(nap, nap)
+        lines.append(f"- Наполнение: {nap_name}")
+    if data.get("data_izmereniya"):
+        lines.append(f"- Дата измерения: {data['data_izmereniya']}")
+    lines.append(f"- Источник: {data.get('istochnik', 'ГМВО')}")
     return "\n".join(lines)
 
 
 async def vodopolzovanie_regionov(
+    ctx: Context,
     region: str = "",
     god: str = "",
-    ctx: Context | None = None,
 ) -> str:
     """Получить данные о водопользовании по регионам.
 
@@ -192,6 +255,7 @@ async def vodopolzovanie_regionov(
     Returns:
         Данные о водопользовании.
     """
+    await ctx.info("Запрос данных о водопользовании...")
     data = await client.poluchit_vodopolzovanie(region=region, god=god)
 
     if not data:
@@ -206,23 +270,18 @@ async def vodopolzovanie_regionov(
             f"Данные доступны на сайте Росводресурсов: rosvodresursy.ru"
         )
 
-    lines = [f"**Водопользование** — записей: {len(data)}\n"]
-    for v in data[:10]:
-        lines.append(f"**{v.region}** ({v.god})")
-        if v.zabrano_vody_km3:
-            lines.append(f"- Забрано воды: {format_number_ru(v.zabrano_vody_km3, 3)} км³")
-        if v.ispolzovano_vody_km3:
-            lines.append(f"- Использовано: {format_number_ru(v.ispolzovano_vody_km3, 3)} км³")
-        if v.sbrosheno_stokov_km3:
-            lines.append(f"- Сброшено стоков: {format_number_ru(v.sbrosheno_stokov_km3, 3)} км³")
-        if v.istochnik:
-            lines.append(f"- Источник: {v.istochnik}")
-        if v.naznachenie:
-            lines.append(f"- Назначение: {v.naznachenie}")
-        lines.append("")
-
-    if len(data) > 10:
-        lines.append(f"\n... и ещё {len(data) - 10} записей")
-
-    lines.append("- Источник: Росводресурсы (rosvodresursy.ru)")
-    return "\n".join(lines)
+    rows = [
+        (
+            v.get("region", ""),
+            v.get("god", ""),
+            str(v.get("zabrano_vody_km3", "")),
+            str(v.get("ispolzovano_vody_km3", "")),
+            str(v.get("sbrosheno_stokov_km3", "")),
+        )
+        for v in data
+    ]
+    header = f"**Водопользование** — записей: {len(data)}\n\n"
+    return header + markdown_table(
+        ["Регион", "Год", "Забрано (км³)", "Использовано (км³)", "Сброс стоков (км³)"],
+        rows,
+    )

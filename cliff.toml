@@ -5,7 +5,7 @@
 header = """
 # Changelog
 
-Todas as mudanças notáveis do mcp-russia estão documentadas neste arquivo.\n
+Все заметные изменения mcp-russia документированы в этом файле.\n
 """
 
 body = """

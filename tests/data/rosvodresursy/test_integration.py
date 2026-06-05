@@ -21,6 +21,7 @@ async def test_has_tools(client):
         "spisok_basseynovykh_okrugov",
         "spisok_tipov_vodnykh_obektov",
         "spisok_vodokhranilishch",
+        "poisk_vodnykh_obektov",
         "info_vodnogo_obekta",
         "gidro_monitoring",
         "info_vodokhranilishcha",
@@ -72,7 +73,6 @@ async def test_spisok_vodokhranilishch(client):
 
 
 async def test_gidro_monitoring(client):
-    """Проверка работы инструмента gidro_monitoring."""
     async with client:
-        result = await client.call_tool("gidro_monitoring", {"post": ""})
+        result = await client.call_tool("gidro_monitoring", {"post_id": ""})
     assert result is not None

@@ -1,6 +1,4 @@
-"""Tool functions for the MinZdrav (Минздрав РФ) feature.
-
-Tools for searching medical organizations, doctors, health indicators, and disease statistics.
+"""Tools for the Минздрав РФ feature.
 
 Rules (ADR-001):
     - tools.py NEVER makes HTTP directly — delegates to client.py
@@ -17,56 +15,57 @@ from . import client
 
 
 async def poisk_med_organizatsiy(
+    ctx: Context,
     region: str = "",
     tip: str = "",
     gorod: str = "",
-    ctx: Context | None = None,
 ) -> str:
-    """Поиск медицинских организаций по параметрам.
+    """Поиск медицинских организаций в ФРМО.
 
     Args:
-        region: Субъект РФ.
-        tip: Тип организации (больница, поликлиника и т.д.).
-        gorod: Город.
+        region: Субъект РФ (необязательно).
+        tip: Тип организации — больница, поликлиника и т.д. (необязательно).
+        gorod: Город (необязательно).
 
     Returns:
-        Результаты поиска медицинских организаций.
+        Список медицинских организаций.
     """
-    if ctx:
-        await ctx.info(f"Поиск медицинских организаций: {region or 'все'}...")
-
-    header = "**Медицинские организации РФ**\n\n"
-
-    filters = []
-    if region:
-        filters.append(f"Регион: {region}")
-    if tip:
-        filters.append(f"Тип: {tip}")
-    if gorod:
-        filters.append(f"Город: {gorod}")
-
-    if filters:
-        header += "Фильтры: " + ", ".join(filters) + "\n\n"
-
-    header += (
-        "Данные о медицинских организациях доступны через:\n"
-        "- Минздрав РФ: https://minzdrav.gov.ru\n"
-        "- Открытые данные: https://data.minzdrav.gov.ru\n"
-        "- Росздравнадзор: https://roszdravnadzor.gov.ru\n\n"
-        "Реестр включает: больницы, поликлиники, диспансеры, станции скорой помощи, "
-        "родильные дома, хосписы, санатории, ФАПы."
+    await ctx.info(f"Поиск медицинских организаций: {region or 'все'}...")
+    orgs = await client.poisk_med_organizatsiy(
+        region=region,
+        tip=tip,
+        gorod=gorod,
     )
-    return header
+    if not orgs:
+        return (
+            "Медицинские организации не найдены.\n\n"
+            "Данные доступны через:\n"
+            "- ФРМО: https://frrr.rosminzdrav.ru\n"
+            "- Росздравнадзор: https://roszdravnadzor.gov.ru"
+        )
+    rows = [
+        (
+            o.get("name", ""),
+            o.get("tip", ""),
+            o.get("region", ""),
+            o.get("city", ""),
+        )
+        for o in orgs
+    ]
+    return markdown_table(
+        ["Название", "Тип", "Регион", "Город"],
+        rows,
+    )
 
 
 async def info_med_organizatsii(
-    id_mo: str,
     ctx: Context,
+    id_mo: str,
 ) -> str:
     """Получить информацию о конкретной медицинской организации.
 
     Args:
-        id_mo: Идентификатор медицинской организации.
+        id_mo: Идентификатор медицинской организации (ОГРН или ИНН).
 
     Returns:
         Подробная информация о медицинской организации.
@@ -81,25 +80,63 @@ async def info_med_organizatsii(
         )
 
     lines = [
-        f"**{mo.name}**",
-        f"- Тип: {mo.tip}",
-        f"- Адрес: {mo.adres}",
-        f"- Регион: {mo.region}",
-        f"- Город: {mo.city}",
-        f"- Телефон: {mo.telefon}",
-        f"- Лицензия: {mo.litsenzia}",
-        f"- Коек: {mo.krovatey}",
-        f"- Врачей: {mo.vrachey}",
+        f"**{mo.get('name', '')}**",
+        f"- Тип: {mo.get('tip', '')}",
+        f"- Адрес: {mo.get('adres', '')}",
+        f"- Регион: {mo.get('region', '')}",
+        f"- Город: {mo.get('city', '')}",
+        f"- Телефон: {mo.get('telefon', '')}",
+        f"- Лицензия: {mo.get('litsenzia', '')}",
+        f"- Коек: {mo.get('krovatey', 0)}",
+        f"- Врачей: {mo.get('vrachey', 0)}",
+        f"- Источник: {mo.get('istochnik', 'ФРМО')}",
     ]
     return "\n".join(lines)
 
 
-async def pokazateli_zdorovya(
-    region: str = "",
-    god: int = 2026,
-    ctx: Context | None = None,
+async def poisk_litsenziy(
+    ctx: Context,
+    inn: str = "",
+    vid: str = "",
 ) -> str:
-    """Получить показатели здоровья населения.
+    """Поиск лицензий Росздравнадзора на медицинскую деятельность.
+
+    Args:
+        inn: ИНН организации (необязательно).
+        vid: Вид лицензируемой деятельности (необязательно).
+
+    Returns:
+        Список лицензий.
+    """
+    await ctx.info("Поиск лицензий Росздравнадзора...")
+    litsenzii = await client.poisk_litsenziy(inn=inn, vid=vid)
+    if not litsenzii:
+        return (
+            "Лицензии не найдены.\n\n"
+            "Реестр лицензий Росздравнадзора: https://roszdravnadzor.gov.ru"
+        )
+    rows = [
+        (
+            lit.get("nomer", ""),
+            lit.get("organizaciya", ""),
+            lit.get("vid_deyatelnosti", ""),
+            lit.get("status", ""),
+            lit.get("data_okonchaniya", ""),
+        )
+        for lit in litsenzii
+    ]
+    return markdown_table(
+        ["№ лицензии", "Организация", "Вид деятельности", "Статус", "Действует до"],
+        rows,
+    )
+
+
+async def pokazateli_zdorovya(
+    ctx: Context,
+    region: str = "",
+    god: int = 0,
+) -> str:
+    """Получить показатели здоровья населения из открытых данных Минздрава.
 
     Args:
         region: Субъект РФ (пусто = вся Россия).
@@ -108,29 +145,36 @@ async def pokazateli_zdorovya(
     Returns:
         Показатели здоровья населения.
     """
-    if ctx:
-        await ctx.info(f"Запрос показателей здоровья: {region or 'РФ'}, {god}...")
-
-    return (
-        f"**Показатели здоровья населения ({god} год)**\n\n"
-        f"Регион: {region or 'Вся Россия'}\n\n"
-        f"Основные показатели:\n"
-        f"- Ожидаемая продолжительность жизни\n"
-        f"- Общая смертность\n"
-        f"- Младенческая смертность\n"
-        f"- Общая заболеваемость\n"
-        f"- Обеспеченность больничными койками\n"
-        f"- Обеспеченность врачами\n\n"
-        f"Данные доступны через открытые источники Минздрава:\n"
-        f"https://data.minzdrav.gov.ru"
+    await ctx.info(f"Запрос показателей здоровья: {region or 'РФ'}, {god or 'последние'}...")
+    data = await client.pokazateli_zdorovya(region=region, god=god)
+    if not data:
+        return (
+            f"**Показатели здоровья населения**\n\n"
+            f"Регион: {region or 'Вся Россия'}\n\n"
+            f"Данные доступны через открытые источники Минздрава:\n"
+            f"https://data.minzdrav.gov.ru"
+        )
+    rows = [
+        (
+            p.get("name", ""),
+            str(p.get("znachenie", "")),
+            p.get("ed_izm", ""),
+            str(p.get("god", "")),
+            p.get("region", ""),
+        )
+        for p in data
+    ]
+    return markdown_table(
+        ["Показатель", "Значение", "Ед. изм.", "Год", "Регион"],
+        rows,
     )
 
 
 async def statistika_zabolevaniy(
+    ctx: Context,
     mkb_code: str = "",
     region: str = "",
-    god: int = 2026,
-    ctx: Context | None = None,
+    god: int = 0,
 ) -> str:
     """Получить статистику заболеваний по МКБ-10.
 
@@ -142,27 +186,33 @@ async def statistika_zabolevaniy(
     Returns:
         Статистика заболеваний.
     """
-    if ctx:
-        await ctx.info(f"Запрос статистики заболеваний: {mkb_code or 'все'}, {god}...")
-
-    header = f"**Статистика заболеваний ({god} год)**\n\n"
-    if mkb_code:
-        header += f"Код МКБ-10: {mkb_code}\n"
-    if region:
-        header += f"Регион: {region}\n"
-
-    header += (
-        "\nДанные о заболеваемости доступны через:\n"
-        "- Минздрав РФ: https://minzdrav.gov.ru\n"
-        "- Открытые данные: https://data.minzdrav.gov.ru\n\n"
-        "Классификация заболеваний по МКБ-10 включает основные классы:\n"
-        "- A00-B99: Инфекционные и паразитарные болезни\n"
-        "- C00-D48: Новообразования\n"
-        "- I00-I99: Болезни системы кровообращения\n"
-        "- J00-J99: Болезни органов дыхания\n"
-        "- K00-K93: Болезни органов пищеварения"
+    await ctx.info(f"Запрос статистики заболеваний: {mkb_code or 'все'}, {god or 'последние'}...")
+    data = await client.statistika_zabolevaniy(mkb_code=mkb_code, region=region, god=god)
+    if not data:
+        header = "**Статистика заболеваний**\n\n"
+        if mkb_code:
+            header += f"Код МКБ-10: {mkb_code}\n"
+        if region:
+            header += f"Регион: {region}\n"
+        header += (
+            "\nДанные о заболеваемости доступны через:\n"
+            "- Открытые данные Минздрава: https://data.minzdrav.gov.ru\n"
+        )
+        return header
+    rows = [
+        (
+            z.get("mkb_code", ""),
+            z.get("name", ""),
+            str(z.get("chelovek_zabolelo", "")),
+            str(z.get("letalnykh_sluchaev", "")),
+            str(z.get("god", "")),
+        )
+        for z in data
+    ]
+    return markdown_table(
+        ["МКБ-10", "Заболевание", "Заболевших", "Летальных", "Год"],
+        rows,
     )
-    return header
 
 
 async def spravochnik_mo(ctx: Context) -> str:
@@ -173,7 +223,6 @@ async def spravochnik_mo(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника типов медицинских организаций...")
     tipy = client.get_tipy_mo()
-
     rows = [(t["code"], t["name"]) for t in tipy]
     header = "**Типы медицинских организаций**\n\n"
     return header + markdown_table(["Код", "Тип организации"], rows)
@@ -187,7 +236,6 @@ async def spravochnik_spetsialnostey(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.get_spetsialnosti()
-
     rows = [(s["code"], s["name"]) for s in spetsialnosti]
     header = "**Врачебные специальности**\n\n"
     return header + markdown_table(["Код", "Специальность"], rows)
@@ -201,7 +249,6 @@ async def spravochnik_mkb10(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника МКБ-10...")
     mkb_classes = client.get_mkb10_classes()
-
     rows = [(m["code"], m["name"]) for m in mkb_classes]
     header = "**Классы МКБ-10**\n\n"
     return header + markdown_table(["Код", "Класс заболеваний"], rows)

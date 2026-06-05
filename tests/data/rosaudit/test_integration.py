@@ -21,6 +21,7 @@ async def test_has_tools(client):
         "spisok_napravleniy",
         "spisok_tipov_meropriyatiy",
         "spisok_subiektov_audita",
+        "poisk_kontrolnyh_meropriyatiy",
         "info_kontrolnogo_meropriyatiya",
         "info_auditorskogo_zaklyucheniya",
         "ispolnenie_byudzheta",

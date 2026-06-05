@@ -2,11 +2,14 @@
 
 # Федеральное агентство водных ресурсов (Росводресурсы)
 # Основные источники данных:
-# 1. Официальный сайт: https://rosvodresursy.ru
-# 2. Государственный водный реестр: https://text.water.ru
-# 3. Гидрологический мониторинг: https://hydromonitor.ru
+# 1. Государственный водный реестр: https://text.water.ru
+# 2. ГМВО (гидромониторинг): https://gmvo.skniigkh.ru
+# 3. Открытые данные: https://data.gov.ru
+# 4. Официальный сайт: https://rosvodresursy.ru
 
-ROSVODRESURSY_API_BASE = "https://api.rosvodresursy.ru/v1"
+VODNYY_REESTR_BASE = "https://text.water.ru"
+GMVO_API_BASE = "https://gmvo.skniigkh.ru"
+DATA_GOV_RU_BASE = "https://data.gov.ru/api/v1"
 
 # Бассейновые округа РФ
 BASSEYNOVYE_OKRUGA = [
@@ -25,7 +28,7 @@ BASSEYNOVYE_OKRUGA = [
     {"code": "13", "name": "Байкальский бассейновый округ"},
     {"code": "14", "name": "Каспийский бассейновый округ"},
     {"code": "15", "name": "Охотский бассейновый округ"},
-    {"code": "16", "name": "Беломоро-Баренцевский бассейновый округ"},
+    {"code": "16", "name": "Беломоро-Баренцевый бассейновый округ"},
     {"code": "17", "name": "Анадыро-Корякский бассейновый округ"},
     {"code": "18", "name": "Камчатский бассейновый округ"},
     {"code": "19", "name": "Сахалинский бассейновый округ"},
@@ -54,36 +57,94 @@ TIPY_GIDRO_DANNYKH = [
     {"code": "navodnenie", "name": "Паводковая обстановка"},
 ]
 
-# Крупные водохранилища
+# Крупные водохранилища с характеристиками
 KRUPNYE_VODOKHRANILISHCHA = [
     {
         "code": "bratsk",
         "name": "Братское водохранилище",
         "region": "Иркутская область",
+        "obiem_km3": 169.0,
+        "ploshchad_km2": 5470,
     },
     {
         "code": "kuybyshev",
         "name": "Куйбышевское водохранилище",
         "region": "Самарская область",
+        "obiem_km3": 58.0,
+        "ploshchad_km2": 6450,
     },
     {
         "code": "volgograd",
         "name": "Волгоградское водохранилище",
         "region": "Волгоградская область",
+        "obiem_km3": 31.5,
+        "ploshchad_km2": 3117,
     },
     {
         "code": "tsimlyansk",
         "name": "Цимлянское водохранилище",
         "region": "Ростовская область",
+        "obiem_km3": 23.9,
+        "ploshchad_km2": 2702,
     },
     {
         "code": "kama",
         "name": "Камское водохранилище",
         "region": "Пермский край",
+        "obiem_km3": 12.2,
+        "ploshchad_km2": 1915,
     },
     {
         "code": "rybinsk",
         "name": "Рыбинское водохранилище",
         "region": "Ярославская область",
+        "obiem_km3": 25.4,
+        "ploshchad_km2": 4550,
+    },
+    {
+        "code": "sayano_shushensk",
+        "name": "Саяно-Шушенское водохранилище",
+        "region": "Республика Хакасия",
+        "obiem_km3": 31.3,
+        "ploshchad_km2": 621,
+    },
+    {
+        "code": "krasnoyarsk",
+        "name": "Красноярское водохранилище",
+        "region": "Красноярский край",
+        "obiem_km3": 73.3,
+        "ploshchad_km2": 2000,
+    },
+    {
+        "code": "zeya",
+        "name": "Зейское водохранилище",
+        "region": "Амурская область",
+        "obiem_km3": 68.4,
+        "ploshchad_km2": 2419,
+    },
+    {
+        "code": "bureya",
+        "name": "Бурейское водохранилище",
+        "region": "Амурская область",
+        "obiem_km3": 20.9,
+        "ploshchad_km2": 743,
     },
 ]
+
+# Признаки наполнения водохранилищ
+PRIZNAKI_NAPOLNENIYA = {
+    "normalnoe": "Нормальное",
+    "nizkoe": "Ниже нормы",
+    "vysokoe": "Выше нормы",
+    "kriticheskoe": "Критическое",
+}
+
+# Опасные гидрологические явления
+OPASNYYE_GIDRO_YAVLENIYA = {
+    "navodnenie": "Наводнение",
+    "pavodok": "Паводок",
+    "polovode": "Половодье",
+    "zator": "Затор льда",
+    "zazhor": "Зажор льда",
+    "selevoy_potok": "Селевой поток",
+}

@@ -20,6 +20,7 @@ async def test_has_tools(client):
     expected = {
         "poisk_med_organizatsiy",
         "info_med_organizatsii",
+        "poisk_litsenziy",
         "pokazateli_zdorovya",
         "statistika_zabolevaniy",
         "spravochnik_mo",
@@ -72,9 +73,8 @@ async def test_spravochnik_mo(client):
 
 
 async def test_pokazateli_zdorovya(client):
-    """Проверка работы инструмента pokazateli_zdorovya."""
     async with client:
         result = await client.call_tool("pokazateli_zdorovya", {"god": 2024})
     assert result is not None
     text = str(result)
-    assert "2024" in text or "продолжительность" in text
+    assert "Показатели" in text or "Минздрав" in text

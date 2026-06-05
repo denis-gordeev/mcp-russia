@@ -1,4 +1,4 @@
-"""Testes do FeatureRegistry e FeatureMeta."""
+"""Тесты FeatureRegistry и FeatureMeta."""
 
 import os
 from unittest.mock import patch
@@ -25,7 +25,7 @@ class TestFeatureMeta:
     def test_create_with_auth(self) -> None:
         meta = FeatureMeta(
             name="transparencia",
-            description="Portal da Transparência",
+            description="Портал прозрачности",
             requires_auth=True,
             auth_env_var="TRANSPARENCIA_API_KEY",
         )
@@ -87,19 +87,19 @@ class TestFeatureRegistry:
         assert registry.skipped == {}
 
     def test_discover_returns_self_for_chaining(self) -> None:
-        """discover() retorna self para permitir chaining."""
+        """discover() возвращает self для цепочки вызовов."""
         registry = FeatureRegistry()
         result = registry.discover("mcp_russia.data")
         assert result is registry
 
     def test_discover_finds_ibge(self) -> None:
-        """Discovery encontra a feature ibge in data package."""
+        """Discovery находит feature ibge в пакете data."""
         registry = FeatureRegistry()
         registry.discover("mcp_russia.data")
         assert "ibge" in registry.features
 
     def test_discover_finds_redator(self) -> None:
-        """Discovery encontra a feature redator in agentes package."""
+        """Discovery находит feature redator в пакете agenty."""
         registry = FeatureRegistry()
         registry.discover("mcp_russia.agenty")
         assert "redator" in registry.features
@@ -115,13 +115,13 @@ class TestFeatureRegistry:
         assert registry.get_feature("nonexistent") is None
 
     def test_mount_all_empty(self) -> None:
-        """Mount com registry vazio não levanta exceção."""
+        """Mount с пустым registry не вызывает исключение."""
         registry = FeatureRegistry()
         root = FastMCP("test-root")
         registry.mount_all(root)  # should not raise
 
     def test_register_and_mount_manual(self) -> None:
-        """Registra uma feature manualmente e monta no root."""
+        """Регистрирует feature вручную и монтирует в root."""
         registry = FeatureRegistry()
 
         meta = FeatureMeta(name="test_feat", description="Test feature")
@@ -146,13 +146,13 @@ class TestFeatureRegistry:
 
     def test_summary_with_features(self) -> None:
         registry = FeatureRegistry()
-        meta = FeatureMeta(name="ibge", description="IBGE dados")
+        meta = FeatureMeta(name="ibge", description="IBGE данные")
         sub = FastMCP("sub")
         registry._features["ibge"] = RegisteredFeature(meta=meta, server=sub, module_path="m")
         summary = registry.summary()
         assert "1 feature(s) active" in summary
         assert "ibge" in summary
-        assert "IBGE dados" in summary
+        assert "IBGE данные" in summary
 
     def test_summary_with_skipped(self) -> None:
         registry = FeatureRegistry()
@@ -176,14 +176,14 @@ class TestFeatureRegistry:
 
 
 # ---------------------------------------------------------------------------
-# Integration: mount e call via fastmcp.Client
+# Интеграция: монтирование и вызов через fastmcp.Client
 # ---------------------------------------------------------------------------
 
 
 class TestRegistryIntegration:
     @pytest.mark.asyncio
     async def test_mounted_tool_callable(self) -> None:
-        """Tool montada via registry é chamável pelo Client."""
+        """Инструмент, подключённый через registry, вызывается через Client."""
         sub = FastMCP("sub")
 
         @sub.tool
@@ -200,7 +200,7 @@ class TestRegistryIntegration:
 
     @pytest.mark.asyncio
     async def test_root_server_starts_empty(self) -> None:
-        """Root server sem features montadas funciona."""
+        """Root-сервер без подключённых features работает."""
         from mcp_russia.server import mcp
 
         async with Client(mcp) as client:

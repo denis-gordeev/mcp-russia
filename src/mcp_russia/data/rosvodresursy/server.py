@@ -15,6 +15,7 @@ from .tools import (
     gidro_monitoring,
     info_vodnogo_obekta,
     info_vodokhranilishcha,
+    poisk_vodnykh_obektov,
     spisok_basseynovykh_okrugov,
     spisok_tipov_vodnykh_obektov,
     spisok_vodokhranilishch,
@@ -27,6 +28,7 @@ mcp = FastMCP("mcp-russia-rosvodresursy")
 mcp.tool(spisok_basseynovykh_okrugov, tags={"бассейновые-округа", "справочник"})
 mcp.tool(spisok_tipov_vodnykh_obektov, tags={"типы-водных-объектов", "справочник"})
 mcp.tool(spisok_vodokhranilishch, tags={"водохранилища", "справочник"})
+mcp.tool(poisk_vodnykh_obektov, tags={"водный-объект", "поиск"})
 mcp.tool(info_vodnogo_obekta, tags={"водный-объект", "информация"})
 mcp.tool(gidro_monitoring, tags={"гидрология", "мониторинг"})
 mcp.tool(info_vodokhranilishcha, tags={"водохранилище", "информация"})

@@ -2,6 +2,65 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-05 (двадцать девятый проход — Росводресурсы, Минздрав, Счётная палата, зачистка португальского)
+
+### Выполнено
+
+- **Подключение реального API Государственного водного реестра в модуле Росводресурсы (rosvodresursy)**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к text.water.ru и gmvo.skniigkh.ru
+  - `poisk_vodnykh_obektov()` — поиск водных объектов через Государственный водный реестр (text.water.ru)
+  - `info_vodnogo_obekta()` — карточка водного объекта из реестра
+  - `poluchit_gidro_dannye()` — гидрологические данные с мониторинговых постов ГМВО (gmvo.skniigkh.ru)
+  - `poluchit_dannye_vodokhranilishcha()` — данные о водохранилищах через ГМВО
+  - `poluchit_vodopolzovanie()` — данные о водопользовании из открытых источников
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлен инструмент `poisk_vodnykh_obektov`; `info_vodokhranilishcha` — fallback на статический справочник при отсутствии данных API
+  - `constants.py`: добавлены `VODNYY_REESTR_BASE`, `GMVO_API_BASE`, `DATA_GOV_RU_BASE`, `PRIZNAKI_NAPOLNENIYA`, `OPASNYYE_GIDRO_YAVLENIYA`; расширены данные водохранилищ (6→10, добавлены объём и площадь)
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API ФРМО и Росздравнадзора в модуле Минздрав (minzdrav)**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к data.minzdrav.gov.ru, roszdravnadzor.gov.ru и frrr.rosminzdrav.ru
+  - `poisk_med_organizatsiy()` — поиск медицинских организаций через ФРМО (frrr.rosminzdrav.ru)
+  - `info_med_organizatsii()` — карточка МО через ФРМО
+  - `poisk_litsenziy()` — новый инструмент: поиск лицензий Росздравнадзора
+  - `pokazateli_zdorovya()` — показатели здоровья из открытых данных Минздрава (data.minzdrav.gov.ru)
+  - `statistika_zabolevaniy()` — статистика заболеваемости из открытых данных Минздрава
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлен инструмент `poisk_litsenziy`
+  - `constants.py`: добавлены `MINZDRAV_OPEN_DATA`, `FRMO_API_BASE`, `ROSZDRAVNADZOR_API`, `VIDY_LITSENZIRUEMOY_DEYATELNOSTI`; расширены справочники (ТИПЫ_МО 8→12, СПЕЦИАЛЬНОСТИ 10→15, МКБ-10 8→10)
+  - Версия модуля: 0.1.0 → 0.2.0
+- **Подключение реального API Счётной палаты в модуле rosaudit**:
+  - `client.py`: полная переработка — заглушки заменены на реальные запросы к ach.gov.ru и budget.gov.ru
+  - `poisk_kontrolnyh_meropriyatiy()` — новый инструмент: поиск контрольных мероприятий через ach.gov.ru
+  - `poluchit_kontrolnoe_meropriyatie()` — карточка мероприятия по номеру
+  - `poluchit_auditorskoe_zaklyuchenie()` — аудиторское заключение по номеру
+  - `poluchit_byudzhet_ispolnenie()` — данные об исполнении бюджета через budget.gov.ru
+  - `poisk_narusheniy()` — поиск выявленных нарушений через ach.gov.ru
+  - `tools.py`: все инструменты переведены на async с Context, форматированный вывод; добавлен инструмент `poisk_kontrolnyh_meropriyatiy`
+  - `constants.py`: добавлены `BUDGET_GOV_RU_BASE`, `STATUSY_KONTROLYA`, `VIDY_NARUSHENIY`; расширены справочники (ТИПЫ_МЕРОПРИЯТИЙ 6→8, СУБЪЕКТЫ_АУДИТА 5→7); исправлен mixed-script код `antiкоррупция` → `antikorruptsiya`
+  - Версия модуля: 0.2.0
+- **Зачистка оставшегося португальского текста**:
+  - `cliff.toml`: португальский header changelog заменён на русский
+  - `tests/_shared/test_feature.py`: все португальские docstrings переведены на русский; `IBGE dados` → `IBGE данные`; `Portal da Transparência` → `Портал прозрачности`; раздел `Integration: mount e call` → `Интеграция: монтирование и вызов`
+  - `tests/_shared/test_settings.py`: португальский docstring переведён; `MCP_BRASIL_HTTP_TIMEOUT` → `MCP_RUSSIA_HTTP_TIMEOUT`
+- **Обновлены тесты**:
+  - rosvodresursy: 14 тестов (было 7) — добавлены тесты с моками (poisk found/empty, info found, gidro with data, vodokhranilishche static fallback, vodopolzovanie with data)
+  - minzdrav: 14 тестов (было 10) — добавлены тесты с моками (poisk found/empty, info found, poisk_litsenziy found/empty, pokazateli found/empty, statistika found/empty)
+  - rosaudit: 14 тестов (было 7) — добавлены тесты с моками (poisk_kontrolnyh found/empty, info_kontrolnogo found, info_auditorskogo found, ispolnenie found, poisk_narusheniy found)
+- **Обновлён README.md**: все 19 модулей подключены к реальным API
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002 ignores для `tests/_shared/*`, `tests/data/rosvodresursy/*`, `tests/data/rospotrebnadzor/*`, `tests/data/roskomnadzor/*`, `tests/data/fssp/*`, `tests/data/publikatsii/*`, `tests/data/cekrf/*`
+- **Прогнаны все проверки**: `pytest` (1974 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Росводресурсы работает через Государственный водный реестр + ГМВО**: text.water.ru — поиск и карточки водных объектов; gmvo.skniigkh.ru — гидрологический мониторинг и данные водохранилищ; fallback на статический справочник водохранилищ при недоступности API
+- **Минздрав работает через ФРМО + открытые данные + Росздравнадзор**: frrr.rosminzdrav.ru — реестр медицинских организаций; data.minzdrav.gov.ru — показатели здоровья и заболеваемость; roszdravnadzor.gov.ru — реестр лицензий
+- **Счётная палата работает через ach.gov.ru + budget.gov.ru**: ach.gov.ru — контрольные мероприятия, аудиторские заключения, нарушения; budget.gov.ru — исполнение федерального бюджета
+- **Итого модулей с реальными API-интерфейсами**: 19 (все российские модули подключены: cbrf, rosgidromet, fns, gosduma, zakupki, kad_arbitrazh, rosapi, rosreestr, gibdd, cekrf, fssp, publikatsii, minobrnauki, rospotrebnadzor, roskomnadzor, rosstat, rosvodresursy, minzdrav, rosaudit)
+
+### Следующие действия
+
+- **Создание новых модулей**: Совет Федерации (sovfed), Федеральное казначейство (kaznacheistvo), Росприроднадзор (rosprirodnadzor)
+- **Углубление интеграций**: расширение данных по регионам (Росстат), добавление EMISS-кодов для ВРП/зарплат
+- **Дочистить оставшиеся португальские формулировки** в deprecated Brazilian модулях и тестах
+
 ## Статус раунда 2026-06-05 (двадцать восьмой проход — Минобрнауки, Роспотребнадзор, Роскомнадзор, Росстат, зачистка ссылок)
 
 ### Выполнено
