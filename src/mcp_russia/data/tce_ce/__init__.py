@@ -20,4 +20,5 @@ FEATURE_META = FeatureMeta(
     api_base="https://api-dados-abertos.tce.ce.gov.br",
     requires_auth=False,
     tags=["⚠️ DEPRECATED", "tce", "ce", "licitacoes", "contratos", "empenhos", "бразилия-legacy"],
+    enabled=False,
 )

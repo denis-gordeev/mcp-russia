@@ -37,4 +37,5 @@ FEATURE_META = FeatureMeta(
         "ncm",
         "pix",
     ],
+    enabled=False,
 )

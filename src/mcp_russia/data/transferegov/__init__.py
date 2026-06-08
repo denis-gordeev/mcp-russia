@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "municipio",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

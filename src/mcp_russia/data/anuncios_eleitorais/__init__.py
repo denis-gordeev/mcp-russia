@@ -29,4 +29,5 @@ FEATURE_META = FeatureMeta(
         "прозрачность",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

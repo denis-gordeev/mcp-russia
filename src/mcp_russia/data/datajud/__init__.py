@@ -27,4 +27,5 @@ FEATURE_META = FeatureMeta(
         "datajud",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

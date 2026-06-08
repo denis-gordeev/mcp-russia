@@ -33,4 +33,5 @@ FEATURE_META = FeatureMeta(
         "pib",
         "selic",
     ],
+    enabled=False,
 )

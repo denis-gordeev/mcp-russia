@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "chuva",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

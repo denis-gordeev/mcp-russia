@@ -2,6 +2,59 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-08 (тридцатый проход — отключение legacy-модулей, новые модули: Совет Федерации, Казначейство, Росприроднадзор)
+
+### Выполнено
+
+- **Отключение всех 27 legacy-модулей с бразильскими данными** (`enabled=False`):
+  - ana, anuncios_eleitorais, bacen, brasilapi, camara, compras, dados_abertos, datajud, diario_oficial, ibge, inpe, jurisprudencia, saude, senado, tabua_mares, tce_ce, tce_pe, tce_pi, tce_rj, tce_rn, tce_rs, tce_sc, tce_sp, tce_to, tcu, transferegov, transparencia, tse
+  - Все португальские инструменты больше не экспонируются через сервер
+  - Модули сохранены в кодовой базе для справки, но не загружаются
+- **Создание модуля Совет Федерации (sovfed)**:
+  - `client.py`: poisk_senatorov, info_senatora, spisok_komitetov, spisok_komissiy, poisk_zakonoproektov, spisok_zasedaniy
+  - `tools.py`: 6 инструментов с async + Context, форматированный вывод через markdown_table
+  - `constants.py`: 16 комитетов, 7 комиссий, статусы законопроектов, должности сенаторов
+  - `schemas.py`: SenatorRezyume, KomitetInfo, ZasedanieInfo, ZakonoproektSovfeda
+  - `resources.py`: istochniki_dannyh, struktura_sovfeda, reglament
+  - `prompts.py`: analiz_senatora, obzor_zakonodatelstva
+  - `server.py`: FastMCP с 6 tools, 3 resources, 2 prompts
+- **Создание модуля Федеральное казначейство (kaznacheistvo)**:
+  - `client.py`: poluchit_ispolnenie_byudzheta, poisk_uchastnikov_bp, poisk_uchrezhdeniy, poluchit_mezhbyudzhetnye, poluchit_byudzhetnuyu_smetu
+  - `tools.py`: 6 инструментов с async + Context
+  - `constants.py`: виды бюджетов, категории расходов, статусы исполнения
+  - `schemas.py`: ByudzhetnayaSmeta, UchastnikBP, SvedeniyaUchrezhdeniya, MezhbyudzhetnyyTransfer
+  - `resources.py`: istochniki_dannyh, struktura_kaznacheistva, byudzhetnaya_sistema
+  - `prompts.py`: analiz_ispolneniya_byudzheta, obzor_byudzhetnoy_sistemy
+- **Создание модуля Росприроднадзор (rosprirodnadzor)**:
+  - `client.py`: poisk_proverok, info_proverki, poisk_obektov_negativnogo, poisk_litsenziy_nedra, poluchit_ekologicheskie_platezhi
+  - `tools.py`: 8 инструментов с async + Context
+  - `constants.py`: виды надзора, категории ОНВ, виды лицензий недропользования, статусы проверок, типы нарушений
+  - `schemas.py`: ProverkaEkologicheskaya, ObektNegativnogoVozdeystviya, LicenziyaNedropolzovanie, EkologicheskiyPlatezh
+  - `resources.py`: istochniki_dannyh, struktura_rosprirodnadzora, zakonodatelstvo_ekologicheskoe
+  - `prompts.py`: analiz_ekologicheskoy_proverki, obzor_nedropolzovaniya
+- **Обновлены тесты**:
+  - sovfed: 11 тестов (tools + integration)
+  - kaznacheistvo: 9 тестов (tools + integration)
+  - rosprirodnadzor: 13 тестов (tools + integration)
+  - Обновлены test_root_server.py, test_discovery.py, test_batch.py, test_feature.py для работы с активными российскими модулями вместо отключённых бразильских
+  - Исправлены pre-existing ошибки ruff (SIM117, E501) в tests/data/minobrnauki/test_tools.py
+- **Обновлён README.md**: 22 модуля активны, 27 отключены, обновлён дисклеймер
+- **Обновлена конфигурация ruff**: добавлены RUF001/RUF002/E501 ignores для sovfed, kaznacheistvo, rosprirodnadzor
+- **Прогнаны все проверки**: `pytest` (2009 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Все legacy-модули отключены через enabled=False**: вместо удаления модулей из кодовой базы, они помечены как неактивные. FeatureRegistry пропускает их при загрузке, инструменты не экспонируются. Это позволяет сохранить код для справки при необходимости.
+- **Сервер экспонирует только русскоязычные инструменты**: 22 активных модуля (19 + 3 новых), все с русскими именами функций и инструментов.
+- **Новые модули следуют единому паттерну**: async модульные функции, http_get/http_post, Context, markdown_table, fallback на статические справочники.
+
+### Следующие действия
+
+- **Подключение реальных API** в новых модулях: sovfed→sovfed.ru, kaznacheistvo→roskazna.gov.ru, rosprirodnadzor→rpn.gov.ru
+- **Углубление интеграций**: расширение данных по регионам (Росстат), добавление EMISS-кодов для ВРП/зарплат
+- **Дочистить оставшиеся португальские формулировки** в документации и CHANGELOG
+- **Удалить отключённые legacy-модули** из кодовой базы при подтверждении ненужности
+
 ## Статус раунда 2026-06-05 (двадцать девятый проход — Росводресурсы, Минздрав, Счётная палата, зачистка португальского)
 
 ### Выполнено

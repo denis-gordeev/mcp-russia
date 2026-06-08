@@ -206,7 +206,7 @@ class TestToolSearchConfig:
             names = {t.name for t in tools}
             assert "spisok_funktsiy" in names
             assert "rekomendovat_instrumenty" in names
-            assert "ibge_listar_estados" in names
+            assert "cbrf_tekushchie_kursy" in names
 
 
 class TestTagPropagation:

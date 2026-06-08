@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "sumulas",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

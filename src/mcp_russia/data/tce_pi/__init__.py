@@ -29,4 +29,5 @@ FEATURE_META = FeatureMeta(
         "orgaos",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

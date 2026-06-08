@@ -29,4 +29,5 @@ FEATURE_META = FeatureMeta(
         "санкции",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

@@ -29,4 +29,5 @@ FEATURE_META = FeatureMeta(
         "fornecedores",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

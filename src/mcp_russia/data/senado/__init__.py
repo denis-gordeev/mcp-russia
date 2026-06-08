@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "комиссии",
         "повестка",
     ],
+    enabled=False,
 )

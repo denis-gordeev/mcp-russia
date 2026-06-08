@@ -30,4 +30,5 @@ FEATURE_META = FeatureMeta(
         "ckan",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

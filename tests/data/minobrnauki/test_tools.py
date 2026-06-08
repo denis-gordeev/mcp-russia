@@ -70,7 +70,9 @@ async def test_info_vuza_by_name():
         "sayt": "https://msu.ru",
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }
-    with patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[mock_data]):
+    with patch.object(
+        minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[mock_data]
+    ):
         result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="МГУ")
     assert "МГУ" in result
     assert "Действует" in result
@@ -91,9 +93,11 @@ async def test_info_vuza_by_inn():
 
 async def test_info_vuza_not_found():
     ctx = _mock_ctx()
-    with patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[]):
-        with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=None):
-            result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="НесуществующийВУЗ")
+    with (
+        patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[]),
+        patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=None),
+    ):
+        result = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="НесуществующийВУЗ")
     assert "не найден" in result
 
 

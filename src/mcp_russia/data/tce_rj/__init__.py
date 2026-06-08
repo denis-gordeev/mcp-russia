@@ -30,4 +30,5 @@ FEATURE_META = FeatureMeta(
         "penalidades",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

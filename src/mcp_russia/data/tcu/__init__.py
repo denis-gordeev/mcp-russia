@@ -30,4 +30,5 @@ FEATURE_META = FeatureMeta(
         "контракты",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

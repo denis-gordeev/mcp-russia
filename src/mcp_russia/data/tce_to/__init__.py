@@ -20,4 +20,5 @@ FEATURE_META = FeatureMeta(
     api_base="https://api.tceto.tc.br/econtas/api",
     requires_auth=False,
     tags=["⚠️ DEPRECATED", "tce", "to", "processos", "pautas", "бразилия-legacy"],
+    enabled=False,
 )

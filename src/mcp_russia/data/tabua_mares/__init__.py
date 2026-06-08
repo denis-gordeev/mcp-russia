@@ -26,4 +26,5 @@ FEATURE_META = FeatureMeta(
         "oceanografia",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

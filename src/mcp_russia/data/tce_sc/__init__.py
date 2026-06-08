@@ -20,4 +20,5 @@ FEATURE_META = FeatureMeta(
     api_base="https://servicos.tcesc.tc.br/endpoints-portal-transparencia",
     requires_auth=False,
     tags=["⚠️ DEPRECATED", "tce", "sc", "municipios", "unidades-gestoras", "бразилия-legacy"],
+    enabled=False,
 )

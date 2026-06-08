@@ -1,0 +1,236 @@
+"""HTTP client for the Федеральное казначейство data sources.
+
+Real API integration with:
+    - Федеральное казначейство: roskazna.gov.ru
+    - Портал бюджетных данных: budget.gov.ru
+"""
+
+from __future__ import annotations
+
+import logging
+from typing import Any
+
+from mcp_russia._shared.http_client import http_get
+
+from .constants import (
+    BUDGET_GOV_RU_BASE,
+    KATEGORII_RASKHODOV,
+    KAZNACHEISTVO_API_BASE,
+    VIDY_BUDZHETOV,
+)
+
+logger = logging.getLogger(__name__)
+
+
+async def poluchit_ispolnenie_byudzheta(
+    god: int = 0,
+    tip: str = "",
+) -> dict[str, Any] | None:
+    """Получить данные об исполнении бюджета.
+
+    Args:
+        god: Год.
+        tip: Тип бюджета.
+
+    Returns:
+        Данные об исполнении бюджета или None.
+    """
+    try:
+        url = f"{BUDGET_GOV_RU_BASE}/execution"
+        params: dict[str, Any] = {}
+        if god:
+            params["year"] = god
+        if tip:
+            params["budgetType"] = tip
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_ispolnenie_byudzheta(data)
+        return None
+    except Exception:
+        logger.exception("Ошибка при получении данных об исполнении бюджета")
+        return None
+
+
+async def poisk_uchastnikov_bp(
+    inn: str = "",
+    nazvanie: str = "",
+) -> list[dict[str, Any]]:
+    """Поиск участников бюджетного процесса.
+
+    Args:
+        inn: ИНН организации.
+        nazvanie: Название организации.
+
+    Returns:
+        Список участников бюджетного процесса.
+    """
+    try:
+        url = f"{KAZNACHEISTVO_API_BASE}/participants"
+        params: dict[str, str] = {}
+        if inn:
+            params["inn"] = inn
+        if nazvanie:
+            params["name"] = nazvanie
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_uchastnik_bp(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.exception("Ошибка при поиске участников бюджетного процесса")
+        return []
+
+
+async def poisk_uchrezhdeniy(
+    inn: str = "",
+    nazvanie: str = "",
+    tip: str = "",
+) -> list[dict[str, Any]]:
+    """Поиск учреждений в сводном реестре.
+
+    Args:
+        inn: ИНН учреждения.
+        nazvanie: Название учреждения.
+        tip: Тип учреждения.
+
+    Returns:
+        Список учреждений.
+    """
+    try:
+        url = f"{KAZNACHEISTVO_API_BASE}/institutions"
+        params: dict[str, str] = {}
+        if inn:
+            params["inn"] = inn
+        if nazvanie:
+            params["name"] = nazvanie
+        if tip:
+            params["type"] = tip
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_uchrezhdenie(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.exception("Ошибка при поиске учреждений")
+        return []
+
+
+async def poluchit_mezhbyudzhetnye(
+    god: int = 0,
+    region: str = "",
+) -> list[dict[str, Any]]:
+    """Получить данные о межбюджетных трансфертах.
+
+    Args:
+        god: Год.
+        region: Код региона.
+
+    Returns:
+        Список межбюджетных трансфертов.
+    """
+    try:
+        url = f"{BUDGET_GOV_RU_BASE}/interbudget"
+        params: dict[str, Any] = {}
+        if god:
+            params["year"] = god
+        if region:
+            params["region"] = region
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        return [_parse_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.exception("Ошибка при получении межбюджетных трансфертов")
+        return []
+
+
+async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
+    """Получить бюджетную смету по номеру.
+
+    Args:
+        nomer: Номер сметы.
+
+    Returns:
+        Данные о смете или None.
+    """
+    try:
+        url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
+        data = await http_get(url, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_byudzhetnaya_smeta(data)
+        return None
+    except Exception:
+        logger.exception("Ошибка при получении бюджетной сметы №%s", nomer)
+        return None
+
+
+def get_vidy_byudzhetov_list() -> list[dict[str, str]]:
+    return VIDY_BUDZHETOV
+
+
+def get_kategorii_raskhodov_list() -> list[dict[str, str]]:
+    return KATEGORII_RASKHODOV
+
+
+def _extract_list(data: Any) -> list[Any]:
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        for key in ("data", "items", "results", "records"):
+            val = data.get(key)
+            if isinstance(val, list):
+                return val
+    return []
+
+
+def _parse_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "period": data.get("period", "") or data.get("year", ""),
+        "tip": data.get("budgetType", "") or data.get("tip", ""),
+        "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
+        "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
+        "deficit": data.get("deficit"),
+        "status": data.get("status", ""),
+        "istochnik": "Портал бюджетных данных (budget.gov.ru)",
+    }
+
+
+def _parse_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "inn": data.get("inn", "") or data.get("id", ""),
+        "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
+        "tip_uchastnika": data.get("participantType", "") or data.get("tip_uchastnika", ""),
+        "byudzhet": data.get("budget", "") or data.get("byudzhet", ""),
+        "istochnik": "Федеральное казначейство (roskazna.gov.ru)",
+    }
+
+
+def _parse_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "inn": data.get("inn", "") or data.get("id", ""),
+        "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
+        "tip": data.get("type", "") or data.get("tip", ""),
+        "osnovnoj_vid_deyatelnosti": data.get("mainActivity", "")
+        or data.get("osnovnoj_vid_deyatelnosti", ""),
+        "osnovanie": data.get("basis", "") or data.get("osnovanie", ""),
+        "istochnik": "Федеральное казначейство (roskazna.gov.ru)",
+    }
+
+
+def _parse_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "vid": data.get("type", "") or data.get("vid", ""),
+        "otpravitel": data.get("sender", "") or data.get("otpravitel", ""),
+        "poluchatel": data.get("receiver", "") or data.get("poluchatel", ""),
+        "summa": data.get("amount") or data.get("summa"),
+        "god": str(data.get("year", "")) or data.get("god", ""),
+        "istochnik": "Портал бюджетных данных (budget.gov.ru)",
+    }
+
+
+def _parse_byudzhetnaya_smeta(data: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
+        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
+        "tip": data.get("type", "") or data.get("tip", ""),
+        "god": str(data.get("year", "")) or data.get("god", ""),
+        "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
+        "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
+        "deficit": data.get("deficit"),
+        "istochnik": "Федеральное казначейство (roskazna.gov.ru)",
+    }

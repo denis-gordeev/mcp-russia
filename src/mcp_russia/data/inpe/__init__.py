@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "inpe",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

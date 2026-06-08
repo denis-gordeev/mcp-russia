@@ -20,4 +20,5 @@ FEATURE_META = FeatureMeta(
     api_base="https://transparencia.tce.sp.gov.br/api",
     requires_auth=False,
     tags=["⚠️ DEPRECATED", "tce", "sp", "despesas", "receitas", "municipios", "бразилия-legacy"],
+    enabled=False,
 )

@@ -92,11 +92,11 @@ class TestFeatureRegistry:
         result = registry.discover("mcp_russia.data")
         assert result is registry
 
-    def test_discover_finds_ibge(self) -> None:
-        """Discovery находит feature ibge в пакете data."""
+    def test_discover_finds_cbrf(self) -> None:
+        """Discovery находит feature cbrf в пакете data."""
         registry = FeatureRegistry()
         registry.discover("mcp_russia.data")
-        assert "ibge" in registry.features
+        assert "cbrf" in registry.features
 
     def test_discover_finds_redator(self) -> None:
         """Discovery находит feature redator в пакете agenty."""

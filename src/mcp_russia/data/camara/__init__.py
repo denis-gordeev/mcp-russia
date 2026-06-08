@@ -33,4 +33,5 @@ FEATURE_META = FeatureMeta(
         "расходы",
         "комиссии",
     ],
+    enabled=False,
 )

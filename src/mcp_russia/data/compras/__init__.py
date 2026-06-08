@@ -33,4 +33,5 @@ FEATURE_META = FeatureMeta(
         "catser",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

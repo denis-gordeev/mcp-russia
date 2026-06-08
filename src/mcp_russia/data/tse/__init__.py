@@ -28,4 +28,5 @@ FEATURE_META = FeatureMeta(
         "отчёты-о-расходах",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

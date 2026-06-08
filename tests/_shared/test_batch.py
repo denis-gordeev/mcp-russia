@@ -25,14 +25,13 @@ class TestBuildDispatch:
     def test_builds_from_registry(self) -> None:
         """Should discover tools from feature modules."""
         result = batch.build_dispatch(_real_registry())
-        # Should find at least ibge tools
-        assert any(k.startswith("ibge_") for k in result)
+        assert any(k.startswith("cbrf_") for k in result)
 
     def test_finds_nested_features(self) -> None:
         """Should discover tools in sub-packages like compras/pncp."""
         result = batch.build_dispatch(_real_registry())
-        assert any(k.startswith("compras_pncp_") for k in result)
-        assert any(k.startswith("compras_dadosabertos_") for k in result)
+        assert any(k.startswith("sovfed_") for k in result)
+        assert any(k.startswith("kaznacheistvo_") for k in result)
 
     def test_caches_result(self) -> None:
         """Second call should return cached dispatch table."""

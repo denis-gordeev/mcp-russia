@@ -29,4 +29,5 @@ FEATURE_META = FeatureMeta(
         "receitas",
         "бразилия-legacy",
     ],
+    enabled=False,
 )

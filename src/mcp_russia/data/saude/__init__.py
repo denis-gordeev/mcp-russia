@@ -18,4 +18,5 @@ FEATURE_META = FeatureMeta(
     api_base="https://apidadosabertos.saude.gov.br/cnes",
     requires_auth=False,
     tags=["⚠️ DEPRECATED", "saude", "sus", "cnes", "hospitais", "leitos", "бразилия-legacy"],
+    enabled=False,
 )

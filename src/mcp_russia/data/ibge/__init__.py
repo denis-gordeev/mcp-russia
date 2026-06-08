@@ -31,4 +31,5 @@ FEATURE_META = FeatureMeta(
         "indicadores",
         "localidades",
     ],
+    enabled=False,
 )
