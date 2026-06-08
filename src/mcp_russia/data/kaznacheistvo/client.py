@@ -2,7 +2,8 @@
 
 Real API integration with:
     - Федеральное казначейство: roskazna.gov.ru
-    - Портал бюджетных данных: budget.gov.ru
+    - Портал бюджетных данных: budget.gov.ru/api
+    - Открытые данные: data.gov.ru
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ from .constants import (
     BUDGET_GOV_RU_BASE,
     KATEGORII_RASKHODOV,
     KAZNACHEISTVO_API_BASE,
+    ROSKAZNA_OPENDATA_BASE,
     VIDY_BUDZHETOV,
 )
 
@@ -26,17 +28,8 @@ async def poluchit_ispolnenie_byudzheta(
     god: int = 0,
     tip: str = "",
 ) -> dict[str, Any] | None:
-    """Получить данные об исполнении бюджета.
-
-    Args:
-        god: Год.
-        tip: Тип бюджета.
-
-    Returns:
-        Данные об исполнении бюджета или None.
-    """
     try:
-        url = f"{BUDGET_GOV_RU_BASE}/execution"
+        url = f"{BUDGET_GOV_RU_BASE}/v1/execution"
         params: dict[str, Any] = {}
         if god:
             params["year"] = god
@@ -45,27 +38,31 @@ async def poluchit_ispolnenie_byudzheta(
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _parse_ispolnenie_byudzheta(data)
-        return None
     except Exception:
-        logger.exception("Ошибка при получении данных об исполнении бюджета")
-        return None
+        logger.debug("budget.gov.ru API недоступен")
+
+    try:
+        url = f"{KAZNACHEISTVO_API_BASE}/execution"
+        params: dict[str, Any] = {}
+        if god:
+            params["year"] = god
+        if tip:
+            params["budgetType"] = tip
+        data = await http_get(url, params=params, timeout=15.0)
+        if isinstance(data, dict):
+            return _parse_ispolnenie_byudzheta(data)
+    except Exception:
+        logger.debug("roskazna.gov.ru API недоступен")
+
+    return None
 
 
 async def poisk_uchastnikov_bp(
     inn: str = "",
     nazvanie: str = "",
 ) -> list[dict[str, Any]]:
-    """Поиск участников бюджетного процесса.
-
-    Args:
-        inn: ИНН организации.
-        nazvanie: Название организации.
-
-    Returns:
-        Список участников бюджетного процесса.
-    """
     try:
-        url = f"{KAZNACHEISTVO_API_BASE}/participants"
+        url = f"{ROSKAZNA_OPENDATA_BASE}/participants"
         params: dict[str, str] = {}
         if inn:
             params["inn"] = inn
@@ -75,7 +72,7 @@ async def poisk_uchastnikov_bp(
         items = _extract_list(data)
         return [_parse_uchastnik_bp(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске участников бюджетного процесса")
+        logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
 
 
@@ -84,18 +81,8 @@ async def poisk_uchrezhdeniy(
     nazvanie: str = "",
     tip: str = "",
 ) -> list[dict[str, Any]]:
-    """Поиск учреждений в сводном реестре.
-
-    Args:
-        inn: ИНН учреждения.
-        nazvanie: Название учреждения.
-        tip: Тип учреждения.
-
-    Returns:
-        Список учреждений.
-    """
     try:
-        url = f"{KAZNACHEISTVO_API_BASE}/institutions"
+        url = f"{ROSKAZNA_OPENDATA_BASE}/institutions"
         params: dict[str, str] = {}
         if inn:
             params["inn"] = inn
@@ -107,7 +94,7 @@ async def poisk_uchrezhdeniy(
         items = _extract_list(data)
         return [_parse_uchrezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске учреждений")
+        logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
 
 
@@ -115,17 +102,8 @@ async def poluchit_mezhbyudzhetnye(
     god: int = 0,
     region: str = "",
 ) -> list[dict[str, Any]]:
-    """Получить данные о межбюджетных трансфертах.
-
-    Args:
-        god: Год.
-        region: Код региона.
-
-    Returns:
-        Список межбюджетных трансфертов.
-    """
     try:
-        url = f"{BUDGET_GOV_RU_BASE}/interbudget"
+        url = f"{BUDGET_GOV_RU_BASE}/v1/interbudget"
         params: dict[str, Any] = {}
         if god:
             params["year"] = god
@@ -135,27 +113,18 @@ async def poluchit_mezhbyudzhetnye(
         items = _extract_list(data)
         return [_parse_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при получении межбюджетных трансфертов")
+        logger.debug("budget.gov.ru API недоступен для межбюджетных трансфертов")
         return []
 
 
 async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
-    """Получить бюджетную смету по номеру.
-
-    Args:
-        nomer: Номер сметы.
-
-    Returns:
-        Данные о смете или None.
-    """
     try:
         url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_byudzhetnaya_smeta(data)
-        return None
     except Exception:
-        logger.exception("Ошибка при получении бюджетной сметы №%s", nomer)
+        logger.debug("roskazna.gov.ru API недоступен для сметы №%s", nomer)
         return None
 
 

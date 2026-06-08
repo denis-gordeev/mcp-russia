@@ -2,6 +2,7 @@
 
 KAZNACHEISTVO_API_BASE = "https://roskazna.gov.ru/api"
 KAZNACHEISTVO_BASE = "https://roskazna.gov.ru"
+ROSKAZNA_OPENDATA_BASE = "https://roskazna.gov.ru/opendata"
 BUDGET_GOV_RU_BASE = "https://budget.gov.ru/api"
 
 VIDY_BUDZHETOV = [

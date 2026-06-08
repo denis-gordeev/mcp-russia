@@ -11,7 +11,7 @@ FEATURE_META = FeatureMeta(
         "экологические платежи и штрафы, данные о радиационной безопасности, "
         "государственный земельный надзор"
     ),
-    version="0.1.0",
+    version="0.2.0",
     api_base="https://rpn.gov.ru",
     requires_auth=False,
     tags=[

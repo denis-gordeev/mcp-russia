@@ -2,6 +2,8 @@
 
 Real API integration with:
     - Росприроднадзор: rpn.gov.ru
+    - Открытые данные Росприроднадзора: rpn.gov.ru/opendata
+    - Реестр ОНВ: onv.register.rpn.gov.ru
     - Госуслуги ЭКО: gosuslugi.ru/api/eco
 """
 
@@ -15,7 +17,9 @@ from mcp_russia._shared.http_client import http_get
 from .constants import (
     GOSUSLUGI_EKO_BASE,
     KATEGORII_OBNV,
+    ONV_REGISTER_BASE,
     ROSPRIRODNADZOR_API_BASE,
+    ROSPRIRODNADZOR_OPENDATA_BASE,
     VIDY_LITSENZIY_NEDRA,
     VIDY_NADZORA,
 )
@@ -29,17 +33,6 @@ async def poisk_proverok(
     god: int = 0,
     limit: int = 20,
 ) -> list[dict[str, Any]]:
-    """Поиск экологических проверок Росприроднадзора.
-
-    Args:
-        organizaciya: Организация.
-        vid_nadzora: Вид надзора.
-        god: Год.
-        limit: Максимум результатов.
-
-    Returns:
-        Список проверок.
-    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
         params: dict[str, Any] = {"limit": limit}
@@ -51,29 +44,36 @@ async def poisk_proverok(
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
         items = _extract_list(data)
-        return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+        if items:
+            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске экологических проверок")
-        return []
+        logger.debug("rpn.gov.ru API недоступен")
+
+    try:
+        url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/inspections"
+        params: dict[str, Any] = {"limit": limit}
+        if organizaciya:
+            params["organization"] = organizaciya
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        if items:
+            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.debug("rpn.gov.ru/opendata недоступен")
+
+    return []
 
 
 async def info_proverki(nomer: str) -> dict[str, Any] | None:
-    """Получить информацию о проверке по номеру.
-
-    Args:
-        nomer: Номер проверки.
-
-    Returns:
-        Данные о проверке или None.
-    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_proverka(data)
-        return None
     except Exception:
-        logger.exception("Ошибка при получении проверки №%s", nomer)
+        logger.debug("rpn.gov.ru API недоступен для проверки №%s", nomer)
         return None
 
 
@@ -82,16 +82,20 @@ async def poisk_obektov_negativnogo(
     kategoriya: str = "",
     limit: int = 20,
 ) -> list[dict[str, Any]]:
-    """Поиск объектов негативного воздействия на окружающую среду.
+    try:
+        url = f"{ONV_REGISTER_BASE}/search"
+        params: dict[str, Any] = {"limit": limit}
+        if organizaciya:
+            params["name"] = organizaciya
+        if kategoriya:
+            params["category"] = kategoriya
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        if items:
+            return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.debug("ONV реестр недоступен")
 
-    Args:
-        organizaciya: Организация.
-        kategoriya: Категория ОНВ (I–IV).
-        limit: Максимум результатов.
-
-    Returns:
-        Список объектов ОНВ.
-    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/onv"
         params: dict[str, Any] = {"limit": limit}
@@ -101,10 +105,12 @@ async def poisk_obektov_negativnogo(
             params["category"] = kategoriya
         data = await http_get(url, params=params, timeout=15.0)
         items = _extract_list(data)
-        return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+        if items:
+            return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске объектов негативного воздействия")
-        return []
+        logger.debug("rpn.gov.ru API недоступен для ОНВ")
+
+    return []
 
 
 async def poisk_litsenziy_nedra(
@@ -112,16 +118,20 @@ async def poisk_litsenziy_nedra(
     vid_litsenzii: str = "",
     limit: int = 20,
 ) -> list[dict[str, Any]]:
-    """Поиск лицензий на пользование недрами.
+    try:
+        url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
+        params: dict[str, Any] = {"limit": limit}
+        if territory:
+            params["territory"] = territory
+        if vid_litsenzii:
+            params["licenseType"] = vid_litsenzii
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        if items:
+            return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
-    Args:
-        territory: Территория / субъект РФ.
-        vid_litsenzii: Вид лицензии.
-        limit: Максимум результатов.
-
-    Returns:
-        Список лицензий.
-    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/licenses"
         params: dict[str, Any] = {"limit": limit}
@@ -133,7 +143,7 @@ async def poisk_litsenziy_nedra(
         items = _extract_list(data)
         return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске лицензий на недропользование")
+        logger.debug("rpn.gov.ru API недоступен для лицензий")
         return []
 
 
@@ -141,15 +151,6 @@ async def poluchit_ekologicheskie_platezhi(
     god: int = 0,
     tip_platezha: str = "",
 ) -> list[dict[str, Any]]:
-    """Получить данные об экологических платежах.
-
-    Args:
-        god: Год.
-        tip_platezha: Тип платежа.
-
-    Returns:
-        Список экологических платежей.
-    """
     try:
         url = f"{GOSUSLUGI_EKO_BASE}/payments"
         params: dict[str, Any] = {}
@@ -161,7 +162,7 @@ async def poluchit_ekologicheskie_platezhi(
         items = _extract_list(data)
         return [_parse_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при получении экологических платежей")
+        logger.debug("Госуслуги ЭКО API недоступен")
         return []
 
 

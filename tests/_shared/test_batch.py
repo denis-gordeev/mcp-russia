@@ -28,7 +28,7 @@ class TestBuildDispatch:
         assert any(k.startswith("cbrf_") for k in result)
 
     def test_finds_nested_features(self) -> None:
-        """Should discover tools in sub-packages like compras/pncp."""
+        """Should discover tools in sub-packages."""
         result = batch.build_dispatch(_real_registry())
         assert any(k.startswith("sovfed_") for k in result)
         assert any(k.startswith("kaznacheistvo_") for k in result)
@@ -67,14 +67,14 @@ class TestExecuteBatch:
 
         async def _spec(ctx: object, param: str) -> str: ...
 
-        mock_fn = AsyncMock(spec=_spec, return_value="resultado ok")
+        mock_fn = AsyncMock(spec=_spec, return_value="rezultat ok")
         batch._dispatch["test_tool"] = mock_fn
 
         ctx = _mock_ctx()
         result = await batch.execute_batch(
             [{"tool": "test_tool", "args": {"param": "value"}}], ctx
         )
-        assert "resultado ok" in result
+        assert "rezultat ok" in result
         mock_fn.assert_called_once()
 
     @pytest.mark.asyncio

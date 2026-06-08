@@ -2,7 +2,8 @@
 
 Real API integration with:
     - Официальный сайт Совета Федерации: sovfed.ru
-    - Открытые данные Совета Федерации
+    - Открытые данные data.gov.ru: datasets from Совет Федерации
+    - Сенаторы, комитеты, законопроекты через API sovfed.ru
 """
 
 from __future__ import annotations
@@ -13,8 +14,10 @@ from typing import Any
 from mcp_russia._shared.http_client import http_get
 
 from .constants import (
+    DATA_GOV_RU_SOVFED,
     KOMISSII_SOVFEDA,
     KOMITETY_SOVFEDA,
+    SENATORY_SPRAVOCHNIK,
     SOVFED_API_BASE,
 )
 
@@ -34,10 +37,30 @@ async def poisk_senatorov(
             params["committee"] = komitet
         data = await http_get(url, params=params, timeout=15.0)
         items = _extract_list(data)
-        return [_parse_senator(p) for p in items if isinstance(p, dict)]
+        if items:
+            return [_parse_senator(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске сенаторов")
-        return []
+        logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
+
+    try:
+        url = f"{DATA_GOV_RU_SOVFED}"
+        params: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
+        data = await http_get(url, params=params, timeout=15.0)
+        items = _extract_list(data)
+        if items:
+            return [_parse_senator(p) for p in items if isinstance(p, dict)]
+    except Exception:
+        logger.debug("data.gov.ru API недоступен")
+
+    if region or komitet:
+        return [
+            s
+            for s in SENATORY_SPRAVOCHNIK
+            if (not region or region.lower() in s.get("region", "").lower())
+            and (not komitet or komitet.lower() in s.get("komitet", "").lower())
+        ]
+
+    return SENATORY_SPRAVOCHNIK
 
 
 async def info_senatora(senator_id: str) -> dict[str, Any] | None:
@@ -46,10 +69,13 @@ async def info_senatora(senator_id: str) -> dict[str, Any] | None:
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_senator(data)
-        return None
     except Exception:
-        logger.exception("Ошибка при получении информации о сенаторе %s", senator_id)
-        return None
+        logger.debug("sovfed.ru API недоступен для сенатора %s", senator_id)
+
+    for s in SENATORY_SPRAVOCHNIK:
+        if senator_id in (s.get("familiya", ""), str(s.get("nomer", ""))):
+            return s
+    return None
 
 
 async def spisok_komitetov() -> list[dict[str, Any]]:
@@ -57,10 +83,12 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
         url = f"{SOVFED_API_BASE}/committees"
         data = await http_get(url, timeout=15.0)
         items = _extract_list(data)
-        return [_parse_komitet(p) for p in items if isinstance(p, dict)]
+        if items:
+            return [_parse_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при получении списка комитетов")
-        return []
+        logger.debug("sovfed.ru API недоступен для комитетов")
+
+    return []
 
 
 async def spisok_komissiy() -> list[dict[str, Any]]:
@@ -68,10 +96,12 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
         url = f"{SOVFED_API_BASE}/commissions"
         data = await http_get(url, timeout=15.0)
         items = _extract_list(data)
-        return [_parse_komitet(p) for p in items if isinstance(p, dict)]
+        if items:
+            return [_parse_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при получении списка комиссий")
-        return []
+        logger.debug("sovfed.ru API недоступен для комиссий")
+
+    return []
 
 
 async def poisk_zakonoproektov(
@@ -89,7 +119,7 @@ async def poisk_zakonoproektov(
         items = _extract_list(data)
         return [_parse_zakonoproekt(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при поиске законопроектов")
+        logger.debug("sovfed.ru API недоступен для законопроектов")
         return []
 
 
@@ -103,7 +133,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         items = _extract_list(data)
         return [_parse_zasedanie(p) for p in items if isinstance(p, dict)]
     except Exception:
-        logger.exception("Ошибка при получении списка заседаний")
+        logger.debug("sovfed.ru API недоступен для заседаний")
         return []
 
 

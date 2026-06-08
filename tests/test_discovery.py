@@ -1,7 +1,7 @@
 """Tests for tool discovery features (BM25 search, rekomendovat_instrumenty, tags).
 
 Tests search transforms, LLM-powered recommendations, and tag propagation.
-MCP_BRASIL_TOOL_SEARCH=none is set in conftest.py (before any import).
+MCP_RUSSIA_TOOL_SEARCH=none is set in conftest.py (before any import).
 """
 
 from __future__ import annotations

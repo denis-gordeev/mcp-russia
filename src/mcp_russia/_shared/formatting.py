@@ -1,8 +1,7 @@
 """Вспомогательные функции для форматирования текста в LLM-ориентированном виде.
 
 Модуль предоставляет утилиты форматирования для российской локали (рубли,
-русский формат чисел) с обратной совместимостью для устаревших бразильских
-форматов (BRL).
+русский формат чисел).
 """
 
 from __future__ import annotations
@@ -48,20 +47,6 @@ def format_rub(value: float) -> str:
     return f"{sign}{int_str},{decimal_part:02d} ₽"
 
 
-def format_brl(value: float) -> str:
-    """Format a number using the Russian RUB style (deprecated alias for format_rub).
-
-    .. deprecated:: Use format_rub instead.
-
-    Args:
-        value: Numeric value.
-
-    Returns:
-        Formatted string like "1 234,56 ₽".
-    """
-    return format_rub(value)
-
-
 def format_number_ru(value: float, decimals: int = 2) -> str:
     """Format a number with Russian locale style (space thousands, comma decimal).
 
@@ -76,26 +61,12 @@ def format_number_ru(value: float, decimals: int = 2) -> str:
     return formatted.replace(",", " ").replace(".", ",")
 
 
-def format_number_br(value: float, decimals: int = 2) -> str:
-    """Format a number with Russian locale style (deprecated alias for format_number_ru).
-
-    .. deprecated:: Use format_number_ru instead.
-
-    Args:
-        value: Numeric value.
-        decimals: Number of decimal places.
-
-    Returns:
-        Formatted string like "1 234,56".
-    """
-    return format_number_ru(value, decimals)
-
-
 def format_percent(value: float, decimals: int = 2) -> str:
     """Format a numeric ratio as percentage text.
 
     Args:
         value: Numeric value (e.g., 0.05 for 5%).
+        decimals: Number of decimal places.
 
     Returns:
         Formatted string like "5,00%".
@@ -108,7 +79,7 @@ def parse_rub_number(value: Any) -> float | None:
 
     Handles strings like "1 234,56" (space=thousands, comma=decimal)
     and "348.600,00" (dot=thousands, comma=decimal) for backward
-    compatibility with legacy Brazilian API responses.
+    compatibility with legacy API responses.
     Passes through int/float values unchanged.
 
     Args:
@@ -132,20 +103,6 @@ def parse_rub_number(value: Any) -> float | None:
         except ValueError:
             return None
     return None
-
-
-def parse_brl_number(value: Any) -> float | None:
-    """Parse a locale-formatted number string into a float (deprecated alias for parse_rub_number).
-
-    .. deprecated:: Use parse_rub_number instead.
-
-    Args:
-        value: Raw value from API (string, int, float, or None).
-
-    Returns:
-        Parsed float or None if unparseable.
-    """
-    return parse_rub_number(value)
 
 
 def truncate_list(items: Sequence[str], max_items: int = 50) -> str:

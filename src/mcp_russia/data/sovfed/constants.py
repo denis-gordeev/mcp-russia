@@ -3,13 +3,16 @@
 # Совет Федерации Федерального Собрания Российской Федерации
 # Основные источники данных:
 # 1. Официальный сайт: https://sovfed.ru
-# 2. Сенаторы: https://sovfed.ru/senators
-# 3. Комитеты: https://sovfed.ru/committees
-# 4. Законопроекты: https://sovfed.ru/bills
-# 5. Заседания: https://sovfed.ru/sessions
+# 2. Открытые данные: https://data.gov.ru/organizations/sovet_federatsii
+# 3. Сенаторы: https://sovfed.ru/senators
+# 4. Комитеты: https://sovfed.ru/committees
+# 5. Законопроекты: https://sovfed.ru/bills
+# 6. Заседания: https://sovfed.ru/sessions
 
 SOVFED_API_BASE = "https://sovfed.ru/api"
 SOVFED_BASE = "https://sovfed.ru"
+DATA_GOV_RU_SOVFED = "https://data.gov.ru/api/dataset"
+DATA_GOV_RU_BASE = "https://data.gov.ru"
 
 KOMITETY_SOVFEDA = [
     {
@@ -73,4 +76,15 @@ DOLZHNOSTI_SENATORA = [
     {"code": "predsedatel_komiteta", "name": "Председатель комитета"},
     {"code": "zam_predsedatelya_komiteta", "name": "Заместитель председателя комитета"},
     {"code": "senator_rf", "name": "Сенатор Российской Федерации"},
+]
+
+SENATORY_SPRAVOCHNIK = [
+    {
+        "familiya": "Матвиенко",
+        "imya": "Валентина",
+        "otchestvo": "Ивановна",
+        "region": "г. Санкт-Петербург",
+        "dolzhnost": "Председатель Совета Федерации",
+        "komitet": "",
+    },
 ]

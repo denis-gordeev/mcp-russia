@@ -2,6 +2,53 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-08 (тридцать первый проход — подключение API, удаление legacy, зачистка)
+
+### Выполнено
+
+- **Подключение реального API Совета Федерации (sovfed)**:
+  - `client.py`: обновлён с multi-source fallback — sovfed.ru/api → data.gov.ru → статический справочник
+  - `constants.py`: добавлены `DATA_GOV_RU_SOVFED`, `DATA_GOV_RU_BASE`, `SENATORY_SPRAVOCHNIK`
+  - `__init__.py`: версия 0.1.0 → 0.2.0
+- **Подключение реального API Федерального казначейства (kaznacheistvo)**:
+  - `client.py`: обновлён с multi-source fallback — budget.gov.ru/api/v1 → roskazna.gov.ru/opendata
+  - `constants.py`: добавлен `ROSKAZNA_OPENDATA_BASE`
+  - `__init__.py`: версия 0.1.0 → 0.2.0
+- **Подключение реального API Росприроднадзора (rosprirodnadzor)**:
+  - `client.py`: обновлён с multi-source fallback — rpn.gov.ru/api → rpn.gov.ru/opendata → onv.register.rpn.gov.ru
+  - `constants.py`: добавлены `ROSPRIRODNADZOR_OPENDATA_BASE`, `ONV_REGISTER_BASE`
+  - `__init__.py`: версия 0.1.0 → 0.2.0
+- **Удаление всех 27 legacy-модулей с бразильскими данными из кодовой базы**:
+  - Исходники: ana, anuncios_eleitorais, bacen, brasilapi, camara, compras, dados_abertos, datajud, diario_oficial, ibge, inpe, jurisprudencia, saude, senado, tabua_mares, tce_ce, tce_pe, tce_pi, tce_rj, tce_rn, tce_rs, tce_sc, tce_sp, tce_to, tcu, transferegov, transparencia, tse
+  - Тесты: соответствующие директории удалены
+  - Конфигурация ruff: удалены 20+ строк per-file-ignores для удалённых модулей
+- **Зачистка португальских формулировок**:
+  - `formatting.py`: удалены deprecated-алиасы `format_brl`, `format_number_br`, `parse_brl_number`; обновлён модульный docstring
+  - `validators.py`: удалены Brazilian validators (`validate_cpf`, `format_cpf`, `validate_cnpj`, `format_cnpj`, `validate_cep`, `format_cep`, `_CNPJ_WEIGHTS_*`); обновлён модульный docstring
+  - `tests/conftest.py`: удалена `MCP_BRASIL_TOOL_SEARCH`
+  - `tests/test_discovery.py`: обновлён комментарий `MCP_BRASIL_TOOL_SEARCH` → `MCP_RUSSIA_TOOL_SEARCH`
+  - `tests/_shared/test_batch.py`: `resultado ok` → `rezultat ok`
+  - `tests/_shared/test_formatting.py`: удалены тесты `TestFormatBrlDeprecated`, `TestFormatNumberBrDeprecated`, `TestParseBrlNumberDeprecated`
+  - `tests/_shared/test_validators.py`: удалены тесты `TestValidateCPF`, `TestFormatCPF`, `TestValidateCNPJ`, `TestFormatCNPJ`, `TestValidateCEP`, `TestFormatCEP`
+  - `data/__init__.py`: обновлён docstring — убрана ссылка на «бразильские источники»
+  - `tests/test_root_server.py`: `подключёнными` → `подключенными`
+- **Обновлён README.md**: отражено удаление legacy-модулей, подключение API трёх модулей
+- **Обновлён pyproject.toml**: убраны ruff per-file-ignores для удалённых модулей
+- **Прогнаны все проверки**: `pytest` (601 passed, 1 skipped), `ruff check` — all passed, `ruff format` — all formatted
+
+### Ключевые архитектурные решения
+
+- **Multi-source fallback**: все три новых модуля используют каскадный fallback при недоступности API: первичный API → вторичный открытый источник → статический справочник
+- **Полное удаление legacy-модулей**: вместо `enabled=False` модули удалены из кодовой базы. Кодовая база уменьшена на ~27 директорий с исходниками и ~27 директорий с тестами
+- **Устранены все backward-compat алиасы**: `format_brl`, `format_number_br`, `parse_brl_number`, Brazilian validators — больше не существуют в коде
+- **Чистая кодовая база**: только 22 российских модуля, все с русскими именами, без португальских остатков в активном коде
+
+### Следующие действия
+
+- **Углубление интеграций**: расширение данных по регионам (Росстат), добавление EMISS-кодов для ВРП/зарплат
+- **Дочистить оставшиеся португальские формулировки** в CHANGELOG.md и docs/ (исторические записи)
+- **Обновить docs/reference/features.md**: удалить секцию DEPRECATED (legacy-модули удалены)
+
 ## Статус раунда 2026-06-08 (тридцатый проход — отключение legacy-модулей, новые модули: Совет Федерации, Казначейство, Росприроднадзор)
 
 ### Выполнено

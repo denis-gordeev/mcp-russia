@@ -2,6 +2,8 @@
 
 ROSPRIRODNADZOR_API_BASE = "https://rpn.gov.ru/api"
 ROSPRIRODNADZOR_BASE = "https://rpn.gov.ru"
+ROSPRIRODNADZOR_OPENDATA_BASE = "https://rpn.gov.ru/opendata"
+ONV_REGISTER_BASE = "https://onv.register.rpn.gov.ru/api"
 GOSUSLUGI_EKO_BASE = "https://gosuslugi.ru/api/eco"
 
 VIDY_NADZORA = [
