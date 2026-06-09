@@ -1,10 +1,10 @@
 # Каталог features
 
-19 российских модулей · 158 инструментов · 56 ресурсов · 38 промптов
+22 российских модуля · 178 инструментов · 65 ресурсов · 44 промпта
 
-Этот каталог описывает текущее содержимое сервера. Российские модули используют русские имена переменных и функций. Legacy-модули (28 бразильских) помечены как DEPRECATED.
+Этот каталог описывает текущее содержимое сервера. Все модули используют русские имена переменных и функций и подключены к реальным российским API.
 
-> **Статус миграции:** сервер перешёл от бразильского исходного проекта к российскому. 19 российских модулей данных созданы с нуля. 28 бразильских legacy-модулей помечены как DEPRECATED и будут постепенно удаляться по мере подключения реальных API.
+> **Статус миграции:** сервер полностью перешёл на российские реалии. 22 российских модуля данных подключены к реальным API. Legacy-модули с бразильскими данными удалены из кодовой базы.
 
 ---
 
@@ -422,56 +422,61 @@
 
 **Авторизация:** не требуется
 
----
+### `sovfed` — Совет Федерации РФ (6 tools, 3 resources, 2 prompts)
 
-## Legacy / DEPRECATED (бразильский исходный проект)
+Сенаторы, комитеты и комиссии, законопроекты, заседания. Реальные API: sovfed.ru, data.gov.ru.
 
-28 модулей, унаследованных от исходного бразильского проекта, помечены как **⚠️ DEPRECATED**. Они продолжают работать как compatibility-слой, но не являются приоритетными для `mcp-russia`. Каждый legacy-модуль содержит ссылку на российский аналог.
+| Tool | Описание |
+|------|----------|
+| `spisok_senatorov` | Список сенаторов Совета Федерации |
+| `info_senatora` | Информация о сенаторе |
+| `spisok_komitetov` | Список комитетов Совета Федерации |
+| `spisok_komissiy` | Список комиссий Совета Федерации |
+| `poisk_zakonoproektov` | Поиск законопроектов, рассмотренных Советом Федерации |
+| `spisok_zasedaniy` | Список заседаний Совета Федерации |
 
-### Экономика и макростатистика
+**Resources:** `data://istochniki-sovfeda`, `data://struktura-sovfeda`, `data://reglament-sovfeda`
 
-- `bacen` (9 tools) — ⚠️ DEPRECATED → используйте `cbrf`
-- `ibge` (9 tools) — ⚠️ DEPRECATED → используйте `rosstat`
+**Prompts:** `analiz_senatora`, `obzor_zakonodatelstva`
 
-### Законодательство
+**Авторизация:** не требуется
 
-- `camara` (10 tools) — ⚠️ DEPRECATED → используйте `gosduma`
-- `senado` (26 tools) — ⚠️ DEPRECATED → используйте `gosduma`
+### `kaznacheistvo` — Федеральное казначейство (6 tools, 3 resources, 2 prompts)
 
-### Прозрачность и аудит
+Исполнение бюджета, участники бюджетного процесса, учреждения, межбюджетные трансферты. Реальные API: roskazna.gov.ru, budget.gov.ru.
 
-- `transparencia` (18 tools) — ⚠️ DEPRECATED → используйте `zakupki`
-- `tcu` (8 tools) — ⚠️ DEPRECATED → используйте `rosaudit`
-- `tce_sp`, `tce_rj`, `tce_rs`, `tce_sc`, `tce_pe`, `tce_ce`, `tce_rn`, `tce_pi`, `tce_to` — ⚠️ DEPRECATED → используйте `rosaudit`
+| Tool | Описание |
+|------|----------|
+| `spisok_vidov_byudzhetov` | Справочник видов бюджетов бюджетной системы РФ |
+| `spisok_kategoriy_raskhodov` | Справочник категорий расходов бюджета |
+| `ispolnenie_byudzheta` | Данные об исполнении бюджета |
+| `poisk_uchastnikov_bp` | Поиск участников бюджетного процесса |
+| `poisk_uchrezhdeniy` | Поиск учреждений в сводном реестре |
+| `mezhbyudzhetnye_transferty` | Данные о межбюджетных трансфертах |
 
-### Судебный контур
+**Resources:** `data://kaznacheistvo/istochniki`, `data://kaznacheistvo/struktura`, `data://kaznacheistvo/byudzhetnaya-sistema`
 
-- `datajud` (7 tools) — ⚠️ DEPRECATED → используйте `kad_arbitrazh`
-- `jurisprudencia` (6 tools) — ⚠️ DEPRECATED → используйте `kad_arbitrazh`
+**Prompts:** `analiz_ispolneniya_byudzheta`, `obzor_byudzhetnoy_sistemy`
 
-### Выборы
+**Авторизация:** не требуется
 
-- `tse` (15 tools) — ⚠️ DEPRECATED → используйте `cekrf`
-- `anuncios_eleitorais` (6 tools) — ⚠️ DEPRECATED → используйте `cekrf`
+### `rosprirodnadzor` — Росприроднадзор (8 tools, 3 resources, 2 prompts)
 
-### Природа и экология
+Экологические проверки, объекты негативного воздействия, лицензии на недропользование, экологические платежи. Реальные API: rpn.gov.ru.
 
-- `inpe` (4 tools) — ⚠️ DEPRECATED → используйте `rosgidromet`
-- `ana` (3 tools) — ⚠️ DEPRECATED → используйте `rosvodresursy`
+| Tool | Описание |
+|------|----------|
+| `spisok_vidov_nadzora` | Справочник видов государственного надзора |
+| `spisok_kategoriy_obnv` | Справочник категорий объектов негативного воздействия |
+| `spisok_vidov_litsenziy_nedra` | Справочник видов лицензий на пользование недрами |
+| `poisk_proverok` | Поиск экологических проверок |
+| `info_proverki` | Информация о проверке по номеру |
+| `poisk_obektov_negativnogo` | Поиск объектов негативного воздействия на окружающую среду |
+| `poisk_litsenziy_nedra` | Поиск лицензий на пользование недрами |
+| `ekologicheskie_platezhi` | Данные об экологических платежах |
 
-### Здравоохранение
+**Resources:** `data://istochniki`, `data://struktura`, `data://zakonodatelstvo`
 
-- `saude` (4 tools) — ⚠️ DEPRECATED → используйте `minzdrav`
+**Prompts:** `analiz_ekologicheskoy_proverki`, `obzor_nedropolzovaniya`
 
-### Закупки
-
-- `compras/pncp` (6 tools) — ⚠️ DEPRECATED → используйте `zakupki`
-- `compras/dadosabertos` (8 tools) — ⚠️ DEPRECATED → используйте `zakupki`
-
-### Справочные данные
-
-- `brasilapi` (16 tools) — ⚠️ DEPRECATED → используйте `rosapi`
-- `dados_abertos` (4 tools) — ⚠️ DEPRECATED → используйте `rosstat`
-- `diario_oficial` (4 tools) — ⚠️ DEPRECATED → используйте `publikatsii`
-- `transferegov` (5 tools) — ⚠️ DEPRECATED → используйте `gosduma`
-- `tabua_mares` — ⚠️ DEPRECATED → используйте `rosgidromet`
+**Авторизация:** не требуется

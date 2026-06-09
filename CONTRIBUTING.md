@@ -20,14 +20,14 @@ src/mcp_russia/
 ├── exceptions.py       # Общие исключения проекта
 ├── _shared/            # Общий код (http_client, formatting, cache, rate_limiter)
 ├── data/               # Features для внешних API
-│   ├── ibge/           # Историческая feature исходного проекта
-│   ├── transparencia/  # Историческая feature исходного проекта
+│   ├── cbrf/           # Центральный банк РФ
+│   ├── rosstat/        # Росстат
 │   └── {novaya_feature}/ # Новая feature данных
 └── agenty/             # Features для агентных сценариев
-    └── redator/        # Исторический агент официальных документов
+    └── redator/        # Агент официальных документов
 ```
 
-Рабочий namespace для запуска и импорта: `mcp_russia`. Исторические упоминания `mcp_brasil` в документации следует считать техническим долгом, если речь не идет о backward-compatibility заметках.
+Рабочий namespace для запуска и импорта: `mcp_russia`.
 
 ## Как добавить новую feature
 
@@ -131,7 +131,7 @@ server.py → tools.py → client.py → schemas.py
 
 ```bash
 make test                 # Все тесты
-make test-feature F=ibge  # Тесты одной feature
+make test-feature F=cbrf  # Тесты одной feature
 make lint                 # ruff check + format check
 make types                # mypy strict
 make ci                   # lint + types + test
@@ -206,6 +206,7 @@ refactor(gosduma): simplify pagination logic
 
 - Перед коммитом убедитесь, что `make ci` проходит
 - Не копите несвязанные изменения в одном коммите
+- Не удаляйте работающие модули без явной подготовки замены
 
 ## Релизы
 

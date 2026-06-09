@@ -145,4 +145,4 @@ cbrf_konvertirovat_valyutu(valyuta="USD", kolichestvo=1000)
 
 ---
 
-_Файл использует российские инструменты `cbrf_*`, `rosstat_*`, `zakupki_*`. Миграция с legacy-tools `bacen_*` и `ibge_*` завершена._
+_Файл использует российские инструменты `cbrf_*`, `rosstat_*`, `zakupki_*`._
