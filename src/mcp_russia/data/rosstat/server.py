@@ -9,6 +9,7 @@ from .prompts import analiz_regiona, obzor_inflyacii
 from .resources import istochniki_dannyh, metodologiya
 from .tools import (
     demografiya,
+    indikator_dannye,
     inflyaciya,
     okrug_info,
     pokazateli_rosstata,
@@ -33,6 +34,7 @@ mcp.tool(demografiya, tags={"демография", "население"})
 mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
 mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
 mcp.tool(sravnenie_regionov, tags={"сравнение", "регионы"})
+mcp.tool(indikator_dannye, tags={"показатель", "ЕМИСС", "универсальный"})
 
 # Resources
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)

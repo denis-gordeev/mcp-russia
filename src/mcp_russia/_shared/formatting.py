@@ -43,6 +43,9 @@ def format_rub(value: float) -> str:
     abs_value = abs(value)
     integer_part = int(abs_value)
     decimal_part = round((abs_value - integer_part) * 100)
+    if decimal_part >= 100:
+        integer_part += 1
+        decimal_part = 0
     int_str = f"{integer_part:,}".replace(",", " ")
     return f"{sign}{int_str},{decimal_part:02d} ₽"
 

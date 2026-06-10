@@ -11,9 +11,9 @@ Some endpoints may require an API token (DUMA_API_TOKEN env variable).
 
 from __future__ import annotations
 
-import os
 from typing import Any
 
+from mcp_russia import settings
 from mcp_russia._shared.http_client import http_get
 
 from .constants import DUMA_DEPUTATS, DUMA_LAWS, DUMA_VOTES, FRAKCII, SOZYVY
@@ -21,8 +21,8 @@ from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
 
 
 def _get_api_token() -> str:
-    """Get Duma API token from environment."""
-    return os.environ.get("DUMA_API_TOKEN", "")
+    """Get Duma API token from settings."""
+    return settings.DUMA_API_TOKEN
 
 
 async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:

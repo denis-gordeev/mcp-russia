@@ -27,6 +27,7 @@ async def test_has_tools(client):
         "vrp_dannye",
         "zarplata_dannye",
         "sravnenie_regionov",
+        "indikator_dannye",
     }
     assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
@@ -90,3 +91,11 @@ async def test_zarplata_dannye(client):
     assert result is not None
     text = str(result)
     assert "заработ" in text.lower()
+
+
+async def test_indikator_dannye(client):
+    async with client:
+        result = await client.call_tool("indikator_dannye", {"kod": "cpi"})
+    assert result is not None
+    text = str(result)
+    assert "ИПЦ" in text or "Инфляц" in text or "31088" in text

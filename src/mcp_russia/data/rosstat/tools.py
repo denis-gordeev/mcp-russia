@@ -14,7 +14,7 @@ from fastmcp import Context
 from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
-from .constants import KLYUCHEVYE_INDIKATORY, REGIONALNYE_POKAZATELI
+from .constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY, REGIONALNYE_POKAZATELI
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -300,5 +300,63 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + markdown_table(
         ["№", "Регион", "Код", "Значение", "Период"],
+        rows,
+    )
+
+
+async def indikator_dannye(
+    kod: str,
+    region: str = "",
+    god: str = "",
+    ctx: Context | None = None,
+) -> str:
+    """Получить данные произвольного показателя Росстата по коду ЕМИСС.
+
+    Универсальный инструмент для запроса данных по любому известному коду ЕМИСС
+    или мнемоническому коду показателя.
+
+    Args:
+        kod: Код ЕМИСС (например, '31088') или мнемонический код (например, 'cpi', 'vrp').
+        region: Код региона (необязательно).
+        god: Год для запроса (например, '2024').
+
+    Returns:
+        Данные показателя.
+    """
+    if ctx:
+        await ctx.info(f"Запрос данных показателя '{kod}'...")
+    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
+    indicator_name = next(
+        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+        "",
+    )
+    if not indicator_name and kod in EMISS_KODY_POKAZATELEY:
+        indicator_name = next(
+            (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+            f"Показатель ЕМИСС {emiss_code}",
+        )
+    data = await client.poluchit_indikator_dannye(kod=kod, region=region, god=god)
+    filter_parts = []
+    if region:
+        filter_parts.append(f"регион {region}")
+    if god:
+        filter_parts.append(f"год {god}")
+    filter_text = f" ({', '.join(filter_parts)})" if filter_parts else ""
+    if not data:
+        return (
+            f"**{indicator_name or kod}**{filter_text}\n\n"
+            f"Данные временно недоступны.\n"
+            f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}\n\n"
+            f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
+        )
+    rows = []
+    for d in data:
+        val = format_number_ru(d.znachenie, 2) if d.znachenie is not None else "—"
+        rows.append((d.period, d.region or "—", val, d.edinitsa or "—"))
+    title = indicator_name or f"Показатель ЕМИСС {emiss_code}"
+    header = f"**{title}**{filter_text}\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["Период", "Регион", "Значение", "Ед. изм."],
         rows,
     )

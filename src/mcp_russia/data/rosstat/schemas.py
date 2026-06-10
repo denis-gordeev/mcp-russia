@@ -62,3 +62,14 @@ class WagesData(BaseModel):
     region: str = ""
     nominalnaya_zp: float | None = None
     realnaya_zp_change: float | None = None
+
+
+class IndikatorDannye(BaseModel):
+    """Универсальные данные показателя ЕМИСС."""
+
+    kod_emiss: str
+    nazvanie: str = ""
+    period: str = ""
+    znachenie: float | None = None
+    edinitsa: str = ""
+    region: str = ""

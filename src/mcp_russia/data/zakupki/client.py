@@ -11,9 +11,9 @@ Full API access may require authentication via ЕСИА.
 
 from __future__ import annotations
 
-import os
 from typing import Any
 
+from mcp_russia import settings
 from mcp_russia._shared.http_client import http_get
 
 from .constants import (
@@ -27,8 +27,8 @@ from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
 
 
 def _get_api_token() -> str:
-    """Get Zakupki API token from environment."""
-    return os.environ.get("ZAKUPKI_API_TOKEN", "")
+    """Get Zakupki API token from settings."""
+    return settings.ZAKUPKI_API_TOKEN
 
 
 async def poisk_zakupok(

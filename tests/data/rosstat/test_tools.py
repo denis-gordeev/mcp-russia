@@ -3,7 +3,7 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosstat import tools as rosstat_tools
-from mcp_russia.data.rosstat.schemas import RegionData, VRPData, WagesData
+from mcp_russia.data.rosstat.schemas import IndikatorDannye, RegionData, VRPData, WagesData
 
 
 def _mock_ctx():
@@ -226,3 +226,71 @@ async def test_sravnenie_regionov_empty():
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
         result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
     assert "недоступны" in result or "ВРП" in result
+
+
+async def test_indikator_dannye_fallback():
+    result = await rosstat_tools.indikator_dannye(kod="cpi")
+    assert "ИПЦ" in result or "Инфляц" in result or "31088" in result
+
+
+async def test_indikator_dannye_with_data():
+    mock_data = [
+        IndikatorDannye(
+            kod_emiss="31088",
+            nazvanie="Индекс потребительских цен (инфляция)",
+            period="2025-01",
+            znachenie=105.2,
+            edinitsa="%",
+            region="",
+        ),
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
+        result = await rosstat_tools.indikator_dannye(kod="cpi")
+    assert "2025-01" in result
+    assert "105" in result
+
+
+async def test_indikator_dannye_with_region():
+    mock_data = [
+        IndikatorDannye(
+            kod_emiss="24140",
+            nazvanie="Средняя заработная плата",
+            period="2024",
+            znachenie=85000.0,
+            edinitsa="руб.",
+            region="г. Москва",
+        ),
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
+        result = await rosstat_tools.indikator_dannye(kod="wages", region="77", god="2024")
+    assert "Москва" in result
+
+
+async def test_indikator_dannye_empty():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        result = await rosstat_tools.indikator_dannye(kod="cpi")
+    assert "недоступны" in result or "31088" in result
+
+
+async def test_indikator_dannye_emiss_code_direct():
+    mock_data = [
+        IndikatorDannye(
+            kod_emiss="99999",
+            nazvanie="Тестовый показатель",
+            period="2024",
+            znachenie=42.0,
+            edinitsa="шт.",
+            region="",
+        ),
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
+        result = await rosstat_tools.indikator_dannye(kod="99999")
+    assert "99999" in result
+
+
+async def test_constants_subiekty_no_duplicates():
+    from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
+
+    codes = [r["code"] for r in SUBIEKTY_RF]
+    dups = [c for c in codes if codes.count(c) > 1]
+    assert len(codes) == len(set(codes)), f"Дубликаты кодов: {dups}"

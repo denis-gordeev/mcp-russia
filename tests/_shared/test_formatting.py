@@ -39,6 +39,12 @@ class TestFormatRub:
     def test_negative(self) -> None:
         assert format_rub(-42.5) == "-42,50 ₽"
 
+    def test_rounding_edge_case(self) -> None:
+        assert format_rub(1.995) == "2,00 ₽"
+
+    def test_rounding_near_integer(self) -> None:
+        assert format_rub(0.999) == "1,00 ₽"
+
 
 class TestFormatNumberRu:
     def test_default_decimals(self) -> None:

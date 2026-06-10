@@ -16,10 +16,11 @@ from .constants import (
     EMISS_API_BASE,
     EMISS_KODY_POKAZATELEY,
     FEDERALNYE_OKRUGA,
+    KLYUCHEVYE_INDIKATORY,
     REGIONALNYE_POKAZATELI,
     SUBIEKTY_RF,
 )
-from .schemas import PokazatelRosstata, RegionData, VRPData, WagesData
+from .schemas import IndikatorDannye, PokazatelRosstata, RegionData, VRPData, WagesData
 
 logger = logging.getLogger(__name__)
 
@@ -308,6 +309,65 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
         return []
     except Exception:
         logger.exception("Ошибка при получении сравнения регионов по показателю %s", pokazatel)
+        return []
+
+
+async def poluchit_indikator_dannye(
+    kod: str,
+    region: str = "",
+    god: str = "",
+) -> list[IndikatorDannye]:
+    """Fetch arbitrary indicator data by EMISS code or friendly code.
+
+    Args:
+        kod: EMISS code (e.g. '31088') or friendly code (e.g. 'cpi').
+        region: Region code filter (optional).
+        god: Year filter (optional).
+
+    Returns:
+        List of indicator data points.
+    """
+    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
+    indicator_name = next(
+        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+        "",
+    )
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        params: dict[str, str] = {}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=20.0)
+        if not isinstance(data, dict):
+            return []
+        items = data.get("data", [])
+        if not isinstance(items, list):
+            return []
+        results = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            region_name = ""
+            reg_code = item.get("region", region)
+            if reg_code:
+                ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                if ri:
+                    region_name = ri["name"]
+            results.append(
+                IndikatorDannye(
+                    kod_emiss=emiss_code,
+                    nazvanie=indicator_name or item.get("name", kod),
+                    period=item.get("date", item.get("period", "")),
+                    znachenie=item.get("value"),
+                    edinitsa=item.get("unit", ""),
+                    region=region_name,
+                )
+            )
+        return results
+    except Exception:
+        logger.exception("Ошибка при получении данных индикатора %s", kod)
         return []
 
 
