@@ -44,3 +44,21 @@ class DemografiyaData(BaseModel):
     rozhdaemost: float | None = None
     smertnost: float | None = None
     estestvenny_prirost: float | None = None
+
+
+class VRPData(BaseModel):
+    """Данные о валовом региональном продукте."""
+
+    period: str
+    region: str = ""
+    vrp: float | None = None
+    vrp_per_capita: float | None = None
+
+
+class WagesData(BaseModel):
+    """Данные о заработной плате."""
+
+    period: str
+    region: str = ""
+    nominalnaya_zp: float | None = None
+    realnaya_zp_change: float | None = None

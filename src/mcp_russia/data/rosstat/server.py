@@ -15,6 +15,9 @@ from .tools import (
     region_info,
     spisok_okrugov,
     spisok_regionov,
+    sravnenie_regionov,
+    vrp_dannye,
+    zarplata_dannye,
 )
 
 mcp = FastMCP("mcp-russia-rosstat")
@@ -27,6 +30,9 @@ mcp.tool(okrug_info, tags={"федеральный-округ", "информа�
 mcp.tool(pokazateli_rosstata, tags={"показатели", "справочник"})
 mcp.tool(inflyaciya, tags={"инфляция", "ИПЦ"})
 mcp.tool(demografiya, tags={"демография", "население"})
+mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
+mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
+mcp.tool(sravnenie_regionov, tags={"сравнение", "регионы"})
 
 # Resources
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)

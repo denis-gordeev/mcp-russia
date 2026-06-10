@@ -1,4 +1,4 @@
-"""Testes do HTTP client compartilhado."""
+"""Тесты общего HTTP-клиента."""
 
 from unittest.mock import patch
 
@@ -21,8 +21,8 @@ class TestCreateClient:
         assert client.headers["accept"] == "application/json"
 
     def test_custom_base_url(self) -> None:
-        client = create_client(base_url="https://api.ibge.gov.br")
-        assert str(client.base_url) == "https://api.ibge.gov.br"
+        client = create_client(base_url="https://www.cbr.ru")
+        assert str(client.base_url) == "https://www.cbr.ru"
 
     def test_custom_timeout(self) -> None:
         client = create_client(timeout=5.0)

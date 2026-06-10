@@ -2,6 +2,41 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-10 (тридцать третий проход — расширение Росстата, зачистка тестов)
+
+### Выполнено
+
+- **Расширение модуля Росстат (rosstat)**:
+  - `constants.py`: EMISS-коды расширены с 8 до 21 показателя; добавлены agrarian (30955), construction (31106), vrp (26975), vrp_per_capita (26976), wages_real (24142), income_per_capita (24141), poverty_rate (24143), subsidy_income (24144), migration (24134), natural_growth (24135), gini (24146), pension_avg (24147), housing (31103)
+  - `constants.py`: добавлен справочник `REGIONALNYE_POKAZATELI` — 10 показателей с региональной разбивкой
+  - `constants.py`: `KLYUCHEVYE_INDIKATORY` расширено с 10 до 16 показателей (добавлены ВРП, реальная зарплата, доходы, бедность, Джини, пенсии)
+  - `schemas.py`: добавлены модели `VRPData` (ВРП с данными на душу населения), `WagesData` (номинальная и реальная зарплата)
+  - `client.py`: добавлены функции `poluchit_vrp()`, `poluchit_zarplatu()`, `poluchit_sravnenie_regionov()`
+  - `tools.py`: добавлены инструменты `vrp_dannye` (данные о ВРП), `zarplata_dannye` (данные о зарплате), `sravnenie_regionov` (рейтинг регионов по показателю)
+  - `server.py`: зарегистрированы 3 новых инструмента; итого 10 tools
+  - `__init__.py`: версия 0.2.0 → 0.3.0
+- **Зачистка тестовых фикстур от португальских имён**:
+  - `tests/_shared/test_feature.py`: `ibge` → `cbrf`, `transparencia` → `zakupki`, `"IBGE API"` → `"ЦБ РФ API"`, `"IBGE данные"` → `"ЦБ РФ данные"`, `TRANSPARENCIA_API_KEY` → `ZAKUPKI_API_KEY`, теги `["geo", "censo"]` → `["валюта", "курсы"]`
+  - `tests/_shared/test_http_client.py`: португальский docstring → русский; `base_url` тест `https://api.ibge.gov.br` → `https://www.cbr.ru`
+- **Обновлён docs/examples/ofitsialnyy-redaktor.md**: секция «Что осталось доделать» → «Выполнено» (шаблоны переведены на ГОСТ Р 7.0.97-2016, примеры используют российские органы и реквизиты)
+- **Обновлён docs/reference/features.md**: росстат 7→10 tools, 178→181 инструментов
+- **Обновлены тесты Росстата**: 22 теста (было 14) — добавлены тесты vrp_dannye (fallback, with_data, empty), zarplata_dannye (fallback, with_data, empty), sravnenie_regionov (invalid, with_data, empty), constants (emiss_kody_complete, regionalnye_pokazateli); интеграционные тесты обновлены (3 новых)
+- **Обновлён pyproject.toml**: добавлен RUF003 ignore для rosstat
+- **Прогнаны все проверки**: `pytest` (614 passed, 1 skipped), `ruff check` — all passed
+
+### Ключевые архитектурные решения
+
+- **EMISS-коды полностью покрывают KLYUCHEVYE_INDIKATORY**: все 16 показателей имеют соответствующие ЕМИСС-коды; тест `test_constants_emiss_kody_complete` верифицирует это соответствие
+- **REGIONALNYE_POKAZATELI** — новый справочник для инструментов, работающих с региональной разбивкой; позволяет `sravnenie_regionov` валидировать входной параметр
+- **sravnenie_regionov** сортирует регионы по убыванию значения показателя; неверный код показателя возвращает список доступных
+- **Тестовые фикстуры полностью русифицированы**: в тестах FeatureMeta и HTTP-клиента больше нет португальских имён
+
+### Следующие действия
+
+- **Углубление интеграций**: верификация EMISS-кодов на живом fedstat.ru (26975/26976 для ВРП, 30955/31106 для сельского хозяйства/строительства)
+- **Расширение региональных данных**: добавление EMISS-кодов для отраслевой структуры ВРП, инвестиций по видам деятельности
+- **Новые инструменты Росстата**: `indikator_dannye` — универсальный инструмент для произвольного показателя по коду ЕМИСС
+
 ## Статус раунда 2026-06-09 (тридцать второй проход — зачистка документации, обновление справочников)
 
 ### Выполнено

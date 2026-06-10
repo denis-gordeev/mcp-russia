@@ -25,6 +25,15 @@ KLYUCHEVYE_INDIKATORY = [
     {"code": "investments", "name": "Инвестиции в основной капитал"},
     {"code": "agrarian", "name": "Индекс производства сельского хозяйства"},
     {"code": "construction", "name": "Объём работ по строительству"},
+    {"code": "vrp", "name": "Валовой региональный продукт"},
+    {"code": "wages_real", "name": "Реальная среднемесячная начисленная заработная плата"},
+    {"code": "income_per_capita", "name": "Среднедушевые денежные доходы населения"},
+    {
+        "code": "poverty_rate",
+        "name": "Численность населения с доходами ниже прожиточного минимума",
+    },
+    {"code": "gini", "name": "Коэффициент Джини"},
+    {"code": "pension_avg", "name": "Средний размер пенсии"},
 ]
 
 # Коды показателей ЕМИСС
@@ -37,6 +46,33 @@ EMISS_KODY_POKAZATELEY = {
     "wages": "24140",
     "retail_trade": "31082",
     "investments": "24145",
+    "agrarian": "30955",
+    "construction": "31106",
+    "vrp": "26975",
+    "vrp_per_capita": "26976",
+    "wages_real": "24142",
+    "income_per_capita": "24141",
+    "poverty_rate": "24143",
+    "subsidy_income": "24144",
+    "migration": "24134",
+    "natural_growth": "24135",
+    "gini": "24146",
+    "pension_avg": "24147",
+    "housing": "31103",
+}
+
+# Показатели, доступные с региональной разбивкой
+REGIONALNYE_POKAZATELI = {
+    "vrp": "26975",
+    "vrp_per_capita": "26976",
+    "wages": "24140",
+    "wages_real": "24142",
+    "income_per_capita": "24141",
+    "poverty_rate": "24143",
+    "population": "24133",
+    "unemployment": "24139",
+    "investments": "24145",
+    "retail_trade": "31082",
 }
 
 # Федеральные округа РФ

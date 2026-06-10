@@ -3,7 +3,7 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosstat import tools as rosstat_tools
-from mcp_russia.data.rosstat.schemas import RegionData
+from mcp_russia.data.rosstat.schemas import RegionData, VRPData, WagesData
 
 
 def _mock_ctx():
@@ -131,3 +131,98 @@ async def test_constants_emiss_kody():
 
     assert "cpi" in EMISS_KODY_POKAZATELEY
     assert "population" in EMISS_KODY_POKAZATELEY
+    assert "vrp" in EMISS_KODY_POKAZATELEY
+    assert "wages" in EMISS_KODY_POKAZATELEY
+    assert "agrarian" in EMISS_KODY_POKAZATELEY
+    assert "construction" in EMISS_KODY_POKAZATELEY
+
+
+async def test_constants_emiss_kody_complete():
+    from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY
+
+    indicator_codes = {p["code"] for p in KLYUCHEVYE_INDIKATORY}
+    for code in indicator_codes:
+        assert code in EMISS_KODY_POKAZATELEY, (
+            f"KLYUCHEVYE_INDIKATORY code '{code}' missing from EMISS_KODY_POKAZATELEY"
+        )
+
+
+async def test_constants_regionalnye_pokazateli():
+    from mcp_russia.data.rosstat.constants import REGIONALNYE_POKAZATELI
+
+    assert "vrp" in REGIONALNYE_POKAZATELI
+    assert "wages" in REGIONALNYE_POKAZATELI
+    assert "population" in REGIONALNYE_POKAZATELI
+
+
+async def test_vrp_dannye_fallback():
+    result = await rosstat_tools.vrp_dannye(region="77")
+    assert "ВРП" in result or "Валовой" in result
+
+
+async def test_vrp_dannye_with_data():
+    mock_data = [
+        VRPData(period="2023", region="г. Москва", vrp=25400.5, vrp_per_capita=1953.8),
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
+        result = await rosstat_tools.vrp_dannye(region="77", god="2023")
+    assert "2023" in result
+    assert "Москва" in result
+
+
+async def test_vrp_dannye_empty():
+    with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=[]):
+        result = await rosstat_tools.vrp_dannye()
+    assert "Валовой" in result or "ВРП" in result
+
+
+async def test_zarplata_dannye_fallback():
+    result = await rosstat_tools.zarplata_dannye(region="77")
+    assert "заработ" in result.lower()
+
+
+async def test_zarplata_dannye_with_data():
+    mock_data = [
+        WagesData(
+            period="2024",
+            region="г. Москва",
+            nominalnaya_zp=125000.0,
+            realnaya_zp_change=-1.5,
+        ),
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=mock_data):
+        result = await rosstat_tools.zarplata_dannye(region="77", god="2024")
+    assert "2024" in result
+    assert "Москва" in result
+
+
+async def test_zarplata_dannye_empty():
+    with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=[]):
+        result = await rosstat_tools.zarplata_dannye()
+    assert "Заработ" in result or "заработ" in result.lower()
+
+
+async def test_sravnenie_regionov_invalid_pokazatel():
+    ctx = _mock_ctx()
+    result = await rosstat_tools.sravnenie_regionov("invalid_code", ctx)
+    assert "не поддерживается" in result
+
+
+async def test_sravnenie_regionov_with_data():
+    ctx = _mock_ctx()
+    mock_data = [
+        {"region": "г. Москва", "code": "77", "value": 25400.5, "period": "2023"},
+        {"region": "Тюменская область", "code": "72", "value": 8900.3, "period": "2023"},
+    ]
+    with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=mock_data):
+        result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+    assert "Москва" in result
+    assert "Тюмен" in result
+    assert "Рейтинг" in result
+
+
+async def test_sravnenie_regionov_empty():
+    ctx = _mock_ctx()
+    with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
+        result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+    assert "недоступны" in result or "ВРП" in result

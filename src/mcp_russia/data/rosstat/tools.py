@@ -14,7 +14,7 @@ from fastmcp import Context
 from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
-from .constants import KLYUCHEVYE_INDIKATORY
+from .constants import KLYUCHEVYE_INDIKATORY, REGIONALNYE_POKAZATELI
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -187,5 +187,118 @@ async def demografiya(region: str = "", ctx: Context | None = None) -> str:
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + markdown_table(
         ["Период", "Население", "Рожд.", "Смерт."],
+        rows,
+    )
+
+
+async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
+    """Получить данные о валовом региональном продукте (ВРП).
+
+    Args:
+        region: Код региона (необязательно). Без указания — данные по всем регионам.
+        god: Год для запроса (например, '2023').
+
+    Returns:
+        Данные о ВРП по России или региону.
+    """
+    if ctx:
+        await ctx.info("Запрос данных о ВРП...")
+    data = await client.poluchit_vrp(region=region, god=god)
+    filter_text = f" по региону {region}" if region else ""
+    if not data:
+        return (
+            f"**Валовой региональный продукт{filter_text}**\n\n"
+            f"Данные о ВРП доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/26975\n"
+            f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
+            f"Для получения конкретных данных используйте инструмент "
+            f"с указанием кода региона и/или года."
+        )
+    rows = []
+    for d in data:
+        vrp_val = format_number_ru(d.vrp, 2) if d.vrp else "—"
+        vrp_pc = format_number_ru(d.vrp_per_capita, 2) if d.vrp_per_capita else "—"
+        rows.append((d.period, d.region or "—", vrp_val, vrp_pc))
+    header = f"**Валовой региональный продукт{filter_text}**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["Период", "Регион", "ВРП (млрд ₽)", "ВРП на душу (тыс. ₽)"],
+        rows,
+    )
+
+
+async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
+    """Получить данные о средней заработной плате.
+
+    Args:
+        region: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2024').
+
+    Returns:
+        Данные о заработной плате.
+    """
+    if ctx:
+        await ctx.info("Запрос данных о заработной плате...")
+    data = await client.poluchit_zarplatu(region=region, god=god)
+    filter_text = f" по региону {region}" if region else " по России"
+    if not data:
+        return (
+            f"**Средняя заработная плата{filter_text}**\n\n"
+            f"Данные о заработной плате доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/24140\n"
+            f"- Росстат: https://rosstat.gov.ru/labor\n\n"
+            f"Для получения конкретных данных используйте инструмент "
+            f"с указанием кода региона и/или года."
+        )
+    rows = []
+    for d in data:
+        zp = format_number_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
+        real = f"{d.realnaya_zp_change}%" if d.realnaya_zp_change else "—"
+        rows.append((d.period, d.region or "—", zp, real))
+    header = f"**Средняя заработная плата{filter_text}**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["Период", "Регион", "Номин. (₽)", "Реальн. изм."],
+        rows,
+    )
+
+
+async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
+    """Сравнить регионы по выбранному показателю.
+
+    Args:
+        pokazatel: Код показателя (например, 'vrp', 'wages', 'income_per_capita').
+
+    Returns:
+        Рейтинг регионов по показателю.
+    """
+    await ctx.info(f"Запрос сравнения регионов по показателю '{pokazatel}'...")
+    if pokazatel not in REGIONALNYE_POKAZATELI:
+        available = ", ".join(sorted(REGIONALNYE_POKAZATELI.keys()))
+        return (
+            f"Показатель '{pokazatel}' не поддерживается для регионального сравнения.\n\n"
+            f"Доступные показатели: {available}"
+        )
+    data = await client.poluchit_sravnenie_regionov(pokazatel)
+    if not data:
+        emiss_code = REGIONALNYE_POKAZATELI[pokazatel]
+        return (
+            f"**Сравнение регионов по показателю '{pokazatel}'**\n\n"
+            f"Данные временно недоступны.\n"
+            f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}"
+        )
+    sorted_data = sorted(data, key=lambda x: x.get("value") or 0, reverse=True)
+    rows = []
+    for i, d in enumerate(sorted_data, 1):
+        val = format_number_ru(d["value"], 2) if d.get("value") else "—"
+        rows.append((i, d.get("region", "—"), d.get("code", "—"), val, d.get("period", "—")))
+    indicator_name = next(
+        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == pokazatel),
+        pokazatel,
+    )
+    header = f"**Рейтинг регионов по показателю «{indicator_name}»**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["№", "Регион", "Код", "Значение", "Период"],
         rows,
     )

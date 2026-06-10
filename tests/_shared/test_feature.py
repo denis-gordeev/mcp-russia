@@ -15,25 +15,25 @@ from mcp_russia._shared.feature import FeatureMeta, FeatureRegistry, RegisteredF
 
 class TestFeatureMeta:
     def test_create_minimal(self) -> None:
-        meta = FeatureMeta(name="ibge", description="IBGE API")
-        assert meta.name == "ibge"
-        assert meta.description == "IBGE API"
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ API")
+        assert meta.name == "cbrf"
+        assert meta.description == "ЦБ РФ API"
         assert meta.version == "0.1.0"
         assert meta.enabled is True
         assert meta.requires_auth is False
 
     def test_create_with_auth(self) -> None:
         meta = FeatureMeta(
-            name="transparencia",
-            description="Портал прозрачности",
+            name="zakupki",
+            description="ЕИС Закупки",
             requires_auth=True,
-            auth_env_var="TRANSPARENCIA_API_KEY",
+            auth_env_var="ZAKUPKI_API_KEY",
         )
         assert meta.requires_auth is True
-        assert meta.auth_env_var == "TRANSPARENCIA_API_KEY"
+        assert meta.auth_env_var == "ZAKUPKI_API_KEY"
 
     def test_is_auth_available_no_auth_required(self) -> None:
-        meta = FeatureMeta(name="ibge", description="IBGE")
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
         assert meta.is_auth_available() is True
 
     def test_is_auth_available_missing_env_var(self) -> None:
@@ -62,17 +62,17 @@ class TestFeatureMeta:
         assert meta.is_auth_available() is False
 
     def test_frozen(self) -> None:
-        meta = FeatureMeta(name="ibge", description="IBGE")
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
         with pytest.raises(AttributeError):
             meta.name = "other"  # type: ignore[misc]
 
     def test_tags_default_empty(self) -> None:
-        meta = FeatureMeta(name="ibge", description="IBGE")
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
         assert meta.tags == []
 
     def test_tags_custom(self) -> None:
-        meta = FeatureMeta(name="ibge", description="IBGE", tags=["geo", "censo"])
-        assert meta.tags == ["geo", "censo"]
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ", tags=["валюта", "курсы"])
+        assert meta.tags == ["валюта", "курсы"]
 
 
 # ---------------------------------------------------------------------------
@@ -146,13 +146,13 @@ class TestFeatureRegistry:
 
     def test_summary_with_features(self) -> None:
         registry = FeatureRegistry()
-        meta = FeatureMeta(name="ibge", description="IBGE данные")
+        meta = FeatureMeta(name="cbrf", description="ЦБ РФ данные")
         sub = FastMCP("sub")
-        registry._features["ibge"] = RegisteredFeature(meta=meta, server=sub, module_path="m")
+        registry._features["cbrf"] = RegisteredFeature(meta=meta, server=sub, module_path="m")
         summary = registry.summary()
         assert "1 feature(s) active" in summary
-        assert "ibge" in summary
-        assert "IBGE данные" in summary
+        assert "cbrf" in summary
+        assert "ЦБ РФ данные" in summary
 
     def test_summary_with_skipped(self) -> None:
         registry = FeatureRegistry()

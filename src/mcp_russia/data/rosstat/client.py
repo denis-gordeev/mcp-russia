@@ -16,9 +16,10 @@ from .constants import (
     EMISS_API_BASE,
     EMISS_KODY_POKAZATELEY,
     FEDERALNYE_OKRUGA,
+    REGIONALNYE_POKAZATELI,
     SUBIEKTY_RF,
 )
-from .schemas import PokazatelRosstata, RegionData
+from .schemas import PokazatelRosstata, RegionData, VRPData, WagesData
 
 logger = logging.getLogger(__name__)
 
@@ -170,6 +171,143 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         return []
     except Exception:
         logger.exception("Ошибка при получении демографических данных")
+        return []
+
+
+async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
+    """Fetch Gross Regional Product data from EMISS.
+
+    Args:
+        region: Region code (optional).
+        god: Year filter.
+
+    Returns:
+        List of VRP data points.
+    """
+    emiss_code = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        params: dict[str, str] = {}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=20.0)
+        if isinstance(data, dict):
+            items = data.get("data", [])
+            if isinstance(items, list):
+                results = []
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    region_name = ""
+                    reg_code = item.get("region", region)
+                    if reg_code:
+                        ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                        if ri:
+                            region_name = ri["name"]
+                    results.append(
+                        VRPData(
+                            period=item.get("date", item.get("period", "")),
+                            region=region_name,
+                            vrp=item.get("value"),
+                            vrp_per_capita=item.get("perCapita"),
+                        )
+                    )
+                return results
+        return []
+    except Exception:
+        logger.exception("Ошибка при получении данных о ВРП")
+        return []
+
+
+async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
+    """Fetch wages data from EMISS.
+
+    Args:
+        region: Region code (optional).
+        god: Year filter.
+
+    Returns:
+        List of wages data points.
+    """
+    emiss_code = EMISS_KODY_POKAZATELEY.get("wages", "24140")
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        params: dict[str, str] = {}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=20.0)
+        if isinstance(data, dict):
+            items = data.get("data", [])
+            if isinstance(items, list):
+                results = []
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    region_name = ""
+                    reg_code = item.get("region", region)
+                    if reg_code:
+                        ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                        if ri:
+                            region_name = ri["name"]
+                    results.append(
+                        WagesData(
+                            period=item.get("date", item.get("period", "")),
+                            region=region_name,
+                            nominalnaya_zp=item.get("value"),
+                            realnaya_zp_change=item.get("realChange"),
+                        )
+                    )
+                return results
+        return []
+    except Exception:
+        logger.exception("Ошибка при получении данных о заработной плате")
+        return []
+
+
+async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
+    """Fetch a regional indicator for all regions for comparison.
+
+    Args:
+        pokazatel: Indicator code from REGIONALNYE_POKAZATELI.
+
+    Returns:
+        List of region-value pairs.
+    """
+    emiss_code = REGIONALNYE_POKAZATELI.get(pokazatel)
+    if not emiss_code:
+        return []
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        data = await http_get(url, params={"groupByRegion": "true"}, timeout=20.0)
+        if isinstance(data, dict):
+            items = data.get("data", [])
+            if isinstance(items, list):
+                results = []
+                for item in items:
+                    if not isinstance(item, dict):
+                        continue
+                    region_code = str(item.get("region", item.get("okato", "")))
+                    region_name = item.get("regionName", "")
+                    if not region_name:
+                        ri = next((r for r in SUBIEKTY_RF if r["code"] == region_code), None)
+                        if ri:
+                            region_name = ri["name"]
+                    results.append(
+                        {
+                            "region": region_name,
+                            "code": region_code,
+                            "value": item.get("value"),
+                            "period": item.get("date", item.get("period", "")),
+                        }
+                    )
+                return results
+        return []
+    except Exception:
+        logger.exception("Ошибка при получении сравнения регионов по показателю %s", pokazatel)
         return []
 
 
