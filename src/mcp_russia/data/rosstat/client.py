@@ -17,10 +17,20 @@ from .constants import (
     EMISS_KODY_POKAZATELEY,
     FEDERALNYE_OKRUGA,
     KLYUCHEVYE_INDIKATORY,
+    OTRASLEVAYA_STRUKTURA_VRP,
     REGIONALNYE_POKAZATELI,
     SUBIEKTY_RF,
+    VIDY_DEYATELNOSTI_INVESTITSII,
 )
-from .schemas import IndikatorDannye, PokazatelRosstata, RegionData, VRPData, WagesData
+from .schemas import (
+    IndikatorDannye,
+    InvestitsiiPoVidam,
+    OtraslevayaStrukturaVRP,
+    PokazatelRosstata,
+    RegionData,
+    VRPData,
+    WagesData,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -407,3 +417,163 @@ def get_subiekty_list() -> list[dict[str, str]]:
 def get_federalny_okruga_list() -> list[dict[str, str]]:
     """Get list of federal districts available for queries."""
     return FEDERALNYE_OKRUGA
+
+
+async def poluchit_otraslevuyu_strukturu_vrp(
+    region: str = "",
+    god: str = "",
+) -> list[OtraslevayaStrukturaVRP]:
+    """Fetch industry structure of GRP by OKVED section.
+
+    Args:
+        region: Region code (optional).
+        god: Year filter.
+
+    Returns:
+        List of industry structure data points.
+    """
+    emiss_code = EMISS_KODY_POKAZATELEY.get("vrp_structure", "27103")
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        params: dict[str, str] = {}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=20.0)
+        if not isinstance(data, dict):
+            return _fallback_otraslevaya_struktura(region, god)
+        items = data.get("data", [])
+        if not isinstance(items, list) or not items:
+            return _fallback_otraslevaya_struktura(region, god)
+        region_name = ""
+        if region:
+            ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+            if ri:
+                region_name = ri["name"]
+        results = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            okved = item.get("okved", item.get("code", ""))
+            otrasl = next(
+                (o["name"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["code"] == okved),
+                item.get("name", okved),
+            )
+            results.append(
+                OtraslevayaStrukturaVRP(
+                    region=region_name or item.get("regionName", ""),
+                    period=item.get("date", item.get("period", god or "")),
+                    otrasl=otrasl,
+                    kod_okved=okved,
+                    dolya_vvp=item.get("share") or item.get("dolya"),
+                    vrp=item.get("value"),
+                )
+            )
+        return results
+    except Exception:
+        logger.exception("Ошибка при получении отраслевой структуры ВРП")
+        return _fallback_otraslevaya_struktura(region, god)
+
+
+def _fallback_otraslevaya_struktura(
+    region: str = "",
+    god: str = "",
+) -> list[OtraslevayaStrukturaVRP]:
+    """Return industry structure reference data as fallback."""
+    region_name = ""
+    if region:
+        ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+        if ri:
+            region_name = ri["name"]
+    return [
+        OtraslevayaStrukturaVRP(
+            region=region_name,
+            period=god or "справочно",
+            otrasl=o["name"],
+            kod_okved=o["code"],
+            dolya_vvp=None,
+            vrp=None,
+        )
+        for o in OTRASLEVAYA_STRUKTURA_VRP
+    ]
+
+
+async def poluchit_investitsii_po_vidam(
+    region: str = "",
+    god: str = "",
+) -> list[InvestitsiiPoVidam]:
+    """Fetch investment data by type of economic activity.
+
+    Args:
+        region: Region code (optional).
+        god: Year filter.
+
+    Returns:
+        List of investment data points by activity.
+    """
+    emiss_code = EMISS_KODY_POKAZATELEY.get("investments_by_activity", "24145")
+    try:
+        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        params: dict[str, str] = {"groupByActivity": "true"}
+        if region:
+            params["region"] = region
+        if god:
+            params["year"] = god
+        data = await http_get(url, params=params, timeout=20.0)
+        if not isinstance(data, dict):
+            return _fallback_investitsii_po_vidam(region, god)
+        items = data.get("data", [])
+        if not isinstance(items, list) or not items:
+            return _fallback_investitsii_po_vidam(region, god)
+        region_name = ""
+        if region:
+            ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+            if ri:
+                region_name = ri["name"]
+        results = []
+        for item in items:
+            if not isinstance(item, dict):
+                continue
+            okved = item.get("okved", item.get("activityCode", ""))
+            vid = next(
+                (v["name"] for v in VIDY_DEYATELNOSTI_INVESTITSII if v["code"] == okved),
+                item.get("activityName", item.get("name", okved)),
+            )
+            results.append(
+                InvestitsiiPoVidam(
+                    region=region_name or item.get("regionName", ""),
+                    period=item.get("date", item.get("period", god or "")),
+                    vid_deyatelnosti=vid,
+                    kod_okved=okved,
+                    investitsii=item.get("value"),
+                    dolya=item.get("share") or item.get("dolya"),
+                )
+            )
+        return results
+    except Exception:
+        logger.exception("Ошибка при получении инвестиций по видам деятельности")
+        return _fallback_investitsii_po_vidam(region, god)
+
+
+def _fallback_investitsii_po_vidam(
+    region: str = "",
+    god: str = "",
+) -> list[InvestitsiiPoVidam]:
+    """Return investment activity reference data as fallback."""
+    region_name = ""
+    if region:
+        ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+        if ri:
+            region_name = ri["name"]
+    return [
+        InvestitsiiPoVidam(
+            region=region_name,
+            period=god or "справочно",
+            vid_deyatelnosti=v["name"],
+            kod_okved=v["code"],
+            investitsii=None,
+            dolya=None,
+        )
+        for v in VIDY_DEYATELNOSTI_INVESTITSII
+    ]

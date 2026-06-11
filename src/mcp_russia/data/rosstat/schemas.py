@@ -73,3 +73,25 @@ class IndikatorDannye(BaseModel):
     znachenie: float | None = None
     edinitsa: str = ""
     region: str = ""
+
+
+class OtraslevayaStrukturaVRP(BaseModel):
+    """Отраслевая структура ВРП по ОКВЭД."""
+
+    region: str = ""
+    period: str = ""
+    otrasl: str = ""
+    kod_okved: str = ""
+    dolya_vvp: float | None = None
+    vrp: float | None = None
+
+
+class InvestitsiiPoVidam(BaseModel):
+    """Инвестиции в основной капитал по видам деятельности."""
+
+    region: str = ""
+    period: str = ""
+    vid_deyatelnosti: str = ""
+    kod_okved: str = ""
+    investitsii: float | None = None
+    dolya: float | None = None

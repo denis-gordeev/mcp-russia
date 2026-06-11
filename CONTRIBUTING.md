@@ -1,4 +1,4 @@
-# Contributing to mcp-russia
+# Участие в разработке mcp-russia
 
 Спасибо за интерес к проекту.
 

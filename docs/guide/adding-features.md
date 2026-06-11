@@ -45,7 +45,7 @@ src/mcp_russia/data/{feature}/
 ```python
 PRIMER_API_BASE = "https://api.example.gov/v1"
 
-TIPOS_ZAPROSA = {
+TIPY_ZAPROSA = {
     "1": "Базовый",
     "2": "Расширенный",
 }
@@ -84,7 +84,7 @@ from .constants import PRIMER_API_BASE
 from .schemas import PrimerZapisi
 
 
-async def list_items(page: int = 1) -> list[PrimerZapisi]:
+async def spisok_zapisey(page: int = 1) -> list[PrimerZapisi]:
     data = await http_get(f"{PRIMER_API_BASE}/items", params={"page": page})
     return [PrimerZapisi(**item) for item in data]
 ```
@@ -101,12 +101,12 @@ async def list_items(page: int = 1) -> list[PrimerZapisi]:
 from . import client
 
 
-async def list_items(page: int = 1) -> str:
+async def spisok_zapisey(page: int = 1) -> str:
     """Возвращает список записей из внешнего источника."""
-    items = await client.list_items(page=page)
-    if not items:
+    zapisi = await client.spisok_zapisey(page=page)
+    if not zapisi:
         return "Ничего не найдено."
-    return "\n".join(f"- {item.name}" for item in items)
+    return "\n".join(f"- {z.name}" for z in zapisi)
 ```
 
 ## Шаг 5. Зарегистрировать feature-server
@@ -120,7 +120,7 @@ from . import tools
 
 
 mcp = FastMCP("example")
-mcp.tool(tools.list_items)
+mcp.tool(tools.spisok_zapisey)
 ```
 
 Если у feature есть resources и prompts, регистрируйте их тут же.

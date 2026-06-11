@@ -3,7 +3,14 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosstat import tools as rosstat_tools
-from mcp_russia.data.rosstat.schemas import IndikatorDannye, RegionData, VRPData, WagesData
+from mcp_russia.data.rosstat.schemas import (
+    IndikatorDannye,
+    InvestitsiiPoVidam,
+    OtraslevayaStrukturaVRP,
+    RegionData,
+    VRPData,
+    WagesData,
+)
 
 
 def _mock_ctx():
@@ -294,3 +301,101 @@ async def test_constants_subiekty_no_duplicates():
     codes = [r["code"] for r in SUBIEKTY_RF]
     dups = [c for c in codes if codes.count(c) > 1]
     assert len(codes) == len(set(codes)), f"Дубликаты кодов: {dups}"
+
+
+async def test_otraslevaya_struktura_vrp_fallback():
+    result = await rosstat_tools.otraslevaya_struktura_vrp(region="77")
+    assert "ОКВЭД" in result or "отраслев" in result.lower()
+
+
+async def test_otraslevaya_struktura_vrp_with_data():
+    mock_data = [
+        OtraslevayaStrukturaVRP(
+            region="г. Москва",
+            period="2023",
+            otrasl="Обрабатывающие производства",
+            kod_okved="C",
+            dolya_vvp=18.5,
+            vrp=4700.0,
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=mock_data
+    ):
+        result = await rosstat_tools.otraslevaya_struktura_vrp(region="77", god="2023")
+    assert "C" in result
+    assert "Обрабатыва" in result
+
+
+async def test_otraslevaya_struktura_vrp_empty():
+    with patch.object(rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=[]):
+        result = await rosstat_tools.otraslevaya_struktura_vrp()
+    assert "ОКВЭД" in result or "27103" in result
+
+
+async def test_investitsii_po_vidam_fallback():
+    result = await rosstat_tools.investitsii_po_vidam(region="77")
+    assert "инвестиц" in result.lower() or "ОКВЭД" in result
+
+
+async def test_investitsii_po_vidam_with_data():
+    mock_data = [
+        InvestitsiiPoVidam(
+            region="г. Москва",
+            period="2023",
+            vid_deyatelnosti="Обрабатывающие производства",
+            kod_okved="C",
+            investitsii=3200.0,
+            dolya=15.3,
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=mock_data
+    ):
+        result = await rosstat_tools.investitsii_po_vidam(region="77", god="2023")
+    assert "C" in result
+    assert "Обрабатыва" in result
+
+
+async def test_investitsii_po_vidam_empty():
+    with patch.object(rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=[]):
+        result = await rosstat_tools.investitsii_po_vidam()
+    assert "инвестиц" in result.lower() or "24145" in result
+
+
+async def test_constants_otraslevaya_struktura():
+    from mcp_russia.data.rosstat.constants import OTRASLEVAYA_STRUKTURA_VRP
+
+    assert len(OTRASLEVAYA_STRUKTURA_VRP) >= 19
+    codes = [o["code"] for o in OTRASLEVAYA_STRUKTURA_VRP]
+    assert "A" in codes
+    assert "F" in codes
+    assert "S" in codes
+
+
+async def test_constants_vidy_deyatelnosti_investitsii():
+    from mcp_russia.data.rosstat.constants import VIDY_DEYATELNOSTI_INVESTITSII
+
+    assert len(VIDY_DEYATELNOSTI_INVESTITSII) >= 19
+    codes = [v["code"] for v in VIDY_DEYATELNOSTI_INVESTITSII]
+    assert "A" in codes
+    assert "F" in codes
+
+
+async def test_constants_new_emiss_kody():
+    from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY
+
+    assert "foreign_trade" in EMISS_KODY_POKAZATELEY
+    assert "energy_production" in EMISS_KODY_POKAZATELEY
+    assert "transport_cargo" in EMISS_KODY_POKAZATELEY
+    assert "science_innovation" in EMISS_KODY_POKAZATELEY
+    assert "vrp_structure" in EMISS_KODY_POKAZATELEY
+
+
+async def test_constants_new_regionalnye_pokazateli():
+    from mcp_russia.data.rosstat.constants import REGIONALNYE_POKAZATELI
+
+    assert "agrarian" in REGIONALNYE_POKAZATELI
+    assert "construction" in REGIONALNYE_POKAZATELI
+    assert "migration" in REGIONALNYE_POKAZATELI
+    assert "natural_growth" in REGIONALNYE_POKAZATELI

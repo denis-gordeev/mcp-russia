@@ -85,7 +85,7 @@ src/mcp_russia/data/{feature}/
 | `planner.py` | построение плана запроса |
 | `lifespan.py` | общий lifecycle для HTTP-клиента |
 
-## Meta-tools root server
+## Мета-инструменты корневого сервера
 
 Поверх feature-инструментов root server регистрирует meta-tools:
 

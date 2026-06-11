@@ -2,6 +2,45 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-11 (тридцать шестой проход — отраслевая структура ВРП, инвестиции по ОКВЭД, зачистка документации)
+
+### Выполнено
+
+- **Новые инструменты Росстата `otraslevaya_struktura_vrp` и `investitsii_po_vidam`**:
+  - `tools.py`: добавлены инструменты `otraslevaya_struktura_vrp` (отраслевая структура ВРП по ОКВЭД) и `investitsii_po_vidam` (инвестиции в основной капитал по видам деятельности)
+  - `client.py`: добавлены функции `poluchit_otraslevuyu_strukturu_vrp()` и `poluchit_investitsii_po_vidam()` с fallback на статический справочник ОКВЭД при недоступности API
+  - `schemas.py`: добавлены модели `OtraslevayaStrukturaVRP` и `InvestitsiiPoVidam`
+  - `constants.py`: добавлен справочник `OTRASLEVAYA_STRUKTURA_VRP` (19 разделов ОКВЭД с кодами ЕМИСС), `VIDY_DEYATELNOSTI_INVESTITSII` (19 видов деятельности)
+  - `server.py`: зарегистрированы 2 новых инструмента с тегами `{"ВРП", "отрасли", "ОКВЭД"}` и `{"инвестиции", "отрасли", "ОКВЭД"}`; итого 13 tools
+  - `__init__.py`: версия 0.4.0 → 0.5.0, описание обновлено, добавлены теги «ОКВЭД» и «инвестиции»
+- **Расширение EMISS-кодов и показателей**:
+  - `EMISS_KODY_POKAZATELEY`: 21 → 27 кодов; добавлены foreign_trade (31099), energy_production (31110), transport_cargo (31153), science_innovation (27621), vrp_structure (27103), investments_by_activity (24145)
+  - `KLYUCHEVYE_INDIKATORY`: 16 → 21 показатель; добавлены внешнеторговый оборот, производство электроэнергии, грузооборот транспорта, затраты на исследования, структура ВРП
+  - `REGIONALNYE_POKAZATELI`: 10 → 14 показателей; добавлены agrarian, construction, migration, natural_growth
+- **Зачистка документации от английских заголовков и португальских артефактов**:
+  - `docs/reference/smart-tools.md`: `# Smart tools` → `# Умные инструменты`; `## Tool Search (BM25)` → `## Поиск инструментов (BM25)`
+  - `docs/concepts/architecture.md`: `## Meta-tools root server` → `## Мета-инструменты корневого сервера`
+  - `CONTRIBUTING.md`: `# Contributing to mcp-russia` → `# Участие в разработке mcp-russia`
+  - `docs/guide/adding-features.md`: `TIPOS_ZAPROSA` → `TIPY_ZAPROSA`; `list_items` → `spisok_zapisey` во всех примерах кода
+- **Обновлена документация**:
+  - `docs/reference/features.md`: росстат 11→13 tools, 182→184 инструментов; описание обновлено (21 показатель, 27 ЕМИСС-кодов)
+  - `README.md`: добавлены строки про `otraslevaya_struktura_vrp` и `investitsii_po_vidam`
+- **Исправлен ruff SIM117** в `tests/data/rosapi/test_tools.py`: вложенные `with` объединены в один
+- **Обновлены тесты Росстата**: 51 тест (было 42) — добавлены тесты otraslevaya_struktura_vrp (fallback, with_data, empty), investitsii_po_vidam (fallback, with_data, empty), constants (otraslevaya_struktura, vidy_deyatelnosti_investitsii, new_emiss_kody, new_regionalnye_pokazateli)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (641 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Отраслевая структура ВРП с fallback**: инструмент `otraslevaya_struktura_vrp` запрашивает ЕМИСС-код 27103; при недоступности API возвращает справочник всех 19 разделов ОКВЭД без количественных данных — это позволяет пользователю увидеть структуру классификации и понять, какие данные доступны
+- **Инвестиции по видам деятельности с fallback**: инструмент `investitsii_po_vidam` аналогично использует ЕМИСС-код 24145 с параметром `groupByActivity=true`; fallback возвращает справочник видов деятельности
+- **EMISS-коды расширены для полного покрытия**: 27 кодов теперь покрывают все 21 показатель из `KLYUCHEVYE_INDIKATORY` плюс дополнительные коды для региональных и отраслевых запросов; тест `test_constants_emiss_kody_complete` верифицирует соответствие
+
+### Следующие действия
+
+- **Верификация EMISS-кодов на живом fedstat.ru**: проверить корректность кодов 27103 (структура ВРП), 31099 (внешняя торговля), 31110 (электроэнергия), 31153 (грузооборот), 27621 (наука)
+- **Добавить статические данные отраслевой структуры ВРП**: на основе опубликованных Росстатом данных заполнить fallback справочник количественными значениями (доли по ОКВЭД за последний доступный год)
+- **Дочистить CHANGELOG.md**: пометить (legacy) все непомеченные бразильские модули и функции в исторических записях
+
 ## Статус раунда 2026-06-11 (тридцать пятый проход — auth_env_var, AuthError, зачистка)
 
 ### Выполнено

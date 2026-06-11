@@ -14,7 +14,13 @@ from fastmcp import Context
 from mcp_russia._shared.formatting import format_number_ru, markdown_table
 
 from . import client
-from .constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY, REGIONALNYE_POKAZATELI
+from .constants import (
+    EMISS_KODY_POKAZATELEY,
+    KLYUCHEVYE_INDIKATORY,
+    OTRASLEVAYA_STRUKTURA_VRP,
+    REGIONALNYE_POKAZATELI,
+    VIDY_DEYATELNOSTI_INVESTITSII,
+)
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -358,5 +364,85 @@ async def indikator_dannye(
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + markdown_table(
         ["Период", "Регион", "Значение", "Ед. изм."],
+        rows,
+    )
+
+
+async def otraslevaya_struktura_vrp(
+    region: str = "",
+    god: str = "",
+    ctx: Context | None = None,
+) -> str:
+    """Получить отраслевую структуру ВРП по видам экономической деятельности (ОКВЭД).
+
+    Args:
+        region: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2023').
+
+    Returns:
+        Отраслевая структура ВРП.
+    """
+    if ctx:
+        await ctx.info("Запрос отраслевой структуры ВРП...")
+    data = await client.poluchit_otraslevuyu_strukturu_vrp(region=region, god=god)
+    filter_text = f" по региону {region}" if region else " по России"
+    if not data:
+        return (
+            f"**Отраслевая структура ВРП{filter_text}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/27103\n"
+            f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
+            f"Разделы ОКВЭД: "
+            + ", ".join(f"{o['code']} — {o['name']}" for o in OTRASLEVAYA_STRUKTURA_VRP)
+        )
+    rows = []
+    for d in data:
+        dolya = f"{d.dolya_vvp:.1f}%" if d.dolya_vvp is not None else "—"
+        vrp_val = format_number_ru(d.vrp, 2) if d.vrp is not None else "—"
+        rows.append((d.kod_okved, d.otrasl, vrp_val, dolya))
+    header = f"**Отраслевая структура ВРП{filter_text}**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["ОКВЭД", "Отрасль", "ВРП (млрд ₽)", "Доля (%)"],
+        rows,
+    )
+
+
+async def investitsii_po_vidam(
+    region: str = "",
+    god: str = "",
+    ctx: Context | None = None,
+) -> str:
+    """Получить инвестиции в основной капитал по видам экономической деятельности.
+
+    Args:
+        region: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2023').
+
+    Returns:
+        Инвестиции по видам деятельности.
+    """
+    if ctx:
+        await ctx.info("Запрос инвестиций по видам деятельности...")
+    data = await client.poluchit_investitsii_po_vidam(region=region, god=god)
+    filter_text = f" по региону {region}" if region else " по России"
+    if not data:
+        return (
+            f"**Инвестиции по видам деятельности{filter_text}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/24145\n"
+            f"- Росстат: https://rosstat.gov.ru/investment\n\n"
+            f"Виды деятельности: "
+            + ", ".join(f"{v['code']} — {v['name']}" for v in VIDY_DEYATELNOSTI_INVESTITSII)
+        )
+    rows = []
+    for d in data:
+        inv_val = format_number_ru(d.investitsii, 2) if d.investitsii is not None else "—"
+        dolya = f"{d.dolya:.1f}%" if d.dolya is not None else "—"
+        rows.append((d.kod_okved, d.vid_deyatelnosti, inv_val, dolya))
+    header = f"**Инвестиции по видам деятельности{filter_text}**\n\n"
+    header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return header + markdown_table(
+        ["ОКВЭД", "Вид деятельности", "Инвестиции (млрд ₽)", "Доля (%)"],
         rows,
     )

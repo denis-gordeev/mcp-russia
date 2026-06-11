@@ -11,7 +11,9 @@ from .tools import (
     demografiya,
     indikator_dannye,
     inflyaciya,
+    investitsii_po_vidam,
     okrug_info,
+    otraslevaya_struktura_vrp,
     pokazateli_rosstata,
     region_info,
     spisok_okrugov,
@@ -35,6 +37,8 @@ mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
 mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
 mcp.tool(sravnenie_regionov, tags={"сравнение", "регионы"})
 mcp.tool(indikator_dannye, tags={"показатель", "ЕМИСС", "универсальный"})
+mcp.tool(otraslevaya_struktura_vrp, tags={"ВРП", "отрасли", "ОКВЭД"})
+mcp.tool(investitsii_po_vidam, tags={"инвестиции", "отрасли", "ОКВЭД"})
 
 # Resources
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
