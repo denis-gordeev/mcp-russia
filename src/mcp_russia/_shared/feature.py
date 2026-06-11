@@ -217,7 +217,9 @@ class FeatureRegistry:
         if self._features:
             lines.append("Active:")
             for name, feat in sorted(self._features.items()):
-                auth_icon = "🔑" if feat.meta.requires_auth else "🔓"
+                auth_icon = (
+                    "🔑" if feat.meta.requires_auth else ("🔏" if feat.meta.auth_env_var else "🔓")
+                )
                 lines.append(f"  /{name:<20} {auth_icon} {feat.meta.description}")
 
         if self._skipped:

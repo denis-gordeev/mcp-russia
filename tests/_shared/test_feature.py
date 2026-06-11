@@ -61,6 +61,27 @@ class TestFeatureMeta:
         meta = FeatureMeta(name="t", description="T", requires_auth=True)
         assert meta.is_auth_available() is False
 
+    def test_is_auth_available_optional_auth_no_env(self) -> None:
+        meta = FeatureMeta(
+            name="t",
+            description="T",
+            requires_auth=False,
+            auth_env_var="FAKE_KEY_NOT_SET",
+        )
+        with patch.dict(os.environ, {}, clear=False):
+            os.environ.pop("FAKE_KEY_NOT_SET", None)
+            assert meta.is_auth_available() is True
+
+    def test_is_auth_available_optional_auth_with_env(self) -> None:
+        meta = FeatureMeta(
+            name="t",
+            description="T",
+            requires_auth=False,
+            auth_env_var="TEST_OPT_KEY",
+        )
+        with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
+            assert meta.is_auth_available() is True
+
     def test_frozen(self) -> None:
         meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
         with pytest.raises(AttributeError):

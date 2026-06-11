@@ -2,8 +2,12 @@
 
 from unittest.mock import AsyncMock, patch
 
+import pytest
+
 from mcp_russia.data.rosapi import tools as rosapi_tools
+from mcp_russia.data.rosapi.client import _dadata_headers
 from mcp_russia.data.rosapi.schemas import AdresRF, BankRF, Organizatsiya
+from mcp_russia.exceptions import AuthError
 
 
 def _mock_ctx():
@@ -177,3 +181,15 @@ async def test_nalogovye_stavki():
     assert "20%" in result
     assert "НДФЛ" in result
     assert "13%" in result
+
+
+async def test_dadata_headers_raises_auth_error_without_key():
+    with patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""):
+        with pytest.raises(AuthError, match="MCP_RUSSIA_DADATA_API_KEY"):
+            _dadata_headers()
+
+
+async def test_dadata_headers_with_key():
+    with patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", "test-key"):
+        headers = _dadata_headers()
+        assert headers["Authorization"] == "Token test-key"

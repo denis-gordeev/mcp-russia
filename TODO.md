@@ -2,6 +2,49 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-11 (тридцать пятый проход — auth_env_var, AuthError, зачистка)
+
+### Выполнено
+
+- **Подключение `auth_env_var` к модулям с авторизацией**:
+  - `rosapi/__init__.py`: добавлен `auth_env_var="MCP_RUSSIA_DADATA_API_KEY"` (исправлен баг — `requires_auth=True` без `auth_env_var` приводил к `is_auth_available() → False`, модуль всегда пропускался реестром)
+  - `gosduma/__init__.py`: добавлен `auth_env_var="MCP_RUSSIA_DUMA_API_TOKEN"` (requires_auth=False — модуль работает без токена, но с ограничениями)
+  - `zakupki/__init__.py`: добавлен `auth_env_var="MCP_RUSSIA_ZAKUPKI_API_TOKEN"` (requires_auth=False — модуль работает без токена, но с ограничениями)
+- **Использование `AuthError` в rosapi/client.py**:
+  - `_dadata_headers()`: вместо тихой отправки запросов без ключа — возбуждает `AuthError` с инструкцией по настройке MCP_RUSSIA_DADATA_API_KEY
+  - `AuthError` определён в `exceptions.py`, но ранее нигде не вызывался
+- **Информационные заметки об авторизации в tools**:
+  - `gosduma/tools.py`: добавлена функция `_auth_note()`, выводит `*Для полного доступа к API настройте MCP_RUSSIA_DUMA_API_TOKEN*` при отсутствии токена
+  - `zakupki/tools.py`: добавлена функция `_auth_note()`, выводит `*Для полного доступа к API настройте MCP_RUSSIA_ZAKUPKI_API_TOKEN*` при отсутствии токена
+  - Заметки добавлены к результатам инструментов: spisok_deputatov, zakonoproekty, golosovaniya (Госдума), poisk_zakupok, poisk_kontraktov, plany_zakupok (Закупки)
+- **Обновлён `_shared/feature.py`**:
+  - `summary()`: добавлен третий значок авторизации — `🔏` для модулей с `auth_env_var`, но `requires_auth=False` (опциональная авторизация)
+  - Ранее: только `🔑` (requires_auth=True) и `🔓` (без авторизации)
+- **Обновлён `_shared/discovery.py`**:
+  - `build_catalog()`: добавлена категория «Рекомендуется аутентификация ({env_var})» для модулей с `auth_env_var`, но `requires_auth=False`
+  - Ранее: только «Требуется аутентификация» и «Без аутентификации»
+- **Обновлена документация**:
+  - `docs/reference/features.md`: Госдума — «опциональная (MCP_RUSSIA_DUMA_API_TOKEN для полного доступа)»; РосАПИ — «требуется (MCP_RUSSIA_DADATA_API_KEY)»; Закупки — «опциональная (MCP_RUSSIA_ZAKUPKI_API_TOKEN для полного доступа)»
+- **Подтверждено**: кодовая база (`src/`, `tests/`, `docs/`) полностью очищена от португальских/бразильских артефактов. Единственные упоминания — в `TODO.md` (исторические записи) и `CHANGELOG.md` (legacy-записи)
+- **Обновлены тесты**:
+  - `tests/_shared/test_feature.py`: добавлены тесты `test_is_auth_available_optional_auth_no_env`, `test_is_auth_available_optional_auth_with_env`
+  - `tests/data/rosapi/test_tools.py`: добавлены тесты `test_dadata_headers_raises_auth_error_without_key`, `test_dadata_headers_with_key`
+  - `tests/data/gosduma/test_tools.py`: добавлены тесты `test_auth_note_without_token`, `test_auth_note_with_token`
+  - `tests/data/zakupki/test_tools.py`: добавлены тесты `test_auth_note_without_token`, `test_auth_note_with_token`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (487 passed, 1 skipped для non-integration тестов)
+
+### Ключевые архитектурные решения
+
+- **Трёхуровневая модель авторизации**: `requires_auth=True` (модуль пропускается без токена), `requires_auth=False` + `auth_env_var` (опциональная авторизация с рекомендацией), `requires_auth=False` без `auth_env_var` (без авторизации)
+- **`AuthError` используется по назначению**: rosapi (требует Dadata API ключ) возбуждает `AuthError` при отсутствии ключа; gosduma и zakupki (опциональная авторизация) показывают информационную заметку в результатах инструментов
+- **Исправлен баг rosapi**: `requires_auth=True` без `auth_env_var` приводил к тому, что `is_auth_available()` всегда возвращал `False`, и реестр FeatureRegistry всегда пропускал модуль rosapi. Теперь `auth_env_var="MCP_RUSSIA_DADATA_API_KEY"` корректно указан
+
+### Следующие действия
+
+- **Углубление интеграций**: верификация EMISS-кодов на живом fedstat.ru (26975/26976 для ВРП, 30955/31106 для сельского хозяйства/строительства)
+- **Расширение региональных данных**: добавление EMISS-кодов для отраслевой структуры ВРП, инвестиций по видам деятельности
+- **Подключение `requires_auth=True` для РосАПИ**: rosapi теперь корректно настроен с `auth_env_var`, но реестр пропустит модуль если Dadata API ключ не задан — это ожидаемое поведение
+
 ## Статус раунда 2026-06-10 (тридцать четвёртый проход — универсальный инструмент ЕМИСС, исправление багов, унификация настроек)
 
 ### Выполнено

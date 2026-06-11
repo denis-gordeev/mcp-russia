@@ -251,3 +251,13 @@ async def test_golosovaniya_with_data():
         result = await gosduma_tools.golosovaniya(sozyv="8")
     assert "О бюджете" in result
     assert "300" in result
+
+
+async def test_auth_note_without_token():
+    with patch.object(gosduma_tools.client, "_get_api_token", return_value=""):
+        assert "MCP_RUSSIA_DUMA_API_TOKEN" in gosduma_tools._auth_note()
+
+
+async def test_auth_note_with_token():
+    with patch.object(gosduma_tools.client, "_get_api_token", return_value="secret"):
+        assert gosduma_tools._auth_note() == ""

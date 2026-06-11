@@ -15,6 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from mcp_russia._shared.http_client import http_post
+from mcp_russia.exceptions import AuthError
 from mcp_russia.settings import DADATA_API_KEY
 
 from .constants import PRAZDNIKI_RF
@@ -30,8 +31,12 @@ def _dadata_headers(token: str | None = None) -> dict[str, str]:
         "Accept": "application/json",
     }
     key = token or DADATA_API_KEY
-    if key:
-        headers["Authorization"] = f"Token {key}"
+    if not key:
+        raise AuthError(
+            "Для работы с Dadata API необходим ключ MCP_RUSSIA_DADATA_API_KEY. "
+            "Зарегистрируйтесь: https://dadata.ru/api/"
+        )
+    headers["Authorization"] = f"Token {key}"
     return headers
 
 

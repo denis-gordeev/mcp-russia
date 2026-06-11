@@ -65,7 +65,11 @@ def build_catalog(registry: object) -> str:
         auth_info = (
             f"Требуется аутентификация ({meta.auth_env_var})"
             if meta.requires_auth
-            else "Без аутентификации"
+            else (
+                f"Рекомендуется аутентификация ({meta.auth_env_var})"
+                if meta.auth_env_var
+                else "Без аутентификации"
+            )
         )
         lines.append(f"\n## {meta.name}: {meta.description}")
         lines.append(f"Авторизация: {auth_info}")

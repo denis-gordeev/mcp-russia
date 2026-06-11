@@ -16,6 +16,12 @@ from mcp_russia._shared.formatting import markdown_table
 from . import client
 
 
+def _auth_note() -> str:
+    if not client._get_api_token():
+        return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_DUMA_API_TOKEN*"
+    return ""
+
+
 async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     """Получить список депутатов Государственной Думы.
 
@@ -49,7 +55,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     if len(deputats) > 50:
         header += " (показано первых 50)"
     header += "\n\n"
-    return header + markdown_table(["ID", "ФИО", "Фракция", "Комитет"], rows)
+    return header + markdown_table(["ID", "ФИО", "Фракция", "Комитет"], rows) + _auth_note()
 
 
 async def info_deputata(id_deputata: int, ctx: Context) -> str:
@@ -162,7 +168,11 @@ async def zakonoproekty(
     rows = [(b.number, b.title[:80], b.status, b.date_vnesen) for b in bills]
     header = "**Законопроекты Государственной Думы**\n\n"
     header += f"Найдено: {len(bills)} законопроектов\n\n"
-    return header + markdown_table(["Номер", "Название", "Статус", "Дата внесения"], rows)
+    return (
+        header
+        + markdown_table(["Номер", "Название", "Статус", "Дата внесения"], rows)
+        + _auth_note()
+    )
 
 
 async def golosovaniya(
@@ -199,4 +209,4 @@ async def golosovaniya(
     ]
     header = "**Голосования Государственной Думы**\n\n"
     header += f"Найдено: {len(votes)} голосований\n\n"
-    return header + markdown_table(["ID", "Тема", "Дата", "Результат"], rows)
+    return header + markdown_table(["ID", "Тема", "Дата", "Результат"], rows) + _auth_note()

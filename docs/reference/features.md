@@ -70,7 +70,7 @@
 
 **Prompts:** `analiz_deputata`, `obzor_zakonodatelstva`
 
-**Авторизация:** не требуется
+**Авторизация:** опциональная (MCP_RUSSIA_DUMA_API_TOKEN для полного доступа)
 
 ### `cekrf` — Центральная избирательная комиссия РФ (10 tools, 5 resources, 2 prompts)
 
@@ -114,7 +114,7 @@
 
 **Prompts:** `analiz_organizacii`, `poisk_adresa_prompt`
 
-**Авторизация:** опциональна (Dadata API-ключ)
+**Авторизация:** требуется (MCP_RUSSIA_DADATA_API_KEY)
 
 ### `zakupki` — Единая информационная система закупок (7 tools, 3 resources, 2 prompts)
 
@@ -134,7 +134,7 @@
 
 **Prompts:** `analiz_zakupki`, `obzor_zakupok`
 
-**Авторизация:** не требуется
+**Авторизация:** опциональная (MCP_RUSSIA_ZAKUPKI_API_TOKEN для полного доступа)
 
 ### `minzdrav` — Министерство здравоохранения РФ (7 tools, 3 resources, 2 prompts)
 

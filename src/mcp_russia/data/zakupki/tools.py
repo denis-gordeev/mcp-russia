@@ -16,6 +16,12 @@ from mcp_russia._shared.formatting import format_rub, markdown_table
 from . import client
 
 
+def _auth_note() -> str:
+    if not client._get_api_token():
+        return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_ZAKUPKI_API_TOKEN*"
+    return ""
+
+
 async def poisk_zakupok(
     zapros: str = "",
     zakon: str = "",
@@ -77,7 +83,11 @@ async def poisk_zakupok(
     ]
     header = "**Результаты поиска в ЕИС закупок**\n\n"
     header += f"Найдено: {len(zakupki)} закупок\n\n"
-    return header + markdown_table(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
+    return (
+        header
+        + markdown_table(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
+        + _auth_note()
+    )
 
 
 async def info_zakupki(
@@ -160,7 +170,11 @@ async def poisk_kontraktov(
         for k in kontrakty[:30]
     ]
     header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
-    return header + markdown_table(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
+    return (
+        header
+        + markdown_table(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
+        + _auth_note()
+    )
 
 
 async def info_zakazchika(
@@ -297,4 +311,4 @@ async def plany_zakupok(
     ]
     header = f"**Планы-графики закупок на {god} год**\n\n"
     header += f"Найдено: {len(plany)}\n\n"
-    return header + markdown_table(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows)
+    return header + markdown_table(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows) + _auth_note()

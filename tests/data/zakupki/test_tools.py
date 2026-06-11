@@ -210,3 +210,13 @@ async def test_plany_zakupok_empty():
         result = await zakupki_tools.plany_zakupok(god=2025, ctx=ctx)
     assert "2025" in result
     assert "Планы-графики" in result
+
+
+async def test_auth_note_without_token():
+    with patch.object(zakupki_tools.client, "_get_api_token", return_value=""):
+        assert "MCP_RUSSIA_ZAKUPKI_API_TOKEN" in zakupki_tools._auth_note()
+
+
+async def test_auth_note_with_token():
+    with patch.object(zakupki_tools.client, "_get_api_token", return_value="secret"):
+        assert zakupki_tools._auth_note() == ""

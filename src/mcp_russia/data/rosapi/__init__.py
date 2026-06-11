@@ -19,6 +19,7 @@ FEATURE_META = FeatureMeta(
     version="0.2.0",
     api_base="https://dadata.ru/api",
     requires_auth=True,
+    auth_env_var="MCP_RUSSIA_DADATA_API_KEY",
     tags=[
         "адрес",
         "фиаc",
