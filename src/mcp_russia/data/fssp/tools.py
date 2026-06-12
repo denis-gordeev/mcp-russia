@@ -1,4 +1,4 @@
-"""Tools for the ФССП feature."""
+"""Инструменты модуля ФССП."""
 
 from __future__ import annotations
 

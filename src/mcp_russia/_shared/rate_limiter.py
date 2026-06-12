@@ -1,6 +1,6 @@
-"""Async rate limiter using a sliding window of timestamps.
+"""Асинхронный ограничитель частоты запросов со скользящим окном.
 
-Usage::
+Использование::
 
     limiter = RateLimiter(max_requests=80, period=60.0)
 

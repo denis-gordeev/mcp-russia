@@ -1,4 +1,4 @@
-"""HTTP client for the CBRF (Central Bank of Russia) API.
+"""HTTP-клиент для API ЦБ РФ.
 
 Endpoints:
     - https://www.cbr-xml-daily.ru/daily_json.js  → все курсы валют

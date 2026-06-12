@@ -84,7 +84,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 # Russian text naturally contains Cyrillic characters that RUF001/RUF002 flags
 "src/mcp_russia/data/rosapi/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/cbrf/*" = ["RUF001", "RUF002"]
-"src/mcp_russia/data/rosstat/*" = ["RUF001", "RUF002", "RUF003"]
+"src/mcp_russia/data/rosstat/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "src/mcp_russia/data/gosduma/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/cekrf/*" = ["RUF001", "RUF002", "E501"]
 "src/mcp_russia/agenty/redator/*" = ["RUF001", "RUF002"]

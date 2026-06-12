@@ -1,4 +1,4 @@
-"""Resources for the ФССП feature."""
+"""Справочные ресурсы модуля ФССП."""
 
 from __future__ import annotations
 

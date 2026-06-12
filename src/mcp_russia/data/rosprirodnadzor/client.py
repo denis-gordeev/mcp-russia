@@ -1,6 +1,6 @@
-"""HTTP client for the Росприроднадзор data sources.
+"""HTTP-клиент для модуля Росприроднадзора.
 
-Real API integration with:
+Интеграция с реальными API:
     - Росприроднадзор: rpn.gov.ru
     - Открытые данные Росприроднадзора: rpn.gov.ru/opendata
     - Реестр ОНВ: onv.register.rpn.gov.ru

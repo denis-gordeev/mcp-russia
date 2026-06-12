@@ -1,6 +1,6 @@
-"""HTTP client for the Счётная палата РФ data sources.
+"""HTTP-клиент для модуля Счётной палаты РФ.
 
-Real API integration with:
+Интеграция с реальными API:
     - Открытые данные Счётной палаты: ach.gov.ru
     - Портал бюджетных данных: budget.gov.ru
 """

@@ -1,4 +1,4 @@
-"""Constants for the CBRF (Central Bank of Russia) feature."""
+"""Константы модуля ЦБ РФ."""
 
 CBR_DAILY_JSON = "https://www.cbr-xml-daily.ru/daily_json.js"
 CBR_KEY_RATE_XML = "https://www.cbr-xml-daily.ru/daily_json.js"

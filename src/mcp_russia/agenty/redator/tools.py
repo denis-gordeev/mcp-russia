@@ -2,8 +2,8 @@
 
 Основано на ГОСТ Р 7.0.97-2016 и правилах делопроизводства РФ.
 
-Rules (ADR-001):
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - Возвращает форматированные строки для использования LLM
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Pydantic schemas for the CBRF (Central Bank of Russia) feature."""
+"""Схемы Pydantic модуля ЦБ РФ."""
 
 from __future__ import annotations
 

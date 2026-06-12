@@ -1,4 +1,4 @@
-"""Pydantic schemas for the RosAPI feature."""
+"""Схемы Pydantic модуля РосАПИ."""
 
 from __future__ import annotations
 

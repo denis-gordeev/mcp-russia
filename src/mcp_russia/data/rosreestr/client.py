@@ -1,12 +1,12 @@
-"""HTTP client for the Росреестр feature.
+"""HTTP-клиент для модуля Росреестра.
 
-Provides access to Russian real estate data via pkk.rosreestr.ru:
-- Object search by cadastral number
-- Object details (type, area, address, cadastral value)
-- Cadastral value information
+Обеспечивает доступ к данным о недвижимости через pkk.rosreestr.ru:
+- Поиск объектов по кадастровому номеру
+- Детали объекта (тип, площадь, адрес, кадастровая стоимость)
+- Информация о кадастровой стоимости
 
-pkk.rosreestr.ru is a public service that provides JSON API endpoints.
-No API key required.
+pkk.rosreestr.ru — публичный сервис с JSON API эндпоинтами.
+API-ключ не требуется.
 """
 
 from __future__ import annotations

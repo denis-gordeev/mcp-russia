@@ -1,15 +1,15 @@
-"""Tools for the Росреестр feature.
+"""Инструменты модуля Росреестра.
 
-Tools for accessing Russian real estate data:
-- Reference lists (property types, land categories, usage types, statuses, ownership forms)
-- Object info by cadastral number (via pkk.rosreestr.ru)
-- Cadastral value lookup
-- Rights information
+Инструменты для доступа к данным о недвижимости:
+- Справочные списки (типы объектов, категории земель, виды использования, статусы, формы собственности)
+- Информация об объекте по кадастровому номеру (через pkk.rosreestr.ru)
+- Кадастровая стоимость
+- Информация о правах
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
+    - Использует Context для структурированного логирования и отчётов о прогрессе
 """
 
 from __future__ import annotations

@@ -1,4 +1,4 @@
-"""Reference resources for the Zakupki feature."""
+"""Справочные ресурсы модуля ЕИС Закупок."""
 
 
 def istochniki_dannyh() -> str:

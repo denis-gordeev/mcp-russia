@@ -1,4 +1,4 @@
-"""Pydantic schemas for the MinZdrav (Минздрав РФ) feature."""
+"""Схемы Pydantic модуля Минздрава РФ."""
 
 from __future__ import annotations
 

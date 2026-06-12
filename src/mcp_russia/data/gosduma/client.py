@@ -1,12 +1,12 @@
-"""HTTP client for the Gosduma (State Duma) API.
+"""HTTP-клиент для API Госдумы.
 
-Real API integration:
+Интеграция с реальными API:
     - Депутаты: https://api.duma.gov.ru/api/v1/deputies
     - Законопроекты: https://sozd.duma.gov.ru/api/open-api
     - Голосования: https://api.duma.gov.ru/api/v1/votes
 
-The Госдума API provides open data about deputies, bills, and votes.
-Some endpoints may require an API token (DUMA_API_TOKEN env variable).
+API Госдумы предоставляет открытые данные о депутатах, законопроектах и голосованиях.
+Некоторые эндпоинты могут требовать API-токен (переменная окружения DUMA_API_TOKEN).
 """
 
 from __future__ import annotations
@@ -26,13 +26,13 @@ def _get_api_token() -> str:
 
 
 async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
-    """Fetch list of State Duma deputies from the open API.
+    """Получение списка депутатов Государственной Думы из открытого API.
 
     Args:
-        sozyv: Convocation number (e.g., '8' for VIII созыв).
+        sozyv: Номер созыва (напр., '8' для VIII созыва).
 
     Returns:
-        List of deputies.
+        Список депутатов.
     """
     params: dict[str, str] = {}
     if sozyv:
@@ -50,7 +50,7 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
 
 
 def _parse_deputats(data: Any) -> list[Deputat]:
-    """Parse deputies from API response."""
+    """Разбор данных депутатов из ответа API."""
     if isinstance(data, dict):
         items = data.get("deputies", data.get("items", []))
     elif isinstance(data, list):
@@ -156,7 +156,7 @@ async def poluchit_zakonoproekty(
 
 
 def _parse_zakonoproekty(data: Any) -> list[Zakonoproekt]:
-    """Parse bills from API response."""
+    """Разбор данных законопроектов из ответа API."""
     if isinstance(data, dict):
         items = data.get("bills", data.get("items", []))
     elif isinstance(data, list):
@@ -249,17 +249,17 @@ async def poluchit_frakcii() -> list[Frakciya]:
 
 
 def get_sozyvy() -> list[dict[str, str]]:
-    """Get list of State Duma convocations."""
+    """Возвращает список созывов Государственной Думы."""
     return SOZYVY
 
 
 def get_frakcii() -> list[dict[str, str]]:
-    """Get list of current factions."""
+    """Возвращает список текущих фракций."""
     return FRAKCII
 
 
 def get_komitety() -> list[dict[str, str]]:
-    """Get list of Duma committees."""
+    """Возвращает список комитетов Государственной Думы."""
     from .constants import KOMITETY
 
     return KOMITETY

@@ -1,6 +1,6 @@
-"""HTTP client for the Росводресурсы data sources.
+"""HTTP-клиент для модуля Росводресурсов.
 
-Real API integration with:
+Интеграция с реальными API:
     - Государственный водный реестр: text.water.ru
     - ГМВО (гидромониторинг): gmvo.skniigkh.ru
     - Открытые данные data.gov.ru

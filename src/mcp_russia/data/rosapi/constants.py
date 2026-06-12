@@ -1,4 +1,4 @@
-"""Constants for the RosAPI feature."""
+"""Константы модуля РосАПИ."""
 
 from __future__ import annotations
 

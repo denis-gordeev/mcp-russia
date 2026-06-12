@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Gosduma feature."""
+"""Схемы Pydantic модуля Госдумы."""
 
 from __future__ import annotations
 

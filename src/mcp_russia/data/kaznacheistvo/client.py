@@ -1,6 +1,6 @@
-"""HTTP client for the Федеральное казначейство data sources.
+"""HTTP-клиент для модуля Федерального казначейства.
 
-Real API integration with:
+Интеграция с реальными API:
     - Федеральное казначейство: roskazna.gov.ru
     - Портал бюджетных данных: budget.gov.ru/api
     - Открытые данные: data.gov.ru

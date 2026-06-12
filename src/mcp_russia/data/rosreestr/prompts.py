@@ -1,7 +1,7 @@
-"""Prompts for the Росреестр feature.
+"""Промпты модуля Росреестра.
 
-All prompts are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
+Все промпты на русском с пометками «(legacy — placeholder)», так как
+это модуль-заглушка в ожидании реальной интеграции с API.
 """
 
 from __future__ import annotations

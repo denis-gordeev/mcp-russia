@@ -1,7 +1,7 @@
-"""Resources for the ФНС feature.
+"""Справочные ресурсы модуля ФНС.
 
-All resource descriptions are in Russian with "(legacy — placeholder)" markers since
-this is a placeholder module pending real API integration.
+Все описания ресурсов на русском с пометками «(legacy — placeholder)», так как
+это модуль-заглушка в ожидании реальной интеграции с API.
 """
 
 from __future__ import annotations

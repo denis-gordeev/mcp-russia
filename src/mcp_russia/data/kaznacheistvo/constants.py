@@ -1,4 +1,4 @@
-"""Constants for the Федеральное казначейство feature."""
+"""Константы модуля Федерального казначейства."""
 
 KAZNACHEISTVO_API_BASE = "https://roskazna.gov.ru/api"
 KAZNACHEISTVO_BASE = "https://roskazna.gov.ru"

@@ -1,10 +1,10 @@
-"""Tool functions for the CBRF (Central Bank of Russia) feature.
+"""Инструменты модуля ЦБ РФ.
 
-Tools for accessing CBR exchange rates, key rate, and economic indicators.
+Инструменты для доступа к курсам валют, ключевой ставке и экономическим индикаторам ЦБ.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

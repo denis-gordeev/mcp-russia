@@ -1,4 +1,4 @@
-"""Tools for the Минобрнауки feature."""
+"""Инструменты модуля Минобрнауки."""
 
 from __future__ import annotations
 

@@ -1,9 +1,8 @@
-"""LLM-powered query planner for mcp-russia.
+"""Планировщик запросов mcp-russia на базе LLM.
 
-Uses the Anthropic API to analyze user queries and build structured execution
-plans with ordered steps, tool assignments, parameters, and dependencies.
-The planner works against the current catalog, including legacy features that
-remain available during the migration.
+Использует API Anthropic для анализа пользовательских запросов и построения
+структурированных планов выполнения с упорядоченными шагами, назначением
+инструментов, параметрами и зависимостями.
 """
 
 from __future__ import annotations
@@ -19,7 +18,7 @@ logger = logging.getLogger("mcp-russia.planner")
 
 
 class EtapPlana(BaseModel):
-    """One step of the execution plan."""
+    """Один шаг плана выполнения."""
 
     etap: int
     """Step number (1-based)."""
@@ -50,7 +49,7 @@ class PlanZaprosa(BaseModel):
     """Query complexity: 'prostoy', 'umerennyy', or 'slozhnyy'."""
 
     svodka: str
-    """Brief summary of the plan."""
+    """Краткое описание плана."""
 
     etapy: list[EtapPlana]
     """Ordered execution steps."""

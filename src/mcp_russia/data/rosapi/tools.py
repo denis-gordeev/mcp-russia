@@ -1,16 +1,16 @@
-"""Tool functions for the RosAPI feature.
+"""Инструменты модуля РосАПИ.
 
-Tools for accessing Russian reference data:
-- Address lookup via postal code / ФИАС (Dadata)
-- Organization lookup by INN/OGRN (ЕГРЮЛ/ЕГРИП через Dadata)
-- Bank directory (ЦБ РФ через Dadata)
-- Russian national holidays
-- Tax rates
+Инструменты для доступа к российским справочным данным:
+- Поиск адресов по почтовому индексу / ФИАС (Дадата)
+- Поиск организаций по ИНН/ОГРН (ЕГРЮЛ/ЕГРИП через Дадату)
+- Справочник банков (ЦБ РФ через Дадату)
+- Праздничные дни России
+- Ставки налогов
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
-    - Uses Context for structured logging and progress reporting
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
+    - Использует Context для структурированного логирования и отчётов о прогрессе
 """
 
 from __future__ import annotations

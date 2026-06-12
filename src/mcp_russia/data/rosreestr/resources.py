@@ -1,4 +1,4 @@
-"""Resources for the Росреестр feature."""
+"""Справочные ресурсы модуля Росреестра."""
 
 from __future__ import annotations
 

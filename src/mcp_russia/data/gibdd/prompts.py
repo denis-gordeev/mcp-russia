@@ -1,4 +1,4 @@
-"""Prompts for the ГИБДД/МВД feature."""
+"""Промпты модуля ГИБДД/МВД."""
 
 from __future__ import annotations
 

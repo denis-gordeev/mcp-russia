@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Роскомнадзор feature."""
+"""Схемы Pydantic модуля Роскомнадзора."""
 
 from __future__ import annotations
 

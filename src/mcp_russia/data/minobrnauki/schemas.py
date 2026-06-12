@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Минобрнауки feature."""
+"""Схемы Pydantic модуля Минобрнауки."""
 
 from __future__ import annotations
 

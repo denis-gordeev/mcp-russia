@@ -1,4 +1,4 @@
-"""Prompts for the CBRF (Central Bank of Russia) feature."""
+"""Промпты модуля ЦБ РФ."""
 
 from __future__ import annotations
 

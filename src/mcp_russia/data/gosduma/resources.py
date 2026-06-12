@@ -1,4 +1,4 @@
-"""Reference resources for the Gosduma feature."""
+"""Справочные ресурсы модуля Госдумы."""
 
 
 def istochniki_dannyh() -> str:

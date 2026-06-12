@@ -1,4 +1,4 @@
-"""Prompts for the Rosstat feature."""
+"""Промпты модуля Росстата."""
 
 from __future__ import annotations
 

@@ -1,10 +1,10 @@
-"""Tool functions for the Gosduma (State Duma) feature.
+"""Инструменты модуля Госдумы.
 
-Tools for accessing State Duma deputies, bills, factions, and votes.
+Инструменты для доступа к данным о депутатах, законопроектах, фракциях и голосованиях Госдумы.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

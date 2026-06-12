@@ -1,4 +1,4 @@
-"""Resources for the RosAPI feature."""
+"""Справочные ресурсы модуля РосАПИ."""
 
 from __future__ import annotations
 

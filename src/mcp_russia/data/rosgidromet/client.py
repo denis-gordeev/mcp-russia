@@ -1,11 +1,11 @@
-"""HTTP client for the Росгидромет data sources.
+"""HTTP-клиент для модуля Росгидромета.
 
-Real API integration via Open-Meteo (https://open-meteo.com):
+Интеграция через Open-Meteo (https://open-meteo.com):
     - Текущая погода: /v1/forecast?current_weather=true
     - Прогноз: /v1/forecast?daily=...
     - Качество воздуха: /v1/air-quality?current=...
 
-Open-Meteo is free, no API key required, and covers Russian cities.
+Open-Meteo бесплатен, не требует API-ключа и покрывает города России.
 """
 
 from __future__ import annotations
@@ -69,14 +69,14 @@ async def poluchit_prognoz(
     stanciya: str = "77",
     dni: int = 3,
 ) -> list[PrognozData]:
-    """Fetch weather forecast via Open-Meteo API.
+    """Получение прогноза погоды через API Open-Meteo.
 
     Args:
-        stanciya: Station code.
-        dni: Number of forecast days (1-16).
+        stanciya: Код станции.
+        dni: Количество дней прогноза (1-16).
 
     Returns:
-        List of forecast data.
+        Список данных прогноза.
     """
     info = _find_stanciya(stanciya)
     if not info:
@@ -241,22 +241,22 @@ async def poluchit_sputnik_dannye(
 
 
 def get_stancii_list() -> list[dict[str, Any]]:
-    """Get list of monitoring stations."""
+    """Возвращает список мониторинговых станций."""
     return STANCII_MONITORINGA
 
 
 def get_tipy_meteo_list() -> list[dict[str, str]]:
-    """Get list of meteorological data types."""
+    """Возвращает список типов метеорологических данных."""
     return TIPY_METEODANNYKH
 
 
 def get_tipy_eko_list() -> list[dict[str, str]]:
-    """Get list of environmental data types."""
+    """Возвращает список типов экологических данных."""
     return TIPY_EKODANNYKH
 
 
 def get_tipy_preduprezhdeniy_list() -> list[dict[str, str]]:
-    """Get list of warning types."""
+    """Возвращает список типов предупреждений."""
     return TIPY_PREDUPREZHDENIY
 
 
@@ -350,7 +350,7 @@ def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> li
 
 
 def _hpa_to_mmhg(hpa: float | None) -> float | None:
-    """Convert hectopascals to mmHg."""
+    """Конвертация гектопаскалей в мм рт. ст."""
     if hpa is None:
         return None
     return round(hpa * 0.750062, 1)

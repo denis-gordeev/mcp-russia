@@ -1,6 +1,6 @@
-"""Rosvodresursy feature server — registers tools, resources, and prompts.
+"""Сервер модуля Росводресурсов — регистрирует инструменты, ресурсы и промпты.
 
-Zero business logic (ADR-001 rule #4).
+Без бизнес-логики (ADR-001, правило #4).
 """
 
 from fastmcp import FastMCP

@@ -13,7 +13,7 @@
 ### Документация
 
 - Удалены ссылки на ADR и раздел документации из CONTRIBUTING
-- Обновление README: добавлен модуль tabua_mares и исправлены подсчёты
+- Обновление README: добавлен модуль tabua_mares (legacy) и исправлены подсчёты
 - Удалён пример raio-x-parlamentar
 
 ### Новые функции
@@ -49,7 +49,7 @@
 ### Исправления
 
 - **code-mode:** Корректный fallback на BM25 при отсутствии pydantic-monty
-- **legacy-модуль compras/pncp:** Переработка клиента под реальную спецификацию API
+- **legacy-модуль compras/pncp (legacy):** Переработка клиента под реальную спецификацию API
 - **.gitignore:** Удаление временных файлов из каталога Claude
 - **batch:** Исправление AsyncMock-спецификации для ctx inspection в тесте
 
@@ -156,13 +156,13 @@
 - **legislativo (legacy):** Rate limiting для клиентов camara и senado
 - **senado (legacy):** Инструменты partidos_senado и ufs_senado
 - **judiciario (legacy):** Модули datajud, tse и jurisprudencia
-- **phase4 (legacy):** Модули brasilapi, diario_oficial и compras
+- **phase4 (legacy):** Модули brasilapi (legacy), diario_oficial (legacy) и compras (legacy)
 - **tse (legacy):** Дополнительные инструменты выборов
 - **datajud (legacy):** TREs, TJMs, логические запросы и пагинация search_after
 - **transparencia,transferegov (legacy):** Расширение до 18 инструментов + новый модуль transferegov
 - **senado (legacy):** 4 инструмента открытых данных (поправки, блоки, лидерства, доклады)
 - **tse (legacy):** Инструмент итогов выборов с тотализацией голосов
-- Завершение mcp-russia с 4 новыми модулями + расширение 3 существующих
+- Завершение mcp-russia с 4 новыми модулями (legacy) + расширение 3 существующих
 - **tse (legacy):** Результаты выборов через CDN с 4 новыми инструментами
 - **release:** Инфраструктура управления релизами
 

@@ -1,10 +1,9 @@
-"""mcp-russia root server — auto-discovers and mounts all features.
+"""Корневой сервер mcp-russia — автоматическое обнаружение и монтирование функций.
 
-This file uses FeatureRegistry for zero-touch feature onboarding.
-You should NEVER need to edit this file to add a new feature.
-Just create a new directory following the convention in ADR-001/002.
+Использует FeatureRegistry для подключения функций без ручного редактирования.
+Для добавления новой функции достаточно создать директорию по конвенции ADR-001/002.
 
-Usage:
+Запуск:
     fastmcp run mcp_russia.server:mcp
     fastmcp run mcp_russia.server:mcp --transport http --port 8000
 """
@@ -32,10 +31,10 @@ logger = logging.getLogger("mcp-russia")
 
 
 # ---------------------------------------------------------------------------
-# Middleware — lightweight request logging
+# Промежуточный слой — логирование запросов
 # ---------------------------------------------------------------------------
 class RequestLoggingMiddleware(Middleware):
-    """Log all tool calls, resource reads, and prompt requests."""
+    """Логирует все вызовы инструментов, чтения ресурсов и запросы промптов."""
 
     async def on_call_tool(
         self,
@@ -70,16 +69,16 @@ class RequestLoggingMiddleware(Middleware):
 
 
 # ---------------------------------------------------------------------------
-# Server setup
+# Настройка сервера
 # ---------------------------------------------------------------------------
 
-# Create the root server
+# Создание корневого сервера
 mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
 
-# Add middleware
+# Добавление промежуточного слоя
 mcp.add_middleware(RequestLoggingMiddleware())
 
-# Auto-discover and mount all features
+# Автоматическое обнаружение и монтирование всех функций
 registry = FeatureRegistry()
 registry.discover("mcp_russia.data")
 registry.discover("mcp_russia.agenty")
@@ -87,11 +86,11 @@ registry.mount_all(mcp)
 
 logger.info("\n%s", registry.summary())
 
-# Build batch dispatch table for vypolnit_paket
+# Формирование таблицы диспетчеризации для vypolnit_paket
 build_dispatch(registry)
 
 
-# Expose a meta-tool for introspection
+# Мета-инструмент для интроспекции
 @mcp.tool(tags={"meta", "discovery"})
 def spisok_funktsiy() -> str:
     """Список всех доступных функций (API) в mcp-russia.
@@ -170,7 +169,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
 
 
 # ---------------------------------------------------------------------------
-# Tool Search Transform — configurable via MCP_RUSSIA_TOOL_SEARCH
+# Трансформация поиска инструментов — настраивается через MCP_RUSSIA_TOOL_SEARCH
 # ---------------------------------------------------------------------------
 _always_visible = [
     "spisok_funktsiy",
@@ -188,7 +187,7 @@ if TOOL_SEARCH == "bm25":
             always_visible=_always_visible,
         )
     )
-    logger.info("Tool search: BM25 (search_tools + call_tool)")
+    logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
 
 elif TOOL_SEARCH == "code_mode":
     try:
@@ -204,12 +203,12 @@ elif TOOL_SEARCH == "code_mode":
                 discovery_tools=[GetTags(name="get_tags"), Search(name="search"), GetSchemas()],
             )
         )
-        logger.info("Tool search: CodeMode (experimental)")
+        logger.info("Поиск инструментов: CodeMode (экспериментальный)")
     except ImportError:
         logger.warning(
-            "CodeMode requires pydantic-monty. "
-            "Install with: pip install 'fastmcp[code-mode]'. "
-            "Falling back to BM25."
+            "CodeMode требует pydantic-monty. "
+            "Установите: pip install 'fastmcp[code-mode]'. "
+            "Откат к BM25."
         )
         from fastmcp.server.transforms.search import BM25SearchTransform
 
@@ -221,7 +220,10 @@ elif TOOL_SEARCH == "code_mode":
         )
 
 else:
-    logger.info("Tool search: none (all %d+ tools visible)", len(registry.features))
+    logger.info(
+        "Поиск инструментов: отключён (все %d+ инструментов видны)",
+        len(registry.features),
+    )
 
 
 if __name__ == "__main__":

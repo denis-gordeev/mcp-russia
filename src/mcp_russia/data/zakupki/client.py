@@ -1,12 +1,12 @@
-"""HTTP client for the Zakupki (ЕИС закупок) API.
+"""HTTP-клиент для API ЕИС Закупок.
 
-Real API integration:
+Интеграция с реальными API:
     - ЕИС закупок: https://zakupki.gov.ru
     - Открытые данные: https://data.zakupki.gov.ru
     - Поиск закупок: https://zakupki.gov.ru/api/nsi/search
 
-The ЕИС API provides public access to procurement data.
-Full API access may require authentication via ЕСИА.
+API ЕИС предоставляет публичный доступ к данным о закупках.
+Полный доступ к API может требовать аутентификацию через ЕСИА.
 """
 
 from __future__ import annotations

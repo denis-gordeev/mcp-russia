@@ -1,4 +1,4 @@
-"""Prompts for the RosAPI feature."""
+"""Промпты модуля РосАПИ."""
 
 from __future__ import annotations
 

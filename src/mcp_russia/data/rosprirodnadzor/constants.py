@@ -1,4 +1,4 @@
-"""Constants for the Росприроднадзор feature."""
+"""Константы модуля Росприроднадзора."""
 
 ROSPRIRODNADZOR_API_BASE = "https://rpn.gov.ru/api"
 ROSPRIRODNADZOR_BASE = "https://rpn.gov.ru"

@@ -1,4 +1,4 @@
-"""Reference resources for the Росгидромет feature."""
+"""Справочные ресурсы модуля Росгидромета."""
 
 
 def istochniki_dannyh() -> str:

@@ -1,10 +1,10 @@
-"""Tool functions for the Rosstat feature.
+"""Инструменты модуля Росстата.
 
-Tools for accessing Rosstat demographic, economic, and regional data.
+Инструменты для доступа к демографическим, экономическим и региональным данным Росстата.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

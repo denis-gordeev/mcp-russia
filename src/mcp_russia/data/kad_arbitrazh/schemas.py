@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Kad Arbitrazh (Картотека арбитражных дел) feature."""
+"""Схемы Pydantic модуля Картотеки арбитражных дел."""
 
 from __future__ import annotations
 

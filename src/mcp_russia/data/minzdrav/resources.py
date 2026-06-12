@@ -1,4 +1,4 @@
-"""Reference resources for the MinZdrav feature."""
+"""Справочные ресурсы модуля Минздрава РФ."""
 
 
 def istochniki_dannyh() -> str:

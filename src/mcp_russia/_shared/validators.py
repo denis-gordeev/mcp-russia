@@ -1,4 +1,4 @@
-"""Validators for Russian documents: INN, KPP, SNILS, postal code."""
+"""Валидаторы российских документов: ИНН, КПП, СНИЛС, почтовый индекс."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Tools for the ГИБДД/МВД feature."""
+"""Инструменты модуля ГИБДД/МВД."""
 
 from __future__ import annotations
 

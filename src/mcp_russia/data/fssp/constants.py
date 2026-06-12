@@ -1,4 +1,4 @@
-"""Constants for the ФССП feature."""
+"""Константы модуля ФССП."""
 
 FSSP_API_BASE = "https://fssp.gov.ru/api"
 FSSP_SEARCH_API = "https://fssp.gov.ru/iss/search"

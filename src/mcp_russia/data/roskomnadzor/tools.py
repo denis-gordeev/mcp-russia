@@ -1,4 +1,4 @@
-"""Tools for the Роскомнадзор feature."""
+"""Инструменты модуля Роскомнадзора."""
 
 from __future__ import annotations
 

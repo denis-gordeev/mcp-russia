@@ -1,4 +1,4 @@
-"""Reference resources for the Rosstat feature."""
+"""Справочные ресурсы модуля Росстата."""
 
 
 def istochniki_dannyh() -> str:

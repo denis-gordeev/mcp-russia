@@ -184,8 +184,10 @@ async def test_nalogovye_stavki():
 
 
 async def test_dadata_headers_raises_auth_error_without_key():
-    with patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""), \
-         pytest.raises(AuthError, match="MCP_RUSSIA_DADATA_API_KEY"):
+    with (
+        patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""),
+        pytest.raises(AuthError, match="MCP_RUSSIA_DADATA_API_KEY"),
+    ):
         _dadata_headers()
 
 

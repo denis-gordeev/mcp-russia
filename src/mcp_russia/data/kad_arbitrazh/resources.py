@@ -1,4 +1,4 @@
-"""Reference resources for the Kad Arbitrazh feature."""
+"""Справочные ресурсы модуля Картотеки арбитражных дел."""
 
 
 def istochniki_dannyh() -> str:

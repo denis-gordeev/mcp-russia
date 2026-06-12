@@ -1,4 +1,4 @@
-"""Pydantic schemas for the ГИБДД/МВД feature."""
+"""Схемы Pydantic модуля ГИБДД/МВД."""
 
 from __future__ import annotations
 

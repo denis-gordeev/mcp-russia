@@ -1,11 +1,11 @@
-"""HTTP client for the ФНС feature.
+"""HTTP-клиент для модуля ФНС.
 
-Real API integration with:
+Интеграция с реальными API:
     - ЕГРЮЛ/ЕГРИП: https://egrul.nalog.ru (публичные данные о юрлицах и ИП)
 
-The EGRUL API uses a two-step process:
-    1. POST to start a search → receive task ID
-    2. GET search result by task ID → receive organization data
+API ЕГРЮЛ использует двухшаговый процесс:
+    1. POST для запуска поиска → получение ID задачи
+    2. GET результата поиска по ID задачи → получение данных организации
 """
 
 from __future__ import annotations
@@ -74,13 +74,13 @@ async def poluchit_ip(inn: str) -> IPEGRIP | None:
 
 
 async def poluchit_proverki(inn: str) -> list[NalogovayaProverka]:
-    """Fetch tax inspection data (placeholder — requires authenticated API).
+    """Получение данных налоговой инспекции (требуется авторизованный API).
 
     Args:
         inn: ИНН организации.
 
     Returns:
-        Empty list — real integration requires FNS API token.
+        Пустой список — реальная интеграция требует токен API ФНС.
     """
     return []
 
@@ -99,13 +99,13 @@ async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNac
 
 
 async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
-    """Fetch summary information about an organization.
+    """Получение сводной информации об организации.
 
     Args:
         inn: ИНН организации.
 
     Returns:
-        Summary data or None.
+        Сводные данные или None.
     """
     org = await poluchit_organizaciyu(inn)
     if not org:

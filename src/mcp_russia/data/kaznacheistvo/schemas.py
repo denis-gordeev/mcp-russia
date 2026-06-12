@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Федеральное казначейство feature."""
+"""Схемы Pydantic модуля Федерального казначейства."""
 
 from __future__ import annotations
 

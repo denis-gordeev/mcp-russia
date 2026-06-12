@@ -1,4 +1,4 @@
-"""Reference resources for the Официальные публикации РФ feature."""
+"""Справочные ресурсы модуля Официальные публикации РФ."""
 
 
 def istochniki_dannyh() -> str:

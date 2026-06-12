@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Zakupki (ЕИС закупок) feature."""
+"""Схемы Pydantic модуля ЕИС Закупок."""
 
 from __future__ import annotations
 

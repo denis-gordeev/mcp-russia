@@ -1,4 +1,4 @@
-"""Resources for the Роспотребнадзор feature."""
+"""Справочные ресурсы модуля Роспотребнадзора."""
 
 from __future__ import annotations
 

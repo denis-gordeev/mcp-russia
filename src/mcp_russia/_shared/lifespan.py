@@ -1,8 +1,8 @@
-"""Shared lifespan for mcp-russia — creates/closes an httpx.AsyncClient.
+"""Общий lifespan для mcp-russia — создаёт/закрывает httpx.AsyncClient.
 
-The HTTP client is available in tools via ctx.lifespan_context["http_client"].
+HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_client"].
 
-Usage:
+Использование:
     from mcp_russia._shared.lifespan import http_lifespan
 
     mcp = FastMCP("mcp-russia", lifespan=http_lifespan)

@@ -1,4 +1,4 @@
-"""Prompts for the Официальные публикации РФ feature."""
+"""Промпты модуля Официальные публикации РФ."""
 
 from __future__ import annotations
 

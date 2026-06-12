@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Росгидромет feature."""
+"""Схемы Pydantic модуля Росгидромета."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Prompts for the Росгидромет feature."""
+"""Промпты модуля Росгидромета."""
 
 from __future__ import annotations
 

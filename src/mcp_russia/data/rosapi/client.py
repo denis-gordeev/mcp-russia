@@ -1,13 +1,13 @@
-"""HTTP client for the RosAPI feature.
+"""HTTP-клиент для модуля РосАПИ.
 
-Provides access to Russian reference data via Dadata API:
-- Address suggestions (ФИАС)
-- Organization lookup by INN/OGRN (ЕГРЮЛ/ЕГРИП)
-- Bank directory (ЦБ РФ)
+Обеспечивает доступ к российским справочным данным через API Дадаты:
+- Подсказки по адресам (ФИАС)
+- Поиск организаций по ИНН/ОГРН (ЕГРЮЛ/ЕГРИП)
+- Справочник банков (ЦБ РФ)
 
-Dadata free tier: 10,000 requests/day.
-Register at https://dadata.ru/api/ for an API key.
-Set MCP_RUSSIA_DADATA_API_KEY in environment.
+Бесплатный тариф Дадаты: 10 000 запросов/день.
+Зарегистрируйтесь на https://dadata.ru/api/ для получения API-ключа.
+Установите MCP_RUSSIA_DADATA_API_KEY в переменных окружения.
 """
 
 from __future__ import annotations

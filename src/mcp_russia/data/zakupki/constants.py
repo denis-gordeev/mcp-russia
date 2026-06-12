@@ -1,4 +1,4 @@
-"""Constants for the Zakupki (ЕИС — Единая информационная система закупок) feature."""
+"""Константы модуля ЕИС Закупок."""
 
 # API ЕИС (открытые данные)
 ZAKUPKI_API_BASE = "https://zakupki.gov.ru"

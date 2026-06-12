@@ -1,4 +1,4 @@
-"""Prompts for the Федеральное казначейство feature."""
+"""Промпты модуля Федерального казначейства."""
 
 from __future__ import annotations
 

@@ -1,7 +1,7 @@
-"""Tools for the ФНС feature.
+"""Инструменты модуля ФНС.
 
-Tools for accessing tax data, EGRUL/EGRIP organization lookups,
-and reference information about tax regimes and inspection types.
+Инструменты для доступа к налоговым данным, поиска организаций в ЕГРЮЛ/ЕГРИП
+и справочной информации о налоговых режимах и типах инспекций.
 """
 
 from __future__ import annotations

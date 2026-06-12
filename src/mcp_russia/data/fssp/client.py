@@ -1,6 +1,6 @@
-"""HTTP client for the ФССП feature.
+"""HTTP-клиент для модуля ФССП.
 
-Real API integration with Банк данных исполнительных производств:
+Интеграция с Банком данных исполнительных производств:
     https://fssp.gov.ru/iss/ip
 """
 

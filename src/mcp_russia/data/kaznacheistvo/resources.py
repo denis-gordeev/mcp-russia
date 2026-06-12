@@ -1,4 +1,4 @@
-"""Reference resources for the Федеральное казначейство feature."""
+"""Справочные ресурсы модуля Федерального казначейства."""
 
 
 def istochniki_dannyh() -> str:

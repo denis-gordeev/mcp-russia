@@ -1,16 +1,16 @@
-"""Shared async HTTP client for mcp-russia.
+"""Общий асинхронный HTTP-клиент для mcp-russia.
 
-Provides a configured httpx.AsyncClient factory and a fetch helper with
-retry + exponential backoff for transient errors (5xx, 429, timeouts).
+Предоставляет фабрику httpx.AsyncClient и функцию запроса с
+повторными попытками и экспоненциальной задержкой для transient-ошибок (5xx, 429, таймауты).
 
-Usage:
+Использование:
     from mcp_russia._shared.http_client import create_client, http_get
 
-    # Option 1: client factory (for multiple requests in a feature client)
+    # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
     async with create_client(base_url="https://api.example.com") as client:
         response = await client.get("/endpoint")
 
-    # Option 2: one-shot fetch with automatic retry
+    # Вариант 2: разовый запрос с автоматическими повторными попытками
     data = await http_get("https://api.example.com/endpoint")
 """
 

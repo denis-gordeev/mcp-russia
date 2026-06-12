@@ -1,8 +1,8 @@
-"""HTTP client for Rosstat / EMISS data sources.
+"""HTTP-клиент для модуля Росстата / ЕМИСС.
 
-Real API integration with:
-    - ЕМИСС (fedstat.ru) for statistical indicators
-    - Росстат (rosstat.gov.ru) for published data
+Интеграция с реальными API:
+    - ЕМИСС (fedstat.ru) для статистических показателей
+    - Росстат (rosstat.gov.ru) для опубликованных данных
 """
 
 from __future__ import annotations
@@ -93,13 +93,13 @@ async def poluchit_dannye_regiona(code: str) -> RegionData | None:
 
 
 async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
-    """Fetch data for a federal district.
+    """Получение данных о федеральном округе.
 
     Args:
-        code: Federal district code.
+        code: Код федерального округа.
 
     Returns:
-        Federal district data.
+        Данные федерального округа.
     """
     okrug_info = next((o for o in FEDERALNYE_OKRUGA if o["code"] == code), None)
     if not okrug_info:
@@ -327,15 +327,15 @@ async def poluchit_indikator_dannye(
     region: str = "",
     god: str = "",
 ) -> list[IndikatorDannye]:
-    """Fetch arbitrary indicator data by EMISS code or friendly code.
+    """Получение данных произвольного показателя по коду ЕМИСС или мнемоническому коду.
 
     Args:
-        kod: EMISS code (e.g. '31088') or friendly code (e.g. 'cpi').
-        region: Region code filter (optional).
-        god: Year filter (optional).
+        kod: Код ЕМИСС (напр. '31088') или мнемонический код (напр. 'cpi').
+        region: Код региона для фильтрации (необязательно).
+        god: Фильтр по году (необязательно).
 
     Returns:
-        List of indicator data points.
+        Список точек данных показателя.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
     indicator_name = next(
@@ -410,12 +410,12 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
 
 
 def get_subiekty_list() -> list[dict[str, str]]:
-    """Get list of Russian federal subjects available for queries."""
+    """Возвращает список субъектов РФ, доступных для запросов."""
     return SUBIEKTY_RF
 
 
 def get_federalny_okruga_list() -> list[dict[str, str]]:
-    """Get list of federal districts available for queries."""
+    """Возвращает список федеральных округов, доступных для запросов."""
     return FEDERALNYE_OKRUGA
 
 
@@ -480,7 +480,10 @@ def _fallback_otraslevaya_struktura(
     region: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
-    """Return industry structure reference data as fallback."""
+    """Return industry structure reference data as fallback.
+
+    Uses published Rosstat data for 2022 when API is unavailable.
+    """
     region_name = ""
     if region:
         ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
@@ -489,11 +492,11 @@ def _fallback_otraslevaya_struktura(
     return [
         OtraslevayaStrukturaVRP(
             region=region_name,
-            period=god or "справочно",
+            period=god or "2022",
             otrasl=o["name"],
             kod_okved=o["code"],
-            dolya_vvp=None,
-            vrp=None,
+            dolya_vvp=o.get("dolya_2022"),
+            vrp=o.get("vrp_2022"),
         )
         for o in OTRASLEVAYA_STRUKTURA_VRP
     ]
@@ -560,7 +563,10 @@ def _fallback_investitsii_po_vidam(
     region: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:
-    """Return investment activity reference data as fallback."""
+    """Return investment activity reference data as fallback.
+
+    Uses published Rosstat data for 2022 when API is unavailable.
+    """
     region_name = ""
     if region:
         ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
@@ -569,11 +575,11 @@ def _fallback_investitsii_po_vidam(
     return [
         InvestitsiiPoVidam(
             region=region_name,
-            period=god or "справочно",
+            period=god or "2022",
             vid_deyatelnosti=v["name"],
             kod_okved=v["code"],
-            investitsii=None,
-            dolya=None,
+            investitsii=v.get("inv_2022"),
+            dolya=v.get("dolya_2022"),
         )
         for v in VIDY_DEYATELNOSTI_INVESTITSII
     ]

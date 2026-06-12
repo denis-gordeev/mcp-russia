@@ -1,8 +1,8 @@
-"""Tools for the Росприроднадзор feature.
+"""Инструменты модуля Росприроднадзора.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

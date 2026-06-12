@@ -1,4 +1,4 @@
-"""Prompts for the Kad Arbitrazh feature."""
+"""Промпты модуля Картотеки арбитражных дел."""
 
 from __future__ import annotations
 

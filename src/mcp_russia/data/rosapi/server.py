@@ -1,7 +1,7 @@
-"""RosAPI feature server — registers tools, resources, and prompts.
+"""Сервер модуля РосАПИ — регистрирует инструменты, ресурсы и промпты.
 
-Russian reference data module: addresses, organizations, banks, holidays.
-This file only registers components. Zero business logic (ADR-001 rule #4).
+Модуль российских справочных данных: адреса, организации, банки, праздники.
+Этот файл только регистрирует компоненты. Без бизнес-логики (ADR-001, правило #4).
 """
 
 from fastmcp import FastMCP

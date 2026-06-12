@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Официальные публикации РФ feature."""
+"""Схемы Pydantic модуля Официальные публикации РФ."""
 
 from __future__ import annotations
 

@@ -1,4 +1,4 @@
-"""Reference resources for the CBRF (Central Bank of Russia) feature."""
+"""Справочные ресурсы модуля ЦБ РФ."""
 
 from __future__ import annotations
 

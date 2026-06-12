@@ -1,6 +1,6 @@
-"""HTTP client for the Роспотребнадзор feature.
+"""HTTP-клиент для модуля Роспотребнадзора.
 
-Real API integration with:
+Интеграция с реальными API:
     - Реестр проверок: proverki.rospotrebnadzor.ru
     - Открытые данные: rospotrebnadzor.ru/opendata
     - Защита прав потребителей: zpp.rospotrebnadzor.ru

@@ -1,4 +1,4 @@
-"""Prompts for the Счётная палата РФ feature."""
+"""Промпты модуля Счётной палаты РФ."""
 
 from __future__ import annotations
 

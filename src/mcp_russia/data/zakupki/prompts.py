@@ -1,4 +1,4 @@
-"""Prompts for the Zakupki feature."""
+"""Промпты модуля ЕИС Закупок."""
 
 from __future__ import annotations
 

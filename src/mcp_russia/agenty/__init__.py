@@ -1,1 +1,1 @@
-"""Agent features — intelligent agents built on top of data features."""
+"""Агенты — интеллектуальные агенты поверх модулей данных."""

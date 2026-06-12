@@ -1,4 +1,4 @@
-"""Constants for the Gosduma (State Duma) feature."""
+"""Константы модуля Госдумы."""
 
 # API Государственной Думы (открытые данные)
 DUMA_API_BASE = "https://api.duma.gov.ru/api/v1"

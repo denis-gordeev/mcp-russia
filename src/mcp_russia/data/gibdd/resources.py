@@ -1,4 +1,4 @@
-"""Resources for the ГИБДД/МВД feature."""
+"""Справочные ресурсы модуля ГИБДД/МВД."""
 
 
 def istochniki_dannyh() -> str:

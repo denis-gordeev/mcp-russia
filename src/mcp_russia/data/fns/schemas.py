@@ -1,4 +1,4 @@
-"""Pydantic schemas for the ФНС feature."""
+"""Схемы Pydantic модуля ФНС."""
 
 from __future__ import annotations
 

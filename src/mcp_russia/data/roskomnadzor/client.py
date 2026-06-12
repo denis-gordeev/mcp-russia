@@ -1,6 +1,6 @@
-"""HTTP client for the Роскомнадзор feature.
+"""HTTP-клиент для модуля Роскомнадзора.
 
-Real API integration with:
+Интеграция с реальными API:
     - Реестр операторов ПД: rkn.gov.ru/pdn
     - Реестр ОРИ: rkn.gov.ru/registry-ori
     - Единый реестр запрещённых сайтов: eais.rkn.gov.ru

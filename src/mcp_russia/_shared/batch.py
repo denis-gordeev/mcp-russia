@@ -1,7 +1,7 @@
-"""Batch execution for running multiple tools in a single call.
+"""Пакетное выполнение нескольких инструментов за один вызов.
 
-Builds a dispatch table mapping namespaced tool names to their underlying
-Python functions, then executes them concurrently with asyncio.gather().
+Формирует таблицу диспетчеризации, связывающую полные имена инструментов
+с соответствующими функциями Python, затем выполняет их параллельно через asyncio.gather().
 """
 
 from __future__ import annotations
@@ -55,7 +55,7 @@ def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
 
 
 def _scan_tools_module(module_path: str, namespace: str) -> None:
-    """Import a tools module and register its async functions."""
+    """Импорт модуля инструментов и регистрация его асинхронных функций."""
     try:
         mod = importlib.import_module(f"{module_path}.tools")
     except ImportError:
@@ -71,14 +71,14 @@ async def execute_batch(
     queries: list[dict[str, Any]],
     ctx: Any,
 ) -> str:
-    """Execute multiple tool calls concurrently.
+    """Параллельное выполнение нескольких вызовов инструментов.
 
     Args:
-        queries: List of {"tool": "name", "args": {}} dicts.
-        ctx: FastMCP Context to pass to tools that accept it.
+        queries: Список словарей {"tool": "имя", "args": {}}.
+        ctx: Контекст FastMCP для передачи в инструменты, которые его принимают.
 
     Returns:
-        Formatted markdown with all results.
+        Отформатированный markdown со всеми результатами.
     """
     if not queries:
         return "Нет запросов для выполнения."

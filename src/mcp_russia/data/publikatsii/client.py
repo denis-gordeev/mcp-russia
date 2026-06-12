@@ -1,7 +1,7 @@
-"""HTTP client for the Официальные публикации РФ data sources.
+"""HTTP-клиент для модуля Официальные публикации РФ.
 
-Official Russian legal publications from pravo.gov.ru open data API,
-ConsultantPlus (paid), and Russian Gazette (rg.ru).
+Официальные российские правовые публикации с открытого API pravo.gov.ru,
+КонсультантПлюс (платный) и Российская газета (rg.ru).
 """
 
 from __future__ import annotations
@@ -100,13 +100,13 @@ async def poluchit_publikatsii(
 
 
 async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
-    """Fetch amendments to a legal act from pravo.gov.ru open data.
+    """Получение поправок к нормативному акту из открытых данных pravo.gov.ru.
 
     Args:
-        akt_nomer: Act number/identifier.
+        akt_nomer: Номер/идентификатор акта.
 
     Returns:
-        List of amendments.
+        Список поправок.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
     try:
@@ -138,22 +138,22 @@ async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
 
 
 def get_tipy_aktov_list() -> list[dict[str, str]]:
-    """Get list of normative act types."""
+    """Возвращает список типов нормативных актов."""
     return TIPY_NORMATIVNYKH_AKTOV
 
 
 def get_otrasli_list() -> list[dict[str, str]]:
-    """Get list of legal branches."""
+    """Возвращает список отраслей права."""
     return OTRASLI_ZAKONODATELSTVA
 
 
 def get_istochniki_list() -> list[dict[str, str]]:
-    """Get list of publication sources."""
+    """Возвращает список источников публикаций."""
     return ISTOCHNIKI_PUBLIKATSIY
 
 
 def get_statusy_list() -> list[dict[str, str]]:
-    """Get list of document statuses."""
+    """Возвращает список статусов документов."""
     return STATUSY_DOKUMENTOV
 
 

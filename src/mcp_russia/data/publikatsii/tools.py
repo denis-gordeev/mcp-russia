@@ -1,11 +1,11 @@
-"""Tool functions for the Официальные публикации РФ feature.
+"""Инструменты модуля Официальные публикации РФ.
 
-Tools for accessing legal acts, bills, publications, and amendments
-from the Официальный портал правовой информации (pravo.gov.ru).
+Инструменты для доступа к нормативным актам, законопроектам, публикациям и поправкам
+с Официального портала правовой информации (pravo.gov.ru).
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

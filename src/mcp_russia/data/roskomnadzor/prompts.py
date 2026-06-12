@@ -1,7 +1,7 @@
-"""Prompts for the Роскомнадзор feature.
+"""Промпты модуля Роскомнадзора.
 
-All prompts are in Russian with "(legacy)" markers since this is
-a placeholder module pending real API integration.
+Все промпты на русском с пометками «(legacy)», так как
+это модуль-заглушка в ожидании реальной интеграции с API.
 """
 
 from __future__ import annotations

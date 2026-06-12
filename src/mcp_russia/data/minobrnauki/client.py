@@ -1,6 +1,6 @@
-"""HTTP client for the Минобрнауки feature.
+"""HTTP-клиент для модуля Минобрнауки.
 
-Real API integration with:
+Интеграция с реальными API:
     - Рособрнадзор (аккредитация): obrnadzor.gov.ru/opendata
     - Реестр лицензий: obrnadzor.gov.ru/opendata
     - Рейтинг вузов: vuz.minobrnauki.gov.ru

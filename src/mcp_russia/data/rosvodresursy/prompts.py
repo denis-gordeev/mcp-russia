@@ -1,4 +1,4 @@
-"""Prompts for the Росводресурсы feature."""
+"""Промпты модуля Росводресурсов."""
 
 from __future__ import annotations
 

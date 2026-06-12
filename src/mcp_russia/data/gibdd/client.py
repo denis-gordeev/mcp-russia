@@ -1,6 +1,6 @@
-"""HTTP client for the ГИБДД/МВД feature.
+"""HTTP-клиент для модуля ГИБДД/МВД.
 
-Real API integration with:
+Интеграция с реальными API:
     - Проверка ТС: https://гибдд.рф/check/auto
     - Проверка ВУ: https://гибдд.рф/check/driver
     - Статистика ДТП: https://stat.gibdd.ru

@@ -1,16 +1,16 @@
-"""Feature metadata and auto-registry for mcp-russia.
+"""Метаданные функций и автоматический реестр mcp-russia.
 
-This module implements convention-based auto-discovery of features.
-Any subpackage of mcp_russia that exports a FEATURE_META and has a
-server.py with an `mcp` object will be automatically discovered,
-validated, and mounted on the root server.
+Модуль реализует автоматическое обнаружение функций на основе конвенции.
+Любой подпакет mcp_russia, экспортирующий FEATURE_META и содержащий
+server.py с объектом `mcp`, будет автоматически обнаружен,
+провалидирован и смонтирован на корневой сервер.
 
-Pattern inspired by: Flask blueprints, Django app registry,
+Подход вдохновлён: Flask blueprints, Django app registry,
 pytest plugin discovery, FastAPI router auto-include.
 
-See ADR-002 for the full rationale.
+Полное обоснование — см. ADR-002.
 
-Usage:
+Использование:
     from fastmcp import FastMCP
     from mcp_russia._shared.feature import FeatureRegistry
 
@@ -39,11 +39,11 @@ logger = logging.getLogger(__name__)
 
 @dataclass(frozen=True)
 class FeatureMeta:
-    """Declarative metadata for a feature.
+    """Декларативные метаданные функции.
 
-    Every feature must export a FEATURE_META instance in its __init__.py.
-    The registry uses these metadata for discovery, validation, docs,
-    and runtime decisions (auth gating, feature flags).
+    Каждая функция должна экспортировать экземпляр FEATURE_META в своём __init__.py.
+    Реестр использует эти метаданные для обнаружения, валидации, документации
+    и решений во время выполнения (авторизация, флаги функций).
 
     Example:
         # src/mcp_russia/rosstat/__init__.py

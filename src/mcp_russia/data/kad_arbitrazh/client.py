@@ -1,11 +1,11 @@
-"""HTTP client for the Kad Arbitrazh (Картотека арбитражных дел) API.
+"""HTTP-клиент для API Картотеки арбитражных дел.
 
-Real API integration:
+Интеграция с реальными API:
     - Поиск дел: POST https://kad.arbitr.ru/Kad/Search
     - Карточка дела: GET https://kad.arbitr.ru/Kad/Instance/{id}
 
-The КАД API is public and does not require authentication.
-Rate limiting: be respectful, add delays between requests.
+API КАД является публичным и не требует аутентификации.
+Ограничение запросов: будьте уважительны, добавляйте задержки между запросами.
 """
 
 from __future__ import annotations

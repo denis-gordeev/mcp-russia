@@ -1,10 +1,10 @@
-"""Tool functions for the Kad Arbitrazh (Картотека арбитражных дел) feature.
+"""Инструменты модуля Картотеки арбитражных дел.
 
-Tools for searching court cases, judicial acts, judges, and parties.
+Инструменты для поиска судебных дел, судебных актов, судей и сторон.
 
-Rules (ADR-001):
-    - tools.py NEVER makes HTTP directly — delegates to client.py
-    - Returns formatted strings for LLM consumption
+Правила (ADR-001):
+    - tools.py НЕ делает HTTP-запросы напрямую — делегирует client.py
+    - Возвращает форматированные строки для LLM
 """
 
 from __future__ import annotations

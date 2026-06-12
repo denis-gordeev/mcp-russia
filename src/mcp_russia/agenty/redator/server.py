@@ -1,6 +1,6 @@
 """Сервер функции deloproizvodstvo — регистрирует инструменты, ресурсы и prompts.
 
-Zero business logic (ADR-001 rule #4).
+Без бизнес-логики (правило ADR-001 №4).
 """
 
 from fastmcp import FastMCP

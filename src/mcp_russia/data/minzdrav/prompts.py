@@ -1,4 +1,4 @@
-"""Prompts for the MinZdrav feature."""
+"""Промпты модуля Минздрава РФ."""
 
 from __future__ import annotations
 

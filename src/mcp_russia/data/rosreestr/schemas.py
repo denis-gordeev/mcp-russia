@@ -1,4 +1,4 @@
-"""Pydantic schemas for the Росреестр feature."""
+"""Схемы Pydantic модуля Росреестра."""
 
 from __future__ import annotations
 

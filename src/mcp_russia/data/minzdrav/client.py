@@ -1,6 +1,6 @@
-"""HTTP client for the Минздрав РФ data sources.
+"""HTTP-клиент для модуля Минздрава РФ.
 
-Real API integration with:
+Интеграция с реальными API:
     - Открытые данные Минздрава: data.minzdrav.gov.ru
     - Росздравнадзор: roszdravnadzor.gov.ru
     - ФРМО (Федеральный реестр медицинских организаций)

@@ -1,4 +1,4 @@
-"""Prompts for the Gosduma feature."""
+"""Промпты модуля Госдумы."""
 
 from __future__ import annotations
 

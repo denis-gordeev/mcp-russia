@@ -1,8 +1,7 @@
-"""LLM-powered tool recommendation for mcp-russia.
+"""Рекомендация инструментов mcp-russia на базе LLM.
 
-Uses the Anthropic API to understand user intent and recommend the most
-relevant tools from the current server catalog, including legacy features
-that are still exposed for compatibility.
+Использует API Anthropic для понимания намерений пользователя и подбора
+наиболее релевантных инструментов из текущего каталога сервера.
 """
 
 from __future__ import annotations
@@ -17,9 +16,9 @@ _catalog_cache: str = ""
 
 
 def _format_tool_signature(feature_name: str, tool_name: str, tool: object) -> str:
-    """Format a tool as a readable signature with params and description.
+    """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
-    Produces output like:
+    Формирует вывод вида:
         - gosduma_poluchit_deputatov(familiya?: str) — Список депутатов Госдумы.
     """
     params = getattr(tool, "parameters", {})

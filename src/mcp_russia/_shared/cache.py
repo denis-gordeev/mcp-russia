@@ -1,16 +1,16 @@
-"""Simple async-safe TTL cache for API responses.
+"""Простой потокобезопасный TTL-кэш для ответов API.
 
-Avoids hammering government APIs with repeated identical requests.
-Uses an in-memory dict with per-entry expiration — no external deps.
+Предотвращает повторные идентичные запросы к государственным API.
+Использует словарь в памяти с посерийным истечением срока — без внешних зависимостей.
 
-Usage:
+Использование:
     from mcp_russia._shared.cache import ttl_cache
 
-    cache = ttl_cache(ttl=300)  # 5 minutes
+    cache = ttl_cache(ttl=300)  # 5 минут
 
     @cache
     async def spisok_regionov() -> list[Region]:
-        ...  # HTTP call only happens if cache miss or expired
+        ...  # HTTP-запрос выполняется только при промахе кэша или истечении срока
 """
 
 from __future__ import annotations

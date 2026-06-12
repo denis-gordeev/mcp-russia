@@ -1,9 +1,8 @@
-"""Russian official document generation layer within mcp-russia.
+"""Слой генерации официальных документов РФ в mcp-russia.
 
-This module provides tools for generating official Russian documents
-(pismo, rasporyazhenie, prikaz, akt, spravka, protokol, dokladnaya_zapiska)
-based on Russian official document standards (GOST R 7.0.97-2016,
-Deloproizvodstvo RF).
+Модуль предоставляет инструменты для создания официальных документов
+(письмо, распоряжение, приказ, акт, справка, протокол, докладная_записка)
+на основе ГОСТ Р 7.0.97-2016 и правил делопроизводства РФ.
 """
 
 from mcp_russia._shared.feature import FeatureMeta

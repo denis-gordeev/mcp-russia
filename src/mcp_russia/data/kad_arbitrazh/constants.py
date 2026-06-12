@@ -1,4 +1,4 @@
-"""Constants for the Kad Arbitrazh (Картотека арбитражных дел) feature."""
+"""Константы модуля Картотеки арбитражных дел."""
 
 KAD_ARBITR_API_BASE = "https://kad.arbitr.ru"
 KAD_SEARCH_URL = "https://kad.arbitr.ru/Kad/Search"

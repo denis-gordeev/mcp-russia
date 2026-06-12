@@ -109,14 +109,14 @@ def parse_rub_number(value: Any) -> float | None:
 
 
 def truncate_list(items: Sequence[str], max_items: int = 50) -> str:
-    """Join items with newlines and truncate long lists.
+    """Объединение элементов через перевод строки с усечением длинных списков.
 
     Args:
-        items: List of strings.
-        max_items: Maximum items to show before truncating.
+        items: Список строк.
+        max_items: Максимальное количество элементов перед усечением.
 
     Returns:
-        Joined string with truncation notice if needed.
+        Объединённая строка с уведомлением об усечении при необходимости.
     """
     if len(items) <= max_items:
         return "\n".join(items)

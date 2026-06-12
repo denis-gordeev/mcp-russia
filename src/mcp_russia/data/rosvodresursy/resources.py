@@ -1,4 +1,4 @@
-"""Reference resources for the Росводресурсы feature."""
+"""Справочные ресурсы модуля Росводресурсов."""
 
 
 def istochniki_dannyh() -> str:

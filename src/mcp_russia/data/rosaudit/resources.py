@@ -1,4 +1,4 @@
-"""Reference resources for the Счётная палата РФ feature."""
+"""Справочные ресурсы модуля Счётной палаты РФ."""
 
 
 def istochniki_dannyh() -> str:
