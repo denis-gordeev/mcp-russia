@@ -10,11 +10,11 @@
 
 ## Российские модули
 
-### `cbrf` — Центральный банк Российской Федерации (6 tools, 3 resources, 2 prompts)
+### `cbrf` — Центральный банк Российской Федерации (6 инструментов, 3 ресурса, 2 промпта)
 
 Курсы валют, конвертация, сравнение валют и экономические индикаторы ЦБ РФ.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `tekushchie_kursy` | Официальные курсы основных валют ЦБ РФ на сегодня (USD, EUR, CNY, GBP, JPY, CHF) |
 | `uznat_kurs_valyuty` | Курс одной конкретной валюты с изменением за период |
@@ -23,17 +23,17 @@
 | `sravnit_valyuty` | Сравнительная таблица курсов нескольких валют (до 10) |
 | `kursy_po_stranam` | Курсы валют основных стран-партнёров России |
 
-**Resources:** `data://valyuty` (все валюты), `data://osnovnye` (основные), `data://spravochnik` (справочник)
+**Ресурсы:** `data://valyuty` (все валюты), `data://osnovnye` (основные), `data://spravochnik` (справочник)
 
-**Prompts:** `analise_valyut`, `obzor_ekonomiki`
+**Промпты:** `analise_valyut`, `obzor_ekonomiki`
 
 **Авторизация:** не требуется
 
-### `rosstat` — Федеральная служба государственной статистики (13 tools, 2 resources, 2 prompts)
+### `rosstat` — Федеральная служба государственной статистики (13 инструментов, 2 ресурса, 2 промпта)
 
 Демография, экономика, региональная статистика, федеральные округа, ВРП, заработная плата, отраслевая структура ВРП по ОКВЭД, инвестиции по видам деятельности, региональное сравнение, универсальный запрос по коду ЕМИСС. Реальные API: fedstat.ru (ЕМИСС). 92 субъекта РФ. 27 кодов показателей ЕМИСС.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_regionov` | Список субъектов Российской Федерации (92 субъекта) с кодами OKATO |
 | `spisok_okrugov` | Список федеральных округов РФ |
@@ -49,17 +49,17 @@
 | `otraslevaya_struktura_vrp` | Отраслевая структура ВРП по видам экономической деятельности (ОКВЭД) |
 | `investitsii_po_vidam` | Инвестиции в основной капитал по видам экономической деятельности |
 
-**Resources:** `data://istochniki` (источники данных), `data://metodologiya`
+**Ресурсы:** `data://istochniki` (источники данных), `data://metodologiya`
 
-**Prompts:** `analiz_regiona`, `obzor_inflyacii`
+**Промпты:** `analiz_regiona`, `obzor_inflyacii`
 
 **Авторизация:** не требуется
 
-### `gosduma` — Государственная Дума (6 tools, 2 resources, 2 prompts)
+### `gosduma` — Государственная Дума (6 инструментов, 2 ресурса, 2 промпта)
 
 Депутаты, фракции, комитеты, законопроекты, созывы.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_deputatov` | Список депутатов Госдумы с фильтрацией по созыву |
 | `info_deputata` | Карточка депутата: фракция, комитет, регион, созыв |
@@ -68,17 +68,17 @@
 | `spisok_sozyvov` | Список созывов Государственной Думы |
 | `zakonoproekty` | Законопроекты с фильтрацией по статусу |
 
-**Resources:** `data://istochniki` (источники), `data://struktura` (структура Думы)
+**Ресурсы:** `data://istochniki` (источники), `data://struktura` (структура Думы)
 
-**Prompts:** `analiz_deputata`, `obzor_zakonodatelstva`
+**Промпты:** `analiz_deputata`, `obzor_zakonodatelstva`
 
 **Авторизация:** опциональная (MCP_RUSSIA_DUMA_API_TOKEN для полного доступа)
 
-### `cekrf` — Центральная избирательная комиссия РФ (10 tools, 5 resources, 2 prompts)
+### `cekrf` — Центральная избирательная комиссия РФ (10 инструментов, 5 ресурсов, 2 промпта)
 
 Выборы, кандидаты, партии, результаты, явка. Подключено к ГАС «Выборы» (vybory.izbirkom.ru).
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `tipy_vyborov` | Типы выборов в РФ |
 | `subyekty_rf` | Список субъектов РФ |
@@ -91,17 +91,17 @@
 | `yavka_i_itogi` | Явка и итоги голосования |
 | `spisok_vyborov` | Список известных выборов (федеральные) |
 
-**Resources:** `data://tipy-vyborov`, `data://subyekty-rf`, `data://partii-rf`, `data://info-api`, `data://izvestnye-vybory`
+**Ресурсы:** `data://tipy-vyborov`, `data://subyekty-rf`, `data://partii-rf`, `data://info-api`, `data://izvestnye-vybory`
 
-**Prompts:** `analiz_kandidata`, `sravnenie_partiy`
+**Промпты:** `analiz_kandidata`, `sravnenie_partiy`
 
 **Авторизация:** не требуется
 
-### `rosapi` — Справочные данные РФ (8 tools, 2 resources, 2 prompts)
+### `rosapi` — Справочные данные РФ (8 инструментов, 2 ресурса, 2 промпта)
 
 Адреса (ФИАС), организации (ИНН/ОГРН), банки (БИК), праздники, налоговые ставки.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `konsul_adres_po_indeksu` | Найти адрес по почтовому индексу РФ |
 | `poisk_adresa` | Поиск адреса по свободному запросу через ФИАС |
@@ -112,17 +112,17 @@
 | `prazdniki_rf` | Национальные праздники РФ |
 | `nalogovye_stavki` | Основные налоговые ставки РФ |
 
-**Resources:** `data://nalogovye-stavki`, `data://servisy`
+**Ресурсы:** `data://nalogovye-stavki`, `data://servisy`
 
-**Prompts:** `analiz_organizacii`, `poisk_adresa_prompt`
+**Промпты:** `analiz_organizacii`, `poisk_adresa_prompt`
 
 **Авторизация:** требуется (MCP_RUSSIA_DADATA_API_KEY)
 
-### `zakupki` — Единая информационная система закупок (7 tools, 3 resources, 2 prompts)
+### `zakupki` — Единая информационная система закупок (7 инструментов, 3 ресурса, 2 промпта)
 
 Государственные закупки, контракты, заказчики, поставщики (44-ФЗ, 223-ФЗ).
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `poisk_zakupok` | Поиск закупок по параметрам |
 | `info_zakupki` | Информация о закупке |
@@ -132,17 +132,17 @@
 | `sposoby_zakupok` | Справочник способов закупок |
 | `plany_zakupok` | Планы закупок |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_zakupki`, `obzor_zakupok`
+**Промпты:** `analiz_zakupki`, `obzor_zakupok`
 
 **Авторизация:** опциональная (MCP_RUSSIA_ZAKUPKI_API_TOKEN для полного доступа)
 
-### `minzdrav` — Министерство здравоохранения РФ (7 tools, 3 resources, 2 prompts)
+### `minzdrav` — Министерство здравоохранения РФ (7 инструментов, 3 ресурса, 2 промпта)
 
 Медицинские организации, кадры, показатели здоровья, заболеваемость.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `poisk_med_organizatsiy` | Поиск медицинских организаций |
 | `info_med_organizatsii` | Информация о медицинской организации |
@@ -152,9 +152,9 @@
 | `spravochnik_spetsialnostey` | Справочник медицинских специальностей |
 | `spravochnik_mkb10` | Справочник МКБ-10 |
 
-**Resources:** `data://istochniki`, `data://klassifikatsii`, `data://okruga`
+**Ресурсы:** `data://istochniki`, `data://klassifikatsii`, `data://okruga`
 
-**Prompts:** `analiz_zdorovya_regiona`, `obzor_med_organizatsiy`
+**Промпты:** `analiz_zdorovya_regiona`, `obzor_med_organizatsiy`
 
 **Авторизация:** не требуется
 
@@ -162,7 +162,7 @@
 
 Судебные дела, акты, стороны, справочники категорий и инстанций.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `poisk_del` | Поиск судебных дел |
 | `info_dela` | Информация о деле |
@@ -173,17 +173,17 @@
 | `spravochnik_statusov` | Справочник статусов дел |
 | `spravochnik_aktov` | Справочник типов актов |
 
-**Resources:** `data://istochniki`, `data://sistema`, `data://kodifikatsiya`
+**Ресурсы:** `data://istochniki`, `data://sistema`, `data://kodifikatsiya`
 
-**Prompts:** `analiz_dela`, `analiz_uchastnika`
+**Промпты:** `analiz_dela`, `analiz_uchastnika`
 
 **Авторизация:** не требуется
 
-### `rosaudit` — Счётная палата РФ (7 tools, 3 resources, 2 prompts)
+### `rosaudit` — Счётная палата РФ (7 инструментов, 3 ресурса, 2 промпта)
 
 Контрольные мероприятия, аудиторские заключения, нарушения, исполнение бюджета.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_napravleniy` | Справочник направлений контроля |
 | `spisok_tipov_meropriyatiy` | Справочник типов мероприятий |
@@ -193,17 +193,17 @@
 | `ispolnenie_byudzheta` | Данные об исполнении бюджета |
 | `poisk_narusheniy` | Поиск нарушений |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_auditorskogo_zaklyucheniya`, `obzor_ispolneniya_byudzheta`
+**Промпты:** `analiz_auditorskogo_zaklyucheniya`, `obzor_ispolneniya_byudzheta`
 
 **Авторизация:** не требуется
 
-### `rosgidromet` — Росгидромет (7 tools, 3 resources, 2 prompts)
+### `rosgidromet` — Росгидромет (7 инструментов, 3 ресурса, 2 промпта)
 
 Погода, прогнозы, экология, предупреждения, спутниковый мониторинг.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_stanciy` | Справочник станций мониторинга |
 | `spisok_tipov_dannykh` | Справочник типов данных |
@@ -213,17 +213,17 @@
 | `preduprezhdeniya` | Предупреждения об опасных явлениях |
 | `sputnik_monitoring` | Данные спутникового мониторинга |
 
-**Resources:** `data://istochniki`, `data://metodologiya`, `data://opasnye-yavleniya`
+**Ресурсы:** `data://istochniki`, `data://metodologiya`, `data://opasnye-yavleniya`
 
-**Prompts:** `analiz_pogody_regiona`, `obzor_ekologii`
+**Промпты:** `analiz_pogody_regiona`, `obzor_ekologii`
 
 **Авторизация:** не требуется
 
-### `rosvodresursy` — Росводресурсы (7 tools, 3 resources, 2 prompts)
+### `rosvodresursy` — Росводресурсы (7 инструментов, 3 ресурса, 2 промпта)
 
 Бассейновые округа, водные объекты, водохранилища, мониторинг, водопользование.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_basseynovykh_okrugov` | Справочник бассейновых округов |
 | `spisok_tipov_vodnykh_obektov` | Справочник типов водных объектов |
@@ -233,17 +233,17 @@
 | `info_vodokhranilishcha` | Информация о водохранилище |
 | `vodopolzovanie_regionov` | Данные о водопользовании по регионам |
 
-**Resources:** `data://istochniki`, `data://basseynovye-okruga`, `data://vodokhozyaystvo`
+**Ресурсы:** `data://istochniki`, `data://basseynovye-okruga`, `data://vodokhozyaystvo`
 
-**Prompts:** `analiz_vodnogo_obekta`, `obzor_vodokhranilishch`
+**Промпты:** `analiz_vodnogo_obekta`, `obzor_vodokhranilishch`
 
 **Авторизация:** не требуется
 
-### `publikatsii` — Официальные публикации (9 tools, 3 resources, 2 prompts)
+### `publikatsii` — Официальные публикации (9 инструментов, 3 ресурса, 2 промпта)
 
 Нормативные акты, законопроекты, поиск, официальные публикации pravo.gov.ru. Подключено к порталу открытых данных pravo.gov.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_tipov_aktov` | Справочник типов нормативных актов |
 | `spisok_otrasley` | Справочник отраслей законодательства |
@@ -255,17 +255,17 @@
 | `publikatsii_po_datam` | Публикации по датам |
 | `izmeneniya_akta` | Изменения нормативного акта |
 
-**Resources:** `data://istochniki`, `data://poryadok-opublikovaniya`, `data://struktura-zakonodatelstva`
+**Ресурсы:** `data://istochniki`, `data://poryadok-opublikovaniya`, `data://struktura-zakonodatelstva`
 
-**Prompts:** `analiz_normativnogo_akta`, `obzor_zakonodatelstva`
+**Промпты:** `analiz_normativnogo_akta`, `obzor_zakonodatelstva`
 
 **Авторизация:** не требуется
 
-### `rospotrebnadzor` — Роспотребнадзор (11 tools, 3 resources, 2 prompts)
+### `rospotrebnadzor` — Роспотребнадзор (11 инструментов, 3 ресурса, 2 промпта)
 
 Проверки, нарушения, санитарные нормы, потребительские жалобы. Реальные API: proverki.rospotrebnadzor.ru, zpp.rospotrebnadzor.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_napravleniy` | Справочник направлений надзора |
 | `spisok_tipov_proverok` | Справочник типов проверок |
@@ -279,9 +279,9 @@
 | `zhaloby_potrebiteley` | Потребительские жалобы (zpp.rospotrebnadzor.ru) |
 | `pokazateli_bezopasnosti` | Показатели безопасности |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_proverki`, `obzor_sanitarnoy_situacii`
+**Промпты:** `analiz_proverki`, `obzor_sanitarnoy_situacii`
 
 **Авторизация:** не требуется
 
@@ -289,7 +289,7 @@
 
 Лицензии, СМИ, персональные данные, реестры, нарушения. Реальные API: rkn.gov.ru, eais.rkn.gov.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_napravleniy` | Справочник направлений надзора |
 | `spisok_tipov_licenziy` | Справочник типов лицензий |
@@ -305,17 +305,17 @@
 | `poisk_ori` | Поиск организаторов распространения информации (rkn.gov.ru/registry-ori) |
 | `zapisi_reestra` | Информация о реестре |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_narusheniya`, `obzor_reestrov`
+**Промпты:** `analiz_narusheniya`, `obzor_reestrov`
 
 **Авторизация:** не требуется
 
-### `fns` — Федеральная налоговая служба (9 tools, 3 resources, 2 prompts)
+### `fns` — Федеральная налоговая служба (9 инструментов, 3 ресурса, 2 промпта)
 
 Налоговые режимы, проверки, ЕГРЮЛ/ЕГРИП, начисления.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_nalogovyh_rezhimov` | Справочник режимов налогообложения |
 | `spisok_vidov_nalogov` | Справочник видов налогов |
@@ -327,9 +327,9 @@
 | `proverki_organizacii` | Налоговые проверки организации |
 | `nalogovye_nachisleniya` | Налоговые начисления |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_nalogoplatelshchika`, `obzor_rezhimov_nalogooblozheniya`
+**Промпты:** `analiz_nalogoplatelshchika`, `obzor_rezhimov_nalogooblozheniya`
 
 **Авторизация:** не требуется
 
@@ -337,7 +337,7 @@
 
 Кадастровая стоимость, объекты недвижимости, ЕГРН, формы собственности.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_tipov_nedvizhimosti` | Справочник типов недвижимости |
 | `spisok_kategoriy_zemel` | Справочник категорий земель |
@@ -348,9 +348,9 @@
 | `kadastrovaya_stoimost` | Кадастровая стоимость объекта |
 | `prava_na_obekt` | Права на объект |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_nedvizhimosti`, `obzor_zemelnogo_uchastka`
+**Промпты:** `analiz_nedvizhimosti`, `obzor_zemelnogo_uchastka`
 
 **Авторизация:** не требуется
 
@@ -358,7 +358,7 @@
 
 Исполнительные производства, ограничения, розыск должников. Подключено к Банку данных ИП ФССП (fssp.gov.ru).
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_vidov_proizvodstv` | Справочник видов производств |
 | `spisok_statusov_proizvodstva` | Справочник статусов производств |
@@ -371,17 +371,17 @@
 | `ogranicheniya_dolzhnika` | Ограничения должника |
 | `rozysk_dolzhnika` | Розыск должника |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_dolzhnika`, `obzor_ispolnitelnogo_proizvodstva`
+**Промпты:** `analiz_dolzhnika`, `obzor_ispolnitelnogo_proizvodstva`
 
 **Авторизация:** не требуется
 
-### `gibdd` — ГИБДД / МВД (12 tools, 3 resources, 2 prompts)
+### `gibdd` — ГИБДД / МВД (12 инструментов, 3 ресурса, 2 промпта)
 
 Транспортные средства, водительские удостоверения, проверки ТС, ДТП. Подключено к API ГИБДД (гибдд.рф).
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_tipov_ts` | Справочник типов транспортных средств |
 | `spisok_kategoriyy_vu` | Справочник категорий водительских удостоверений |
@@ -396,9 +396,9 @@
 | `statistika_dtp` | Статистика ДТП |
 | `istoriya_registraciy` | История регистраций транспортного средства |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_transportnogo_sredstva`, `analiz_voditelya`
+**Промпты:** `analiz_transportnogo_sredstva`, `analiz_voditelya`
 
 **Авторизация:** не требуется
 
@@ -406,7 +406,7 @@
 
 Вузы, образовательные программы, научные гранты, аспирантура. Реальные API: obrnadzor.gov.ru (аккредитация и лицензии), vuz.minobrnauki.gov.ru (рейтинги).
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_tipov_vuzov` | Справочник типов вузов |
 | `spisok_form_obucheniya` | Справочник форм обучения |
@@ -422,17 +422,17 @@
 | `aspirantura` | Данные об аспирантуре |
 | `poisk_licenziy` | Поиск лицензий в реестре Рособрнадзора |
 
-**Resources:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
+**Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Prompts:** `analiz_vuza`, `obzor_nauchnyh_grantov`
+**Промпты:** `analiz_vuza`, `obzor_nauchnyh_grantov`
 
 **Авторизация:** не требуется
 
-### `sovfed` — Совет Федерации РФ (6 tools, 3 resources, 2 prompts)
+### `sovfed` — Совет Федерации РФ (6 инструментов, 3 ресурса, 2 промпта)
 
 Сенаторы, комитеты и комиссии, законопроекты, заседания. Реальные API: sovfed.ru, data.gov.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_senatorov` | Список сенаторов Совета Федерации |
 | `info_senatora` | Информация о сенаторе |
@@ -441,17 +441,17 @@
 | `poisk_zakonoproektov` | Поиск законопроектов, рассмотренных Советом Федерации |
 | `spisok_zasedaniy` | Список заседаний Совета Федерации |
 
-**Resources:** `data://istochniki-sovfeda`, `data://struktura-sovfeda`, `data://reglament-sovfeda`
+**Ресурсы:** `data://istochniki-sovfeda`, `data://struktura-sovfeda`, `data://reglament-sovfeda`
 
-**Prompts:** `analiz_senatora`, `obzor_zakonodatelstva`
+**Промпты:** `analiz_senatora`, `obzor_zakonodatelstva`
 
 **Авторизация:** не требуется
 
-### `kaznacheistvo` — Федеральное казначейство (6 tools, 3 resources, 2 prompts)
+### `kaznacheistvo` — Федеральное казначейство (6 инструментов, 3 ресурса, 2 промпта)
 
 Исполнение бюджета, участники бюджетного процесса, учреждения, межбюджетные трансферты. Реальные API: roskazna.gov.ru, budget.gov.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_vidov_byudzhetov` | Справочник видов бюджетов бюджетной системы РФ |
 | `spisok_kategoriy_raskhodov` | Справочник категорий расходов бюджета |
@@ -460,9 +460,9 @@
 | `poisk_uchrezhdeniy` | Поиск учреждений в сводном реестре |
 | `mezhbyudzhetnye_transferty` | Данные о межбюджетных трансфертах |
 
-**Resources:** `data://kaznacheistvo/istochniki`, `data://kaznacheistvo/struktura`, `data://kaznacheistvo/byudzhetnaya-sistema`
+**Ресурсы:** `data://kaznacheistvo/istochniki`, `data://kaznacheistvo/struktura`, `data://kaznacheistvo/byudzhetnaya-sistema`
 
-**Prompts:** `analiz_ispolneniya_byudzheta`, `obzor_byudzhetnoy_sistemy`
+**Промпты:** `analiz_ispolneniya_byudzheta`, `obzor_byudzhetnoy_sistemy`
 
 **Авторизация:** не требуется
 
@@ -470,7 +470,7 @@
 
 Экологические проверки, объекты негативного воздействия, лицензии на недропользование, экологические платежи. Реальные API: rpn.gov.ru.
 
-| Tool | Описание |
+| Инструмент | Описание |
 |------|----------|
 | `spisok_vidov_nadzora` | Справочник видов государственного надзора |
 | `spisok_kategoriy_obnv` | Справочник категорий объектов негативного воздействия |
@@ -481,8 +481,8 @@
 | `poisk_litsenziy_nedra` | Поиск лицензий на пользование недрами |
 | `ekologicheskie_platezhi` | Данные об экологических платежах |
 
-**Resources:** `data://istochniki`, `data://struktura`, `data://zakonodatelstvo`
+**Ресурсы:** `data://istochniki`, `data://struktura`, `data://zakonodatelstvo`
 
-**Prompts:** `analiz_ekologicheskoy_proverki`, `obzor_nedropolzovaniya`
+**Промпты:** `analiz_ekologicheskoy_proverki`, `obzor_nedropolzovaniya`
 
 **Авторизация:** не требуется

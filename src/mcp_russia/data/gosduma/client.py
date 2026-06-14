@@ -21,7 +21,7 @@ from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
 
 
 def _get_api_token() -> str:
-    """Get Duma API token from settings."""
+    """Получение токена API Госдумы из настроек."""
     return settings.DUMA_API_TOKEN
 
 
@@ -80,13 +80,13 @@ def _parse_deputats(data: Any) -> list[Deputat]:
 
 
 async def poluchit_deputata(id: int) -> Deputat | None:
-    """Fetch a specific deputy by ID.
+    """Получение конкретного депутата по ID.
 
     Args:
-        id: Deputy ID.
+        id: ID депутата.
 
     Returns:
-        Deputy data or None.
+        Данные депутата или None.
     """
     token = _get_api_token()
     params: dict[str, str] = {}
@@ -109,7 +109,7 @@ async def poluchit_deputata(id: int) -> Deputat | None:
 
 
 def _parse_one_deputat(data: dict[str, Any]) -> Deputat | None:
-    """Parse a single deputy from API response."""
+    """Разбор данных одного депутата из ответа API."""
     if not isinstance(data, dict):
         return None
     return Deputat(
@@ -130,15 +130,15 @@ async def poluchit_zakonoproekty(
     limit: int = 20,
     page: int = 1,
 ) -> list[Zakonoproekt]:
-    """Fetch legislative bills from the СОЗД API.
+    """Получение законопроектов из API СОЗД.
 
     Args:
-        status: Filter by status (optional).
-        limit: Maximum number of results.
-        page: Page number.
+        status: Фильтр по статусу (необязательно).
+        limit: Максимальное количество результатов.
+        page: Номер страницы.
 
     Returns:
-        List of bills.
+        Список законопроектов.
     """
     params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
     if status:
@@ -187,15 +187,15 @@ async def poluchit_golosovaniya(
     limit: int = 20,
     page: int = 1,
 ) -> list[Golosovanie]:
-    """Fetch voting results from the Госдума API.
+    """Получение результатов голосований из API Госдумы.
 
     Args:
-        sozyv: Convocation number.
-        limit: Maximum number of results.
-        page: Page number.
+        sozyv: Номер созыва.
+        limit: Максимальное количество результатов.
+        page: Номер страницы.
 
     Returns:
-        List of voting results.
+        Список результатов голосований.
     """
     params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
     if sozyv:
@@ -213,7 +213,7 @@ async def poluchit_golosovaniya(
 
 
 def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
-    """Parse voting results from API response."""
+    """Разбор результатов голосований из ответа API."""
     if isinstance(data, dict):
         items = data.get("votes", data.get("items", []))
     elif isinstance(data, list):
@@ -240,10 +240,10 @@ def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
 
 
 async def poluchit_frakcii() -> list[Frakciya]:
-    """Fetch current Duma factions.
+    """Получение текущих фракций Госдумы.
 
     Returns:
-        List of factions.
+        Список фракций.
     """
     return [Frakciya(code=f["code"], name=f["name"]) for f in FRAKCII]
 

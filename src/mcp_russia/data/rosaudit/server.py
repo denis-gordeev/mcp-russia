@@ -24,7 +24,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rosaudit")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
 mcp.tool(spisok_tipov_meropriyatiy, tags={"типы-мероприятий", "справочник"})
 mcp.tool(spisok_subiektov_audita, tags={"субъекты-аудита", "справочник"})
@@ -34,11 +34,11 @@ mcp.tool(info_auditorskogo_zaklyucheniya, tags={"аудиторское-закл
 mcp.tool(ispolnenie_byudzheta, tags={"бюджет", "исполнение"})
 mcp.tool(poisk_narusheniy, tags={"нарушения", "поиск"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)
 mcp.resource("data://struktura", mime_type="text/plain")(struktura_schetnoy_pality)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_auditorskogo_zaklyucheniya)
 mcp.prompt(obzor_ispolneniya_byudzheta)

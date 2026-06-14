@@ -21,44 +21,44 @@ class EtapPlana(BaseModel):
     """Один шаг плана выполнения."""
 
     etap: int
-    """Step number (1-based)."""
+    """Номер шага (начиная с 1)."""
 
     opisanie: str
-    """What this step does."""
+    """Описание действия шага."""
 
     tool: str
-    """Tool name (with feature prefix, e.g. gosduma_poluchit_deputatov)."""
+    """Имя инструмента (с префиксом feature, напр. gosduma_poluchit_deputatov)."""
 
     parametry: dict[str, str]
-    """Key parameters (may contain placeholders like '{etap_1.id}')."""
+    """Ключевые параметры (могут содержать плейсхолдеры вида '{etap_1.id}')."""
 
     zavisit_ot: list[int]
-    """Steps that must complete before this one (empty = independent)."""
+    """Шаги, которые должны завершиться до этого (пусто = независимый)."""
 
     obosnovanie: str
-    """Why this step is needed."""
+    """Обоснование необходимости шага."""
 
 
 class PlanZaprosa(BaseModel):
-    """Complete execution plan for a user query."""
+    """Полный план выполнения запроса пользователя."""
 
     zapros: str
-    """Original user query."""
+    """Оригинальный запрос пользователя."""
 
     slozhnost: str
-    """Query complexity: 'prostoy', 'umerennyy', or 'slozhnyy'."""
+    """Сложность запроса: 'prostoy', 'umerennyy' или 'slozhnyy'."""
 
     svodka: str
     """Краткое описание плана."""
 
     etapy: list[EtapPlana]
-    """Ordered execution steps."""
+    """Упорядоченные шаги выполнения."""
 
     primechaniya: str = ""
-    """Optional notes (auth requirements, caveats)."""
+    """Необязательные заметки (требования авторизации, оговорки)."""
 
     def to_markdown(self) -> str:
-        """Render the plan as human-friendly markdown."""
+        """Рендеринг плана в удобочитаемый Markdown."""
         lines: list[str] = [
             "## План запроса",
             f"**Запрос:** {self.zapros}",
@@ -131,7 +131,7 @@ _SYSTEM_PROMPT = """\
 - известные ограничения данных
 - какие именно cross-source связи делает план
 
-## JSON schema
+## JSON-схема
 
 Верни ТОЛЬКО валидный JSON, без markdown и без ``` блоков.
 
@@ -213,21 +213,21 @@ _SYSTEM_PROMPT = """\
 Расчёт на душу населения выполняется агентом после обоих этапов."
 }}
 
-## Каталог tools
+## Каталог инструментов
 
 {catalog}
 """
 
 
 async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
-    """Call Anthropic API to build a structured execution plan.
+    """Вызов API Anthropic для построения структурированного плана выполнения.
 
     Args:
-        query: Natural language question from the user.
-        catalog: Pre-built catalog string of all tools.
+        query: Вопрос пользователя на естественном языке.
+        catalog: Предварительно собранный каталог всех инструментов.
 
     Returns:
-        Markdown-rendered execution plan or error message.
+        План выполнения в формате Markdown или сообщение об ошибке.
     """
     try:
         import anthropic
@@ -263,11 +263,11 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
             plan = PlanZaprosa.model_validate(json.loads(raw_text))
             return plan.to_markdown()
         except (json.JSONDecodeError, Exception):
-            logger.warning("Failed to parse plan JSON; returning raw text")
+            logger.warning("Не удалось разобрать JSON плана; возврат сырого текста")
             return raw_text
 
     except Exception as e:
-        logger.error("Anthropic API call failed: %s", e)
+        logger.error("Ошибка вызова API Anthropic: %s", e)
         return (
             f"Ошибка при обращении к LLM: {e}\n\n"
             "В качестве альтернативы используйте 'search_tools'."

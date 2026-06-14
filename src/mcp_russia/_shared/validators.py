@@ -8,25 +8,25 @@ _DIGITS_RE = re.compile(r"\D")
 
 
 def _only_digits(value: str) -> str:
-    """Strip all non-digit characters."""
+    """Удаление всех нецифровых символов."""
     return _DIGITS_RE.sub("", value)
 
 
 # ---------------------------------------------------------------------------
-# INN (Идентификационный номер налогоплательщика)
+# ИНН (Идентификационный номер налогоплательщика)
 # ---------------------------------------------------------------------------
 
 
 def validate_inn(inn: str) -> bool:
-    """Validate a Russian INN (taxpayer identification number).
+    """Валидация российского ИНН (идентификационный номер налогоплательщика).
 
-    Supports both 10-digit (legal entities) and 12-digit (individuals) formats.
+    Поддерживает форматы 10 цифр (юридические лица) и 12 цифр (физические лица).
 
     Args:
-        inn: INN string (with or without formatting).
+        inn: Строка ИНН (с форматированием или без).
 
     Returns:
-        True if valid, False otherwise.
+        True если валиден, иначе False.
     """
     digits = _only_digits(inn)
     if len(digits) not in (10, 12):
@@ -55,40 +55,40 @@ def validate_inn(inn: str) -> bool:
 
 
 def format_inn(inn: str) -> str:
-    """Format an INN string for display.
+    """Форматирование ИНН для отображения.
 
     Args:
-        inn: INN digits (with or without formatting).
+        inn: Цифры ИНН (с форматированием или без).
 
     Returns:
-        Formatted INN string.
+        Отформатированная строка ИНН.
 
     Raises:
-        ValueError: If INN does not have 10 or 12 digits.
+        ValueError: Если ИНН не содержит 10 или 12 цифр.
     """
     digits = _only_digits(inn)
     if len(digits) == 10:
         return digits
     if len(digits) == 12:
         return digits
-    raise ValueError(f"INN must have 10 or 12 digits, got {len(digits)}")
+    raise ValueError(f"ИНН должен содержать 10 или 12 цифр, получено {len(digits)}")
 
 
 # ---------------------------------------------------------------------------
-# KPP (Код причины постановки на учёт)
+# КПП (Код причины постановки на учёт)
 # ---------------------------------------------------------------------------
 
 
 def validate_kpp(kpp: str) -> bool:
-    """Validate a Russian KPP (tax registration reason code).
+    """Валидация российского КПП (код причины постановки на учёт).
 
-    KPP is a 9-digit code used alongside INN for legal entities.
+    КПП — 9-значный код, используемый совместно с ИНН для юридических лиц.
 
     Args:
-        kpp: KPP string (with or without formatting).
+        kpp: Строка КПП (с форматированием или без).
 
     Returns:
-        True if valid format, False otherwise.
+        True если формат корректен, иначе False.
     """
     digits = _only_digits(kpp)
     if len(digits) != 9:
@@ -97,38 +97,38 @@ def validate_kpp(kpp: str) -> bool:
 
 
 def format_kpp(kpp: str) -> str:
-    """Format a KPP string for display.
+    """Форматирование КПП для отображения.
 
     Args:
-        kpp: KPP digits (with or without formatting).
+        kpp: Цифры КПП (с форматированием или без).
 
     Returns:
-        Formatted KPP string.
+        Отформатированная строка КПП.
 
     Raises:
-        ValueError: If KPP does not have exactly 9 digits.
+        ValueError: Если КПП не содержит ровно 9 цифр.
     """
     digits = _only_digits(kpp)
     if len(digits) != 9:
-        raise ValueError(f"KPP must have 9 digits, got {len(digits)}")
+        raise ValueError(f"КПП должен содержать 9 цифр, получено {len(digits)}")
     return digits
 
 
 # ---------------------------------------------------------------------------
-# SNILS (Страховой номер индивидуального лицевого счёта)
+# СНИЛС (Страховой номер индивидуального лицевого счёта)
 # ---------------------------------------------------------------------------
 
 
 def validate_snils(snils: str) -> bool:
-    """Validate a Russian SNILS (individual insurance account number).
+    """Валидация российского СНИЛС (страховой номер индивидуального лицевого счёта).
 
-    SNILS is an 11-digit number (9 digits + 2 check digits).
+    СНИЛС — 11-значное число (9 цифр + 2 контрольные цифры).
 
     Args:
-        snils: SNILS string (with or without formatting).
+        snils: Строка СНИЛС (с форматированием или без).
 
     Returns:
-        True if valid, False otherwise.
+        True если валиден, иначе False.
     """
     digits = _only_digits(snils)
     if len(digits) != 11:
@@ -151,36 +151,36 @@ def validate_snils(snils: str) -> bool:
 
 
 def format_snils(snils: str) -> str:
-    """Format a SNILS string as XXX-XXX-XXX XX.
+    """Форматирование СНИЛС в виде XXX-XXX-XXX XX.
 
     Args:
-        snils: SNILS digits (with or without formatting).
+        snils: Цифры СНИЛС (с форматированием или без).
 
     Returns:
-        Formatted SNILS string.
+        Отформатированная строка СНИЛС.
 
     Raises:
-        ValueError: If SNILS does not have exactly 11 digits.
+        ValueError: Если СНИЛС не содержит ровно 11 цифр.
     """
     digits = _only_digits(snils)
     if len(digits) != 11:
-        raise ValueError(f"SNILS must have 11 digits, got {len(digits)}")
+        raise ValueError(f"СНИЛС должен содержать 11 цифр, получено {len(digits)}")
     return f"{digits[:3]}-{digits[3:6]}-{digits[6:9]} {digits[9:]}"
 
 
 # ---------------------------------------------------------------------------
-# Russian postal code
+# Почтовый индекс России
 # ---------------------------------------------------------------------------
 
 
 def validate_postal_code_ru(postal_code: str) -> bool:
-    """Validate a Russian postal code (6 digits).
+    """Валидация российского почтового индекса (6 цифр).
 
     Args:
-        postal_code: Postal code string (with or without formatting).
+        postal_code: Строка почтового индекса (с форматированием или без).
 
     Returns:
-        True if valid format, False otherwise.
+        True если формат корректен, иначе False.
     """
     digits = _only_digits(postal_code)
     if len(digits) != 6:
@@ -189,18 +189,20 @@ def validate_postal_code_ru(postal_code: str) -> bool:
 
 
 def format_postal_code_ru(postal_code: str) -> str:
-    """Format a Russian postal code as XXXXXX.
+    """Форматирование российского почтового индекса как XXXXXX.
 
     Args:
-        postal_code: Postal code digits (with or without formatting).
+        postal_code: Цифры почтового индекса (с форматированием или без).
 
     Returns:
-        Formatted postal code string.
+        Отформатированная строка почтового индекса.
 
     Raises:
-        ValueError: If postal code does not have exactly 6 digits.
+        ValueError: Если почтовый индекс не содержит ровно 6 цифр.
     """
     digits = _only_digits(postal_code)
     if len(digits) != 6:
-        raise ValueError(f"Russian postal code must have 6 digits, got {len(digits)}")
+        raise ValueError(
+            f"Российский почтовый индекс должен содержать 6 цифр, получено {len(digits)}"
+        )
     return digits

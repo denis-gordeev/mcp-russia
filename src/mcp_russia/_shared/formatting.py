@@ -11,14 +11,14 @@ from typing import Any
 
 
 def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
-    """Render tabular data as Markdown.
+    """Рендеринг табличных данных в Markdown.
 
     Args:
-        headers: Column headers.
-        rows: List of rows (each row is a sequence of values).
+        headers: Заголовки столбцов.
+        rows: Список строк (каждая строка — последовательность значений).
 
     Returns:
-        Markdown-formatted table string.
+        Строка таблицы в формате Markdown.
     """
     if not rows:
         return "Результаты не найдены."
@@ -31,13 +31,13 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str
 
 
 def format_rub(value: float) -> str:
-    """Format a number using Russian RUB style.
+    """Форматирование числа в российском рублёвом стиле.
 
     Args:
-        value: Numeric value.
+        value: Числовое значение.
 
     Returns:
-        Formatted string like "1 234,56 ₽".
+        Отформатированная строка вида «1 234,56 ₽».
     """
     sign = "-" if value < 0 else ""
     abs_value = abs(value)
@@ -51,45 +51,45 @@ def format_rub(value: float) -> str:
 
 
 def format_number_ru(value: float, decimals: int = 2) -> str:
-    """Format a number with Russian locale style (space thousands, comma decimal).
+    """Форматирование числа в российском стиле (пробел — тысячи, запятая — десятичные).
 
     Args:
-        value: Numeric value.
-        decimals: Number of decimal places.
+        value: Числовое значение.
+        decimals: Количество десятичных знаков.
 
     Returns:
-        Formatted string like "1 234,56".
+        Отформатированная строка вида «1 234,56».
     """
     formatted = f"{value:,.{decimals}f}"
     return formatted.replace(",", " ").replace(".", ",")
 
 
 def format_percent(value: float, decimals: int = 2) -> str:
-    """Format a numeric ratio as percentage text.
+    """Форматирование числового значения как процент.
 
     Args:
-        value: Numeric value (e.g., 0.05 for 5%).
-        decimals: Number of decimal places.
+        value: Числовое значение (напр. 0.05 для 5%).
+        decimals: Количество десятичных знаков.
 
     Returns:
-        Formatted string like "5,00%".
+        Отформатированная строка вида «5,00%».
     """
     return f"{format_number_ru(value * 100, decimals)}%"
 
 
 def parse_rub_number(value: Any) -> float | None:
-    """Parse a locale-formatted number string into a float.
+    """Разбор локализованной строки числа в число с плавающей точкой.
 
-    Handles strings like "1 234,56" (space=thousands, comma=decimal)
-    and "348.600,00" (dot=thousands, comma=decimal) for backward
-    compatibility with legacy API responses.
-    Passes through int/float values unchanged.
+    Обрабатывает строки вида «1 234,56» (пробел=тысячи, запятая=десятичные)
+    и «348.600,00» (точка=тысячи, запятая=десятичные) для обратной
+    совместимости с legacy-ответами API.
+    Значения int/float пропускаются без изменений.
 
     Args:
-        value: Raw value from API (string, int, float, or None).
+        value: Исходное значение из API (строка, int, float или None).
 
     Returns:
-        Parsed float or None if unparseable.
+        Расобранное число float или None при невозможности разбора.
     """
     if value is None:
         return None

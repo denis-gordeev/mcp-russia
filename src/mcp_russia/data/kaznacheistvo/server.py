@@ -18,7 +18,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-kaznacheistvo")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_vidov_byudzhetov, tags={"виды-бюджетов", "справочник"})
 mcp.tool(spisok_kategoriy_raskhodov, tags={"категории-расходов", "справочник"})
 mcp.tool(ispolnenie_byudzheta, tags={"бюджет", "исполнение"})
@@ -26,13 +26,13 @@ mcp.tool(poisk_uchastnikov_bp, tags={"участники-бп", "поиск"})
 mcp.tool(poisk_uchrezhdeniy, tags={"учреждения", "поиск"})
 mcp.tool(mezhbyudzhetnye_transferty, tags={"межбюджетные-трансферты", "поиск"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://kaznacheistvo/istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://kaznacheistvo/struktura", mime_type="text/plain")(struktura_kaznacheistva)
 mcp.resource("data://kaznacheistvo/byudzhetnaya-sistema", mime_type="text/plain")(
     byudzhetnaya_sistema
 )
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_ispolneniya_byudzheta)
 mcp.prompt(obzor_byudzhetnoy_sistemy)

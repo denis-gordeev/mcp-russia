@@ -1,4 +1,4 @@
-"""Tests for the shared lifespan — HTTP client lifecycle."""
+"""Тесты общего жизненного цикла — HTTP-клиент."""
 
 import contextlib
 
@@ -8,16 +8,16 @@ from mcp_russia._shared.lifespan import http_lifespan
 
 
 class TestHttpLifespan:
-    """Test the http_lifespan creates and closes an httpx.AsyncClient."""
+    """Проверяет, что http_lifespan создаёт и закрывает httpx.AsyncClient."""
 
     @pytest.mark.asyncio
     async def test_lifespan_creates_and_closes_client(self) -> None:
-        """Lifespan should yield an http_client and close it on exit."""
+        """Lifespan должен вернуть http_client и закрыть его при выходе."""
         from fastmcp import FastMCP
 
         server = FastMCP("test")
 
-        # Simulate the lifespan generator
+        # Имитируем генератор жизненного цикла
         gen = http_lifespan._fn(server)
         context = await gen.__anext__()
 
@@ -27,7 +27,7 @@ class TestHttpLifespan:
         client = context["http_client"]
         assert not client.is_closed
 
-        # Cleanup
+        # Очистка
         with contextlib.suppress(StopAsyncIteration):
             await gen.__anext__()
 
@@ -35,7 +35,7 @@ class TestHttpLifespan:
 
     @pytest.mark.asyncio
     async def test_lifespan_client_has_correct_headers(self) -> None:
-        """The HTTP client should have User-Agent and Accept headers."""
+        """HTTP-клиент должен иметь заголовки User-Agent и Accept."""
         from fastmcp import FastMCP
 
         server = FastMCP("test")
@@ -48,6 +48,6 @@ class TestHttpLifespan:
         assert "User-Agent" in client.headers
         assert client.headers["Accept"] == "application/json"
 
-        # Cleanup
+        # Очистка
         with contextlib.suppress(StopAsyncIteration):
             await gen.__anext__()

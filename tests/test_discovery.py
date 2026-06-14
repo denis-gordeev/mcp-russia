@@ -1,7 +1,7 @@
-"""Tests for tool discovery features (BM25 search, rekomendovat_instrumenty, tags).
+"""Тесты для функций обнаружения инструментов (BM25-поиск, rekomendovat_instrumenty, теги).
 
-Tests search transforms, LLM-powered recommendations, and tag propagation.
-MCP_RUSSIA_TOOL_SEARCH=none is set in conftest.py (before any import).
+Тестирует трансформации поиска, рекомендации на основе LLM и распространение тегов.
+MCP_RUSSIA_TOOL_SEARCH=none устанавливается в conftest.py (до любого импорта).
 """
 
 from __future__ import annotations
@@ -104,12 +104,12 @@ class TestBM25SearchTransform:
 
         @server.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
-            """List all regions of Russia."""
+            """Список всех регионов России."""
             return "Moscow, Tatarstan, Sverdlovsk"
 
         @server.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
-            """Request data by code."""
+            """Запрос данных по коду."""
             return f"Data {kod}"
 
         server.add_transform(BM25SearchTransform(max_results=5))
@@ -130,18 +130,18 @@ class TestBM25SearchTransform:
 
         @server.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
-            """List all regions of Russia (spisok regionov)."""
+            """Список всех регионов России (spisok regionov)."""
             return "Moscow, Tatarstan"
 
         @server.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
-            """Request time series data from Rosstat."""
+            """Запрос данных временных рядов из Росстата."""
             return f"Data {kod}"
 
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "regions russia"})
+            result = await c.call_tool("search_tools", {"query": "spisok regionov"})
             text = str(result.content)
             assert "spisok_regionov" in text
 
@@ -153,12 +153,12 @@ class TestBM25SearchTransform:
 
         @server.tool(tags={"meta"})
         def spisok_funktsiy() -> str:
-            """List features."""
+            """Список функций."""
             return "functions"
 
         @server.tool(tags={"search"})
         def hidden_tool() -> str:
-            """Hidden tool."""
+            """Скрытый инструмент."""
             return "hidden"
 
         server.add_transform(
@@ -182,7 +182,7 @@ class TestBM25SearchTransform:
 
         @server.tool
         def slozhit(a: int, b: int) -> int:
-            """Add two numbers."""
+            """Сложение двух чисел."""
             return a + b
 
         server.add_transform(BM25SearchTransform(max_results=5))
@@ -216,7 +216,7 @@ class TestTagPropagation:
 
         @child.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
-            """List regions."""
+            """Список регионов."""
             return "Moscow"
 
         parent = FastMCP("parent")
@@ -235,18 +235,18 @@ class TestTagPropagation:
 
         @server.tool(tags={"environmental", "fires"})
         def nayti_ochagi() -> str:
-            """Find fire hotspots detected by satellite in Russia."""
+            """Поиск очагов пожаров, обнаруженных спутником в России."""
             return "hotspots"
 
         @server.tool(tags={"financial", "banks"})
         def spisok_bankov() -> str:
-            """List all Russian banks registered with the Central Bank."""
+            """Список всех банков России, зарегистрированных в Центральном банке."""
             return "banks"
 
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "fire hotspots satellite"})
+            result = await c.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
             text = str(result.content)
             assert "nayti_ochagi" in text
 

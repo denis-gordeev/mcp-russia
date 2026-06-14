@@ -22,7 +22,7 @@
 
 ## Что есть в проекте
 
-- MCP-сервер на Python с автоматическим discovery feature-пакетов;
+- MCP-сервер на Python с автоматическим обнаружением пакетов модулей;
 - 22 российских data-модуля, подключённых к реальным API;
 - инфраструктура разработки: `uv`, `pytest`, `ruff`, `mypy`, `Makefile`;
 - публичный namespace `mcp_russia`.
@@ -32,10 +32,10 @@
 | Страница | Что внутри |
 |----------|------------|
 | [Быстрый старт](guide/quickstart.md) | Установка и подключение `mcp-russia` к MCP-клиентам |
-| [Архитектура](concepts/architecture.md) | Как устроены root server, auto-registry и feature-пакеты |
+| [Архитектура](concepts/architecture.md) | Как устроены корневой сервер, авторегистрация и пакеты модулей |
 | [Каталог features](reference/features.md) | Текущий каталог интеграций и инструментов |
 | [Умные инструменты](reference/smart-tools.md) | Мета-инструменты: обнаружение, планирование, пакетное выполнение |
-| [Добавление features](guide/adding-features.md) | Как добавлять новую feature |
+| [Добавление features](guide/adding-features.md) | Как добавлять новый модуль |
 | [Конфигурация](reference/configuration.md) | Переменные окружения и режимы запуска |
 | [Разработка](guide/development.md) | Setup, проверки, CI и процесс участия |
 

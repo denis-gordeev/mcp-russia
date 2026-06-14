@@ -14,7 +14,7 @@ def _mock_ctx():
     return ctx
 
 
-# --- Parser tests ---
+# --- Тесты парсера ---
 
 
 def test_parse_deputats_list():
@@ -120,7 +120,7 @@ def test_parse_one_deputat_none():
     assert gosduma_client._parse_one_deputat("string") is None
 
 
-# --- Tool tests (all HTTP calls mocked) ---
+# --- Тесты инструментов (все HTTP-вызовы замоканы) ---
 
 
 async def test_spisok_deputatov_empty():

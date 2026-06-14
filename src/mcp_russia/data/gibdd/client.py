@@ -24,13 +24,13 @@ logger = logging.getLogger(__name__)
 
 
 async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
-    """Check vehicle registration history via ГИБДД API.
+    """Проверка истории регистрации ТС через API ГИБДД.
 
     Args:
-        vin: VIN number (17 characters).
+        vin: VIN-номер (17 символов).
 
     Returns:
-        List of registration actions.
+        Список регистрационных действий.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
     try:
@@ -42,13 +42,13 @@ async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
 
 
 async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
-    """Check vehicle accident history via ГИБДД API.
+    """Проверка истории ДТП через API ГИБДД.
 
     Args:
-        vin: VIN number (17 characters).
+        vin: VIN-номер (17 символов).
 
     Returns:
-        List of accident records.
+        Список записей о ДТП.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
     try:
@@ -60,13 +60,13 @@ async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
 
 
 async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
-    """Check if vehicle is wanted via ГИБДД API.
+    """Проверка нахождения ТС в розыске через API ГИБДД.
 
     Args:
-        vin: VIN number (17 characters).
+        vin: VIN-номер (17 символов).
 
     Returns:
-        List of wanted records.
+        Список записей о розыске.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
     try:
@@ -78,13 +78,13 @@ async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
 
 
 async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
-    """Check vehicle registration restrictions via ГИБДД API.
+    """Проверка ограничений на регистрацию ТС через API ГИБДД.
 
     Args:
-        vin: VIN number (17 characters).
+        vin: VIN-номер (17 символов).
 
     Returns:
-        List of restriction records.
+        Список записей об ограничениях.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
     try:
@@ -96,13 +96,13 @@ async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
 
 
 async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
-    """Check driver license validity via ГИБДД API.
+    """Проверка действительности ВУ через API ГИБДД.
 
     Args:
-        nomer_vu: Driver license number (10 digits, no spaces).
+        nomer_vu: Номер водительского удостоверения (10 цифр, без пробелов).
 
     Returns:
-        Driver license data or None.
+        Данные ВУ или None.
     """
     url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
     try:
@@ -114,14 +114,14 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
 
 
 async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
-    """Fetch DTP crash statistics from stat.gibdd.ru.
+    """Получение статистики ДТП с stat.gibdd.ru.
 
     Args:
-        region: Region name (subject of the Russian Federation).
-        god: Year for statistics.
+        region: Название региона (субъект РФ).
+        god: Год для статистики.
 
     Returns:
-        Crash statistics or None.
+        Статистика ДТП или None.
     """
     url = f"{GIBDD_STAT_BASE}/map/dtp"
     params = {"region": region, "year": str(god)}
@@ -134,9 +134,9 @@ async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
 
 
 def _extract_result(data: Any, key: str) -> dict[str, Any]:
-    """Extract a result section from a ГИБДД check API response.
+    """Извлечение секции результата из ответа API проверки ГИБДД.
 
-    Typical format: {"RequestResult": {"result": {<key>: {...}}}}
+    Типичный формат: {"RequestResult": {"result": {<key>: {...}}}}
     """
     if not isinstance(data, dict):
         return {}
@@ -150,7 +150,7 @@ def _extract_result(data: Any, key: str) -> dict[str, Any]:
 
 
 def _parse_history(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
-    """Parse vehicle registration history response."""
+    """Разбор ответа истории регистрации ТС."""
     history = _extract_result(data, "history")
     if not isinstance(history, dict):
         return []
@@ -172,7 +172,7 @@ def _parse_history(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
 
 
 def _parse_dtp(data: Any) -> list[dict[str, Any]]:
-    """Parse vehicle accident history response."""
+    """Разбор ответа истории ДТП."""
     dtp = _extract_result(data, "dtp")
     if not isinstance(dtp, dict):
         return []
@@ -195,7 +195,7 @@ def _parse_dtp(data: Any) -> list[dict[str, Any]]:
 
 
 def _parse_wanted(data: Any) -> list[dict[str, Any]]:
-    """Parse vehicle wanted status response."""
+    """Разбор ответа о розыске ТС."""
     wanted = _extract_result(data, "wanted")
     if not isinstance(wanted, dict):
         return []
@@ -218,7 +218,7 @@ def _parse_wanted(data: Any) -> list[dict[str, Any]]:
 
 
 def _parse_restrict(data: Any) -> list[dict[str, Any]]:
-    """Parse vehicle restrictions response."""
+    """Разбор ответа об ограничениях транспортного средства."""
     restrict = _extract_result(data, "restrict")
     if not isinstance(restrict, dict):
         return []
@@ -241,7 +241,7 @@ def _parse_restrict(data: Any) -> list[dict[str, Any]]:
 
 
 def _parse_driver(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
-    """Parse driver license check response."""
+    """Разбор ответа проверки водительского удостоверения."""
     driver = _extract_result(data, "driver")
     if not isinstance(driver, dict):
         return None
@@ -273,7 +273,7 @@ def _parse_driver(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
 
 
 def _parse_statistika(data: Any, region: str, god: int) -> StatistikaDTP | None:
-    """Parse DTP crash statistics response."""
+    """Разбор ответа статистики ДТП."""
     if not isinstance(data, dict):
         return None
 

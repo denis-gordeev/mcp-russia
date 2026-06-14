@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 @lifespan
 async def http_lifespan(server: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
-    """Create a shared httpx.AsyncClient on startup, close on shutdown."""
-    logger.info("Starting shared HTTP client")
+    """Создание общего httpx.AsyncClient при запуске, закрытие при завершении."""
+    logger.info("Запуск общего HTTP-клиента")
     client = httpx.AsyncClient(
         timeout=httpx.Timeout(HTTP_TIMEOUT),
         headers={
@@ -39,4 +39,4 @@ async def http_lifespan(server: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | 
         yield {"http_client": client}
     finally:
         await client.aclose()
-        logger.info("Shared HTTP client closed")
+        logger.info("Общий HTTP-клиент закрыт")

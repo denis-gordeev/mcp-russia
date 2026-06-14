@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-# Known Russian national holidays
+# Государственные праздники РФ
 PRAZDNIKI_RF: dict[str, str] = {
     "01-01": "Новый год",
     "01-02": "Новогодние каникулы",
@@ -20,7 +20,7 @@ PRAZDNIKI_RF: dict[str, str] = {
     "11-04": "День народного единства",
 }
 
-# Known Russian tax rates and indicators
+# Известные налоговые ставки и показатели
 NALOGOVYE_STAVKI: dict[str, str] = {
     "NDS": "НДС (налог на добавленную стоимость)",
     "NP": "Налог на прибыль организаций",
@@ -32,7 +32,7 @@ NALOGOVYE_STAVKI: dict[str, str] = {
     "ESN": "Единый сельскохозяйственный налог",
 }
 
-# Main Russian banks (reference list)
+# Основные банки России (справочный список)
 OSNOVNYE_BANKI: list[dict[str, str]] = [
     {"name": "Центральный банк РФ", "bik": "044525225"},
     {"name": "Сбербанк", "bik": "044525225"},
@@ -48,7 +48,7 @@ OSNOVNYE_BANKI: list[dict[str, str]] = [
     {"name": "МКБ", "bik": "044525353"},
 ]
 
-# Vehicle types for Russian classification
+# Типы транспортных средств для российской классификации
 TIPY_TRANSPORTA: dict[str, str] = {
     "car": "Легковой автомобиль",
     "truck": "Грузовой автомобиль",

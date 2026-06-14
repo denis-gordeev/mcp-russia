@@ -127,7 +127,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
 
 
 async def _proverka_ts_full(vin: str) -> tuple:
-    """Run all vehicle checks in parallel."""
+    """Выполнение всех проверок транспортного средства параллельно."""
     import asyncio
 
     results = await asyncio.gather(

@@ -1,4 +1,4 @@
-"""Tests for the public mcp-russia namespace."""
+"""Тесты для публичного пространства имён mcp-russia."""
 
 from __future__ import annotations
 

@@ -20,7 +20,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-kad-arbitrazh")
 
-# Tools
+# Инструменты
 mcp.tool(poisk_del, tags={"дела", "поиск"})
 mcp.tool(info_dela, tags={"дело", "подробности"})
 mcp.tool(akty_po_delu, tags={"акты", "судебные-акты"})
@@ -30,11 +30,11 @@ mcp.tool(spravochnik_instantsiy, tags={"инстанции", "справочни
 mcp.tool(spravochnik_statusov, tags={"статусы", "справочник"})
 mcp.tool(spravochnik_aktov, tags={"типы-актов", "справочник"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://sistema", mime_type="text/plain")(sistema_sudov)
 mcp.resource("data://kodifikatsiya", mime_type="text/plain")(kodifikatsiya_del)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_dela)
 mcp.prompt(analiz_uchastnika)

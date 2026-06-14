@@ -139,7 +139,7 @@ class TestFeatureRegistry:
         """Mount с пустым registry не вызывает исключение."""
         registry = FeatureRegistry()
         root = FastMCP("test-root")
-        registry.mount_all(root)  # should not raise
+        registry.mount_all(root)  # не должен вызывать исключение
 
     def test_register_and_mount_manual(self) -> None:
         """Регистрирует feature вручную и монтирует в root."""
@@ -150,7 +150,7 @@ class TestFeatureRegistry:
 
         @sub_server.tool
         def ping() -> str:
-            """Ping tool."""
+            """Инструмент проверки связи."""
             return "pong"
 
         registry._features["test_feat"] = RegisteredFeature(
@@ -209,7 +209,7 @@ class TestRegistryIntegration:
 
         @sub.tool
         def echo(msg: str) -> str:
-            """Echo a message."""
+            """Вернуть сообщение."""
             return f"echo: {msg}"
 
         root = FastMCP("root")
@@ -231,7 +231,7 @@ class TestRegistryIntegration:
 
     @pytest.mark.asyncio
     async def test_spisok_funktsiy_tool(self) -> None:
-        """Meta-tool spisok_funktsiy returns summary."""
+        """Мета-инструмент spisok_funktsiy возвращает сводку."""
         from mcp_russia.server import mcp
 
         async with Client(mcp) as client:

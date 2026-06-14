@@ -28,14 +28,14 @@ from .schemas import (
 
 
 async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt | None:
-    """Fetch a normative legal act by number from pravo.gov.ru open data.
+    """Получение нормативного правового акта по номеру из открытых данных pravo.gov.ru.
 
     Args:
-        nomer: Act number/identifier (e.g. "ФЗ-123", "УП-234").
-        tip: Act type code (fz, ukaz, postanovlenie_pr, etc.).
+        nomer: Номер/идентификатор акта (напр. «ФЗ-123», «УП-234»).
+        tip: Код типа акта (fz, ukaz, postanovlenie_pr и т.д.).
 
     Returns:
-        Act data or None.
+        Данные акта или None.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
     params: dict[str, str] = {}
@@ -49,13 +49,13 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
 
 
 async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
-    """Fetch a bill by number from pravo.gov.ru open data.
+    """Получение законопроекта по номеру из открытых данных pravo.gov.ru.
 
     Args:
-        nomer: Bill number.
+        nomer: Номер законопроекта.
 
     Returns:
-        Bill data or None.
+        Данные законопроекта или None.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
     try:
@@ -71,16 +71,16 @@ async def poluchit_publikatsii(
     data_from: str = "",
     data_to: str = "",
 ) -> list[OficialnayaPublikatsiya]:
-    """Search official publications via pravo.gov.ru open data.
+    """Поиск официальных публикаций через открытые данные pravo.gov.ru.
 
     Args:
-        tip: Document type filter (pravo.gov.ru type code).
-        otrysl: Legal branch filter.
-        data_from: Start date filter (YYYY-MM-DD).
-        data_to: End date filter (YYYY-MM-DD).
+        tip: Фильтр по типу документа (код типа pravo.gov.ru).
+        otrysl: Фильтр по отрасли права.
+        data_from: Фильтр по начальной дате (ГГГГ-ММ-ДД).
+        data_to: Фильтр по конечной дате (ГГГГ-ММ-ДД).
 
     Returns:
-        List of publications.
+        Список публикаций.
     """
     url = PRAVO_SEARCH_URL
     params: dict[str, str] = {}
@@ -117,14 +117,14 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
 
 
 async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
-    """Search legal acts by text via pravo.gov.ru open data.
+    """Поиск правовых актов по тексту через открытые данные pravo.gov.ru.
 
     Args:
-        tekst: Search text.
-        tip: Document type filter (pravo.gov.ru type code).
+        tekst: Поисковый текст.
+        tip: Фильтр по типу документа (код типа pravo.gov.ru).
 
     Returns:
-        List of matching acts.
+        Список найденных актов.
     """
     url = PRAVO_SEARCH_URL
     params: dict[str, str] = {"q": tekst}
@@ -157,11 +157,11 @@ def get_statusy_list() -> list[dict[str, str]]:
     return STATUSY_DOKUMENTOV
 
 
-# --- Response parsers ---
+# --- Разборщики ответов ---
 
 
 def _parse_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
-    """Parse pravo.gov.ru open data response into NormativnyyAkt."""
+    """Разбор ответа открытых данных pravo.gov.ru в NormativnyyAkt."""
     if not isinstance(data, dict):
         return None
     tip_code = str(data.get("type", data.get("tip", "")) or "")
@@ -182,7 +182,7 @@ def _parse_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
 
 
 def _parse_zakon_proekt(data: Any) -> ZakonProekt | None:
-    """Parse pravo.gov.ru open data response into ZakonProekt."""
+    """Разбор ответа открытых данных pravo.gov.ru в ZakonProekt."""
     if not isinstance(data, dict):
         return None
     return ZakonProekt(
@@ -198,7 +198,7 @@ def _parse_zakon_proekt(data: Any) -> ZakonProekt | None:
 
 
 def _parse_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
-    """Parse pravo.gov.ru open data search response into list of OficialnayaPublikatsiya."""
+    """Разбор поискового ответа открытых данных pravo.gov.ru в список OficialnayaPublikatsiya."""
     items = data
     if isinstance(data, dict):
         items = data.get("items", data.get("results", data.get("documents", [])))
@@ -224,7 +224,7 @@ def _parse_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
 
 
 def _parse_izmeneniya(data: Any) -> list[IzmenenieAkta]:
-    """Parse pravo.gov.ru open data amendments response into list of IzmenenieAkta."""
+    """Разбор ответа поправок открытых данных pravo.gov.ru в список IzmenenieAkta."""
     items = data
     if isinstance(data, dict):
         items = data.get("items", data.get("results", data.get("amendments", [])))
@@ -251,7 +251,7 @@ def _parse_izmeneniya(data: Any) -> list[IzmenenieAkta]:
 
 
 def _search_results(data: Any) -> list[NormativnyyAkt]:
-    """Parse pravo.gov.ru open data search results into NormativnyyAkt list."""
+    """Разбор результатов поиска открытых данных pravo.gov.ru в список NormativnyyAkt."""
     items = data
     if isinstance(data, dict):
         items = data.get("items", data.get("results", data.get("documents", [])))

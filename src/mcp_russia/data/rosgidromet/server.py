@@ -19,7 +19,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rosgidromet")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_stanciy, tags={"станции", "справочник"})
 mcp.tool(spisok_tipov_dannykh, tags={"типы-данных", "справочник"})
 mcp.tool(pogoda_seychas, tags={"погода", "текущая"})
@@ -28,11 +28,11 @@ mcp.tool(ekologiya_regiona, tags={"экология", "регион"})
 mcp.tool(preduprezhdeniya, tags={"предупреждения", "опасные-явления"})
 mcp.tool(sputnik_monitoring, tags={"спутники", "мониторинг"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://metodologiya", mime_type="text/plain")(metodologiya)
 mcp.resource("data://opasnye-yavleniya", mime_type="text/plain")(opasnye_yavleniya)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_pogody_regiona)
 mcp.prompt(obzor_ekologii)

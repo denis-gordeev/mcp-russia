@@ -1,4 +1,4 @@
-"""Testes do cache com TTL."""
+"""Тесты кэша с TTL."""
 
 import time
 
@@ -34,15 +34,15 @@ class TestTTLCache:
         cache = TTLCache(ttl=60, maxsize=2)
         cache.set("a", 1)
         cache.set("b", 2)
-        cache.set("c", 3)  # should evict oldest
+        cache.set("c", 3)  # должен вытеснить самый старый
         assert cache.size <= 2
 
     def test_evicts_expired_first(self) -> None:
         cache = TTLCache(ttl=0.01, maxsize=2)
         cache.set("a", 1)
-        time.sleep(0.02)  # "a" expires
+        time.sleep(0.02)  # «a» истекает
         cache.set("b", 2)
-        cache.set("c", 3)  # evicts expired "a", not "b"
+        cache.set("c", 3)  # вытесняет истекший «a», а не «b»
         assert cache.get("b") == 2
         assert cache.get("c") == 3
 
@@ -68,7 +68,7 @@ class TestTtlCacheDecorator:
         result2 = await fetch_data("a")
         assert result1 == "result-a"
         assert result2 == "result-a"
-        assert call_count == 1  # second call was cached
+        assert call_count == 1  # второй вызов был из кэша
 
     @pytest.mark.asyncio
     async def test_different_args_different_cache(self) -> None:
@@ -135,5 +135,5 @@ class TestTtlCacheDecorator:
 
         await fetch(uf="SP")
         await fetch(uf="RJ")
-        await fetch(uf="SP")  # cached
+        await fetch(uf="SP")  # из кэша
         assert call_count == 2

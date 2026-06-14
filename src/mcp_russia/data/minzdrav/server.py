@@ -20,7 +20,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-minzdrav")
 
-# Tools
+# Инструменты
 mcp.tool(poisk_med_organizatsiy, tags={"медицинские-организации", "поиск"})
 mcp.tool(info_med_organizatsii, tags={"медицинская-организация", "информация"})
 mcp.tool(poisk_litsenziy, tags={"лицензии", "поиск"})
@@ -30,11 +30,11 @@ mcp.tool(spravochnik_mo, tags={"типы-мо", "справочник"})
 mcp.tool(spravochnik_spetsialnostey, tags={"специальности", "справочник"})
 mcp.tool(spravochnik_mkb10, tags={"мкб-10", "справочник"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://klassifikatsii", mime_type="text/plain")(klassifikatsii)
 mcp.resource("data://okruga", mime_type="text/plain")(federalnyye_okruga)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_zdorovya_regiona)
 mcp.prompt(obzor_med_organizatsiy)

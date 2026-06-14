@@ -1,4 +1,4 @@
-"""Tests for Russian validators: INN, KPP, SNILS, postal code."""
+"""Тесты российских валидаторов: ИНН, КПП, СНИЛС, почтовый индекс."""
 
 import pytest
 
@@ -39,7 +39,7 @@ class TestFormatINN:
         assert format_inn("771014046678") == "771014046678"
 
     def test_raises_wrong_length(self) -> None:
-        with pytest.raises(ValueError, match="10 or 12 digits"):
+        with pytest.raises(ValueError, match="10 или 12 цифр"):
             format_inn("123")
 
 
@@ -62,7 +62,7 @@ class TestFormatKPP:
         assert format_kpp("773601001") == "773601001"
 
     def test_raises_wrong_length(self) -> None:
-        with pytest.raises(ValueError, match="9 digits"):
+        with pytest.raises(ValueError, match="9 цифр"):
             format_kpp("123")
 
 
@@ -88,7 +88,7 @@ class TestFormatSNILS:
         assert format_snils("112-233-445 95") == "112-233-445 95"
 
     def test_raises_wrong_length(self) -> None:
-        with pytest.raises(ValueError, match="11 digits"):
+        with pytest.raises(ValueError, match="11 цифр"):
             format_snils("123")
 
 
@@ -111,5 +111,5 @@ class TestFormatPostalCodeRU:
         assert format_postal_code_ru("101000") == "101000"
 
     def test_raises_wrong_length(self) -> None:
-        with pytest.raises(ValueError, match="6 digits"):
+        with pytest.raises(ValueError, match="6 цифр"):
             format_postal_code_ru("123")

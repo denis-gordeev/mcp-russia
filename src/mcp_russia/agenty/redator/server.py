@@ -36,14 +36,14 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-deloproizvodstvo")
 
-# Tools
+# Инструменты
 mcp.tool(formatirovat_data_extenso, tags={"форматирование", "дата"})
 mcp.tool(generirovat_numeraciyu, tags={"форматирование", "нумерация"})
 mcp.tool(konsulitirovat_obrashchenie, tags={"справочник", "обращения"})
 mcp.tool(validirovat_dokument, tags={"валидация", "документ"})
 mcp.tool(spisok_tipov_dokumentov, tags={"справочник", "типы-документов"})
 
-# Prompts
+# Промпты
 mcp.prompt(redaktor_pismo)
 mcp.prompt(redaktor_prikaz)
 mcp.prompt(redaktor_rasporyazhenie)
@@ -52,7 +52,7 @@ mcp.prompt(redaktor_spravka)
 mcp.prompt(redaktor_protokol)
 mcp.prompt(redaktor_dokladnaya_zapiska)
 
-# Resources
+# Ресурсы
 mcp.resource("template://pismo")(get_template_pismo)
 mcp.resource("template://prikaz")(get_template_prikaz)
 mcp.resource("template://rasporyazhenie")(get_template_rasporyazhenie)

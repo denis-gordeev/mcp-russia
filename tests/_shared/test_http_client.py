@@ -60,7 +60,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_404_raises_immediately(self) -> None:
-        """4xx errors (except 429) should not retry."""
+        """Ошибки 4xx (кроме 429) не должны повторяться."""
         respx.get("https://api.example.com/missing").mock(
             return_value=httpx.Response(404, text="Not Found")
         )
@@ -70,7 +70,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_500_retries_then_succeeds(self) -> None:
-        """Server error on first attempt, success on second."""
+        """Ошибка сервера при первой попытке, успех при второй."""
         route = respx.get("https://api.example.com/flaky")
         route.side_effect = [
             httpx.Response(500, text="Internal Server Error"),
@@ -83,7 +83,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_429_retries(self) -> None:
-        """Rate limited requests should retry."""
+        """Запросы с ограничением скорости должны повторяться."""
         route = respx.get("https://api.example.com/limited")
         route.side_effect = [
             httpx.Response(429, text="Too Many Requests"),
@@ -96,7 +96,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_all_retries_exhausted(self) -> None:
-        """After all retries fail, raises HttpClientError."""
+        """После исчерпания всех попыток возбуждает HttpClientError."""
         respx.get("https://api.example.com/down").mock(
             return_value=httpx.Response(503, text="Service Unavailable")
         )
@@ -109,7 +109,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_timeout_retries(self) -> None:
-        """Timeout errors should retry."""
+        """Ошибки таймаута должны повторяться."""
         route = respx.get("https://api.example.com/slow")
         route.side_effect = [
             httpx.ReadTimeout("timeout"),
@@ -122,7 +122,7 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_zero_retries_no_retry(self) -> None:
-        """With max_retries=0, no retries happen."""
+        """При max_retries=0 повторных запросов не происходит."""
         respx.get("https://api.example.com/once").mock(
             return_value=httpx.Response(500, text="Error")
         )

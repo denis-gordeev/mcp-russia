@@ -1,8 +1,8 @@
 """HTTP-клиент для API ЦБ РФ.
 
-Endpoints:
-    - https://www.cbr-xml-daily.ru/daily_json.js  → все курсы валют
-    - https://www.cbr-xml-daily.ru/daily_json.js  → курсы на конкретную дату
+Эндпоинты:
+- https://www.cbr-xml-daily.ru/daily_json.js  → все курсы валют
+- https://www.cbr-xml-daily.ru/daily_json.js  → курсы на конкретную дату
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from .schemas import ZnachenieValyuty
 
 
 def _parse_valyuta(code: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
-    """Parse currency data from the CBR JSON API."""
+    """Разбор данных о валютах из JSON API ЦБ РФ."""
     entry = data.get(code, {})
     if not entry:
         return ZnachenieValyuty(
@@ -43,27 +43,27 @@ def _parse_valyuta(code: str, data: dict[str, Any], date_str: str = "") -> Znach
 
 
 async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
-    """Fetch all currency exchange rates from CBR.
+    """Получение всех курсов валют ЦБ РФ.
 
     Args:
-        data: Date in YYYY-MM-DD format (optional, defaults to latest).
+        data: Дата в формате ГГГГ-ММ-ДД (необязательно, по умолчанию последние).
 
     Returns:
-        Raw JSON response from the CBR API.
+        Сырой JSON-ответ от API ЦБ РФ.
     """
     url = CBR_DAILY_JSON
     return await http_get(url)
 
 
 async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyuty | None:
-    """Fetch a single currency exchange rate.
+    """Получение курса отдельной валюты.
 
     Args:
-        code: Currency code (e.g. 'USD', 'EUR', 'CNY').
-        data: Date in YYYY-MM-DD format (optional).
+        code: Код валюты (напр. «USD», «EUR», «CNY»).
+        data: Дата в формате ГГГГ-ММ-ДД (необязательно).
 
     Returns:
-        Currency data or None if not found.
+        Данные о валюте или None если не найдена.
     """
     result = await poluchit_vse_valyuty(data)
     valute_data = result.get("Valute", {})
@@ -75,13 +75,13 @@ async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyu
 
 
 async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
-    """Fetch multiple currency exchange rates in parallel.
+    """Получение нескольких курсов валют параллельно.
 
     Args:
-        codes: List of currency codes.
+        codes: Список кодов валют.
 
     Returns:
-        List of currency data.
+        Список данных о валютах.
     """
     result = await poluchit_vse_valyuty()
     valute_data = result.get("Valute", {})
@@ -91,26 +91,26 @@ async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:
-    """Fetch main currency exchange rates (USD, EUR, CNY, GBP, JPY, CHF).
+    """Получение курсов основных валют (USD, EUR, CNY, GBP, JPY, CHF).
 
     Returns:
-        List of main currency data.
+        Список данных об основных валютах.
     """
     osnovnyye = ["USD", "EUR", "CNY", "GBP", "JPY", "CHF"]
     return await poluchit_valyuty_spisok(osnovnyye)
 
 
 async def poluchit_dinamiku_kursa(code: str) -> dict[str, Any]:
-    """Fetch dynamic historical data for a currency.
+    """Получение динамики исторических данных для валюты.
 
-    This uses the CBR's dynamic API for historical data.
+    Использует API динамики ЦБ РФ для исторических данных.
     API: https://www.cbr-xml-daily.ru/dynamics_json.js
 
     Args:
-        code: Currency code.
+        code: Код валюты.
 
     Returns:
-        Historical currency data.
+        Исторические данные о валюте.
     """
     url = f"https://www.cbr-xml-daily.ru/dynamics/{code}/dynamic_json.js"
     try:

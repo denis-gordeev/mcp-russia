@@ -26,13 +26,13 @@ from .schemas import (
 
 
 async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
-    """Fetch organization data from ЕГРЮЛ via egrul.nalog.ru.
+    """Получение данных организации из ЕГРЮЛ через egrul.nalog.ru.
 
     Args:
         inn: ИНН организации (10 цифр).
 
     Returns:
-        Organization data or None.
+        Данные организации или None.
     """
     try:
         result = await _egrul_search(inn)
@@ -50,13 +50,13 @@ async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
 
 
 async def poluchit_ip(inn: str) -> IPEGRIP | None:
-    """Fetch individual entrepreneur data from ЕГРИП via egrul.nalog.ru.
+    """Получение данных об ИП из ЕГРИП через egrul.nalog.ru.
 
     Args:
         inn: ИНН ИП (12 цифр).
 
     Returns:
-        IP data or None.
+        Данные ИП или None.
     """
     try:
         result = await _egrul_search(inn)
@@ -86,26 +86,26 @@ async def poluchit_proverki(inn: str) -> list[NalogovayaProverka]:
 
 
 async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNachislenie]:
-    """Fetch tax accruals (placeholder — requires authenticated API).
+    """Получение начислений налогов (заглушка — требуется авторизованный API).
 
     Args:
         inn: ИНН организации или ИП.
         period: Налоговый период.
 
     Returns:
-        Empty list — real integration requires FNS API token.
+        Пустой список — реальная интеграция требует токен API ФНС.
     """
     return []
 
 
 async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
-    """Получение сводной информации об организации.
+    """Получение данных об организации из ЕГРЮЛ через egrul.nalog.ru.
 
     Args:
-        inn: ИНН организации.
+        inn: ИНН организации (10 цифр).
 
     Returns:
-        Сводные данные или None.
+        Данные организации или None.
     """
     org = await poluchit_organizaciyu(inn)
     if not org:
@@ -123,16 +123,16 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
 
 
 async def _egrul_search(query: str) -> dict[str, Any] | None:
-    """Perform a two-step search via the EGRUL nalog.ru API.
+    """Двухшаговый поиск через API ЕГРЮЛ nalog.ru.
 
-    Step 1: POST search request → get task ID.
-    Step 2: GET search result by task ID.
+    Шаг 1: POST-запрос поиска → получение ID задачи.
+    Шаг 2: GET-запрос результата поиска по ID задачи.
 
     Args:
-        query: INN, OGRN, or organization name to search.
+        query: ИНН, ОГРН или название организации для поиска.
 
     Returns:
-        Search result data or None.
+        Данные результата поиска или None.
     """
     search_url = EGRUL_API_BASE
     result_url = f"{EGRUL_API_BASE}/search-result/"
@@ -155,7 +155,7 @@ async def _egrul_search(query: str) -> dict[str, Any] | None:
 
 
 def _parse_egrul_organization(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
-    """Parse an EGRUL entry into OrganizaciyaEGRUL schema."""
+    """Разбор записи ЕГРЮЛ в схему OrganizaciyaEGRUL."""
     return OrganizaciyaEGRUL(
         inn=entry.get("inn", "") or entry.get("t", ""),
         ogrn=entry.get("ogrn", "") or entry.get("o", ""),
@@ -171,7 +171,7 @@ def _parse_egrul_organization(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
 
 
 def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
-    """Parse an EGRIP entry into IPEGRIP schema."""
+    """Разбор записи ЕГРИП в схему IPEGRIP."""
     return IPEGRIP(
         inn=entry.get("inn", "") or entry.get("t", ""),
         ogrnip=entry.get("ogrn", "") or entry.get("o", ""),
@@ -183,7 +183,7 @@ def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
 
 
 def _parse_status(status_code: Any) -> str:
-    """Convert EGRUL status code to Russian description."""
+    """Преобразование кода статуса ЕГРЮЛ в русское описание."""
     status_map = {
         "01": "Действующая",
         "02": "В процессе ликвидации",

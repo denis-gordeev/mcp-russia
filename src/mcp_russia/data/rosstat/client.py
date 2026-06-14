@@ -36,14 +36,14 @@ logger = logging.getLogger(__name__)
 
 
 async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelRosstata]:
-    """Fetch a statistical indicator from EMISS/Rosstat.
+    """Получение статистического показателя из ЕМИСС/Росстата.
 
     Args:
-        code: Indicator code (e.g. 'cpi', 'population').
-        date_range: Date range filter (optional).
+        code: Код показателя (напр. 'cpi', 'population').
+        date_range: Фильтр по диапазону дат (необязательно).
 
     Returns:
-        List of indicator values.
+        Список значений показателя.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(code, code)
     try:
@@ -59,13 +59,13 @@ async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelR
 
 
 async def poluchit_dannye_regiona(code: str) -> RegionData | None:
-    """Fetch regional data for a Russian federal subject.
+    """Получение данных о субъекте РФ.
 
     Args:
-        code: Region code (OKATO/OKTMO).
+        code: Код региона (ОКАТО/ОКТМО).
 
     Returns:
-        Regional data or None.
+        Данные региона или None.
     """
     region_info = next((r for r in SUBIEKTY_RF if r["code"] == code), None)
     if not region_info:
@@ -115,13 +115,13 @@ async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
 
 
 async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
-    """Fetch inflation (CPI) data from EMISS.
+    """Получение данных об инфляции (ИПЦ) из ЕМИСС.
 
     Args:
-        god: Year filter.
+        god: Фильтр по году.
 
     Returns:
-        List of CPI data points.
+        Список точек данных ИПЦ.
     """
     try:
         emiss_code = EMISS_KODY_POKAZATELEY.get("cpi", "31088")
@@ -150,13 +150,13 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
 
 
 async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
-    """Fetch demographic data from EMISS.
+    """Получение демографических данных из ЕМИСС.
 
     Args:
-        region: Region code (optional).
+        region: Код региона (необязательно).
 
     Returns:
-        List of demographic data points.
+        Список точек демографических данных.
     """
     try:
         emiss_code = EMISS_KODY_POKAZATELEY.get("population", "24133")
@@ -186,14 +186,14 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
 
 
 async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
-    """Fetch Gross Regional Product data from EMISS.
+    """Получение данных о валовом региональном продукте из ЕМИСС.
 
     Args:
-        region: Region code (optional).
-        god: Year filter.
+        region: Код региона (необязательно).
+        god: Фильтр по году.
 
     Returns:
-        List of VRP data points.
+        Список точек данных ВРП.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
     try:
@@ -233,14 +233,14 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
 
 
 async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
-    """Fetch wages data from EMISS.
+    """Получение данных о заработной плате из ЕМИСС.
 
     Args:
-        region: Region code (optional).
-        god: Year filter.
+        region: Код региона (необязательно).
+        god: Фильтр по году.
 
     Returns:
-        List of wages data points.
+        Список точек данных о заработной плате.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("wages", "24140")
     try:
@@ -280,13 +280,13 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
 
 
 async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
-    """Fetch a regional indicator for all regions for comparison.
+    """Получение регионального показателя по всем регионам для сравнения.
 
     Args:
-        pokazatel: Indicator code from REGIONALNYE_POKAZATELI.
+        pokazatel: Код показателя из REGIONALNYE_POKAZATELI.
 
     Returns:
-        List of region-value pairs.
+        Список пар «регион — значение».
     """
     emiss_code = REGIONALNYE_POKAZATELI.get(pokazatel)
     if not emiss_code:
@@ -382,7 +382,7 @@ async def poluchit_indikator_dannye(
 
 
 def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
-    """Parse EMISS API response into PokazatelRosstata objects."""
+    """Разбор ответа API ЕМИСС в объекты PokazatelRosstata."""
     if not isinstance(data, dict):
         return []
 
@@ -423,14 +423,14 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     region: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
-    """Fetch industry structure of GRP by OKVED section.
+    """Получение отраслевой структуры ВРП по разделам ОКВЭД.
 
     Args:
-        region: Region code (optional).
-        god: Year filter.
+        region: Код региона (необязательно).
+        god: Фильтр по году.
 
     Returns:
-        List of industry structure data points.
+        Список точек данных отраслевой структуры.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("vrp_structure", "27103")
     try:
@@ -480,9 +480,9 @@ def _fallback_otraslevaya_struktura(
     region: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
-    """Return industry structure reference data as fallback.
+    """Возврат справочных данных об отраслевой структуре как fallback.
 
-    Uses published Rosstat data for 2022 when API is unavailable.
+    Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
     region_name = ""
     if region:
@@ -506,14 +506,14 @@ async def poluchit_investitsii_po_vidam(
     region: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:
-    """Fetch investment data by type of economic activity.
+    """Получение данных об инвестициях по видам экономической деятельности.
 
     Args:
-        region: Region code (optional).
-        god: Year filter.
+        region: Код региона (необязательно).
+        god: Фильтр по году.
 
     Returns:
-        List of investment data points by activity.
+        Список точек данных об инвестициях по видам деятельности.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("investments_by_activity", "24145")
     try:
@@ -563,9 +563,9 @@ def _fallback_investitsii_po_vidam(
     region: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:
-    """Return investment activity reference data as fallback.
+    """Возврат справочных данных об инвестиционной деятельности как fallback.
 
-    Uses published Rosstat data for 2022 when API is unavailable.
+    Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
     region_name = ""
     if region:

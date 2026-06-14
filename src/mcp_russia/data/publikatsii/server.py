@@ -25,7 +25,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-publikatsii")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_tipov_aktov, tags={"типы-актов", "справочник"})
 mcp.tool(spisok_otrasley, tags={"отрасли", "справочник"})
 mcp.tool(spisok_istochnikov, tags={"источники", "справочник"})
@@ -36,11 +36,11 @@ mcp.tool(poisk_aktov, tags={"поиск", "акты"})
 mcp.tool(publikatsii_po_datam, tags={"публикации", "период"})
 mcp.tool(izmeneniya_akta, tags={"изменения", "акт"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://poryadok-opublikovaniya", mime_type="text/plain")(poryadok_opublikovaniya)
 mcp.resource("data://struktura-zakonodatelstva", mime_type="text/plain")(struktura_zakonodatelstva)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_normativnogo_akta)
 mcp.prompt(obzor_zakonodatelstva)

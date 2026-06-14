@@ -26,10 +26,10 @@ _dispatch: dict[str, Any] = {}
 
 
 def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
-    """Build a mapping of namespaced tool names → async functions.
+    """Построение отображения полных имён инструментов → асинхронные функции.
 
-    Scans tools.py modules from all registered features, including
-    nested sub-packages (e.g., zakupki/sub-module).
+    Сканирует модули tools.py всех зарегистрированных функций, включая
+    вложенные подпакеты (напр., zakupki/sub-module).
     """
     global _dispatch
     if _dispatch:
@@ -39,7 +39,7 @@ def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
         base = feat.module_path
         _scan_tools_module(base, name)
 
-        # Sub-packages (e.g., data module with sub-features)
+        # Подпакеты (напр., модуль данных с подфункциями)
         try:
             pkg = importlib.import_module(base)
             if hasattr(pkg, "__path__"):
@@ -50,7 +50,7 @@ def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
         except Exception:
             pass
 
-    logger.info("Batch dispatch: %d tools registered", len(_dispatch))
+    logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispatch))
     return _dispatch
 
 

@@ -1,4 +1,4 @@
-"""Tests for the batch execution module."""
+"""Тесты модуля пакетного выполнения."""
 
 from __future__ import annotations
 
@@ -17,24 +17,24 @@ def _mock_ctx() -> MagicMock:
 
 @pytest.fixture(autouse=True)
 def _reset_dispatch() -> None:
-    """Clear dispatch table before each test."""
+    """Очищает таблицу диспетчеризации перед каждым тестом."""
     batch._dispatch.clear()
 
 
 class TestBuildDispatch:
     def test_builds_from_registry(self) -> None:
-        """Should discover tools from feature modules."""
+        """Должен обнаруживать инструменты из модулей features."""
         result = batch.build_dispatch(_real_registry())
         assert any(k.startswith("cbrf_") for k in result)
 
     def test_finds_nested_features(self) -> None:
-        """Should discover tools in sub-packages."""
+        """Должен обнаруживать инструменты в подпакетах."""
         result = batch.build_dispatch(_real_registry())
         assert any(k.startswith("sovfed_") for k in result)
         assert any(k.startswith("kaznacheistvo_") for k in result)
 
     def test_caches_result(self) -> None:
-        """Second call should return cached dispatch table."""
+        """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
         reg = _real_registry()
         first = batch.build_dispatch(reg)
         second = batch.build_dispatch(reg)
@@ -63,7 +63,7 @@ class TestExecuteBatch:
 
     @pytest.mark.asyncio
     async def test_calls_tool_with_ctx(self) -> None:
-        """Should pass ctx to tools that accept it."""
+        """Должен передавать ctx инструментам, которые его принимают."""
 
         async def _spec(ctx: object, param: str) -> str: ...
 
@@ -79,7 +79,7 @@ class TestExecuteBatch:
 
     @pytest.mark.asyncio
     async def test_calls_tool_without_ctx(self) -> None:
-        """Should work with tools that don't take ctx."""
+        """Должен работать с инструментами, не принимающими ctx."""
 
         async def no_ctx_tool(name: str) -> str:
             return f"hello {name}"
@@ -92,7 +92,7 @@ class TestExecuteBatch:
 
     @pytest.mark.asyncio
     async def test_parallel_execution(self) -> None:
-        """Should execute multiple queries concurrently."""
+        """Должен выполнять несколько запросов параллельно."""
         call_count = 0
 
         async def counting_tool(n: int) -> str:
@@ -118,7 +118,7 @@ class TestExecuteBatch:
 
     @pytest.mark.asyncio
     async def test_handles_tool_error(self) -> None:
-        """Should catch exceptions and include error in results."""
+        """Должен перехватывать исключения и включать ошибку в результаты."""
 
         async def failing_tool() -> str:
             msg = "API timeout"
@@ -133,7 +133,7 @@ class TestExecuteBatch:
 
     @pytest.mark.asyncio
     async def test_mixed_success_and_failure(self) -> None:
-        """Should return partial results when some tools fail."""
+        """Должен возвращать частичные результаты при ошибках части инструментов."""
 
         async def ok_tool() -> str:
             return "success"
@@ -158,7 +158,7 @@ class TestExecuteBatch:
 
 
 def _real_registry() -> batch.FeatureRegistry:
-    """Build a real registry from the project for integration testing."""
+    """Собирает реальный registry проекта для интеграционного тестирования."""
     from mcp_russia._shared.feature import FeatureRegistry
 
     reg = FeatureRegistry()

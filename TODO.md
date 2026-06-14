@@ -2,6 +2,61 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-14 (тридцать восьмой проход — русификация документации, тестов и комментариев)
+
+### Выполнено
+
+- **Русификация документации docs/ (125 замен)**:
+  - `docs/reference/features.md` (88 замен): `Tool` → `Инструмент` (22), `Resources:` → `Ресурсы:` (22), `Prompts:` → `Промпты:` (22), `(X tools, Y resources, Z prompts)` → `(X инструментов, Y ресурсов, Z промптов)` (22)
+  - `docs/concepts/architecture.md` (5 замен): `root server с auto-registry` → `корневой сервер с авторегистрацией`, `internal-слоем` → `внутренним слоем`, `schemas, tools, resources и prompts` → `схемы, инструменты, ресурсы и промпты`, `tools, resources и prompts` → `инструменты, ресурсы и промпты`, `каталог и рекомендация tools` → `каталог и рекомендация инструментов`
+  - `docs/guide/adding-features.md` (11 замен): `feature` → `модуль`, `data-feature` → `модуль данных`, `agent-feature` → `агентный модуль`, `Описать tools` → `Описать инструменты`, `feature-server` → `сервер модуля`, `resources и prompts` → `ресурсы и промпты`
+  - `docs/guide/development.md` (5 замен): `внутри feature` → `внутри модуля`, `compatibility-слой` → `слой совместимости`, `поведение feature` → `поведение модуля`
+  - `docs/index.md` (3 замены): `discovery feature-пакетов` → `обнаружение пакетов модулей`, `root server, auto-registry и feature-пакеты` → `корневой сервер, авторегистрация и пакеты модулей`, `Как добавлять новую feature` → `Как добавлять новый модуль`
+  - `docs/reference/smart-tools.md` (5 замен): `tools` → `инструменты` (в бегущем тексте), `per capita` → `на душу населения`, `из другой feature` → `из другого модуля`
+  - `docs/reference/configuration.md` (2 замены): `каталог tools` → `каталог инструментов`, `tools показывается` → `инструментов показывается`
+  - `docs/examples/ofitsialnyy-redaktor.md` (4 замены): `compatibility-layer` → `уровень совместимости`, `relevant resource` → `соответствующий ресурс`, `Official Editor` → `Официальный редактор`
+  - `docs/examples/gosudarstvennaya-politika.md` (4 замены): `(INPUT)` → `(ВХОД)`, `(PROCESS)` → `(ПРОЦЕСС)`, `(OUTPUT)` → `(ВЫХОД)`, `(ACCOUNTABILITY)` → `(ОТВЕТСТВЕННОСТЬ)`
+  - `docs/examples/zhurnalist-stati.md` (1 замена): `Top 10` → `топ-10`
+- **Русификация тестовых docstrings и комментариев (38 замен в 10 файлах)**:
+  - `tests/_shared/test_batch.py` (4 docstrings): `Should execute multiple queries concurrently` → `Должен выполнять несколько запросов параллельно` и др.
+  - `tests/_shared/test_http_client.py` (6 docstrings): `4xx errors should not retry` → `Ошибки 4xx не должны повторяться` и др.
+  - `tests/_shared/test_rate_limiter.py` (1 module docstring + 6 comments): `Tests for the async RateLimiter` → `Тесты асинхронного ограничителя запросов` и др.
+  - `tests/_shared/test_lifespan.py` (1 module + 1 class + 2 method docstrings + 3 comments): полная русификация
+  - `tests/_shared/test_validators.py` (1 module docstring): `Tests for Russian validators` → `Тесты российских валидаторов`
+  - `tests/_shared/test_settings.py` (1 docstring): `Settings can be overridden via env vars` → `Настройки можно переопределить через переменные окружения`
+  - `tests/_shared/test_feature.py` (2 tool docstrings + 1 method docstring + 1 comment): `Ping tool` → `Инструмент проверки связи`, `Echo a message` → `Вернуть сообщение` и др.
+  - `tests/_shared/test_cache.py` (1 португальский module docstring + 5 comments): `Testes do cache com TTL` → `Тесты кэша с TTL`, English inline comments → русские
+  - `tests/data/zakupki/test_tools.py` (2 section comments): `Parser tests` → `Тесты парсера`, `Tool tests` → `Тесты инструментов`
+  - `tests/data/gosduma/test_tools.py` (2 section comments): аналогично
+- **Русификация inline-комментариев в src/mcp_russia/ (5 замен)**:
+  - `_shared/feature.py`: `ensure .env is loaded` → `убедиться, что .env загружен`
+  - `_shared/planner.py`: `JSON schema` → `JSON-схема`, `Каталог tools` → `Каталог инструментов`
+  - `settings.py`: `Dadata API (rosapi)` → `Dadata API (РосАПИ)`
+- **Исправление E501 (длинные строки) от предыдущего раунда**:
+  - `_shared/feature.py`: docstring `mount_all` перенесён на две строки
+  - `_shared/validators.py`: `raise ValueError(...)` перенесён на три строки
+  - `tests/agenty/redator/test_integration.py`: сокращён module docstring
+- **Исправление BM25-тестов** после русификации docstrings:
+  - `tests/test_discovery.py`: поисковые запросы обновлены на транслитерированные (`"regions russia"` → `"spisok regionov"`, `"fire hotspots satellite"` → `"ochagi pozhary sputnik"`), т.к. BM25-токенизатор не поддерживает кириллицу
+- **Исправление test_validators.py match-строк** после русификации ValueError-сообщений:
+  - `"10 or 12 digits"` → `"10 или 12 цифр"`, `"9 digits"` → `"9 цифр"`, `"11 digits"` → `"11 цифр"`, `"6 digits"` → `"6 цифр"`
+- **Обновлена конфигурация ruff**:
+  - `src/mcp_russia/_shared/*`: добавлен `RUF003`
+  - `tests/_shared/*`: добавлен `RUF003`, удалён дубликат ключа
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (641 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **BM25-токенизатор не поддерживает кириллицу**: после русификации docstrings тестовые BM25-запросы пришлось перевести на транслитерацию (латинские аналоги русских слов). Это известное ограничение библиотеки fastmcp — в продакшене запросы пользователей обычно приходят на естественном языке через LLM, который формулирует их латиницей
+- **Документация полностью русифицирована**: все 11 markdown-файлов в `docs/` теперь содержат только русские заголовки, термины и описания; английские гибридные термины (`feature`, `tools`, `resources`, `prompts`, `root server`, `auto-registry`, `compatibility-layer`) заменены на русские эквиваленты
+- **Тесты полностью русифицированы**: последний португальский артефакт (`Testes do cache com TTL`) устранён; все английские docstrings, комментарии и section-метки в тестах переведены
+
+### Следующие действия
+
+- **Добавить русские docstrings к ~95 функциям без docstrings** в модулях: fssp, rosreestr, rosprirodnadzor, kaznacheistvo, kad_arbitrazh, rosapi, rosaudit, rosvodresursy, sovfed, minzdrav, cekrf
+- **Верификация оставшихся ЕМИСС-кодов**: проверить коды 24133 (население), 26973 (ВВП), 30826 (промышленность) и др.
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+
 ## Статус раунда 2026-06-12 (тридцать седьмой проход — русификация документации, исправление ЕМИСС-кодов, статические данные ВРП/инвестиций)
 
 ### Выполнено

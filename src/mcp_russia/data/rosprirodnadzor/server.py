@@ -24,7 +24,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rosprirodnadzor")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_vidov_nadzora, tags={"виды-надзора", "справочник"})
 mcp.tool(spisok_kategoriy_obnv, tags={"категории-ОНВ", "справочник"})
 mcp.tool(spisok_vidov_litsenziy_nedra, tags={"лицензии-недра", "справочник"})
@@ -34,11 +34,11 @@ mcp.tool(poisk_obektov_negativnogo, tags={"ОНВ", "поиск"})
 mcp.tool(poisk_litsenziy_nedra, tags={"лицензии-недра", "поиск"})
 mcp.tool(ekologicheskie_platezhi, tags={"экологические-платежи", "данные"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://struktura", mime_type="text/plain")(struktura_rosprirodnadzora)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo_ekologicheskoe)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_ekologicheskoy_proverki)
 mcp.prompt(obzor_nedropolzovaniya)

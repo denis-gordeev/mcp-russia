@@ -16,11 +16,11 @@ from collections import deque
 
 
 class RateLimiter:
-    """Token-bucket-style rate limiter with sliding window.
+    """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
 
     Args:
-        max_requests: Maximum number of requests allowed in the window.
-        period: Window duration in seconds.
+        max_requests: Максимальное число запросов в окне.
+        period: Длительность окна в секундах.
     """
 
     def __init__(self, max_requests: int, period: float) -> None:
@@ -30,13 +30,13 @@ class RateLimiter:
         self._lock = asyncio.Lock()
 
     def _purge(self, now: float) -> None:
-        """Remove timestamps outside the current window."""
+        """Удаление меток времени за пределами текущего окна."""
         cutoff = now - self._period
         while self._timestamps and self._timestamps[0] <= cutoff:
             self._timestamps.popleft()
 
     async def acquire(self) -> None:
-        """Wait until a request slot is available, then reserve it."""
+        """Ожидание доступного слота запроса и его резервирование."""
         while True:
             async with self._lock:
                 now = time.monotonic()
@@ -44,7 +44,7 @@ class RateLimiter:
                 if len(self._timestamps) < self._max_requests:
                     self._timestamps.append(now)
                     return
-                # Calculate wait time until oldest entry expires
+                # Расчёт времени ожидания до истечения самой старой записи
                 wait = self._timestamps[0] + self._period - now
             await asyncio.sleep(max(wait, 0.01))
 

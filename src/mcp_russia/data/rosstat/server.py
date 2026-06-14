@@ -25,7 +25,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rosstat")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_regionov, tags={"регионы", "справочник"})
 mcp.tool(spisok_okrugov, tags={"федеральные-округа", "справочник"})
 mcp.tool(region_info, tags={"регион", "информация"})
@@ -40,10 +40,10 @@ mcp.tool(indikator_dannye, tags={"показатель", "ЕМИСС", "унив
 mcp.tool(otraslevaya_struktura_vrp, tags={"ВРП", "отрасли", "ОКВЭД"})
 mcp.tool(investitsii_po_vidam, tags={"инвестиции", "отрасли", "ОКВЭД"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://metodologiya", mime_type="text/plain")(metodologiya)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_regiona)
 mcp.prompt(obzor_inflyacii)

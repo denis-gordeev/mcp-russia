@@ -1,4 +1,4 @@
-"""Tests for the Russian official document tool functions."""
+"""Тесты функций инструментов российских официальных документов."""
 
 from datetime import datetime
 
@@ -153,5 +153,5 @@ class TestSpisokTipovDokumentov:
     @pytest.mark.asyncio
     async def test_contains_count(self) -> None:
         result = await tools.spisok_tipov_dokumentov()
-        # Should mention 7 document types
+        # Должен упомянуть 7 типов документов
         assert "типов" in result.lower() or "тип" in result.lower()

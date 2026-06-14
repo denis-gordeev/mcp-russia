@@ -8,7 +8,7 @@
 src/
 └── mcp_russia/
     ├── __init__.py         # публичный namespace
-    ├── server.py           # root server с auto-registry
+    ├── server.py           # корневой сервер с авторегистрацией
     ├── settings.py         # конфигурация через env vars
     ├── exceptions.py       # общие исключения
     ├── _shared/            # общая инфраструктура
@@ -22,10 +22,10 @@ src/
 - импорт для запуска: `mcp_russia.server`;
 - команды из `Makefile`, использующие `mcp_russia`.
 
-## Что пока считается internal-слоем
+## Что пока считается внутренним слоем
 
 - shared-инфраструктура и feature-дерево внутри `mcp_russia`;
-- значительная часть schemas, tools, resources и prompts.
+- значительная часть схем, инструментов, ресурсов и промптов.
 
 ## Root server
 
@@ -44,12 +44,12 @@ registry.mount_all(mcp)
 Следствие простое:
 
 - внешние клиенты работают через `mcp_russia`;
-- новые feature должны добавляться сразу в `mcp_russia`;
+- новые модули должны добавляться сразу в `mcp_russia`;
 - дальнейшая миграция сместилась в углубление API-интеграций и зачистку документации.
 
 ## Анатомия feature
 
-Каждая feature остается изолированным пакетом с предсказуемой структурой:
+Каждая feature остаётся изолированным пакетом с предсказуемой структурой:
 
 ```text
 src/mcp_russia/data/{feature}/
@@ -63,7 +63,7 @@ src/mcp_russia/data/{feature}/
 
 Распределение ответственности:
 
-- `server.py` регистрирует tools, resources и prompts;
+- `server.py` регистрирует инструменты, ресурсы и промпты;
 - `tools.py` оркестрирует пользовательские запросы;
 - `client.py` делает HTTP-вызовы и возвращает типизированные данные;
 - `schemas.py` хранит Pydantic-модели;
@@ -81,7 +81,7 @@ src/mcp_russia/data/{feature}/
 | `formatting.py` | табличное и числовое форматирование |
 | `rate_limiter.py` | rate limiting для внешних API |
 | `batch.py` | выполнение нескольких tool-call за один запрос |
-| `discovery.py` | каталог и рекомендация tools |
+| `discovery.py` | каталог и рекомендация инструментов |
 | `planner.py` | построение плана запроса |
 | `lifespan.py` | общий lifecycle для HTTP-клиента |
 

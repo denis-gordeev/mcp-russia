@@ -27,7 +27,7 @@ from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
 
 
 def _get_api_token() -> str:
-    """Get Zakupki API token from settings."""
+    """Получение токена API Закупок из настроек."""
     return settings.ZAKUPKI_API_TOKEN
 
 
@@ -79,7 +79,7 @@ async def poisk_zakupok(
 
 
 def _parse_zakupki_search(data: Any) -> list[Zakupka]:
-    """Parse search results into Zakupka list."""
+    """Разбор результатов поиска в список Zakupka."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):
@@ -111,7 +111,7 @@ def _parse_zakupki_search(data: Any) -> list[Zakupka]:
 
 
 def _determine_zakon(item: dict[str, Any]) -> str:
-    """Determine which law applies (44-ФЗ or 223-ФЗ)."""
+    """Определение применяемого закона (44-ФЗ или 223-ФЗ)."""
     fz = item.get("fz", item.get("law", ""))
     if isinstance(fz, (int, float)):
         fz = str(int(fz))
@@ -123,7 +123,7 @@ def _determine_zakon(item: dict[str, Any]) -> str:
 
 
 def _safe_float(value: Any) -> float:
-    """Safely convert a value to float."""
+    """Безопасное преобразование значения в float."""
     if value is None:
         return 0.0
     try:
@@ -194,7 +194,7 @@ async def poisk_kontraktov(
 
 
 def _parse_kontrakty(data: Any) -> list[Kontrakt]:
-    """Parse contract search results."""
+    """Разбор результатов поиска контрактов."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):
@@ -226,7 +226,7 @@ def _parse_kontrakty(data: Any) -> list[Kontrakt]:
 async def info_zakazchika(inn: str) -> Zakazchik | None:
     """Получить информацию о заказчике по ИНН.
 
-    Uses the ЕГРЮЛ data from egrul.nalog.ru to get basic organization info.
+    Использует данные ЕГРЮЛ с egrul.nalog.ru для получения базовой информации об организации.
 
     Args:
         inn: ИНН заказчика.
@@ -257,7 +257,7 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
 async def info_postavshchika(inn: str) -> Postavshchik | None:
     """Получить информацию о поставщике по ИНН.
 
-    Uses the ЕГРЮЛ/ЕГРИП data from egrul.nalog.ru to get basic info.
+    Использует данные ЕГРЮЛ/ЕГРИП с egrul.nalog.ru для получения базовой информации.
 
     Args:
         inn: ИНН поставщика.
@@ -329,7 +329,7 @@ async def plany_zakupok(year: int = 2026, organizer_inn: str = "") -> list[PlanZ
 
 
 def _parse_plany(data: Any) -> list[PlanZakupki]:
-    """Parse procurement plans."""
+    """Разбор планов закупок."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):

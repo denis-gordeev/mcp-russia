@@ -27,7 +27,7 @@ from mcp_russia.settings import HTTP_BACKOFF_BASE, HTTP_MAX_RETRIES, HTTP_TIMEOU
 
 logger = logging.getLogger(__name__)
 
-# Status codes that trigger a retry
+# Коды состояния, инициирующие повторную попытку
 _RETRYABLE_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
 
 
@@ -36,15 +36,15 @@ def create_client(
     timeout: float | None = None,
     headers: dict[str, str] | None = None,
 ) -> httpx.AsyncClient:
-    """Create a configured httpx.AsyncClient.
+    """Создание настроенного httpx.AsyncClient.
 
     Args:
-        base_url: Base URL for all requests.
-        timeout: Request timeout in seconds. Default: settings.HTTP_TIMEOUT.
-        headers: Extra headers to merge with defaults.
+        base_url: Базовый URL для всех запросов.
+        timeout: Таймаут запроса в секундах. По умолчанию: settings.HTTP_TIMEOUT.
+        headers: Дополнительные заголовки для слияния с заголовками по умолчанию.
 
     Returns:
-        Configured httpx.AsyncClient (use as async context manager).
+        Настроенный httpx.AsyncClient (использовать как async context manager).
     """
     default_headers = {
         "User-Agent": USER_AGENT,
@@ -69,23 +69,23 @@ async def http_get(
     timeout: float | None = None,
     max_retries: int | None = None,
 ) -> Any:
-    """Make a GET request with retry + exponential backoff.
+    """Выполнение GET-запроса с повторными попытками и экспоненциальной задержкой.
 
-    Retries on: HTTP 429/5xx, timeouts, and connection errors.
-    Does NOT retry on 4xx (except 429) — those are client errors.
+    Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
+    НЕ повторяет при 4xx (кроме 429) — это клиентские ошибки.
 
     Args:
-        url: Full URL to request.
-        params: Query parameters.
-        headers: Extra headers (merged with defaults).
-        timeout: Request timeout in seconds.
-        max_retries: Max retry attempts. Default: settings.HTTP_MAX_RETRIES.
+        url: Полный URL для запроса.
+        params: Параметры запроса.
+        headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
+        timeout: Таймаут запроса в секундах.
+        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
 
     Returns:
-        Parsed JSON response.
+        Разобранный JSON-ответ.
 
     Raises:
-        HttpClientError: On non-retryable errors or exhausted retries.
+        HttpClientError: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None
@@ -108,7 +108,7 @@ async def http_get(
                         )
                         await asyncio.sleep(wait)
                         continue
-                    # Last attempt still failed with retryable status
+                    # Последняя попытка завершилась повторяемой ошибкой
                     raise HttpClientError(
                         f"Request to {url} failed after {retries + 1} attempts "
                         f"(last: HTTP {response.status_code})"
@@ -149,23 +149,23 @@ async def http_post(
     timeout: float | None = None,
     max_retries: int | None = None,
 ) -> Any:
-    """Make a POST request with retry + exponential backoff.
+    """Выполнение POST-запроса с повторными попытками и экспоненциальной задержкой.
 
-    Retries on: HTTP 429/5xx, timeouts, and connection errors.
+    Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
 
     Args:
-        url: Full URL to request.
-        json_body: JSON body to send.
-        params: Query parameters.
-        headers: Extra headers (merged with defaults).
-        timeout: Request timeout in seconds.
-        max_retries: Max retry attempts. Default: settings.HTTP_MAX_RETRIES.
+        url: Полный URL для запроса.
+        json_body: JSON-тело для отправки.
+        params: Параметры запроса.
+        headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
+        timeout: Таймаут запроса в секундах.
+        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
 
     Returns:
-        Parsed JSON response.
+        Разобранный JSON-ответ.
 
     Raises:
-        HttpClientError: On non-retryable errors or exhausted retries.
+        HttpClientError: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None

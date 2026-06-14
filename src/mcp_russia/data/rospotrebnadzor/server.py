@@ -27,7 +27,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rospotrebnadzor")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
 mcp.tool(spisok_tipov_proverok, tags={"типы-проверок", "справочник"})
 mcp.tool(spisok_kategoriy_obiektov, tags={"категории-объектов", "справочник"})
@@ -40,11 +40,11 @@ mcp.tool(spisok_sanpinov, tags={"санпин", "справочник"})
 mcp.tool(zhaloby_potrebiteley, tags={"жалобы", "потребители"})
 mcp.tool(pokazateli_bezopasnosti, tags={"показатели", "безопасность"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)
 mcp.resource("data://struktura", mime_type="text/plain")(struktura_rospotrebnadzora)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_proverki)
 mcp.prompt(obzor_sanitarnoy_situacii)

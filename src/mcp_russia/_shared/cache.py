@@ -24,10 +24,10 @@ F = TypeVar("F", bound=Callable[..., Any])
 
 
 class TTLCache:
-    """In-memory cache with per-entry TTL expiration.
+    """Кэш в памяти с посерийным TTL-истечением.
 
-    Thread-safe for asyncio (single-threaded event loop).
-    Not suitable for multi-process deployments — use Redis for that.
+    Потокобезопасен для asyncio (однопоточный цикл событий).
+    Не подходит для многопроцессных развертываний — используйте Redis.
     """
 
     def __init__(self, ttl: float = 300.0, maxsize: int = 256) -> None:
@@ -37,11 +37,11 @@ class TTLCache:
 
     @property
     def size(self) -> int:
-        """Number of entries currently in cache (including expired)."""
+        """Количество записей в кэше (включая просроченные)."""
         return len(self._store)
 
     def get(self, key: str) -> Any | None:
-        """Get a value if it exists and hasn't expired."""
+        """Получение значения, если оно существует и не истекло."""
         entry = self._store.get(key)
         if entry is None:
             return None
@@ -52,39 +52,39 @@ class TTLCache:
         return value
 
     def set(self, key: str, value: Any) -> None:
-        """Store a value with TTL expiration."""
+        """Сохранение значения с TTL-истечением."""
         if len(self._store) >= self._maxsize:
             self._evict()
         self._store[key] = (time.monotonic() + self._ttl, value)
 
     def clear(self) -> None:
-        """Remove all entries."""
+        """Удаление всех записей."""
         self._store.clear()
 
     def _evict(self) -> None:
-        """Remove expired entries; if still full, remove oldest."""
+        """Удаление просроченных записей; если кэш полон — удаление самой старой."""
         now = time.monotonic()
         expired = [k for k, (exp, _) in self._store.items() if now > exp]
         for k in expired:
             del self._store[k]
 
-        # Still at capacity? Remove the entry expiring soonest
+        # Всё ещё полон? Удаляем запись с ближайшим истечением
         if len(self._store) >= self._maxsize:
             oldest_key = min(self._store, key=lambda k: self._store[k][0])
             del self._store[oldest_key]
 
 
 def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
-    """Decorator that caches async function results with TTL.
+    """Декоратор кэширования результатов асинхронных функций с TTL.
 
-    Cache key is built from function name + stringified args/kwargs.
+    Ключ кэша строится из имени функции + строковых аргументов/kwargs.
 
     Args:
-        ttl: Time-to-live in seconds. Default: 300 (5 minutes).
-        maxsize: Maximum cache entries. Default: 256.
+        ttl: Время жизни в секундах. По умолчанию: 300 (5 минут).
+        maxsize: Максимальное число записей в кэше. По умолчанию: 256.
 
     Returns:
-        Decorator that wraps an async function with caching.
+        Декоратор, оборачивающий асинхронную функцию кэшированием.
 
     Example:
         @ttl_cache(ttl=60)
@@ -104,7 +104,7 @@ def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
             cache.set(key, result)
             return result
 
-        # Expose cache for testing/clearing
+        # Доступ к кэшу для тестирования/очистки
         wrapper.cache = cache  # type: ignore[attr-defined]
         return wrapper  # type: ignore[return-value]
 

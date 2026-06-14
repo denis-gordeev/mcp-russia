@@ -29,7 +29,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-roskomnadzor")
 
-# Tools
+# Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
 mcp.tool(spisok_tipov_licenziy, tags={"лицензии", "справочник"})
 mcp.tool(spisok_kategoriy_narusheniy, tags={"нарушения", "справочник"})
@@ -44,11 +44,11 @@ mcp.tool(proverka_blokirovki, tags={"блокировка", "проверка"})
 mcp.tool(poisk_ori, tags={"ори", "поиск"})
 mcp.tool(zapisi_reestra, tags={"реестр", "записи"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)
 mcp.resource("data://struktura", mime_type="text/plain")(struktura_roskomnadzora)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_narusheniya)
 mcp.prompt(obzor_reestrov)

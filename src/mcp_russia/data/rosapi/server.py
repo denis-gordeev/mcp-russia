@@ -21,7 +21,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-rosapi")
 
-# Tools (8)
+# Инструменты (8)
 mcp.tool(konsul_adres_po_indeksu, tags={"адрес", "почтовый-индекс", "фиаc"})
 mcp.tool(poisk_adresa, tags={"адрес", "поиск", "фиаc"})
 mcp.tool(poisk_org_po_inn, tags={"организация", "инн", "егр юл"})
@@ -31,10 +31,10 @@ mcp.tool(konsul_bank_po_bik, tags={"банк", "бик", "справочник"}
 mcp.tool(prazdniki_rf, tags={"праздники", "календарь", "национальные"})
 mcp.tool(nalogovye_stavki, tags={"налоги", "ставки", "фнс"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://nalogovye-stavki", mime_type="application/json")(nalogovye_stavki_resurs)
 mcp.resource("data://servisy", mime_type="application/json")(dostupnye_servisy)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_organizacii)
 mcp.prompt(poisk_adresa_prompt)

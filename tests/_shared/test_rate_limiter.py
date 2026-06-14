@@ -1,4 +1,4 @@
-"""Tests for the async RateLimiter."""
+"""Тесты асинхронного ограничителя запросов (RateLimiter)."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ class TestRateLimiter:
         for _ in range(5):
             async with limiter:
                 pass
-        # All 5 should succeed without blocking
+        # Все 5 должны пройти без блокировки
 
     @pytest.mark.asyncio
     async def test_blocks_when_exhausted(self) -> None:
@@ -27,7 +27,7 @@ class TestRateLimiter:
         async with limiter:
             pass
 
-        # Third request should block; verify by using a short timeout
+        # Третий запрос должен блокироваться; проверяем с коротким таймаутом
         with pytest.raises(asyncio.TimeoutError):
             await asyncio.wait_for(limiter.acquire(), timeout=0.05)
 
@@ -36,9 +36,9 @@ class TestRateLimiter:
         limiter = RateLimiter(max_requests=1, period=0.05)
         async with limiter:
             pass
-        # Wait for window to expire
+        # Ждём истечения окна
         await asyncio.sleep(0.06)
-        # Should be allowed now
+        # Теперь должен быть разрешён
         async with limiter:
             pass
 
@@ -52,10 +52,10 @@ class TestRateLimiter:
     async def test_purge_removes_old_timestamps(self) -> None:
         limiter = RateLimiter(max_requests=2, period=0.05)
         now = time.monotonic()
-        # Simulate old timestamps
+        # Имитируем старые метки времени
         limiter._timestamps.append(now - 1.0)
         limiter._timestamps.append(now - 1.0)
-        # Purge should clear them, allowing new requests
+        # Очистка должна удалить их, разрешив новые запросы
         async with limiter:
             pass
         assert len(limiter._timestamps) == 1

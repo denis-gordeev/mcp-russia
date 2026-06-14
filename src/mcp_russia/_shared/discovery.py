@@ -42,16 +42,16 @@ def _format_tool_signature(feature_name: str, tool_name: str, tool: object) -> s
 
 
 def build_catalog(registry: object) -> str:
-    """Build a rich text catalog of all tools from the registry.
+    """Построение подробного каталога всех инструментов из реестра.
 
-    Uses FeatureMeta (name, description, auth) and tool schemas (params,
-    types, descriptions) to produce a detailed catalog for LLM consumption.
+    Использует FeatureMeta (имя, описание, авторизация) и схемы инструментов
+    (параметры, типы, описания) для формирования детального каталога для LLM.
 
     Args:
-        registry: FeatureRegistry instance with discovered features.
+        registry: Экземпляр FeatureRegistry с обнаруженными функциями.
 
     Returns:
-        Markdown-formatted catalog with feature context and tool signatures.
+        Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
     """
     global _catalog_cache
     if _catalog_cache:
@@ -83,14 +83,14 @@ def build_catalog(registry: object) -> str:
 
 
 async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
-    """Call Anthropic API to recommend tools based on user query.
+    """Вызов API Anthropic для рекомендации инструментов по запросу пользователя.
 
     Args:
-        query: Natural language question from the user.
-        catalog: Pre-built catalog string of all tools.
+        query: Вопрос пользователя на естественном языке.
+        catalog: Предварительно собранный каталог всех инструментов.
 
     Returns:
-        LLM-generated recommendations with explanations.
+        Рекомендации LLM с пояснениями.
     """
     try:
         import anthropic
@@ -133,7 +133,7 @@ async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
         block = response.content[0]
         return str(getattr(block, "text", ""))
     except Exception as e:
-        logger.error("Anthropic API call failed: %s", e)
+        logger.error("Ошибка вызова API Anthropic: %s", e)
         return (
             f"Ошибка при обращении к LLM: {e}\n\n"
             "В качестве альтернативы используйте 'search_tools'."

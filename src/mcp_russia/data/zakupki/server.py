@@ -20,7 +20,7 @@ from .tools import (
 
 mcp = FastMCP("mcp-russia-zakupki")
 
-# Tools
+# Инструменты
 mcp.tool(poisk_zakupok, tags={"закупки", "поиск"})
 mcp.tool(info_zakupki, tags={"закупка", "подробности"})
 mcp.tool(poisk_kontraktov, tags={"контракты", "поиск"})
@@ -30,11 +30,11 @@ mcp.tool(statusy_zakupok, tags={"статусы", "справочник"})
 mcp.tool(sposoby_zakupok, tags={"способы", "справочник"})
 mcp.tool(plany_zakupok, tags={"планы", "закупки"})
 
-# Resources
+# Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)
 mcp.resource("data://struktura", mime_type="text/plain")(struktura_eis)
 
-# Prompts
+# Промпты
 mcp.prompt(analiz_zakupki)
 mcp.prompt(obzor_zakupok)

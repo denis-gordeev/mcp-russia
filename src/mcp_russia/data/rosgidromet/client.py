@@ -40,13 +40,13 @@ def _find_stanciya(code: str) -> dict[str, Any] | None:
 
 
 async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
-    """Fetch current weather data via Open-Meteo API.
+    """Получение текущих данных о погоде через API Open-Meteo.
 
     Args:
-        stanciya: Station code (default: Moscow — 77).
+        stanciya: Код станции (по умолчанию: Москва — 77).
 
     Returns:
-        Current weather data or None.
+        Данные о текущей погоде или None.
     """
     info = _find_stanciya(stanciya)
     if not info:
@@ -100,14 +100,14 @@ async def poluchit_ekologiyu(
     gorod: str = "",
     tip: str = "",
 ) -> list[EkologiyaData]:
-    """Fetch air quality data via Open-Meteo Air Quality API.
+    """Получение данных о качестве воздуха через API Open-Meteo Air Quality.
 
     Args:
-        gorod: City name filter (matched against station names).
-        tip: Data type filter (only 'vozdukh' supported for now).
+        gorod: Фильтр по названию города (сопоставляется с названиями станций).
+        tip: Фильтр по типу данных (пока поддерживается только 'vozdukh').
 
     Returns:
-        List of environmental data.
+        Список экологических данных.
     """
     stations = STANCII_MONITORINGA
     if gorod:
@@ -137,16 +137,16 @@ async def poluchit_ekologiyu(
 
 
 async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
-    """Fetch active weather warnings.
+    """Получение активных предупреждений о погоде.
 
-    Open-Meteo does not provide warning data. This function checks
-    current weather conditions and generates warnings for extreme values.
+    Open-Meteo не предоставляет данные о предупреждениях. Эта функция
+    проверяет текущие погодные условия и генерирует предупреждения для экстремальных значений.
 
     Args:
-        region: Region code or name.
+        region: Код или название региона.
 
     Returns:
-        List of active warnings.
+        Список активных предупреждений.
     """
     stations = STANCII_MONITORINGA
     if region:
@@ -226,16 +226,16 @@ async def poluchit_sputnik_dannye(
     region: str = "",
     tip: str = "",
 ) -> list[SputnikMonitoring]:
-    """Satellite monitoring data placeholder.
+    """Заглушка данных спутникового мониторинга.
 
-    Open-Meteo does not provide satellite imagery. This remains a stub.
+    Open-Meteo не предоставляет спутниковые снимки. Остаётся заглушкой.
 
     Args:
-        region: Region filter.
-        tip: Data type (lesa, voda, pozhary, snezhnyy_pokrov).
+        region: Фильтр по региону.
+        tip: Тип данных (lesa, voda, pozhary, snezhnyy_pokrov).
 
     Returns:
-        Empty list — satellite data not available via current API.
+        Пустой список — спутниковые данные недоступны через текущий API.
     """
     return []
 
@@ -260,11 +260,11 @@ def get_tipy_preduprezhdeniy_list() -> list[dict[str, str]]:
     return TIPY_PREDUPREZHDENIY
 
 
-# --- Open-Meteo response parsers ---
+# --- Разборщики ответов Open-Meteo ---
 
 
 def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> PogodaData:
-    """Parse Open-Meteo forecast response into PogodaData."""
+    """Разбор ответа прогноза Open-Meteo в PogodaData."""
     current = data.get("current", {})
     wmo_code = current.get("weather_code", 0)
     wind_dir_deg = current.get("wind_direction_10m", 0)
@@ -288,7 +288,7 @@ def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> Pogod
 
 
 def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozData]:
-    """Parse Open-Meteo daily forecast into list of PrognozData."""
+    """Разбор ежедневного прогноза Open-Meteo в список PrognozData."""
     daily = data.get("daily", {})
     dates = daily.get("time", [])
     t_max = daily.get("temperature_2m_max", [])
@@ -315,7 +315,7 @@ def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list
 
 
 def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> list[EkologiyaData]:
-    """Parse Open-Meteo air quality response into list of EkologiyaData."""
+    """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaData."""
     current = data.get("current", {})
     time_str = current.get("time", "")
 
@@ -357,7 +357,7 @@ def _hpa_to_mmhg(hpa: float | None) -> float | None:
 
 
 def _deg_to_napravlenie(deg: float) -> str:
-    """Convert wind direction degrees to Russian compass direction."""
+    """Преобразование градусов направления ветра в российское компасное направление."""
     directions = [
         "С",
         "ССВ",

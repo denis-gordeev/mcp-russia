@@ -1,4 +1,4 @@
-"""Integration tests for the Russian official document feature using fastmcp.Client."""
+"""Интеграционные тесты модуля официальных документов с fastmcp.Client."""
 
 import pytest
 from fastmcp import Client

@@ -15,7 +15,7 @@ def _mock_ctx():
     return ctx
 
 
-# --- Parser tests ---
+# --- Тесты парсера ---
 
 
 def test_parse_zakupki_search():
@@ -78,7 +78,7 @@ def test_safe_float():
     assert zakupki_client._safe_float("200.5") == 200.5
 
 
-# --- Tool tests (all HTTP calls mocked) ---
+# --- Тесты инструментов (все HTTP-вызовы замоканы) ---
 
 
 async def test_poisk_zakupok_empty():

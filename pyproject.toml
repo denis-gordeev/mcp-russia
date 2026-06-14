@@ -88,8 +88,9 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "src/mcp_russia/data/gosduma/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/cekrf/*" = ["RUF001", "RUF002", "E501"]
 "src/mcp_russia/agenty/redator/*" = ["RUF001", "RUF002"]
-"src/mcp_russia/_shared/*" = ["RUF001", "RUF002"]
+"src/mcp_russia/_shared/*" = ["RUF001", "RUF002", "RUF003"]
 "tests/agenty/redator/*" = ["RUF001", "RUF002"]
+"tests/_shared/*" = ["RUF001", "RUF002", "RUF003"]
 # Russian modules with Cyrillic text
 "src/mcp_russia/data/zakupki/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "src/mcp_russia/data/minzdrav/*" = ["RUF001", "RUF002", "RUF003", "E501"]
@@ -134,7 +135,6 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "tests/data/gosduma/*" = ["RUF001", "RUF002"]
 "tests/test_discovery.py" = ["RUF001", "RUF002"]
 "tests/test_root_server.py" = ["RUF001", "RUF002"]
-"tests/_shared/*" = ["RUF001", "RUF002"]
 
 [tool.mypy]
 python_version = "3.10"
