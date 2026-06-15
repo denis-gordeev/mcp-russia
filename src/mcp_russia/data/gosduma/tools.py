@@ -17,6 +17,7 @@ from . import client
 
 
 def _auth_note() -> str:
+    """Заметка о необходимости настройки API-токена при его отсутствии."""
     if not client._get_api_token():
         return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_DUMA_API_TOKEN*"
     return ""

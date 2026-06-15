@@ -87,6 +87,7 @@ async def execute_batch(
         return "Максимум 10 запросов на пакет. Уменьшите список."
 
     async def _run_one(q: dict[str, Any]) -> tuple[str, str]:
+        """Выполнение одного инструмента из пакета."""
         tool_name = q.get("tool", "")
         args = q.get("args", {})
         fn = _dispatch.get(tool_name)

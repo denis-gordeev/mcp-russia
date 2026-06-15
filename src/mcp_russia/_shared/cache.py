@@ -31,6 +31,7 @@ class TTLCache:
     """
 
     def __init__(self, ttl: float = 300.0, maxsize: int = 256) -> None:
+        """Инициализация кэша с заданным TTL и максимальным размером."""
         self._ttl = ttl
         self._maxsize = maxsize
         self._store: dict[str, tuple[float, Any]] = {}
@@ -94,8 +95,11 @@ def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
     cache = TTLCache(ttl=ttl, maxsize=maxsize)
 
     def decorator(func: F) -> F:
+        """Обёртка функции с привязкой к кэшу."""
+
         @functools.wraps(func)
         async def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Асинхронное выполнение с проверкой кэша перед вызовом."""
             key = f"{func.__qualname__}:{args!r}:{kwargs!r}"
             cached = cache.get(key)
             if cached is not None:

@@ -101,6 +101,7 @@ class FeatureRegistry:
     """
 
     def __init__(self) -> None:
+        """Инициализация пустого реестра функций."""
         self._features: dict[str, RegisteredFeature] = {}
         self._skipped: dict[str, str] = {}
 

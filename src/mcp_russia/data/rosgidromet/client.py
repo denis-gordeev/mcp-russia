@@ -33,6 +33,7 @@ from .schemas import (
 
 
 def _find_stanciya(code: str) -> dict[str, Any] | None:
+    """Поиск станции мониторинга по коду."""
     for s in STANCII_MONITORINGA:
         if s["code"] == code:
             return s

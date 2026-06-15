@@ -24,6 +24,7 @@ class RateLimiter:
     """
 
     def __init__(self, max_requests: int, period: float) -> None:
+        """Инициализация ограничителя с заданными параметрами окна."""
         self._max_requests = max_requests
         self._period = period
         self._timestamps: deque[float] = deque()
@@ -49,8 +50,10 @@ class RateLimiter:
             await asyncio.sleep(max(wait, 0.01))
 
     async def __aenter__(self) -> RateLimiter:
+        """Вход в контекст: ожидание и резервирование слота."""
         await self.acquire()
         return self
 
     async def __aexit__(self, *exc: object) -> None:
+        """Выход из контекста: без освобождения слота (скользящее окно)."""
         pass
