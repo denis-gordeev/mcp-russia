@@ -33,6 +33,7 @@ TIPY_OBEKTA_CODE = {
 
 
 def _parse_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObekt:
+    """Разбор данных объекта недвижимости из ответа pkk.rosreestr.ru."""
     tip = data.get("type", "").lower()
     tip_code = TIPY_OBEKTA_CODE.get(tip, "")
 
@@ -91,6 +92,14 @@ def _parse_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObe
 
 
 async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
+    """Получить информацию об объекте недвижимости по кадастровому номеру.
+
+    Args:
+        kadastrovyy_nomer: Кадастровый номер объекта.
+
+    Returns:
+        Данные объекта или None.
+    """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         result = await http_get(url, headers={"Accept": "application/json"})
@@ -102,6 +111,14 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
 
 
 async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> KadastrovayaStoimost | None:
+    """Получить кадастровую стоимость объекта по кадастровому номеру.
+
+    Args:
+        kadastrovyy_nomer: Кадастровый номер объекта.
+
+    Returns:
+        Данные о кадастровой стоимости или None.
+    """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         result = await http_get(url, headers={"Accept": "application/json"})
@@ -140,6 +157,14 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
 
 
 async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
+    """Получить информацию о правах на объект недвижимости.
+
+    Args:
+        kadastrovyy_nomer: Кадастровый номер объекта.
+
+    Returns:
+        Список зарегистрированных прав.
+    """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         result = await http_get(url, headers={"Accept": "application/json"})
@@ -164,6 +189,14 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
 
 
 async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
+    """Поиск объектов недвижимости по запросу через pkk.rosreestr.ru.
+
+    Args:
+        zapros: Поисковый запрос (кадастровый номер или адрес).
+
+    Returns:
+        Список найденных объектов.
+    """
     try:
         url = f"{PKK_SEARCH_URL}"
         result = await http_get(

@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 
 
 def _parse_fio(fio: str) -> dict[str, str]:
+    """Разбор ФИО на компоненты (фамилия, имя, отчество)."""
     parts = fio.strip().split()
     result: dict[str, str] = {}
     if len(parts) >= 1:
@@ -29,6 +30,7 @@ def _parse_fio(fio: str) -> dict[str, str]:
 
 
 def _parse_proizvodstva(data: Any) -> list[dict[str, Any]]:
+    """Разбор ответа API ФССП в список исполнительных производств."""
     if not isinstance(data, dict):
         return []
     inner = data.get("data", data)
@@ -46,6 +48,7 @@ def _parse_proizvodstva(data: Any) -> list[dict[str, Any]]:
 
 
 def _normalise_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
+    """Нормализация записи исполнительного производства."""
     return {
         "nomer": item.get("number", item.get("номер", "")),
         "dolzhnik": item.get("name", item.get("должник", item.get("nameRaw", ""))),
@@ -65,6 +68,16 @@ async def poisk_proizvodstv(
     data_rozhdeniya: str = "",
     region: str = "",
 ) -> list[dict[str, Any]]:
+    """Поиск исполнительных производств по ФИО должника.
+
+    Args:
+        fio: ФИО должника.
+        data_rozhdeniya: Дата рождения должника.
+        region: Код региона.
+
+    Returns:
+        Список исполнительных производств.
+    """
     fio_parts = _parse_fio(fio)
     body: dict[str, Any] = {"is": fio_parts}
     if data_rozhdeniya:
@@ -96,6 +109,14 @@ async def poisk_proizvodstv(
 
 
 async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
+    """Получить информацию об исполнительном производстве по номеру.
+
+    Args:
+        nomer: Номер исполнительного производства.
+
+    Returns:
+        Данные производства или None.
+    """
     try:
         data = await http_get(f"{FSSP_IP_BASE}", params={"number": nomer})
         records = _parse_proizvodstva(data)
@@ -112,6 +133,15 @@ async def ogranicheniya_dolzhnika(
     fio: str,
     data_rozhdeniya: str = "",
 ) -> list[dict[str, Any]]:
+    """Найти ограничения, наложенные на должника (запрет на выезд, арест и т.д.).
+
+    Args:
+        fio: ФИО должника.
+        data_rozhdeniya: Дата рождения должника.
+
+    Returns:
+        Список производств с ограничениями.
+    """
     proizvodstva = await poisk_proizvodstv(fio, data_rozhdeniya)
     restrictions = []
     for p in proizvodstva:
@@ -126,6 +156,14 @@ async def ogranicheniya_dolzhnika(
 
 
 async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
+    """Найти производства с розыском должника.
+
+    Args:
+        fio: ФИО должника.
+
+    Returns:
+        Список производств с розыском.
+    """
     proizvodstva = await poisk_proizvodstv(fio)
     wanted = []
     for p in proizvodstva:

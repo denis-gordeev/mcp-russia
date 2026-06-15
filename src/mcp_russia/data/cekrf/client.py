@@ -61,6 +61,7 @@ class _VyboryTableParser(HTMLParser):
         self.stats_text = ""
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        """Обработка открывающего HTML-тега."""
         attr_dict = dict(attrs)
         tag_lower = tag.lower()
 
@@ -84,6 +85,7 @@ class _VyboryTableParser(HTMLParser):
                 self.stats_text = ""
 
     def handle_endtag(self, tag: str) -> None:
+        """Обработка закрывающего HTML-тега."""
         tag_lower = tag.lower()
         if tag_lower == "td" and self._in_td:
             self._in_td = False
@@ -103,6 +105,7 @@ class _VyboryTableParser(HTMLParser):
             self._in_stats = False
 
     def handle_data(self, data: str) -> None:
+        """Обработка текстового содержимого HTML."""
         text = data.strip()
         if not text:
             return

@@ -155,18 +155,22 @@ async def poisk_narusheniy(
 
 
 def get_napravleniya_list() -> list[dict[str, str]]:
+    """Вернуть справочник направлений контроля."""
     return NAPRAVLENIYA_KONTROLYA
 
 
 def get_tipy_meropriyatiy_list() -> list[dict[str, str]]:
+    """Вернуть справочник типов контрольных мероприятий."""
     return TIPY_MEROPRIYATIY
 
 
 def get_subiekty_audita_list() -> list[dict[str, str]]:
+    """Вернуть справочник субъектов аудита."""
     return SUBIEKTY_AUDITA
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -178,6 +182,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных контрольного мероприятия."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
@@ -193,6 +198,7 @@ def _parse_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных аудиторского заключения."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
@@ -209,6 +215,7 @@ def _parse_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_byudzhet_ispolnenie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных об исполнении бюджета."""
     return {
         "period": data.get("period", "") or data.get("year", ""),
         "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
@@ -219,6 +226,7 @@ def _parse_byudzhet_ispolnenie(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_narushenie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных о нарушении."""
     return {
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
         "summa": data.get("amount") or data.get("summa"),

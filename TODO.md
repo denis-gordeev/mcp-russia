@@ -2,6 +2,36 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-15 (тридцать девятый проход — русские docstrings для 110 функций)
+
+### Выполнено
+
+- **Добавлены русские docstrings к 110 функциям без docstrings** в 11 модулях (все в client.py):
+  - `fssp/client.py` (7 функций): `_parse_fio`, `_parse_proizvodstva`, `_normalise_proizvodstvo`, `poisk_proizvodstv`, `info_proizvodstva`, `ogranicheniya_dolzhnika`, `rozysk_dolzhnika`
+  - `rosreestr/client.py` (5 функций): `_parse_obekt`, `poluchit_obekt`, `poluchit_kadastrovnuyu_stoimost`, `poluchit_prava`, `poisk_po_nomeru`
+  - `rosprirodnadzor/client.py` (13 функций): `poisk_proverok`, `info_proverki`, `poisk_obektov_negativnogo`, `poisk_litsenziy_nedra`, `poluchit_ekologicheskie_platezhi`, `get_vidy_nadzora_list`, `get_kategori_obnv_list`, `get_vidy_litsenziy_nedra_list`, `_extract_list`, `_parse_proverka`, `_parse_obekt_negativnogo`, `_parse_litsenziya`, `_parse_ekologicheskiy_platezh`
+  - `kaznacheistvo/client.py` (13 функций): `poluchit_ispolnenie_byudzheta`, `poisk_uchastnikov_bp`, `poisk_uchrezhdeniy`, `poluchit_mezhbyudzhetnye`, `poluchit_byudzhetnuyu_smetu`, `get_vidy_byudzhetov_list`, `get_kategorii_raskhodov_list`, `_extract_list`, `_parse_ispolnenie_byudzheta`, `_parse_uchastnik_bp`, `_parse_uchrezhdenie`, `_parse_mezhbyudzhetnyy_transfer`, `_parse_byudzhetnaya_smeta`
+  - `kad_arbitrazh/client.py` (10 функций): `_opredelit_sud_po_nomeru`, `_opredelit_kategoriyu`, `_parse_rezultaty_poiska`, `_parse_kartochka_dela`, `_parse_akty`, `_parse_storony`, `get_instantsii`, `get_kategorii_del`, `get_statusy_del`, `get_tipy_aktov`
+  - `rosapi/client.py` (18 функций): `_dadata_headers`, `_nested_get`, `_parse_org_data`, `_parse_bank_data`, `_suggest_address`, `_find_by_fias`, `_postal_by_index`, `_find_org_by_inn`, `_find_org_by_ogrn`, `_list_banks`, `_find_bank_by_bik`, `get_holidays`, `consult_address_by_postal`, `search_address`, `find_org_by_inn`, `find_org_by_ogrn`, `list_banks_public`, `find_bank_by_bik`
+  - `rosaudit/client.py` (8 функций): `get_napravleniya_list`, `get_tipy_meropriyatiy_list`, `get_subiekty_audita_list`, `_extract_list`, `_parse_kontrolnoe_meropriyatie`, `_parse_auditorskoe_zaklyuchenie`, `_parse_byudzhet_ispolnenie`, `_parse_narushenie`
+  - `rosvodresursy/client.py` (10 функций): `get_basseynovye_okruga_list`, `get_tipy_vodnykh_obektov_list`, `get_tipy_gidro_list`, `get_vodokhranilishcha_list`, `get_vodokhranilishcha_detailed`, `_extract_list`, `_parse_vodnyy_obekt`, `_parse_gidro_zapis`, `_parse_vodokhranilishche`, `_parse_vodopolzovanie_zapis`
+  - `sovfed/client.py` (13 функций): `poisk_senatorov`, `info_senatora`, `spisok_komitetov`, `spisok_komissiy`, `poisk_zakonoproektov`, `spisok_zasedaniy`, `get_komitety_list`, `get_komissii_list`, `_extract_list`, `_parse_senator`, `_parse_komitet`, `_parse_zasedanie`, `_parse_zakonoproekt`
+  - `minzdrav/client.py` (10 функций): `get_tipy_mo`, `get_spetsialnosti`, `get_mkb10_classes`, `get_federalnyye_okruga`, `get_pokazateli_zdorovya_list`, `_extract_list`, `_parse_med_organizatsia`, `_parse_litsenziya`, `_parse_pokazatel`, `_parse_zabolevanie`
+  - `cekrf/client.py` (3 функции): `handle_starttag`, `handle_endtag`, `handle_data`
+- **Подтверждено**: tools.py, prompts.py, schemas.py, resources.py, server.py, constants.py — все функции уже имеют docstrings
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (641 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Все 110 функций client.py в 11 модулях получили русские docstrings**: публичные функции — с Args/Returns, приватные — с кратким описанием
+- **Паттерн docstrings**: для async-функций с параметрами используется полная форма (Args, Returns), для приватных хелперов и геттеров-справочников — однострочные описания
+
+### Следующие действия
+
+- **Верификация оставшихся ЕМИСС-кодов**: проверить коды 24133 (население), 26973 (ВВП), 30826 (промышленность) и др.
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Проверка оставшихся модулей на наличие функций без docstrings**: cbrf, rosgidromet, fns, gosduma, zakupki, publikatsii, minobrnauki, rospotrebnadzor, roskomnadzor, rosstat
+
 ## Статус раунда 2026-06-14 (тридцать восьмой проход — русификация документации, тестов и комментариев)
 
 ### Выполнено

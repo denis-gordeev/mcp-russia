@@ -27,11 +27,13 @@ from .schemas import StoronaDela, SudebnoeDelo, SudebnoeZasedanie, SudebnyyAkt, 
 
 
 def _opredelit_sud_po_nomeru(number: str) -> str:
+    """Определить суд по префиксу номера дела."""
     kod = number.split("-")[0] if "-" in number else number[:3]
     return SUDY_PRYAMYE.get(kod, "")
 
 
 def _opredelit_kategoriyu(number: str) -> str:
+    """Определить категорию дела по букве номера."""
     if len(number) > 4 and number[4] == "-":
         letter = number[3] if len(number) > 3 else ""
         return KATEGORII_KAD.get(letter, "")
@@ -39,6 +41,7 @@ def _opredelit_kategoriyu(number: str) -> str:
 
 
 def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
+    """Разбор результатов поиска дел из API КАД."""
     if isinstance(data, dict):
         items = data.get("Instances", data.get("Result", []))
     elif isinstance(data, list):
@@ -103,6 +106,7 @@ def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
 
 
 def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
+    """Разбор карточки судебного дела из API КАД."""
     if not isinstance(data, dict):
         return None
 
@@ -153,6 +157,7 @@ def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
 
 
 def _parse_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
+    """Разбор судебных актов из ответа API КАД."""
     if isinstance(data, dict):
         items = data.get("Documents", data.get("Result", []))
     elif isinstance(data, list):
@@ -182,6 +187,7 @@ def _parse_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
 
 
 def _parse_storony(data: Any, delo_number: str) -> list[StoronaDela]:
+    """Разбор сторон судебного дела из ответа API КАД."""
     if not isinstance(data, dict):
         return []
 
@@ -412,16 +418,20 @@ async def storony_dela(number: str) -> list[StoronaDela]:
 
 
 def get_instantsii() -> list[dict[str, str]]:
+    """Вернуть справочник инстанций судов."""
     return INSTANTSII_SUDOV
 
 
 def get_kategorii_del() -> list[dict[str, str]]:
+    """Вернуть справочник категорий дел."""
     return KATEGORII_DEL
 
 
 def get_statusy_del() -> list[dict[str, str]]:
+    """Вернуть справочник статусов дел."""
     return STATUSY_DEL
 
 
 def get_tipy_aktov() -> list[dict[str, str]]:
+    """Вернуть справочник типов актов."""
     return TIPLY_AKTOV

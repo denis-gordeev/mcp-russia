@@ -28,6 +28,15 @@ async def poisk_senatorov(
     region: str = "",
     komitet: str = "",
 ) -> list[dict[str, Any]]:
+    """Поиск сенаторов Совета Федерации.
+
+    Args:
+        region: Регион представительства.
+        komitet: Комитет.
+
+    Returns:
+        Список сенаторов.
+    """
     try:
         url = f"{SOVFED_API_BASE}/senators"
         params: dict[str, Any] = {}
@@ -64,6 +73,14 @@ async def poisk_senatorov(
 
 
 async def info_senatora(senator_id: str) -> dict[str, Any] | None:
+    """Получить подробную информацию о сенаторе.
+
+    Args:
+        senator_id: Идентификатор или фамилия сенатора.
+
+    Returns:
+        Данные сенатора или None.
+    """
     try:
         url = f"{SOVFED_API_BASE}/senators/{senator_id}"
         data = await http_get(url, timeout=15.0)
@@ -79,6 +96,7 @@ async def info_senatora(senator_id: str) -> dict[str, Any] | None:
 
 
 async def spisok_komitetov() -> list[dict[str, Any]]:
+    """Получить список комитетов Совета Федерации из API sovfed.ru."""
     try:
         url = f"{SOVFED_API_BASE}/committees"
         data = await http_get(url, timeout=15.0)
@@ -92,6 +110,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
 
 
 async def spisok_komissiy() -> list[dict[str, Any]]:
+    """Получить список комиссий Совета Федерации из API sovfed.ru."""
     try:
         url = f"{SOVFED_API_BASE}/commissions"
         data = await http_get(url, timeout=15.0)
@@ -108,6 +127,15 @@ async def poisk_zakonoproektov(
     status: str = "",
     god: int = 0,
 ) -> list[dict[str, Any]]:
+    """Поиск законопроектов Совета Федерации.
+
+    Args:
+        status: Статус законопроекта.
+        god: Год рассмотрения.
+
+    Returns:
+        Список законопроектов.
+    """
     try:
         url = f"{SOVFED_API_BASE}/bills"
         params: dict[str, Any] = {}
@@ -124,6 +152,14 @@ async def poisk_zakonoproektov(
 
 
 async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
+    """Получить список заседаний Совета Федерации.
+
+    Args:
+        god: Год.
+
+    Returns:
+        Список заседаний.
+    """
     try:
         url = f"{SOVFED_API_BASE}/sessions"
         params: dict[str, Any] = {}
@@ -138,14 +174,17 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
 
 
 def get_komitety_list() -> list[dict[str, str]]:
+    """Вернуть справочник комитетов Совета Федерации."""
     return KOMITETY_SOVFEDA
 
 
 def get_komissii_list() -> list[dict[str, str]]:
+    """Вернуть справочник комиссий Совета Федерации."""
     return KOMISSII_SOVFEDA
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -157,6 +196,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_senator(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных сенатора."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "familiya": data.get("lastName", "") or data.get("familiya", ""),
@@ -172,6 +212,7 @@ def _parse_senator(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_komitet(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных комитета/комиссии."""
     return {
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
         "predsedatel": data.get("chairman", "") or data.get("predsedatel", ""),
@@ -182,6 +223,7 @@ def _parse_komitet(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных заседания."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "data": data.get("date", "") or data.get("data", ""),
@@ -192,6 +234,7 @@ def _parse_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_zakonoproekt(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных законопроекта."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),

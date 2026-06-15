@@ -163,18 +163,22 @@ async def poluchit_vodopolzovanie(
 
 
 def get_basseynovye_okruga_list() -> list[dict[str, str]]:
+    """Вернуть справочник бассейновых округов."""
     return BASSEYNOVYE_OKRUGA
 
 
 def get_tipy_vodnykh_obektov_list() -> list[dict[str, str]]:
+    """Вернуть справочник типов водных объектов."""
     return TIPY_VODNYKH_OBIEKTOV
 
 
 def get_tipy_gidro_list() -> list[dict[str, str]]:
+    """Вернуть справочник типов гидрологических данных."""
     return TIPY_GIDRO_DANNYKH
 
 
 def get_vodokhranilishcha_list() -> list[dict[str, str]]:
+    """Вернуть справочник водохранилищ (краткий)."""
     return [
         {"code": v["code"], "name": v["name"], "region": v["region"]}
         for v in KRUPNYE_VODOKHRANILISHCHA
@@ -182,10 +186,12 @@ def get_vodokhranilishcha_list() -> list[dict[str, str]]:
 
 
 def get_vodokhranilishcha_detailed() -> list[dict[str, Any]]:
+    """Вернуть подробный справочник водохранилищ."""
     return KRUPNYE_VODOKHRANILISHCHA
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -197,6 +203,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных водного объекта."""
     return {
         "code": item.get("code", "") or item.get("id", ""),
         "name": item.get("name", "") or item.get("title", ""),
@@ -211,6 +218,7 @@ def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор записи гидрологических данных."""
     return {
         "post": item.get("post", "") or item.get("postName", ""),
         "post_id": item.get("postId", "") or item.get("post_id", ""),
@@ -226,6 +234,7 @@ def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных водохранилища."""
     return {
         "code": item.get("code", "") or item.get("id", ""),
         "name": item.get("name", "") or item.get("title", ""),
@@ -240,6 +249,7 @@ def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_vodopolzovanie_zapis(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор записи о водопользовании."""
     return {
         "region": item.get("region", ""),
         "god": str(item.get("year", item.get("god", ""))),

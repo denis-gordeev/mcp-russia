@@ -33,6 +33,17 @@ async def poisk_proverok(
     god: int = 0,
     limit: int = 20,
 ) -> list[dict[str, Any]]:
+    """Поиск экологических проверок Росприроднадзора.
+
+    Args:
+        organizaciya: Название организации.
+        vid_nadzora: Код вида надзора.
+        god: Год проверки.
+        limit: Максимум результатов.
+
+    Returns:
+        Список проверок.
+    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
         params: dict[str, Any] = {"limit": limit}
@@ -67,6 +78,14 @@ async def poisk_proverok(
 
 
 async def info_proverki(nomer: str) -> dict[str, Any] | None:
+    """Получить информацию о проверке Росприроднадзора по номеру.
+
+    Args:
+        nomer: Номер проверки.
+
+    Returns:
+        Данные проверки или None.
+    """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
         data = await http_get(url, timeout=15.0)
@@ -82,6 +101,16 @@ async def poisk_obektov_negativnogo(
     kategoriya: str = "",
     limit: int = 20,
 ) -> list[dict[str, Any]]:
+    """Поиск объектов негативного воздействия в реестре ОНВ.
+
+    Args:
+        organizaciya: Название организации.
+        kategoriya: Категория ОНВ.
+        limit: Максимум результатов.
+
+    Returns:
+        Список объектов ОНВ.
+    """
     try:
         url = f"{ONV_REGISTER_BASE}/search"
         params: dict[str, Any] = {"limit": limit}
@@ -118,6 +147,16 @@ async def poisk_litsenziy_nedra(
     vid_litsenzii: str = "",
     limit: int = 20,
 ) -> list[dict[str, Any]]:
+    """Поиск лицензий на недропользование.
+
+    Args:
+        territory: Территория действия лицензии.
+        vid_litsenzii: Вид лицензии.
+        limit: Максимум результатов.
+
+    Returns:
+        Список лицензий.
+    """
     try:
         url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
         params: dict[str, Any] = {"limit": limit}
@@ -151,6 +190,15 @@ async def poluchit_ekologicheskie_platezhi(
     god: int = 0,
     tip_platezha: str = "",
 ) -> list[dict[str, Any]]:
+    """Получить данные об экологических платежах.
+
+    Args:
+        god: Год.
+        tip_platezha: Тип платежа.
+
+    Returns:
+        Список экологических платежей.
+    """
     try:
         url = f"{GOSUSLUGI_EKO_BASE}/payments"
         params: dict[str, Any] = {}
@@ -167,18 +215,22 @@ async def poluchit_ekologicheskie_platezhi(
 
 
 def get_vidy_nadzora_list() -> list[dict[str, str]]:
+    """Вернуть справочник видов надзора Росприроднадзора."""
     return VIDY_NADZORA
 
 
 def get_kategori_obnv_list() -> list[dict[str, str]]:
+    """Вернуть справочник категорий ОНВ."""
     return KATEGORII_OBNV
 
 
 def get_vidy_litsenziy_nedra_list() -> list[dict[str, str]]:
+    """Вернуть справочник видов лицензий на недропользование."""
     return VIDY_LITSENZIY_NEDRA
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -190,6 +242,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных проверки Росприроднадзора."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "organizaciya": data.get("organization", "") or data.get("organizaciya", ""),
@@ -204,6 +257,7 @@ def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных объекта негативного воздействия."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
@@ -215,6 +269,7 @@ def _parse_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_litsenziya(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных лицензии на недропользование."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "vid_litsenzii": data.get("licenseType", "") or data.get("vid_litsenzii", ""),
@@ -226,6 +281,7 @@ def _parse_litsenziya(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_ekologicheskiy_platezh(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных экологического платежа."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "tip_platezha": data.get("paymentType", "") or data.get("tip_platezha", ""),

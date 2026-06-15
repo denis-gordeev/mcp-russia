@@ -28,6 +28,15 @@ async def poluchit_ispolnenie_byudzheta(
     god: int = 0,
     tip: str = "",
 ) -> dict[str, Any] | None:
+    """Получить данные об исполнении федерального бюджета.
+
+    Args:
+        god: Год.
+        tip: Тип бюджета.
+
+    Returns:
+        Данные об исполнении бюджета или None.
+    """
     try:
         url = f"{BUDGET_GOV_RU_BASE}/v1/execution"
         params: dict[str, Any] = {}
@@ -61,6 +70,15 @@ async def poisk_uchastnikov_bp(
     inn: str = "",
     nazvanie: str = "",
 ) -> list[dict[str, Any]]:
+    """Поиск участников бюджетного процесса.
+
+    Args:
+        inn: ИНН организации.
+        nazvanie: Название организации.
+
+    Returns:
+        Список участников бюджетного процесса.
+    """
     try:
         url = f"{ROSKAZNA_OPENDATA_BASE}/participants"
         params: dict[str, str] = {}
@@ -81,6 +99,16 @@ async def poisk_uchrezhdeniy(
     nazvanie: str = "",
     tip: str = "",
 ) -> list[dict[str, Any]]:
+    """Поиск казённых учреждений.
+
+    Args:
+        inn: ИНН учреждения.
+        nazvanie: Название учреждения.
+        tip: Тип учреждения.
+
+    Returns:
+        Список учреждений.
+    """
     try:
         url = f"{ROSKAZNA_OPENDATA_BASE}/institutions"
         params: dict[str, str] = {}
@@ -102,6 +130,15 @@ async def poluchit_mezhbyudzhetnye(
     god: int = 0,
     region: str = "",
 ) -> list[dict[str, Any]]:
+    """Получить данные о межбюджетных трансфертах.
+
+    Args:
+        god: Год.
+        region: Регион.
+
+    Returns:
+        Список межбюджетных трансфертов.
+    """
     try:
         url = f"{BUDGET_GOV_RU_BASE}/v1/interbudget"
         params: dict[str, Any] = {}
@@ -118,6 +155,14 @@ async def poluchit_mezhbyudzhetnye(
 
 
 async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
+    """Получить бюджетную смету по номеру.
+
+    Args:
+        nomer: Номер сметы.
+
+    Returns:
+        Данные бюджетной сметы или None.
+    """
     try:
         url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
         data = await http_get(url, timeout=15.0)
@@ -129,14 +174,17 @@ async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
 
 
 def get_vidy_byudzhetov_list() -> list[dict[str, str]]:
+    """Вернуть справочник видов бюджетов."""
     return VIDY_BUDZHETOV
 
 
 def get_kategorii_raskhodov_list() -> list[dict[str, str]]:
+    """Вернуть справочник категорий расходов."""
     return KATEGORII_RASKHODOV
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -148,6 +196,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных об исполнении бюджета."""
     return {
         "period": data.get("period", "") or data.get("year", ""),
         "tip": data.get("budgetType", "") or data.get("tip", ""),
@@ -160,6 +209,7 @@ def _parse_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных участника бюджетного процесса."""
     return {
         "inn": data.get("inn", "") or data.get("id", ""),
         "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
@@ -170,6 +220,7 @@ def _parse_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных казённого учреждения."""
     return {
         "inn": data.get("inn", "") or data.get("id", ""),
         "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
@@ -182,6 +233,7 @@ def _parse_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных межбюджетного трансферта."""
     return {
         "vid": data.get("type", "") or data.get("vid", ""),
         "otpravitel": data.get("sender", "") or data.get("otpravitel", ""),
@@ -193,6 +245,7 @@ def _parse_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_byudzhetnaya_smeta(data: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных бюджетной сметы."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),

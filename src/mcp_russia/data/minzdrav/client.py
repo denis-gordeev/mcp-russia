@@ -178,26 +178,32 @@ async def statistika_zabolevaniy(
 
 
 def get_tipy_mo() -> list[dict[str, str]]:
+    """Вернуть справочник типов медицинских организаций."""
     return TIPLY_MO
 
 
 def get_spetsialnosti() -> list[dict[str, str]]:
+    """Вернуть справочник врачебных специальностей."""
     return SPETSIALNOSTI_VRACHEY
 
 
 def get_mkb10_classes() -> list[dict[str, str]]:
+    """Вернуть справочник классов МКБ-10."""
     return MKB10_CLASSES
 
 
 def get_federalnyye_okruga() -> list[dict[str, str]]:
+    """Вернуть справочник федеральных округов."""
     return FEDERALNYE_OKRUGA
 
 
 def get_pokazateli_zdorovya_list() -> list[dict[str, str]]:
+    """Вернуть справочник показателей здоровья."""
     return POKAZATELI_ZDOROVYA
 
 
 def _extract_list(data: Any) -> list[Any]:
+    """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -209,6 +215,7 @@ def _extract_list(data: Any) -> list[Any]:
 
 
 def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных медицинской организации."""
     return {
         "id": item.get("id", "") or item.get("ogrn", ""),
         "name": item.get("name", "") or item.get("fullName", ""),
@@ -225,6 +232,7 @@ def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_litsenziya(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных лицензии."""
     return {
         "nomer": item.get("number", "") or item.get("nomer", ""),
         "organizaciya": item.get("organizationName", "") or item.get("name", ""),
@@ -239,6 +247,7 @@ def _parse_litsenziya(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных показателя здоровья."""
     return {
         "kod": item.get("code", "") or item.get("kod", ""),
         "name": item.get("name", ""),
@@ -251,6 +260,7 @@ def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _parse_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных о заболевании."""
     return {
         "mkb_code": item.get("mkbCode", "") or item.get("mkb_code", ""),
         "name": item.get("name", "") or item.get("diseaseName", ""),
