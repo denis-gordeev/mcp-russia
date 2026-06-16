@@ -23,7 +23,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
     Возвращает курсы: доллар США, евро, китайский юань,
     фунт стерлингов, японская иена, швейцарский франк.
 
-    Returns:
+    Возвращает:
         Таблица с курсами валют.
     """
     await ctx.info("Запрос курсов основных валют ЦБ РФ...")
@@ -66,10 +66,10 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     Доступные коды: USD, EUR, CNY, GBP, JPY, CHF, KZT, BYN и др.
     Используйте spisok_valyut() для полного списка.
 
-    Args:
+    Аргументы:
         kod: Код валюты (например, 'USD', 'EUR', 'CNY').
 
-    Returns:
+    Возвращает:
         Подробная информация о курсе валюты.
     """
     await ctx.info(f"Запрос курса {kod}...")
@@ -107,7 +107,7 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
 async def spisok_valyut(ctx: Context) -> str:
     """Получить полный список валют, доступных в справочнике ЦБ РФ.
 
-    Returns:
+    Возвращает:
         Список всех доступных валют с кодами и названиями.
     """
     await ctx.info("Запрос списка валют ЦБ РФ...")
@@ -136,11 +136,11 @@ async def konvertirovat_valyutu(
 ) -> str:
     """Конвертировать сумму из иностранной валюты в рубли по курсу ЦБ РФ.
 
-    Args:
+    Аргументы:
         valyuta: Код валюты (USD, EUR, CNY и т.д.).
         kolichestvo: Сумма в иностранной валюте.
 
-    Returns:
+    Возвращает:
         Результат конвертации.
     """
     await ctx.info(f"Конвертация {kolichestvo} {valyuta} в рубли...")
@@ -168,11 +168,11 @@ async def konvertirovat_valyutu(
 async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = None) -> str:
     """Сравнить курсы нескольких валют ЦБ РФ.
 
-    Args:
+    Аргументы:
         kody: Коды валют для сравнения (например, ['USD', 'EUR', 'CNY']).
               По умолчанию сравниваются USD, EUR, CNY.
 
-    Returns:
+    Возвращает:
         Сравнительная таблица курсов.
     """
     if not kody:
@@ -208,7 +208,7 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
 async def kursy_po_stranam(ctx: Context) -> str:
     """Получить курсы валют для основных стран-партнёров России.
 
-    Returns:
+    Возвращает:
         Таблица с курсами валют по странам.
     """
     await ctx.info("Запрос курсов валют по странам...")

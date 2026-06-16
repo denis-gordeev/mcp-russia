@@ -30,11 +30,11 @@ async def poluchit_ispolnenie_byudzheta(
 ) -> dict[str, Any] | None:
     """Получить данные об исполнении федерального бюджета.
 
-    Args:
+    Аргументы:
         god: Год.
         tip: Тип бюджета.
 
-    Returns:
+    Возвращает:
         Данные об исполнении бюджета или None.
     """
     try:
@@ -72,11 +72,11 @@ async def poisk_uchastnikov_bp(
 ) -> list[dict[str, Any]]:
     """Поиск участников бюджетного процесса.
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
         nazvanie: Название организации.
 
-    Returns:
+    Возвращает:
         Список участников бюджетного процесса.
     """
     try:
@@ -101,12 +101,12 @@ async def poisk_uchrezhdeniy(
 ) -> list[dict[str, Any]]:
     """Поиск казённых учреждений.
 
-    Args:
+    Аргументы:
         inn: ИНН учреждения.
         nazvanie: Название учреждения.
         tip: Тип учреждения.
 
-    Returns:
+    Возвращает:
         Список учреждений.
     """
     try:
@@ -132,11 +132,11 @@ async def poluchit_mezhbyudzhetnye(
 ) -> list[dict[str, Any]]:
     """Получить данные о межбюджетных трансфертах.
 
-    Args:
+    Аргументы:
         god: Год.
         region: Регион.
 
-    Returns:
+    Возвращает:
         Список межбюджетных трансфертов.
     """
     try:
@@ -157,10 +157,10 @@ async def poluchit_mezhbyudzhetnye(
 async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
     """Получить бюджетную смету по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер сметы.
 
-    Returns:
+    Возвращает:
         Данные бюджетной сметы или None.
     """
     try:

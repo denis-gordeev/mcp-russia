@@ -29,12 +29,12 @@ async def poisk_akreditovannyh_vuzov(
 ) -> list[dict[str, Any]]:
     """Поиск аккредитованных образовательных учреждений через Рособрнадзор.
 
-    Args:
+    Аргументы:
         nazvanie: Название вуза (частичное совпадение).
         inn: ИНН организации.
         region: Регион (субъект РФ).
 
-    Returns:
+    Возвращает:
         Список аккредитованных учреждений.
     """
     try:
@@ -61,10 +61,10 @@ async def poisk_akreditovannyh_vuzov(
 async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
     """Получить информацию об аккредитации образовательного учреждения.
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Данные об аккредитации или None.
     """
     try:
@@ -88,11 +88,11 @@ async def poisk_licenziy(
 ) -> list[dict[str, Any]]:
     """Поиск лицензированных образовательных учреждений через Рособрнадзор.
 
-    Args:
+    Аргументы:
         nazvanie: Название вуза (частичное совпадение).
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Список лицензированных учреждений.
     """
     try:
@@ -117,11 +117,11 @@ async def poisk_licenziy(
 async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[str, Any]]:
     """Получить рейтинг вузов.
 
-    Args:
+    Аргументы:
         tip_reytinga: Тип рейтинга.
         god: Год рейтинга.
 
-    Returns:
+    Возвращает:
         Список рейтинговых данных.
     """
     try:
@@ -151,10 +151,10 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
 async def poluchit_granty(organizatsiya: str = "") -> list[dict[str, Any]]:
     """Получить информацию о грантах РНФ.
 
-    Args:
+    Аргументы:
         organizatsiya: Организация-заявитель (необязательно).
 
-    Returns:
+    Возвращает:
         Список грантов.
     """
     return _granty_fallback(organizatsiya)
@@ -163,10 +163,10 @@ async def poluchit_granty(organizatsiya: str = "") -> list[dict[str, Any]]:
 async def poluchit_aspirantov(organizatsiya: str = "") -> list[dict[str, Any]]:
     """Получить данные об аспирантах.
 
-    Args:
+    Аргументы:
         организatsiya: Организация (необязательно).
 
-    Returns:
+    Возвращает:
         Сведения об аспирантах.
     """
     return []

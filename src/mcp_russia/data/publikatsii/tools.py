@@ -22,7 +22,7 @@ _PRAVO_ATTRIBUTION = "\n\n_Источник: Официальный портал
 async def spisok_tipov_aktov(ctx: Context) -> str:
     """Получить список типов нормативных актов.
 
-    Returns:
+    Возвращает:
         Список типов актов.
     """
     await ctx.info("Запрос списка типов актов...")
@@ -36,7 +36,7 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
 async def spisok_otrasley(ctx: Context) -> str:
     """Получить список отраслей законодательства.
 
-    Returns:
+    Возвращает:
         Список отраслей.
     """
     await ctx.info("Запрос списка отраслей законодательства...")
@@ -50,7 +50,7 @@ async def spisok_otrasley(ctx: Context) -> str:
 async def spisok_istochnikov(ctx: Context) -> str:
     """Получить список источников официальных публикаций.
 
-    Returns:
+    Возвращает:
         Список источников.
     """
     await ctx.info("Запрос списка источников публикаций...")
@@ -64,7 +64,7 @@ async def spisok_istochnikov(ctx: Context) -> str:
 async def spisok_statusov(ctx: Context) -> str:
     """Получить список статусов документов.
 
-    Returns:
+    Возвращает:
         Список статусов.
     """
     await ctx.info("Запрос списка статусов документов...")
@@ -82,11 +82,11 @@ async def info_normativnogo_akta(
 ) -> str:
     """Получить информацию о нормативном акте по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер акта.
         tip: Тип акта (fz, ukaz, postanovlenie_pr и т.д.).
 
-    Returns:
+    Возвращает:
         Информация о нормативном акте.
     """
     if ctx:
@@ -121,10 +121,10 @@ async def info_normativnogo_akta(
 async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
     """Получить информацию о законопроекте по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер законопроекта.
 
-    Returns:
+    Возвращает:
         Информация о законопроекте.
     """
     if ctx:
@@ -157,11 +157,11 @@ async def poisk_aktov(
 ) -> str:
     """Поиск нормативных актов по тексту.
 
-    Args:
+    Аргументы:
         tekst: Текст для поиска.
         tip: Тип документа (необязательно).
 
-    Returns:
+    Возвращает:
         Результаты поиска.
     """
     if ctx:
@@ -199,13 +199,13 @@ async def publikatsii_po_datam(
 ) -> str:
     """Получить публикации за период.
 
-    Args:
+    Аргументы:
         tip: Тип документа (необязательно).
         otrysl: Отрасль законодательства (необязательно).
         data_from: Дата начала периода.
         data_to: Дата окончания периода.
 
-    Returns:
+    Возвращает:
         Список публикаций.
     """
     if ctx:
@@ -248,10 +248,10 @@ async def publikatsii_po_datam(
 async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
     """Получить изменения нормативного акта.
 
-    Args:
+    Аргументы:
         akt_nomer: Номер акта.
 
-    Returns:
+    Возвращает:
         Список изменений.
     """
     if ctx:

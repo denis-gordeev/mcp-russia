@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_deputata(context: str, ctx: Context) -> str:
     """Анализ деятельности депутата Государственной Думы.
 
-    Args:
+    Аргументы:
         context: Контекст запроса.
 
-    Returns:
-        Prompt template for deputy analysis.
+    Возвращает:
+        Шаблон промпта для анализа депутата.
     """
     return (
         f"Выполни анализ деятельности депутата Госдумы.\n\n"
@@ -29,8 +29,8 @@ async def analiz_deputata(context: str, ctx: Context) -> str:
 async def obzor_zakonodatelstva(ctx: Context) -> str:
     """Обзор законодательной активности Государственной Думы.
 
-    Returns:
-        Prompt template for legislative overview.
+    Возвращает:
+        Шаблон промпта для обзора законодательства.
     """
     return (
         "Подготовь обзор законодательной активности Госдумы.\n\n"

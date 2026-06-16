@@ -26,10 +26,10 @@ logger = logging.getLogger(__name__)
 async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
     """Проверка истории регистрации ТС через API ГИБДД.
 
-    Args:
+    Аргументы:
         vin: VIN-номер (17 символов).
 
-    Returns:
+    Возвращает:
         Список регистрационных действий.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
@@ -44,10 +44,10 @@ async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
 async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
     """Проверка истории ДТП через API ГИБДД.
 
-    Args:
+    Аргументы:
         vin: VIN-номер (17 символов).
 
-    Returns:
+    Возвращает:
         Список записей о ДТП.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
@@ -62,10 +62,10 @@ async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
 async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
     """Проверка нахождения ТС в розыске через API ГИБДД.
 
-    Args:
+    Аргументы:
         vin: VIN-номер (17 символов).
 
-    Returns:
+    Возвращает:
         Список записей о розыске.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
@@ -80,10 +80,10 @@ async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
 async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
     """Проверка ограничений на регистрацию ТС через API ГИБДД.
 
-    Args:
+    Аргументы:
         vin: VIN-номер (17 символов).
 
-    Returns:
+    Возвращает:
         Список записей об ограничениях.
     """
     url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
@@ -98,10 +98,10 @@ async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
 async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     """Проверка действительности ВУ через API ГИБДД.
 
-    Args:
+    Аргументы:
         nomer_vu: Номер водительского удостоверения (10 цифр, без пробелов).
 
-    Returns:
+    Возвращает:
         Данные ВУ или None.
     """
     url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
@@ -116,11 +116,11 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
 async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
     """Получение статистики ДТП с stat.gibdd.ru.
 
-    Args:
+    Аргументы:
         region: Название региона (субъект РФ).
         god: Год для статистики.
 
-    Returns:
+    Возвращает:
         Статистика ДТП или None.
     """
     url = f"{GIBDD_STAT_BASE}/map/dtp"

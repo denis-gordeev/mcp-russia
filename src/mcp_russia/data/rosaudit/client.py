@@ -31,13 +31,13 @@ async def poisk_kontrolnyh_meropriyatiy(
 ) -> list[dict[str, Any]]:
     """Поиск контрольных мероприятий Счётной палаты.
 
-    Args:
+    Аргументы:
         napravlenie: Код направления контроля.
         status: Статус мероприятия.
         god: Год.
         limit: Максимум результатов.
 
-    Returns:
+    Возвращает:
         Список контрольных мероприятий.
     """
     try:
@@ -60,10 +60,10 @@ async def poisk_kontrolnyh_meropriyatiy(
 async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
     """Получить контрольное мероприятие по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер мероприятия.
 
-    Returns:
+    Возвращает:
         Данные о мероприятии или None.
     """
     try:
@@ -80,10 +80,10 @@ async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
 async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None:
     """Получить аудиторское заключение по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер заключения.
 
-    Returns:
+    Возвращает:
         Данные о заключении или None.
     """
     try:
@@ -102,10 +102,10 @@ async def poluchit_byudzhet_ispolnenie(
 ) -> dict[str, Any] | None:
     """Получить данные об исполнении федерального бюджета.
 
-    Args:
+    Аргументы:
         period: Период (год или квартал).
 
-    Returns:
+    Возвращает:
         Данные об исполнении бюджета или None.
     """
     try:
@@ -129,12 +129,12 @@ async def poisk_narusheniy(
 ) -> list[dict[str, Any]]:
     """Поиск выявленных нарушений.
 
-    Args:
+    Аргументы:
         organizaciya: Организация.
         tip: Тип нарушения.
         god: Год.
 
-    Returns:
+    Возвращает:
         Список нарушений.
     """
     try:

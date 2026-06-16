@@ -19,7 +19,7 @@ def redaktor_pismo(
 ) -> list[Message]:
     """Редактор официального письма.
 
-    Args:
+    Аргументы:
         adresat: Имя адресата.
         dolzhnost_adresata: Должность адресата.
         tema: Тема письма.
@@ -56,7 +56,7 @@ def redaktor_prikaz(
 ) -> list[Message]:
     """Редактор приказа.
 
-    Args:
+    Аргументы:
         tema: Тема приказа.
         rukovoditel: Руководитель-инициатор.
         osnovanie: Основание для издания.
@@ -88,7 +88,7 @@ def redaktor_rasporyazhenie(
 ) -> list[Message]:
     """Редактор распоряжения.
 
-    Args:
+    Аргументы:
         tema: Тема распоряжения.
         osnovanie: Основание для издания.
     """
@@ -114,7 +114,7 @@ def redaktor_rasporyazhenie(
 def redaktor_akt(tema: str, komissiya: str = "") -> list[Message]:
     """Редактор акта.
 
-    Args:
+    Аргументы:
         tema: Тема акта.
         komissiya: Состав комиссии.
     """
@@ -139,7 +139,7 @@ def redaktor_akt(tema: str, komissiya: str = "") -> list[Message]:
 def redaktor_spravka(tema: str, dannye: str = "") -> list[Message]:
     """Редактор справки.
 
-    Args:
+    Аргументы:
         tema: Тема справки.
         dannye: Фактические данные.
     """
@@ -168,7 +168,7 @@ def redaktor_protokol(
 ) -> list[Message]:
     """Редактор протокола заседания.
 
-    Args:
+    Аргументы:
         tema: Тема заседания.
         uchastniki: Список участников.
         voprosy: Повестка дня.
@@ -199,7 +199,7 @@ def redaktor_dokladnaya_zapiska(
 ) -> list[Message]:
     """Редактор докладной записки.
 
-    Args:
+    Аргументы:
         tema: Тема записки.
         rukovoditel: Руководитель-адресат.
     """

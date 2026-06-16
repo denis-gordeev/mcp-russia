@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_zakupki(context: str, ctx: Context) -> str:
     """Анализ конкретной закупки в ЕИС.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (номер закупки или описание).
 
-    Returns:
-        Prompt template for procurement analysis.
+    Возвращает:
+        Шаблон промпта для анализа закупки.
     """
     return (
         f"Выполни анализ закупки в ЕИС.\n\n"
@@ -30,11 +30,11 @@ async def analiz_zakupki(context: str, ctx: Context) -> str:
 async def obzor_zakupok(context: str, ctx: Context) -> str:
     """Обзор закупочной активности организации.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (ИНН или название организации).
 
-    Returns:
-        Prompt template for procurement overview.
+    Возвращает:
+        Шаблон промпта для обзора закупок.
     """
     return (
         f"Подготовь обзор закупочной активности организации.\n\n"

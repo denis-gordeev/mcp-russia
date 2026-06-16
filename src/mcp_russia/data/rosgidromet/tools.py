@@ -19,7 +19,7 @@ from . import client
 async def spisok_stanciy(ctx: Context) -> str:
     """Получить список станций мониторинга Росгидромета.
 
-    Returns:
+    Возвращает:
         Список станций с кодами.
     """
     await ctx.info("Запрос списка станций мониторинга...")
@@ -33,7 +33,7 @@ async def spisok_stanciy(ctx: Context) -> str:
 async def spisok_tipov_dannykh(ctx: Context) -> str:
     """Получить список типов метеорологических и экологических данных.
 
-    Returns:
+    Возвращает:
         Список типов данных.
     """
     await ctx.info("Запрос списка типов данных...")
@@ -54,10 +54,10 @@ async def spisok_tipov_dannykh(ctx: Context) -> str:
 async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> str:
     """Получить текущую погоду на станции.
 
-    Args:
+    Аргументы:
         stanciya: Код станции (по умолчанию Москва — 77).
 
-    Returns:
+    Возвращает:
         Текущие погодные данные.
     """
     await ctx.info(f"Запрос текущей погоды на станции {stanciya}...")
@@ -99,11 +99,11 @@ async def prognoz_pogody(
 ) -> str:
     """Получить прогноз погоды на несколько дней.
 
-    Args:
+    Аргументы:
         stanciya: Код станции.
         dni: Количество дней прогноза (1-7).
 
-    Returns:
+    Возвращает:
         Прогноз погоды.
     """
     await ctx.info(f"Запрос прогноза на {dni} дней для станции {stanciya}...")
@@ -139,11 +139,11 @@ async def ekologiya_regiona(
 ) -> str:
     """Получить данные об экологической обстановке.
 
-    Args:
+    Аргументы:
         gorod: Название города (необязательно).
         tip: Тип данных (vozdukh, voda, pochva, radiaciya, shum).
 
-    Returns:
+    Возвращает:
         Данные об экологической обстановке.
     """
     await ctx.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
@@ -180,10 +180,10 @@ async def ekologiya_regiona(
 async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
     """Получить активные предупреждения об опасных явлении.
 
-    Args:
+    Аргументы:
         region: Регион (необязательно).
 
-    Returns:
+    Возвращает:
         Активные предупреждения.
     """
     await ctx.info(f"Запрос предупреждений для региона {region}...")
@@ -218,11 +218,11 @@ async def sputnik_monitoring(
 ) -> str:
     """Получить данные спутникового мониторинга.
 
-    Args:
+    Аргументы:
         region: Регион (необязательно).
         tip: Тип данных (lesa, voda, pozhary, snezhnyy_pokrov).
 
-    Returns:
+    Возвращает:
         Данные спутникового мониторинга.
     """
     await ctx.info(f"Запрос спутниковых данных: регион={region}, тип={tip}")

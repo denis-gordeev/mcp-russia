@@ -94,10 +94,10 @@ def _parse_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObe
 async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
     """Получить информацию об объекте недвижимости по кадастровому номеру.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта.
 
-    Returns:
+    Возвращает:
         Данные объекта или None.
     """
     try:
@@ -113,10 +113,10 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
 async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> KadastrovayaStoimost | None:
     """Получить кадастровую стоимость объекта по кадастровому номеру.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта.
 
-    Returns:
+    Возвращает:
         Данные о кадастровой стоимости или None.
     """
     try:
@@ -159,10 +159,10 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
 async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
     """Получить информацию о правах на объект недвижимости.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта.
 
-    Returns:
+    Возвращает:
         Список зарегистрированных прав.
     """
     try:
@@ -191,10 +191,10 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
 async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
     """Поиск объектов недвижимости по запросу через pkk.rosreestr.ru.
 
-    Args:
+    Аргументы:
         zapros: Поисковый запрос (кадастровый номер или адрес).
 
-    Returns:
+    Возвращает:
         Список найденных объектов.
     """
     try:

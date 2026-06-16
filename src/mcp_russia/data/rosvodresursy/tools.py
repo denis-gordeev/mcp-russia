@@ -18,7 +18,7 @@ from .constants import PRIZNAKI_NAPOLNENIYA
 async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
     """Получить список бассейновых округов РФ.
 
-    Returns:
+    Возвращает:
         Список бассейновых округов.
     """
     await ctx.info("Запрос списка бассейновых округов...")
@@ -31,7 +31,7 @@ async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
 async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
     """Получить список типов водных объектов.
 
-    Returns:
+    Возвращает:
         Список типов водных объектов и гидрологических данных.
     """
     await ctx.info("Запрос списка типов водных объектов...")
@@ -52,7 +52,7 @@ async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
 async def spisok_vodokhranilishch(ctx: Context) -> str:
     """Получить список крупных водохранилищ.
 
-    Returns:
+    Возвращает:
         Список крупных водохранилищ с объёмом и площадью.
     """
     await ctx.info("Запрос списка водохранилищ...")
@@ -78,13 +78,13 @@ async def poisk_vodnykh_obektov(
 ) -> str:
     """Поиск водных объектов в Государственном водном реестре.
 
-    Args:
+    Аргументы:
         zapros: Название или часть названия водного объекта.
         tip: Тип водного объекта (reka, ozero, vodokhranilishche и т.д.).
         basseyn: Код бассейнового округа.
         region: Регион.
 
-    Returns:
+    Возвращает:
         Список найденных водных объектов.
     """
     await ctx.info(f"Поиск водных объектов: {zapros or 'все'}...")
@@ -114,10 +114,10 @@ async def poisk_vodnykh_obektov(
 async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
     """Получить информацию о водном объекте по коду.
 
-    Args:
+    Аргументы:
         code: Код водного объекта из Государственного водного реестра.
 
-    Returns:
+    Возвращает:
         Информация о водном объекте.
     """
     await ctx.info(f"Запрос информации о водном объекте {code}...")
@@ -154,12 +154,12 @@ async def gidro_monitoring(
 ) -> str:
     """Получить данные гидрологического мониторинга с постов ГМВО.
 
-    Args:
+    Аргументы:
         post_id: Идентификатор гидрологического поста (необязательно).
         region: Регион (необязательно).
         tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
-    Returns:
+    Возвращает:
         Гидрологические данные.
     """
     await ctx.info("Запрос данных гидрологического мониторинга...")
@@ -197,10 +197,10 @@ async def gidro_monitoring(
 async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
     """Получить информацию о водохранилище по коду.
 
-    Args:
+    Аргументы:
         code: Код водохранилища.
 
-    Returns:
+    Возвращает:
         Информация о водохранилище.
     """
     await ctx.info(f"Запрос информации о водохранилище {code}...")
@@ -248,11 +248,11 @@ async def vodopolzovanie_regionov(
 ) -> str:
     """Получить данные о водопользовании по регионам.
 
-    Args:
+    Аргументы:
         region: Регион (необязательно).
         god: Год (необязательно).
 
-    Returns:
+    Возвращает:
         Данные о водопользовании.
     """
     await ctx.info("Запрос данных о водопользовании...")

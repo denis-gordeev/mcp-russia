@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_dela(context: str, ctx: Context) -> str:
     """Анализ арбитражного дела.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (номер дела или участники).
 
-    Returns:
-        Prompt template for case analysis.
+    Возвращает:
+        Шаблон промпта для анализа дела.
     """
     return (
         f"Выполни анализ арбитражного дела.\n\n"
@@ -30,11 +30,11 @@ async def analiz_dela(context: str, ctx: Context) -> str:
 async def analiz_uchastnika(context: str, ctx: Context) -> str:
     """Анализ судебного участника (компании или ИП).
 
-    Args:
+    Аргументы:
         context: Контекст запроса (название или ИНН организации).
 
-    Returns:
-        Prompt template for participant analysis.
+    Возвращает:
+        Шаблон промпта для анализа участника.
     """
     return (
         f"Подготовь анализ участника арбитражных дел.\n\n"

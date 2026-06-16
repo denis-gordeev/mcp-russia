@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_vodnogo_obekta(context: str, ctx: Context) -> str:
     """Анализ водного объекта.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ реки Волга").
 
-    Returns:
-        Prompt template for water body analysis.
+    Возвращает:
+        Шаблон промпта для анализа водного объекта.
     """
     return (
         f"Выполни анализ водного объекта.\n\n"
@@ -30,8 +30,8 @@ async def analiz_vodnogo_obekta(context: str, ctx: Context) -> str:
 async def obzor_vodokhranilishch(ctx: Context) -> str:
     """Обзор состояния крупных водохранилищ РФ.
 
-    Returns:
-        Prompt template for reservoir overview.
+    Возвращает:
+        Шаблон промпта для обзора водохранилищ.
     """
     return (
         "Подготовь обзор состояния крупных водохранилищ РФ.\n\n"

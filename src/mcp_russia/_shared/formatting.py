@@ -13,11 +13,11 @@ from typing import Any
 def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
     """Рендеринг табличных данных в Markdown.
 
-    Args:
+    Аргументы:
         headers: Заголовки столбцов.
         rows: Список строк (каждая строка — последовательность значений).
 
-    Returns:
+    Возвращает:
         Строка таблицы в формате Markdown.
     """
     if not rows:
@@ -33,10 +33,10 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str
 def format_rub(value: float) -> str:
     """Форматирование числа в российском рублёвом стиле.
 
-    Args:
+    Аргументы:
         value: Числовое значение.
 
-    Returns:
+    Возвращает:
         Отформатированная строка вида «1 234,56 ₽».
     """
     sign = "-" if value < 0 else ""
@@ -53,11 +53,11 @@ def format_rub(value: float) -> str:
 def format_number_ru(value: float, decimals: int = 2) -> str:
     """Форматирование числа в российском стиле (пробел — тысячи, запятая — десятичные).
 
-    Args:
+    Аргументы:
         value: Числовое значение.
         decimals: Количество десятичных знаков.
 
-    Returns:
+    Возвращает:
         Отформатированная строка вида «1 234,56».
     """
     formatted = f"{value:,.{decimals}f}"
@@ -67,11 +67,11 @@ def format_number_ru(value: float, decimals: int = 2) -> str:
 def format_percent(value: float, decimals: int = 2) -> str:
     """Форматирование числового значения как процент.
 
-    Args:
+    Аргументы:
         value: Числовое значение (напр. 0.05 для 5%).
         decimals: Количество десятичных знаков.
 
-    Returns:
+    Возвращает:
         Отформатированная строка вида «5,00%».
     """
     return f"{format_number_ru(value * 100, decimals)}%"
@@ -85,10 +85,10 @@ def parse_rub_number(value: Any) -> float | None:
     совместимости с legacy-ответами API.
     Значения int/float пропускаются без изменений.
 
-    Args:
+    Аргументы:
         value: Исходное значение из API (строка, int, float или None).
 
-    Returns:
+    Возвращает:
         Расобранное число float или None при невозможности разбора.
     """
     if value is None:
@@ -111,11 +111,11 @@ def parse_rub_number(value: Any) -> float | None:
 def truncate_list(items: Sequence[str], max_items: int = 50) -> str:
     """Объединение элементов через перевод строки с усечением длинных списков.
 
-    Args:
+    Аргументы:
         items: Список строк.
         max_items: Максимальное количество элементов перед усечением.
 
-    Returns:
+    Возвращает:
         Объединённая строка с уведомлением об усечении при необходимости.
     """
     if len(items) <= max_items:

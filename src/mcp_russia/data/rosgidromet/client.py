@@ -43,10 +43,10 @@ def _find_stanciya(code: str) -> dict[str, Any] | None:
 async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
     """Получение текущих данных о погоде через API Open-Meteo.
 
-    Args:
+    Аргументы:
         stanciya: Код станции (по умолчанию: Москва — 77).
 
-    Returns:
+    Возвращает:
         Данные о текущей погоде или None.
     """
     info = _find_stanciya(stanciya)
@@ -72,11 +72,11 @@ async def poluchit_prognoz(
 ) -> list[PrognozData]:
     """Получение прогноза погоды через API Open-Meteo.
 
-    Args:
+    Аргументы:
         stanciya: Код станции.
         dni: Количество дней прогноза (1-16).
 
-    Returns:
+    Возвращает:
         Список данных прогноза.
     """
     info = _find_stanciya(stanciya)
@@ -103,11 +103,11 @@ async def poluchit_ekologiyu(
 ) -> list[EkologiyaData]:
     """Получение данных о качестве воздуха через API Open-Meteo Air Quality.
 
-    Args:
+    Аргументы:
         gorod: Фильтр по названию города (сопоставляется с названиями станций).
         tip: Фильтр по типу данных (пока поддерживается только 'vozdukh').
 
-    Returns:
+    Возвращает:
         Список экологических данных.
     """
     stations = STANCII_MONITORINGA
@@ -143,10 +143,10 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
     Open-Meteo не предоставляет данные о предупреждениях. Эта функция
     проверяет текущие погодные условия и генерирует предупреждения для экстремальных значений.
 
-    Args:
+    Аргументы:
         region: Код или название региона.
 
-    Returns:
+    Возвращает:
         Список активных предупреждений.
     """
     stations = STANCII_MONITORINGA
@@ -231,11 +231,11 @@ async def poluchit_sputnik_dannye(
 
     Open-Meteo не предоставляет спутниковые снимки. Остаётся заглушкой.
 
-    Args:
+    Аргументы:
         region: Фильтр по региону.
         tip: Тип данных (lesa, voda, pozhary, snezhnyy_pokrov).
 
-    Returns:
+    Возвращает:
         Пустой список — спутниковые данные недоступны через текущий API.
     """
     return []

@@ -47,10 +47,10 @@ def build_catalog(registry: object) -> str:
     Использует FeatureMeta (имя, описание, авторизация) и схемы инструментов
     (параметры, типы, описания) для формирования детального каталога для LLM.
 
-    Args:
+    Аргументы:
         registry: Экземпляр FeatureRegistry с обнаруженными функциями.
 
-    Returns:
+    Возвращает:
         Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
     """
     global _catalog_cache
@@ -85,11 +85,11 @@ def build_catalog(registry: object) -> str:
 async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
     """Вызов API Anthropic для рекомендации инструментов по запросу пользователя.
 
-    Args:
+    Аргументы:
         query: Вопрос пользователя на естественном языке.
         catalog: Предварительно собранный каталог всех инструментов.
 
-    Returns:
+    Возвращает:
         Рекомендации LLM с пояснениями.
     """
     try:

@@ -22,7 +22,7 @@ _ATTRIBUTION = "\n\n_Источник: ФССП России (fssp.gov.ru)_"
 async def spisok_vidov_proizvodstv(ctx: Context) -> str:
     """Список видов исполнительных производств.
 
-    Returns:
+    Возвращает:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
     rows = [(v["code"], v["name"]) for v in VidyIspolnitelnyhProizvodstv]
@@ -32,7 +32,7 @@ async def spisok_vidov_proizvodstv(ctx: Context) -> str:
 async def spisok_statusov_proizvodstva(ctx: Context) -> str:
     """Список статусов исполнительного производства.
 
-    Returns:
+    Возвращает:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
     rows = [(s["code"], s["name"]) for s in StatusyProizvodstva]
@@ -42,7 +42,7 @@ async def spisok_statusov_proizvodstva(ctx: Context) -> str:
 async def spisok_ogranicheniy(ctx: Context) -> str:
     """Список видов ограничений, налагаемых судебными приставами.
 
-    Returns:
+    Возвращает:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
     rows = [(o["code"], o["name"]) for o in Ogranicheniya]
@@ -52,7 +52,7 @@ async def spisok_ogranicheniy(ctx: Context) -> str:
 async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
     """Список категорий должников.
 
-    Returns:
+    Возвращает:
         Список категорий (физлицо, юрлицо, ИП).
     """
     rows = [(k["code"], k["name"]) for k in KategoriiDolzhnikov]
@@ -62,7 +62,7 @@ async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
 async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
     """Список оснований возбуждения исполнительного производства.
 
-    Returns:
+    Возвращает:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
     rows = [(o["code"], o["name"]) for o in OsnovaniyaVozbuzhdeniya]
@@ -72,7 +72,7 @@ async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
 async def spisok_regionov(ctx: Context) -> str:
     """Список кодов регионов для поиска в Банке данных ФССП.
 
-    Returns:
+    Возвращает:
         Список регионов и их кодов.
     """
     rows = [
@@ -84,11 +84,11 @@ async def spisok_regionov(ctx: Context) -> str:
 async def info_proizvodstva(ctx: Context, nomer: str) -> str:
     """Подробная информация об исполнительном производстве.
 
-    Args:
+    Аргументы:
         nomer: Номер исполнительного производства
             (напр.: «12345/23/77001-ИП»).
 
-    Returns:
+    Возвращает:
         Сведения о производстве (должник, взыскатель, сумма, статус).
     """
     result = await client.info_proizvodstva(nomer)
@@ -118,12 +118,12 @@ async def poisk_dolzhnika(
 ) -> str:
     """Поиск исполнительных производств по должнику.
 
-    Args:
+    Аргументы:
         fio: ФИО должника или название организации.
         data_rozhdeniya: Дата рождения (необязательно, напр.: «01.01.1990»).
         region: Код региона (необязательно, напр.: «77» — Москва).
 
-    Returns:
+    Возвращает:
         Список исполнительных производств с суммами и статусами.
     """
     results = await client.poisk_proizvodstv(fio, data_rozhdeniya, region)
@@ -157,11 +157,11 @@ async def ogranicheniya_dolzhnika(
 ) -> str:
     """Ограничения, наложенные на должника.
 
-    Args:
+    Аргументы:
         fio: ФИО должника или название организации.
         data_rozhdeniya: Дата рождения (необязательно, напр.: «01.01.1990»).
 
-    Returns:
+    Возвращает:
         Список ограничений (запрет на выезд, арест счетов и т.д.).
     """
     results = await client.ogranicheniya_dolzhnika(fio, data_rozhdeniya)
@@ -189,10 +189,10 @@ async def ogranicheniya_dolzhnika(
 async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
     """Сведения о розыске должника или имущества.
 
-    Args:
+    Аргументы:
         fio: ФИО разыскиваемого лица.
 
-    Returns:
+    Возвращает:
         Сведения о розыске (тип, основание, кто объявил).
     """
     results = await client.rozysk_dolzhnika(fio)

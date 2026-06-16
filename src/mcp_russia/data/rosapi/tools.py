@@ -28,10 +28,10 @@ from .constants import NALOGOVYE_STAVKI, OSNOVNYE_BANKI
 async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
     """Найти адрес по почтовому индексу РФ.
 
-    Args:
+    Аргументы:
         indeks: Почтовый индекс (6 цифр, например 101000).
 
-    Returns:
+    Возвращает:
         Адресная информация или сообщение об ошибке.
     """
     await ctx.info(f"Поиск адреса по индексу {indeks}...")
@@ -65,10 +65,10 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
 async def poisk_adresa(zapros: str, ctx: Context) -> str:
     """Найти адрес по свободному запросу через ФИАС.
 
-    Args:
+    Аргументы:
         zapros: Строка запроса (например, "Москва, Красная площадь").
 
-    Returns:
+    Возвращает:
         Список найденных адресов.
     """
     await ctx.info(f"Поиск адреса: {zapros}...")
@@ -98,10 +98,10 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
 async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
     """Найти организацию по ИНН.
 
-    Args:
+    Аргументы:
         inn: ИНН организации (10 или 12 цифр).
 
-    Returns:
+    Возвращает:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ИНН {inn}...")
@@ -145,10 +145,10 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
 async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     """Найти организацию по ОГРН.
 
-    Args:
+    Аргументы:
         ogrn: ОГРН организации (13 или 15 цифр).
 
-    Returns:
+    Возвращает:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
@@ -175,7 +175,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
 async def spisok_bankov(ctx: Context) -> str:
     """Получить справочник банков России.
 
-    Returns:
+    Возвращает:
         Список банков с БИК и названиями.
     """
     await ctx.info("Запрос справочника банков...")
@@ -200,10 +200,10 @@ async def spisok_bankov(ctx: Context) -> str:
 async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     """Получить информацию о банке по БИК.
 
-    Args:
+    Аргументы:
         bik: БИК банка (9 цифр).
 
-    Returns:
+    Возвращает:
         Данные банка.
     """
     await ctx.info(f"Поиск банка по БИК {bik}...")
@@ -244,10 +244,10 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
 async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> str:
     """Получить список национальных праздников РФ.
 
-    Args:
+    Аргументы:
         god: Год запроса (например, 2025). По умолчанию — текущий.
 
-    Returns:
+    Возвращает:
         Список праздников с датами.
     """
     if god is None:
@@ -268,7 +268,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
 async def nalogovye_stavki(ctx: Context) -> str:
     """Получить основные налоговые ставки РФ.
 
-    Returns:
+    Возвращает:
         Справочная информация о налогах.
     """
     await ctx.info("Запрос налоговых ставок...")

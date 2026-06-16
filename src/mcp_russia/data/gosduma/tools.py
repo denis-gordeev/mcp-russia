@@ -26,10 +26,10 @@ def _auth_note() -> str:
 async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     """Получить список депутатов Государственной Думы.
 
-    Args:
+    Аргументы:
         sozyv: Номер созыва (например, '8'). По умолчанию — текущий.
 
-    Returns:
+    Возвращает:
         Список депутатов.
     """
     if ctx:
@@ -62,10 +62,10 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
 async def info_deputata(id_deputata: int, ctx: Context) -> str:
     """Получить информацию о конкретном депутате Госдумы.
 
-    Args:
+    Аргументы:
         id_deputata: ID депутата.
 
-    Returns:
+    Возвращает:
         Подробная информация о депутате.
     """
     await ctx.info(f"Запрос информации о депутате {id_deputata}...")
@@ -97,7 +97,7 @@ async def info_deputata(id_deputata: int, ctx: Context) -> str:
 async def spisok_frakcii(ctx: Context) -> str:
     """Получить список фракций Государственной Думы.
 
-    Returns:
+    Возвращает:
         Список фракций.
     """
     await ctx.info("Запрос списка фракций Госдумы...")
@@ -111,7 +111,7 @@ async def spisok_frakcii(ctx: Context) -> str:
 async def spisok_komitetov(ctx: Context) -> str:
     """Получить список комитетов Государственной Думы.
 
-    Returns:
+    Возвращает:
         Список комитетов.
     """
     await ctx.info("Запрос списка комитетов Госдумы...")
@@ -125,7 +125,7 @@ async def spisok_komitetov(ctx: Context) -> str:
 async def spisok_sozyvov(ctx: Context) -> str:
     """Получить список созывов Государственной Думы.
 
-    Returns:
+    Возвращает:
         Список созывов.
     """
     await ctx.info("Запрос списка созывов Госдумы...")
@@ -143,11 +143,11 @@ async def zakonoproekty(
 ) -> str:
     """Получить список законопроектов Государственной Думы.
 
-    Args:
+    Аргументы:
         status: Фильтр по статусу (например, 'принят', 'рассматривается').
         limit: Максимальное количество результатов (до 50).
 
-    Returns:
+    Возвращает:
         Список законопроектов.
     """
     if ctx:
@@ -183,11 +183,11 @@ async def golosovaniya(
 ) -> str:
     """Получить результаты голосований Государственной Думы.
 
-    Args:
+    Аргументы:
         sozyv: Номер созыва.
         limit: Максимальное количество результатов (до 50).
 
-    Returns:
+    Возвращает:
         Результаты голосований.
     """
     if ctx:

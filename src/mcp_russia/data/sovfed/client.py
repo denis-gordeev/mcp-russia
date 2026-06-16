@@ -30,11 +30,11 @@ async def poisk_senatorov(
 ) -> list[dict[str, Any]]:
     """Поиск сенаторов Совета Федерации.
 
-    Args:
+    Аргументы:
         region: Регион представительства.
         komitet: Комитет.
 
-    Returns:
+    Возвращает:
         Список сенаторов.
     """
     try:
@@ -75,10 +75,10 @@ async def poisk_senatorov(
 async def info_senatora(senator_id: str) -> dict[str, Any] | None:
     """Получить подробную информацию о сенаторе.
 
-    Args:
+    Аргументы:
         senator_id: Идентификатор или фамилия сенатора.
 
-    Returns:
+    Возвращает:
         Данные сенатора или None.
     """
     try:
@@ -129,11 +129,11 @@ async def poisk_zakonoproektov(
 ) -> list[dict[str, Any]]:
     """Поиск законопроектов Совета Федерации.
 
-    Args:
+    Аргументы:
         status: Статус законопроекта.
         god: Год рассмотрения.
 
-    Returns:
+    Возвращает:
         Список законопроектов.
     """
     try:
@@ -154,10 +154,10 @@ async def poisk_zakonoproektov(
 async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
     """Получить список заседаний Совета Федерации.
 
-    Args:
+    Аргументы:
         god: Год.
 
-    Returns:
+    Возвращает:
         Список заседаний.
     """
     try:

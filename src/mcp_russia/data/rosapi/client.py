@@ -218,10 +218,10 @@ def get_holidays(year: int) -> list[dict[str, str]]:
 async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str]:
     """Получить адрес по почтовому индексу.
 
-    Args:
+    Аргументы:
         postal_code: Почтовый индекс.
 
-    Returns:
+    Возвращает:
         Адрес или словарь с ошибкой.
     """
     result = await _postal_by_index(postal_code)
@@ -251,10 +251,10 @@ async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str
 async def search_address(query: str) -> list[dict[str, str]]:
     """Поиск адресов по строковому запросу.
 
-    Args:
+    Аргументы:
         query: Поисковый запрос.
 
-    Returns:
+    Возвращает:
         Список найденных адресов.
     """
     result = await _suggest_address(query)
@@ -281,10 +281,10 @@ async def search_address(query: str) -> list[dict[str, str]]:
 async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
     """Найти организацию по ИНН через ЕГРЮЛ/ЕГРИП.
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Данные организации или словарь с ошибкой.
     """
     result = await _find_org_by_inn(inn)
@@ -313,10 +313,10 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
 async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
     """Найти организацию по ОГРН через ЕГРЮЛ/ЕГРИП.
 
-    Args:
+    Аргументы:
         ogrn: ОГРН организации.
 
-    Returns:
+    Возвращает:
         Данные организации или словарь с ошибкой.
     """
     result = await _find_org_by_ogrn(ogrn)
@@ -363,10 +363,10 @@ async def list_banks_public() -> list[BankRF]:
 async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
     """Найти банк по БИК через справочник ЦБ РФ.
 
-    Args:
+    Аргументы:
         bik: БИК банка.
 
-    Returns:
+    Возвращает:
         Данные банка или словарь с ошибкой.
     """
     result = await _find_bank_by_bik(bik)

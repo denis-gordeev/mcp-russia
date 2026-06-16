@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_zdorovya_regiona(context: str, ctx: Context) -> str:
     """Анализ здоровья населения региона.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (регион или тема).
 
-    Returns:
-        Prompt template for regional health analysis.
+    Возвращает:
+        Шаблон промпта для анализа здоровья региона.
     """
     return (
         f"Выполни анализ здоровья населения региона.\n\n"
@@ -30,11 +30,11 @@ async def analiz_zdorovya_regiona(context: str, ctx: Context) -> str:
 async def obzor_med_organizatsiy(context: str, ctx: Context) -> str:
     """Обзор медицинских организаций в регионе.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (регион, город или тип МО).
 
-    Returns:
-        Prompt template for medical organizations overview.
+    Возвращает:
+        Шаблон промпта для обзора медицинских организаций.
     """
     return (
         f"Подготовь обзор медицинских организаций.\n\n"

@@ -23,7 +23,7 @@ from .constants import (
 def spisok_nalogovyh_rezhimov() -> list[dict]:
     """Список режимов налогообложения в РФ.
 
-    Returns:
+    Возвращает:
         Список режимов (ОСНО, УСН, ЕНВД, ПСН, ЕСН, НПД).
     """
     return NalogovyeRezhimy
@@ -32,7 +32,7 @@ def spisok_nalogovyh_rezhimov() -> list[dict]:
 def spisok_vidov_nalogov() -> list[dict]:
     """Список основных видов налогов в РФ.
 
-    Returns:
+    Возвращает:
         Список видов налогов (НДС, НДФЛ, налог на прибыль и др.).
     """
     return VidyNalogov
@@ -41,7 +41,7 @@ def spisok_vidov_nalogov() -> list[dict]:
 def spisok_tipov_proverok() -> list[dict]:
     """Список типов налоговых проверок.
 
-    Returns:
+    Возвращает:
         Список типов проверок (выездная, камеральная, документарная).
     """
     return TipyProverok
@@ -50,7 +50,7 @@ def spisok_tipov_proverok() -> list[dict]:
 def spisok_statusov_organizaciy() -> list[dict]:
     """Список статусов организаций в ЕГРЮЛ.
 
-    Returns:
+    Возвращает:
         Список статусов (действующая, ликвидирована и т.д.).
     """
     return StatusyOrganizacii
@@ -59,7 +59,7 @@ def spisok_statusov_organizaciy() -> list[dict]:
 def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
     """Список категорий налогоплательщиков.
 
-    Returns:
+    Возвращает:
         Список категорий (юрлицо, ИП, самозанятый, физлицо).
     """
     return KategoriiNalogoplatelshchikov
@@ -70,10 +70,10 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
 
     Использует публичный API egrul.nalog.ru для получения данных.
 
-    Args:
+    Аргументы:
         inn: ИНН организации (10 цифр).
 
-    Returns:
+    Возвращает:
         Сведения об организации (название, адрес, руководитель, статус).
     """
     if ctx:
@@ -113,10 +113,10 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
 
     Использует публичный API egrul.nalog.ru для получения данных.
 
-    Args:
+    Аргументы:
         inn: ИНН индивидуального предпринимателя (12 цифр).
 
-    Returns:
+    Возвращает:
         Сведения об ИП (ФИО, дата регистрации, статус, вид деятельности).
     """
     if ctx:
@@ -146,10 +146,10 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
     Данные о проверках требуют авторизованный доступ к API ФНС.
     Возвращается справочная информация.
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Информация о проверках или справка.
     """
     if ctx:
@@ -174,11 +174,11 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
     Данные о начислениях требуют авторизованный доступ к API ФНС.
     Возвращается справочная информация.
 
-    Args:
+    Аргументы:
         inn: ИНН организации или ИП.
         period: Налоговый период (необязательно, напр. «2025»).
 
-    Returns:
+    Возвращает:
         Информация о начислениях или справка.
     """
     if ctx:

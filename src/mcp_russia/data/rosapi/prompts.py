@@ -9,7 +9,7 @@ from fastmcp.prompts import Message, PromptMessage, PromptResult
 def analiz_organizacii(inn: str) -> PromptResult:
     """Подсказка для анализа организации по ИНН.
 
-    Args:
+    Аргументы:
         inn: ИНН организации для проверки.
     """
     return PromptResult(
@@ -39,7 +39,7 @@ def analiz_organizacii(inn: str) -> PromptResult:
 def poisk_adresa_prompt(adres: str) -> PromptResult:
     """Подсказка для поиска адреса через ФИАС.
 
-    Args:
+    Аргументы:
         adres: Адрес для поиска.
     """
     return PromptResult(

@@ -38,12 +38,12 @@ def create_client(
 ) -> httpx.AsyncClient:
     """Создание настроенного httpx.AsyncClient.
 
-    Args:
+    Аргументы:
         base_url: Базовый URL для всех запросов.
         timeout: Таймаут запроса в секундах. По умолчанию: settings.HTTP_TIMEOUT.
         headers: Дополнительные заголовки для слияния с заголовками по умолчанию.
 
-    Returns:
+    Возвращает:
         Настроенный httpx.AsyncClient (использовать как async context manager).
     """
     default_headers = {
@@ -74,17 +74,17 @@ async def http_get(
     Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
     НЕ повторяет при 4xx (кроме 429) — это клиентские ошибки.
 
-    Args:
+    Аргументы:
         url: Полный URL для запроса.
         params: Параметры запроса.
         headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
         timeout: Таймаут запроса в секундах.
         max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
 
-    Returns:
+    Возвращает:
         Разобранный JSON-ответ.
 
-    Raises:
+    Вызывает:
         HttpClientError: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
@@ -153,7 +153,7 @@ async def http_post(
 
     Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
 
-    Args:
+    Аргументы:
         url: Полный URL для запроса.
         json_body: JSON-тело для отправки.
         params: Параметры запроса.
@@ -161,10 +161,10 @@ async def http_post(
         timeout: Таймаут запроса в секундах.
         max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
 
-    Returns:
+    Возвращает:
         Разобранный JSON-ответ.
 
-    Raises:
+    Вызывает:
         HttpClientError: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES

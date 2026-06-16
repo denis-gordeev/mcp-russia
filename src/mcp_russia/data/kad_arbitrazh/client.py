@@ -228,7 +228,7 @@ async def poisk_del(
 ) -> list[SudebnoeDelo]:
     """Поиск дел в Картотеке арбитражных дел через API kad.arbitr.ru.
 
-    Args:
+    Аргументы:
         number: Номер дела (например, 'А40-12345/2024').
         istorcz: Название истца.
         otvetchik: Название ответчика.
@@ -238,7 +238,7 @@ async def poisk_del(
         sudya: Фамилия судьи.
         limit: Максимальное количество результатов.
 
-    Returns:
+    Возвращает:
         Список судебных дел.
     """
     sides: list[dict[str, Any]] = []
@@ -276,10 +276,10 @@ async def poisk_del(
 async def info_dela(number: str) -> SudebnoeDelo | None:
     """Получить подробную информацию о судебном деле.
 
-    Args:
+    Аргументы:
         number: Номер дела.
 
-    Returns:
+    Возвращает:
         Данные дела или None.
     """
     try:
@@ -295,10 +295,10 @@ async def info_dela(number: str) -> SudebnoeDelo | None:
 async def akty_po_delu(number: str) -> list[SudebnyyAkt]:
     """Получить судебные акты по делу.
 
-    Args:
+    Аргументы:
         number: Номер дела.
 
-    Returns:
+    Возвращает:
         Список судебных актов.
     """
     try:
@@ -314,10 +314,10 @@ async def akty_po_delu(number: str) -> list[SudebnyyAkt]:
 async def info_akta(id_akta: str) -> SudebnyyAkt | None:
     """Получить подробную информацию о судебном акте.
 
-    Args:
+    Аргументы:
         id_akta: Идентификатор судебного акта.
 
-    Returns:
+    Возвращает:
         Данные акта или None.
     """
     try:
@@ -346,10 +346,10 @@ async def info_akta(id_akta: str) -> SudebnyyAkt | None:
 async def zasedaniya_po_delu(number: str) -> list[SudebnoeZasedanie]:
     """Получить информацию о заседаниях по делу.
 
-    Args:
+    Аргументы:
         number: Номер дела.
 
-    Returns:
+    Возвращает:
         Список заседаний.
     """
     try:
@@ -388,11 +388,11 @@ async def zasedaniya_po_delu(number: str) -> list[SudebnoeZasedanie]:
 async def poisk_sudey(familiya: str = "", sud_name: str = "") -> list[Sudy]:
     """Поиск судей арбитражных судов.
 
-    Args:
+    Аргументы:
         familiya: Фамилия судьи.
         sud_name: Наименование суда.
 
-    Returns:
+    Возвращает:
         Список судей.
     """
     return []
@@ -401,10 +401,10 @@ async def poisk_sudey(familiya: str = "", sud_name: str = "") -> list[Sudy]:
 async def storony_dela(number: str) -> list[StoronaDela]:
     """Получить стороны судебного дела.
 
-    Args:
+    Аргументы:
         number: Номер дела.
 
-    Returns:
+    Возвращает:
         Список сторон (истцы и ответчики).
     """
     try:

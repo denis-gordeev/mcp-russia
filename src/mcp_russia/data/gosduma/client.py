@@ -28,10 +28,10 @@ def _get_api_token() -> str:
 async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
     """Получение списка депутатов Государственной Думы из открытого API.
 
-    Args:
+    Аргументы:
         sozyv: Номер созыва (напр., '8' для VIII созыва).
 
-    Returns:
+    Возвращает:
         Список депутатов.
     """
     params: dict[str, str] = {}
@@ -82,10 +82,10 @@ def _parse_deputats(data: Any) -> list[Deputat]:
 async def poluchit_deputata(id: int) -> Deputat | None:
     """Получение конкретного депутата по ID.
 
-    Args:
+    Аргументы:
         id: ID депутата.
 
-    Returns:
+    Возвращает:
         Данные депутата или None.
     """
     token = _get_api_token()
@@ -132,12 +132,12 @@ async def poluchit_zakonoproekty(
 ) -> list[Zakonoproekt]:
     """Получение законопроектов из API СОЗД.
 
-    Args:
+    Аргументы:
         status: Фильтр по статусу (необязательно).
         limit: Максимальное количество результатов.
         page: Номер страницы.
 
-    Returns:
+    Возвращает:
         Список законопроектов.
     """
     params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
@@ -189,12 +189,12 @@ async def poluchit_golosovaniya(
 ) -> list[Golosovanie]:
     """Получение результатов голосований из API Госдумы.
 
-    Args:
+    Аргументы:
         sozyv: Номер созыва.
         limit: Максимальное количество результатов.
         page: Номер страницы.
 
-    Returns:
+    Возвращает:
         Список результатов голосований.
     """
     params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
@@ -242,7 +242,7 @@ def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
 async def poluchit_frakcii() -> list[Frakciya]:
     """Получение текущих фракций Госдумы.
 
-    Returns:
+    Возвращает:
         Список фракций.
     """
     return [Frakciya(code=f["code"], name=f["name"]) for f in FRAKCII]

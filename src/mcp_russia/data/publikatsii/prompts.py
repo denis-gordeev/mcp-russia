@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_normativnogo_akta(context: str, ctx: Context) -> str:
     """Анализ нормативного правового акта.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ ФЗ № 44").
 
-    Returns:
-        Prompt template for legal act analysis.
+    Возвращает:
+        Шаблон промпта для анализа нормативного акта.
     """
     return (
         f"Выполни анализ нормативного правового акта.\n\n"
@@ -31,8 +31,8 @@ async def analiz_normativnogo_akta(context: str, ctx: Context) -> str:
 async def obzor_zakonodatelstva(ctx: Context) -> str:
     """Обзор изменений в законодательстве за период.
 
-    Returns:
-        Prompt template for legislative overview.
+    Возвращает:
+        Шаблон промпта для обзора законодательства.
     """
     return (
         "Подготовь обзор изменений в законодательстве за период.\n\n"

@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_pogody_regiona(context: str, ctx: Context) -> str:
     """Анализ погодных условий в регионе.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "погода в Москве").
 
-    Returns:
-        Prompt template for weather analysis.
+    Возвращает:
+        Шаблон промпта для анализа погоды.
     """
     return (
         f"Выполни анализ погодных условий в регионе.\n\n"
@@ -30,8 +30,8 @@ async def analiz_pogody_regiona(context: str, ctx: Context) -> str:
 async def obzor_ekologii(ctx: Context) -> str:
     """Обзор экологической обстановки в России.
 
-    Returns:
-        Prompt template for environmental overview.
+    Возвращает:
+        Шаблон промпта для обзора экологии.
     """
     return (
         "Подготовь обзор экологической обстановки в России.\n\n"

@@ -38,11 +38,11 @@ logger = logging.getLogger(__name__)
 async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelRosstata]:
     """Получение статистического показателя из ЕМИСС/Росстата.
 
-    Args:
+    Аргументы:
         code: Код показателя (напр. 'cpi', 'population').
         date_range: Фильтр по диапазону дат (необязательно).
 
-    Returns:
+    Возвращает:
         Список значений показателя.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(code, code)
@@ -61,10 +61,10 @@ async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelR
 async def poluchit_dannye_regiona(code: str) -> RegionData | None:
     """Получение данных о субъекте РФ.
 
-    Args:
+    Аргументы:
         code: Код региона (ОКАТО/ОКТМО).
 
-    Returns:
+    Возвращает:
         Данные региона или None.
     """
     region_info = next((r for r in SUBIEKTY_RF if r["code"] == code), None)
@@ -95,10 +95,10 @@ async def poluchit_dannye_regiona(code: str) -> RegionData | None:
 async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
     """Получение данных о федеральном округе.
 
-    Args:
+    Аргументы:
         code: Код федерального округа.
 
-    Returns:
+    Возвращает:
         Данные федерального округа.
     """
     okrug_info = next((o for o in FEDERALNYE_OKRUGA if o["code"] == code), None)
@@ -117,10 +117,10 @@ async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
 async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
     """Получение данных об инфляции (ИПЦ) из ЕМИСС.
 
-    Args:
+    Аргументы:
         god: Фильтр по году.
 
-    Returns:
+    Возвращает:
         Список точек данных ИПЦ.
     """
     try:
@@ -152,10 +152,10 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
 async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
     """Получение демографических данных из ЕМИСС.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
 
-    Returns:
+    Возвращает:
         Список точек демографических данных.
     """
     try:
@@ -188,11 +188,11 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
 async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
     """Получение данных о валовом региональном продукте из ЕМИСС.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
         god: Фильтр по году.
 
-    Returns:
+    Возвращает:
         Список точек данных ВРП.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
@@ -235,11 +235,11 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
 async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
     """Получение данных о заработной плате из ЕМИСС.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
         god: Фильтр по году.
 
-    Returns:
+    Возвращает:
         Список точек данных о заработной плате.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("wages", "24140")
@@ -282,10 +282,10 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
 async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
     """Получение регионального показателя по всем регионам для сравнения.
 
-    Args:
+    Аргументы:
         pokazatel: Код показателя из REGIONALNYE_POKAZATELI.
 
-    Returns:
+    Возвращает:
         Список пар «регион — значение».
     """
     emiss_code = REGIONALNYE_POKAZATELI.get(pokazatel)
@@ -329,12 +329,12 @@ async def poluchit_indikator_dannye(
 ) -> list[IndikatorDannye]:
     """Получение данных произвольного показателя по коду ЕМИСС или мнемоническому коду.
 
-    Args:
+    Аргументы:
         kod: Код ЕМИСС (напр. '31088') или мнемонический код (напр. 'cpi').
         region: Код региона для фильтрации (необязательно).
         god: Фильтр по году (необязательно).
 
-    Returns:
+    Возвращает:
         Список точек данных показателя.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
@@ -425,11 +425,11 @@ async def poluchit_otraslevuyu_strukturu_vrp(
 ) -> list[OtraslevayaStrukturaVRP]:
     """Получение отраслевой структуры ВРП по разделам ОКВЭД.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
         god: Фильтр по году.
 
-    Returns:
+    Возвращает:
         Список точек данных отраслевой структуры.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("vrp_structure", "27103")
@@ -508,11 +508,11 @@ async def poluchit_investitsii_po_vidam(
 ) -> list[InvestitsiiPoVidam]:
     """Получение данных об инвестициях по видам экономической деятельности.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
         god: Фильтр по году.
 
-    Returns:
+    Возвращает:
         Список точек данных об инвестициях по видам деятельности.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("investments_by_activity", "24145")

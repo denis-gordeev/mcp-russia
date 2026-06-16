@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_ispolneniya_byudzheta(context: str, ctx: Context) -> str:
     """Анализ исполнения бюджета по данным Федерального казначейства.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ исполнения федерального бюджета за 2025 год").
 
-    Returns:
-        Prompt template for budget execution analysis.
+    Возвращает:
+        Шаблон промпта для анализа исполнения бюджета.
     """
     return (
         f"Выполни анализ исполнения бюджета по данным Федерального казначейства.\n\n"
@@ -30,8 +30,8 @@ async def analiz_ispolneniya_byudzheta(context: str, ctx: Context) -> str:
 async def obzor_byudzhetnoy_sistemy(ctx: Context) -> str:
     """Обзор бюджетной системы Российской Федерации.
 
-    Returns:
-        Prompt template for budget system overview.
+    Возвращает:
+        Шаблон промпта для обзора бюджетной системы.
     """
     return (
         "Подготовь обзор бюджетной системы Российской Федерации.\n\n"

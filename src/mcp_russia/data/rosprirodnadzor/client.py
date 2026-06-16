@@ -35,13 +35,13 @@ async def poisk_proverok(
 ) -> list[dict[str, Any]]:
     """Поиск экологических проверок Росприроднадзора.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации.
         vid_nadzora: Код вида надзора.
         god: Год проверки.
         limit: Максимум результатов.
 
-    Returns:
+    Возвращает:
         Список проверок.
     """
     try:
@@ -80,10 +80,10 @@ async def poisk_proverok(
 async def info_proverki(nomer: str) -> dict[str, Any] | None:
     """Получить информацию о проверке Росприроднадзора по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер проверки.
 
-    Returns:
+    Возвращает:
         Данные проверки или None.
     """
     try:
@@ -103,12 +103,12 @@ async def poisk_obektov_negativnogo(
 ) -> list[dict[str, Any]]:
     """Поиск объектов негативного воздействия в реестре ОНВ.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации.
         kategoriya: Категория ОНВ.
         limit: Максимум результатов.
 
-    Returns:
+    Возвращает:
         Список объектов ОНВ.
     """
     try:
@@ -149,12 +149,12 @@ async def poisk_litsenziy_nedra(
 ) -> list[dict[str, Any]]:
     """Поиск лицензий на недропользование.
 
-    Args:
+    Аргументы:
         territory: Территория действия лицензии.
         vid_litsenzii: Вид лицензии.
         limit: Максимум результатов.
 
-    Returns:
+    Возвращает:
         Список лицензий.
     """
     try:
@@ -192,11 +192,11 @@ async def poluchit_ekologicheskie_platezhi(
 ) -> list[dict[str, Any]]:
     """Получить данные об экологических платежах.
 
-    Args:
+    Аргументы:
         god: Год.
         tip_platezha: Тип платежа.
 
-    Returns:
+    Возвращает:
         Список экологических платежей.
     """
     try:

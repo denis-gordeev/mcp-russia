@@ -34,14 +34,14 @@ async def poisk_vodnykh_obektov(
 ) -> list[dict[str, Any]]:
     """Поиск водных объектов в Государственном водном реестре.
 
-    Args:
+    Аргументы:
         zapros: Поисковый запрос (название водного объекта).
         tip: Тип водного объекта (reka, ozero и т.д.).
         basseyn: Код бассейнового округа.
         region: Регион.
         limit: Максимум результатов.
 
-    Returns:
+    Возвращает:
         Список водных объектов.
     """
     try:
@@ -67,10 +67,10 @@ async def poisk_vodnykh_obektov(
 async def info_vodnogo_obekta(code: str) -> dict[str, Any] | None:
     """Получить информацию о водном объекте из Государственного водного реестра.
 
-    Args:
+    Аргументы:
         code: Код водного объекта.
 
-    Returns:
+    Возвращает:
         Данные о водном объекте или None.
     """
     try:
@@ -91,12 +91,12 @@ async def poluchit_gidro_dannye(
 ) -> list[dict[str, Any]]:
     """Получить гидрологические данные с мониторинговых постов ГМВО.
 
-    Args:
+    Аргументы:
         post_id: Идентификатор гидрологического поста.
         region: Регион.
         tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
-    Returns:
+    Возвращает:
         Список гидрологических данных.
     """
     try:
@@ -117,10 +117,10 @@ async def poluchit_gidro_dannye(
 async def poluchit_dannye_vodokhranilishcha(code: str) -> dict[str, Any] | None:
     """Получить актуальные данные о водохранилище.
 
-    Args:
+    Аргументы:
         code: Код водохранилища.
 
-    Returns:
+    Возвращает:
         Данные о водохранилище или None.
     """
     try:
@@ -140,11 +140,11 @@ async def poluchit_vodopolzovanie(
 ) -> list[dict[str, Any]]:
     """Получить данные о водопользовании из открытых данных.
 
-    Args:
+    Аргументы:
         region: Регион.
         god: Год.
 
-    Returns:
+    Возвращает:
         Список данных о водопользовании.
     """
     try:

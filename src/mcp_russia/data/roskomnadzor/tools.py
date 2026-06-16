@@ -20,7 +20,7 @@ from .constants import (
 async def spisok_napravleniy(ctx: Context) -> str:
     """Список направлений деятельности Роскомнадзора.
 
-    Returns:
+    Возвращает:
         Список направлений с кодами и названиями.
     """
     rows = [(n["code"], n["name"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
@@ -30,7 +30,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
 async def spisok_tipov_licenziy(ctx: Context) -> str:
     """Список типов лицензий связи.
 
-    Returns:
+    Возвращает:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TIPY_LICENZIY_SVYAZI]
@@ -40,7 +40,7 @@ async def spisok_tipov_licenziy(ctx: Context) -> str:
 async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
     """Список категорий нарушений.
 
-    Returns:
+    Возвращает:
         Список категорий нарушений (утечка ПД, запрещённый контент и т.д.).
     """
     rows = [(k["code"], k["name"]) for k in KATEGORII_NARUSHENIY]
@@ -50,7 +50,7 @@ async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
 async def spisok_reestrov(ctx: Context) -> str:
     """Список реестров Роскомнадзора.
 
-    Returns:
+    Возвращает:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
     rows = [(r["code"], r["name"]) for r in REGISTRY_RKN]
@@ -60,7 +60,7 @@ async def spisok_reestrov(ctx: Context) -> str:
 async def spisok_tipov_smi(ctx: Context) -> str:
     """Список типов СМИ.
 
-    Returns:
+    Возвращает:
         Справочник типов СМИ (печатные, сетевые, ТВ, радио и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TIPY_SMI]
@@ -70,7 +70,7 @@ async def spisok_tipov_smi(ctx: Context) -> str:
 async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
     """Список категорий операторов персональных данных.
 
-    Returns:
+    Возвращает:
         Справочник категорий операторов ПД.
     """
     rows = [(k["code"], k["name"]) for k in KATEGORII_PD_OPERATOROV]
@@ -80,11 +80,11 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
 async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -> str:
     """Информация о лицензии связи.
 
-    Args:
+    Аргументы:
         nomer_licenzii: Номер лицензии (необязательно).
         inn: ИНН лицензиата (необязательно).
 
-    Returns:
+    Возвращает:
         Информация о лицензии (тип, организация, даты, статус, территория).
     """
     await ctx.info("Запрос информации о лицензии связи...")
@@ -108,11 +108,11 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
 async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
     """Поиск СМИ по регистрационному номеру или названию.
 
-    Args:
+    Аргументы:
         registracionnyy_nomer: Регистрационный номер СМИ (необязательно).
         nazvanie: Название СМИ (необязательно).
 
-    Returns:
+    Возвращает:
         Список СМИ с информацией о типе, учредителе, языке.
     """
     await ctx.info("Поиск СМИ в реестре Роскомнадзора...")
@@ -141,11 +141,11 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
 async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> str:
     """Информация об операторе персональных данных.
 
-    Args:
+    Аргументы:
         inn: ИНН организации (необязательно).
         nazvanie: Название организации (необязательно).
 
-    Returns:
+    Возвращает:
         Список операторов ПД с типом, целями обработки, статусом.
     """
     await ctx.info("Поиск оператора ПД в реестре Роскомнадзора...")
@@ -174,11 +174,11 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
 async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
     """Поиск нарушений в сфере связи/ИТ.
 
-    Args:
+    Аргументы:
         организационный: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
-    Returns:
+    Возвращает:
         Информация о реестрах нарушений Роскомнадзора.
     """
     return (
@@ -194,10 +194,10 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
 async def proverka_blokirovki(ctx: Context, domain: str) -> str:
     """Проверка наличия сайта в реестре запрещённых сайтов.
 
-    Args:
+    Аргументы:
         domain: Доменное имя для проверки (напр. «example.com»).
 
-    Returns:
+    Возвращает:
         Информация о наличии сайта в реестре блокировок.
     """
     await ctx.info(f"Проверка блокировки {domain}...")
@@ -221,11 +221,11 @@ async def proverka_blokirovki(ctx: Context, domain: str) -> str:
 async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     """Поиск организаторов распространения информации (ОРИ).
 
-    Args:
+    Аргументы:
         nazvanie: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
-    Returns:
+    Возвращает:
         Список ОРИ с типом, статусом, основанием включения.
     """
     await ctx.info("Поиск ОРИ в реестре Роскомнадзора...")
@@ -254,11 +254,11 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
 async def zapisi_reestra(ctx: Context, reestr_code: str, zapisi_id: str = "") -> str:
     """Информация о реестре Роскомнадзора.
 
-    Args:
+    Аргументы:
         reestr_code: Код реестра (blocked_sites, pd_operators, ori и т.д.).
         zapisi_id: ID конкретной записи (необязательно).
 
-    Returns:
+    Возвращает:
         Описание реестра и ссылка на источник.
     """
     reestr = next((r for r in REGISTRY_RKN if r["code"] == reestr_code), None)

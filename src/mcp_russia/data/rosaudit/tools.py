@@ -49,12 +49,12 @@ async def poisk_kontrolnyh_meropriyatiy(
 ) -> str:
     """Поиск контрольных мероприятий Счётной палаты.
 
-    Args:
+    Аргументы:
         napravlenie: Код направления контроля (необязательно).
         status: Статус мероприятия (необязательно).
         god: Год (необязательно).
 
-    Returns:
+    Возвращает:
         Список контрольных мероприятий.
     """
     await ctx.info("Поиск контрольных мероприятий...")
@@ -87,10 +87,10 @@ async def poisk_kontrolnyh_meropriyatiy(
 async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
     """Получить информацию о контрольном мероприятии по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер мероприятия.
 
-    Returns:
+    Возвращает:
         Информация о мероприятии.
     """
     await ctx.info(f"Запрос информации о контрольном мероприятии {nomer}...")
@@ -120,10 +120,10 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
 async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
     """Получить аудиторское заключение по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер заключения.
 
-    Returns:
+    Возвращает:
         Информация о заключении.
     """
     await ctx.info(f"Запрос аудиторского заключения {nomer}...")
@@ -154,10 +154,10 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
 async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
     """Получить данные об исполнении федерального бюджета.
 
-    Args:
+    Аргументы:
         period: Период (год, например '2025').
 
-    Returns:
+    Возвращает:
         Данные об исполнении бюджета.
     """
     await ctx.info("Запрос данных об исполнении бюджета...")
@@ -189,12 +189,12 @@ async def poisk_narusheniy(
 ) -> str:
     """Поиск выявленных нарушений по организации или типу.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации (необязательно).
         tip: Тип нарушения (необязательно).
         god: Год (необязательно).
 
-    Returns:
+    Возвращает:
         Список выявленных нарушений.
     """
     await ctx.info("Поиск нарушений...")

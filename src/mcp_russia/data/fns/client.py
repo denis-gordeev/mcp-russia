@@ -28,10 +28,10 @@ from .schemas import (
 async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
     """Получение данных организации из ЕГРЮЛ через egrul.nalog.ru.
 
-    Args:
+    Аргументы:
         inn: ИНН организации (10 цифр).
 
-    Returns:
+    Возвращает:
         Данные организации или None.
     """
     try:
@@ -52,10 +52,10 @@ async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
 async def poluchit_ip(inn: str) -> IPEGRIP | None:
     """Получение данных об ИП из ЕГРИП через egrul.nalog.ru.
 
-    Args:
+    Аргументы:
         inn: ИНН ИП (12 цифр).
 
-    Returns:
+    Возвращает:
         Данные ИП или None.
     """
     try:
@@ -76,10 +76,10 @@ async def poluchit_ip(inn: str) -> IPEGRIP | None:
 async def poluchit_proverki(inn: str) -> list[NalogovayaProverka]:
     """Получение данных налоговой инспекции (требуется авторизованный API).
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Пустой список — реальная интеграция требует токен API ФНС.
     """
     return []
@@ -88,11 +88,11 @@ async def poluchit_proverki(inn: str) -> list[NalogovayaProverka]:
 async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNachislenie]:
     """Получение начислений налогов (заглушка — требуется авторизованный API).
 
-    Args:
+    Аргументы:
         inn: ИНН организации или ИП.
         period: Налоговый период.
 
-    Returns:
+    Возвращает:
         Пустой список — реальная интеграция требует токен API ФНС.
     """
     return []
@@ -101,10 +101,10 @@ async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNac
 async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
     """Получение данных об организации из ЕГРЮЛ через egrul.nalog.ru.
 
-    Args:
+    Аргументы:
         inn: ИНН организации (10 цифр).
 
-    Returns:
+    Возвращает:
         Данные организации или None.
     """
     org = await poluchit_organizaciyu(inn)
@@ -128,10 +128,10 @@ async def _egrul_search(query: str) -> dict[str, Any] | None:
     Шаг 1: POST-запрос поиска → получение ID задачи.
     Шаг 2: GET-запрос результата поиска по ID задачи.
 
-    Args:
+    Аргументы:
         query: ИНН, ОГРН или название организации для поиска.
 
-    Returns:
+    Возвращает:
         Данные результата поиска или None.
     """
     search_url = EGRUL_API_BASE

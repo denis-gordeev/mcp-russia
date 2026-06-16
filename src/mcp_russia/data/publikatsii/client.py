@@ -30,11 +30,11 @@ from .schemas import (
 async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt | None:
     """Получение нормативного правового акта по номеру из открытых данных pravo.gov.ru.
 
-    Args:
+    Аргументы:
         nomer: Номер/идентификатор акта (напр. «ФЗ-123», «УП-234»).
         tip: Код типа акта (fz, ukaz, postanovlenie_pr и т.д.).
 
-    Returns:
+    Возвращает:
         Данные акта или None.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
@@ -51,10 +51,10 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
 async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     """Получение законопроекта по номеру из открытых данных pravo.gov.ru.
 
-    Args:
+    Аргументы:
         nomer: Номер законопроекта.
 
-    Returns:
+    Возвращает:
         Данные законопроекта или None.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
@@ -73,13 +73,13 @@ async def poluchit_publikatsii(
 ) -> list[OficialnayaPublikatsiya]:
     """Поиск официальных публикаций через открытые данные pravo.gov.ru.
 
-    Args:
+    Аргументы:
         tip: Фильтр по типу документа (код типа pravo.gov.ru).
         otrysl: Фильтр по отрасли права.
         data_from: Фильтр по начальной дате (ГГГГ-ММ-ДД).
         data_to: Фильтр по конечной дате (ГГГГ-ММ-ДД).
 
-    Returns:
+    Возвращает:
         Список публикаций.
     """
     url = PRAVO_SEARCH_URL
@@ -102,10 +102,10 @@ async def poluchit_publikatsii(
 async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     """Получение поправок к нормативному акту из открытых данных pravo.gov.ru.
 
-    Args:
+    Аргументы:
         akt_nomer: Номер/идентификатор акта.
 
-    Returns:
+    Возвращает:
         Список поправок.
     """
     url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
@@ -119,11 +119,11 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
 async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
     """Поиск правовых актов по тексту через открытые данные pravo.gov.ru.
 
-    Args:
+    Аргументы:
         tekst: Поисковый текст.
         tip: Фильтр по типу документа (код типа pravo.gov.ru).
 
-    Returns:
+    Возвращает:
         Список найденных актов.
     """
     url = PRAVO_SEARCH_URL

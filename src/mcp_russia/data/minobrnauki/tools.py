@@ -21,7 +21,7 @@ from .constants import (
 async def spisok_tipov_vuzov(ctx: Context) -> str:
     """Список типов высших учебных заведений.
 
-    Returns:
+    Возвращает:
         Список типов вузов (университет, академия, институт и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TIPY_VUZOV]
@@ -31,7 +31,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
 async def spisok_form_obucheniya(ctx: Context) -> str:
     """Список форм обучения.
 
-    Returns:
+    Возвращает:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
     rows = [(f["code"], f["name"]) for f in FORMY_OBUCHENIYA]
@@ -41,7 +41,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
 async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
     """Список уровней образования.
 
-    Returns:
+    Возвращает:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
     rows = [(u["code"], u["name"]) for u in UROVNI_OBRAZOVANIYA]
@@ -51,7 +51,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
 async def spisok_otrasley_nauki(ctx: Context) -> str:
     """Список отраслей науки.
 
-    Returns:
+    Возвращает:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
     rows = [(o["code"], o["name"]) for o in OTRASLI_NAUKI]
@@ -61,7 +61,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
 async def spisok_tipov_grantov(ctx: Context) -> str:
     """Список типов научных грантов.
 
-    Returns:
+    Возвращает:
         Список грантовых фондов и программ.
     """
     rows = [(g["code"], g["name"]) for g in TIPY_GRANTOV]
@@ -71,7 +71,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
 async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
     """Список статусов аккредитации вузов.
 
-    Returns:
+    Возвращает:
         Список статусов (действует, приостановлена, отменена).
     """
     rows = [(s["code"], s["name"]) for s in STATUSY_AKKREDITATSII]
@@ -81,7 +81,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
 async def spisok_federalnyh_okrugov(ctx: Context) -> str:
     """Список федеральных округов РФ.
 
-    Returns:
+    Возвращает:
         Список федеральных округов.
     """
     rows = [(f["code"], f["name"]) for f in FEDERALNYE_OKRUGA]
@@ -91,11 +91,11 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
 async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     """Информация о высшем учебном заведении (аккредитация Рособрнадзора).
 
-    Args:
+    Аргументы:
         nazvanie: Название вуза (напр. «МГУ», «МФТИ»).
         inn: ИНН вуза.
 
-    Returns:
+    Возвращает:
         Сведения о вузе (тип, город, регион, аккредитация).
     """
     await ctx.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
@@ -127,11 +127,11 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
 async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
     """Образовательные программы вуза.
 
-    Args:
+    Аргументы:
         vuz: Название вуза.
         uroven: Уровень образования (необязательно).
 
-    Returns:
+    Возвращает:
         Список программ с кодами направлений.
     """
     await ctx.info(f"Запрос программ вуза «{vuz}»...")
@@ -155,10 +155,10 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
 async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     """Научные гранты и исследования.
 
-    Args:
+    Аргументы:
         organizatsiya: Организация-заявитель (необязательно).
 
-    Returns:
+    Возвращает:
         Список грантовых фондов и программ.
     """
     await ctx.info("Запрос информации о грантах...")
@@ -190,11 +190,11 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
 async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -> str:
     """Рейтинг высших учебных заведений.
 
-    Args:
+    Аргументы:
         tip_reytinga: Тип рейтинга (необязательно).
         god: Год рейтинга.
 
-    Returns:
+    Возвращает:
         Таблица рейтинга вузов с баллами по категориям.
     """
     await ctx.info(f"Запрос рейтинга вузов за {god} г....")
@@ -225,10 +225,10 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
 async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
     """Данные об аспирантах и докторантах.
 
-    Args:
+    Аргументы:
         organizatsiya: Организация (необязательно).
 
-    Returns:
+    Возвращает:
         Сведения об аспирантах, направлениях и научных руководителях.
     """
     return (
@@ -245,11 +245,11 @@ async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
 async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     """Поиск лицензий на образовательную деятельность.
 
-    Args:
+    Аргументы:
         nazvanie: Название вуза (необязательно).
         inn: ИНН организации (необязательно).
 
-    Returns:
+    Возвращает:
         Список лицензий с номерами и статусами.
     """
     await ctx.info("Запрос лицензий из реестра Рособрнадзора...")

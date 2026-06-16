@@ -40,14 +40,14 @@ async def poisk_zakupok(
 ) -> list[Zakupka]:
     """Поиск закупок в ЕИС по параметрам.
 
-    Args:
+    Аргументы:
         query: Поисковый запрос (название закупки).
         zakon: Тип закона ("44-ФЗ" или "223-ФЗ").
         region: Регион заказчика.
         status: Статус закупки.
         limit: Максимальное количество результатов.
 
-    Returns:
+    Возвращает:
         Список закупок.
     """
     params: dict[str, str | int] = {
@@ -135,10 +135,10 @@ def _safe_float(value: Any) -> float:
 async def poluchit_zakupku(id_zakupki: str) -> Zakupka | None:
     """Получить подробную информацию о конкретной закупке.
 
-    Args:
+    Аргументы:
         id_zakupki: Идентификатор закупки в ЕИС (реестровый номер).
 
-    Returns:
+    Возвращает:
         Данные закупки или None.
     """
     token = _get_api_token()
@@ -164,12 +164,12 @@ async def poisk_kontraktov(
 ) -> list[Kontrakt]:
     """Поиск контрактов в реестре.
 
-    Args:
+    Аргументы:
         contractor_inn: ИНН поставщика.
         zakazchik_inn: ИНН заказчика.
         limit: Максимальное количество результатов.
 
-    Returns:
+    Возвращает:
         Список контрактов.
     """
     params: dict[str, str | int] = {
@@ -228,10 +228,10 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
 
     Использует данные ЕГРЮЛ с egrul.nalog.ru для получения базовой информации об организации.
 
-    Args:
+    Аргументы:
         inn: ИНН заказчика.
 
-    Returns:
+    Возвращает:
         Данные заказчика или None.
     """
     try:
@@ -259,10 +259,10 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
 
     Использует данные ЕГРЮЛ/ЕГРИП с egrul.nalog.ru для получения базовой информации.
 
-    Args:
+    Аргументы:
         inn: ИНН поставщика.
 
-    Returns:
+    Возвращает:
         Данные поставщика или None.
     """
     try:
@@ -302,11 +302,11 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
 async def plany_zakupok(year: int = 2026, organizer_inn: str = "") -> list[PlanZakupki]:
     """Получить планы-графики закупок.
 
-    Args:
+    Аргументы:
         year: Год плана.
         organizer_inn: ИНН организатора (опционально).
 
-    Returns:
+    Возвращает:
         Список планов-графиков.
     """
     params: dict[str, str | int] = {

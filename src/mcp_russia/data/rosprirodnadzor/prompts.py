@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_ekologicheskoy_proverki(context: str, ctx: Context) -> str:
     """Анализ экологической проверки Росприроднадзора.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ проверки № 123").
 
-    Returns:
-        Prompt template for environmental inspection analysis.
+    Возвращает:
+        Шаблон промпта для анализа экологической проверки.
     """
     return (
         f"Выполни анализ экологической проверки Росприроднадзора.\n\n"
@@ -30,8 +30,8 @@ async def analiz_ekologicheskoy_proverki(context: str, ctx: Context) -> str:
 async def obzor_nedropolzovaniya(ctx: Context) -> str:
     """Обзор лицензий на пользование недрами.
 
-    Returns:
-        Prompt template for subsoil use overview.
+    Возвращает:
+        Шаблон промпта для обзора недропользования.
     """
     return (
         "Подготовь обзор лицензий на пользование недрами.\n\n"

@@ -19,7 +19,7 @@ from .constants import (
 async def spisok_napravleniy(ctx: Context) -> str:
     """Список направлений деятельности Роспотребнадзора.
 
-    Returns:
+    Возвращает:
         Список направлений с кодами и названиями.
     """
     rows = [(n["code"], n["name"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
@@ -29,7 +29,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
 async def spisok_tipov_proverok(ctx: Context) -> str:
     """Список типов проверок Роспотребнадзора.
 
-    Returns:
+    Возвращает:
         Список типов проверок (плановая, внеплановая и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TIPY_PROVEROK]
@@ -39,7 +39,7 @@ async def spisok_tipov_proverok(ctx: Context) -> str:
 async def spisok_kategoriy_obiektov(ctx: Context) -> str:
     """Список категорий объектов надзора.
 
-    Returns:
+    Возвращает:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
     rows = [(k["code"], k["name"]) for k in KATEGORII_OBIEKTOV]
@@ -49,7 +49,7 @@ async def spisok_kategoriy_obiektov(ctx: Context) -> str:
 async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
     """Список региональных управлений Роспотребнадзора.
 
-    Returns:
+    Возвращает:
         Список управлений по федеральным округам.
     """
     rows = [(r["code"], r["name"]) for r in REGIONALNYE_UPRAVLENIYA]
@@ -59,10 +59,10 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
 async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
     """Подробная информация о проверке Роспотребнадзора.
 
-    Args:
+    Аргументы:
         nomer_proverki: Номер проверки.
 
-    Returns:
+    Возвращает:
         Информация о проверке (тип, объект, даты, статус, результат).
     """
     await ctx.info(f"Запрос проверки № {nomer_proverki}...")
@@ -92,12 +92,12 @@ async def poisk_proverok(
 ) -> str:
     """Поиск проверок в реестре Роспотребнадзора.
 
-    Args:
+    Аргументы:
         inn: ИНН проверяемого лица (необязательно).
         nazvanie: Название проверяемого лица (необязательно).
         region: Код региона (необязательно).
 
-    Returns:
+    Возвращает:
         Список проверок с типом, датами и статусом.
     """
     await ctx.info("Поиск проверок в реестре Роспотребнадзора...")
@@ -132,11 +132,11 @@ async def plan_proverok(
 ) -> str:
     """План проверок Роспотребнадзора.
 
-    Args:
+    Аргументы:
         god: Год плана проверок.
         region: Код региона (необязательно).
 
-    Returns:
+    Возвращает:
         Список запланированных проверок.
     """
     await ctx.info("Запрос плана проверок Роспотребнадзора...")
@@ -166,7 +166,7 @@ async def plan_proverok(
 async def spisok_sanpinov(ctx: Context) -> str:
     """Список основных санитарных правил и нормативов (СанПиН).
 
-    Returns:
+    Возвращает:
         Справочник основных СанПиН с кодами и названиями.
     """
     rows = [(s["code"], s["name"]) for s in SANPIN_OSNOVNYE]
@@ -176,11 +176,11 @@ async def spisok_sanpinov(ctx: Context) -> str:
 async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
     """Жалобы потребителей, зарегистрированные через ЗПП Роспотребнадзора.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
-    Returns:
+    Возвращает:
         Список жалоб с темой, статусом рассмотрения и результатом.
     """
     await ctx.info("Поиск жалоб потребителей...")
@@ -206,11 +206,11 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
 async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
     """Поиск санитарных нарушений по организации.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
-    Returns:
+    Возвращает:
         Список выявленных нарушений.
     """
     await ctx.info("Поиск нарушений в реестре проверок...")
@@ -240,10 +240,10 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
 async def pokazateli_bezopasnosti(ctx: Context, kod_pokazatelya: str = "") -> str:
     """Показатели эпидемиологической и санитарной безопасности.
 
-    Args:
+    Аргументы:
         kod_pokazatelya: Код показателя (необязательно).
 
-    Returns:
+    Возвращает:
         Информация об источниках показателей безопасности.
     """
     return (

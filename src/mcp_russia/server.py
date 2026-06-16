@@ -41,6 +41,7 @@ class RequestLoggingMiddleware(Middleware):
         context: MiddlewareContext[mt.CallToolRequestParams],
         call_next: CallNext[mt.CallToolRequestParams, ToolResult],
     ) -> ToolResult:
+        """Логирование вызова инструмента с замером времени."""
         name = context.message.name
         logger.info("Tool call: %s", name)
         start = time.monotonic()
@@ -54,6 +55,7 @@ class RequestLoggingMiddleware(Middleware):
         context: MiddlewareContext[mt.ReadResourceRequestParams],
         call_next: CallNext[mt.ReadResourceRequestParams, ResourceResult],
     ) -> ResourceResult:
+        """Логирование чтения ресурса."""
         uri = context.message.uri
         logger.info("Resource read: %s", uri)
         return await call_next(context)
@@ -63,6 +65,7 @@ class RequestLoggingMiddleware(Middleware):
         context: MiddlewareContext[mt.GetPromptRequestParams],
         call_next: CallNext[mt.GetPromptRequestParams, PromptResult],
     ) -> PromptResult:
+        """Логирование запроса промпта."""
         name = context.message.name
         logger.info("Prompt get: %s", name)
         return await call_next(context)
@@ -98,7 +101,7 @@ def spisok_funktsiy() -> str:
     Используйте этот инструмент, чтобы узнать, какие государственные API
     подключены и какие инструменты предоставляет каждая функция.
 
-    Returns:
+    Возвращает:
         Сводка активных функций с описанием и статусом аутентификации.
     """
     return registry.summary()
@@ -111,7 +114,7 @@ async def rekomendovat_instrumenty(query: str, ctx: Context) -> str:
     Использует ИИ для понимания намерения и подбора наиболее подходящих
     инструментов mcp-russia с объяснением, когда и как их применять.
 
-    Args:
+    Аргументы:
         query: Вопрос или описание потребности
                (напр.: «нужны данные о расходах федерального бюджета»).
     """
@@ -130,7 +133,7 @@ async def splanirovat_zapros(query: str, ctx: Context) -> str:
     в каком порядке, и какие этапы зависят от других. Полезно для запросов,
     требующих нескольких комбинированных вызовов.
 
-    Args:
+    Аргументы:
         query: Вопрос на естественном языке
                (напр.: «сравните расходы депутата X со средним значением»).
     """
@@ -152,7 +155,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
     Каждый запрос должен содержать полное имя инструмента (с пространством
     имён, напр.: «gosduma_poisk_deputata») и его аргументы.
 
-    Args:
+    Аргументы:
         zaprosy: Список запросов. Каждый элемент — объект с:
                  - "tool": полное имя инструмента
                    (напр.: «gosduma_info_deputata»)

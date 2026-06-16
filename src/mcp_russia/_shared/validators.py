@@ -22,10 +22,10 @@ def validate_inn(inn: str) -> bool:
 
     Поддерживает форматы 10 цифр (юридические лица) и 12 цифр (физические лица).
 
-    Args:
+    Аргументы:
         inn: Строка ИНН (с форматированием или без).
 
-    Returns:
+    Возвращает:
         True если валиден, иначе False.
     """
     digits = _only_digits(inn)
@@ -57,13 +57,13 @@ def validate_inn(inn: str) -> bool:
 def format_inn(inn: str) -> str:
     """Форматирование ИНН для отображения.
 
-    Args:
+    Аргументы:
         inn: Цифры ИНН (с форматированием или без).
 
-    Returns:
+    Возвращает:
         Отформатированная строка ИНН.
 
-    Raises:
+    Вызывает:
         ValueError: Если ИНН не содержит 10 или 12 цифр.
     """
     digits = _only_digits(inn)
@@ -84,10 +84,10 @@ def validate_kpp(kpp: str) -> bool:
 
     КПП — 9-значный код, используемый совместно с ИНН для юридических лиц.
 
-    Args:
+    Аргументы:
         kpp: Строка КПП (с форматированием или без).
 
-    Returns:
+    Возвращает:
         True если формат корректен, иначе False.
     """
     digits = _only_digits(kpp)
@@ -99,13 +99,13 @@ def validate_kpp(kpp: str) -> bool:
 def format_kpp(kpp: str) -> str:
     """Форматирование КПП для отображения.
 
-    Args:
+    Аргументы:
         kpp: Цифры КПП (с форматированием или без).
 
-    Returns:
+    Возвращает:
         Отформатированная строка КПП.
 
-    Raises:
+    Вызывает:
         ValueError: Если КПП не содержит ровно 9 цифр.
     """
     digits = _only_digits(kpp)
@@ -124,10 +124,10 @@ def validate_snils(snils: str) -> bool:
 
     СНИЛС — 11-значное число (9 цифр + 2 контрольные цифры).
 
-    Args:
+    Аргументы:
         snils: Строка СНИЛС (с форматированием или без).
 
-    Returns:
+    Возвращает:
         True если валиден, иначе False.
     """
     digits = _only_digits(snils)
@@ -153,13 +153,13 @@ def validate_snils(snils: str) -> bool:
 def format_snils(snils: str) -> str:
     """Форматирование СНИЛС в виде XXX-XXX-XXX XX.
 
-    Args:
+    Аргументы:
         snils: Цифры СНИЛС (с форматированием или без).
 
-    Returns:
+    Возвращает:
         Отформатированная строка СНИЛС.
 
-    Raises:
+    Вызывает:
         ValueError: Если СНИЛС не содержит ровно 11 цифр.
     """
     digits = _only_digits(snils)
@@ -176,10 +176,10 @@ def format_snils(snils: str) -> str:
 def validate_postal_code_ru(postal_code: str) -> bool:
     """Валидация российского почтового индекса (6 цифр).
 
-    Args:
+    Аргументы:
         postal_code: Строка почтового индекса (с форматированием или без).
 
-    Returns:
+    Возвращает:
         True если формат корректен, иначе False.
     """
     digits = _only_digits(postal_code)
@@ -191,13 +191,13 @@ def validate_postal_code_ru(postal_code: str) -> bool:
 def format_postal_code_ru(postal_code: str) -> str:
     """Форматирование российского почтового индекса как XXXXXX.
 
-    Args:
+    Аргументы:
         postal_code: Цифры почтового индекса (с форматированием или без).
 
-    Returns:
+    Возвращает:
         Отформатированная строка почтового индекса.
 
-    Raises:
+    Вызывает:
         ValueError: Если почтовый индекс не содержит ровно 6 цифр.
     """
     digits = _only_digits(postal_code)

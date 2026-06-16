@@ -26,14 +26,14 @@ async def poisk_del(
 ) -> str:
     """Поиск дел в Картотеке арбитражных дел.
 
-    Args:
+    Аргументы:
         nomer: Номер дела (например, 'А40-12345/2024').
         istorcz: Название истца.
         otvetchik: Название ответчика.
         inn: ИНН участника.
         kategoriya: Категория дела.
 
-    Returns:
+    Возвращает:
         Результаты поиска дел.
     """
     if ctx:
@@ -100,10 +100,10 @@ async def info_dela(
 ) -> str:
     """Получить подробную информацию о судебном деле.
 
-    Args:
+    Аргументы:
         nomer_dela: Номер дела (например, 'А40-12345/2024').
 
-    Returns:
+    Возвращает:
         Подробная информация о деле.
     """
     await ctx.info(f"Запрос информации о деле {nomer_dela}...")
@@ -136,10 +136,10 @@ async def akty_po_delu(
 ) -> str:
     """Получить судебные акты по делу.
 
-    Args:
+    Аргументы:
         nomer_dela: Номер дела.
 
-    Returns:
+    Возвращает:
         Судебные акты по делу.
     """
     await ctx.info(f"Запрос актов по делу {nomer_dela}...")
@@ -162,10 +162,10 @@ async def storony_dela(
 ) -> str:
     """Получить стороны судебного дела.
 
-    Args:
+    Аргументы:
         nomer_dela: Номер дела.
 
-    Returns:
+    Возвращает:
         Стороны дела (истцы и ответчики).
     """
     await ctx.info(f"Запрос сторон по делу {nomer_dela}...")
@@ -187,7 +187,7 @@ async def storony_dela(
 async def spravochnik_kategoriy(ctx: Context) -> str:
     """Получить справочник категорий дел.
 
-    Returns:
+    Возвращает:
         Категории дел.
     """
     await ctx.info("Запрос справочника категорий дел...")
@@ -201,7 +201,7 @@ async def spravochnik_kategoriy(ctx: Context) -> str:
 async def spravochnik_instantsiy(ctx: Context) -> str:
     """Получить справочник инстанций арбитражных судов.
 
-    Returns:
+    Возвращает:
         Инстанции судов.
     """
     await ctx.info("Запрос справочника инстанций судов...")
@@ -215,7 +215,7 @@ async def spravochnik_instantsiy(ctx: Context) -> str:
 async def spravochnik_statusov(ctx: Context) -> str:
     """Получить справочник статусов дел.
 
-    Returns:
+    Возвращает:
         Статусы дел.
     """
     await ctx.info("Запрос справочника статусов дел...")
@@ -229,7 +229,7 @@ async def spravochnik_statusov(ctx: Context) -> str:
 async def spravochnik_aktov(ctx: Context) -> str:
     """Получить справочник типов судебных актов.
 
-    Returns:
+    Возвращает:
         Типы актов.
     """
     await ctx.info("Запрос справочника типов актов...")

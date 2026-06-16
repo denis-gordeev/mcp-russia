@@ -22,7 +22,7 @@ _ATTRIBUTION = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
 async def spisok_tipov_ts(ctx: Context) -> str:
     """Список типов транспортных средств.
 
-    Returns:
+    Возвращает:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TipyTransportnykhSredstv]
@@ -32,7 +32,7 @@ async def spisok_tipov_ts(ctx: Context) -> str:
 async def spisok_kategoriyy_vu(ctx: Context) -> str:
     """Список категорий водительских удостоверений.
 
-    Returns:
+    Возвращает:
         Список категорий ВУ (A, B, C, D, M и т.д.).
     """
     rows = [(k["code"], k["name"]) for k in KategoriiVoditelskihUdostovereniy]
@@ -42,7 +42,7 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
     """Список видов нарушений ПДД.
 
-    Returns:
+    Возвращает:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
     """
     rows = [(n["code"], n["name"]) for n in VidyNarusheniy]
@@ -52,7 +52,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
 async def spisok_statusov_shtrafov(ctx: Context) -> str:
     """Список статусов штрафов ГИБДД.
 
-    Returns:
+    Возвращает:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
     rows = [(s["code"], s["name"]) for s in StatusyShtrafov]
@@ -62,7 +62,7 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
 async def spisok_tipov_dtp(ctx: Context) -> str:
     """Список типов ДТП.
 
-    Returns:
+    Возвращает:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
     """
     rows = [(t["code"], t["name"]) for t in TipyDTP]
@@ -72,7 +72,7 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
 async def spisok_regionov_registratsii(ctx: Context) -> str:
     """Список основных регионов регистрации ТС.
 
-    Returns:
+    Возвращает:
         Список регионов с кодами.
     """
     rows = [(r["code"], r["name"]) for r in RegionyRegistratsii]
@@ -82,10 +82,10 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
 async def info_ts(ctx: Context, vin: str) -> str:
     """Проверка транспортного средства по VIN.
 
-    Args:
+    Аргументы:
         vin: VIN-номер транспортного средства (17 символов).
 
-    Returns:
+    Возвращает:
         Сведения о ТС: история регистраций, розыск, ограничения, ДТП.
     """
     history, dtp, wanted, restrict = await _proverka_ts_full(vin)
@@ -142,10 +142,10 @@ async def _proverka_ts_full(vin: str) -> tuple:
 async def info_vu(ctx: Context, nomer_vu: str) -> str:
     """Проверка водительского удостоверения.
 
-    Args:
+    Аргументы:
         nomer_vu: Серия и номер ВУ (10 цифр, без пробелов).
 
-    Returns:
+    Возвращает:
         Сведения о ВУ (категория, срок, статус, ограничения).
     """
     vu = await client.proverka_vu(nomer_vu)
@@ -171,10 +171,10 @@ async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
 
     Проверка штрафов требует авторизованный доступ через Госуслуги.
 
-    Args:
+    Аргументы:
         gos_nomer: Государственный регистрационный номер ТС (напр. «А123АА77»).
 
-    Returns:
+    Возвращает:
         Информация о штрафах или указание использовать Госуслуги.
     """
     return (
@@ -190,10 +190,10 @@ async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
 
     Проверка штрафов требует авторизованный доступ через Госуслуги.
 
-    Args:
+    Аргументы:
         nomer_vu: Серия и номер ВУ (10 цифр).
 
-    Returns:
+    Возвращает:
         Информация о штрафах или указание использовать Госуслуги.
     """
     return (
@@ -207,11 +207,11 @@ async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
 async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
     """Статистика ДТП по региону.
 
-    Args:
+    Аргументы:
         region: Название субъекта РФ.
         god: Год статистики.
 
-    Returns:
+    Возвращает:
         Статистика ДТП: количество, погибшие, раненые, пешеходы, дети.
     """
     data = await client.statistika_dtp_region(region, god)
@@ -233,10 +233,10 @@ async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
 async def istoriya_registraciy(ctx: Context, vin: str) -> str:
     """История регистрационных действий транспортного средства.
 
-    Args:
+    Аргументы:
         vin: VIN-номер транспортного средства (17 символов).
 
-    Returns:
+    Возвращает:
         Список регистрационных действий (постановка/снятие с учёта, смена собственника).
     """
     records = await client.proverka_istorii_ts(vin)

@@ -45,10 +45,10 @@ def _parse_valyuta(code: str, data: dict[str, Any], date_str: str = "") -> Znach
 async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
     """Получение всех курсов валют ЦБ РФ.
 
-    Args:
+    Аргументы:
         data: Дата в формате ГГГГ-ММ-ДД (необязательно, по умолчанию последние).
 
-    Returns:
+    Возвращает:
         Сырой JSON-ответ от API ЦБ РФ.
     """
     url = CBR_DAILY_JSON
@@ -58,11 +58,11 @@ async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
 async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyuty | None:
     """Получение курса отдельной валюты.
 
-    Args:
+    Аргументы:
         code: Код валюты (напр. «USD», «EUR», «CNY»).
         data: Дата в формате ГГГГ-ММ-ДД (необязательно).
 
-    Returns:
+    Возвращает:
         Данные о валюте или None если не найдена.
     """
     result = await poluchit_vse_valyuty(data)
@@ -77,10 +77,10 @@ async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyu
 async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
     """Получение нескольких курсов валют параллельно.
 
-    Args:
+    Аргументы:
         codes: Список кодов валют.
 
-    Returns:
+    Возвращает:
         Список данных о валютах.
     """
     result = await poluchit_vse_valyuty()
@@ -93,7 +93,7 @@ async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:
     """Получение курсов основных валют (USD, EUR, CNY, GBP, JPY, CHF).
 
-    Returns:
+    Возвращает:
         Список данных об основных валютах.
     """
     osnovnyye = ["USD", "EUR", "CNY", "GBP", "JPY", "CHF"]
@@ -106,10 +106,10 @@ async def poluchit_dinamiku_kursa(code: str) -> dict[str, Any]:
     Использует API динамики ЦБ РФ для исторических данных.
     API: https://www.cbr-xml-daily.ru/dynamics_json.js
 
-    Args:
+    Аргументы:
         code: Код валюты.
 
-    Returns:
+    Возвращает:
         Исторические данные о валюте.
     """
     url = f"https://www.cbr-xml-daily.ru/dynamics/{code}/dynamic_json.js"

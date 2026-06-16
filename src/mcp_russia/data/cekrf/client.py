@@ -50,6 +50,7 @@ class _VyboryTableParser(HTMLParser):
     """Парсер HTML-таблиц ГАС «Выборы» для извлечения результатов."""
 
     def __init__(self) -> None:
+        """Инициализация парсера HTML-таблиц."""
         super().__init__()
         self._in_td = False
         self._in_th = False
@@ -380,12 +381,12 @@ async def spisok_vyborov(
 ) -> list[dict[str, Any]]:
     """Получить список выборов из ГАС «Выборы».
 
-    Args:
+    Аргументы:
         god: Год выборов.
         tip: Код типа выборов.
         region: Номер региона.
 
-    Returns:
+    Возвращает:
         Список выборов с метаданными.
     """
     if god is not None and tip is not None:
@@ -448,12 +449,12 @@ async def poisk_kandidata(
 ) -> list[KandidatKratko]:
     """Поиск кандидата по ФИО в ГАС «Выборы».
 
-    Args:
+    Аргументы:
         fio: Фамилия, имя или отчество (частичное совпадение).
         god: Год выборов (необязательно).
         region: Код субъекта РФ (необязательно).
 
-    Returns:
+    Возвращает:
         Список найденных кандидатов.
     """
     search_url = f"{VYBORY_API}/izbirkom"
@@ -529,11 +530,11 @@ async def kandidat_podrobno(
 ) -> Kandidat | None:
     """Получить подробную информацию о кандидате из ГАС «Выборы».
 
-    Args:
+    Аргументы:
         kandidat_id: ID кандидата или ФИО.
         god: Год выборов (необязательно).
 
-    Returns:
+    Возвращает:
         Подробная информация о кандидате или None.
     """
     cik_data = await _fetch_cik_json(
@@ -598,12 +599,12 @@ async def rezultaty_vyborov(
 ) -> list[ResultatKandidata]:
     """Получить результаты выборов из ГАС «Выборы».
 
-    Args:
+    Аргументы:
         god: Год выборов.
         tip: Код типа выборов (необязательно).
         region: Код субъекта РФ (необязательно).
 
-    Returns:
+    Возвращает:
         Список результатов кандидатов.
     """
     vybory_info = _find_vybory_by_god_tip(god, tip)
@@ -657,12 +658,12 @@ async def yavka_i_itogi(
 ) -> dict[str, Any]:
     """Получить данные о явке и итогах выборов из ГАС «Выборы».
 
-    Args:
+    Аргументы:
         god: Год выборов.
         tip: Код типа выборов (необязательно).
         region: Код субъекта РФ (необязательно).
 
-    Returns:
+    Возвращает:
         Словарь с итогами выборов.
     """
     vybory_info = _find_vybory_by_god_tip(god, tip)

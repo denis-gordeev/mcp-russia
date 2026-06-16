@@ -26,7 +26,7 @@ from .constants import (
 async def spisok_regionov(ctx: Context) -> str:
     """Получить список субъектов Российской Федерации.
 
-    Returns:
+    Возвращает:
         Список субъектов РФ с кодами.
     """
     await ctx.info("Запрос списка субъектов РФ...")
@@ -40,7 +40,7 @@ async def spisok_regionov(ctx: Context) -> str:
 async def spisok_okrugov(ctx: Context) -> str:
     """Получить список федеральных округов РФ.
 
-    Returns:
+    Возвращает:
         Список федеральных округов.
     """
     await ctx.info("Запрос списка федеральных округов...")
@@ -54,10 +54,10 @@ async def spisok_okrugov(ctx: Context) -> str:
 async def region_info(kod: str, ctx: Context) -> str:
     """Получить информацию о субъекте РФ по коду.
 
-    Args:
+    Аргументы:
         kod: Код региона (OKATO).
 
-    Returns:
+    Возвращает:
         Информация о регионе.
     """
     await ctx.info(f"Запрос информации о регионе {kod}...")
@@ -88,10 +88,10 @@ async def region_info(kod: str, ctx: Context) -> str:
 async def okrug_info(kod: str, ctx: Context) -> str:
     """Получить информацию о федеральном округе.
 
-    Args:
+    Аргументы:
         kod: Код федерального округа.
 
-    Returns:
+    Возвращает:
         Информация о федеральном округе.
     """
     await ctx.info(f"Запрос информации о федеральном округе {kod}...")
@@ -116,7 +116,7 @@ async def okrug_info(kod: str, ctx: Context) -> str:
 async def pokazateli_rosstata(ctx: Context) -> str:
     """Получить список основных показателей Росстата.
 
-    Returns:
+    Возвращает:
         Список доступных показателей.
     """
     await ctx.info("Запрос списка показателей Росстата...")
@@ -129,10 +129,10 @@ async def pokazateli_rosstata(ctx: Context) -> str:
 async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
     """Получить данные об инфляции (ИПЦ) в России.
 
-    Args:
+    Аргументы:
         god: Год для запроса (например, '2025'). По умолчанию — текущий.
 
-    Returns:
+    Возвращает:
         Данные об инфляции.
     """
     if ctx:
@@ -164,10 +164,10 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
 async def demografiya(region: str = "", ctx: Context | None = None) -> str:
     """Получить демографические данные по России или региону.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно).
 
-    Returns:
+    Возвращает:
         Демографические данные.
     """
     if ctx:
@@ -200,11 +200,11 @@ async def demografiya(region: str = "", ctx: Context | None = None) -> str:
 async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
     """Получить данные о валовом региональном продукте (ВРП).
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно). Без указания — данные по всем регионам.
         god: Год для запроса (например, '2023').
 
-    Returns:
+    Возвращает:
         Данные о ВРП по России или региону.
     """
     if ctx:
@@ -236,11 +236,11 @@ async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None
 async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
     """Получить данные о средней заработной плате.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2024').
 
-    Returns:
+    Возвращает:
         Данные о заработной плате.
     """
     if ctx:
@@ -272,10 +272,10 @@ async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None =
 async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     """Сравнить регионы по выбранному показателю.
 
-    Args:
+    Аргументы:
         pokazatel: Код показателя (например, 'vrp', 'wages', 'income_per_capita').
 
-    Returns:
+    Возвращает:
         Рейтинг регионов по показателю.
     """
     await ctx.info(f"Запрос сравнения регионов по показателю '{pokazatel}'...")
@@ -321,12 +321,12 @@ async def indikator_dannye(
     Универсальный инструмент для запроса данных по любому известному коду ЕМИСС
     или мнемоническому коду показателя.
 
-    Args:
+    Аргументы:
         kod: Код ЕМИСС (например, '31088') или мнемонический код (например, 'cpi', 'vrp').
         region: Код региона (необязательно).
         god: Год для запроса (например, '2024').
 
-    Returns:
+    Возвращает:
         Данные показателя.
     """
     if ctx:
@@ -375,11 +375,11 @@ async def otraslevaya_struktura_vrp(
 ) -> str:
     """Получить отраслевую структуру ВРП по видам экономической деятельности (ОКВЭД).
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2023').
 
-    Returns:
+    Возвращает:
         Отраслевая структура ВРП.
     """
     if ctx:
@@ -415,11 +415,11 @@ async def investitsii_po_vidam(
 ) -> str:
     """Получить инвестиции в основной капитал по видам экономической деятельности.
 
-    Args:
+    Аргументы:
         region: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2023').
 
-    Returns:
+    Возвращает:
         Инвестиции по видам деятельности.
     """
     if ctx:

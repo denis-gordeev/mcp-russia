@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analise_valyut(context: str, ctx: Context) -> str:
     """Анализ динамики валютных курсов на основе данных ЦБ РФ.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ рубля к доллару").
 
-    Returns:
-        Prompt template for currency analysis.
+    Возвращает:
+        Шаблон промпта для анализа валют.
     """
     return (
         f"Выполни анализ валютных курсов на основе данных ЦБ РФ.\n\n"
@@ -29,8 +29,8 @@ async def analise_valyut(context: str, ctx: Context) -> str:
 async def obzor_ekonomiki(ctx: Context) -> str:
     """Обзор ключевых экономических показателей РФ.
 
-    Returns:
-        Prompt template for economic overview.
+    Возвращает:
+        Шаблон промпта для обзора экономики.
     """
     return (
         "Подготовь обзор ключевых экономических показателей Российской Федерации.\n\n"

@@ -122,10 +122,10 @@ class FeatureRegistry:
         следуют конвенции. Функции с ошибками валидации логируются
         как предупреждения и пропускаются — они не ломают сервер.
 
-        Args:
+        Аргументы:
             package_name: Базовый пакет для сканирования. По умолчанию: «mcp_russia».
 
-        Returns:
+        Возвращает:
             self для цепочки вызовов: registry.discover().mount_all(mcp)
         """
         package = importlib.import_module(package_name)
@@ -200,7 +200,7 @@ class FeatureRegistry:
         Каждая функция получает пространство имён по названию
         (напр. инструменты становятся rosstat_poluchit_*).
 
-        Args:
+        Аргументы:
             root_server: Корневой FastMCP-сервер для монтирования функций.
         """
         for name, feature in sorted(self._features.items()):

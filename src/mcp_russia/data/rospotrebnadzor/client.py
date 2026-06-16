@@ -25,12 +25,12 @@ async def poisk_proverok(
 ) -> list[dict[str, Any]]:
     """Поиск проверок в реестре proverki.rospotrebnadzor.ru.
 
-    Args:
+    Аргументы:
         target_inn: ИНН проверяемого лица.
         target_name: Название проверяемого лица.
         region: Код региона.
 
-    Returns:
+    Возвращает:
         Список проверок.
     """
     try:
@@ -58,10 +58,10 @@ async def poisk_proverok(
 async def info_proverki(nomer: str) -> dict[str, Any] | None:
     """Получить информацию о проверке по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер проверки.
 
-    Returns:
+    Возвращает:
         Данные о проверке или None.
     """
     try:
@@ -82,12 +82,12 @@ async def plan_proverok(
 ) -> list[dict[str, Any]]:
     """Получить план проверок Роспотребнадзора.
 
-    Args:
+    Аргументы:
         god: Год плана проверок.
         region: Код региона.
         organ: Код контролирующего органа.
 
-    Returns:
+    Возвращает:
         Список запланированных проверок.
     """
     try:
@@ -116,11 +116,11 @@ async def poisk_zhalob(
 ) -> list[dict[str, Any]]:
     """Поиск жалоб потребителей через zpp.rospotrebnadzor.ru.
 
-    Args:
+    Аргументы:
         organizaciya: Название организации.
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Список жалоб.
     """
     try:

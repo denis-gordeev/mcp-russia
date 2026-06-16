@@ -18,7 +18,7 @@ from collections import deque
 class RateLimiter:
     """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
 
-    Args:
+    Аргументы:
         max_requests: Максимальное число запросов в окне.
         period: Длительность окна в секундах.
     """

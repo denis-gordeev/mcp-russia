@@ -40,10 +40,10 @@ async def spisok_senatorov(ctx: Context) -> str:
 async def info_senatora(senator_id: str, ctx: Context) -> str:
     """Получить информацию о сенаторе Совета Федерации.
 
-    Args:
+    Аргументы:
         senator_id: Идентификатор сенатора.
 
-    Returns:
+    Возвращает:
         Информация о сенаторе.
     """
     await ctx.info(f"Запрос информации о сенаторе {senator_id}...")
@@ -118,11 +118,11 @@ async def poisk_zakonoproektov(
 ) -> str:
     """Поиск законопроектов, рассмотренных Советом Федерации.
 
-    Args:
+    Аргументы:
         status: Статус законопроекта (необязательно).
         god: Год (необязательно).
 
-    Returns:
+    Возвращает:
         Список законопроектов.
     """
     await ctx.info("Поиск законопроектов...")
@@ -160,10 +160,10 @@ async def poisk_zakonoproektov(
 async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
     """Получить список заседаний Совета Федерации.
 
-    Args:
+    Аргументы:
         god: Год (необязательно).
 
-    Returns:
+    Возвращает:
         Список заседаний.
     """
     await ctx.info("Запрос списка заседаний...")

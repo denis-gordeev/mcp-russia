@@ -70,12 +70,12 @@ async def poisk_proizvodstv(
 ) -> list[dict[str, Any]]:
     """Поиск исполнительных производств по ФИО должника.
 
-    Args:
+    Аргументы:
         fio: ФИО должника.
         data_rozhdeniya: Дата рождения должника.
         region: Код региона.
 
-    Returns:
+    Возвращает:
         Список исполнительных производств.
     """
     fio_parts = _parse_fio(fio)
@@ -111,10 +111,10 @@ async def poisk_proizvodstv(
 async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
     """Получить информацию об исполнительном производстве по номеру.
 
-    Args:
+    Аргументы:
         nomer: Номер исполнительного производства.
 
-    Returns:
+    Возвращает:
         Данные производства или None.
     """
     try:
@@ -135,11 +135,11 @@ async def ogranicheniya_dolzhnika(
 ) -> list[dict[str, Any]]:
     """Найти ограничения, наложенные на должника (запрет на выезд, арест и т.д.).
 
-    Args:
+    Аргументы:
         fio: ФИО должника.
         data_rozhdeniya: Дата рождения должника.
 
-    Returns:
+    Возвращает:
         Список производств с ограничениями.
     """
     proizvodstva = await poisk_proizvodstv(fio, data_rozhdeniya)
@@ -158,10 +158,10 @@ async def ogranicheniya_dolzhnika(
 async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
     """Найти производства с розыском должника.
 
-    Args:
+    Аргументы:
         fio: ФИО должника.
 
-    Returns:
+    Возвращает:
         Список производств с розыском.
     """
     proizvodstva = await poisk_proizvodstv(fio)

@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_regiona(context: str, ctx: Context) -> str:
     """Анализ социально-экономического положения региона.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ Москвы").
 
-    Returns:
-        Prompt template for regional analysis.
+    Возвращает:
+        Шаблон промпта для анализа региона.
     """
     return (
         f"Выполни анализ социально-экономического положения региона.\n\n"
@@ -30,8 +30,8 @@ async def analiz_regiona(context: str, ctx: Context) -> str:
 async def obzor_inflyacii(ctx: Context) -> str:
     """Обзор динамики потребительских цен в России.
 
-    Returns:
-        Prompt template for inflation overview.
+    Возвращает:
+        Шаблон промпта для обзора инфляции.
     """
     return (
         "Подготовь обзор динамики потребительских цен (инфляции) в России.\n\n"

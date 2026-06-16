@@ -31,7 +31,7 @@ from .constants import (
 def spisok_tipov_nedvizhimosti() -> list[dict]:
     """Список типов объектов недвижимости.
 
-    Returns:
+    Возвращает:
         Список типов (земельный участок, здание, помещение и т.д.).
     """
     return TipyNedvizhimosti
@@ -40,7 +40,7 @@ def spisok_tipov_nedvizhimosti() -> list[dict]:
 def spisok_kategoriy_zemel() -> list[dict]:
     """Список категорий земель по целевому назначению.
 
-    Returns:
+    Возвращает:
         Список категорий земель (сельскохозяйственные, населённых пунктов и др.).
     """
     return KategoriiZemel
@@ -49,7 +49,7 @@ def spisok_kategoriy_zemel() -> list[dict]:
 def spisok_vidov_ispolzovaniya() -> list[dict]:
     """Список видов разрешённого использования земельных участков.
 
-    Returns:
+    Возвращает:
         Список видов использования (жилое, общественное, промышленное и др.).
     """
     return VidyIspolzovaniya
@@ -58,7 +58,7 @@ def spisok_vidov_ispolzovaniya() -> list[dict]:
 def spisok_statusov_obiekta() -> list[dict]:
     """Список статусов учёта объектов недвижимости.
 
-    Returns:
+    Возвращает:
         Список статусов (учтённый, ранее учтённый, временный и др.).
     """
     return StatusyObiekta
@@ -67,7 +67,7 @@ def spisok_statusov_obiekta() -> list[dict]:
 def spisok_form_sobstvennosti() -> list[dict]:
     """Список форм собственности на недвижимость.
 
-    Returns:
+    Возвращает:
         Список форм собственности (частная, государственная, муниципальная и др.).
     """
     return FormySobstvennosti
@@ -76,11 +76,11 @@ def spisok_form_sobstvennosti() -> list[dict]:
 async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
     """Подробная информация об объекте недвижимости по кадастровому номеру.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта
             (напр.: «77:01:0001001:1001»).
 
-    Returns:
+    Возвращает:
         Сведения об объекте (тип, адрес, площадь, кадастровая стоимость, статус).
     """
     await ctx.info(f"Запрос объекта {kadastrovyy_nomer}...")
@@ -131,10 +131,10 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
 async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
     """Кадастровая стоимость объекта недвижимости.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта.
 
-    Returns:
+    Возвращает:
         Кадастровая стоимость, дата определения, основание.
     """
     await ctx.info(f"Запрос кадастровой стоимости {kadastrovyy_nomer}...")
@@ -168,10 +168,10 @@ async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
 async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
     """Сведения о зарегистрированных правах на объект.
 
-    Args:
+    Аргументы:
         kadastrovyy_nomer: Кадастровый номер объекта.
 
-    Returns:
+    Возвращает:
         Список зарегистрированных прав (собственность, аренда и т.д.).
     """
     await ctx.info(f"Запрос прав на объект {kadastrovyy_nomer}...")

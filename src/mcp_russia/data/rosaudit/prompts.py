@@ -8,11 +8,11 @@ from fastmcp import Context
 async def analiz_auditorskogo_zaklyucheniya(context: str, ctx: Context) -> str:
     """Анализ аудиторского заключения Счётной палаты.
 
-    Args:
+    Аргументы:
         context: Контекст запроса (например, "анализ заключения № 123").
 
-    Returns:
-        Prompt template for audit conclusion analysis.
+    Возвращает:
+        Шаблон промпта для анализа аудиторского заключения.
     """
     return (
         f"Выполни анализ аудиторского заключения Счётной палаты РФ.\n\n"
@@ -30,8 +30,8 @@ async def analiz_auditorskogo_zaklyucheniya(context: str, ctx: Context) -> str:
 async def obzor_ispolneniya_byudzheta(ctx: Context) -> str:
     """Обзор исполнения федерального бюджета.
 
-    Returns:
-        Prompt template for budget execution overview.
+    Возвращает:
+        Шаблон промпта для обзора исполнения бюджета.
     """
     return (
         "Подготовь обзор исполнения федерального бюджета.\n\n"

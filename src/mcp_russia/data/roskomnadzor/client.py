@@ -25,11 +25,11 @@ logger = logging.getLogger(__name__)
 async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str, Any]]:
     """Поиск оператора персональных данных в реестре Роскомнадзора.
 
-    Args:
+    Аргументы:
         inn: ИНН организации.
         nazvanie: Название организации.
 
-    Returns:
+    Возвращает:
         Список операторов ПД.
     """
     try:
@@ -55,11 +55,11 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
 async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
     """Поиск организатора распространения информации в реестре ОРИ.
 
-    Args:
+    Аргументы:
         nazvanie: Название организации.
         inn: ИНН организации.
 
-    Returns:
+    Возвращает:
         Список организаторов ОРИ.
     """
     try:
@@ -85,10 +85,10 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
 async def proverka_blokirovki(domain: str = "") -> dict[str, Any]:
     """Проверка наличия сайта в реестре запрещённых сайтов.
 
-    Args:
+    Аргументы:
         domain: Доменное имя для проверки.
 
-    Returns:
+    Возвращает:
         Информация о блокировке.
     """
     if not domain:
@@ -113,11 +113,11 @@ async def proverka_blokirovki(domain: str = "") -> dict[str, Any]:
 async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]:
     """Поиск лицензий связи в реестре Роскомнадзора.
 
-    Args:
+    Аргументы:
         nomer: Номер лицензии.
         inn: ИНН лицензиата.
 
-    Returns:
+    Возвращает:
         Список лицензий.
     """
     try:
@@ -143,11 +143,11 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
 async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list[dict[str, Any]]:
     """Поиск СМИ в реестре Роскомнадзора.
 
-    Args:
+    Аргументы:
         registracionnyy_nomer: Регистрационный номер СМИ.
         nazvanie: Название СМИ.
 
-    Returns:
+    Возвращает:
         Список СМИ.
     """
     try:
