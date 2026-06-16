@@ -10,7 +10,7 @@
 PRAVO_API_BASE = "https://pravo.gov.ru/opendata/7700748144-prfgi"
 PRAVO_SEARCH_URL = "https://pravo.gov.ru/opendata/7700748144-prfgi/search"
 PRAVO_DOCUMENT_URL = "https://pravo.gov.ru/opendata/7700748144-prfgi/document"
-CONSULTANT_API_BASE = "https://api.consultant.ru/v1"  # paid service
+CONSULTANT_API_BASE = "https://api.consultant.ru/v1"  # платный сервис
 
 # Типы документов pravo.gov.ru (коды портала)
 TIPY_DOKUMENTOV_PRAVO = {

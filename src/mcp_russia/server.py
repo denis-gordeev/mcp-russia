@@ -43,11 +43,11 @@ class RequestLoggingMiddleware(Middleware):
     ) -> ToolResult:
         """Логирование вызова инструмента с замером времени."""
         name = context.message.name
-        logger.info("Tool call: %s", name)
+        logger.info("Вызов инструмента: %s", name)
         start = time.monotonic()
         result = await call_next(context)
         elapsed = time.monotonic() - start
-        logger.info("Tool %s completed in %.2fs", name, elapsed)
+        logger.info("Инструмент %s завершён за %.2fс", name, elapsed)
         return result
 
     async def on_read_resource(
@@ -57,7 +57,7 @@ class RequestLoggingMiddleware(Middleware):
     ) -> ResourceResult:
         """Логирование чтения ресурса."""
         uri = context.message.uri
-        logger.info("Resource read: %s", uri)
+        logger.info("Чтение ресурса: %s", uri)
         return await call_next(context)
 
     async def on_get_prompt(
@@ -67,7 +67,7 @@ class RequestLoggingMiddleware(Middleware):
     ) -> PromptResult:
         """Логирование запроса промпта."""
         name = context.message.name
-        logger.info("Prompt get: %s", name)
+        logger.info("Запрос промпта: %s", name)
         return await call_next(context)
 
 

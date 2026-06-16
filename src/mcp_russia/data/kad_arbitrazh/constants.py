@@ -5,39 +5,39 @@ KAD_SEARCH_URL = "https://kad.arbitr.ru/Kad/Search"
 KAD_INSTANCE_URL = "https://kad.arbitr.ru/Kad/Instance"
 
 INSTANTSII_SUDOV = [
-    {"code": "first", "name": "Арбитражный суд субъекта РФ (первая инстанция)"},
-    {"code": "appeal", "name": "Арбитражный апелляционный суд"},
-    {"code": "cassation", "name": "Арбитражный суд округа (кассация)"},
-    {"code": "supreme", "name": "Судебная коллегия ВС РФ"},
+    {"code": "pervaya", "name": "Арбитражный суд субъекта РФ (первая инстанция)"},
+    {"code": "apellyatsionnaya", "name": "Арбитражный апелляционный суд"},
+    {"code": "kassatsionnaya", "name": "Арбитражный суд округа (кассация)"},
+    {"code": "verkhovnyy", "name": "Судебная коллегия ВС РФ"},
 ]
 
 KATEGORII_DEL = [
-    {"code": "bankruptcy", "name": "Банкротство"},
-    {"code": "contract", "name": "Споры из договоров"},
-    {"code": "tax", "name": "Налоговые споры"},
-    {"code": "property", "name": "Имущественные споры"},
-    {"code": "corporate", "name": "Корпоративные споры"},
-    {"code": "ip", "name": "Интеллектуальная собственность"},
-    {"code": "administrative", "name": "Административные дела"},
-    {"code": "enforcement", "name": "Дела о принудительном исполнении"},
+    {"code": "bankrotstvo", "name": "Банкротство"},
+    {"code": "dogovor", "name": "Споры из договоров"},
+    {"code": "nalogovye", "name": "Налоговые споры"},
+    {"code": "imushchestvennye", "name": "Имущественные споры"},
+    {"code": "korporativnye", "name": "Корпоративные споры"},
+    {"code": "intellekt", "name": "Интеллектуальная собственность"},
+    {"code": "administrativnye", "name": "Административные дела"},
+    {"code": "prinuditelnoe", "name": "Дела о принудительном исполнении"},
 ]
 
 STATUSY_DEL = [
-    {"code": "new", "name": "Новое"},
-    {"code": "accepted", "name": "Принято к производству"},
-    {"code": "pending", "name": "На рассмотрении"},
-    {"code": "postponed", "name": "Отложено"},
-    {"code": "decided", "name": "Решение вынесено"},
-    {"code": "appealed", "name": "Обжаловано"},
-    {"code": "closed", "name": "Дело завершено"},
+    {"code": "novoe", "name": "Новое"},
+    {"code": "prinyato", "name": "Принято к производству"},
+    {"code": "na_rassmotrenii", "name": "На рассмотрении"},
+    {"code": "otlozheno", "name": "Отложено"},
+    {"code": "reshenie", "name": "Решение вынесено"},
+    {"code": "obzhalovano", "name": "Обжаловано"},
+    {"code": "zaversheno", "name": "Дело завершено"},
 ]
 
 TIPLY_AKTOV = [
-    {"code": "decision", "name": "Решение"},
-    {"code": "definition", "name": "Определение"},
-    {"code": "resolution", "name": "Постановление"},
-    {"code": "order", "name": "Приказ"},
-    {"code": "ruling", "name": "Распоряжение"},
+    {"code": "reshenie", "name": "Решение"},
+    {"code": "opredelenie", "name": "Определение"},
+    {"code": "postanovlenie", "name": "Постановление"},
+    {"code": "prikaz", "name": "Приказ"},
+    {"code": "rasporyazhenie", "name": "Распоряжение"},
 ]
 
 SUDY_PRYAMYE = {

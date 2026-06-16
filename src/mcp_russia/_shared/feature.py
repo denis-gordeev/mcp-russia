@@ -45,7 +45,7 @@ class FeatureMeta:
     Реестр использует эти метаданные для обнаружения, валидации, документации
     и решений во время выполнения (авторизация, флаги функций).
 
-    Example:
+    Пример:
         # src/mcp_russia/rosstat/__init__.py
         from mcp_russia._shared.feature import FeatureMeta
 
@@ -142,7 +142,7 @@ class FeatureRegistry:
             except Exception as exc:
                 reason = str(exc)
                 self._skipped[short_name] = reason
-                logger.warning("Feature '%s' skipped: %s", short_name, reason)
+                logger.warning("Функция '%s' пропущена: %s", short_name, reason)
 
         return self
 
@@ -154,22 +154,22 @@ class FeatureRegistry:
         # Шаг 2: Проверка наличия и корректности FEATURE_META
         meta = getattr(feature_module, "FEATURE_META", None)
         if meta is None:
-            raise ValueError(f"No FEATURE_META in {module_path}")
+            raise ValueError(f"Нет FEATURE_META в {module_path}")
 
         if not isinstance(meta, FeatureMeta):
-            raise TypeError(f"FEATURE_META in {module_path} is not a FeatureMeta instance")
+            raise TypeError(f"FEATURE_META в {module_path} не является экземпляром FeatureMeta")
 
         # Шаг 3: Проверка активности функции
         if not meta.enabled:
-            self._skipped[short_name] = "disabled (enabled=False)"
-            logger.info("Feature '%s' is disabled, skipping.", short_name)
+            self._skipped[short_name] = "отключена (enabled=False)"
+            logger.info("Функция '%s' отключена, пропуск.", short_name)
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
         if not meta.is_auth_available():
-            self._skipped[short_name] = f"missing env var {meta.auth_env_var}"
+            self._skipped[short_name] = f"отсутствует переменная {meta.auth_env_var}"
             logger.warning(
-                "Feature '%s' requires %s (not set), skipping.",
+                "Функция '%s' требует %s (не задано), пропуск.",
                 short_name,
                 meta.auth_env_var,
             )
@@ -180,7 +180,7 @@ class FeatureRegistry:
         server = getattr(server_module, "mcp", None)
 
         if server is None:
-            raise ValueError(f"No `mcp` object in {module_path}.server")
+            raise ValueError(f"Нет объекта `mcp` в {module_path}.server")
 
         # Шаг 6: Регистрация
         self._features[short_name] = RegisteredFeature(
@@ -189,7 +189,7 @@ class FeatureRegistry:
             module_path=module_path,
         )
         logger.info(
-            "Registered feature '%s' v%s",
+            "Зарегистрирована функция '%s' v%s",
             meta.name,
             meta.version,
         )
@@ -205,7 +205,7 @@ class FeatureRegistry:
         """
         for name, feature in sorted(self._features.items()):
             root_server.mount(feature.server, namespace=name)
-            logger.info("Mounted '%s' — %s", name, feature.meta.description)
+            logger.info("Смонтирована '%s' — %s", name, feature.meta.description)
 
     def summary(self) -> str:
         """Читаемая сводка зарегистрированных функций.
@@ -213,7 +213,8 @@ class FeatureRegistry:
         Полезно для логирования при запуске и генерации документации.
         """
         lines = [
-            f"mcp-russia — {len(self._features)} feature(s) active, {len(self._skipped)} skipped\n"
+            f"mcp-russia — {len(self._features)} функция(й) активно, "
+            f"{len(self._skipped)} пропущено\n"
         ]
 
         if self._features:

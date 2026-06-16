@@ -2,7 +2,63 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-16 (сорок первый проход — русификация docstrings, модуль МЧС)
+## Статус раунда 2026-06-16 (сорок второй проход — русификация логгеров/ошибок, модуль Россельхознадзор)
+
+### Выполнено
+
+- **Русификация логгерных сообщений** (19 замен в 3 файлах):
+  - `server.py`: `"Tool call: %s"` → `"Вызов инструмента: %s"`, `"Tool %s completed in %.2fs"` → `"Инструмент %s завершён за %.2fс"`, `"Resource read: %s"` → `"Чтение ресурса: %s"`, `"Prompt get: %s"` → `"Запрос промпта: %s"`
+  - `_shared/feature.py`: `"Feature '%s' skipped: %s"` → `"Функция '%s' пропущена: %s"`, `"Feature '%s' is disabled, skipping."` → `"Функция '%s' отключена, пропуск."`, `"Feature '%s' requires %s (not set), skipping."` → `"Функция '%s' требует %s (не задано), пропуск."`, `"Registered feature '%s' v%s"` → `"Зарегистрирована функция '%s' v%s"`, `"Mounted '%s' — %s"` → `"Смонтирована '%s' — %s"`
+  - `_shared/http_client.py`: `"Retry %d/%d for %s (HTTP %d), waiting %.1fs"` → `"Повтор %d/%d для %s (HTTP %d), ожидание %.1fс"`, `"Request to %s failed after ... attempts"` → `"Запрос к %s не удался после ... попыток"`, `"HTTP ... from %s"` → `"HTTP ... от %s"`, `"Request to %s failed (attempt ...)"` → `"Запрос к %s не удался (попытка ...)"` (аналогично для http_post)
+- **Русификация сообщений об ошибках** (9 замен):
+  - `_shared/feature.py`: `"No FEATURE_META in ..."` → `"Нет FEATURE_META в ..."`, `"FEATURE_META in ... is not a FeatureMeta instance"` → `"FEATURE_META в ... не является экземпляром FeatureMeta"`, `"disabled (enabled=False)"` → `"отключена (enabled=False)"`, `"missing env var ..."` → `"отсутствует переменная ..."`, `"No 'mcp' object in ..."` → `"Нет объекта 'mcp' в ..."`
+  - `_shared/http_client.py`: все HttpClientError-сообщения переведены
+- **Русификация смешанных строк**:
+  - `_shared/feature.py`: `"X feature(s) active, Y skipped"` → `"X функция(й) активно, Y пропущено"`
+- **Русификация секций docstrings**:
+  - `_shared/feature.py`: `Example:` → `Пример:`
+  - `_shared/cache.py`: `Example:` → `Пример:`
+  - `agenty/redator/resources.py`: `"Resources: шаблоны..."` → `"Ресурсы: шаблоны..."`
+  - `agenty/redator/prompts.py`: `"Prompts: агенты..."` → `"Промпты: агенты..."`
+  - `data/__init__.py`: `"Data features —"` → `"Модули данных —"`
+- **Русификация кодовых значений в константах**:
+  - `kad_arbitrazh/constants.py`: 24 английских кода заменены на русскую транслитерацию (first→pervaya, appeal→apellyatsionnaya, bankruptcy→bankrotstvo, и т.д.)
+  - `cbrf/constants.py`: `"key_rate"` → `"klyuchevaya_stavka"`
+- **Русификация комментариев**:
+  - `publikatsii/constants.py`: `# paid service` → `# платный сервис`
+- **Обновлены тесты**:
+  - `tests/_shared/test_feature.py`: `assert "0 feature(s) active"` → `assert "0 функция(й) активно"`, `"1 feature(s) active"` → `"1 функция(й) активно"`, `"missing FEATURE_META"` → `"отсутствует FEATURE_META"`, `"1 skipped"` → `"1 пропущено"`, `"Test feature"` → `"Тестовая функция"`
+  - `tests/_shared/test_http_client.py`: `match="failed after"` → `match="не удался после"`
+- **Создан модуль Россельхознадзор (rosselkhoznadzor)** — 24-й российский модуль:
+  - `__init__.py`: FeatureMeta с тегами ветеринарный надзор, фитосанитарный контроль, карантин растений, пестициды, земельный надзор
+  - `constants.py`: API URLs, справочники (6 видов надзора, 4 категории проверок, 6 видов нарушений, 5 типов продукции, 3 карантинных объекта, 8 федеральных округов), статическая статистика за 2023
+  - `schemas.py`: 4 модели (ProverkaRskhn, KarantinnyyObyekt, RegistratsiyaProduktsii, VeterinarnyySertifikat)
+  - `client.py`: 5 async-функций (poisk_proverok, poisk_karantinnykh_obektov, poisk_registratsiy_produktsii, veterinarsnye_sertifikaty, preduprezhdeniya_karantina) + 7 справочников + fallback на статические данные
+  - `tools.py`: 9 инструментов (4 справочника + 5 данных) с форматированным выводом
+  - `resources.py`: 3 ресурса (источники данных, структура Россельхознадзора, законодательство)
+  - `prompts.py`: 2 промпта (анализ ветеринарной проверки, обзор карантинной обстановки)
+  - `server.py`: FastMCP с 9 tools, 3 resources, 2 prompts
+- **Обновлены тесты**: 21 тест Россельхознадзора (tools + constants + integration)
+- **Обновлена конфигурация ruff**: добавлены per-file-ignores для rosselkhoznadzor
+- **Обновлена документация**:
+  - docs/reference/features.md: 23→24 модулей, 193→202 инструментов, 68→71 ресурсов, 46→48 промптов; добавлено описание Россельхознадзора
+  - README.md: 23→24 модуля, добавлено описание Россельхознадзора
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Логгерные сообщения полностью русифицированы**: все logger.info/warning/error в server.py, _shared/feature.py, _shared/http_client.py теперь на русском. Это затрагивает пользовательский вывод (summary) и отладочные сообщения
+- **Сообщения об ошибках русифицированы**: ValueError, TypeError, HttpClientError возбуждаются с русскими сообщениями. Версия HttpClientError в http_get и http_post идентична
+- **Кодовые значения в kad_arbitrazh/constants.py русифицированы**: 24 английских кода (first, appeal, bankruptcy, и т.д.) заменены на русскую транслитерацию (pervaya, apellyatsionnaya, bankrotstvo) для единообразия со всеми другими модулями
+- **Модуль Россельхознадзор с multi-source fallback**: как все остальные модули, использует каскадный fallback при недоступности API (fsvps.gov.ru → data.fsvps.gov.ru → статические данные). Статистика 2023 используется как fallback
+- **24 российских модуля**: покрытие расширено с 23 до 24 модулей. Итого 202 инструмента, 71 ресурс, 48 промптов
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Русификация оставшихся кодовых значений**: sovfed/constants.py ("pending"), rosaudit/constants.py ("property"), zakupki/constants.py ("closed")
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
 
 ### Выполнено
 

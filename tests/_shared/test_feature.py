@@ -128,8 +128,8 @@ class TestFeatureRegistry:
     def test_summary_empty(self) -> None:
         registry = FeatureRegistry()
         summary = registry.summary()
-        assert "0 feature(s) active" in summary
-        assert "0 skipped" in summary
+        assert "0 функция(й) активно" in summary
+        assert "0 пропущено" in summary
 
     def test_get_feature_not_found(self) -> None:
         registry = FeatureRegistry()
@@ -145,7 +145,7 @@ class TestFeatureRegistry:
         """Регистрирует feature вручную и монтирует в root."""
         registry = FeatureRegistry()
 
-        meta = FeatureMeta(name="test_feat", description="Test feature")
+        meta = FeatureMeta(name="test_feat", description="Тестовая функция")
         sub_server = FastMCP("test-sub")
 
         @sub_server.tool
@@ -171,15 +171,15 @@ class TestFeatureRegistry:
         sub = FastMCP("sub")
         registry._features["cbrf"] = RegisteredFeature(meta=meta, server=sub, module_path="m")
         summary = registry.summary()
-        assert "1 feature(s) active" in summary
+        assert "1 функция(й) активно" in summary
         assert "cbrf" in summary
         assert "ЦБ РФ данные" in summary
 
     def test_summary_with_skipped(self) -> None:
         registry = FeatureRegistry()
-        registry._skipped["broken"] = "missing FEATURE_META"
+        registry._skipped["broken"] = "отсутствует FEATURE_META"
         summary = registry.summary()
-        assert "1 skipped" in summary
+        assert "1 пропущено" in summary
         assert "broken" in summary
 
     def test_skipped_returns_copy(self) -> None:

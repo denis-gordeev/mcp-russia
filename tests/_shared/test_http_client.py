@@ -102,7 +102,7 @@ class TestHttpGet:
         )
         with (
             patch("mcp_russia._shared.http_client.asyncio.sleep"),
-            pytest.raises(HttpClientError, match="failed after"),
+            pytest.raises(HttpClientError, match="не удался после"),
         ):
             await http_get("https://api.example.com/down", max_retries=1)
 

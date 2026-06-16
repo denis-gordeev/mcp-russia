@@ -87,7 +87,7 @@ def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
     Возвращает:
         Декоратор, оборачивающий асинхронную функцию кэшированием.
 
-    Example:
+    Пример:
         @ttl_cache(ttl=60)
         async def poluchit_region() -> list[Region]:
             return await http_get(...)

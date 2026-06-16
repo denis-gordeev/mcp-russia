@@ -99,7 +99,7 @@ async def http_get(
                     if attempt < retries:
                         wait = HTTP_BACKOFF_BASE * (2**attempt)
                         logger.warning(
-                            "Retry %d/%d for %s (HTTP %d), waiting %.1fs",
+                            "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
                             attempt + 1,
                             retries,
                             url,
@@ -110,8 +110,8 @@ async def http_get(
                         continue
                     # Последняя попытка завершилась повторяемой ошибкой
                     raise HttpClientError(
-                        f"Request to {url} failed after {retries + 1} attempts "
-                        f"(last: HTTP {response.status_code})"
+                        f"Запрос к {url} не удался после {retries + 1} попыток "
+                        f"(последняя: HTTP {response.status_code})"
                     )
 
                 response.raise_for_status()
@@ -119,7 +119,7 @@ async def http_get(
 
             except httpx.HTTPStatusError as exc:
                 raise HttpClientError(
-                    f"HTTP {exc.response.status_code} from {url}: {exc.response.text[:200]}"
+                    f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
                 ) from exc
 
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
@@ -127,7 +127,7 @@ async def http_get(
                 if attempt < retries:
                     wait = HTTP_BACKOFF_BASE * (2**attempt)
                     logger.warning(
-                        "Request to %s failed (attempt %d/%d): %s, waiting %.1fs",
+                        "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
                         url,
                         attempt + 1,
                         retries,
@@ -137,7 +137,7 @@ async def http_get(
                     await asyncio.sleep(wait)
                     continue
 
-    raise HttpClientError(f"Request to {url} failed after {retries + 1} attempts") from last_error
+    raise HttpClientError(f"Запрос к {url} не удался после {retries + 1} попыток") from last_error
 
 
 async def http_post(
@@ -179,7 +179,7 @@ async def http_post(
                     if attempt < retries:
                         wait = HTTP_BACKOFF_BASE * (2**attempt)
                         logger.warning(
-                            "Retry %d/%d for %s (HTTP %d), waiting %.1fs",
+                            "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
                             attempt + 1,
                             retries,
                             url,
@@ -189,8 +189,8 @@ async def http_post(
                         await asyncio.sleep(wait)
                         continue
                     raise HttpClientError(
-                        f"Request to {url} failed after {retries + 1} attempts "
-                        f"(last: HTTP {response.status_code})"
+                        f"Запрос к {url} не удался после {retries + 1} попыток "
+                        f"(последняя: HTTP {response.status_code})"
                     )
 
                 response.raise_for_status()
@@ -198,7 +198,7 @@ async def http_post(
 
             except httpx.HTTPStatusError as exc:
                 raise HttpClientError(
-                    f"HTTP {exc.response.status_code} from {url}: {exc.response.text[:200]}"
+                    f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
                 ) from exc
 
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
@@ -206,7 +206,7 @@ async def http_post(
                 if attempt < retries:
                     wait = HTTP_BACKOFF_BASE * (2**attempt)
                     logger.warning(
-                        "Request to %s failed (attempt %d/%d): %s, waiting %.1fs",
+                        "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
                         url,
                         attempt + 1,
                         retries,
@@ -216,4 +216,4 @@ async def http_post(
                     await asyncio.sleep(wait)
                     continue
 
-    raise HttpClientError(f"Request to {url} failed after {retries + 1} attempts") from last_error
+    raise HttpClientError(f"Запрос к {url} не удался после {retries + 1} попыток") from last_error
