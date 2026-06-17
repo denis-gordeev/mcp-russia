@@ -95,7 +95,7 @@ async def test_zarplata_dannye(client):
 
 async def test_indikator_dannye(client):
     async with client:
-        result = await client.call_tool("indikator_dannye", {"kod": "cpi"})
+        result = await client.call_tool("indikator_dannye", {"kod": "ipcz"})
     assert result is not None
     text = str(result)
     assert "ИПЦ" in text or "Инфляц" in text or "31088" in text

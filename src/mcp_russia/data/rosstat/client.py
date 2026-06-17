@@ -39,7 +39,7 @@ async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelR
     """Получение статистического показателя из ЕМИСС/Росстата.
 
     Аргументы:
-        code: Код показателя (напр. 'cpi', 'population').
+        code: Код показателя (напр. 'ipcz', 'naselenie').
         date_range: Фильтр по диапазону дат (необязательно).
 
     Возвращает:
@@ -124,7 +124,7 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
         Список точек данных ИПЦ.
     """
     try:
-        emiss_code = EMISS_KODY_POKAZATELEY.get("cpi", "31088")
+        emiss_code = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
         if god:
@@ -159,7 +159,7 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         Список точек демографических данных.
     """
     try:
-        emiss_code = EMISS_KODY_POKAZATELEY.get("population", "24133")
+        emiss_code = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
         if region:
@@ -242,7 +242,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
     Возвращает:
         Список точек данных о заработной плате.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("wages", "24140")
+    emiss_code = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
@@ -330,7 +330,7 @@ async def poluchit_indikator_dannye(
     """Получение данных произвольного показателя по коду ЕМИСС или мнемоническому коду.
 
     Аргументы:
-        kod: Код ЕМИСС (напр. '31088') или мнемонический код (напр. 'cpi').
+        kod: Код ЕМИСС (напр. '31088') или мнемонический код (напр. 'ipcz').
         region: Код региона для фильтрации (необязательно).
         god: Фильтр по году (необязательно).
 
@@ -432,7 +432,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     Возвращает:
         Список точек данных отраслевой структуры.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("vrp_structure", "27103")
+    emiss_code = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
@@ -515,7 +515,7 @@ async def poluchit_investitsii_po_vidam(
     Возвращает:
         Список точек данных об инвестициях по видам деятельности.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("investments_by_activity", "24145")
+    emiss_code = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {"groupByActivity": "true"}

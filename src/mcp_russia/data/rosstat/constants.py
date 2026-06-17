@@ -25,62 +25,62 @@ ROSSTAT_BASE = "https://rosstat.gov.ru"
 
 # Основные показатели для быстрого запроса
 KLYUCHEVYE_INDIKATORY = [
-    {"code": "population", "name": "Численность населения"},
-    {"code": "cpi", "name": "Индекс потребительских цен (инфляция)"},
-    {"code": "gdp", "name": "ВВП Российской Федерации"},
-    {"code": "industrial", "name": "Индекс промышленного производства"},
-    {"code": "unemployment", "name": "Уровень безработицы"},
-    {"code": "wages", "name": "Средняя заработная плата"},
-    {"code": "retail_trade", "name": "Оборот розничной торговли"},
-    {"code": "investments", "name": "Инвестиции в основной капитал"},
-    {"code": "agrarian", "name": "Индекс производства сельского хозяйства"},
-    {"code": "construction", "name": "Объём работ по строительству"},
+    {"code": "naselenie", "name": "Численность населения"},
+    {"code": "ipcz", "name": "Индекс потребительских цен (инфляция)"},
+    {"code": "vvp", "name": "ВВП Российской Федерации"},
+    {"code": "promyshlennoe_proizvodstvo", "name": "Индекс промышленного производства"},
+    {"code": "bezrabotitsa", "name": "Уровень безработицы"},
+    {"code": "zarplata", "name": "Средняя заработная плата"},
+    {"code": "roznichnaya_torgovlya", "name": "Оборот розничной торговли"},
+    {"code": "investitsii", "name": "Инвестиции в основной капитал"},
+    {"code": "selkoe_khozyaystvo", "name": "Индекс производства сельского хозяйства"},
+    {"code": "stroitelstvo", "name": "Объём работ по строительству"},
     {"code": "vrp", "name": "Валовой региональный продукт"},
-    {"code": "wages_real", "name": "Реальная среднемесячная начисленная заработная плата"},
-    {"code": "income_per_capita", "name": "Среднедушевые денежные доходы населения"},
+    {"code": "realnaya_zarplata", "name": "Реальная среднемесячная начисленная заработная плата"},
+    {"code": "dokhody_na_dushu", "name": "Среднедушевые денежные доходы населения"},
     {
-        "code": "poverty_rate",
+        "code": "uroven_bednosti",
         "name": "Численность населения с доходами ниже прожиточного минимума",
     },
-    {"code": "gini", "name": "Коэффициент Джини"},
-    {"code": "pension_avg", "name": "Средний размер пенсии"},
-    {"code": "foreign_trade", "name": "Внешнеторговый оборот"},
-    {"code": "energy_production", "name": "Производство электроэнергии"},
-    {"code": "transport_cargo", "name": "Грузооборот транспорта"},
-    {"code": "science_innovation", "name": "Затраты на исследования и разработки"},
-    {"code": "vrp_structure", "name": "Структура ВРП по видам экономической деятельности"},
+    {"code": "koeffitsient_dzhini", "name": "Коэффициент Джини"},
+    {"code": "srednyaya_pensiya", "name": "Средний размер пенсии"},
+    {"code": "vneshnetorgovyy_oborot", "name": "Внешнеторговый оборот"},
+    {"code": "proizvodstvo_elektroenergii", "name": "Производство электроэнергии"},
+    {"code": "gruzooborot_transporta", "name": "Грузооборот транспорта"},
+    {"code": "nauka_i_innovatsii", "name": "Затраты на исследования и разработки"},
+    {"code": "struktura_vrp", "name": "Структура ВРП по видам экономической деятельности"},
 ]
 
 # Коды показателей ЕМИСС
 # После верификации 2026-06-12 исправлены коды energy_production и transport_cargo.
 EMISS_KODY_POKAZATELEY = {
-    "cpi": "31088",  # ✅ ИПЦ
-    "population": "24133",  # ❓ численность населения
-    "gdp": "26973",  # ❓ ВВП
-    "industrial": "30826",  # ❓ промышленное производство
-    "unemployment": "24139",  # ❓ безработица
-    "wages": "24140",  # ❓ зарплата
-    "retail_trade": "31082",  # ❓ розничная торговля
-    "investments": "24145",  # ❓ инвестиции
-    "agrarian": "30955",  # ⚠️ устарел — цены с/х продукции по 2016 г.
-    "construction": "31106",  # ❓ строительство
+    "ipcz": "31088",  # ✅ ИПЦ
+    "naselenie": "24133",  # ❓ численность населения
+    "vvp": "26973",  # ❓ ВВП
+    "promyshlennoe_proizvodstvo": "30826",  # ❓ промышленное производство
+    "bezrabotitsa": "24139",  # ❓ безработица
+    "zarplata": "24140",  # ❓ зарплата
+    "roznichnaya_torgovlya": "31082",  # ❓ розничная торговля
+    "investitsii": "24145",  # ❓ инвестиции
+    "selkoe_khozyaystvo": "30955",  # ⚠️ устарел — цены с/х продукции по 2016 г.
+    "stroitelstvo": "31106",  # ❓ строительство
     "vrp": "26975",  # ❓ ВРП
-    "vrp_per_capita": "26976",  # ❓ ВРП на душу
-    "wages_real": "24142",  # ❓ реальная зарплата
-    "income_per_capita": "24141",  # ❓ доходы на душу
-    "poverty_rate": "24143",  # ❓ бедность
-    "subsidy_income": "24144",  # ❓ субсидии
-    "migration": "24134",  # ❓ миграция
-    "natural_growth": "24135",  # ❓ естественный прирост
-    "gini": "24146",  # ❓ коэффициент Джини
-    "pension_avg": "24147",  # ❓ средняя пенсия
-    "housing": "31103",  # ❓ жильё
-    "foreign_trade": "31099",  # ⚠️ устарел — страница-заглушка
-    "energy_production": "31208",  # ✅ производство электроэнергии (был 31110 ❌ — с/х цены)
-    "transport_cargo": "31221",  # ✅ грузооборот транспорта (был 31153 ❌ — долги предприятий)
-    "science_innovation": "27621",  # ⚠️ устарел — страница-заглушка
-    "vrp_structure": "27103",  # ⚠️ устарел — страница-заглушка
-    "investments_by_activity": "24145",  # ❓ инвестиции по видам
+    "vrp_na_dushu": "26976",  # ❓ ВРП на душу
+    "realnaya_zarplata": "24142",  # ❓ реальная зарплата
+    "dokhody_na_dushu": "24141",  # ❓ доходы на душу
+    "uroven_bednosti": "24143",  # ❓ бедность
+    "subsidii": "24144",  # ❓ субсидии
+    "migratsiya": "24134",  # ❓ миграция
+    "estestvennyy_prirost": "24135",  # ❓ естественный прирост
+    "koeffitsient_dzhini": "24146",  # ❓ коэффициент Джини
+    "srednyaya_pensiya": "24147",  # ❓ средняя пенсия
+    "zhile": "31103",  # ❓ жильё
+    "vneshnetorgovyy_oborot": "31099",  # ⚠️ устарел — страница-заглушка
+    "proizvodstvo_elektroenergii": "31208",  # ✅ производство электроэнергии (был 31110 ❌ — с/х цены)
+    "gruzooborot_transporta": "31221",  # ✅ грузооборот транспорта (был 31153 ❌ — долги предприятий)
+    "nauka_i_innovatsii": "27621",  # ⚠️ устарел — страница-заглушка
+    "struktura_vrp": "27103",  # ⚠️ устарел — страница-заглушка
+    "investitsii_po_vidam": "24145",  # ❓ инвестиции по видам
 }
 
 # Отраслевая структура ВРП (ОКВЭД)
@@ -317,21 +317,21 @@ VIDY_DEYATELNOSTI_INVESTITSII = [
 # Показатели, доступные с региональной разбивкой
 REGIONALNYE_POKAZATELI = {
     "vrp": "26975",
-    "vrp_per_capita": "26976",
-    "wages": "24140",
-    "wages_real": "24142",
-    "income_per_capita": "24141",
-    "poverty_rate": "24143",
-    "population": "24133",
-    "unemployment": "24139",
-    "investments": "24145",
-    "retail_trade": "31082",
-    "agrarian": "30955",
-    "construction": "31106",
-    "migration": "24134",
-    "natural_growth": "24135",
-    "energy_production": "31208",
-    "transport_cargo": "31221",
+    "vrp_na_dushu": "26976",
+    "zarplata": "24140",
+    "realnaya_zarplata": "24142",
+    "dokhody_na_dushu": "24141",
+    "uroven_bednosti": "24143",
+    "naselenie": "24133",
+    "bezrabotitsa": "24139",
+    "investitsii": "24145",
+    "roznichnaya_torgovlya": "31082",
+    "selkoe_khozyaystvo": "30955",
+    "stroitelstvo": "31106",
+    "migratsiya": "24134",
+    "estestvennyy_prirost": "24135",
+    "proizvodstvo_elektroenergii": "31208",
+    "gruzooborot_transporta": "31221",
 }
 
 # Федеральные округа РФ

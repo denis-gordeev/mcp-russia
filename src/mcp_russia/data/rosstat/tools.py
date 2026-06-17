@@ -145,7 +145,7 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
             f"- ЕМИСС: https://fedstat.ru/indicator/31088\n"
             f"- Росстат: https://rosstat.gov.ru/statistics/price\n\n"
             f"Для запроса данных за {god or 'текущий период'} "
-            f"используйте показатель 'cpi' через API ЕМИСС."
+            f"используйте показатель 'ipcz' через API ЕМИСС."
         )
     rows = []
     for d in data:
@@ -273,7 +273,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     """Сравнить регионы по выбранному показателю.
 
     Аргументы:
-        pokazatel: Код показателя (например, 'vrp', 'wages', 'income_per_capita').
+        pokazatel: Код показателя (например, 'vrp', 'zarplata', 'dokhody_na_dushu').
 
     Возвращает:
         Рейтинг регионов по показателю.
@@ -322,7 +322,7 @@ async def indikator_dannye(
     или мнемоническому коду показателя.
 
     Аргументы:
-        kod: Код ЕМИСС (например, '31088') или мнемонический код (например, 'cpi', 'vrp').
+        kod: Код ЕМИСС (например, '31088') или мнемонический код (например, 'ipcz', 'vrp').
         region: Код региона (необязательно).
         god: Год для запроса (например, '2024').
 

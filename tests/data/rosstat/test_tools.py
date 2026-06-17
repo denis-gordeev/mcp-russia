@@ -89,7 +89,7 @@ async def test_pokazateli_rosstata():
     ctx = _mock_ctx()
     result = await rosstat_tools.pokazateli_rosstata(ctx)
     assert "показател" in result.lower()
-    assert "населени" in result or "population" in result
+    assert "населени" in result or "naselenie" in result
 
 
 async def test_inflyaciya_fallback():
@@ -136,12 +136,12 @@ async def test_constants_subiekty_count():
 async def test_constants_emiss_kody():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY
 
-    assert "cpi" in EMISS_KODY_POKAZATELEY
-    assert "population" in EMISS_KODY_POKAZATELEY
+    assert "ipcz" in EMISS_KODY_POKAZATELEY
+    assert "naselenie" in EMISS_KODY_POKAZATELEY
     assert "vrp" in EMISS_KODY_POKAZATELEY
-    assert "wages" in EMISS_KODY_POKAZATELEY
-    assert "agrarian" in EMISS_KODY_POKAZATELEY
-    assert "construction" in EMISS_KODY_POKAZATELEY
+    assert "zarplata" in EMISS_KODY_POKAZATELEY
+    assert "selkoe_khozyaystvo" in EMISS_KODY_POKAZATELEY
+    assert "stroitelstvo" in EMISS_KODY_POKAZATELEY
 
 
 async def test_constants_emiss_kody_complete():
@@ -158,8 +158,8 @@ async def test_constants_regionalnye_pokazateli():
     from mcp_russia.data.rosstat.constants import REGIONALNYE_POKAZATELI
 
     assert "vrp" in REGIONALNYE_POKAZATELI
-    assert "wages" in REGIONALNYE_POKAZATELI
-    assert "population" in REGIONALNYE_POKAZATELI
+    assert "zarplata" in REGIONALNYE_POKAZATELI
+    assert "naselenie" in REGIONALNYE_POKAZATELI
 
 
 async def test_vrp_dannye_fallback():
@@ -236,7 +236,7 @@ async def test_sravnenie_regionov_empty():
 
 
 async def test_indikator_dannye_fallback():
-    result = await rosstat_tools.indikator_dannye(kod="cpi")
+    result = await rosstat_tools.indikator_dannye(kod="ipcz")
     assert "ИПЦ" in result or "Инфляц" in result or "31088" in result
 
 
@@ -252,7 +252,7 @@ async def test_indikator_dannye_with_data():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="cpi")
+        result = await rosstat_tools.indikator_dannye(kod="ipcz")
     assert "2025-01" in result
     assert "105" in result
 
@@ -269,13 +269,13 @@ async def test_indikator_dannye_with_region():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="wages", region="77", god="2024")
+        result = await rosstat_tools.indikator_dannye(kod="zarplata", region="77", god="2024")
     assert "Москва" in result
 
 
 async def test_indikator_dannye_empty():
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
-        result = await rosstat_tools.indikator_dannye(kod="cpi")
+        result = await rosstat_tools.indikator_dannye(kod="ipcz")
     assert "недоступны" in result or "31088" in result
 
 
@@ -385,17 +385,17 @@ async def test_constants_vidy_deyatelnosti_investitsii():
 async def test_constants_new_emiss_kody():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY
 
-    assert "foreign_trade" in EMISS_KODY_POKAZATELEY
-    assert "energy_production" in EMISS_KODY_POKAZATELEY
-    assert "transport_cargo" in EMISS_KODY_POKAZATELEY
-    assert "science_innovation" in EMISS_KODY_POKAZATELEY
-    assert "vrp_structure" in EMISS_KODY_POKAZATELEY
+    assert "vneshnetorgovyy_oborot" in EMISS_KODY_POKAZATELEY
+    assert "proizvodstvo_elektroenergii" in EMISS_KODY_POKAZATELEY
+    assert "gruzooborot_transporta" in EMISS_KODY_POKAZATELEY
+    assert "nauka_i_innovatsii" in EMISS_KODY_POKAZATELEY
+    assert "struktura_vrp" in EMISS_KODY_POKAZATELEY
 
 
 async def test_constants_new_regionalnye_pokazateli():
     from mcp_russia.data.rosstat.constants import REGIONALNYE_POKAZATELI
 
-    assert "agrarian" in REGIONALNYE_POKAZATELI
-    assert "construction" in REGIONALNYE_POKAZATELI
-    assert "migration" in REGIONALNYE_POKAZATELI
-    assert "natural_growth" in REGIONALNYE_POKAZATELI
+    assert "selkoe_khozyaystvo" in REGIONALNYE_POKAZATELI
+    assert "stroitelstvo" in REGIONALNYE_POKAZATELI
+    assert "migratsiya" in REGIONALNYE_POKAZATELI
+    assert "estestvennyy_prirost" in REGIONALNYE_POKAZATELI

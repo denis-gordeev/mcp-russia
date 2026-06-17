@@ -2,6 +2,49 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-17 (сорок четвёртый проход — русификация кодовых значений Росстата, Минздрава, Роскомнадзора, РосАПИ, Госдумы, ЦИК)
+
+### Выполнено
+
+- **Русификация кодовых значений Росстата** (51 замена в 3 структурах):
+  - `KLYUCHEVYE_INDIKATORY`: 21 код — population→naselenie, cpi→ipcz, gdp→vvp, industrial→promyshlennoe_proizvodstvo, unemployment→bezrabotitsa, wages→zarplata, retail_trade→roznichnaya_torgovlya, investments→investitsii, agrarian→selkoe_khozyaystvo, construction→stroitelstvo, wages_real→realnaya_zarplata, income_per_capita→dokhody_na_dushu, poverty_rate→uroven_bednosti, gini→koeffitsient_dzhini, pension_avg→srednyaya_pensiya, foreign_trade→vneshnetorgovyy_oborot, energy_production→proizvodstvo_elektroenergii, transport_cargo→gruzooborot_transporta, science_innovation→nauka_i_innovatsii, vrp_structure→struktura_vrp; vrp без изменений
+  - `EMISS_KODY_POKAZATELEY`: 23 ключа + vrp_per_capita→vrp_na_dushu, subsidy_income→subsidii, migration→migratsiya, natural_growth→estestvennyy_prirost, housing→zhile, investments_by_activity→investitsii_po_vidam
+  - `REGIONALNYE_POKAZATELI`: 16 ключей (аналогично KLYUCHEVYE_INDIKATORY + vrp_na_dushu, migratsiya, estestvennyy_prirost, proizvodstvo_elektroenergii, gruzooborot_transporta)
+- **Русификация кодовых значений Минздрава** (29 замен):
+  - `POKAZATELI_ZDOROVYA`: 6 кодов (life_expectancy→prodolzhitelnost_zhizni, mortality→smertnost, infant_mortality→mladencheskaya_smertnost, morbidity→zabolevaemost, hospital_beds→bolnichnye_koyki, doctors→vrachi)
+  - `TIPLY_MO`: 7 кодов (hospital→bolnitsa, polyclinic→poliklinika, dispensary→dispanser, emergency→skoraya_pomoshch, maternity→roddom, hospice→khospis, sanatorium→sanatoriy); nc→nt
+  - `SPETSIALNOSTI_VRACHEY`: 15 кодов (therapist→terapevt, surgeon→khirurg, pediatrician→pediatr, neurologist→nevropatolog, cardiologist→kardiolog, ophthalmologist→oftalmolog, dentist→stomatolog, gynecologist→akusher_ginekolog, traumatologist→travmatolog, anesthesiologist→anesteziolog, psychiatrist→psikhiatr, dermatologist→dermatovenerolog, endocrinologist→endokrinolog, urologist→urolog, oncologist→onkolog)
+- **Русификация кодовых значений Роскомнадзора** (8 замен):
+  - `TIPY_LICENZIY_SVYAZI`: 2 кода (data_transmission→peredacha_dannykh, satellite→sputnikovaya)
+  - `KATEGORII_NARUSHENIY`: 6 кодов (personal_data_leak→utechka_personalnykh_dannykh, illegal_content→zapreshchennyy_kontent, copyright_violation→narushenie_avtorskikh_prav, license_violation→narushenie_litsenzionnykh_trebovaniy, data_localization→narushenie_lokalizatsii_dannykh, extremism→ekstremistskie_materialy)
+- **Русификация кодовых значений РосАПИ** (5 замен):
+  - `TIPY_TRANSPORTA`: 5 ключей (car→legkovoy, truck→gruzovoy, moto→mototsikl, bus→avtobus, special→spectekhnika)
+- **Русификация кодовых значений Госдумы** (4 замены):
+  - `KLYUCHEVYE_INDIKATORY`: 4 кода (deputats→deputaty, laws→zakonoproekty, sessions→zasedaniya, votes→golosovaniya)
+- **Русификация кодовых значений ЦИК РФ** (3 замены):
+  - `DOLZHNOSTI_FEDERAL`: level "federal"→"federalnyy" (3 записи)
+- **Обновлены ссылки в client.py и tools.py**:
+  - `rosstat/client.py`: 5 EMISS_KODY_POKAZATELEY.get() вызовов + 2 docstring
+  - `rosstat/tools.py`: 3 docstring
+- **Обновлены тесты**:
+  - `tests/data/rosstat/test_tools.py`: 18 замен (ipcz, naselenie, zarplata, selkoe_khozyaystvo, stroitelstvo, vneshnetorgovyy_oborot, proizvodstvo_elektroenergii, gruzooborot_transporta, nauka_i_innovatsii, struktura_vrp, migratsiya, estestvennyy_prirost, dokhody_na_dushu)
+  - `tests/data/rosstat/test_integration.py`: 1 замена (cpi→ipcz)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Все кодовые значения в constants.py русифицированы во всех 6 модулях**: английские мнемоники (cpi, gdp, wages и т.д.) заменены на русскую транслитерацию (ipcz, vvp, zarplata и т.д.) для единообразия со всеми другими модулями (kad_arbitrazh, cbrf, sovfed и т.д.)
+- **Росстат — крупнейший модуль по количеству кодов**: 51 замена в 3 структурах (KLYUCHEVYE_INDIKATORY, EMISS_KODY_POKAZATELEY, REGIONALNYE_POKAZATELI). Коды глубоко встроены в client.py и tools.py
+- **Ключи парсинга внешних API не затронуты**: `.get("population")`, `.get("gdp")`, `.get("doctors")` и т.д. в client.py — это ключи ответов внешних API, они остаются на английском
+- **deputats→deputaty**: исправлена несогласованность в Госдуме (смешанный паттерн)
+
+### Следующие действия
+
+- **Русификация полей Pydantic-схем**: `code→kod`, `name→nazvanie`, `value→znachenie`, `date→data`, `region→region` (оставить), `period→period` (оставить) в schemas.py всех модулей — затронет JSON-вывод инструментов
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+
 ## Статус раунда 2026-06-17 (сорок третий проход — русификация кодовых значений, зачистка английских строк)
 
 ### Выполнено

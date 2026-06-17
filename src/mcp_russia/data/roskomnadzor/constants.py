@@ -31,18 +31,18 @@ TIPY_LICENZIY_SVYAZI = [
     {"code": "mobilnaya", "name": "Мобильная связь"},
     {"code": "internet", "name": "Интернет-доступ"},
     {"code": "tv_radio", "name": "Телевизионное и радиовещание"},
-    {"code": "data_transmission", "name": "Передача данных"},
-    {"code": "satellite", "name": "Спутниковая связь"},
+    {"code": "peredacha_dannykh", "name": "Передача данных"},
+    {"code": "sputnikovaya", "name": "Спутниковая связь"},
 ]
 
 # Категории нарушений
 KATEGORII_NARUSHENIY = [
-    {"code": "personal_data_leak", "name": "Утечка персональных данных"},
-    {"code": "illegal_content", "name": "Распространение запрещённого контента"},
-    {"code": "copyright_violation", "name": "Нарушение авторских прав"},
-    {"code": "license_violation", "name": "Нарушение лицензионных требований"},
-    {"code": "data_localization", "name": "Нарушение требований локализации данных"},
-    {"code": "extremism", "name": "Экстремистские материалы"},
+    {"code": "utechka_personalnykh_dannykh", "name": "Утечка персональных данных"},
+    {"code": "zapreshchennyy_kontent", "name": "Распространение запрещённого контента"},
+    {"code": "narushenie_avtorskikh_prav", "name": "Нарушение авторских прав"},
+    {"code": "narushenie_litsenzionnykh_trebovaniy", "name": "Нарушение лицензионных требований"},
+    {"code": "narushenie_lokalizatsii_dannykh", "name": "Нарушение требований локализации данных"},
+    {"code": "ekstremistskie_materialy", "name": "Экстремистские материалы"},
 ]
 
 # Реестры Роскомнадзора

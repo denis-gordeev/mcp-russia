@@ -13,47 +13,47 @@ FRMO_API_BASE = "https://frrr.rosminzdrav.ru/api"
 
 # Основные показатели здоровья
 POKAZATELI_ZDOROVYA = [
-    {"code": "life_expectancy", "name": "Ожидаемая продолжительность жизни"},
-    {"code": "mortality", "name": "Общая смертность"},
-    {"code": "infant_mortality", "name": "Младенческая смертность"},
-    {"code": "morbidity", "name": "Общая заболеваемость"},
-    {"code": "hospital_beds", "name": "Обеспеченность больничными койками"},
-    {"code": "doctors", "name": "Обеспеченность врачами"},
+    {"code": "prodolzhitelnost_zhizni", "name": "Ожидаемая продолжительность жизни"},
+    {"code": "smertnost", "name": "Общая смертность"},
+    {"code": "mladencheskaya_smertnost", "name": "Младенческая смертность"},
+    {"code": "zabolevaemost", "name": "Общая заболеваемость"},
+    {"code": "bolnichnye_koyki", "name": "Обеспеченность больничными койками"},
+    {"code": "vrachi", "name": "Обеспеченность врачами"},
 ]
 
 # Типы медицинских организаций
 TIPLY_MO = [
-    {"code": "hospital", "name": "Больница (стационар)"},
-    {"code": "polyclinic", "name": "Поликлиника (амбулатория)"},
-    {"code": "dispensary", "name": "Диспансер"},
-    {"code": "emergency", "name": "Станция скорой помощи"},
-    {"code": "maternity", "name": "Родильный дом"},
-    {"code": "hospice", "name": "Хоспис"},
-    {"code": "sanatorium", "name": "Санаторий"},
+    {"code": "bolnitsa", "name": "Больница (стационар)"},
+    {"code": "poliklinika", "name": "Поликлиника (амбулатория)"},
+    {"code": "dispanser", "name": "Диспансер"},
+    {"code": "skoraya_pomoshch", "name": "Станция скорой помощи"},
+    {"code": "roddom", "name": "Родильный дом"},
+    {"code": "khospis", "name": "Хоспис"},
+    {"code": "sanatoriy", "name": "Санаторий"},
     {"code": "fap", "name": "Фельдшерско-акушерский пункт"},
     {"code": "dkb", "name": "Детская городская больница"},
     {"code": "dgp", "name": "Детская городская поликлиника"},
-    {"code": "nc", "name": "Научный центр"},
+    {"code": "nt", "name": "Научный центр"},
     {"code": "kdl", "name": "Клинико-диагностическая лаборатория"},
 ]
 
 # Классы специальностей врачей
 SPETSIALNOSTI_VRACHEY = [
-    {"code": "therapist", "name": "Терапевт"},
-    {"code": "surgeon", "name": "Хирург"},
-    {"code": "pediatrician", "name": "Педиатр"},
-    {"code": "neurologist", "name": "Невролог"},
-    {"code": "cardiologist", "name": "Кардиолог"},
-    {"code": "ophthalmologist", "name": "Офтальмолог"},
-    {"code": "dentist", "name": "Стоматолог"},
-    {"code": "gynecologist", "name": "Акушер-гинеколог"},
-    {"code": "traumatologist", "name": "Травматолог-ортопед"},
-    {"code": "anesthesiologist", "name": "Анестезиолог-реаниматолог"},
-    {"code": "psychiatrist", "name": "Психиатр"},
-    {"code": "dermatologist", "name": "Дерматовенеролог"},
-    {"code": "endocrinologist", "name": "Эндокринолог"},
-    {"code": "urologist", "name": "Уролог"},
-    {"code": "oncologist", "name": "Онколог"},
+    {"code": "terapevt", "name": "Терапевт"},
+    {"code": "khirurg", "name": "Хирург"},
+    {"code": "pediatr", "name": "Педиатр"},
+    {"code": "nevropatolog", "name": "Невролог"},
+    {"code": "kardiolog", "name": "Кардиолог"},
+    {"code": "oftalmolog", "name": "Офтальмолог"},
+    {"code": "stomatolog", "name": "Стоматолог"},
+    {"code": "akusher_ginekolog", "name": "Акушер-гинеколог"},
+    {"code": "travmatolog", "name": "Травматолог-ортопед"},
+    {"code": "anesteziolog", "name": "Анестезиолог-реаниматолог"},
+    {"code": "psikhiatr", "name": "Психиатр"},
+    {"code": "dermatovenerolog", "name": "Дерматовенеролог"},
+    {"code": "endokrinolog", "name": "Эндокринолог"},
+    {"code": "urolog", "name": "Уролог"},
+    {"code": "onkolog", "name": "Онколог"},
 ]
 
 # Классы МКБ-10 (основные)

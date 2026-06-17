@@ -9,10 +9,10 @@ DUMA_TRANSCRIPTS = "https://api.duma.gov.ru/api/v1/transcripts"
 
 # Ключевые показатели
 KLYUCHEVYE_INDIKATORY = [
-    {"code": "deputats", "name": "Список депутатов"},
-    {"code": "laws", "name": "Законопроекты"},
-    {"code": "sessions", "name": "Пленарные заседания"},
-    {"code": "votes", "name": "Результаты голосований"},
+    {"code": "deputaty", "name": "Список депутатов"},
+    {"code": "zakonoproekty", "name": "Законопроекты"},
+    {"code": "zasedaniya", "name": "Пленарные заседания"},
+    {"code": "golosovaniya", "name": "Результаты голосований"},
 ]
 
 # Созывы Государственной Думы

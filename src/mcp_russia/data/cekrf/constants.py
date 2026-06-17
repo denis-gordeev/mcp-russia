@@ -145,16 +145,16 @@ TIPOVY_VYBORY = {
 
 # Избирательные должности (федеральные)
 DOLZHNOSTI_FEDERAL = [
-    {"code": 1, "name": "Президент Российской Федерации", "level": "federal"},
+    {"code": 1, "name": "Президент Российской Федерации", "level": "federalnyy"},
     {
         "code": 2,
         "name": "Депутат Государственной Думы (по фед. округу)",
-        "level": "federal",
+        "level": "federalnyy",
     },
     {
         "code": 3,
         "name": "Депутат Государственной Думы (по одномандатному округу)",
-        "level": "federal",
+        "level": "federalnyy",
     },
 ]
 
