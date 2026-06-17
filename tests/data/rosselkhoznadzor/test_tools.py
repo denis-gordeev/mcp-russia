@@ -76,7 +76,7 @@ class TestTools:
         ctx = AsyncMock()
         with patch.object(client, "poisk_proverok", return_value=[]):
             result = await tools.poisk_proverok(ctx)
-        assert "fallback" in result or "не найдены" in result
+        assert "резервные данные" in result or "не найдены" in result
 
     @pytest.mark.asyncio
     async def test_poisk_proverok_with_data(self) -> None:

@@ -24,7 +24,7 @@ class Organizatsiya(BaseModel):
     ogrn: str | None = Field(default=None, description="ОГРН (13 или 15 цифр)")
     name_full: str | None = None
     name_short: str | None = None
-    status: str | None = Field(default=None, description="Статус: ACTIVE, LIQUIDATED, etc.")
+    status: str | None = Field(default=None, description="Статус: ACTIVE, LIQUIDATED и т.д.")
     address: str | None = None
     director: str | None = None
     registration_date: str | None = None
@@ -47,7 +47,7 @@ class Prazdnik(BaseModel):
 
     date: str = Field(description="Дата (YYYY-MM-DD)")
     name: str
-    type: str = Field(description="Тип: national, professional, memorial")
+    type: str = Field(description="Тип: национальный, профессиональный, памятный")
 
 
 class PostalCodeInfo(BaseModel):

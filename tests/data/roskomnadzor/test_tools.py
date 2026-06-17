@@ -143,7 +143,7 @@ async def test_poisk_ori_empty():
 
 async def test_zapisi_reestra_found():
     ctx = _mock_ctx()
-    result = await rkn_tools.zapisi_reestra(ctx, reestr_code="blocked_sites")
+    result = await rkn_tools.zapisi_reestra(ctx, reestr_code="zapreshchennye_sayty")
     assert "запрещённых сайтов" in result
 
 

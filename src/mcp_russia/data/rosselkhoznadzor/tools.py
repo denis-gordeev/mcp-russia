@@ -76,7 +76,7 @@ async def poisk_proverok(
         static = client.get_statistika_rskhn_static()
         if static:
             lines = [
-                "**Статистика проверок Россельхознадзора (2023, fallback-данные)**\n",
+                "**Статистика проверок Россельхознадзора (2023, резервные данные)**\n",
                 f"- Всего проверок: {static['vsego_proverok']:,}",
                 f"- Выявлено нарушений: {static['narusheniy_vyyavleno']:,}",
                 f"- Наложено штрафов: {static['shtrafov_nalozheno']:,}",

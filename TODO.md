@@ -2,7 +2,49 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-16 (сорок второй проход — русификация логгеров/ошибок, модуль Россельхознадзор)
+## Статус раунда 2026-06-17 (сорок третий проход — русификация кодовых значений, зачистка английских строк)
+
+### Выполнено
+
+- **Русификация кодовых значений в словарях constants.py** (62 замены в 8 модулях):
+  - `sovfed/constants.py`: `STATUSY_ZAKONOPROEKTA` — 7 ключей (pending→na_rassmotrenii, approved→odobren, rejected→otklonen, revision→dorabotka, committee→v_komitete, session→na_zasedanii, enacted→prinyat)
+  - `rosaudit/constants.py`: `STATUSY_KONTROLYA` — 5 ключей (planned→zaplanirovano, in_progress→provoditsya, completed→zaversheno, cancelled→otmeneno, approved→utverzhdeno); `VIDY_NARUSHENIY` — 5 ключей (financial→finansovoe, budget→byudzhetnoe, procurement→v_sfere_zakupok, property→pri_ispolzovanii_gossobstvennosti, program→pri_realizatsii_gosprogramm)
+  - `rosprirodnadzor/constants.py`: `STATUSY_PROVEROK` — 6 ключей (planned→zaplanirovana, in_progress→provoditsya, completed→zavershena, cancelled→otmenena, violations_found→narusheniya_vyyavleny, no_violations→narusheniy_net); `TIPY_NARUSHENIY_EKO` — 8 ключей (air→atmosfernyy_vozdukh, water→vodnoe, soil→pochvy, waste→otkhody, subsoil→nedropolzovanie, radiation→radiatsionnaya_bezopasnost, land→zemelnoe, bio→zhivotnyy_mir)
+  - `rospotrebnadzor/constants.py`: `NAPRAVLENIYA_DEYATELNOSTI` — 7 кодов (sanitary→sanitarnyy_nadzor, consumer_protection→zashchita_prav_potrebiteley, radiation_safety→radiatsionnaya_bezopasnost, water_safety→bezopasnost_vodnykh, air_quality→kachestvo_atmosfernogo_vozdukha, food_safety→bezopasnost_pishchevykh, product_safety→bezopasnost_neprodovolstvennykh); `KATEGORII_OBIEKTOV` — 8 кодов (food_enterprise→pishchevye_predpriyatiya, catering→obshchestvennoe_pitanie, education→obrazovatelnye_uchrezhdeniya, medical→meditsinskie_organizatsii, water_supply→vodosnabzhayushchie, retail→obekty_torgovli, industrial→promyshlennye_predpriyatiya, residential→zhilye_zdaniya); `STATUSY_PROVEROK` — 4 ключа (planned→zaplanirovana, in_progress→provoditsya, completed→zavershena, canceled→otmenena); `VIDY_NARUSHENIY` — 4 ключа (sanitary→sanitarnoe, consumer→prava_potrebiteley, radiation→radiatsionnaya, food→pishchevaya_bezopasnost)
+  - `gosduma/constants.py`: `KOMITETY` — 8 кодов (budget→byudzhet_i_nalogi, legislation→gosstroitelstvo_i_zakonodatelstvo, defense→oborona, foreign→mezhdunarodnye_dela, economy→ekonomicheskaya_politika, health→okhrana_zdorovya, education→prosvishchenie, energy→energetika); `STATUSY_ZAKONOPROEKTOV` — 9 кодов (introduced→vnesen_v_gd, committee→v_komitete, first_reading→pervoe_chtenie, second_reading→vtoroe_chtenie, third_reading→tretie_chtenie, approved→odobren_sf, signed→podpisan_prezidentom, rejected→otklonen, withdrawn→otozvan_initsiatorom)
+  - `roskomnadzor/constants.py`: `NAPRAVLENIYA_DEYATELNOSTI` — 6 кодов (media_supervision→nadzor_smi, telecom_supervision→nadzor_svyazi, it_supervision→nadzor_it, personal_data→zashchita_pd, internet_control→kontrol_interneta, copyright→zashchita_avtorskikh_prav); `REGISTRY_RKN` — 5 кодов (blocked_sites→zapreshchennye_sayty, pd_operators→operatory_pd, it_companies→inostrannye_it_kompanii, license_holders→litsenziaty_svyazi, media_registry→reestr_smi); `TIPY_SMI` — 5 кодов (print→pechatnoe_izdanie, online→setevoe_izdanie, tv→telekanal, radio→radiokanal, news_agency→informatsionnoe_agentstvo); `KATEGORII_PD_OPERATOROV` — 6 кодов (government→gosudarstvennye_organy, commercial→kommercheskie_organizatsii, nonprofit→nekommercheskie_organizatsii, individual_entrepreneur→individualnye_predprinimateli, education→obrazovatelnye_uchrezhdeniya, healthcare→meditsinskie_organizatsii); `OSNOVANIYA_BLOKIROVKI` — 9 ключей (drug→narkotiki, suicide→samoubiystva, pornography→detskaya_porografiya, extremism→ekstremizm, gambling→azarntnye_igry, copyright→avtorskoe_pravo, dangerous→opasnaya_informatsiya, fake→nedostovernaya_informatsiya, personal_data→utechka_pd)
+  - `kaznacheistvo/constants.py`: `STATUSY_ISPOLNENIYA` — 5 ключей (approved→utverzhdyon, in_execution→ispolnyaetsya, completed→ispolnen, revised→skorrektirovan, preliminary→predvaritelnyy)
+  - `zakupki/constants.py`: `SPOSOBY_ZAKUPOK` — 6 кодов (open→otkrytyy_konkurs, auction→elektronnyy_auktsion, query→zapros_kotirovok, single→edinyy_postavshchik, closed→zakrytyy_konkurs, limited→ogranichennoe_uchastie); `OTRASLI` — 8 кодов (construction→stroitelstvo, it→informatsionnye_tekhnologii, medicine→meditsina_i_farmvtsevtika, education→obrazovanie, transport→transport_i_logistika, energy→energetika, food→prodovolstvie, security→bezopasnost_i_oborona); `STATUSY_ZAKUPOK` — 6 кодов (planning→planirovanie, announced→opublikovana, bidding→priem_zayavok, review→rassmotrenie_zayavok, completed→zavershena, cancelled→otmenena)
+- **Русификация оставшихся английских строк** (21 замена):
+  - `etc.` → `и т.д.` в rosvodresursy/schemas.py, publikatsii/schemas.py (4 замены), rosapi/schemas.py
+  - `ACTIVE, LIQUIDATED, etc.` → `ACTIVE, LIQUIDATED и т.д.` в rosapi/schemas.py
+  - `Тип: national, professional, memorial` → `Тип: национальный, профессиональный, памятный` в rosapi/schemas.py
+  - `Уровень (federal/regional/municipal)` → `Уровень (федеральный/региональный/муниципальный)` в cekrf/schemas.py
+  - `WMO weather code` → `коды ВМО` в rosgidromet/constants.py
+  - `fallback-данные` → `резервные данные` в mchs/tools.py, rosselkhoznadzor/tools.py
+  - `fallback-поиске` → `резервном поиске` в fssp/client.py
+  - `как fallback` → `как резервный вариант` в rosstat/client.py (2 docstrings)
+  - `legacy-ответами` → `устаревшими ответами` в _shared/formatting.py
+  - `legacy — placeholder` → `заглушка` в 6 модулях (fssp, fns, minobrnauki, rospotrebnadzor, roskomnadzor, rosreestr — prompts.py и resources.py)
+- **Обновлены тесты**:
+  - `tests/data/roskomnadzor/test_tools.py`: `"blocked_sites"` → `"zapreshchennye_sayty"`
+  - `tests/data/rosselkhoznadzor/test_tools.py`: `"fallback"` → `"резервные данные"`
+  - `tests/data/mchs/test_tools.py`: `"fallback"` → `"резервные данные"`
+- **Обновлена docstring**: roskomnadzor/tools.py — `reestr_code: Код реестра (zapreshchennye_sayty, operatory_pd, ori и т.д.)`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 reformatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Полная русификация кодовых значений в 8 модулях**: все английские коды в словарях и списках constants.py заменены на русскую транслитерацию. Это обеспечивает единообразие с kad_arbitrazh/constants.py (русифицированным в раунде 42) и cbrf/constants.py
+- **Кодовые значения REGISTRY_RKN русифицированы**: несмотря на использование в tools.py как параметр поиска (`r["code"] == reestr_code`), коды заменены и тест обновлён. LLM увидит русифицированные коды в таблице `spisok_reestrov` и передаст их как параметры
+- **Английские термины «fallback» и «legacy — placeholder» устранены**: в пользовательском выводе и docstrings заменены на русские эквиваленты. Внутренние имена функций `_fallback_*` сохранены как устоявшийся программный термин
+
+### Следующие действия
+
+- **Русификация кодовых значений Росстата**: `KLYUCHEVYE_INDIKATORY`, `EMISS_KODY_POKAZATELEY`, `REGIONALNYE_POKAZATELI` — 30+ английских мнемоник (cpi, gdp, vrp, wages и т.д.) глубоко встроены в client.py, tools.py и тесты. Требует скоординированной замены в 10+ файлах
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
 
 ### Выполнено
 

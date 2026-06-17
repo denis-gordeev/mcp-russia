@@ -10,7 +10,7 @@ class VodnyyObekt(BaseModel):
 
     code: str
     name: str
-    tip: str = ""  # reka, ozero, vodokhranilishche, etc.
+    tip: str = ""  # reka, ozero, vodokhranilishche, и т.д.
     basseyn: str = ""
     dlinna_km: float | None = None
     ploshchad_km2: float | None = None

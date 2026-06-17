@@ -45,9 +45,9 @@ KATEGORII_RASKHODOV = [
 ]
 
 STATUSY_ISPOLNENIYA = {
-    "approved": "Утверждён",
-    "in_execution": "Исполняется",
-    "completed": "Исполнен",
-    "revised": "Скорректирован",
-    "preliminary": "Предварительный",
+    "utverzhdyon": "Утверждён",
+    "ispolnyaetsya": "Исполняется",
+    "ispolnen": "Исполнен",
+    "skorrektirovan": "Скорректирован",
+    "predvaritelnyy": "Предварительный",
 }

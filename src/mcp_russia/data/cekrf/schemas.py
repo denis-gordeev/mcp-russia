@@ -25,7 +25,7 @@ class Dolzhnost(BaseModel):
 
     code: int = Field(description="Код должности")
     name: str = Field(description="Наименование должности")
-    level: str = Field(description="Уровень (federal/regional/municipal)")
+    level: str = Field(description="Уровень (федеральный/региональный/муниципальный)")
 
 
 class KandidatKratko(BaseModel):

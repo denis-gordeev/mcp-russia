@@ -76,7 +76,7 @@ async def statistika_pojarov(
         static = client.get_statistika_pojarov_static()
         if static:
             lines = [
-                "**Статистика пожаров в РФ (2023, fallback-данные)**\n",
+                "**Статистика пожаров в РФ (2023, резервные данные)**\n",
                 f"- Всего пожаров: {static['vsego_pojarov']:,}",
                 f"- Погибших: {static['pogibshikh']:,}",
                 f"- Пострадавших: {static['postradavshikh']:,}",

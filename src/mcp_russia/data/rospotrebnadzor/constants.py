@@ -14,13 +14,16 @@ ZPP_API_BASE = "https://zpp.rospotrebnadzor.ru"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {"code": "sanitary", "name": "Санитарно-эпидемиологический надзор"},
-    {"code": "consumer_protection", "name": "Защита прав потребителей"},
-    {"code": "radiation_safety", "name": "Радиационная безопасность"},
-    {"code": "water_safety", "name": "Безопасность водных объектов"},
-    {"code": "air_quality", "name": "Контроль качества атмосферного воздуха"},
-    {"code": "food_safety", "name": "Безопасность пищевых продуктов"},
-    {"code": "product_safety", "name": "Безопасность непродовольственных товаров"},
+    {"code": "sanitarnyy_nadzor", "name": "Санитарно-эпидемиологический надзор"},
+    {"code": "zashchita_prav_potrebiteley", "name": "Защита прав потребителей"},
+    {"code": "radiatsionnaya_bezopasnost", "name": "Радиационная безопасность"},
+    {"code": "bezopasnost_vodnykh", "name": "Безопасность водных объектов"},
+    {"code": "kachestvo_atmosfernogo_vozdukha", "name": "Контроль качества атмосферного воздуха"},
+    {"code": "bezopasnost_pishchevykh", "name": "Безопасность пищевых продуктов"},
+    {
+        "code": "bezopasnost_neprodovolstvennykh",
+        "name": "Безопасность непродовольственных товаров",
+    },
 ]
 
 # Типы проверок
@@ -34,14 +37,14 @@ TIPY_PROVEROK = [
 
 # Категории объектов надзора
 KATEGORII_OBIEKTOV = [
-    {"code": "food_enterprise", "name": "Предприятия пищевой промышленности"},
-    {"code": "catering", "name": "Общественное питание"},
-    {"code": "education", "name": "Образовательные учреждения"},
-    {"code": "medical", "name": "Медицинские организации"},
-    {"code": "water_supply", "name": "Водоснабжающие организации"},
-    {"code": "retail", "name": "Объекты торговли"},
-    {"code": "industrial", "name": "Промышленные предприятия"},
-    {"code": "residential", "name": "Жилые здания"},
+    {"code": "pishchevye_predpriyatiya", "name": "Предприятия пищевой промышленности"},
+    {"code": "obshchestvennoe_pitanie", "name": "Общественное питание"},
+    {"code": "obrazovatelnye_uchrezhdeniya", "name": "Образовательные учреждения"},
+    {"code": "meditsinskie_organizatsii", "name": "Медицинские организации"},
+    {"code": "vodosnabzhayushchie", "name": "Водоснабжающие организации"},
+    {"code": "obekty_torgovli", "name": "Объекты торговли"},
+    {"code": "promyshlennye_predpriyatiya", "name": "Промышленные предприятия"},
+    {"code": "zhilye_zdaniya", "name": "Жилые здания"},
 ]
 
 # Региональные управления (по федеральным округам)
@@ -67,16 +70,16 @@ SANPIN_OSNOVNYE = [
 
 # Статусы проверок
 STATUSY_PROVEROK = {
-    "planned": "Запланирована",
-    "in_progress": "Проводится",
-    "completed": "Завершена",
-    "canceled": "Отменена",
+    "zaplanirovana": "Запланирована",
+    "provoditsya": "Проводится",
+    "zavershena": "Завершена",
+    "otmenena": "Отменена",
 }
 
 # Виды нарушений
 VIDY_NARUSHENIY = {
-    "sanitary": "Санитарно-эпидемиологическое",
-    "consumer": "Защита прав потребителей",
-    "radiation": "Радиационная безопасность",
-    "food": "Безопасность пищевых продуктов",
+    "sanitarnoe": "Санитарно-эпидемиологическое",
+    "prava_potrebiteley": "Защита прав потребителей",
+    "radiatsionnaya": "Радиационная безопасность",
+    "pishchevaya_bezopasnost": "Безопасность пищевых продуктов",
 }

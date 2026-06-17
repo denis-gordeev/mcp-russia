@@ -10,11 +10,11 @@ class NormativnyyAkt(BaseModel):
 
     nomer: str
     nazvanie: str
-    tip: str = ""  # fz, ukaz, postanovlenie_pr, etc.
+    tip: str = ""  # fz, ukaz, postanovlenie_pr, и т.д.
     data_prinyatiya: str = ""
     data_publikatsii: str = ""
-    istochnik: str = ""  # pravo.gov.ru, rg.ru, etc.
-    status: str = ""  # deystvuyushchiy, utratil_silu, etc.
+    istochnik: str = ""  # pravo.gov.ru, rg.ru, и т.д.
+    status: str = ""  # deystvuyushchiy, utratil_silu, и т.д.
     otrysl: str = ""
     kratkoe_opisanie: str = ""
     tekst_url: str = ""

@@ -104,7 +104,7 @@ async def poisk_proizvodstv(
             data = await http_get(FSSP_IP_BASE, params=params)
             return _parse_proizvodstva(data)
         except Exception:
-            logger.exception("Ошибка при fallback-поиске производств по ФИО «%s»", fio)
+            logger.exception("Ошибка при резервном поиске производств по ФИО «%s»", fio)
             return []
 
 

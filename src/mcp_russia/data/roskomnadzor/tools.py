@@ -255,7 +255,7 @@ async def zapisi_reestra(ctx: Context, reestr_code: str, zapisi_id: str = "") ->
     """Информация о реестре Роскомнадзора.
 
     Аргументы:
-        reestr_code: Код реестра (blocked_sites, pd_operators, ori и т.д.).
+        reestr_code: Код реестра (zapreshchennye_sayty, operatory_pd, ori и т.д.).
         zapisi_id: ID конкретной записи (необязательно).
 
     Возвращает:

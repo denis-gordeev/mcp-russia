@@ -17,12 +17,12 @@ ORI_REGISTRY_URL = "https://rkn.gov.ru/registry-ori"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {"code": "media_supervision", "name": "Надзор в сфере СМИ"},
-    {"code": "telecom_supervision", "name": "Надзор в сфере связи (телекоммуникации)"},
-    {"code": "it_supervision", "name": "Надзор в сфере информационных технологий"},
-    {"code": "personal_data", "name": "Защита персональных данных"},
-    {"code": "internet_control", "name": "Контроль информационного пространства в сети Интернет"},
-    {"code": "copyright", "name": "Защита авторских прав в сети"},
+    {"code": "nadzor_smi", "name": "Надзор в сфере СМИ"},
+    {"code": "nadzor_svyazi", "name": "Надзор в сфере связи (телекоммуникации)"},
+    {"code": "nadzor_it", "name": "Надзор в сфере информационных технологий"},
+    {"code": "zashchita_pd", "name": "Защита персональных данных"},
+    {"code": "kontrol_interneta", "name": "Контроль информационного пространства в сети Интернет"},
+    {"code": "zashchita_avtorskikh_prav", "name": "Защита авторских прав в сети"},
 ]
 
 # Типы лицензий связи
@@ -48,12 +48,12 @@ KATEGORII_NARUSHENIY = [
 # Реестры Роскомнадзора
 REGISTRY_RKN = [
     {
-        "code": "blocked_sites",
+        "code": "zapreshchennye_sayty",
         "name": "Единый реестр запрещённых сайтов",
         "url": "https://eais.rkn.gov.ru",
     },
     {
-        "code": "pd_operators",
+        "code": "operatory_pd",
         "name": "Реестр операторов персональных данных",
         "url": "https://rkn.gov.ru/pdn",
     },
@@ -63,46 +63,46 @@ REGISTRY_RKN = [
         "url": "https://rkn.gov.ru/registry-ori",
     },
     {
-        "code": "it_companies",
+        "code": "inostrannye_it_kompanii",
         "name": "Реестр иностранных IT-компаний",
         "url": "https://rkn.gov.ru/it-companies",
     },
     {
-        "code": "license_holders",
+        "code": "litsenziaty_svyazi",
         "name": "Реестр лицензиатов связи",
         "url": "https://rkn.gov.ru/licenses",
     },
-    {"code": "media_registry", "name": "Реестр СМИ", "url": "https://rkn.gov.ru/mass-media"},
+    {"code": "reestr_smi", "name": "Реестр СМИ", "url": "https://rkn.gov.ru/mass-media"},
 ]
 
 # Типы СМИ
 TIPY_SMI = [
-    {"code": "print", "name": "Печатное издание (газета, журнал)"},
-    {"code": "online", "name": "Сетевое издание"},
-    {"code": "tv", "name": "Телеканал"},
-    {"code": "radio", "name": "Радиоканал"},
-    {"code": "news_agency", "name": "Информационное агентство"},
+    {"code": "pechatnoe_izdanie", "name": "Печатное издание (газета, журнал)"},
+    {"code": "setevoe_izdanie", "name": "Сетевое издание"},
+    {"code": "telekanal", "name": "Телеканал"},
+    {"code": "radiokanal", "name": "Радиоканал"},
+    {"code": "informatsionnoe_agentstvo", "name": "Информационное агентство"},
 ]
 
 # Субъекты персональных данных (категории операторов)
 KATEGORII_PD_OPERATOROV = [
-    {"code": "government", "name": "Государственные органы"},
-    {"code": "commercial", "name": "Коммерческие организации"},
-    {"code": "nonprofit", "name": "Некоммерческие организации"},
-    {"code": "individual_entrepreneur", "name": "Индивидуальные предприниматели"},
-    {"code": "education", "name": "Образовательные учреждения"},
-    {"code": "healthcare", "name": "Медицинские организации"},
+    {"code": "gosudarstvennye_organy", "name": "Государственные органы"},
+    {"code": "kommercheskie_organizatsii", "name": "Коммерческие организации"},
+    {"code": "nekommercheskie_organizatsii", "name": "Некоммерческие организации"},
+    {"code": "individualnye_predprinimateli", "name": "Индивидуальные предприниматели"},
+    {"code": "obrazovatelnye_uchrezhdeniya", "name": "Образовательные учреждения"},
+    {"code": "meditsinskie_organizatsii", "name": "Медицинские организации"},
 ]
 
 # Основания включения в реестр запрещённых сайтов
 OSNOVANIYA_BLOKIROVKI = {
-    "drug": "Наркотические средства",
-    "suicide": "Пропаганда самоубийств",
-    "pornography": "Детская порнография",
-    "extremism": "Экстремистские материалы",
-    "gambling": "Нелегальные азартные игры",
-    "copyright": "Нарушение авторских прав",
-    "dangerous": "Опасная информация для детей",
-    "fake": "Недостоверная информация",
-    "personal_data": "Утечка персональных данных",
+    "narkotiki": "Наркотические средства",
+    "samoubiystva": "Пропаганда самоубийств",
+    "detskaya_porografiya": "Детская порнография",
+    "ekstremizm": "Экстремистские материалы",
+    "azarntnye_igry": "Нелегальные азартные игры",
+    "avtorskoe_pravo": "Нарушение авторских прав",
+    "opasnaya_informatsiya": "Опасная информация для детей",
+    "nedostovernaya_informatsiya": "Недостоверная информация",
+    "utechka_pd": "Утечка персональных данных",
 }

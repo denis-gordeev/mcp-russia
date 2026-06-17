@@ -63,18 +63,18 @@ SUBIEKTY_AUDITA = [
 
 # Статусы контрольных мероприятий
 STATUSY_KONTROLYA = {
-    "planned": "Запланировано",
-    "in_progress": "Проводится",
-    "completed": "Завершено",
-    "cancelled": "Отменено",
-    "approved": "Утверждено",
+    "zaplanirovano": "Запланировано",
+    "provoditsya": "Проводится",
+    "zaversheno": "Завершено",
+    "otmeneno": "Отменено",
+    "utverzhdeno": "Утверждено",
 }
 
 # Виды нарушений
 VIDY_NARUSHENIY = {
-    "financial": "Финансовое нарушение",
-    "budget": "Бюджетное нарушение",
-    "procurement": "Нарушение в сфере закупок",
-    "property": "Нарушение при использовании госсобственности",
-    "program": "Нарушение при реализации госпрограмм",
+    "finansovoe": "Финансовое нарушение",
+    "byudzhetnoe": "Бюджетное нарушение",
+    "v_sfere_zakupok": "Нарушение в сфере закупок",
+    "pri_ispolzovanii_gossobstvennosti": "Нарушение при использовании госсобственности",
+    "pri_realizatsii_gosprogramm": "Нарушение при реализации госпрограмм",
 }

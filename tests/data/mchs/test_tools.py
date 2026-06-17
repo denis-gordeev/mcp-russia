@@ -41,7 +41,7 @@ async def test_statistika_pojarov_fallback():
     ctx = _mock_ctx()
     with patch.object(mchs_tools.client, "statistika_pojarov", return_value=[]):
         result = await mchs_tools.statistika_pojarov(ctx)
-    assert "356" in result or "2023" in result or "fallback" in result.lower()
+    assert "356" in result or "2023" in result or "резервные данные" in result
 
 
 async def test_statistika_pojarov_with_data():

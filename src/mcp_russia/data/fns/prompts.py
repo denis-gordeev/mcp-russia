@@ -1,6 +1,6 @@
 """Промпты модуля ФНС.
 
-Все промпты на русском с пометками «(legacy — placeholder)», так как
+Все промпты на русском с пометками «(заглушка)», так как
 это модуль-заглушка в ожидании реальной интеграции с API.
 """
 
@@ -11,7 +11,7 @@ from fastmcp.prompts import Message, PromptMessage, PromptResult
 
 
 def analiz_nalogoplatelshchika() -> PromptResult:
-    """Анализ налогоплательщика по ИНН. (legacy — placeholder)
+    """Анализ налогоплательщика по ИНН. (заглушка)
 
     Используйте этот промпт для анализа организации или ИП по ИНН.
     """
@@ -40,7 +40,7 @@ def analiz_nalogoplatelshchika() -> PromptResult:
 
 
 def obzor_rezhimov_nalogooblozheniya() -> PromptResult:
-    """Обзор режимов налогообложения для бизнеса. (legacy — placeholder)
+    """Обзор режимов налогообложения для бизнеса. (заглушка)
 
     Используйте этот промпт для выбора оптимального режима налогообложения.
     """

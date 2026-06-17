@@ -38,30 +38,30 @@ FRAKCII = [
 
 # Комитеты (основные)
 KOMITETY = [
-    {"code": "budget", "name": "Комитет по бюджету и налогам"},
+    {"code": "byudzhet_i_nalogi", "name": "Комитет по бюджету и налогам"},
     {
-        "code": "legislation",
+        "code": "gosstroitelstvo_i_zakonodatelstvo",
         "name": "Комитет по госстроительству и законодательству",
     },
-    {"code": "defense", "name": "Комитет по обороне"},
-    {"code": "foreign", "name": "Комитет по международным делам"},
-    {"code": "economy", "name": "Комитет по экономической политике"},
-    {"code": "health", "name": "Комитет по охране здоровья"},
-    {"code": "education", "name": "Комитет по просвещению"},
-    {"code": "energy", "name": "Комитет по энергетике"},
+    {"code": "oborona", "name": "Комитет по обороне"},
+    {"code": "mezhdunarodnye_dela", "name": "Комитет по международным делам"},
+    {"code": "ekonomicheskaya_politika", "name": "Комитет по экономической политике"},
+    {"code": "okhrana_zdorovya", "name": "Комитет по охране здоровья"},
+    {"code": "prosvishchenie", "name": "Комитет по просвещению"},
+    {"code": "energetika", "name": "Комитет по энергетике"},
 ]
 
 # Статусы законопроектов
 STATUSY_ZAKONOPROEKTOV = [
-    {"code": "introduced", "name": "Внесён в ГД"},
-    {"code": "committee", "name": "На рассмотрении комитета"},
-    {"code": "first_reading", "name": "Прошёл первое чтение"},
-    {"code": "second_reading", "name": "Прошёл второе чтение"},
-    {"code": "third_reading", "name": "Прошёл третье чтение"},
-    {"code": "approved", "name": "Одобрен Советом Федерации"},
-    {"code": "signed", "name": "Подписан Президентом"},
-    {"code": "rejected", "name": "Отклонён"},
-    {"code": "withdrawn", "name": "Отозван инициатором"},
+    {"code": "vnesen_v_gd", "name": "Внесён в ГД"},
+    {"code": "v_komitete", "name": "На рассмотрении комитета"},
+    {"code": "pervoe_chtenie", "name": "Прошёл первое чтение"},
+    {"code": "vtoroe_chtenie", "name": "Прошёл второе чтение"},
+    {"code": "tretie_chtenie", "name": "Прошёл третье чтение"},
+    {"code": "odobren_sf", "name": "Одобрен Советом Федерации"},
+    {"code": "podpisan_prezidentom", "name": "Подписан Президентом"},
+    {"code": "otklonen", "name": "Отклонён"},
+    {"code": "otozvan_initsiatorom", "name": "Отозван инициатором"},
 ]
 
 # Фракции — маппинг кодов API → русские названия

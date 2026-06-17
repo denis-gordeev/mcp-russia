@@ -20,32 +20,32 @@ TIPLY_DANNYKH = [
 
 # Способы определения поставщиков
 SPOSOBY_ZAKUPOK = [
-    {"code": "open", "name": "Открытый конкурс"},
-    {"code": "auction", "name": "Электронный аукцион"},
-    {"code": "query", "name": "Запрос котировок"},
-    {"code": "single", "name": "Закупка у единственного поставщика"},
-    {"code": "closed", "name": "Закрытый конкурс"},
-    {"code": "limited", "name": "Закупка с ограниченным участием"},
+    {"code": "otkrytyy_konkurs", "name": "Открытый конкурс"},
+    {"code": "elektronnyy_auktsion", "name": "Электронный аукцион"},
+    {"code": "zapros_kotirovok", "name": "Запрос котировок"},
+    {"code": "edinyy_postavshchik", "name": "Закупка у единственного поставщика"},
+    {"code": "zakrytyy_konkurs", "name": "Закрытый конкурс"},
+    {"code": "ogranichennoe_uchastie", "name": "Закупка с ограниченным участием"},
 ]
 
 # Основные отрасли (ОКВЭД верхнего уровня)
 OTRASLI = [
-    {"code": "construction", "name": "Строительство"},
-    {"code": "it", "name": "Информационные технологии"},
-    {"code": "medicine", "name": "Медицина и фармацевтика"},
-    {"code": "education", "name": "Образование"},
-    {"code": "transport", "name": "Транспорт и логистика"},
-    {"code": "energy", "name": "Энергетика"},
-    {"code": "food", "name": "Продовольствие"},
-    {"code": "security", "name": "Безопасность и оборона"},
+    {"code": "stroitelstvo", "name": "Строительство"},
+    {"code": "informatsionnye_tekhnologii", "name": "Информационные технологии"},
+    {"code": "meditsina_i_farmvtsevtika", "name": "Медицина и фармацевтика"},
+    {"code": "obrazovanie", "name": "Образование"},
+    {"code": "transport_i_logistika", "name": "Транспорт и логистика"},
+    {"code": "energetika", "name": "Энергетика"},
+    {"code": "prodovolstvie", "name": "Продовольствие"},
+    {"code": "bezopasnost_i_oborona", "name": "Безопасность и оборона"},
 ]
 
 # Статусы закупок
 STATUSY_ZAKUPOK = [
-    {"code": "planning", "name": "Планирование"},
-    {"code": "announced", "name": "Опубликована"},
-    {"code": "bidding", "name": "Приём заявок"},
-    {"code": "review", "name": "Рассмотрение заявок"},
-    {"code": "completed", "name": "Завершена"},
-    {"code": "cancelled", "name": "Отменена"},
+    {"code": "planirovanie", "name": "Планирование"},
+    {"code": "opublikovana", "name": "Опубликована"},
+    {"code": "priem_zayavok", "name": "Приём заявок"},
+    {"code": "rassmotrenie_zayavok", "name": "Рассмотрение заявок"},
+    {"code": "zavershena", "name": "Завершена"},
+    {"code": "otmenena", "name": "Отменена"},
 ]

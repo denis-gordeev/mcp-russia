@@ -53,13 +53,13 @@ KOMISSII_SOVFEDA = [
 ]
 
 STATUSY_ZAKONOPROEKTA = {
-    "pending": "На рассмотрении",
-    "approved": "Одобрен",
-    "rejected": "Отклонён",
-    "revision": "Доработка",
-    "committee": "В комитете",
-    "session": "На заседании",
-    "enacted": "Принят",
+    "na_rassmotrenii": "На рассмотрении",
+    "odobren": "Одобрен",
+    "otklonen": "Отклонён",
+    "dorabotka": "Доработка",
+    "v_komitete": "В комитете",
+    "na_zasedanii": "На заседании",
+    "prinyat": "Принят",
 }
 
 DOLZHNOSTI_SENATORA = [
