@@ -101,9 +101,9 @@ def _parse_zakupki_search(data: Any) -> list[Zakupka]:
                 status=item.get("status", item.get("commonStatus", "")),
                 initial_price=_safe_float(item.get("price", item.get("maxPrice", 0))),
                 currency=item.get("currency", "RUB"),
-                publish_date=item.get("publishDate", item.get("docPublishDate", "")),
+                data_publikatsii=item.get("publishDate", item.get("docPublishDate", "")),
                 deadline=item.get("endDate", item.get("bidEndDate", "")),
-                organizer_name=item.get("customerName", item.get("organizerName", "")),
+                nazvanie_organizatora=item.get("customerName", item.get("organizerName", "")),
                 organizer_inn=item.get("customerInn", item.get("organizerInn", "")),
             )
         )
@@ -211,11 +211,11 @@ def _parse_kontrakty(data: Any) -> list[Kontrakt]:
                 id=str(item.get("id", "")),
                 number=item.get("regNum", item.get("contractNumber", "")),
                 zakupka_number=item.get("purchaseNumber", ""),
-                contractor_name=item.get("supplierName", item.get("contractorName", "")),
+                nazvanie_podryadchika=item.get("supplierName", item.get("contractorName", "")),
                 contractor_inn=item.get("supplierInn", item.get("contractorInn", "")),
                 price=_safe_float(item.get("price", item.get("contractPrice", 0))),
                 currency=item.get("currency", "RUB"),
-                sign_date=item.get("signDate", item.get("contractDate", "")),
+                data_podpisaniya=item.get("signDate", item.get("contractDate", "")),
                 status=item.get("status", item.get("contractStatus", "")),
                 execution_deadline=item.get("executionDate", item.get("endDate", "")),
             )
@@ -241,7 +241,7 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
         if org:
             return Zakazchik(
                 id=org.inn,
-                name=org.nazvanie,
+                nazvanie=org.nazvanie,
                 inn=org.inn,
                 kpp="",
                 region="",
@@ -273,7 +273,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
             if org:
                 return Postavshchik(
                     id=org.inn,
-                    name=org.nazvanie,
+                    nazvanie=org.nazvanie,
                     inn=org.inn,
                     region="",
                     contracts_won=0,
@@ -286,7 +286,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
             if ip:
                 return Postavshchik(
                     id=ip.inn,
-                    name=ip.fio,
+                    nazvanie=ip.fio,
                     inn=ip.inn,
                     region="",
                     contracts_won=0,
@@ -345,12 +345,12 @@ def _parse_plany(data: Any) -> list[PlanZakupki]:
             PlanZakupki(
                 id=str(item.get("id", "")),
                 year=item.get("year", 0),
-                organizer_name=item.get("customerName", ""),
+                nazvanie_organizatora=item.get("customerName", ""),
                 organizer_inn=item.get("customerInn", ""),
                 items_count=item.get("positionsCount", 0),
                 total_budget=_safe_float(item.get("totalSum", 0)),
-                created_date=item.get("createDate", ""),
-                updated_date=item.get("updateDate", ""),
+                data_sozdaniya=item.get("createDate", ""),
+                data_obnovleniya=item.get("updateDate", ""),
             )
         )
     return results

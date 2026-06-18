@@ -63,12 +63,12 @@ def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
     director = mgmt_obj.get("name") if isinstance(mgmt_obj, dict) else None
     reg_date = state_obj.get("registration_date") if isinstance(state_obj, dict) else None
     return {
-        "name_full": name_full,
-        "name_short": name_short,
+        "nazvanie_polnoe": name_full,
+        "nazvanie_kratkoe": name_short,
         "status": status,
         "address": address,
         "director": director,
-        "registration_date": reg_date,
+        "data_registratsii": reg_date,
     }
 
 
@@ -80,8 +80,8 @@ def _parse_bank_data(data: dict[str, Any], fallback_name: str = "") -> dict[str,
     addr_obj = data.get("address")
     city = _nested_get(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
     return {
-        "name_full": name_full,
-        "name_short": name_short,
+        "nazvanie_polnoe": name_full,
+        "nazvanie_kratkoe": name_short,
         "city": city,
     }
 
@@ -195,8 +195,8 @@ def get_holidays(year: int) -> list[dict[str, str]]:
         full_date = f"{year}-{date_str}"
         holidays.append(
             {
-                "date": full_date,
-                "name": name,
+                "data": full_date,
+                "nazvanie": name,
                 "type": "national"
                 if date_str
                 in [
@@ -239,7 +239,7 @@ async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str
     s = suggestions[0]
     data = s.get("data", {})
     return AdresRF(
-        postal_code=data.get("postal_code", postal_code),
+        pochtovyy_indeks=data.get("postal_code", postal_code),
         region=data.get("region_with_type", ""),
         city=data.get("city_with_type") or data.get("settlement_with_type", ""),
         street=data.get("street_with_type"),
@@ -267,7 +267,7 @@ async def search_address(query: str) -> list[dict[str, str]]:
         results.append(
             {
                 "value": s.get("value", ""),
-                "postal_code": data.get("postal_code", ""),
+                "pochtovyy_indeks": data.get("postal_code", ""),
                 "region": data.get("region_with_type", ""),
                 "city": city,
                 "street": data.get("street_with_type", ""),
@@ -301,12 +301,12 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
         inn=data.get("inn", inn),
         kpp=data.get("kpp"),
         ogrn=data.get("ogrn"),
-        name_full=parsed["name_full"],
-        name_short=parsed["name_short"],
+        nazvanie_polnoe=parsed["nazvanie_polnoe"],
+        nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         status=parsed["status"],
         address=parsed["address"],
         director=parsed["director"],
-        registration_date=parsed["registration_date"],
+        data_registratsii=parsed["data_registratsii"],
     )
 
 
@@ -333,8 +333,8 @@ async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
         inn=data.get("inn", ""),
         kpp=data.get("kpp"),
         ogrn=data.get("ogrn", ogrn),
-        name_full=parsed["name_full"],
-        name_short=parsed["name_short"],
+        nazvanie_polnoe=parsed["nazvanie_polnoe"],
+        nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         status=parsed["status"],
         address=parsed["address"],
     )
@@ -350,8 +350,8 @@ async def list_banks_public() -> list[BankRF]:
         banks.append(
             BankRF(
                 bik=data.get("bic", ""),
-                name=parsed["name_full"],
-                name_short=parsed["name_short"],
+                nazvanie=parsed["nazvanie_polnoe"],
+                nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
                 city=parsed["city"],
                 region=None,
                 swift=data.get("swift"),
@@ -379,8 +379,8 @@ async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
     parsed = _parse_bank_data(data, suggestions[0].get("value", ""))
     return BankRF(
         bik=data.get("bic", bik),
-        name=parsed["name_full"],
-        name_short=parsed["name_short"],
+        nazvanie=parsed["nazvanie_polnoe"],
+        nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         city=parsed["city"],
         region=None,
         swift=data.get("swift"),

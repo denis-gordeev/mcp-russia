@@ -26,7 +26,7 @@ class Zakonoproekt(BaseModel):
     number: str
     title: str
     status: str = ""
-    date_vnesen: str = ""
+    data_vneseniya: str = ""
     author: str = ""
     readings: int = 0
 
@@ -34,8 +34,8 @@ class Zakonoproekt(BaseModel):
 class Frakciya(BaseModel):
     """Фракция Государственной Думы."""
 
-    code: str
-    name: str
+    kod: str
+    nazvanie: str
     rukovoditel: str = ""
     count: int = 0
 
@@ -45,7 +45,7 @@ class Golosovanie(BaseModel):
 
     zakonoproekt_id: str
     title: str
-    date: str
+    data: str
     za: int = 0
     protiv: int = 0
     vozhderzhalsya: int = 0

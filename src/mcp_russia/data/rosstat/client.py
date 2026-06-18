@@ -75,8 +75,8 @@ async def poluchit_dannye_regiona(code: str) -> RegionData | None:
         data = await http_get(url, timeout=20.0)
         if isinstance(data, dict):
             return RegionData(
-                code=code,
-                name=region_info["name"],
+                kod=code,
+                nazvanie=region_info["name"],
                 federalny_okrug=region_info.get("okrug", ""),
                 population=data.get("population"),
                 vrp=data.get("gdp") or data.get("vrp"),
@@ -86,8 +86,8 @@ async def poluchit_dannye_regiona(code: str) -> RegionData | None:
         logger.exception("Ошибка при получении данных региона %s", code)
 
     return RegionData(
-        code=code,
-        name=region_info["name"],
+        kod=code,
+        nazvanie=region_info["name"],
         federalny_okrug=region_info.get("okrug", ""),
     )
 
@@ -107,8 +107,8 @@ async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
 
     regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == code]
     return {
-        "code": code,
-        "name": okrug_info["name"],
+        "kod": code,
+        "nazvanie": okrug_info["name"],
         "kolichestvo_subiektov": len(regiony),
         "subiekty": [r["name"] for r in regiony],
     }
@@ -310,8 +310,8 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                     results.append(
                         {
                             "region": region_name,
-                            "code": region_code,
-                            "value": item.get("value"),
+                            "kod": region_code,
+                            "znachenie": item.get("value"),
                             "period": item.get("date", item.get("period", "")),
                         }
                     )
@@ -397,11 +397,11 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
         try:
             results.append(
                 PokazatelRosstata(
-                    code=code,
-                    name=item.get("name", code),
-                    value=float(item.get("value", 0)),
+                    kod=code,
+                    nazvanie=item.get("name", code),
+                    znachenie=float(item.get("value", 0)),
                     unit=item.get("unit", ""),
-                    date=item.get("date", ""),
+                    data=item.get("date", ""),
                 )
             )
         except (ValueError, TypeError):

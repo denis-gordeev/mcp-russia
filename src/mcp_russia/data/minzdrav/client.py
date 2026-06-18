@@ -218,7 +218,7 @@ def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных медицинской организации."""
     return {
         "id": item.get("id", "") or item.get("ogrn", ""),
-        "name": item.get("name", "") or item.get("fullName", ""),
+        "nazvanie": item.get("name", "") or item.get("fullName", ""),
         "tip": item.get("type", "") or item.get("tip", ""),
         "region": item.get("region", "") or item.get("subject", ""),
         "city": item.get("city", "") or item.get("settlement", ""),
@@ -250,7 +250,7 @@ def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных показателя здоровья."""
     return {
         "kod": item.get("code", "") or item.get("kod", ""),
-        "name": item.get("name", ""),
+        "nazvanie": item.get("name", ""),
         "znachenie": item.get("value") or item.get("znachenie", 0),
         "ed_izm": item.get("unit", "") or item.get("ed_izm", ""),
         "god": item.get("year") or item.get("god", 0),
@@ -262,8 +262,8 @@ def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
 def _parse_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о заболевании."""
     return {
-        "mkb_code": item.get("mkbCode", "") or item.get("mkb_code", ""),
-        "name": item.get("name", "") or item.get("diseaseName", ""),
+        "kod_mkb": item.get("mkbCode", "") or item.get("mkb_code", ""),
+        "nazvanie": item.get("name", "") or item.get("diseaseName", ""),
         "chelovek_zabolelo": item.get("cases") or item.get("chelovek_zabolelo", 0),
         "chelovek_vylechilos": item.get("recovered") or item.get("chelovek_vylechilos", 0),
         "letalnykh_sluchaev": item.get("deaths") or item.get("letalnykh_sluchaev", 0),

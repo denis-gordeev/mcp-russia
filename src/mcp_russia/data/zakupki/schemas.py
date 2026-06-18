@@ -16,9 +16,9 @@ class Zakupka(BaseModel):
     status: str = ""
     initial_price: float = 0.0
     currency: str = "RUB"
-    publish_date: str = ""
+    data_publikatsii: str = ""
     deadline: str = ""
-    organizer_name: str = ""
+    nazvanie_organizatora: str = ""
     organizer_inn: str = ""
 
 
@@ -28,11 +28,11 @@ class Kontrakt(BaseModel):
     id: str
     number: str = ""
     zakupka_number: str = ""
-    contractor_name: str = ""
+    nazvanie_podryadchika: str = ""
     contractor_inn: str = ""
     price: float = 0.0
     currency: str = "RUB"
-    sign_date: str = ""
+    data_podpisaniya: str = ""
     status: str = ""
     execution_deadline: str = ""
 
@@ -41,7 +41,7 @@ class Zakazchik(BaseModel):
     """Заказчик (государственный/муниципальный орган)."""
 
     id: str
-    name: str
+    nazvanie: str
     inn: str = ""
     kpp: str = ""
     region: str = ""
@@ -54,7 +54,7 @@ class Postavshchik(BaseModel):
     """Поставщик (участник закупки)."""
 
     id: str
-    name: str
+    nazvanie: str
     inn: str = ""
     region: str = ""
     contracts_won: int = 0
@@ -68,9 +68,9 @@ class PlanZakupki(BaseModel):
 
     id: str
     year: int
-    organizer_name: str = ""
+    nazvanie_organizatora: str = ""
     organizer_inn: str = ""
     items_count: int = 0
     total_budget: float = 0.0
-    created_date: str = ""
-    updated_date: str = ""
+    data_sozdaniya: str = ""
+    data_obnovleniya: str = ""

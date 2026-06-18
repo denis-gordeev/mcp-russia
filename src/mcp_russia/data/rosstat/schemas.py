@@ -8,19 +8,19 @@ from pydantic import BaseModel
 class PokazatelRosstata(BaseModel):
     """Показатель Росстата."""
 
-    code: str
-    name: str
-    value: float
+    kod: str
+    nazvanie: str
+    znachenie: float
     unit: str = ""
-    date: str = ""
+    data: str = ""
     source: str = "Федеральная служба государственной статистики (Росстат)"
 
 
 class RegionData(BaseModel):
     """Данные по региону РФ."""
 
-    code: str
-    name: str
+    kod: str
+    nazvanie: str
     federalny_okrug: str = ""
     population: int | None = None
     vrp: float | None = None

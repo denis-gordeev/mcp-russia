@@ -218,7 +218,7 @@ async def test_zakonoproekty_with_data():
             number="12345-8",
             title="О внесении изменений",
             status="Рассматривается",
-            date_vnesen="2025-01-15",
+            data_vneseniya="2025-01-15",
             author="Депутаты ГД",
             readings=1,
         )
@@ -240,7 +240,7 @@ async def test_golosovaniya_with_data():
         Golosovanie(
             zakonoproekt_id="1",
             title="О бюджете",
-            date="2025-12-01",
+            data="2025-12-01",
             za=300,
             protiv=50,
             vozhderzhalsya=10,

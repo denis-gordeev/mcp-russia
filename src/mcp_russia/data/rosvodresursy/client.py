@@ -180,7 +180,7 @@ def get_tipy_gidro_list() -> list[dict[str, str]]:
 def get_vodokhranilishcha_list() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
-        {"code": v["code"], "name": v["name"], "region": v["region"]}
+        {"kod": v["code"], "nazvanie": v["name"], "region": v["region"]}
         for v in KRUPNYE_VODOKHRANILISHCHA
     ]
 
@@ -205,8 +205,8 @@ def _extract_list(data: Any) -> list[Any]:
 def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водного объекта."""
     return {
-        "code": item.get("code", "") or item.get("id", ""),
-        "name": item.get("name", "") or item.get("title", ""),
+        "kod": item.get("code", "") or item.get("id", ""),
+        "nazvanie": item.get("name", "") or item.get("title", ""),
         "tip": item.get("type", "") or item.get("tip", ""),
         "basseyn": item.get("basin", "") or item.get("basseyn", ""),
         "dlinna_km": item.get("length") or item.get("dlinna_km"),
@@ -236,8 +236,8 @@ def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
 def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водохранилища."""
     return {
-        "code": item.get("code", "") or item.get("id", ""),
-        "name": item.get("name", "") or item.get("title", ""),
+        "kod": item.get("code", "") or item.get("id", ""),
+        "nazvanie": item.get("name", "") or item.get("title", ""),
         "region": item.get("region", ""),
         "obiem_km3": item.get("volume") or item.get("obiem_km3"),
         "ploshchad_km2": item.get("area") or item.get("ploshchad_km2"),

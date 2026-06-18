@@ -2,6 +2,61 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-18 (сорок пятый проход — русификация полей Pydantic-схем)
+
+### Выполнено
+
+- **Русификация полей Pydantic-схем** (49 замен в 10 модулях):
+  - `code→kod` (11 замен): cekrf (SubyektRF, TipVyborov, Dolzhnost), gosduma (Frakciya), rospotrebnadzor (OrganNadzora), rosapi (PostalCodeInfo), rosstat (PokazatelRosstata, RegionData), rosvodresursy (VodnyyObekt, VodokhranilishcheData)
+  - `name→nazvanie` (14 замен): cekrf (SubyektRF, TipVyborov, Dolzhnost, PartiaInfo), gosduma (Frakciya), rosapi (BankRF, Prazdnik), rosstat (PokazatelRosstata, RegionData), rosvodresursy (VodnyyObekt, VodokhranilishcheData), kad_arbitrazh (StoronaDela), zakupki (Zakazchik, Postavshchik), minzdrav (MedOrganizatsia, PokazatelZdorovya, ZabolevanieStat)
+  - `value→znachenie` (2 замены): rosstat (PokazatelRosstata), cbrf (DannyeValyuty)
+  - `date→data` (3 замены): rosapi (Prazdnik), gosduma (Golosovanie), cbrf (DannyeValyuty)
+  - Составные поля `*_name/name_*→*_nazvanie/nazvanie_*` (10 замен): cekrf (short_name→kratkoe_nazvanie), rosapi (name_full→nazvanie_polnoe, name_short→nazvanie_kratkoe), kad_arbitrazh (sud_name→nazvanie_suda), zakupki (organizer_name→nazvanie_organizatora, contractor_name→nazvanie_podryadchika)
+  - Составные поля `*_date/date_*→*_data/data_*` (6 замен): rosapi (registration_date→data_registratsii), kad_arbitrazh (posledniy_akt_date→data_poslednego_akta), gosduma (date_vnesen→data_vneseniya), zakupki (publish_date→data_publikatsii, sign_date→data_podpisaniya, created_date→data_sozdaniya, updated_date→data_obnovleniya)
+  - Составные поля `*_code/code_*→*_kod/kod_*` (3 замены): roskomnadzor (registry_code→kod_reestra), rosapi (postal_code→pochtovyy_indeks), minzdrav (mkb_code→kod_mkb)
+- **Обновлены клиентские функции** (координированные замены в client.py 8 модулей):
+  - cekrf/client.py: TipVyborov, SubyektRF, Dolzhnost, PartiaInfo — keyword args
+  - rosapi/client.py: _parse_org_data, _parse_bank_data, get_holidays dict keys, AdresRF, Organizatsiya, BankRF constructors
+  - rosvodresursy/client.py: get_vodokhranilishcha_list, _parse_vodnyy_obekt, _parse_vodokhranilishche dict keys
+  - kad_arbitrazh/client.py: SudebnoeDelo, StoronaDela constructors
+  - gosduma/client.py: Zakonoproekt, Golosovanie, Frakciya constructors
+  - rosstat/client.py: RegionData, PokazatelRosstata constructors, poluchit_federalny_okrug/poluchit_sravnenie_regionov dict keys
+  - zakupki/client.py: Zakupka, Kontrakt, Zakazchik, Postavshchik, PlanZakupki constructors
+  - minzdrav/client.py: _parse_med_organizatsia, _parse_pokazatel, _parse_zabolevanie dict keys
+- **Обновлены инструменты** (координированные замены в tools.py 8 модулей):
+  - cekrf/tools.py: attribute access на TipVyborov.kod, SubyektRF.nazvanie, Dolzhnost.kod, PartiaInfo.kratkoe_nazvanie
+  - rosapi/tools.py: AdresRF.pochtovyy_indeks, Organizatsiya.nazvanie_polnoe/nazvanie_kratkoe/data_registratsii, BankRF.nazvanie/nazvanie_kratkoe, holidays dict keys
+  - rosvodresursy/tools.py: dict key access nazvanie
+  - kad_arbitrazh/tools.py: SudebnoeDelo.nazvanie_suda/data_poslednego_akta, StoronaDela.nazvanie
+  - gosduma/tools.py: Zakonoproekt.data_vneseniya, Golosovanie.data
+  - rosstat/tools.py: RegionData.kod/nazvanie, okrug_info dict keys, sravnenie_regionov dict keys
+  - zakupki/tools.py: Zakupka.data_publikatsii/nazvanie_organizatora, Kontrakt.nazvanie_podryadchika/data_podpisaniya, Zakazchik.nazvanie, Postavshchik.nazvanie, PlanZakupki.nazvanie_organizatora
+  - minzdrav/tools.py: dict key access nazvanie, kod_mkb
+- **Обновлены тесты** (31 замена в 7 тестовых файлах):
+  - tests/data/cekrf/test_tools.py: TipVyborov, SubyektRF, Dolzhnost, PartiaInfo kwargs
+  - tests/data/rosapi/test_tools.py: AdresRF, Organizatsiya, BankRF kwargs, search_address dict keys
+  - tests/data/rosvodresursy/test_tools.py: mock data dict keys
+  - tests/data/kad_arbitrazh/test_tools.py: SudebnoeDelo attribute/dict access
+  - tests/data/gosduma/test_tools.py: Zakonoproekt, Golosovanie kwargs
+  - tests/data/rosstat/test_tools.py: RegionData kwargs, okrug/sravnenie dict keys
+  - tests/data/zakupki/test_tools.py: Zakupka, Kontrakt kwargs, assertion access
+  - tests/data/minzdrav/test_tools.py: mock data dict keys
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Все поля Pydantic-схем русифицированы**: английские field names (code, name, value, date и их составные формы) заменены на русскую транслитерацию (kod, nazvanie, znachenie, data и т.д.) во всех 10 модулях, где они оставались
+- **JSON-вывод инструментов теперь полностью русифицирован**: при сериализации Pydantic-моделей в JSON ключи полей будут на русском (kod, nazvanie и т.д.)
+- **Dict keys клиентских функций синхронизированы**: возвращаемые словари в client.py используют те же ключи, что и соответствующие Pydantic-схемы
+- **14 модулей уже имели русские поля**: publikatsii, rosselkhoznadzor, mchs, rosgidromet, gibdd, fssp, sovfed, rosprirodnadzor, rosaudit, rosreestr, fns, kaznacheistvo, minobrnauki, agenty/redator — не потребовали изменений
+- **Константы (constants.py) не затронуты**: справочники в constants.py по-прежнему используют `"code"` и `"name"` как внутренние ключи — это данные, а не схема
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+
 ## Статус раунда 2026-06-17 (сорок четвёртый проход — русификация кодовых значений Росстата, Минздрава, Роскомнадзора, РосАПИ, Госдумы, ЦИК)
 
 ### Выполнено

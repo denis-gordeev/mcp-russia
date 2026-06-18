@@ -90,11 +90,11 @@ def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
                 category=category,
                 status=case_info.get("Status", item.get("status", "")),
                 sudya=case_info.get("Judge", item.get("judge", "")),
-                sud_name=sud_name,
+                nazvanie_suda=sud_name,
                 data_vozbuzhdeniya=case_info.get(
                     "RegistrationDate", item.get("registrationDate", "")
                 ),
-                posledniy_akt_date=case_info.get(
+                data_poslednego_akta=case_info.get(
                     "LastDocumentDate", item.get("lastDocumentDate", "")
                 ),
                 istorcy=istorcy,
@@ -147,9 +147,9 @@ def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
         category=category,
         status=case_info.get("Status", data.get("status", "")),
         sudya=case_info.get("Judge", data.get("judge", "")),
-        sud_name=sud_name,
+        nazvanie_suda=sud_name,
         data_vozbuzhdeniya=case_info.get("RegistrationDate", data.get("registrationDate", "")),
-        posledniy_akt_date=case_info.get("LastDocumentDate", data.get("lastDocumentDate", "")),
+        data_poslednego_akta=case_info.get("LastDocumentDate", data.get("lastDocumentDate", "")),
         istorcy=istorcy,
         otvetchiki=otvetchiki,
         summa_iska=summa,
@@ -208,7 +208,7 @@ def _parse_storony(data: Any, delo_number: str) -> list[StoronaDela]:
                 inn = parts[1].strip().lstrip(":").strip().split()[0] if len(parts) > 1 else ""
             results.append(
                 StoronaDela(
-                    name=name,
+                    nazvanie=name,
                     inn=inn,
                     tip=tip_label,
                 )

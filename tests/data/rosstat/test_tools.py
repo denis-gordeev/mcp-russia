@@ -43,7 +43,7 @@ async def test_spisok_okrugov():
 
 async def test_region_info():
     ctx = _mock_ctx()
-    region = RegionData(code="77", name="г. Москва", federalny_okrug="ЦФО", population=13000000)
+    region = RegionData(kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", population=13000000)
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
         result = await rosstat_tools.region_info("77", ctx)
     assert "Москва" in result
@@ -63,8 +63,8 @@ async def test_okrug_info():
         rosstat_tools.client,
         "poluchit_federalny_okrug",
         return_value={
-            "code": "CFO",
-            "name": "Центральный федеральный округ",
+            "kod": "CFO",
+            "nazvanie": "Центральный федеральный округ",
             "kolichestvo_subiektov": 18,
             "subiekty": ["г. Москва", "Московская область"],
         },
@@ -218,8 +218,8 @@ async def test_sravnenie_regionov_invalid_pokazatel():
 async def test_sravnenie_regionov_with_data():
     ctx = _mock_ctx()
     mock_data = [
-        {"region": "г. Москва", "code": "77", "value": 25400.5, "period": "2023"},
-        {"region": "Тюменская область", "code": "72", "value": 8900.3, "period": "2023"},
+        {"region": "г. Москва", "kod": "77", "znachenie": 25400.5, "period": "2023"},
+        {"region": "Тюменская область", "kod": "72", "znachenie": 8900.3, "period": "2023"},
     ]
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=mock_data):
         result = await rosstat_tools.sravnenie_regionov("vrp", ctx)

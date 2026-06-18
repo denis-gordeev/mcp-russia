@@ -61,7 +61,7 @@ def test_parse_kontrakty():
     }
     result = zakupki_client._parse_kontrakty(data)
     assert len(result) == 1
-    assert result[0].contractor_name == "ООО Ромашка"
+    assert result[0].nazvanie_podryadchika == "ООО Ромашка"
     assert result[0].price == 500000.0
 
 
@@ -99,8 +99,8 @@ async def test_poisk_zakupok_with_data():
             sposob="Электронный аукцион",
             status="Подача заявок",
             initial_price=1500000.0,
-            publish_date="2025-01-15",
-            organizer_name="Минобразования",
+            data_publikatsii="2025-01-15",
+            nazvanie_organizatora="Минобразования",
             organizer_inn="7700000000",
         )
     ]
@@ -138,9 +138,9 @@ async def test_info_zakupki_found():
         sposob="Электронный аукцион",
         status="Подача заявок",
         initial_price=1500000.0,
-        publish_date="2025-01-15",
+        data_publikatsii="2025-01-15",
         deadline="2025-02-01",
-        organizer_name="Минобразования",
+        nazvanie_organizatora="Минобразования",
         organizer_inn="7700000000",
     )
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=zakupka):
@@ -164,10 +164,10 @@ async def test_poisk_kontraktov_with_data():
             id="1",
             number="12345678901",
             zakupka_number="0123400000125000001",
-            contractor_name="ООО Ромашка",
+            nazvanie_podryadchika="ООО Ромашка",
             contractor_inn="7700000001",
             price=500000.0,
-            sign_date="2025-02-01",
+            data_podpisaniya="2025-02-01",
             status="Исполнение",
         )
     ]

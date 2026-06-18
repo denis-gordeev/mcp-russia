@@ -12,9 +12,9 @@ class SudebnoeDelo(BaseModel):
     category: str = ""
     status: str = ""
     sudya: str = ""
-    sud_name: str = ""
+    nazvanie_suda: str = ""
     data_vozbuzhdeniya: str = ""
-    posledniy_akt_date: str = ""
+    data_poslednego_akta: str = ""
     istorcy: list[str] = []
     otvetchiki: list[str] = []
     summa_iska: float = 0.0
@@ -53,7 +53,7 @@ class Sudy(BaseModel):
 
     id: str
     familiya_imya: str
-    sud_name: str = ""
+    nazvanie_suda: str = ""
     dolzhnost: str = ""  # председатель, судья
     del_rassmotreno: int = 0
 
@@ -61,7 +61,7 @@ class Sudy(BaseModel):
 class StoronaDela(BaseModel):
     """Сторона судебного дела (истец/ответчик)."""
 
-    name: str
+    nazvanie: str
     inn: str = ""
     tip: str = ""  # "истец" или "ответчик"
     region: str = ""

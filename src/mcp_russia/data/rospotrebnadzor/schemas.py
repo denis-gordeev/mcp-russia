@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class OrganNadzora(BaseModel):
     """Орган Роспотребнадзора (территориальное управление)."""
 
-    code: str
+    kod: str
     nazvanie: str
     federalnyy_okrug: str = ""
     region: str = ""

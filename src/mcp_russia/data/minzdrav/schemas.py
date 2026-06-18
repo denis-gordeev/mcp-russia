@@ -9,7 +9,7 @@ class MedOrganizatsia(BaseModel):
     """Медицинская организация."""
 
     id: str
-    name: str
+    nazvanie: str
     tip: str = ""  # тип МО (больница, поликлиника и т.д.)
     region: str = ""
     city: str = ""
@@ -37,7 +37,7 @@ class PokazatelZdorovya(BaseModel):
     """Показатель здоровья населения."""
 
     kod: str
-    name: str
+    nazvanie: str
     znachenie: float = 0.0
     ed_izm: str = ""
     god: int = 0
@@ -48,8 +48,8 @@ class PokazatelZdorovya(BaseModel):
 class ZabolevanieStat(BaseModel):
     """Статистика по заболеванию."""
 
-    mkb_code: str
-    name: str
+    kod_mkb: str
+    nazvanie: str
     chelovek_zabolelo: int = 0
     chelovek_vylechilos: int = 0
     letalnykh_sluchaev: int = 0

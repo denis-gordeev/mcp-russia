@@ -174,7 +174,7 @@ def _parse_zakonoproekty(data: Any) -> list[Zakonoproekt]:
                 number=item.get("number", ""),
                 title=item.get("name", item.get("title", "")),
                 status=item.get("statusName", item.get("status", "")),
-                date_vnesen=item.get("dateIntroduction", item.get("introductionDate", "")),
+                data_vneseniya=item.get("dateIntroduction", item.get("introductionDate", "")),
                 author=item.get("subjectName", item.get("author", "")),
                 readings=item.get("readingsCount", item.get("readings", 0)),
             )
@@ -229,7 +229,7 @@ def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
             Golosovanie(
                 zakonoproekt_id=str(item.get("billId", item.get("id", ""))),
                 title=item.get("subject", item.get("title", "")),
-                date=item.get("date", item.get("voteDate", "")),
+                data=item.get("date", item.get("voteDate", "")),
                 za=item.get("totalFor", item.get("for", 0)),
                 protiv=item.get("totalAgainst", item.get("against", 0)),
                 vozhderzhalsya=item.get("totalAbstain", item.get("abstain", 0)),
@@ -245,7 +245,7 @@ async def poluchit_frakcii() -> list[Frakciya]:
     Возвращает:
         Список фракций.
     """
-    return [Frakciya(code=f["code"], name=f["name"]) for f in FRAKCII]
+    return [Frakciya(kod=f["code"], nazvanie=f["name"]) for f in FRAKCII]
 
 
 def get_sozyvy() -> list[dict[str, str]]:

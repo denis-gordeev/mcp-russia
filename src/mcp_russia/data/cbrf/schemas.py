@@ -19,12 +19,12 @@ class ZnachenieValyuty(BaseModel):
 class DannyeValyuty(BaseModel):
     """Полные данные по валюте из API ЦБ РФ."""
 
-    code: str
-    name: str
+    kod: str
+    nazvanie: str
     nominal: int
-    value: float
+    znachenie: float
     previous: float | None = None
-    date: str = ""
+    data: str = ""
 
 
 class EkonomicheskiyIndikator(BaseModel):

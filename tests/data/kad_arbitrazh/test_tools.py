@@ -30,7 +30,7 @@ class TestParserRezultatyPoiska:
         results = kad_client._parse_rezultaty_poiska(data)
         assert len(results) == 1
         assert results[0].number == "А40-12345/2024"
-        assert results[0].sud_name == "АС г. Москвы"
+        assert results[0].nazvanie_suda == "АС г. Москвы"
         assert results[0].summa_iska == 1000000.0
         assert "ООО Альфа" in results[0].istorcy
 
@@ -162,7 +162,7 @@ async def test_poisk_del_with_results():
             category="Банкротство",
             status="На рассмотрении",
             sudya="Иванов И.И.",
-            sud_name="АС г. Москвы",
+            nazvanie_suda="АС г. Москвы",
             summa_iska=1000000,
             istorcy=["ООО Альфа"],
             otvetchiki=["ООО Бета"],

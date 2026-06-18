@@ -70,7 +70,7 @@ async def region_info(kod: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{data.name}** (код {data.code})",
+        f"**{data.nazvanie}** (код {data.kod})",
     ]
     if data.federalny_okrug:
         lines.append(f"- Федеральный округ: {data.federalny_okrug}")
@@ -101,7 +101,7 @@ async def okrug_info(kod: str, ctx: Context) -> str:
         return f"{data['error']}\n\nИспользуйте spisok_okrugov() для списка округов."
 
     lines = [
-        f"**{data['name']}** (код {data['code']})",
+        f"**{data['nazvanie']}** (код {data['kod']})",
         f"- Субъектов в округе: {data.get('kolichestvo_subiektov', 0)}",
     ]
     subiekty = data.get("subiekty", [])
@@ -293,11 +293,11 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}"
         )
-    sorted_data = sorted(data, key=lambda x: x.get("value") or 0, reverse=True)
+    sorted_data = sorted(data, key=lambda x: x.get("znachenie") or 0, reverse=True)
     rows = []
     for i, d in enumerate(sorted_data, 1):
-        val = format_number_ru(d["value"], 2) if d.get("value") else "—"
-        rows.append((i, d.get("region", "—"), d.get("code", "—"), val, d.get("period", "—")))
+        val = format_number_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
+        rows.append((i, d.get("region", "—"), d.get("kod", "—"), val, d.get("period", "—")))
     indicator_name = next(
         (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == pokazatel),
         pokazatel,

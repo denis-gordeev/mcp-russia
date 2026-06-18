@@ -43,7 +43,7 @@ async def test_poisk_vodnykh_obektov_empty():
 async def test_poisk_vodnykh_obektov_found():
     ctx = _mock_ctx()
     mock_data = [
-        {"name": "Река Волга", "tip": "Река", "basseyn": "Волжский", "region": ""},
+        {"nazvanie": "Река Волга", "tip": "Река", "basseyn": "Волжский", "region": ""},
     ]
     with patch.object(rosvodresursy_tools.client, "poisk_vodnykh_obektov", return_value=mock_data):
         result = await rosvodresursy_tools.poisk_vodnykh_obektov(ctx, zapros="Волга")
@@ -60,7 +60,7 @@ async def test_info_vodnogo_obekta_not_found():
 async def test_info_vodnogo_obekta_found():
     ctx = _mock_ctx()
     mock_data = {
-        "name": "Река Волга",
+        "nazvanie": "Река Волга",
         "tip": "Река",
         "basseyn": "Волжский бассейновый округ",
         "dlinna_km": 3530,

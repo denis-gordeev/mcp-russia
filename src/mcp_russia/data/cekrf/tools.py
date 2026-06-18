@@ -31,7 +31,7 @@ async def tipy_vyborov(ctx: Context) -> str:
     await ctx.info("Запрос типов выборов ЦИК РФ...")
     tipy = await client.tipy_vyborov()
 
-    rows = [(str(t.code), t.name) for t in tipy]
+    rows = [(str(t.kod), t.nazvanie) for t in tipy]
     header = "**Типы выборов в РФ**\n\n"
     return header + markdown_table(["Код", "Тип выборов"], rows)
 
@@ -47,7 +47,7 @@ async def subyekty_rf(ctx: Context) -> str:
     await ctx.info("Запрос справочника субъектов РФ...")
     subyekty = await client.subyekty_rf()
 
-    rows = [(s.code, s.name) for s in subyekty]
+    rows = [(s.kod, s.nazvanie) for s in subyekty]
     header = f"**Субъекты Российской Федерации** — {len(rows)} субъектов\n\n"
     return header + markdown_table(["Код", "Субъект РФ"], rows)
 
@@ -64,7 +64,7 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     await ctx.info("Запрос федеральных избирательных должностей...")
     dolzhnosti = await client.dolzhnosti_federal()
 
-    rows = [(str(d.code), d.name, d.level) for d in dolzhnosti]
+    rows = [(str(d.kod), d.nazvanie, d.level) for d in dolzhnosti]
     header = "**Федеральные избирательные должности**\n\n"
     return header + markdown_table(["Код", "Должность", "Уровень"], rows)
 
@@ -78,7 +78,7 @@ async def partii_rf(ctx: Context) -> str:
     await ctx.info("Запрос справочника партий РФ...")
     partii = await client.partii_rf()
 
-    rows = [(p.short_name, p.name, p.color) for p in partii]
+    rows = [(p.kratkoe_nazvanie, p.nazvanie, p.color) for p in partii]
     header = f"**Политические партии РФ** — {len(rows)} партий\n\n"
     return header + markdown_table(["Краткое", "Наименование", "Цвет"], rows)
 

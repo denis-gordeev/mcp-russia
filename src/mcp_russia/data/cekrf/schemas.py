@@ -8,23 +8,23 @@ from pydantic import BaseModel, Field
 class SubyektRF(BaseModel):
     """Субъект Российской Федерации."""
 
-    code: str = Field(description="Код субъекта РФ")
-    name: str = Field(description="Полное наименование субъекта")
+    kod: str = Field(description="Код субъекта РФ")
+    nazvanie: str = Field(description="Полное наименование субъекта")
     okato: str = Field(description="Код ОКАТО", default="")
 
 
 class TipVyborov(BaseModel):
     """Тип выборов."""
 
-    code: int = Field(description="Код типа выборов")
-    name: str = Field(description="Наименование типа выборов")
+    kod: int = Field(description="Код типа выборов")
+    nazvanie: str = Field(description="Наименование типа выборов")
 
 
 class Dolzhnost(BaseModel):
     """Избирательная должность."""
 
-    code: int = Field(description="Код должности")
-    name: str = Field(description="Наименование должности")
+    kod: int = Field(description="Код должности")
+    nazvanie: str = Field(description="Наименование должности")
     level: str = Field(description="Уровень (федеральный/региональный/муниципальный)")
 
 
@@ -87,7 +87,7 @@ class ItogiVYborov(BaseModel):
 class PartiaInfo(BaseModel):
     """Информация о политической партии."""
 
-    name: str = Field(description="Полное наименование партии")
-    short_name: str = Field(description="Краткое наименование")
+    nazvanie: str = Field(description="Полное наименование партии")
+    kratkoe_nazvanie: str = Field(description="Краткое наименование")
     color: str = Field(description="Цвет партии (hex)", default="")
     registraciya: str = Field(description="Номер регистрации Минюста", default="")

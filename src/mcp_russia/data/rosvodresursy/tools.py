@@ -98,7 +98,7 @@ async def poisk_vodnykh_obektov(
         return "Водные объекты не найдены. Попробуйте изменить параметры поиска."
     rows = [
         (
-            o.get("name", ""),
+            o.get("nazvanie", ""),
             o.get("tip", ""),
             o.get("basseyn", ""),
             o.get("region", ""),
@@ -130,7 +130,7 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{data.get('name', '')}**",
+        f"**{data.get('nazvanie', '')}**",
         f"- Тип: {data.get('tip', '')}",
         f"- Бассейн: {data.get('basseyn', '')}",
     ]
@@ -223,7 +223,7 @@ async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{data.get('name', '')}** ({data.get('region', '')})",
+        f"**{data.get('nazvanie', '')}** ({data.get('region', '')})",
     ]
     if data.get("obiem_km3"):
         lines.append(f"- Объём: {format_number_ru(data['obiem_km3'], 2)} км³")

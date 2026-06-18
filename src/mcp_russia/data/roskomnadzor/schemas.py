@@ -56,7 +56,7 @@ class NarushenieRKN(BaseModel):
 class ZapisReestra(BaseModel):
     """Запись из реестра Роскомнадзора."""
 
-    registry_code: str  # код реестра
+    kod_reestra: str  # код реестра
     zapisi_id: str
     osnovanie: str = ""
     data_vneseniya: str = ""

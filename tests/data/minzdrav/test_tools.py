@@ -22,7 +22,12 @@ async def test_poisk_med_organizatsiy_empty():
 async def test_poisk_med_organizatsiy_found():
     ctx = _mock_ctx()
     mock_data = [
-        {"name": "Городская больница №1", "tip": "Больница", "region": "Москва", "city": "Москва"},
+        {
+            "nazvanie": "Городская больница №1",
+            "tip": "Больница",
+            "region": "Москва",
+            "city": "Москва",
+        },
     ]
     with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
         result = await minzdrav_tools.poisk_med_organizatsiy(
@@ -41,7 +46,7 @@ async def test_info_med_organizatsii_not_found():
 async def test_info_med_organizatsii_found():
     ctx = _mock_ctx()
     mock_data = {
-        "name": "Городская больница №1",
+        "nazvanie": "Городская больница №1",
         "tip": "Больница",
         "adres": "г. Москва, ул. Примерная, д.1",
         "region": "Москва",
@@ -91,7 +96,7 @@ async def test_pokazateli_zdorovya_found():
     ctx = _mock_ctx()
     mock_data = [
         {
-            "name": "Ожидаемая продолжительность жизни",
+            "nazvanie": "Ожидаемая продолжительность жизни",
             "znachenie": 73.5,
             "ed_izm": "лет",
             "god": 2024,
@@ -114,8 +119,8 @@ async def test_statistika_zabolevaniy_found():
     ctx = _mock_ctx()
     mock_data = [
         {
-            "mkb_code": "I00-I99",
-            "name": "Болезни системы кровообращения",
+            "kod_mkb": "I00-I99",
+            "nazvanie": "Болезни системы кровообращения",
             "chelovek_zabolelo": 500000,
             "letalnykh_sluchaev": 10000,
             "god": 2024,

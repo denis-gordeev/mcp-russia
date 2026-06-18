@@ -23,7 +23,7 @@ async def test_konsul_adres_po_indeksu_success():
         rosapi_tools.client,
         "consult_address_by_postal",
         return_value=AdresRF(
-            postal_code="101000",
+            pochtovyy_indeks="101000",
             region="г Москва",
             city="Москва",
             street="Красная площадь",
@@ -64,7 +64,7 @@ async def test_poisk_adresa_success():
         return_value=[
             {
                 "value": "г Москва, Красная площадь",
-                "postal_code": "101000",
+                "pochtovyy_indeks": "101000",
                 "region": "г Москва",
                 "city": "Москва",
                 "street": "Красная площадь",
@@ -87,12 +87,12 @@ async def test_poisk_org_po_inn_success():
             inn="7707083893",
             kpp="773601001",
             ogrn="1027700132195",
-            name_full="Публичное акционерное общество «Сбербанк России»",
-            name_short="ПАО Сбербанк",
+            nazvanie_polnoe="Публичное акционерное общество «Сбербанк России»",
+            nazvanie_kratkoe="ПАО Сбербанк",
             status="ACTIVE",
             address="г Москва, ул Вавилова, д 19",
             director="Греф Герман Оскарович",
-            registration_date="2002-08-23",
+            data_registratsii="2002-08-23",
         ),
     ):
         result = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
@@ -138,8 +138,8 @@ async def test_konsul_bank_po_bik_dadata():
         "find_bank_by_bik",
         return_value=BankRF(
             bik="044525225",
-            name="Публичное акционерное общество «Сбербанк России»",
-            name_short="ПАО Сбербанк",
+            nazvanie="Публичное акционерное общество «Сбербанк России»",
+            nazvanie_kratkoe="ПАО Сбербанк",
             city="Москва",
             swift="SABRRUMM",
         ),

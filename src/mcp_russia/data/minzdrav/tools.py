@@ -45,7 +45,7 @@ async def poisk_med_organizatsiy(
         )
     rows = [
         (
-            o.get("name", ""),
+            o.get("nazvanie", ""),
             o.get("tip", ""),
             o.get("region", ""),
             o.get("city", ""),
@@ -80,7 +80,7 @@ async def info_med_organizatsii(
         )
 
     lines = [
-        f"**{mo.get('name', '')}**",
+        f"**{mo.get('nazvanie', '')}**",
         f"- Тип: {mo.get('tip', '')}",
         f"- Адрес: {mo.get('adres', '')}",
         f"- Регион: {mo.get('region', '')}",
@@ -156,7 +156,7 @@ async def pokazateli_zdorovya(
         )
     rows = [
         (
-            p.get("name", ""),
+            p.get("nazvanie", ""),
             str(p.get("znachenie", "")),
             p.get("ed_izm", ""),
             str(p.get("god", "")),
@@ -201,8 +201,8 @@ async def statistika_zabolevaniy(
         return header
     rows = [
         (
-            z.get("mkb_code", ""),
-            z.get("name", ""),
+            z.get("kod_mkb", ""),
+            z.get("nazvanie", ""),
             str(z.get("chelovek_zabolelo", "")),
             str(z.get("letalnykh_sluchaev", "")),
             str(z.get("god", "")),

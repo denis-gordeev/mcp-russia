@@ -166,7 +166,7 @@ async def zakonoproekty(
             f"используйте API СОЗД."
         )
 
-    rows = [(b.number, b.title[:80], b.status, b.date_vnesen) for b in bills]
+    rows = [(b.number, b.title[:80], b.status, b.data_vneseniya) for b in bills]
     header = "**Законопроекты Государственной Думы**\n\n"
     header += f"Найдено: {len(bills)} законопроектов\n\n"
     return (
@@ -205,7 +205,7 @@ async def golosovaniya(
         )
 
     rows = [
-        (v.zakonoproekt_id, v.title[:60], v.date, f"За: {v.za} / Против: {v.protiv}")
+        (v.zakonoproekt_id, v.title[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
         for v in votes
     ]
     header = "**Голосования Государственной Думы**\n\n"

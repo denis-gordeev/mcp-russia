@@ -8,8 +8,8 @@ from pydantic import BaseModel
 class VodnyyObekt(BaseModel):
     """Водный объект РФ."""
 
-    code: str
-    name: str
+    kod: str
+    nazvanie: str
     tip: str = ""  # reka, ozero, vodokhranilishche, и т.д.
     basseyn: str = ""
     dlinna_km: float | None = None
@@ -34,8 +34,8 @@ class GidroData(BaseModel):
 class VodokhranilishcheData(BaseModel):
     """Данные водохранилища."""
 
-    code: str
-    name: str
+    kod: str
+    nazvanie: str
     region: str = ""
     obiem_km3: float | None = None
     ploshchad_km2: float | None = None

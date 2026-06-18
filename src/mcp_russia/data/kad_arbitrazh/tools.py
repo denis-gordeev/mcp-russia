@@ -80,7 +80,7 @@ async def poisk_del(
                 d.number,
                 d.category or "—",
                 d.status or "—",
-                d.sud_name or "—",
+                d.nazvanie_suda or "—",
                 summa,
             )
         )
@@ -119,9 +119,9 @@ async def info_dela(
         f"- Категория: {delo.category}",
         f"- Статус: {delo.status}",
         f"- Судья: {delo.sudya}",
-        f"- Суд: {delo.sud_name}",
+        f"- Суд: {delo.nazvanie_suda}",
         f"- Дата возбуждения: {delo.data_vozbuzhdeniya}",
-        f"- Последний акт: {delo.posledniy_akt_date}",
+        f"- Последний акт: {delo.data_poslednego_akta}",
         f"- Истцы: {', '.join(delo.istorcy)}",
         f"- Ответчики: {', '.join(delo.otvetchiki)}",
     ]
@@ -176,7 +176,7 @@ async def storony_dela(
 
     lines = [f"**Стороны дела {nomer_dela}**\n"]
     for s in storony:
-        lines.append(f"- **{s.tip}**: {s.name}")
+        lines.append(f"- **{s.tip}**: {s.nazvanie}")
         if s.inn:
             lines.append(f"  ИНН: {s.inn}")
         if s.region:

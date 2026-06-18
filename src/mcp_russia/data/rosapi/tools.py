@@ -46,7 +46,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**Почтовый индекс:** {result.postal_code}",
+        f"**Почтовый индекс:** {result.pochtovyy_indeks}",
         f"**Полный адрес:** {result.full_address or 'Н/Д'}",
     ]
     if result.region:
@@ -86,7 +86,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
             (
                 str(i),
                 addr.get("value", ""),
-                addr.get("postal_code", ""),
+                addr.get("pochtovyy_indeks", ""),
             )
         )
 
@@ -116,7 +116,7 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{result.name_short or result.name_full or 'Организация'}**",
+        f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
         f"- ИНН: {result.inn}",
     ]
     if result.kpp:
@@ -135,8 +135,8 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         lines.append(f"- Адрес: {result.address}")
     if result.director:
         lines.append(f"- Руководитель: {result.director}")
-    if result.registration_date:
-        lines.append(f"- Дата регистрации: {result.registration_date}")
+    if result.data_registratsii:
+        lines.append(f"- Дата регистрации: {result.data_registratsii}")
 
     lines.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
     return "\n".join(lines)
@@ -158,7 +158,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
         return f"**ОГРН: {ogrn}**\n\n{result['error']}"
 
     lines = [
-        f"**{result.name_short or result.name_full or 'Организация'}**",
+        f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
         f"- ОГРН: {result.ogrn or ogrn}",
     ]
     if result.inn:
@@ -227,11 +227,11 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
         )
 
     lines = [
-        f"**{result.name}**",
+        f"**{result.nazvanie}**",
         f"- БИК: {result.bik}",
     ]
-    if result.name_short:
-        lines.append(f"- Краткое название: {result.name_short}")
+    if result.nazvanie_kratkoe:
+        lines.append(f"- Краткое название: {result.nazvanie_kratkoe}")
     if result.city:
         lines.append(f"- Город: {result.city}")
     if result.swift:
@@ -258,8 +258,8 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
 
     rows = []
     for h in holidays:
-        date_str = h["date"][5:]
-        rows.append((date_str, h["name"], h["type"]))
+        date_str = h["data"][5:]
+        rows.append((date_str, h["nazvanie"], h["type"]))
 
     header = f"**Национальные праздники РФ ({god})**\n\n"
     return header + markdown_table(["Дата", "Праздник", "Тип"], rows)

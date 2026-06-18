@@ -124,12 +124,12 @@ async def info_zakupki(
         lines.append(f"- Статус: {zakupka.status}")
     if zakupka.initial_price:
         lines.append(f"- Начальная цена: {format_rub(zakupka.initial_price)}")
-    if zakupka.publish_date:
-        lines.append(f"- Дата публикации: {zakupka.publish_date}")
+    if zakupka.data_publikatsii:
+        lines.append(f"- Дата публикации: {zakupka.data_publikatsii}")
     if zakupka.deadline:
         lines.append(f"- Срок подачи заявок: {zakupka.deadline}")
-    if zakupka.organizer_name:
-        lines.append(f"- Заказчик: {zakupka.organizer_name}")
+    if zakupka.nazvanie_organizatora:
+        lines.append(f"- Заказчик: {zakupka.nazvanie_organizatora}")
     if zakupka.organizer_inn:
         lines.append(f"- ИНН заказчика: {zakupka.organizer_inn}")
 
@@ -167,7 +167,7 @@ async def poisk_kontraktov(
         )
 
     rows = [
-        (k.number, k.contractor_name[:40], format_rub(k.price), k.status, k.sign_date)
+        (k.number, k.nazvanie_podryadchika[:40], format_rub(k.price), k.status, k.data_podpisaniya)
         for k in kontrakty[:30]
     ]
     header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
@@ -197,7 +197,7 @@ async def info_zakazchika(
         return f"Заказчик с ИНН {inn} не найден в ЕИС.\n\nПроверьте корректность ИНН."
 
     lines = [
-        f"**Заказчик: {zakazchik.name}**",
+        f"**Заказчик: {zakazchik.nazvanie}**",
         f"- ИНН: {zakazchik.inn}",
     ]
     if zakazchik.kpp:
@@ -235,7 +235,7 @@ async def info_postavshchika(
 
     status = "Добросовестный" if postavshchik.is_dobrosovestny else "В реестре недобросовестных"
     lines = [
-        f"**Поставщик: {postavshchik.name}**",
+        f"**Поставщик: {postavshchik.nazvanie}**",
         f"- ИНН: {postavshchik.inn}",
     ]
     if postavshchik.region:
@@ -307,7 +307,12 @@ async def plany_zakupok(
         )
 
     rows = [
-        (p.organizer_name[:40], p.organizer_inn, str(p.items_count), format_rub(p.total_budget))
+        (
+            p.nazvanie_organizatora[:40],
+            p.organizer_inn,
+            str(p.items_count),
+            format_rub(p.total_budget),
+        )
         for p in plany[:30]
     ]
     header = f"**Планы-графики закупок на {god} год**\n\n"
