@@ -2,6 +2,57 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-18 (сорок шестой проход — русификация документации)
+
+### Выполнено
+
+- **Русификация терминологии в документации** (~140 замен в 16 файлах):
+  - `feature` → `модуль` (~32 замены): README.md (6), CONTRIBUTING.md (8), docs/concepts/architecture.md (9), docs/index.md (3), docs/reference/smart-tools.md (1), docs/reference/configuration.md (1), docs/guide/adding-features.md (2), docs/guide/development.md (2), docs/examples/ekonomist.md (1)
+  - `tools` → `инструменты` (~14 замен): README.md (1), docs/reference/smart-tools.md (6), docs/reference/configuration.md (2), docs/guide/quickstart.md (1), docs/concepts/architecture.md (1), docs/examples/analiz-zakonodatelstva.md (1)
+  - `Prompt:` → `Промпт:` (90 замен в 7 файлах docs/examples/): zhurnalist-rassledovatel (19), gosudarstvennaya-politika (21), zhurnalist-stati (16), municipalnyy-kontrol (14), ekonomicheskaya-panorama (7), parlamentskiy-otchet (7), ekonomist (6)
+  - `meta-tools` → `мета-инструменты` (6 замен): docs/reference/smart-tools.md (2), docs/reference/configuration.md (2), docs/guide/quickstart.md (1), docs/concepts/architecture.md (1)
+- **Русификация английских заголовков** (9 замен):
+  - `## Root server` → `## Корневой сервер` (architecture.md)
+  - `## Анатомия feature` → `## Анатомия модуля` (architecture.md)
+  - `## Shared-инфраструктура` → `## Общая инфраструктура` (architecture.md)
+  - `## Pull request` → `## Pull-запрос` (CONTRIBUTING.md)
+  - `### HTTP transport` → `### HTTP-транспорт` (configuration.md)
+  - `### Retry с backoff` → `### Повторные попытки с экспоненциальной задержкой` (configuration.md)
+  - `### Rate limiting` → `### Ограничение частоты запросов` (configuration.md)
+  - `## Локальный setup` → `## Локальная настройка` (development.md)
+  - `### HTTP / streamable HTTP` → `### HTTP / потоковый HTTP` (quickstart.md)
+- **Русификация смешанных терминов** (8 замен):
+  - `package-by-feature` → `пакетирование по модулям` (README.md)
+  - `feature-дерево` → `дерево модулей` (architecture.md)
+  - `feature-пакетов` → `пакетов модулей` (architecture.md)
+  - `feature-инструментов` → `инструментов модулей` (architecture.md)
+  - `feature-модулей` → `модулей` (architecture.md, ekonomist.md)
+  - `Setup, проверки` → `Настройка, проверки` (index.md)
+  - `data features` → `модули данных`, `agent features` → `агентные модули` (architecture.md)
+- **Русификация таблиц** (2 замены):
+  - `| API | Feature |` → `| API | Модуль |` (analiz-zakonodatelstva.md)
+  - `| Resource | Содержимое |` → `| Ресурс | Содержимое |` (ofitsialnyy-redaktor.md)
+- **Русификация комментариев в тестах** (2 замены):
+  - `# FeatureMeta` → `# FeatureMeta (метаданные модуля)` (tests/_shared/test_feature.py)
+  - `# FeatureRegistry` → `# FeatureRegistry (реестр модулей)` (tests/_shared/test_feature.py)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Документация полностью русифицирована**: все английские термины (feature, tools, meta-tools, Prompt:) в пользовательской документации заменены на русские эквиваленты
+- **Термин feature устранён из документации**: везде заменён на «модуль», что соответствует русскоязычной терминологии проекта
+- **Промпты в примерах унифицированы**: `> Prompt:` → `> Промпт:` во всех 7 примерах docs/examples/ (кроме politolog.md и analiz-zakonodatelstva.md, которые уже использовали русские варианты)
+- **Технические имена файлов не затронуты**: `{feature}` в путях `src/mcp_russia/data/{feature}/` и командах `make test-feature` оставлены как есть, т.к. это шаблоны/команды
+
+### Следующие действия
+
+- **Русификация оставшихся полей Pydantic-схем**: `id→identifikator`, `number→nomer`, `title→nazvanie`, `status→status` (оставить), `city→gorod`, `street→ulitsa`, `house→dom`, `price→tsena`, `currency→valyuta`, `deadline→srok`, `count→kolichestvo`, `population→naselenie`, `unit→edinitsa`, `source→istochnik`, `feels_like→oshchushchaetsya_kak`, `full_address→polnyy_adres`, `district→rayon`, `addresses→adresa`, `type→tip`, `territory→territoriya`, `previous→predydushchee`, `year→god`, `author→avtor`, `readings→chteniya`, `level→uroven`, `color→tsvet`, `phone→telefon`, `address→adres`, `director→rukovoditel` — затронет ~120+ полей в schemas.py, client.py, tools.py и тестах
+- **Русификация ключей словарей в constants.py**: `"code"→"kod"`, `"name"→"nazvanie"` — ~340+ вхождений в 22 модулях; потребует координированных замен в tools.py, client.py и тестах
+- **Русификация параметров функций**: `region`, `status`, `number`, `code`, `id`, `year` и др. — ~60+ вхождений в client.py и tools.py
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+
 ## Статус раунда 2026-06-18 (сорок пятый проход — русификация полей Pydantic-схем)
 
 ### Выполнено

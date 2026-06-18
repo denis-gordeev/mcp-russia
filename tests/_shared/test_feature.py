@@ -9,7 +9,7 @@ from fastmcp import Client, FastMCP
 from mcp_russia._shared.feature import FeatureMeta, FeatureRegistry, RegisteredFeature
 
 # ---------------------------------------------------------------------------
-# FeatureMeta
+# FeatureMeta (метаданные модуля)
 # ---------------------------------------------------------------------------
 
 
@@ -97,7 +97,7 @@ class TestFeatureMeta:
 
 
 # ---------------------------------------------------------------------------
-# FeatureRegistry
+# FeatureRegistry (реестр модулей)
 # ---------------------------------------------------------------------------
 
 

@@ -56,7 +56,7 @@ uv add mcp-russia
 claude mcp add mcp-russia -- uvx --from mcp-russia python -m mcp_russia.server
 ```
 
-### HTTP / streamable HTTP
+### HTTP / потоковый HTTP
 
 ```bash
 fastmcp run mcp_russia.server:mcp --transport http --port 8000
@@ -87,7 +87,7 @@ make serve
 
 | Переменная | Назначение |
 |------------|------------|
-| `ANTHROPIC_API_KEY` | Нужен для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros` |
+| `ANTHROPIC_API_KEY` | Нужен для мета-инструментов `rekomendovat_instrumenty` и `splanirovat_zapros` |
 
 ## Совместимость
 

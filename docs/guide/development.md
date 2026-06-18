@@ -1,6 +1,6 @@
 # Разработка
 
-## Локальный setup
+## Локальная настройка
 
 ```bash
 git clone git@github.com:denis-gordeev/mcp-russia.git
@@ -20,7 +20,7 @@ make dev
 | `make sync` | установить production-зависимости |
 | `make dev` | установить production + dev зависимости |
 | `make test` | запустить весь test suite |
-| `make test-feature F=cbrf` | прогнать тесты одной feature |
+| `make test-feature F=cbrf` | прогнать тесты одного модуля |
 | `make lint` | `ruff check` + `ruff format --check` |
 | `make fix` | auto-fix для lint и форматирования |
 | `make types` | `mypy` по `src/mcp_russia/` |
@@ -36,7 +36,7 @@ make dev
 
 Практическое правило:
 
-- новые кодовые изменения и новые features должны добавляться в `mcp_russia`;
+- новые кодовые изменения и новые модули должны добавляться в `mcp_russia`;
 - документация продолжает обновляться для устранения исторических неточностей.
 
 ## Структура тестов

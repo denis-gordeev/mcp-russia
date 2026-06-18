@@ -8,13 +8,13 @@
 
 | Переменная | По умолчанию | Описание |
 |----------|--------------|----------|
-| `ANTHROPIC_API_KEY` | — | Нужен для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros` |
+| `ANTHROPIC_API_KEY` | — | Нужен для мета-инструментов `rekomendovat_instrumenty` и `splanirovat_zapros` |
 
 ### Настройки сервера
 
 | Переменная | По умолчанию | Описание |
 |----------|--------------|----------|
-| `MCP_RUSSIA_TOOL_SEARCH` | `bm25` | Режим discovery и публикации tools для LLM |
+| `MCP_RUSSIA_TOOL_SEARCH` | `bm25` | Режим discovery и публикации инструментов для LLM |
 | `MCP_RUSSIA_HTTP_TIMEOUT` | `30.0` | HTTP timeout в секундах |
 | `MCP_RUSSIA_HTTP_MAX_RETRIES` | `3` | Максимальное число повторных попыток |
 | `MCP_RUSSIA_HTTP_BACKOFF_BASE` | `1.0` | Базовая задержка для экспоненциального backoff |
@@ -32,7 +32,7 @@
 
 ### Anthropic API
 
-Нужен только для meta-tools `rekomendovat_instrumenty` и `splanirovat_zapros`. Остальные features продолжают работать без него.
+Нужен только для мета-инструментов `rekomendovat_instrumenty` и `splanirovat_zapros`. Остальные модули продолжают работать без него.
 
 Установите `ANTHROPIC_API_KEY=<ваш-ключ>`.
 
@@ -85,7 +85,7 @@ claude mcp add mcp-russia \
   -- uvx --from mcp-russia python -m mcp_russia.server
 ```
 
-### HTTP transport
+### HTTP-транспорт
 
 ```bash
 ANTHROPIC_API_KEY=xxx \
@@ -96,7 +96,7 @@ ANTHROPIC_API_KEY=xxx \
 
 Общий `httpx` client поддерживает retry, backoff и единые timeout-настройки.
 
-### Retry с backoff
+### Повторные попытки с экспоненциальной задержкой
 
 Повтор выполняется автоматически при:
 
@@ -107,9 +107,9 @@ ANTHROPIC_API_KEY=xxx \
 
 Базовая схема backoff: `1s -> 2s -> 4s`, с опорой на `MCP_RUSSIA_HTTP_BACKOFF_BASE` и ограничением `MCP_RUSSIA_HTTP_MAX_RETRIES`.
 
-### Rate limiting
+### Ограничение частоты запросов
 
-Отдельные features могут использовать общий `RateLimiter` из `src/mcp_russia/_shared/rate_limiter.py`:
+Отдельные модули могут использовать общий `RateLimiter` из `src/mcp_russia/_shared/rate_limiter.py`:
 
 ```python
 limiter = RateLimiter(max_requests=5, period=1.0)

@@ -19,17 +19,17 @@ src/mcp_russia/
 ├── settings.py         # Конфигурация через env vars
 ├── exceptions.py       # Общие исключения проекта
 ├── _shared/            # Общий код (http_client, formatting, cache, rate_limiter)
-├── data/               # Features для внешних API
+├── data/               # Модули для внешних API
 │   ├── cbrf/           # Центральный банк РФ
 │   ├── rosstat/        # Росстат
-│   └── {novaya_feature}/ # Новая feature данных
-└── agenty/             # Features для агентных сценариев
+│   └── {novaya_feature}/ # Новый модуль данных
+└── agenty/             # Модули для агентных сценариев
     └── redator/        # Агент официальных документов
 ```
 
 Рабочий namespace для запуска и импорта: `mcp_russia`.
 
-## Как добавить новую feature
+## Как добавить новый модуль
 
 1. Создайте каталог `src/mcp_russia/data/{feature}/` (API) или `src/mcp_russia/agenty/{feature}/` (агенты) с обязательными файлами:
 
@@ -81,7 +81,7 @@ tests/data/{feature}/         # или tests/agenty/{feature}/
 
 ## Поток зависимостей
 
-Внутри каждой feature поток зависимостей однонаправленный:
+Внутри каждого модуля поток зависимостей однонаправленный:
 
 ```
 server.py → tools.py → client.py → schemas.py
@@ -110,7 +110,7 @@ server.py → tools.py → client.py → schemas.py
 2. `tools.py` не делает HTTP-запросы — делегирует в `client.py`
 3. `client.py` не форматирует ответы для LLM — возвращает Pydantic models
 4. `schemas.py` без бизнес-логики — только модели
-5. `server.py` feature только регистрирует — без предметной логики
+5. `server.py` модуля только регистрирует — без предметной логики
 6. `constants.py` не импортирует другие модули проекта
 7. У каждой tool есть docstring — LLM использует ее при выборе вызова
 8. Везде async — `async def` в tools и clients
@@ -200,7 +200,7 @@ async def test_tool_via_mcp_client():
 feat(cbrf): add tool poluchit_dinamiku_kursa
 fix(fns): handle empty response from EGRUL
 test(zakupki): add edge-case tests for client
-docs: update README with new feature
+docs: обновить README с новым модулем
 refactor(gosduma): simplify pagination logic
 ```
 
@@ -216,7 +216,7 @@ refactor(gosduma): simplify pagination logic
 
 | Ситуация | Bump | Пример |
 |----------|------|---------|
-| Новая feature (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
+| Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
 | Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): handle timeout` |
 | Breaking change (переименование tools, изменение API) | **major** | refactor, ломающий клиентов |
 | Только docs, тесты, внутренний refactor | **нет** | Релиз не обязателен |
@@ -244,10 +244,10 @@ make build            # Сборка пакета (sdist + wheel)
 - `CHANGELOG.md` генерируется через `git-cliff` (`cliff.toml`)
 - `semantic-release` настроен в `pyproject.toml` (`[tool.semantic_release]`)
 
-## Pull request
+## Pull-запрос
 
 - Используйте **Conventional Commits** в заголовке PR
 - Перед открытием PR убедитесь, что `make ci` проходит
 - Опишите, что изменилось и зачем
-- Для новой feature добавляйте тесты (`test_tools.py`, `test_client.py`, `test_integration.py`)
+- Для нового модуля добавляйте тесты (`test_tools.py`, `test_client.py`, `test_integration.py`)
 - Если обнаружили технический долг или следующий шаг миграции, зафиксируйте его в `TODO.md`
