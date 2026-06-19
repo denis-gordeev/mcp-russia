@@ -52,7 +52,7 @@ registry.mount_all(mcp)
 Каждый модуль остаётся изолированным пакетом с предсказуемой структурой:
 
 ```text
-src/mcp_russia/data/{feature}/
+src/mcp_russia/data/{modul}/
 ├── __init__.py
 ├── server.py
 ├── tools.py

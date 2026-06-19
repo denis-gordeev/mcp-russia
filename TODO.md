@@ -2,6 +2,60 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-19 (сорок восьмой проход — устранение термина «feature» из промптов, документации и Makefile)
+
+### Выполнено
+
+- **Устранение термина «feature» из LLM-промптов** (7 замен в planner.py):
+  - `с префиксом feature` → `с префиксом модуля` (docstring EtapPlana.tool)
+  - `исторические названия features и tools` → `исторические названия модулей и инструментов`
+  - `Используй ТОЛЬКО tools из каталога. Никогда не придумывай новые names.` → `Используй ТОЛЬКО инструменты из каталога. Никогда не придумывай новые имена.`
+  - `Используй точные имена tools с префиксом feature.` → `Используй точные имена инструментов с префиксом модуля.`
+  - `несколько features` → `несколько модулей` (2 места)
+  - `второй feature` → `вторым модулем`
+  - `feature_imya_instrumenta` → `modul_imya_instrumenta` (пример JSON)
+- **Устранение термина «features» из документации** (4 замены):
+  - `27 активных features` → `27 активных модулей` (docs/reference/smart-tools.md)
+  - `вывести summary зарегистрированных features` → `вывести сводку зарегистрированных модулей` (docs/guide/development.md)
+  - `feat(feature):` → `feat(modul):` (commit convention в development.md)
+  - `{feature}/` → `{modul}/` в path templates (docs/guide/adding-features.md — 3 места, docs/concepts/architecture.md — 1 место)
+- **Перевод комментариев Makefile на русский** (16 замен):
+  - `Show this help` → `Показать справку`
+  - `Install production dependencies` → `Установить production-зависимости`
+  - `Install all dependencies` → `Установить все зависимости`
+  - `Run lint + format check` → `Проверка линтером и форматирования`
+  - `Auto-fix lint + format` → `Автоисправление линтера и форматирования`
+  - `Run mypy strict type checking` → `Строгая проверка типов mypy`
+  - `Run all tests` → `Запустить все тесты`
+  - `Run tests for a specific feature` → `Запустить тесты одного модуля`
+  - `Full CI pipeline` → `Полный CI-конвейер`
+  - `Run MCP server (stdio)` → `Запустить MCP-сервер (stdio)`
+  - `Run MCP server (HTTP)` → `Запустить MCP-сервер (HTTP)`
+  - `Inspect MCP server tools/resources/prompts` → `Показать инструменты/ресурсы/промпты MCP-сервера`
+  - `Show current version` → `Показать текущую версию`
+  - `Build package` → `Собрать пакет`
+  - `Generate CHANGELOG.md` → `Сгенерировать CHANGELOG.md`
+  - И все остальные комментарии (release, diagrams, clean)
+- **Русификация внутренних переменных** (4 замены):
+  - `feature_name` → `imya_modulya` (discovery.py — параметр функции + использование)
+  - `feature_module` → `importiruyemyy_modul` (feature.py — переменная в _try_register)
+  - `feature` → `modul` (feature.py — loop variable в mount_all)
+  - Добавлена полная docstring к `_format_tool_signature` с параметрами
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Термин «feature» полностью устранён из пользовательского вывода и документации**: во всех LLM-промптах, Makefile-комментариях и docs/ вместо «feature» используется «модуль/модуля/модулей»
+- **Внутренние переменные русифицированы**: `feature_name` → `imya_modulya`, `feature_module` → `importiruyemyy_modul`, loop variable `feature` → `modul` в монтировании
+- **Имена классов FeatureMeta/FeatureRegistry сохранены**: это установившиеся программные конструкции, на которые ссылается множество модулей через FEATURE_META
+- **Makefile-цель `test-feature` сохранена**: переименование могло бы сломать существующие скрипты и привычки; комментарий переведён на русский
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+
 ## Статус раунда 2026-06-19 (сорок седьмой проход — русификация полей Pydantic-схем, ключей констант, параметров функций)
 
 ### Выполнено

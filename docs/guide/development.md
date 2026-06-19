@@ -27,7 +27,7 @@ make dev
 | `make ci` | полный локальный quality gate |
 | `make run` | запуск MCP-сервера по stdio |
 | `make serve` | запуск MCP-сервера по HTTP |
-| `make inspect` | вывести summary зарегистрированных features |
+| `make inspect` | вывести сводку зарегистрированных модулей |
 | `make build` | собрать wheel и sdist |
 
 ## Переходная особенность кодовой базы
@@ -81,7 +81,7 @@ make test
 Предпочтительный стиль:
 
 ```text
-feat(feature): краткое описание
+feat(modul): краткое описание
 fix(scope): краткое описание
 docs: актуализировать русскоязычную документацию
 test(scope): добавить покрытие

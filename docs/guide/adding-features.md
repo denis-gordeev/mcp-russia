@@ -7,19 +7,19 @@
 Для модуля данных используйте:
 
 ```text
-src/mcp_russia/data/{feature}/
+src/mcp_russia/data/{modul}/
 ```
 
 Для агентного модуля используйте:
 
 ```text
-src/mcp_russia/agenty/{feature}/
+src/mcp_russia/agenty/{modul}/
 ```
 
 Минимальная структура пакета:
 
 ```text
-src/mcp_russia/data/{feature}/
+src/mcp_russia/data/{modul}/
 ├── __init__.py
 ├── server.py
 ├── tools.py
@@ -150,7 +150,7 @@ FEATURE_META = FeatureMeta(
 Ожидаемая структура:
 
 ```text
-tests/data/{feature}/
+tests/data/{modul}/
 ├── test_tools.py
 ├── test_client.py
 └── test_integration.py

@@ -8,7 +8,7 @@
 
 ```text
 → spisok_funktsiy()
-← 27 активных features:
+← 27 активных модулей:
    cbrf (6 инструментов) ✓
    rosstat (7 инструментов) ✓
    gosduma (6 инструментов) ✓

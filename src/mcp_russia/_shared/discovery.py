@@ -15,11 +15,16 @@ logger = logging.getLogger("mcp-russia.discovery")
 _catalog_cache: str = ""
 
 
-def _format_tool_signature(feature_name: str, tool_name: str, tool: object) -> str:
+def _format_tool_signature(imya_modulya: str, tool_name: str, tool: object) -> str:
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
     Формирует вывод вида:
         - gosduma_poluchit_deputatov(familiya?: str) — Список депутатов Госдумы.
+
+    Аргументы:
+        imya_modulya: Имя модуля (префикс инструмента).
+        tool_name: Имя инструмента.
+        tool: Объект инструмента.
     """
     params = getattr(tool, "parameters", {})
     properties: dict[str, dict[str, object]] = params.get("properties", {})
@@ -34,7 +39,7 @@ def _format_tool_signature(feature_name: str, tool_name: str, tool: object) -> s
         param_parts.append(f"{pname}{opt}: {ptype}")
 
     signature = ", ".join(param_parts)
-    full_name = f"{feature_name}_{tool_name}"
+    full_name = f"{imya_modulya}_{tool_name}"
 
     desc = (getattr(tool, "description", "") or "").split("\n")[0]
 

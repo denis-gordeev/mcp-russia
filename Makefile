@@ -5,72 +5,72 @@
 
 ## —— Setup ——
 
-help: ## Show this help
+help: ## Показать справку
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-sync: ## Install production dependencies
+sync: ## Установить production-зависимости
 	uv sync
 
-dev: ## Install all dependencies (prod + dev)
+dev: ## Установить все зависимости (prod + dev)
 	uv sync --group dev
 
 ## —— Quality ——
 
-lint: ## Run lint + format check
+lint: ## Проверка линтером и форматирования
 	uv run ruff check src/ tests/ && uv run ruff format --check src/ tests/
 
-fix: ## Auto-fix lint + format
+fix: ## Автоисправление линтера и форматирования
 	uv run ruff check --fix src/ tests/ && uv run ruff format src/ tests/
 
-types: ## Run mypy strict type checking
+types: ## Строгая проверка типов mypy
 	uv run mypy src/mcp_russia/
 
-test: ## Run all tests
+test: ## Запустить все тесты
 	uv run pytest -v
 
-test-feature: ## Run tests for a specific feature (usage: make test-feature F=cbrf)
+test-feature: ## Запустить тесты одного модуля (использование: make test-feature F=cbrf)
 	uv run pytest tests/data/$(F)/ -v 2>/dev/null || uv run pytest tests/agenty/$(F)/ -v
 
-ci: lint types test ## Full CI pipeline: lint + types + test
+ci: lint types test ## Полный CI-конвейер: линтер + типы + тесты
 
 ## —— Server ——
 
-run: ## Run MCP server (stdio)
+run: ## Запустить MCP-сервер (stdio)
 	uv run python -m mcp_russia.server
 
-serve: ## Run MCP server (HTTP :8000)
+serve: ## Запустить MCP-сервер (HTTP :8000)
 	uv run python -c "from mcp_russia.server import mcp; mcp.run(transport='streamable-http', host='0.0.0.0', port=8000)"
 
-inspect: ## Inspect MCP server tools/resources/prompts
+inspect: ## Показать инструменты/ресурсы/промпты MCP-сервера
 	uv run python -c "from mcp_russia.server import mcp, registry; print(registry.summary())"
 
 ## —— Release ——
 
-version: ## Show current version
+version: ## Показать текущую версию
 	@uv version
 
-build: ## Build package (sdist + wheel)
+build: ## Собрать пакет (sdist + wheel)
 	uv build
 
-changelog: ## Generate CHANGELOG.md with git-cliff
+changelog: ## Сгенерировать CHANGELOG.md с помощью git-cliff
 	git cliff -o CHANGELOG.md
 
-release-patch: ci ## Release patch version (0.1.0 → 0.1.1)
+release-patch: ci ## Релиз патч-версии (0.1.0 → 0.1.1)
 	@scripts/release.sh patch
 
-release-minor: ci ## Release minor version (0.1.0 → 0.2.0)
+release-minor: ci ## Релиз минорной версии (0.1.0 → 0.2.0)
 	@scripts/release.sh minor
 
-release-major: ci ## Release major version (0.1.0 → 1.0.0)
+release-major: ci ## Релиз мажорной версии (0.1.0 → 1.0.0)
 	@scripts/release.sh major
 
 ## —— Docs ——
 
-diagrams: ## Generate architecture diagrams (requires graphviz)
+diagrams: ## Сгенерировать диаграммы архитектуры (требуется graphviz)
 	uv run python scripts/generate_diagrams.py
 
 ## —— Misc ——
 
-clean: ## Remove build artifacts and caches
+clean: ## Удалить артефакты сборки и кеши
 	rm -rf .pytest_cache .mypy_cache .ruff_cache dist/ build/ *.egg-info
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true

@@ -149,10 +149,10 @@ class FeatureRegistry:
     def _try_register(self, module_path: str, short_name: str) -> None:
         """Попытка импорта и регистрации отдельной функции."""
         # Шаг 1: Импорт __init__.py функции
-        feature_module = importlib.import_module(module_path)
+        importiruyemyy_modul = importlib.import_module(module_path)
 
         # Шаг 2: Проверка наличия и корректности FEATURE_META
-        meta = getattr(feature_module, "FEATURE_META", None)
+        meta = getattr(importiruyemyy_modul, "FEATURE_META", None)
         if meta is None:
             raise ValueError(f"Нет FEATURE_META в {module_path}")
 
@@ -203,9 +203,9 @@ class FeatureRegistry:
         Аргументы:
             root_server: Корневой FastMCP-сервер для монтирования функций.
         """
-        for name, feature in sorted(self._features.items()):
-            root_server.mount(feature.server, namespace=name)
-            logger.info("Смонтирована '%s' — %s", name, feature.meta.description)
+        for name, modul in sorted(self._features.items()):
+            root_server.mount(modul.server, namespace=name)
+            logger.info("Смонтирована '%s' — %s", name, modul.meta.description)
 
     def summary(self) -> str:
         """Читаемая сводка зарегистрированных функций.
