@@ -122,14 +122,14 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
     )
 
 
-async def _egrul_search(query: str) -> dict[str, Any] | None:
+async def _egrul_search(zapros: str) -> dict[str, Any] | None:
     """Двухшаговый поиск через API ЕГРЮЛ nalog.ru.
 
     Шаг 1: POST-запрос поиска → получение ID задачи.
     Шаг 2: GET-запрос результата поиска по ID задачи.
 
     Аргументы:
-        query: ИНН, ОГРН или название организации для поиска.
+        zapros: ИНН, ОГРН или название организации для поиска.
 
     Возвращает:
         Данные результата поиска или None.
@@ -141,7 +141,7 @@ async def _egrul_search(query: str) -> dict[str, Any] | None:
         search_url,
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         json_body=None,
-        params={"query": query},
+        params={"query": zapros},
     )
 
     token = task_data.get("t") if isinstance(task_data, dict) else None
@@ -182,7 +182,7 @@ def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
     )
 
 
-def _parse_status(status_code: Any) -> str:
+def _parse_status(kod_statusa: Any) -> str:
     """Преобразование кода статуса ЕГРЮЛ в русское описание."""
     status_map = {
         "01": "Действующая",
@@ -198,6 +198,6 @@ def _parse_status(status_code: Any) -> str:
         "11": "Прекратила деятельность через выделение",
         "12": "Прекратила деятельность через преобразование",
     }
-    if isinstance(status_code, str):
-        return status_map.get(status_code, status_code)
-    return str(status_code) if status_code else ""
+    if isinstance(kod_statusa, str):
+        return status_map.get(kod_statusa, kod_statusa)
+    return str(kod_statusa) if kod_statusa else ""

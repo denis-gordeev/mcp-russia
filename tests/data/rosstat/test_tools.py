@@ -43,7 +43,7 @@ async def test_spisok_okrugov():
 
 async def test_region_info():
     ctx = _mock_ctx()
-    region = RegionData(kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", population=13000000)
+    region = RegionData(kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000)
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
         result = await rosstat_tools.region_info("77", ctx)
     assert "Москва" in result
@@ -147,7 +147,7 @@ async def test_constants_emiss_kody():
 async def test_constants_emiss_kody_complete():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY
 
-    indicator_codes = {p["code"] for p in KLYUCHEVYE_INDIKATORY}
+    indicator_codes = {p["kod"] for p in KLYUCHEVYE_INDIKATORY}
     for code in indicator_codes:
         assert code in EMISS_KODY_POKAZATELEY, (
             f"KLYUCHEVYE_INDIKATORY code '{code}' missing from EMISS_KODY_POKAZATELEY"
@@ -169,7 +169,7 @@ async def test_vrp_dannye_fallback():
 
 async def test_vrp_dannye_with_data():
     mock_data = [
-        VRPData(period="2023", region="г. Москва", vrp=25400.5, vrp_per_capita=1953.8),
+        VRPData(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
     ]
     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
         result = await rosstat_tools.vrp_dannye(region="77", god="2023")
@@ -298,7 +298,7 @@ async def test_indikator_dannye_emiss_code_direct():
 async def test_constants_subiekty_no_duplicates():
     from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
 
-    codes = [r["code"] for r in SUBIEKTY_RF]
+    codes = [r["kod"] for r in SUBIEKTY_RF]
     dups = [c for c in codes if codes.count(c) > 1]
     assert len(codes) == len(set(codes)), f"Дубликаты кодов: {dups}"
 
@@ -367,7 +367,7 @@ async def test_constants_otraslevaya_struktura():
     from mcp_russia.data.rosstat.constants import OTRASLEVAYA_STRUKTURA_VRP
 
     assert len(OTRASLEVAYA_STRUKTURA_VRP) >= 19
-    codes = [o["code"] for o in OTRASLEVAYA_STRUKTURA_VRP]
+    codes = [o["kod"] for o in OTRASLEVAYA_STRUKTURA_VRP]
     assert "A" in codes
     assert "F" in codes
     assert "S" in codes
@@ -377,7 +377,7 @@ async def test_constants_vidy_deyatelnosti_investitsii():
     from mcp_russia.data.rosstat.constants import VIDY_DEYATELNOSTI_INVESTITSII
 
     assert len(VIDY_DEYATELNOSTI_INVESTITSII) >= 19
-    codes = [v["code"] for v in VIDY_DEYATELNOSTI_INVESTITSII]
+    codes = [v["kod"] for v in VIDY_DEYATELNOSTI_INVESTITSII]
     assert "A" in codes
     assert "F" in codes
 

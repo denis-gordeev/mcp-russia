@@ -23,7 +23,7 @@ class DannyeValyuty(BaseModel):
     nazvanie: str
     nominal: int
     znachenie: float
-    previous: float | None = None
+    predydushchee: float | None = None
     data: str = ""
 
 

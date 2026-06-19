@@ -17,31 +17,31 @@ def test_spisok_nalogovyh_rezhimov():
     result = fns_tools.spisok_nalogovyh_rezhimov()
     assert isinstance(result, list)
     assert len(result) > 0
-    assert any(r["code"] == "osno" for r in result)
+    assert any(r["kod"] == "osno" for r in result)
 
 
 def test_spisok_vidov_nalogov():
     result = fns_tools.spisok_vidov_nalogov()
     assert isinstance(result, list)
-    assert any(v["code"] == "nds" for v in result)
+    assert any(v["kod"] == "nds" for v in result)
 
 
 def test_spisok_tipov_proverok():
     result = fns_tools.spisok_tipov_proverok()
     assert isinstance(result, list)
-    assert any(t["code"] == "kameralnaya" for t in result)
+    assert any(t["kod"] == "kameralnaya" for t in result)
 
 
 def test_spisok_statusov_organizaciy():
     result = fns_tools.spisok_statusov_organizaciy()
     assert isinstance(result, list)
-    assert any(s["code"] == "deystvuyushchaya" for s in result)
+    assert any(s["kod"] == "deystvuyushchaya" for s in result)
 
 
 def test_spisok_kategoriy_nalogoplatelshchikov():
     result = fns_tools.spisok_kategoriy_nalogoplatelshchikov()
     assert isinstance(result, list)
-    assert any(k["code"] == "ip" for k in result)
+    assert any(k["kod"] == "ip" for k in result)
 
 
 async def test_info_organizacii_found():

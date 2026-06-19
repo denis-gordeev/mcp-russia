@@ -35,7 +35,7 @@ from .schemas import (
 def _find_stanciya(code: str) -> dict[str, Any] | None:
     """Поиск станции мониторинга по коду."""
     for s in STANCII_MONITORINGA:
-        if s["code"] == code:
+        if s["kod"] == code:
             return s
     return None
 
@@ -112,7 +112,7 @@ async def poluchit_ekologiyu(
     """
     stations = STANCII_MONITORINGA
     if gorod:
-        stations = [s for s in stations if gorod.lower() in s["name"].lower()]
+        stations = [s for s in stations if gorod.lower() in s["nazvanie"].lower()]
     if not stations:
         stations = STANCII_MONITORINGA[:5]
 
@@ -155,7 +155,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
             s
             for s in stations
             if region.lower() in s.get("region", "").lower()
-            or region.lower() in s.get("name", "").lower()
+            or region.lower() in s.get("nazvanie", "").lower()
         ]
     if not stations:
         stations = STANCII_MONITORINGA
@@ -180,7 +180,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                     Preduprezhdenie(
                         tip="moroz",
                         region=station.get("region", ""),
-                        gorod=station["name"],
+                        gorod=station["nazvanie"],
                         opisanie=f"Сильный мороз: {temp}°C",
                         uroven_opasnosti="vysokiy",
                     )
@@ -190,7 +190,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                     Preduprezhdenie(
                         tip="zhara",
                         region=station.get("region", ""),
-                        gorod=station["name"],
+                        gorod=station["nazvanie"],
                         opisanie=f"Сильная жара: {temp}°C",
                         uroven_opasnosti="sredniy",
                     )
@@ -201,7 +201,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                     Preduprezhdenie(
                         tip="shtorm",
                         region=station.get("region", ""),
-                        gorod=station["name"],
+                        gorod=station["nazvanie"],
                         opisanie=f"Сильный ветер: {wind:.1f} м/с",
                         uroven_opasnosti="vysokiy" if wind >= 30 else "sredniy",
                     )
@@ -212,7 +212,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                     Preduprezhdenie(
                         tip="urogan",
                         region=station.get("region", ""),
-                        gorod=station["name"],
+                        gorod=station["nazvanie"],
                         opisanie=f"Гроза ({WMO_KODY_POGODY.get(wmo, '')})",
                         uroven_opasnosti="sredniy" if wmo == 95 else "vysokiy",
                     )
@@ -272,11 +272,11 @@ def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> Pogod
     opisaniye = WMO_KODY_POGODY.get(wmo_code, "")
 
     return PogodaData(
-        stanciya=info["code"],
-        gorod=info["name"],
+        stanciya=info["kod"],
+        gorod=info["nazvanie"],
         region=info.get("region", ""),
         temperatura=current.get("temperature_2m"),
-        feels_like=current.get("apparent_temperature"),
+        oshchushchaetsya_kak=current.get("apparent_temperature"),
         vlazhnost=current.get("relative_humidity_2m"),
         davlenie=_hpa_to_mmhg(current.get("surface_pressure")),
         veter_skorost=current.get("wind_speed_10m"),
@@ -303,7 +303,7 @@ def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list
         wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
         results.append(
             PrognozData(
-                gorod=info["name"],
+                gorod=info["nazvanie"],
                 data=date_str,
                 temperatura_dnem=t_max[i] if i < len(t_max) else None,
                 temperatura_nochyu=t_min[i] if i < len(t_min) else None,
@@ -336,8 +336,8 @@ def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> li
             prevyshenie = value > norma
             results.append(
                 EkologiyaData(
-                    gorod=info["name"],
-                    stanciya=info["code"],
+                    gorod=info["nazvanie"],
+                    stanciya=info["kod"],
                     tip="vozdukh",
                     pokazatel=name,
                     znachenie=round(value, 2),

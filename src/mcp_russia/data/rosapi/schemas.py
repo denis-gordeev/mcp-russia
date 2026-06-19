@@ -10,10 +10,10 @@ class AdresRF(BaseModel):
 
     pochtovyy_indeks: str = Field(description="Почтовый индекс (6 цифр)")
     region: str = Field(description="Субъект РФ (область, край, республика)")
-    city: str = Field(description="Город/населённый пункт")
-    street: str | None = None
-    house: str | None = None
-    full_address: str = Field(description="Полный адрес одной строкой")
+    gorod: str = Field(description="Город/населённый пункт")
+    ulitsa: str | None = None
+    dom: str | None = None
+    polnyy_adres: str = Field(description="Полный адрес одной строкой")
 
 
 class Organizatsiya(BaseModel):
@@ -25,8 +25,8 @@ class Organizatsiya(BaseModel):
     nazvanie_polnoe: str | None = None
     nazvanie_kratkoe: str | None = None
     status: str | None = Field(default=None, description="Статус: ACTIVE, LIQUIDATED и т.д.")
-    address: str | None = None
-    director: str | None = None
+    adres: str | None = None
+    rukovoditel: str | None = None
     data_registratsii: str | None = None
 
 
@@ -36,10 +36,10 @@ class BankRF(BaseModel):
     bik: str = Field(description="БИК банка (9 цифр)")
     nazvanie: str
     nazvanie_kratkoe: str | None = None
-    city: str | None = None
+    gorod: str | None = None
     region: str | None = None
-    phone: str | None = None
-    swift: str | None = None
+    telefon: str | None = None
+    svift: str | None = None
 
 
 class Prazdnik(BaseModel):
@@ -47,7 +47,7 @@ class Prazdnik(BaseModel):
 
     data: str = Field(description="Дата (YYYY-MM-DD)")
     nazvanie: str
-    type: str = Field(description="Тип: национальный, профессиональный, памятный")
+    tip: str = Field(description="Тип: национальный, профессиональный, памятный")
 
 
 class PostalCodeInfo(BaseModel):
@@ -55,6 +55,6 @@ class PostalCodeInfo(BaseModel):
 
     kod: str = Field(description="Почтовый индекс (6 цифр)")
     region: str
-    city: str
-    district: str | None = None
-    addresses: list[str] = Field(description="Список обслуживаемых адресов")
+    gorod: str
+    rayon: str | None = None
+    adresa: list[str] = Field(description="Список обслуживаемых адресов")

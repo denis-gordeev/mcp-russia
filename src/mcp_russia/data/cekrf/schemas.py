@@ -25,13 +25,13 @@ class Dolzhnost(BaseModel):
 
     kod: int = Field(description="Код должности")
     nazvanie: str = Field(description="Наименование должности")
-    level: str = Field(description="Уровень (федеральный/региональный/муниципальный)")
+    uroven: str = Field(description="Уровень (федеральный/региональный/муниципальный)")
 
 
 class KandidatKratko(BaseModel):
     """Краткая информация о кандидате."""
 
-    id: str = Field(description="ID кандидата")
+    identifikator: str = Field(description="ID кандидата")
     fio: str = Field(description="ФИО кандидата")
     partia: str = Field(description="Партия / статус выдвижения", default="")
     dolzhnost: str = Field(description="Избирательная должность")
@@ -42,7 +42,7 @@ class KandidatKratko(BaseModel):
 class Kandidat(BaseModel):
     """Полная информация о кандидате."""
 
-    id: str = Field(description="ID кандидата")
+    identifikator: str = Field(description="ID кандидата")
     fio: str = Field(description="ФИО")
     data_rozhdeniya: str = Field(description="Дата рождения", default="")
     mesto_rozhdeniya: str = Field(description="Место рождения", default="")
@@ -89,5 +89,5 @@ class PartiaInfo(BaseModel):
 
     nazvanie: str = Field(description="Полное наименование партии")
     kratkoe_nazvanie: str = Field(description="Краткое наименование")
-    color: str = Field(description="Цвет партии (hex)", default="")
+    tsvet: str = Field(description="Цвет партии (hex)", default="")
     registraciya: str = Field(description="Номер регистрации Минюста", default="")

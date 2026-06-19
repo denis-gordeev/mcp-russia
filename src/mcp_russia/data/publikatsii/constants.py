@@ -35,48 +35,48 @@ TIPY_DOKUMENTOV_PRAVO = {
 
 # Типы нормативных актов
 TIPY_NORMATIVNYKH_AKTOV = [
-    {"code": "fz", "name": "Федеральный закон"},
-    {"code": "ukaz", "name": "Указ Президента РФ"},
-    {"code": "postanovlenie_pr", "name": "Постановление Правительства РФ"},
-    {"code": "prikaz", "name": "Приказ федерального органа"},
-    {"code": "fkz", "name": "Федеральный конституционный закон"},
-    {"code": "ukaz_gd", "name": "Постановление Государственной Думы"},
-    {"code": "ukaz_sf", "name": "Постановление Совета Федерации"},
-    {"code": "pismo", "name": "Письмо федерального органа"},
-    {"code": "raspor", "name": "Распоряжение Правительства РФ"},
+    {"kod": "fz", "nazvanie": "Федеральный закон"},
+    {"kod": "ukaz", "nazvanie": "Указ Президента РФ"},
+    {"kod": "postanovlenie_pr", "nazvanie": "Постановление Правительства РФ"},
+    {"kod": "prikaz", "nazvanie": "Приказ федерального органа"},
+    {"kod": "fkz", "nazvanie": "Федеральный конституционный закон"},
+    {"kod": "ukaz_gd", "nazvanie": "Постановление Государственной Думы"},
+    {"kod": "ukaz_sf", "nazvanie": "Постановление Совета Федерации"},
+    {"kod": "pismo", "nazvanie": "Письмо федерального органа"},
+    {"kod": "raspor", "nazvanie": "Распоряжение Правительства РФ"},
 ]
 
 # Отрасли законодательства
 OTRASLI_ZAKONODATELSTVA = [
-    {"code": "konstitucionnoe", "name": "Конституционное право"},
-    {"code": "grazhdanskoe", "name": "Гражданское право"},
-    {"code": "ugolovnoe", "name": "Уголовное право"},
-    {"code": "administrativnoe", "name": "Административное право"},
-    {"code": "trudovoe", "name": "Трудовое право"},
-    {"code": "nalogovoe", "name": "Налоговое право"},
-    {"code": "byudzhetnoe", "name": "Бюджетное право"},
-    {"code": "zemelnoe", "name": "Земельное право"},
-    {"code": "ekologicheskoe", "name": "Экологическое право"},
-    {"code": "predprinimatelskoe", "name": "Предпринимательское право"},
+    {"kod": "konstitucionnoe", "nazvanie": "Конституционное право"},
+    {"kod": "grazhdanskoe", "nazvanie": "Гражданское право"},
+    {"kod": "ugolovnoe", "nazvanie": "Уголовное право"},
+    {"kod": "administrativnoe", "nazvanie": "Административное право"},
+    {"kod": "trudovoe", "nazvanie": "Трудовое право"},
+    {"kod": "nalogovoe", "nazvanie": "Налоговое право"},
+    {"kod": "byudzhetnoe", "nazvanie": "Бюджетное право"},
+    {"kod": "zemelnoe", "nazvanie": "Земельное право"},
+    {"kod": "ekologicheskoe", "nazvanie": "Экологическое право"},
+    {"kod": "predprinimatelskoe", "nazvanie": "Предпринимательское право"},
 ]
 
 # Источники официальных публикаций
 ISTOCHNIKI_PUBLIKATSIY = [
     {
-        "code": "pravo_gov_ru",
-        "name": "pravo.gov.ru — Официальный интернет-портал правовой информации",
+        "kod": "pravo_gov_ru",
+        "nazvanie": "pravo.gov.ru — Официальный интернет-портал правовой информации",
     },
-    {"code": "rg_ru", "name": "rg.ru — Российская газета"},
-    {"code": "consultant_ru", "name": "consultant.ru — КонсультантПлюс"},
-    {"code": "garant_ru", "name": "garant.ru — ГАРАНТ"},
-    {"code": "sobranie_zak", "name": "Собрание законодательства РФ"},
+    {"kod": "rg_ru", "nazvanie": "rg.ru — Российская газета"},
+    {"kod": "consultant_ru", "nazvanie": "consultant.ru — КонсультантПлюс"},
+    {"kod": "garant_ru", "nazvanie": "garant.ru — ГАРАНТ"},
+    {"kod": "sobranie_zak", "nazvanie": "Собрание законодательства РФ"},
 ]
 
 # Статусы документов
 STATUSY_DOKUMENTOV = [
-    {"code": "deystvuyushchiy", "name": "Действующий"},
-    {"code": "utratil_silu", "name": "Утратил силу"},
-    {"code": "izmeneniya", "name": "С изменениями"},
-    {"code": "proekt", "name": "Проект"},
-    {"code": "priostanovlen", "name": "Приостановлен"},
+    {"kod": "deystvuyushchiy", "nazvanie": "Действующий"},
+    {"kod": "utratil_silu", "nazvanie": "Утратил силу"},
+    {"kod": "izmeneniya", "nazvanie": "С изменениями"},
+    {"kod": "proekt", "nazvanie": "Проект"},
+    {"kod": "priostanovlen", "nazvanie": "Приостановлен"},
 ]

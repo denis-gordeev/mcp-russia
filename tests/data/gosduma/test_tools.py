@@ -78,7 +78,7 @@ def test_parse_zakonoproekty():
     }
     result = gosduma_client._parse_zakonoproekty(data)
     assert len(result) == 1
-    assert result[0].number == "12345-8"
+    assert result[0].nomer == "12345-8"
     assert result[0].status == "Рассматривается"
 
 
@@ -132,7 +132,7 @@ async def test_spisok_deputatov_empty():
 async def test_spisok_deputatov_with_data():
     deputats = [
         Deputat(
-            id=1,
+            identifikator=1,
             фамилия="Иванов",
             имя="Иван",
             отчество="Иванович",
@@ -142,7 +142,7 @@ async def test_spisok_deputatov_with_data():
             созыв="8",
         ),
         Deputat(
-            id=2,
+            identifikator=2,
             фамилия="Петров",
             имя="Пётр",
             отчество="Петрович",
@@ -168,7 +168,7 @@ async def test_info_deputata_not_found():
 async def test_info_deputata_found():
     ctx = _mock_ctx()
     deputat = Deputat(
-        id=1,
+        identifikator=1,
         фамилия="Иванов",
         имя="Иван",
         отчество="Иванович",
@@ -214,13 +214,13 @@ async def test_zakonoproekty_empty():
 async def test_zakonoproekty_with_data():
     bills = [
         Zakonoproekt(
-            id="1",
-            number="12345-8",
-            title="О внесении изменений",
+            identifikator="1",
+            nomer="12345-8",
+            nazvanie="О внесении изменений",
             status="Рассматривается",
             data_vneseniya="2025-01-15",
-            author="Депутаты ГД",
-            readings=1,
+            avtor="Депутаты ГД",
+            chteniya=1,
         )
     ]
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=bills):
@@ -238,8 +238,8 @@ async def test_golosovaniya_empty():
 async def test_golosovaniya_with_data():
     votes = [
         Golosovanie(
-            zakonoproekt_id="1",
-            title="О бюджете",
+            zakonoproekt_identifikator="1",
+            nazvanie="О бюджете",
             data="2025-12-01",
             za=300,
             protiv=50,

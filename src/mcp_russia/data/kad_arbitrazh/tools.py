@@ -40,11 +40,11 @@ async def poisk_del(
         await ctx.info(f"Поиск дел: {nomer or istorcz or otvetchik or 'все'}...")
 
     dela = await client.poisk_del(
-        number=nomer,
+        nomer=nomer,
         istorcz=istorcz,
         otvetchik=otvetchik,
         inn=inn,
-        category=kategoriya,
+        kategoriya=kategoriya,
     )
 
     header = "**Картотека арбитражных дел**\n\n"
@@ -77,8 +77,8 @@ async def poisk_del(
         summa = format_rub(d.summa_iska) if d.summa_iska > 0 else "—"
         rows.append(
             (
-                d.number,
-                d.category or "—",
+                d.nomer,
+                d.kategoriya or "—",
                 d.status or "—",
                 d.nazvanie_suda or "—",
                 summa,
@@ -115,8 +115,8 @@ async def info_dela(
         )
 
     lines = [
-        f"**Дело {delo.number}**",
-        f"- Категория: {delo.category}",
+        f"**Дело {delo.nomer}**",
+        f"- Категория: {delo.kategoriya}",
         f"- Статус: {delo.status}",
         f"- Судья: {delo.sudya}",
         f"- Суд: {delo.nazvanie_suda}",
@@ -193,7 +193,7 @@ async def spravochnik_kategoriy(ctx: Context) -> str:
     await ctx.info("Запрос справочника категорий дел...")
     kategorii = client.get_kategorii_del()
 
-    rows = [(k["code"], k["name"]) for k in kategorii]
+    rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории арбитражных дел**\n\n"
     return header + markdown_table(["Код", "Категория"], rows)
 
@@ -207,7 +207,7 @@ async def spravochnik_instantsiy(ctx: Context) -> str:
     await ctx.info("Запрос справочника инстанций судов...")
     instantsii = client.get_instantsii()
 
-    rows = [(i["code"], i["name"]) for i in instantsii]
+    rows = [(i["kod"], i["nazvanie"]) for i in instantsii]
     header = "**Инстанции арбитражных судов**\n\n"
     return header + markdown_table(["Код", "Инстанция"], rows)
 
@@ -221,7 +221,7 @@ async def spravochnik_statusov(ctx: Context) -> str:
     await ctx.info("Запрос справочника статусов дел...")
     statusy = client.get_statusy_del()
 
-    rows = [(s["code"], s["name"]) for s in statusy]
+    rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы судебных дел**\n\n"
     return header + markdown_table(["Код", "Статус"], rows)
 
@@ -235,6 +235,6 @@ async def spravochnik_aktov(ctx: Context) -> str:
     await ctx.info("Запрос справочника типов актов...")
     tipy = client.get_tipy_aktov()
 
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы судебных актов**\n\n"
     return header + markdown_table(["Код", "Тип акта"], rows)

@@ -81,7 +81,7 @@ async def poisk_chs(
     region: str = "",
     vid_chs: str = "",
     klass_chs: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск чрезвычайных ситуаций.
 
@@ -89,14 +89,14 @@ async def poisk_chs(
         region: Регион.
         vid_chs: Вид ЧС.
         klass_chs: Класс ЧС.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список чрезвычайных ситуаций.
     """
     try:
         url = f"{MCHS_API_BASE}/emergencies"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if region:
             params["region"] = region
         if vid_chs:
@@ -112,7 +112,7 @@ async def poisk_chs(
 
     try:
         url = f"{MCHS_OPENDATA_BASE}/emergencies"
-        params = {"limit": limit}
+        params = {"limit": ogranichenie}
         if region:
             params["region"] = region
         if vid_chs:

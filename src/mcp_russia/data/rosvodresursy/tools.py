@@ -23,7 +23,7 @@ async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка бассейновых округов...")
     okruga = client.get_basseynovye_okruga_list()
-    rows = [(o["code"], o["name"]) for o in okruga]
+    rows = [(o["kod"], o["nazvanie"]) for o in okruga]
     header = "**Бассейновые округа Российской Федерации**\n\n"
     return header + markdown_table(["Код", "Бассейновый округ"], rows)
 
@@ -39,11 +39,11 @@ async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
     gidro = client.get_tipy_gidro_list()
 
     lines = ["**Типы водных объектов**\n"]
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     lines.append(markdown_table(["Код", "Тип"], rows))
 
     lines.append("\n**Типы гидрологических данных**\n")
-    rows = [(g["code"], g["name"]) for g in gidro]
+    rows = [(g["kod"], g["nazvanie"]) for g in gidro]
     lines.append(markdown_table(["Код", "Тип"], rows))
 
     return "\n".join(lines)
@@ -59,7 +59,7 @@ async def spisok_vodokhranilishch(ctx: Context) -> str:
     vodokhr = client.get_vodokhranilishcha_detailed()
 
     rows = [
-        (v["name"], v["region"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
+        (v["nazvanie"], v["region"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
         for v in vodokhr
     ]
     header = "**Крупные водохранилища РФ**\n\n"
@@ -111,21 +111,21 @@ async def poisk_vodnykh_obektov(
     )
 
 
-async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
+async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
     """Получить информацию о водном объекте по коду.
 
     Аргументы:
-        code: Код водного объекта из Государственного водного реестра.
+        kod: Код водного объекта из Государственного водного реестра.
 
     Возвращает:
         Информация о водном объекте.
     """
-    await ctx.info(f"Запрос информации о водном объекте {code}...")
-    data = await client.info_vodnogo_obekta(code)
+    await ctx.info(f"Запрос информации о водном объекте {kod}...")
+    data = await client.info_vodnogo_obekta(kod)
 
     if not data:
         return (
-            f"Водный объект с кодом '{code}' не найден.\n\n"
+            f"Водный объект с кодом '{kod}' не найден.\n\n"
             f"Проверьте код в Государственном водном реестре: text.water.ru"
         )
 
@@ -148,14 +148,14 @@ async def info_vodnogo_obekta(code: str, ctx: Context) -> str:
 
 async def gidro_monitoring(
     ctx: Context,
-    post_id: str = "",
+    identifikator_posta: str = "",
     region: str = "",
     tip_dannykh: str = "uroven",
 ) -> str:
     """Получить данные гидрологического мониторинга с постов ГМВО.
 
     Аргументы:
-        post_id: Идентификатор гидрологического поста (необязательно).
+        identifikator_posta: Идентификатор гидрологического поста (необязательно).
         region: Регион (необязательно).
         tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
@@ -164,7 +164,7 @@ async def gidro_monitoring(
     """
     await ctx.info("Запрос данных гидрологического мониторинга...")
     zapisi = await client.poluchit_gidro_dannye(
-        post_id=post_id,
+        identifikator_posta=identifikator_posta,
         region=region,
         tip_dannykh=tip_dannykh,
     )
@@ -194,23 +194,23 @@ async def gidro_monitoring(
     )
 
 
-async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
+async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
     """Получить информацию о водохранилище по коду.
 
     Аргументы:
-        code: Код водохранилища.
+        kod: Код водохранилища.
 
     Возвращает:
         Информация о водохранилище.
     """
-    await ctx.info(f"Запрос информации о водохранилище {code}...")
-    data = await client.poluchit_dannye_vodokhranilishcha(code)
+    await ctx.info(f"Запрос информации о водохранилище {kod}...")
+    data = await client.poluchit_dannye_vodokhranilishcha(kod)
 
     if not data:
         vodokhr_list = client.get_vodokhranilishcha_detailed()
-        static = next((v for v in vodokhr_list if v["code"] == code), None)
+        static = next((v for v in vodokhr_list if v["kod"] == kod), None)
         if static:
-            lines = [f"**{static['name']}** ({static['region']})"]
+            lines = [f"**{static['nazvanie']}** ({static['region']})"]
             if static.get("obiem_km3"):
                 lines.append(f"- Объём: {format_number_ru(static['obiem_km3'], 2)} км³")
             if static.get("ploshchad_km2"):
@@ -218,7 +218,7 @@ async def info_vodokhranilishcha(code: str, ctx: Context) -> str:
             lines.append("- Источник: Справочник Росводресурсов")
             return "\n".join(lines)
         return (
-            f"Водохранилище с кодом '{code}' не найдено.\n\n"
+            f"Водохранилище с кодом '{kod}' не найдено.\n\n"
             f"Используйте spisok_vodokhranilishch() для списка водохранилищ."
         )
 

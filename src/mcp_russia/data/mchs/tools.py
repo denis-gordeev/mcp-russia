@@ -18,7 +18,7 @@ async def spisok_vidov_chs(ctx: Context) -> str:
     """Получить список видов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка видов ЧС...")
     vidy = client.get_vidy_chs_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды чрезвычайных ситуаций**\n\n"
     return header + markdown_table(["Код", "Вид ЧС"], rows)
 
@@ -27,7 +27,7 @@ async def spisok_klassov_chs(ctx: Context) -> str:
     """Получить список классов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка классов ЧС...")
     klassy = client.get_klassy_chs_list()
-    rows = [(k["code"], k["name"]) for k in klassy]
+    rows = [(k["kod"], k["nazvanie"]) for k in klassy]
     header = "**Классы чрезвычайных ситуаций**\n\n"
     return header + markdown_table(["Код", "Класс ЧС"], rows)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_pojarov(ctx: Context) -> str:
     """Получить список видов пожаров."""
     await ctx.info("Запрос списка видов пожаров...")
     vidy = client.get_vidy_pojarov_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды пожаров**\n\n"
     return header + markdown_table(["Код", "Вид пожара"], rows)
 
@@ -45,7 +45,7 @@ async def spisok_tipov_opasnosti(ctx: Context) -> str:
     """Получить список типов опасностей."""
     await ctx.info("Запрос списка типов опасностей...")
     tipy = client.get_tipy_opasnosti_list()
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы опасностей для предупреждений МЧС**\n\n"
     return header + markdown_table(["Код", "Тип опасности"], rows)
 

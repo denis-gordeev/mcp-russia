@@ -74,5 +74,5 @@ async def test_spisok_vodokhranilishch(client):
 
 async def test_gidro_monitoring(client):
     async with client:
-        result = await client.call_tool("gidro_monitoring", {"post_id": ""})
+        result = await client.call_tool("gidro_monitoring", {"identifikator_posta": ""})
     assert result is not None

@@ -138,8 +138,8 @@ async def _fetch_vybory_html(
     tvd: str,
     vrn: str,
     region: int = 0,
-    sub_region: int = 0,
-    vib_type: int = 242,
+    podregion: int = 0,
+    tip_golosovaniya: int = 242,
     vibid: str | None = None,
 ) -> str | None:
     """Получить HTML-страницу результатов выборов из ГАС «Выборы»."""
@@ -151,8 +151,8 @@ async def _fetch_vybory_html(
         "prver": 0,
         "pronetvd": "null",
         "region": region,
-        "sub_region": sub_region,
-        "type": vib_type,
+        "sub_region": podregion,
+        "type": tip_golosovaniya,
         "vibid": vibid or vrn,
     }
     url = f"{VYBORY_API}/izbirkom"
@@ -318,7 +318,7 @@ def _parse_candidates_from_html(html: str) -> list[KandidatKratko]:
         if fio:
             kandidaty.append(
                 KandidatKratko(
-                    id=kandidat_id or fio,
+                    identifikator=kandidat_id or fio,
                     fio=fio,
                     partia=partia,
                     dolzhnost=dolzhnost,
@@ -334,8 +334,8 @@ async def tipy_vyborov() -> list[TipVyborov]:
     """Получить список типов выборов."""
     results: list[TipVyborov] = []
     for v in TIPOVY_VYBORY.values():
-        code: Any = v["code"]
-        name: Any = v["name"]
+        code: Any = v["kod"]
+        name: Any = v["nazvanie"]
         results.append(
             TipVyborov(kod=code if isinstance(code, int) else int(str(code)), nazvanie=str(name))
         )
@@ -344,19 +344,19 @@ async def tipy_vyborov() -> list[TipVyborov]:
 
 async def subyekty_rf() -> list[SubyektRF]:
     """Получить справочник субъектов Российской Федерации."""
-    return [SubyektRF(kod=s["code"], nazvanie=s["name"], okato=s["okato"]) for s in SUBYEKTY_RF]
+    return [SubyektRF(kod=s["kod"], nazvanie=s["nazvanie"], okato=s["okato"]) for s in SUBYEKTY_RF]
 
 
 async def dolzhnosti_federal() -> list[Dolzhnost]:
     """Получить список федеральных избирательных должностей."""
     results: list[Dolzhnost] = []
     for d in DOLZHNOSTI_FEDERAL:
-        code: Any = d["code"]
+        code: Any = d["kod"]
         results.append(
             Dolzhnost(
                 kod=code if isinstance(code, int) else int(str(code)),
-                nazvanie=str(d["name"]),
-                level=str(d["level"]),
+                nazvanie=str(d["nazvanie"]),
+                uroven=str(d["uroven"]),
             )
         )
     return results
@@ -365,7 +365,9 @@ async def dolzhnosti_federal() -> list[Dolzhnost]:
 async def partii_rf() -> list[PartiaInfo]:
     """Получить справочник политических партий РФ."""
     return [
-        PartiaInfo(nazvanie=p["name"], kratkoe_nazvanie=p["short_name"], color=p["color"])
+        PartiaInfo(
+            nazvanie=p["nazvanie"], kratkoe_nazvanie=p["korotkoe_nazvanie"], tsvet=p["tsvet"]
+        )
         for p in PARTII_RF
     ]
 
@@ -428,7 +430,7 @@ async def spisok_vyborov(
                     if title_match:
                         results.append(
                             {
-                                "name": title_match.group(1).strip(),
+                                "nazvanie": title_match.group(1).strip(),
                                 "tip": tip or 0,
                                 "god": god,
                                 "tvd": "",
@@ -477,7 +479,7 @@ async def poisk_kandidata(
     if vybory_info:
         params["tvd"] = vybory_info["tvd"]
         params["vrn"] = vybory_info["vrn"]
-        params["type"] = vybory_info.get("type", 242)
+        params["type"] = vybory_info.get("tip", 242)
         params["vibid"] = vybory_info["vrn"]
 
     try:
@@ -512,7 +514,7 @@ async def poisk_kandidata(
                 continue
             results.append(
                 KandidatKratko(
-                    id=str(item.get("id", "")),
+                    identifikator=str(item.get("id", "")),
                     fio=str(item.get("fio", item.get("name", ""))),
                     partia=str(item.get("party", item.get("partia", ""))),
                     dolzhnost=str(item.get("position", item.get("dolzhnost", ""))),
@@ -544,7 +546,7 @@ async def kandidat_podrobno(
     )
     if isinstance(cik_data, dict):
         return Kandidat(
-            id=str(cik_data.get("id", kandidat_id)),
+            identifikator=str(cik_data.get("id", kandidat_id)),
             fio=str(cik_data.get("fio", cik_data.get("name", ""))),
             data_rozhdeniya=str(cik_data.get("birthDate", cik_data.get("data_rozhdeniya", ""))),
             mesto_rozhdeniya=str(cik_data.get("birthPlace", cik_data.get("mesto_rozhdeniya", ""))),
@@ -575,14 +577,14 @@ async def kandidat_podrobno(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=0,
-            vib_type=int(str(vybory_info.get("type", 242))),
+            tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
             kandidaty = _parse_candidates_from_html(html)
             for k in kandidaty:
-                if k.id == kandidat_id or kandidat_id.lower() in k.fio.lower():
+                if k.identifikator == kandidat_id or kandidat_id.lower() in k.fio.lower():
                     return Kandidat(
-                        id=k.id,
+                        identifikator=k.identifikator,
                         fio=k.fio,
                         partia=k.partia,
                         dolzhnost=k.dolzhnost,
@@ -619,7 +621,7 @@ async def rezultaty_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=region_num,
-            vib_type=int(str(vybory_info.get("type", 242))),
+            tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
             results = _parse_results_from_html(html)
@@ -678,7 +680,7 @@ async def yavka_i_itogi(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=region_num,
-            vib_type=int(str(vybory_info.get("type", 242))),
+            tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
             turnout = _parse_turnout_from_html(html)
@@ -687,7 +689,7 @@ async def yavka_i_itogi(
                     "god": god,
                     "tip": tip,
                     "region": region,
-                    "name": str(vybory_info["name"]),
+                    "name": str(vybory_info["nazvanie"]),
                     "data": str(vybory_info["data"]),
                     **turnout,
                     "istochnik": f"ГАС «Выборы» ({VYBORY_API_BASE})",

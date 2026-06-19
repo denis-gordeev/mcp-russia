@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class Deputat(BaseModel):
     """Депутат Государственной Думы."""
 
-    id: int
+    identifikator: int
     фамилия: str
     имя: str
     отчество: str
@@ -16,19 +16,19 @@ class Deputat(BaseModel):
     комитет: str = ""
     регион: str = ""
     созыв: str = ""
-    foto_url: str = ""
+    foto_ssylka: str = ""
 
 
 class Zakonoproekt(BaseModel):
     """Законопроект Государственной Думы."""
 
-    id: str
-    number: str
-    title: str
+    identifikator: str
+    nomer: str
+    nazvanie: str
     status: str = ""
     data_vneseniya: str = ""
-    author: str = ""
-    readings: int = 0
+    avtor: str = ""
+    chteniya: int = 0
 
 
 class Frakciya(BaseModel):
@@ -37,14 +37,14 @@ class Frakciya(BaseModel):
     kod: str
     nazvanie: str
     rukovoditel: str = ""
-    count: int = 0
+    kolichestvo: int = 0
 
 
 class Golosovanie(BaseModel):
     """Результат голосования."""
 
-    zakonoproekt_id: str
-    title: str
+    zakonoproekt_identifikator: str
+    nazvanie: str
     data: str
     za: int = 0
     protiv: int = 0

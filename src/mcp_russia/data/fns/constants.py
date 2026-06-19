@@ -11,43 +11,43 @@ FNS_API_BASE = "https://api.nalog.ru"
 EGRUL_API_BASE = "https://egrul.nalog.ru"
 
 NalogovyeRezhimy = [
-    {"code": "osno", "name": "ОСНО — общая система налогообложения"},
-    {"code": "usn_dohody", "name": "УСН «Доходы» — 6%"},
-    {"code": "usn_dohody_minus_rashody", "name": "УСН «Доходы минус расходы» — 15%"},
-    {"code": "envd", "name": "ЕНВД — единый налог на вменённый доход"},
-    {"code": "psn", "name": "ПСН — патентная система налогообложения"},
-    {"code": "esn", "name": "ЕСН — единый сельскохозяйственный налог"},
-    {"code": "npd", "name": "НПД — налог на профессиональный доход (самозанятые)"},
+    {"kod": "osno", "nazvanie": "ОСНО — общая система налогообложения"},
+    {"kod": "usn_dohody", "nazvanie": "УСН «Доходы» — 6%"},
+    {"kod": "usn_dohody_minus_rashody", "nazvanie": "УСН «Доходы минус расходы» — 15%"},
+    {"kod": "envd", "nazvanie": "ЕНВД — единый налог на вменённый доход"},
+    {"kod": "psn", "nazvanie": "ПСН — патентная система налогообложения"},
+    {"kod": "esn", "nazvanie": "ЕСН — единый сельскохозяйственный налог"},
+    {"kod": "npd", "nazvanie": "НПД — налог на профессиональный доход (самозанятые)"},
 ]
 
 VidyNalogov = [
-    {"code": "nds", "name": "НДС — налог на добавленную стоимость"},
-    {"code": "ndfl", "name": "НДФЛ — налог на доходы физических лиц"},
-    {"code": "nalog_na_pribyl", "name": "Налог на прибыль организаций"},
-    {"code": "nalog_na_imushchestvo", "name": "Налог на имущество организаций"},
-    {"code": "transportnyy_nalog", "name": "Транспортный налог"},
-    {"code": "zemelnyy_nalog", "name": "Земельный налог"},
-    {"code": "strahovye_vznosy", "name": "Страховые взносы"},
-    {"code": "akcizy", "name": "Акцизы"},
+    {"kod": "nds", "nazvanie": "НДС — налог на добавленную стоимость"},
+    {"kod": "ndfl", "nazvanie": "НДФЛ — налог на доходы физических лиц"},
+    {"kod": "nalog_na_pribyl", "nazvanie": "Налог на прибыль организаций"},
+    {"kod": "nalog_na_imushchestvo", "nazvanie": "Налог на имущество организаций"},
+    {"kod": "transportnyy_nalog", "nazvanie": "Транспортный налог"},
+    {"kod": "zemelnyy_nalog", "nazvanie": "Земельный налог"},
+    {"kod": "strahovye_vznosy", "nazvanie": "Страховые взносы"},
+    {"kod": "akcizy", "nazvanie": "Акцизы"},
 ]
 
 TipyProverok = [
-    {"code": "vycznaya", "name": "Выездная налоговая проверка"},
-    {"code": "kameralnaya", "name": "Камеральная налоговая проверка"},
-    {"code": "dokumentalnaya", "name": "Документарная проверка"},
+    {"kod": "vycznaya", "nazvanie": "Выездная налоговая проверка"},
+    {"kod": "kameralnaya", "nazvanie": "Камеральная налоговая проверка"},
+    {"kod": "dokumentalnaya", "nazvanie": "Документарная проверка"},
 ]
 
 StatusyOrganizacii = [
-    {"code": "deystvuyushchaya", "name": "Действующая"},
-    {"code": "v_processe_likvidacii", "name": "В процессе ликвидации"},
-    {"code": "likvidirovana", "name": "Ликвидирована"},
-    {"code": "v_processe_reorganizacii", "name": "В процессе реорганизации"},
-    {"code": "prekratila_deyatelnost", "name": "Прекратила деятельность"},
+    {"kod": "deystvuyushchaya", "nazvanie": "Действующая"},
+    {"kod": "v_processe_likvidacii", "nazvanie": "В процессе ликвидации"},
+    {"kod": "likvidirovana", "nazvanie": "Ликвидирована"},
+    {"kod": "v_processe_reorganizacii", "nazvanie": "В процессе реорганизации"},
+    {"kod": "prekratila_deyatelnost", "nazvanie": "Прекратила деятельность"},
 ]
 
 KategoriiNalogoplatelshchikov = [
-    {"code": "yuridicheskoe_lico", "name": "Юридическое лицо"},
-    {"code": "ip", "name": "Индивидуальный предприниматель"},
-    {"code": "samozanyatyy", "name": "Самозанятый (НПД)"},
-    {"code": "fizicheskoe_lico", "name": "Физическое лицо"},
+    {"kod": "yuridicheskoe_lico", "nazvanie": "Юридическое лицо"},
+    {"kod": "ip", "nazvanie": "Индивидуальный предприниматель"},
+    {"kod": "samozanyatyy", "nazvanie": "Самозанятый (НПД)"},
+    {"kod": "fizicheskoe_lico", "nazvanie": "Физическое лицо"},
 ]

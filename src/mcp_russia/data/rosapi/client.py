@@ -66,8 +66,8 @@ def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
         "nazvanie_polnoe": name_full,
         "nazvanie_kratkoe": name_short,
         "status": status,
-        "address": address,
-        "director": director,
+        "adres": address,
+        "rukovoditel": director,
         "data_registratsii": reg_date,
     }
 
@@ -82,13 +82,13 @@ def _parse_bank_data(data: dict[str, Any], fallback_name: str = "") -> dict[str,
     return {
         "nazvanie_polnoe": name_full,
         "nazvanie_kratkoe": name_short,
-        "city": city,
+        "gorod": city,
     }
 
 
-async def _suggest_address(query: str, token: str | None = None) -> dict[str, Any]:
+async def _suggest_address(zapros: str, token: str | None = None) -> dict[str, Any]:
     """Получить подсказки по адресу через Dadata API."""
-    body = {"query": query, "count": 10}
+    body = {"query": zapros, "count": 10}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/address",
@@ -99,9 +99,9 @@ async def _suggest_address(query: str, token: str | None = None) -> dict[str, An
         return {"suggestions": []}
 
 
-async def _find_by_fias(fias_id: str, token: str | None = None) -> dict[str, Any]:
+async def _find_by_fias(identifikator_fias: str, token: str | None = None) -> dict[str, Any]:
     """Найти адрес по ФИАС-идентификатору через Dadata API."""
-    body = {"query": fias_id}
+    body = {"query": identifikator_fias}
     try:
         return await http_post(
             f"{DADATA_FIND_URL}/address",
@@ -112,9 +112,9 @@ async def _find_by_fias(fias_id: str, token: str | None = None) -> dict[str, Any
         return {"suggestions": []}
 
 
-async def _postal_by_index(index: str, token: str | None = None) -> dict[str, Any]:
+async def _postal_by_index(indeks: str, token: str | None = None) -> dict[str, Any]:
     """Найти адрес по почтовому индексу через Dadata API."""
-    body = {"query": index, "count": 1}
+    body = {"query": indeks, "count": 1}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/address",
@@ -188,16 +188,16 @@ async def _find_bank_by_bik(bik: str, token: str | None = None) -> dict[str, Any
         return {"suggestions": []}
 
 
-def get_holidays(year: int) -> list[dict[str, str]]:
+def get_holidays(god: int) -> list[dict[str, str]]:
     """Вернуть список государственных праздников РФ на указанный год."""
     holidays = []
     for date_str, name in PRAZDNIKI_RF.items():
-        full_date = f"{year}-{date_str}"
+        full_date = f"{god}-{date_str}"
         holidays.append(
             {
                 "data": full_date,
                 "nazvanie": name,
-                "type": "national"
+                "tip": "national"
                 if date_str
                 in [
                     "01-01",
@@ -215,22 +215,22 @@ def get_holidays(year: int) -> list[dict[str, str]]:
     return holidays
 
 
-async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str]:
+async def consult_address_by_postal(pochtovyy_indeks: str) -> AdresRF | dict[str, str]:
     """Получить адрес по почтовому индексу.
 
     Аргументы:
-        postal_code: Почтовый индекс.
+        pochtovyy_indeks: Почтовый индекс.
 
     Возвращает:
         Адрес или словарь с ошибкой.
     """
-    result = await _postal_by_index(postal_code)
+    result = await _postal_by_index(pochtovyy_indeks)
     suggestions = result.get("suggestions", [])
 
     if not suggestions:
         return {
             "error": (
-                f"Адрес по индексу {postal_code} не найден.\n"
+                f"Адрес по индексу {pochtovyy_indeks} не найден.\n"
                 "Для работы с адресами подключите API Dadata:\n"
                 "https://dadata.ru/api/address/"
             ),
@@ -239,25 +239,25 @@ async def consult_address_by_postal(postal_code: str) -> AdresRF | dict[str, str
     s = suggestions[0]
     data = s.get("data", {})
     return AdresRF(
-        pochtovyy_indeks=data.get("postal_code", postal_code),
+        pochtovyy_indeks=data.get("postal_code", pochtovyy_indeks),
         region=data.get("region_with_type", ""),
-        city=data.get("city_with_type") or data.get("settlement_with_type", ""),
-        street=data.get("street_with_type"),
-        house=data.get("house"),
-        full_address=s.get("unrestricted_value") or s.get("value", ""),
+        gorod=data.get("city_with_type") or data.get("settlement_with_type", ""),
+        ulitsa=data.get("street_with_type"),
+        dom=data.get("house"),
+        polnyy_adres=s.get("unrestricted_value") or s.get("value", ""),
     )
 
 
-async def search_address(query: str) -> list[dict[str, str]]:
+async def search_address(zapros: str) -> list[dict[str, str]]:
     """Поиск адресов по строковому запросу.
 
     Аргументы:
-        query: Поисковый запрос.
+        zapros: Поисковый запрос.
 
     Возвращает:
         Список найденных адресов.
     """
-    result = await _suggest_address(query)
+    result = await _suggest_address(zapros)
     suggestions = result.get("suggestions", [])
 
     results = []
@@ -269,9 +269,9 @@ async def search_address(query: str) -> list[dict[str, str]]:
                 "value": s.get("value", ""),
                 "pochtovyy_indeks": data.get("postal_code", ""),
                 "region": data.get("region_with_type", ""),
-                "city": city,
-                "street": data.get("street_with_type", ""),
-                "house": data.get("house", ""),
+                "gorod": city,
+                "ulitsa": data.get("street_with_type", ""),
+                "dom": data.get("house", ""),
                 "fias_id": data.get("fias_id", ""),
             }
         )
@@ -304,8 +304,8 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
         nazvanie_polnoe=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         status=parsed["status"],
-        address=parsed["address"],
-        director=parsed["director"],
+        adres=parsed["adres"],
+        rukovoditel=parsed["rukovoditel"],
         data_registratsii=parsed["data_registratsii"],
     )
 
@@ -336,7 +336,7 @@ async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
         nazvanie_polnoe=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         status=parsed["status"],
-        address=parsed["address"],
+        adres=parsed["adres"],
     )
 
 
@@ -352,9 +352,9 @@ async def list_banks_public() -> list[BankRF]:
                 bik=data.get("bic", ""),
                 nazvanie=parsed["nazvanie_polnoe"],
                 nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
-                city=parsed["city"],
+                gorod=parsed["gorod"],
                 region=None,
-                swift=data.get("swift"),
+                svift=data.get("swift"),
             )
         )
     return banks
@@ -381,7 +381,7 @@ async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
         bik=data.get("bic", bik),
         nazvanie=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
-        city=parsed["city"],
+        gorod=parsed["gorod"],
         region=None,
-        swift=data.get("swift"),
+        svift=data.get("swift"),
     )

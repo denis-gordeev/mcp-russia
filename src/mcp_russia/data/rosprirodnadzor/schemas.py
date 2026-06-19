@@ -26,7 +26,7 @@ class ObektNegativnogoVozdeystviya(BaseModel):
 class LicenziyaNedropolzovanie(BaseModel):
     nomer: str
     vid_litsenzii: str = ""
-    territory: str = ""
+    territoriya: str = ""
     srok_deystviya: str = ""
     derzhatel: str = ""
 

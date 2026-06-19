@@ -87,7 +87,7 @@ def test_parse_openmeteo_pogoda():
     result = _parse_openmeteo_pogoda(data, info)
     assert result.gorod == "Москва"
     assert result.temperatura == 5.3
-    assert result.feels_like == 2.1
+    assert result.oshchushchaetsya_kak == 2.1
     assert result.vlazhnost == 72
     assert result.opisaniye == "Пасмурно"
     assert result.veter_napravlenie == "Ю"

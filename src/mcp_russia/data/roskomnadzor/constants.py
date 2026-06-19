@@ -17,81 +17,90 @@ ORI_REGISTRY_URL = "https://rkn.gov.ru/registry-ori"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {"code": "nadzor_smi", "name": "Надзор в сфере СМИ"},
-    {"code": "nadzor_svyazi", "name": "Надзор в сфере связи (телекоммуникации)"},
-    {"code": "nadzor_it", "name": "Надзор в сфере информационных технологий"},
-    {"code": "zashchita_pd", "name": "Защита персональных данных"},
-    {"code": "kontrol_interneta", "name": "Контроль информационного пространства в сети Интернет"},
-    {"code": "zashchita_avtorskikh_prav", "name": "Защита авторских прав в сети"},
+    {"kod": "nadzor_smi", "nazvanie": "Надзор в сфере СМИ"},
+    {"kod": "nadzor_svyazi", "nazvanie": "Надзор в сфере связи (телекоммуникации)"},
+    {"kod": "nadzor_it", "nazvanie": "Надзор в сфере информационных технологий"},
+    {"kod": "zashchita_pd", "nazvanie": "Защита персональных данных"},
+    {
+        "kod": "kontrol_interneta",
+        "nazvanie": "Контроль информационного пространства в сети Интернет",
+    },
+    {"kod": "zashchita_avtorskikh_prav", "nazvanie": "Защита авторских прав в сети"},
 ]
 
 # Типы лицензий связи
 TIPY_LICENZIY_SVYAZI = [
-    {"code": "telefonnaya", "name": "Телефонная связь"},
-    {"code": "mobilnaya", "name": "Мобильная связь"},
-    {"code": "internet", "name": "Интернет-доступ"},
-    {"code": "tv_radio", "name": "Телевизионное и радиовещание"},
-    {"code": "peredacha_dannykh", "name": "Передача данных"},
-    {"code": "sputnikovaya", "name": "Спутниковая связь"},
+    {"kod": "telefonnaya", "nazvanie": "Телефонная связь"},
+    {"kod": "mobilnaya", "nazvanie": "Мобильная связь"},
+    {"kod": "internet", "nazvanie": "Интернет-доступ"},
+    {"kod": "tv_radio", "nazvanie": "Телевизионное и радиовещание"},
+    {"kod": "peredacha_dannykh", "nazvanie": "Передача данных"},
+    {"kod": "sputnikovaya", "nazvanie": "Спутниковая связь"},
 ]
 
 # Категории нарушений
 KATEGORII_NARUSHENIY = [
-    {"code": "utechka_personalnykh_dannykh", "name": "Утечка персональных данных"},
-    {"code": "zapreshchennyy_kontent", "name": "Распространение запрещённого контента"},
-    {"code": "narushenie_avtorskikh_prav", "name": "Нарушение авторских прав"},
-    {"code": "narushenie_litsenzionnykh_trebovaniy", "name": "Нарушение лицензионных требований"},
-    {"code": "narushenie_lokalizatsii_dannykh", "name": "Нарушение требований локализации данных"},
-    {"code": "ekstremistskie_materialy", "name": "Экстремистские материалы"},
+    {"kod": "utechka_personalnykh_dannykh", "nazvanie": "Утечка персональных данных"},
+    {"kod": "zapreshchennyy_kontent", "nazvanie": "Распространение запрещённого контента"},
+    {"kod": "narushenie_avtorskikh_prav", "nazvanie": "Нарушение авторских прав"},
+    {
+        "kod": "narushenie_litsenzionnykh_trebovaniy",
+        "nazvanie": "Нарушение лицензионных требований",
+    },
+    {
+        "kod": "narushenie_lokalizatsii_dannykh",
+        "nazvanie": "Нарушение требований локализации данных",
+    },
+    {"kod": "ekstremistskie_materialy", "nazvanie": "Экстремистские материалы"},
 ]
 
 # Реестры Роскомнадзора
 REGISTRY_RKN = [
     {
-        "code": "zapreshchennye_sayty",
-        "name": "Единый реестр запрещённых сайтов",
-        "url": "https://eais.rkn.gov.ru",
+        "kod": "zapreshchennye_sayty",
+        "nazvanie": "Единый реестр запрещённых сайтов",
+        "ssylka": "https://eais.rkn.gov.ru",
     },
     {
-        "code": "operatory_pd",
-        "name": "Реестр операторов персональных данных",
-        "url": "https://rkn.gov.ru/pdn",
+        "kod": "operatory_pd",
+        "nazvanie": "Реестр операторов персональных данных",
+        "ssylka": "https://rkn.gov.ru/pdn",
     },
     {
-        "code": "ori",
-        "name": "Реестр организаторов распространения информации",
-        "url": "https://rkn.gov.ru/registry-ori",
+        "kod": "ori",
+        "nazvanie": "Реестр организаторов распространения информации",
+        "ssylka": "https://rkn.gov.ru/registry-ori",
     },
     {
-        "code": "inostrannye_it_kompanii",
-        "name": "Реестр иностранных IT-компаний",
-        "url": "https://rkn.gov.ru/it-companies",
+        "kod": "inostrannye_it_kompanii",
+        "nazvanie": "Реестр иностранных IT-компаний",
+        "ssylka": "https://rkn.gov.ru/it-companies",
     },
     {
-        "code": "litsenziaty_svyazi",
-        "name": "Реестр лицензиатов связи",
-        "url": "https://rkn.gov.ru/licenses",
+        "kod": "litsenziaty_svyazi",
+        "nazvanie": "Реестр лицензиатов связи",
+        "ssylka": "https://rkn.gov.ru/licenses",
     },
-    {"code": "reestr_smi", "name": "Реестр СМИ", "url": "https://rkn.gov.ru/mass-media"},
+    {"kod": "reestr_smi", "nazvanie": "Реестр СМИ", "ssylka": "https://rkn.gov.ru/mass-media"},
 ]
 
 # Типы СМИ
 TIPY_SMI = [
-    {"code": "pechatnoe_izdanie", "name": "Печатное издание (газета, журнал)"},
-    {"code": "setevoe_izdanie", "name": "Сетевое издание"},
-    {"code": "telekanal", "name": "Телеканал"},
-    {"code": "radiokanal", "name": "Радиоканал"},
-    {"code": "informatsionnoe_agentstvo", "name": "Информационное агентство"},
+    {"kod": "pechatnoe_izdanie", "nazvanie": "Печатное издание (газета, журнал)"},
+    {"kod": "setevoe_izdanie", "nazvanie": "Сетевое издание"},
+    {"kod": "telekanal", "nazvanie": "Телеканал"},
+    {"kod": "radiokanal", "nazvanie": "Радиоканал"},
+    {"kod": "informatsionnoe_agentstvo", "nazvanie": "Информационное агентство"},
 ]
 
 # Субъекты персональных данных (категории операторов)
 KATEGORII_PD_OPERATOROV = [
-    {"code": "gosudarstvennye_organy", "name": "Государственные органы"},
-    {"code": "kommercheskie_organizatsii", "name": "Коммерческие организации"},
-    {"code": "nekommercheskie_organizatsii", "name": "Некоммерческие организации"},
-    {"code": "individualnye_predprinimateli", "name": "Индивидуальные предприниматели"},
-    {"code": "obrazovatelnye_uchrezhdeniya", "name": "Образовательные учреждения"},
-    {"code": "meditsinskie_organizatsii", "name": "Медицинские организации"},
+    {"kod": "gosudarstvennye_organy", "nazvanie": "Государственные органы"},
+    {"kod": "kommercheskie_organizatsii", "nazvanie": "Коммерческие организации"},
+    {"kod": "nekommercheskie_organizatsii", "nazvanie": "Некоммерческие организации"},
+    {"kod": "individualnye_predprinimateli", "nazvanie": "Индивидуальные предприниматели"},
+    {"kod": "obrazovatelnye_uchrezhdeniya", "nazvanie": "Образовательные учреждения"},
+    {"kod": "meditsinskie_organizatsii", "nazvanie": "Медицинские организации"},
 ]
 
 # Основания включения в реестр запрещённых сайтов

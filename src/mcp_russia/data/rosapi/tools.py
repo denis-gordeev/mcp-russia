@@ -47,16 +47,16 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
 
     lines = [
         f"**Почтовый индекс:** {result.pochtovyy_indeks}",
-        f"**Полный адрес:** {result.full_address or 'Н/Д'}",
+        f"**Полный адрес:** {result.polnyy_adres or 'Н/Д'}",
     ]
     if result.region:
         lines.append(f"**Регион:** {result.region}")
-    if result.city:
-        lines.append(f"**Город:** {result.city}")
-    if result.street:
-        lines.append(f"**Улица:** {result.street}")
-    if result.house:
-        lines.append(f"**Дом:** {result.house}")
+    if result.gorod:
+        lines.append(f"**Город:** {result.gorod}")
+    if result.ulitsa:
+        lines.append(f"**Улица:** {result.ulitsa}")
+    if result.dom:
+        lines.append(f"**Дом:** {result.dom}")
 
     lines.append("\nИсточник: ФИАС / Dadata")
     return "\n".join(lines)
@@ -131,10 +131,10 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
             "BANKRUPT": "Банкрот",
         }
         lines.append(f"- Статус: {status_map.get(result.status, result.status)}")
-    if result.address:
-        lines.append(f"- Адрес: {result.address}")
-    if result.director:
-        lines.append(f"- Руководитель: {result.director}")
+    if result.adres:
+        lines.append(f"- Адрес: {result.adres}")
+    if result.rukovoditel:
+        lines.append(f"- Руководитель: {result.rukovoditel}")
     if result.data_registratsii:
         lines.append(f"- Дата регистрации: {result.data_registratsii}")
 
@@ -165,8 +165,8 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
         lines.append(f"- ИНН: {result.inn}")
     if result.kpp:
         lines.append(f"- КПП: {result.kpp}")
-    if result.address:
-        lines.append(f"- Адрес: {result.address}")
+    if result.adres:
+        lines.append(f"- Адрес: {result.adres}")
 
     lines.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
     return "\n".join(lines)
@@ -185,7 +185,7 @@ async def spisok_bankov(ctx: Context) -> str:
         rows.append(
             (
                 bank["bik"],
-                bank["name"],
+                bank["nazvanie"],
             )
         )
 
@@ -218,7 +218,9 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
                 break
 
         if found:
-            return f"**{found['name']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
+            return (
+                f"**{found['nazvanie']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
+            )
 
         return (
             f"Банк с БИК {bik} не найден.\n\n"
@@ -232,10 +234,10 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     ]
     if result.nazvanie_kratkoe:
         lines.append(f"- Краткое название: {result.nazvanie_kratkoe}")
-    if result.city:
-        lines.append(f"- Город: {result.city}")
-    if result.swift:
-        lines.append(f"- SWIFT: {result.swift}")
+    if result.gorod:
+        lines.append(f"- Город: {result.gorod}")
+    if result.svift:
+        lines.append(f"- SWIFT: {result.svift}")
 
     lines.append("- Источник: ЦБ РФ через Dadata")
     return "\n".join(lines)
@@ -259,7 +261,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
     rows = []
     for h in holidays:
         date_str = h["data"][5:]
-        rows.append((date_str, h["nazvanie"], h["type"]))
+        rows.append((date_str, h["nazvanie"], h["tip"]))
 
     header = f"**Национальные праздники РФ ({god})**\n\n"
     return header + markdown_table(["Дата", "Праздник", "Тип"], rows)

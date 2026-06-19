@@ -25,7 +25,7 @@ async def spisok_tipov_ts(ctx: Context) -> str:
     Возвращает:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TipyTransportnykhSredstv]
+    rows = [(t["kod"], t["nazvanie"]) for t in TipyTransportnykhSredstv]
     return markdown_table(["Код", "Тип ТС"], rows)
 
 
@@ -35,7 +35,7 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
     Возвращает:
         Список категорий ВУ (A, B, C, D, M и т.д.).
     """
-    rows = [(k["code"], k["name"]) for k in KategoriiVoditelskihUdostovereniy]
+    rows = [(k["kod"], k["nazvanie"]) for k in KategoriiVoditelskihUdostovereniy]
     return markdown_table(["Категория", "Описание"], rows)
 
 
@@ -45,7 +45,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
     Возвращает:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
     """
-    rows = [(n["code"], n["name"]) for n in VidyNarusheniy]
+    rows = [(n["kod"], n["nazvanie"]) for n in VidyNarusheniy]
     return markdown_table(["Код", "Вид нарушения"], rows)
 
 
@@ -55,7 +55,7 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
     Возвращает:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
-    rows = [(s["code"], s["name"]) for s in StatusyShtrafov]
+    rows = [(s["kod"], s["nazvanie"]) for s in StatusyShtrafov]
     return markdown_table(["Код", "Статус штрафа"], rows)
 
 
@@ -65,7 +65,7 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
     Возвращает:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TipyDTP]
+    rows = [(t["kod"], t["nazvanie"]) for t in TipyDTP]
     return markdown_table(["Код", "Тип ДТП"], rows)
 
 
@@ -75,7 +75,7 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
     Возвращает:
         Список регионов с кодами.
     """
-    rows = [(r["code"], r["name"]) for r in RegionyRegistratsii]
+    rows = [(r["kod"], r["nazvanie"]) for r in RegionyRegistratsii]
     return markdown_table(["Код региона", "Регион"], rows)
 
 

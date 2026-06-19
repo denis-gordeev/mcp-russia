@@ -32,7 +32,7 @@ async def spisok_regionov(ctx: Context) -> str:
     await ctx.info("Запрос списка субъектов РФ...")
     regiony = client.get_subiekty_list()
 
-    rows = [(r["code"], r["name"], r.get("okrug", "")) for r in regiony]
+    rows = [(r["kod"], r["nazvanie"], r.get("okrug", "")) for r in regiony]
     header = f"**Субъекты Российской Федерации** — {len(regiony)} субъектов\n\n"
     return header + markdown_table(["Код", "Регион", "ФО"], rows)
 
@@ -46,7 +46,7 @@ async def spisok_okrugov(ctx: Context) -> str:
     await ctx.info("Запрос списка федеральных округов...")
     okruga = client.get_federalny_okruga_list()
 
-    rows = [(o["code"], o["name"]) for o in okruga]
+    rows = [(o["kod"], o["nazvanie"]) for o in okruga]
     header = "**Федеральные округа Российской Федерации**\n\n"
     return header + markdown_table(["Код", "Округ"], rows)
 
@@ -74,8 +74,8 @@ async def region_info(kod: str, ctx: Context) -> str:
     ]
     if data.federalny_okrug:
         lines.append(f"- Федеральный округ: {data.federalny_okrug}")
-    if data.population:
-        lines.append(f"- Население: {format_number_ru(data.population, 0)} чел.")
+    if data.naselenie:
+        lines.append(f"- Население: {format_number_ru(data.naselenie, 0)} чел.")
     if data.vrp:
         lines.append(f"- ВРП: {format_number_ru(data.vrp, 2)} млрд ₽")
     if data.srednyaya_zp:
@@ -121,7 +121,7 @@ async def pokazateli_rosstata(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка показателей Росстата...")
 
-    rows = [(p["code"], p["name"]) for p in KLYUCHEVYE_INDIKATORY]
+    rows = [(p["kod"], p["nazvanie"]) for p in KLYUCHEVYE_INDIKATORY]
     header = "**Основные показатели Росстата**\n\n"
     return header + markdown_table(["Код", "Показатель"], rows)
 
@@ -223,7 +223,7 @@ async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None
     rows = []
     for d in data:
         vrp_val = format_number_ru(d.vrp, 2) if d.vrp else "—"
-        vrp_pc = format_number_ru(d.vrp_per_capita, 2) if d.vrp_per_capita else "—"
+        vrp_pc = format_number_ru(d.vrp_na_dushu, 2) if d.vrp_na_dushu else "—"
         rows.append((d.period, d.region or "—", vrp_val, vrp_pc))
     header = f"**Валовой региональный продукт{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
@@ -299,7 +299,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
         val = format_number_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
         rows.append((i, d.get("region", "—"), d.get("kod", "—"), val, d.get("period", "—")))
     indicator_name = next(
-        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == pokazatel),
+        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
         pokazatel,
     )
     header = f"**Рейтинг регионов по показателю «{indicator_name}»**\n\n"
@@ -333,12 +333,12 @@ async def indikator_dannye(
         await ctx.info(f"Запрос данных показателя '{kod}'...")
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
     indicator_name = next(
-        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
     )
     if not indicator_name and kod in EMISS_KODY_POKAZATELEY:
         indicator_name = next(
-            (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+            (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
             f"Показатель ЕМИСС {emiss_code}",
         )
     data = await client.poluchit_indikator_dannye(kod=kod, region=region, god=god)
@@ -393,7 +393,7 @@ async def otraslevaya_struktura_vrp(
             f"- ЕМИСС: https://fedstat.ru/indicator/27103\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
             f"Разделы ОКВЭД: "
-            + ", ".join(f"{o['code']} — {o['name']}" for o in OTRASLEVAYA_STRUKTURA_VRP)
+            + ", ".join(f"{o['kod']} — {o['nazvanie']}" for o in OTRASLEVAYA_STRUKTURA_VRP)
         )
     rows = []
     for d in data:
@@ -433,7 +433,7 @@ async def investitsii_po_vidam(
             f"- ЕМИСС: https://fedstat.ru/indicator/24145\n"
             f"- Росстат: https://rosstat.gov.ru/investment\n\n"
             f"Виды деятельности: "
-            + ", ".join(f"{v['code']} — {v['name']}" for v in VIDY_DEYATELNOSTI_INVESTITSII)
+            + ", ".join(f"{v['kod']} — {v['nazvanie']}" for v in VIDY_DEYATELNOSTI_INVESTITSII)
         )
     rows = []
     for d in data:

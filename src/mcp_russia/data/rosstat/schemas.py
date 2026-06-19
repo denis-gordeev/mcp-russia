@@ -11,9 +11,9 @@ class PokazatelRosstata(BaseModel):
     kod: str
     nazvanie: str
     znachenie: float
-    unit: str = ""
+    edinitsa: str = ""
     data: str = ""
-    source: str = "Федеральная служба государственной статистики (Росстат)"
+    istochnik: str = "Федеральная служба государственной статистики (Росстат)"
 
 
 class RegionData(BaseModel):
@@ -22,7 +22,7 @@ class RegionData(BaseModel):
     kod: str
     nazvanie: str
     federalny_okrug: str = ""
-    population: int | None = None
+    naselenie: int | None = None
     vrp: float | None = None
     srednyaya_zp: float | None = None
 
@@ -52,7 +52,7 @@ class VRPData(BaseModel):
     period: str
     region: str = ""
     vrp: float | None = None
-    vrp_per_capita: float | None = None
+    vrp_na_dushu: float | None = None
 
 
 class WagesData(BaseModel):

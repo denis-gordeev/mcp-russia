@@ -13,7 +13,7 @@ class OrganNadzora(BaseModel):
     federalnyy_okrug: str = ""
     region: str = ""
     telefon: str = ""
-    email: str = ""
+    elektronnaya_pochta: str = ""
 
 
 class Proverka(BaseModel):

@@ -32,7 +32,7 @@ async def poisk_proverok(
     region: str = "",
     vid_nadzora: str = "",
     tip_proverki: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск проверок Россельхознадзора.
 
@@ -40,14 +40,14 @@ async def poisk_proverok(
         region: Регион.
         vid_nadzora: Вид надзора.
         tip_proverki: Тип проверки.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список проверок.
     """
     try:
         url = f"{FSVPS_API_BASE}/inspections"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if region:
             params["region"] = region
         if vid_nadzora:
@@ -63,7 +63,7 @@ async def poisk_proverok(
 
     try:
         url = f"{FSVPS_OPENDATA_BASE}/inspections"
-        params = {"limit": limit}
+        params = {"limit": ogranichenie}
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
@@ -109,21 +109,21 @@ async def poisk_karantinnykh_obektov(
 async def poisk_registratsiy_produktsii(
     tip_produktsii: str = "",
     proizvoditel: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск зарегистрированной продукции.
 
     Аргументы:
         tip_produktsii: Тип продукции.
         proizvoditel: Производитель.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список зарегистрированной продукции.
     """
     try:
         url = f"{FSVPS_API_BASE}/registrations"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if tip_produktsii:
             params["productType"] = tip_produktsii
         if proizvoditel:
@@ -141,21 +141,21 @@ async def poisk_registratsiy_produktsii(
 async def veterinarsnye_sertifikaty(
     region: str = "",
     tip_produktsii: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск ветеринарных сертификатов.
 
     Аргументы:
         region: Регион отправки.
         tip_produktsii: Тип продукции.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список ветеринарных сертификатов.
     """
     try:
         url = f"{FSVPS_API_BASE}/certificates"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if region:
             params["region"] = region
         if tip_produktsii:

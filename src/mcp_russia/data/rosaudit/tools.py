@@ -18,7 +18,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
     """Получить список направлений контрольной деятельности Счётной палаты."""
     await ctx.info("Запрос списка направлений контроля...")
     napravleniya = client.get_napravleniya_list()
-    rows = [(n["code"], n["name"]) for n in napravleniya]
+    rows = [(n["kod"], n["nazvanie"]) for n in napravleniya]
     header = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
     return header + markdown_table(["Код", "Направление"], rows)
 
@@ -27,7 +27,7 @@ async def spisok_tipov_meropriyatiy(ctx: Context) -> str:
     """Получить список типов контрольных мероприятий."""
     await ctx.info("Запрос списка типов мероприятий...")
     tipy = client.get_tipy_meropriyatiy_list()
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы контрольных мероприятий**\n\n"
     return header + markdown_table(["Код", "Тип"], rows)
 
@@ -36,7 +36,7 @@ async def spisok_subiektov_audita(ctx: Context) -> str:
     """Получить список субъектов внешнего государственного аудита."""
     await ctx.info("Запрос списка субъектов аудита...")
     subiekty = client.get_subiekty_audita_list()
-    rows = [(s["code"], s["name"]) for s in subiekty]
+    rows = [(s["kod"], s["nazvanie"]) for s in subiekty]
     header = "**Субъекты внешнего государственного аудита**\n\n"
     return header + markdown_table(["Код", "Субъект"], rows)
 

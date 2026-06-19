@@ -25,7 +25,7 @@ async def spisok_stanciy(ctx: Context) -> str:
     await ctx.info("Запрос списка станций мониторинга...")
     stancii = client.get_stancii_list()
 
-    rows = [(s["code"], s["name"], s["region"]) for s in stancii]
+    rows = [(s["kod"], s["nazvanie"], s["region"]) for s in stancii]
     header = "**Станции мониторинга Росгидромета**\n\n"
     return header + markdown_table(["Код", "Город", "Округ"], rows)
 
@@ -41,11 +41,11 @@ async def spisok_tipov_dannykh(ctx: Context) -> str:
     eko = client.get_tipy_eko_list()
 
     lines = ["**Типы метеорологических данных**\n"]
-    rows = [(m["code"], m["name"]) for m in meteo]
+    rows = [(m["kod"], m["nazvanie"]) for m in meteo]
     lines.append(markdown_table(["Код", "Тип"], rows))
 
     lines.append("\n**Типы экологических данных**\n")
-    rows = [(e["code"], e["name"]) for e in eko]
+    rows = [(e["kod"], e["nazvanie"]) for e in eko]
     lines.append(markdown_table(["Код", "Тип"], rows))
 
     return "\n".join(lines)
@@ -72,8 +72,8 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
     lines = [f"**Погода: {data.gorod}** ({data.region})"]
     if data.temperatura:
         lines.append(f"- Температура: {format_number_ru(data.temperatura, 1)}°C")
-    if data.feels_like:
-        lines.append(f"- Ощущается как: {format_number_ru(data.feels_like, 1)}°C")
+    if data.oshchushchaetsya_kak:
+        lines.append(f"- Ощущается как: {format_number_ru(data.oshchushchaetsya_kak, 1)}°C")
     if data.vlazhnost:
         lines.append(f"- Влажность: {format_number_ru(data.vlazhnost, 0)}%")
     if data.davlenie:
@@ -244,8 +244,8 @@ async def sputnik_monitoring(
     for s in data[:5]:
         lines.append(f"- {s.region} ({s.data_syomki}): {s.tip_dannykh}")
         lines.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
-        if s.izobrazhenie_url:
-            lines.append(f"  Изображение: {s.izobrazhenie_url}")
+        if s.izobrazhenie_ssylka:
+            lines.append(f"  Изображение: {s.izobrazhenie_ssylka}")
         lines.append("")
 
     if len(data) > 5:

@@ -28,7 +28,7 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
     await ctx.info("Запрос списка типов актов...")
     tipy = client.get_tipy_aktov_list()
 
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы нормативных актов РФ**\n\n"
     return header + markdown_table(["Код", "Тип"], rows) + _PRAVO_ATTRIBUTION
 
@@ -42,7 +42,7 @@ async def spisok_otrasley(ctx: Context) -> str:
     await ctx.info("Запрос списка отраслей законодательства...")
     otrsli = client.get_otrasli_list()
 
-    rows = [(o["code"], o["name"]) for o in otrsli]
+    rows = [(o["kod"], o["nazvanie"]) for o in otrsli]
     header = "**Отрасли законодательства РФ**\n\n"
     return header + markdown_table(["Код", "Отрасль"], rows) + _PRAVO_ATTRIBUTION
 
@@ -56,7 +56,7 @@ async def spisok_istochnikov(ctx: Context) -> str:
     await ctx.info("Запрос списка источников публикаций...")
     istochniki = client.get_istochniki_list()
 
-    rows = [(i["code"], i["name"]) for i in istochniki]
+    rows = [(i["kod"], i["nazvanie"]) for i in istochniki]
     header = "**Источники официальных публикаций**\n\n"
     return header + markdown_table(["Код", "Источник"], rows) + _PRAVO_ATTRIBUTION
 
@@ -70,7 +70,7 @@ async def spisok_statusov(ctx: Context) -> str:
     await ctx.info("Запрос списка статусов документов...")
     statusy = client.get_statusy_list()
 
-    rows = [(s["code"], s["name"]) for s in statusy]
+    rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы документов**\n\n"
     return header + markdown_table(["Код", "Статус"], rows) + _PRAVO_ATTRIBUTION
 
@@ -111,8 +111,8 @@ async def info_normativnogo_akta(
         lines.append(f"- Описание: {data.kratkoe_opisanie}")
     if data.izmeneniya:
         lines.append(f"- Изменений: {len(data.izmeneniya)}")
-    if data.tekst_url:
-        lines.append(f"- Текст: {data.tekst_url}")
+    if data.tekst_ssylka:
+        lines.append(f"- Текст: {data.tekst_ssylka}")
     lines.append(f"- Источник: {data.istochnik}")
     lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
@@ -144,8 +144,8 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
     ]
     if data.chteniya:
         lines.append(f"- Чтений: {len(data.chteniya)}")
-    if data.tekst_url:
-        lines.append(f"- Текст: {data.tekst_url}")
+    if data.tekst_ssylka:
+        lines.append(f"- Текст: {data.tekst_ssylka}")
     lines.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(lines)
 

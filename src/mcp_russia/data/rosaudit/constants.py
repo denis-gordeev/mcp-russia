@@ -13,52 +13,52 @@ BUDGET_GOV_RU_BASE = "https://budget.gov.ru/api"
 # Направления контрольной деятельности
 NAPRAVLENIYA_KONTROLYA = [
     {
-        "code": "ispolnenie_byudzheta",
-        "name": "Контроль исполнения федерального бюджета",
+        "kod": "ispolnenie_byudzheta",
+        "nazvanie": "Контроль исполнения федерального бюджета",
     },
     {
-        "code": "effektivnost",
-        "name": "Аудит эффективности использования бюджетных средств",
+        "kod": "effektivnost",
+        "nazvanie": "Аудит эффективности использования бюджетных средств",
     },
     {
-        "code": "gosprogramma",
-        "name": "Экспертиза государственных программ",
+        "kod": "gosprogramma",
+        "nazvanie": "Экспертиза государственных программ",
     },
     {
-        "code": "zakonoproekty",
-        "name": "Экспертиза законопроектов и нормативных актов",
+        "kod": "zakonoproekty",
+        "nazvanie": "Экспертиза законопроектов и нормативных актов",
     },
     {
-        "code": "strategicheskie",
-        "name": "Стратегический анализ и прогнозирование",
+        "kod": "strategicheskie",
+        "nazvanie": "Стратегический анализ и прогнозирование",
     },
     {
-        "code": "antikorruptsiya",
-        "name": "Антикоррупционная экспертиза",
+        "kod": "antikorruptsiya",
+        "nazvanie": "Антикоррупционная экспертиза",
     },
 ]
 
 # Типы контрольных мероприятий
 TIPY_MEROPRIYATIY = [
-    {"code": "proverka", "name": "Проверка"},
-    {"code": "auditorskaya_proverka", "name": "Аудиторская проверка"},
-    {"code": "analiticheskaya_zapiska", "name": "Аналитическая записка"},
-    {"code": "ekspertiza", "name": "Экспертиза"},
-    {"code": "monitoring", "name": "Мониторинг"},
-    {"code": "spravka", "name": "Справка"},
-    {"code": "reviziya", "name": "Ревизия"},
-    {"code": "obsledovanie", "name": "Обследование"},
+    {"kod": "proverka", "nazvanie": "Проверка"},
+    {"kod": "auditorskaya_proverka", "nazvanie": "Аудиторская проверка"},
+    {"kod": "analiticheskaya_zapiska", "nazvanie": "Аналитическая записка"},
+    {"kod": "ekspertiza", "nazvanie": "Экспертиза"},
+    {"kod": "monitoring", "nazvanie": "Мониторинг"},
+    {"kod": "spravka", "nazvanie": "Справка"},
+    {"kod": "reviziya", "nazvanie": "Ревизия"},
+    {"kod": "obsledovanie", "nazvanie": "Обследование"},
 ]
 
 # Субъекты внешнего государственного аудита
 SUBIEKTY_AUDITA = [
-    {"code": "fz", "name": "Федеральные органы исполнительной власти"},
-    {"code": "gf", "name": "Государственные фонды (ПФР, ФСС, ФОМС)"},
-    {"code": "gk", "name": "Государственные корпорации и компании"},
-    {"code": "ak", "name": "Акционерные общества с госучастием"},
-    {"code": "bk", "name": "Бюджеты бюджетной системы РФ"},
-    {"code": "fn", "name": "Федеральные назначения"},
-    {"code": "mb", "name": "Межбюджетные трансферты субъектам РФ"},
+    {"kod": "fz", "nazvanie": "Федеральные органы исполнительной власти"},
+    {"kod": "gf", "nazvanie": "Государственные фонды (ПФР, ФСС, ФОМС)"},
+    {"kod": "gk", "nazvanie": "Государственные корпорации и компании"},
+    {"kod": "ak", "nazvanie": "Акционерные общества с госучастием"},
+    {"kod": "bk", "nazvanie": "Бюджеты бюджетной системы РФ"},
+    {"kod": "fn", "nazvanie": "Федеральные назначения"},
+    {"kod": "mb", "nazvanie": "Межбюджетные трансферты субъектам РФ"},
 ]
 
 # Статусы контрольных мероприятий

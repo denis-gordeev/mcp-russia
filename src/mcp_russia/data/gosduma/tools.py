@@ -48,7 +48,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
         )
 
     rows = [
-        (str(d.id), f"{d.фамилия} {d.имя} {d.отчество}".strip(), d.фракция, d.комитет)
+        (str(d.identifikator), f"{d.фамилия} {d.имя} {d.отчество}".strip(), d.фракция, d.комитет)
         for d in deputats[:50]
     ]
     header = f"**Депутаты Государственной Думы (созыв {sozyv or 'текущий'})**\n\n"
@@ -59,26 +59,27 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     return header + markdown_table(["ID", "ФИО", "Фракция", "Комитет"], rows) + _auth_note()
 
 
-async def info_deputata(id_deputata: int, ctx: Context) -> str:
+async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
     """Получить информацию о конкретном депутате Госдумы.
 
     Аргументы:
-        id_deputata: ID депутата.
+        identifikator_deputata: ID депутата.
 
     Возвращает:
         Подробная информация о депутате.
     """
-    await ctx.info(f"Запрос информации о депутате {id_deputata}...")
-    deputat = await client.poluchit_deputata(id_deputata)
+    await ctx.info(f"Запрос информации о депутате {identifikator_deputata}...")
+    deputat = await client.poluchit_deputata(identifikator_deputata)
 
     if not deputat:
         return (
-            f"Депутат с ID {id_deputata} не найден.\n\nИспользуйте spisok_deputatov() для поиска."
+            f"Депутат с ID {identifikator_deputata} не найден.\n\n"
+            f"Используйте spisok_deputatov() для поиска."
         )
 
     lines = [
         f"**{deputat.фамилия} {deputat.имя} {deputat.отчество}**",
-        f"- ID: {deputat.id}",
+        f"- ID: {deputat.identifikator}",
     ]
     if deputat.фракция:
         lines.append(f"- Фракция: {deputat.фракция}")
@@ -103,7 +104,7 @@ async def spisok_frakcii(ctx: Context) -> str:
     await ctx.info("Запрос списка фракций Госдумы...")
     frakcii = client.get_frakcii()
 
-    rows = [(f["code"], f["name"]) for f in frakcii]
+    rows = [(f["kod"], f["nazvanie"]) for f in frakcii]
     header = "**Фракции Государственной Думы**\n\n"
     return header + markdown_table(["Код", "Фракция"], rows)
 
@@ -117,7 +118,7 @@ async def spisok_komitetov(ctx: Context) -> str:
     await ctx.info("Запрос списка комитетов Госдумы...")
     komitety = client.get_komitety()
 
-    rows = [(k["code"], k["name"]) for k in komitety]
+    rows = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Государственной Думы**\n\n"
     return header + markdown_table(["Код", "Комитет"], rows)
 
@@ -131,28 +132,28 @@ async def spisok_sozyvov(ctx: Context) -> str:
     await ctx.info("Запрос списка созывов Госдумы...")
     sozyvy = client.get_sozyvy()
 
-    rows = [(s["code"], s["name"]) for s in sozyvy]
+    rows = [(s["kod"], s["nazvanie"]) for s in sozyvy]
     header = "**Созывы Государственной Думы**\n\n"
     return header + markdown_table(["Код", "Созыв"], rows)
 
 
 async def zakonoproekty(
     status: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
     ctx: Context | None = None,
 ) -> str:
     """Получить список законопроектов Государственной Думы.
 
     Аргументы:
         status: Фильтр по статусу (например, 'принят', 'рассматривается').
-        limit: Максимальное количество результатов (до 50).
+        ogranichenie: Максимальное количество результатов (до 50).
 
     Возвращает:
         Список законопроектов.
     """
     if ctx:
         await ctx.info(f"Запрос законопроектов (статус: {status or 'все'})...")
-    bills = await client.poluchit_zakonoproekty(status=status, limit=limit)
+    bills = await client.poluchit_zakonoproekty(status=status, ogranichenie=ogranichenie)
 
     if not bills:
         status_label = status or "все"
@@ -166,7 +167,7 @@ async def zakonoproekty(
             f"используйте API СОЗД."
         )
 
-    rows = [(b.number, b.title[:80], b.status, b.data_vneseniya) for b in bills]
+    rows = [(b.nomer, b.nazvanie[:80], b.status, b.data_vneseniya) for b in bills]
     header = "**Законопроекты Государственной Думы**\n\n"
     header += f"Найдено: {len(bills)} законопроектов\n\n"
     return (
@@ -178,21 +179,21 @@ async def zakonoproekty(
 
 async def golosovaniya(
     sozyv: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
     ctx: Context | None = None,
 ) -> str:
     """Получить результаты голосований Государственной Думы.
 
     Аргументы:
         sozyv: Номер созыва.
-        limit: Максимальное количество результатов (до 50).
+        ogranichenie: Максимальное количество результатов (до 50).
 
     Возвращает:
         Результаты голосований.
     """
     if ctx:
         await ctx.info(f"Запрос голосований (созыв: {sozyv or 'текущий'})...")
-    votes = await client.poluchit_golosovaniya(sozyv=sozyv, limit=limit)
+    votes = await client.poluchit_golosovaniya(sozyv=sozyv, ogranichenie=ogranichenie)
 
     if not votes:
         return (
@@ -205,7 +206,7 @@ async def golosovaniya(
         )
 
     rows = [
-        (v.zakonoproekt_id, v.title[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
+        (v.zakonoproekt_identifikator, v.nazvanie[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
         for v in votes
     ]
     header = "**Голосования Государственной Думы**\n\n"

@@ -7,29 +7,29 @@ FIRES_STAT_BASE = "https://fires.ru/api"
 DATA_GOV_RU_MCHS = "https://data.gov.ru/opendata/7719484243-mchs"
 
 VIDY_CHS = [
-    {"code": "tekhogennyy", "name": "Техногенная чрезвычайная ситуация"},
-    {"code": "prirodnyy", "name": "Природная чрезвычайная ситуация"},
-    {"code": "biologo-socialnyy", "name": "Биолого-социальная чрезвычайная ситуация"},
-    {"code": "ekologicheskiy", "name": "Экологическая чрезвычайная ситуация"},
+    {"kod": "tekhogennyy", "nazvanie": "Техногенная чрезвычайная ситуация"},
+    {"kod": "prirodnyy", "nazvanie": "Природная чрезвычайная ситуация"},
+    {"kod": "biologo-socialnyy", "nazvanie": "Биолого-социальная чрезвычайная ситуация"},
+    {"kod": "ekologicheskiy", "nazvanie": "Экологическая чрезвычайная ситуация"},
 ]
 
 KLASSY_CHS = [
-    {"code": "lokalnaya", "name": "Локальная"},
-    {"code": "municipalnaya", "name": "Муниципальная"},
-    {"code": "mezhmunicipalnaya", "name": "Межмуниципальная"},
-    {"code": "regionalnaya", "name": "Региональная"},
-    {"code": "mezhregionalnaya", "name": "Межрегиональная"},
-    {"code": "federalnaya", "name": "Федеральная"},
+    {"kod": "lokalnaya", "nazvanie": "Локальная"},
+    {"kod": "municipalnaya", "nazvanie": "Муниципальная"},
+    {"kod": "mezhmunicipalnaya", "nazvanie": "Межмуниципальная"},
+    {"kod": "regionalnaya", "nazvanie": "Региональная"},
+    {"kod": "mezhregionalnaya", "nazvanie": "Межрегиональная"},
+    {"kod": "federalnaya", "nazvanie": "Федеральная"},
 ]
 
 VIDY_POZHAROV = [
-    {"code": "zhiloy", "name": "Пожар в жилом секторе"},
-    {"code": "proizvodstvennyy", "name": "Пожар на производственном объекте"},
-    {"code": "transportnyy", "name": "Пожар на транспорте"},
-    {"code": "lesnoy", "name": "Лесной пожар"},
-    {"code": "torfyanoy", "name": "Торфяной пожар"},
-    {"code": "stepnoy", "name": "Степной пожар"},
-    {"code": "tekhnogennyy", "name": "Техногенный пожар"},
+    {"kod": "zhiloy", "nazvanie": "Пожар в жилом секторе"},
+    {"kod": "proizvodstvennyy", "nazvanie": "Пожар на производственном объекте"},
+    {"kod": "transportnyy", "nazvanie": "Пожар на транспорте"},
+    {"kod": "lesnoy", "nazvanie": "Лесной пожар"},
+    {"kod": "torfyanoy", "nazvanie": "Торфяной пожар"},
+    {"kod": "stepnoy", "nazvanie": "Степной пожар"},
+    {"kod": "tekhnogennyy", "nazvanie": "Техногенный пожар"},
 ]
 
 STATUSY_CHS = {
@@ -40,23 +40,23 @@ STATUSY_CHS = {
 }
 
 TIPY_OPASNOSTI = [
-    {"code": "radiacionnyy", "name": "Радиационная опасность"},
-    {"code": "khimicheskiy", "name": "Химическая опасность"},
-    {"code": "biologicheskiy", "name": "Биологическая опасность"},
-    {"code": "gidrologicheskiy", "name": "Гидрологическая опасность"},
-    {"code": "geologicheskiy", "name": "Геологическая опасность"},
-    {"code": "meteorologicheskiy", "name": "Метеорологическая опасность"},
-    {"code": "pozharnyy", "name": "Пожарная опасность"},
+    {"kod": "radiacionnyy", "nazvanie": "Радиационная опасность"},
+    {"kod": "khimicheskiy", "nazvanie": "Химическая опасность"},
+    {"kod": "biologicheskiy", "nazvanie": "Биологическая опасность"},
+    {"kod": "gidrologicheskiy", "nazvanie": "Гидрологическая опасность"},
+    {"kod": "geologicheskiy", "nazvanie": "Геологическая опасность"},
+    {"kod": "meteorologicheskiy", "nazvanie": "Метеорологическая опасность"},
+    {"kod": "pozharnyy", "nazvanie": "Пожарная опасность"},
 ]
 
 FEDERALNYE_OKRUGA_MCHS = [
-    {"code": "tcentralnyy", "name": "Центральный", "centry": ["Москва"]},
-    {"code": "severo-zapadnyy", "name": "Северо-Западный", "centry": ["Санкт-Петербург"]},
-    {"code": "yuzhnyy", "name": "Южный", "centry": ["Ростов-на-Дону"]},
-    {"code": "privolzhskiy", "name": "Приволжский", "centry": ["Нижний Новгород"]},
-    {"code": "uralskiy", "name": "Уральский", "centry": ["Екатеринбург"]},
-    {"code": "sibirskiy", "name": "Сибирский", "centry": ["Красноярск"]},
-    {"code": "dalnevostochnyy", "name": "Дальневосточный", "centry": ["Хабаровск"]},
+    {"kod": "tcentralnyy", "nazvanie": "Центральный", "centry": ["Москва"]},
+    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный", "centry": ["Санкт-Петербург"]},
+    {"kod": "yuzhnyy", "nazvanie": "Южный", "centry": ["Ростов-на-Дону"]},
+    {"kod": "privolzhskiy", "nazvanie": "Приволжский", "centry": ["Нижний Новгород"]},
+    {"kod": "uralskiy", "nazvanie": "Уральский", "centry": ["Екатеринбург"]},
+    {"kod": "sibirskiy", "nazvanie": "Сибирский", "centry": ["Красноярск"]},
+    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный", "centry": ["Хабаровск"]},
 ]
 
 STATISTIKA_POZHAROV_2023 = {

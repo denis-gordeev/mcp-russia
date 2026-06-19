@@ -113,7 +113,7 @@ async def test_proverka_blokirovki_not_blocked():
         "proverka_blokirovki",
         return_value={"domain": "example.com", "blokirovka": False, "istochnik": "ЕАИС"},
     ):
-        result = await rkn_tools.proverka_blokirovki(ctx, domain="example.com")
+        result = await rkn_tools.proverka_blokirovki(ctx, domen="example.com")
     assert "НЕ найден" in result
 
 
@@ -130,7 +130,7 @@ async def test_proverka_blokirovki_blocked():
             "organy": "Роскомнадзор",
         },
     ):
-        result = await rkn_tools.proverka_blokirovki(ctx, domain="blocked-site.ru")
+        result = await rkn_tools.proverka_blokirovki(ctx, domen="blocked-site.ru")
     assert "ЗАБЛОКИРОВАН" in result
 
 
@@ -143,11 +143,11 @@ async def test_poisk_ori_empty():
 
 async def test_zapisi_reestra_found():
     ctx = _mock_ctx()
-    result = await rkn_tools.zapisi_reestra(ctx, reestr_code="zapreshchennye_sayty")
+    result = await rkn_tools.zapisi_reestra(ctx, kod_reestra="zapreshchennye_sayty")
     assert "запрещённых сайтов" in result
 
 
 async def test_zapisi_reestra_not_found():
     ctx = _mock_ctx()
-    result = await rkn_tools.zapisi_reestra(ctx, reestr_code="nonexistent")
+    result = await rkn_tools.zapisi_reestra(ctx, kod_reestra="nonexistent")
     assert "не найден" in result

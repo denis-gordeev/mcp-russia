@@ -133,7 +133,7 @@ async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
         return None
 
 
-def _extract_result(data: Any, key: str) -> dict[str, Any]:
+def _extract_result(data: Any, klyuch: str) -> dict[str, Any]:
     """Извлечение секции результата из ответа API проверки ГИБДД.
 
     Типичный формат: {"RequestResult": {"result": {<key>: {...}}}}
@@ -146,7 +146,7 @@ def _extract_result(data: Any, key: str) -> dict[str, Any]:
     result = request_result.get("result", {})
     if not isinstance(result, dict):
         return {}
-    return result.get(key, {})
+    return result.get(klyuch, {})
 
 
 def _parse_history(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:

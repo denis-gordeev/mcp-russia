@@ -6,60 +6,60 @@ FSVPS_OPENDATA_BASE = "https://data.fsvps.gov.ru/opendata"
 DATA_GOV_RU_FSVPS = "https://data.gov.ru/opendata/7710746433-fsvps"
 
 VIDY_NADZORA = [
-    {"code": "veterinarnyy", "name": "Ветеринарный надзор"},
-    {"code": "fitosanitarnyy", "name": "Фитосанитарный контроль"},
-    {"code": "zemelnyy", "name": "Земельный надзор"},
-    {"code": "karantin_rasteniy", "name": "Карантин растений"},
-    {"code": "pestitsidy", "name": "Пестициды и агрохимикаты"},
-    {"code": "korma", "name": "Корма и кормовые добавки"},
+    {"kod": "veterinarnyy", "nazvanie": "Ветеринарный надзор"},
+    {"kod": "fitosanitarnyy", "nazvanie": "Фитосанитарный контроль"},
+    {"kod": "zemelnyy", "nazvanie": "Земельный надзор"},
+    {"kod": "karantin_rasteniy", "nazvanie": "Карантин растений"},
+    {"kod": "pestitsidy", "nazvanie": "Пестициды и агрохимикаты"},
+    {"kod": "korma", "nazvanie": "Корма и кормовые добавки"},
 ]
 
 KATEGORII_PROVEROK = [
-    {"code": "planoaya", "name": "Плановая проверка"},
-    {"code": "vneplanovaya", "name": "Внеплановая проверка"},
-    {"code": "reysovyy", "name": "Рейдовый осмотр"},
-    {"code": "monitoring", "name": "Мониторинг"},
+    {"kod": "planoaya", "nazvanie": "Плановая проверка"},
+    {"kod": "vneplanovaya", "nazvanie": "Внеплановая проверка"},
+    {"kod": "reysovyy", "nazvanie": "Рейдовый осмотр"},
+    {"kod": "monitoring", "nazvanie": "Мониторинг"},
 ]
 
 STATUSY_PROVEROK = [
-    {"code": "zaplanirovana", "name": "Запланирована"},
-    {"code": "v_protsesse", "name": "В процессе"},
-    {"code": "zavershena", "name": "Завершена"},
-    {"code": "otmenena", "name": "Отменена"},
+    {"kod": "zaplanirovana", "nazvanie": "Запланирована"},
+    {"kod": "v_protsesse", "nazvanie": "В процессе"},
+    {"kod": "zavershena", "nazvanie": "Завершена"},
+    {"kod": "otmenena", "nazvanie": "Отменена"},
 ]
 
 VIDY_NARUSHENIY_RSKHN = [
-    {"code": "veterinarnye", "name": "Нарушения ветеринарного законодательства"},
-    {"code": "fitosanitarnye", "name": "Нарушения фитосанитарных правил"},
-    {"code": "karantinnye", "name": "Нарушения карантинного режима"},
-    {"code": "zemelnye", "name": "Нарушения земельного законодательства"},
-    {"code": "pestitsidnye", "name": "Нарушения в области пестицидов"},
-    {"code": "kormovye", "name": "Нарушения в области кормов"},
+    {"kod": "veterinarnye", "nazvanie": "Нарушения ветеринарного законодательства"},
+    {"kod": "fitosanitarnye", "nazvanie": "Нарушения фитосанитарных правил"},
+    {"kod": "karantinnye", "nazvanie": "Нарушения карантинного режима"},
+    {"kod": "zemelnye", "nazvanie": "Нарушения земельного законодательства"},
+    {"kod": "pestitsidnye", "nazvanie": "Нарушения в области пестицидов"},
+    {"kod": "kormovye", "nazvanie": "Нарушения в области кормов"},
 ]
 
 TIPY_PRODUKTSII = [
-    {"code": "zhivotnovodcheskaya", "name": "Животноводческая продукция"},
-    {"code": "rastenievodcheskaya", "name": "Растениеводческая продукция"},
-    {"code": "kombinirovannaya", "name": "Комбинированная продукция"},
-    {"code": "korma_dobavki", "name": "Корма и кормовые добавки"},
-    {"code": "pestitsidy_ogakh", "name": "Пестициды и агрохимикаты"},
+    {"kod": "zhivotnovodcheskaya", "nazvanie": "Животноводческая продукция"},
+    {"kod": "rastenievodcheskaya", "nazvanie": "Растениеводческая продукция"},
+    {"kod": "kombinirovannaya", "nazvanie": "Комбинированная продукция"},
+    {"kod": "korma_dobavki", "nazvanie": "Корма и кормовые добавки"},
+    {"kod": "pestitsidy_ogakh", "nazvanie": "Пестициды и агрохимикаты"},
 ]
 
 KARANTINNYE_OBYEKTY = [
-    {"code": "vreditel", "name": "Вредители растений"},
-    {"code": "bolezni", "name": "Болезни растений"},
-    {"code": "sornyaki", "name": "Сорняки (карантинные)"},
+    {"kod": "vreditel", "nazvanie": "Вредители растений"},
+    {"kod": "bolezni", "nazvanie": "Болезни растений"},
+    {"kod": "sornyaki", "nazvanie": "Сорняки (карантинные)"},
 ]
 
 FEDERALNYE_OKRUGA_RSKHN = [
-    {"code": "tcentralnyy", "name": "Центральный", "tsentry": ["Москва"]},
-    {"code": "severo-zapadnyy", "name": "Северо-Западный", "tsentry": ["Санкт-Петербург"]},
-    {"code": "yuzhnyy", "name": "Южный", "tsentry": ["Ростов-на-Дону"]},
-    {"code": "privolzhskiy", "name": "Приволжский", "tsentry": ["Нижний Новгород"]},
-    {"code": "uralskiy", "name": "Уральский", "tsentry": ["Екатеринбург"]},
-    {"code": "sibirskiy", "name": "Сибирский", "tsentry": ["Красноярск"]},
-    {"code": "dalnevostochnyy", "name": "Дальневосточный", "tsentry": ["Хабаровск"]},
-    {"code": "krymskiy", "name": "Крымский", "tsentry": ["Симферополь"]},
+    {"kod": "tcentralnyy", "nazvanie": "Центральный", "tsentry": ["Москва"]},
+    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный", "tsentry": ["Санкт-Петербург"]},
+    {"kod": "yuzhnyy", "nazvanie": "Южный", "tsentry": ["Ростов-на-Дону"]},
+    {"kod": "privolzhskiy", "nazvanie": "Приволжский", "tsentry": ["Нижний Новгород"]},
+    {"kod": "uralskiy", "nazvanie": "Уральский", "tsentry": ["Екатеринбург"]},
+    {"kod": "sibirskiy", "nazvanie": "Сибирский", "tsentry": ["Красноярск"]},
+    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный", "tsentry": ["Хабаровск"]},
+    {"kod": "krymskiy", "nazvanie": "Крымский", "tsentry": ["Симферополь"]},
 ]
 
 STATISTIKA_RSKHN_2023 = {

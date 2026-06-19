@@ -18,7 +18,7 @@ async def spisok_vidov_nadzora(ctx: Context) -> str:
     """Получить список видов государственного надзора Росприроднадзора."""
     await ctx.info("Запрос списка видов надзора...")
     vidy = client.get_vidy_nadzora_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды государственного надзора Росприроднадзора**\n\n"
     return header + markdown_table(["Код", "Вид надзора"], rows)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_obnv(ctx: Context) -> str:
     """Получить список категорий объектов негативного воздействия."""
     await ctx.info("Запрос списка категорий ОНВ...")
     kategorii = client.get_kategori_obnv_list()
-    rows = [(k["code"], k["name"]) for k in kategorii]
+    rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
     return header + markdown_table(["Категория", "Описание"], rows)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
     """Получить список видов лицензий на пользование недрами."""
     await ctx.info("Запрос списка видов лицензий...")
     vidy = client.get_vidy_litsenziy_nedra_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды лицензий на пользование недрами**\n\n"
     return header + markdown_table(["Код", "Вид лицензии"], rows)
 
@@ -165,13 +165,13 @@ async def poisk_obektov_negativnogo(
 
 async def poisk_litsenziy_nedra(
     ctx: Context,
-    territory: str = "",
+    territoriya: str = "",
     vid_litsenzii: str = "",
 ) -> str:
     """Поиск лицензий на пользование недрами.
 
     Аргументы:
-        territory: Территория / субъект РФ (необязательно).
+        territoriya: Территория / субъект РФ (необязательно).
         vid_litsenzii: Вид лицензии (необязательно).
 
     Возвращает:
@@ -179,13 +179,13 @@ async def poisk_litsenziy_nedra(
     """
     await ctx.info("Поиск лицензий на недропользование...")
     litsenzii = await client.poisk_litsenziy_nedra(
-        territory=territory,
+        territoriya=territoriya,
         vid_litsenzii=vid_litsenzii,
     )
     if not litsenzii:
         filters = []
-        if territory:
-            filters.append(f"территория: {territory}")
+        if territoriya:
+            filters.append(f"территория: {territoriya}")
         if vid_litsenzii:
             filters.append(f"вид лицензии: {vid_litsenzii}")
         filter_text = f" ({', '.join(filters)})" if filters else ""
@@ -197,7 +197,7 @@ async def poisk_litsenziy_nedra(
         (
             lic.get("nomer", ""),
             lic.get("vid_litsenzii", ""),
-            lic.get("territory", ""),
+            lic.get("territoriya", ""),
             lic.get("derzhatel", "")[:40],
             lic.get("srok_deystviya", ""),
         )

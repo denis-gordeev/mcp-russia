@@ -4,10 +4,10 @@ CBR_DAILY_JSON = "https://www.cbr-xml-daily.ru/daily_json.js"
 CBR_KEY_RATE_XML = "https://www.cbr-xml-daily.ru/daily_json.js"
 
 KLYUCHEVYE_INDIKATORY = [
-    {"code": "klyuchevaya_stavka", "name": "Ключевая ставка ЦБ РФ"},
-    {"code": "USD", "name": "Курс доллара США (официальный)"},
-    {"code": "EUR", "name": "Курс евро (официальный)"},
-    {"code": "CNY", "name": "Курс китайского юаня (официальный)"},
+    {"kod": "klyuchevaya_stavka", "nazvanie": "Ключевая ставка ЦБ РФ"},
+    {"kod": "USD", "nazvanie": "Курс доллара США (официальный)"},
+    {"kod": "EUR", "nazvanie": "Курс евро (официальный)"},
+    {"kod": "CNY", "nazvanie": "Курс китайского юаня (официальный)"},
 ]
 
 OSNOVNYE_VALYUTY = [

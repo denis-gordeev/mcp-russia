@@ -36,8 +36,8 @@ def test_parse_zakupki_search():
     }
     result = zakupki_client._parse_zakupki_search(data)
     assert len(result) == 1
-    assert result[0].number == "0123400000125000001"
-    assert result[0].initial_price == 1500000.0
+    assert result[0].nomer == "0123400000125000001"
+    assert result[0].nachalnaya_tsena == 1500000.0
 
 
 def test_parse_zakupki_search_empty():
@@ -62,7 +62,7 @@ def test_parse_kontrakty():
     result = zakupki_client._parse_kontrakty(data)
     assert len(result) == 1
     assert result[0].nazvanie_podryadchika == "ООО Ромашка"
-    assert result[0].price == 500000.0
+    assert result[0].tsena == 500000.0
 
 
 def test_determine_zakon():
@@ -92,16 +92,16 @@ async def test_poisk_zakupok_with_data():
     ctx = _mock_ctx()
     zakupki = [
         Zakupka(
-            id="1",
-            number="0123400000125000001",
-            title="Поставка компьютеров",
+            identifikator="1",
+            nomer="0123400000125000001",
+            nazvanie="Поставка компьютеров",
             zakon="44-ФЗ",
             sposob="Электронный аукцион",
             status="Подача заявок",
-            initial_price=1500000.0,
+            nachalnaya_tsena=1500000.0,
             data_publikatsii="2025-01-15",
             nazvanie_organizatora="Минобразования",
-            organizer_inn="7700000000",
+            organizator_inn="7700000000",
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=zakupki):
@@ -131,17 +131,17 @@ async def test_info_zakupki_not_found():
 async def test_info_zakupki_found():
     ctx = _mock_ctx()
     zakupka = Zakupka(
-        id="1",
-        number="0123400000125000001",
-        title="Поставка компьютеров",
+        identifikator="1",
+        nomer="0123400000125000001",
+        nazvanie="Поставка компьютеров",
         zakon="44-ФЗ",
         sposob="Электронный аукцион",
         status="Подача заявок",
-        initial_price=1500000.0,
+        nachalnaya_tsena=1500000.0,
         data_publikatsii="2025-01-15",
-        deadline="2025-02-01",
+        srok_podachi="2025-02-01",
         nazvanie_organizatora="Минобразования",
-        organizer_inn="7700000000",
+        organizator_inn="7700000000",
     )
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=zakupka):
         result = await zakupki_tools.info_zakupki("0123400000125000001", ctx)
@@ -161,12 +161,12 @@ async def test_poisk_kontraktov_with_data():
     ctx = _mock_ctx()
     kontrakty = [
         Kontrakt(
-            id="1",
-            number="12345678901",
-            zakupka_number="0123400000125000001",
+            identifikator="1",
+            nomer="12345678901",
+            zakupka_nomer="0123400000125000001",
             nazvanie_podryadchika="ООО Ромашка",
-            contractor_inn="7700000001",
-            price=500000.0,
+            podryadchik_inn="7700000001",
+            tsena=500000.0,
             data_podpisaniya="2025-02-01",
             status="Исполнение",
         )

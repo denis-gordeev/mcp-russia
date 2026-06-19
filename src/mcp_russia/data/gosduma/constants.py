@@ -9,59 +9,59 @@ DUMA_TRANSCRIPTS = "https://api.duma.gov.ru/api/v1/transcripts"
 
 # Ключевые показатели
 KLYUCHEVYE_INDIKATORY = [
-    {"code": "deputaty", "name": "Список депутатов"},
-    {"code": "zakonoproekty", "name": "Законопроекты"},
-    {"code": "zasedaniya", "name": "Пленарные заседания"},
-    {"code": "golosovaniya", "name": "Результаты голосований"},
+    {"kod": "deputaty", "nazvanie": "Список депутатов"},
+    {"kod": "zakonoproekty", "nazvanie": "Законопроекты"},
+    {"kod": "zasedaniya", "nazvanie": "Пленарные заседания"},
+    {"kod": "golosovaniya", "nazvanie": "Результаты голосований"},
 ]
 
 # Созывы Государственной Думы
 SOZYVY = [
-    {"code": "1", "name": "I созыв (1993–1995)"},
-    {"code": "2", "name": "II созыв (1995–1999)"},
-    {"code": "3", "name": "III созыв (1999–2003)"},
-    {"code": "4", "name": "IV созыв (2003–2007)"},
-    {"code": "5", "name": "V созыв (2007–2011)"},
-    {"code": "6", "name": "VI созыв (2011–2016)"},
-    {"code": "7", "name": "VII созыв (2016–2021)"},
-    {"code": "8", "name": "VIII созыв (2021–2026)"},
+    {"kod": "1", "nazvanie": "I созыв (1993–1995)"},
+    {"kod": "2", "nazvanie": "II созыв (1995–1999)"},
+    {"kod": "3", "nazvanie": "III созыв (1999–2003)"},
+    {"kod": "4", "nazvanie": "IV созыв (2003–2007)"},
+    {"kod": "5", "nazvanie": "V созыв (2007–2011)"},
+    {"kod": "6", "nazvanie": "VI созыв (2011–2016)"},
+    {"kod": "7", "nazvanie": "VII созыв (2016–2021)"},
+    {"kod": "8", "nazvanie": "VIII созыв (2021–2026)"},
 ]
 
 # Фракции (текущий созыв)
 FRAKCII = [
-    {"code": "ER", "name": "Единая Россия"},
-    {"code": "KPRF", "name": "КПРФ"},
-    {"code": "SRZP", "name": "Справедливая Россия — За правду"},
-    {"code": "LDPR", "name": "ЛДПР"},
-    {"code": "NL", "name": "Новые люди"},
+    {"kod": "ER", "nazvanie": "Единая Россия"},
+    {"kod": "KPRF", "nazvanie": "КПРФ"},
+    {"kod": "SRZP", "nazvanie": "Справедливая Россия — За правду"},
+    {"kod": "LDPR", "nazvanie": "ЛДПР"},
+    {"kod": "NL", "nazvanie": "Новые люди"},
 ]
 
 # Комитеты (основные)
 KOMITETY = [
-    {"code": "byudzhet_i_nalogi", "name": "Комитет по бюджету и налогам"},
+    {"kod": "byudzhet_i_nalogi", "nazvanie": "Комитет по бюджету и налогам"},
     {
-        "code": "gosstroitelstvo_i_zakonodatelstvo",
-        "name": "Комитет по госстроительству и законодательству",
+        "kod": "gosstroitelstvo_i_zakonodatelstvo",
+        "nazvanie": "Комитет по госстроительству и законодательству",
     },
-    {"code": "oborona", "name": "Комитет по обороне"},
-    {"code": "mezhdunarodnye_dela", "name": "Комитет по международным делам"},
-    {"code": "ekonomicheskaya_politika", "name": "Комитет по экономической политике"},
-    {"code": "okhrana_zdorovya", "name": "Комитет по охране здоровья"},
-    {"code": "prosvishchenie", "name": "Комитет по просвещению"},
-    {"code": "energetika", "name": "Комитет по энергетике"},
+    {"kod": "oborona", "nazvanie": "Комитет по обороне"},
+    {"kod": "mezhdunarodnye_dela", "nazvanie": "Комитет по международным делам"},
+    {"kod": "ekonomicheskaya_politika", "nazvanie": "Комитет по экономической политике"},
+    {"kod": "okhrana_zdorovya", "nazvanie": "Комитет по охране здоровья"},
+    {"kod": "prosvishchenie", "nazvanie": "Комитет по просвещению"},
+    {"kod": "energetika", "nazvanie": "Комитет по энергетике"},
 ]
 
 # Статусы законопроектов
 STATUSY_ZAKONOPROEKTOV = [
-    {"code": "vnesen_v_gd", "name": "Внесён в ГД"},
-    {"code": "v_komitete", "name": "На рассмотрении комитета"},
-    {"code": "pervoe_chtenie", "name": "Прошёл первое чтение"},
-    {"code": "vtoroe_chtenie", "name": "Прошёл второе чтение"},
-    {"code": "tretie_chtenie", "name": "Прошёл третье чтение"},
-    {"code": "odobren_sf", "name": "Одобрен Советом Федерации"},
-    {"code": "podpisan_prezidentom", "name": "Подписан Президентом"},
-    {"code": "otklonen", "name": "Отклонён"},
-    {"code": "otozvan_initsiatorom", "name": "Отозван инициатором"},
+    {"kod": "vnesen_v_gd", "nazvanie": "Внесён в ГД"},
+    {"kod": "v_komitete", "nazvanie": "На рассмотрении комитета"},
+    {"kod": "pervoe_chtenie", "nazvanie": "Прошёл первое чтение"},
+    {"kod": "vtoroe_chtenie", "nazvanie": "Прошёл второе чтение"},
+    {"kod": "tretie_chtenie", "nazvanie": "Прошёл третье чтение"},
+    {"kod": "odobren_sf", "nazvanie": "Одобрен Советом Федерации"},
+    {"kod": "podpisan_prezidentom", "nazvanie": "Подписан Президентом"},
+    {"kod": "otklonen", "nazvanie": "Отклонён"},
+    {"kod": "otozvan_initsiatorom", "nazvanie": "Отозван инициатором"},
 ]
 
 # Фракции — маппинг кодов API → русские названия

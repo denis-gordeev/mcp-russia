@@ -176,7 +176,7 @@ def _parse_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
         status=data.get("status", "") or "",
         otrysl=data.get("branch", data.get("otrysl", "")) or "",
         kratkoe_opisanie=data.get("description", data.get("kratkoe_opisanie", "")) or "",
-        tekst_url=data.get("url", data.get("tekst_url", "")) or "",
+        tekst_ssylka=data.get("url", data.get("tekst_ssylka", "")) or "",
         izmeneniya=data.get("amendments", data.get("izmeneniya", [])) or [],
     )
 
@@ -193,7 +193,7 @@ def _parse_zakon_proekt(data: Any) -> ZakonProekt | None:
         vnesen_subiekt=data.get("introducedBy", data.get("vnesen_subiekt", "")) or "",
         otvetstvennyy_komitet=data.get("committee", data.get("otvetstvennyy_komitet", "")) or "",
         chteniya=data.get("readings", data.get("chteniya", [])) or [],
-        tekst_url=data.get("url", data.get("tekst_url", "")) or "",
+        tekst_ssylka=data.get("url", data.get("tekst_ssylka", "")) or "",
     )
 
 
@@ -217,7 +217,7 @@ def _parse_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
                 istochnik=item.get("source", item.get("istochnik", "pravo.gov.ru")),
                 rubrika=item.get("rubric", item.get("rubrika", "")),
                 annotaciya=item.get("annotation", item.get("annotaciya", "")),
-                tekst_url=item.get("url", item.get("tekst_url", "")),
+                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
             )
         )
     return results
@@ -244,7 +244,7 @@ def _parse_izmeneniya(data: Any) -> list[IzmenenieAkta]:
                 data_vstupleniya_v_silu=item.get(
                     "effectiveDate", item.get("data_vstupleniya_v_silu", "")
                 ),
-                tekst_url=item.get("url", item.get("tekst_url", "")),
+                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
             )
         )
     return results
@@ -270,7 +270,7 @@ def _search_results(data: Any) -> list[NormativnyyAkt]:
                 status=item.get("status", ""),
                 otrysl=item.get("branch", item.get("otrysl", "")),
                 kratkoe_opisanie=item.get("description", item.get("kratkoe_opisanie", "")),
-                tekst_url=item.get("url", item.get("tekst_url", "")),
+                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
             )
         )
     return results

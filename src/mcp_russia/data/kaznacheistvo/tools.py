@@ -18,7 +18,7 @@ async def spisok_vidov_byudzhetov(ctx: Context) -> str:
     """Получить список видов бюджетов бюджетной системы РФ."""
     await ctx.info("Запрос списка видов бюджетов...")
     vidy = client.get_vidy_byudzhetov_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды бюджетов бюджетной системы РФ**\n\n"
     return header + markdown_table(["Код", "Вид бюджета"], rows)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
     """Получить список категорий расходов бюджета."""
     await ctx.info("Запрос списка категорий расходов...")
     kategorii = client.get_kategorii_raskhodov_list()
-    rows = [(k["code"], k["name"]) for k in kategorii]
+    rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории расходов бюджета**\n\n"
     return header + markdown_table(["Код", "Категория"], rows)
 

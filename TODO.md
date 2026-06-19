@@ -2,7 +2,65 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-18 (сорок шестой проход — русификация документации)
+## Статус раунда 2026-06-19 (сорок седьмой проход — русификация полей Pydantic-схем, ключей констант, параметров функций)
+
+### Выполнено
+
+- **Русификация оставшихся полей Pydantic-схем** (~67 замен в 12 модулях):
+  - `id` → `identifikator` (10 моделей в 5 модулях): zakupki (Zakupka, Kontrakt, Zakazchik, Postavshchik, PlanZakupki), gosduma (Deputat, Zakonoproekt), kad_arbitrazh (SudebnyyAkt, SudebnoeZasedanie, Sudy), cekrf (KandidatKratko, Kandidat), minzdrav (MedOrganizatsia, VrachebnyyKadr)
+  - `number` → `nomer` (5 моделей в 3 модулях): zakupki (Zakupka, Kontrakt), gosduma (Zakonoproekt), kad_arbitrazh (SudebnoeDelo)
+  - `title` → `nazvanie` (3 модели в gosduma: Zakonoproekt, Golosovanie; zakupki: Zakupka)
+  - `city` → `gorod` (4 модели в rosapi: AdresRF, BankRF, PostalCodeInfo; minzdrav: MedOrganizatsia)
+  - `currency` → `valyuta` (2 модели: zakupki Zakupka/Kontrakt, kad_arbitrazh SudebnoeDelo)
+  - `initial_price` → `nachalnaya_tsena`, `deadline` → `srok_podachi`, `organizer_inn` → `organizator_inn`, `execution_deadline` → `srok_ispolneniya`, `contractor_inn` → `podryadchik_inn`, `price` → `tsena`, `zakupka_number` → `zakupka_nomer` (zakupki)
+  - `zakupki_count` → `zakupki_kolichestvo`, `total_spent` → `obshchie_raskhody`, `contracts_won` → `kontraktov_vyigrano`, `contracts_executed` → `kontraktov_ispolneno`, `total_revenue` → `obshchiy_dokhod`, `year` → `god`, `items_count` → `kolichestvo_pozitsiy`, `total_budget` → `obshchiy_byudzhet` (zakupki)
+  - `street` → `ulitsa`, `house` → `dom`, `full_address` → `polnyy_adres`, `address` → `adres`, `director` → `rukovoditel`, `phone` → `telefon`, `swift` → `svift`, `type` → `tip`, `district` → `rayon`, `addresses` → `adresa` (rosapi)
+  - `category` → `kategoriya`, `delo_number` → `delo_nomer`, `pdf_url` → `pdf_ssylka` (kad_arbitrazh)
+  - `author` → `avtor`, `readings` → `chteniya`, `count` → `kolichestvo`, `zakonoproekt_id` → `zakonoproekt_identifikator`, `foto_url` → `foto_ssylka` (gosduma)
+  - `level` → `uroven`, `color` → `tsvet` (cekrf)
+  - `unit` → `edinitsa`, `source` → `istochnik`, `population` → `naselenie`, `vrp_per_capita` → `vrp_na_dushu` (rosstat)
+  - `feels_like` → `oshchushchaetsya_kak`, `izobrazhenie_url` → `izobrazhenie_ssylka` (rosgidromet)
+  - `previous` → `predydushchee` (cbrf)
+  - `tekst_url` → `tekst_ssylka` (publikatsii, 4 модели)
+  - `territory` → `territoriya` (rosprirodnadzor)
+  - `email` → `elektronnaya_pochta` (rospotrebnadzor)
+- **Русификация ключей словарей в constants.py** (~1,915 замен в 23 модулях):
+  - `"code"` → `"kod"` (~911 замен во всех 23 модулях)
+  - `"name"` → `"nazvanie"` (~937 замен во всех 24 модулях)
+  - `"short_name"` → `"korotkoe_nazvanie"`, `"color"` → `"tsvet"`, `"type"` → `"tip"`, `"level"` → `"uroven"` (cekrf)
+  - `"url"` → `"ssylka"` (roskomnadzor)
+  - Исправлена ошибка дублирования ключей в cekrf IZVESTNYE_VYBORY: первый `"type"` → `"tip_vyborov"`, второй → `"tip"`
+- **Русификация параметров функций** (~60+ замен в 12 модулях):
+  - `code` → `kod`, `codes` → `kody` (cbrf/client.py)
+  - `sub_region` → `podregion`, `vib_type` → `tip_golosovaniya` (cekrf/client.py)
+  - `query` → `zapros`, `status_code` → `kod_statusa` (fns/client.py)
+  - `id` → `identifikator`, `limit` → `ogranichenie`, `page` → `stranitsa`, `id_deputata` → `identifikator_deputata` (gosduma)
+  - `number` → `nomer`, `category` → `kategoriya`, `id_akta` → `identifikator_akta`, `key` → `klyuch` (kad_arbitrazh)
+  - `id_mo` → `identifikator_mo`, `mkb_code` → `kod_mkb` (minzdrav)
+  - `domain` → `domen`, `reestr_code` → `kod_reestra`, `zapisi_id` → `identifikator_zapisi` (roskomnadzor)
+  - `target_inn` → `inn_tseli`, `target_name` → `nazvanie_tseli` (rospotrebnadzor)
+  - `territory` → `territoriya` (rosprirodnadzor)
+  - `date_range` → `diapazon_dat` (rosstat)
+  - `post_id` → `identifikator_posta` (rosvodresursy)
+  - `senator_id` → `identifikator_senatora` (sovfed)
+  - `contractor_inn` → `inn_podryadchika`, `zakazchik_inn` → `inn_zakazchika`, `organizer_inn` → `inn_organizatora` (zakupki)
+  - `postal_code` → `pochtovyy_indeks`, `fias_id` → `identifikator_fias`, `index` → `indeks` (rosapi)
+- **Обновлены все ссылки** в client.py, tools.py и тестах (координированные замены)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Все поля Pydantic-схем русифицированы**: английские field names заменены на русскую транслитерацию во всех 12 модулях, где они оставались. JSON-вывод инструментов теперь полностью на русском
+- **Все ключи словарей в constants.py русифицированы**: `"code"` → `"kod"`, `"name"` → `"nazvanie"` во всех 23 модулях. Справочные данные теперь используют русские ключи
+- **Все параметры функций русифицированы**: английские параметры (limit, code, id, query, etc.) заменены на русскую транслитерацию в 12 модулях
+- **Исправлена ошибка дублирования ключей**: в cekrf/constants.py IZVESTNYE_VYBORY имел два ключа `"type"`, второй перезаписывал первый. Теперь: `"tip_vyborov"` (тип выборов: 1=президентские, 2=думские) и `"tip"` (VRN-код: 242/224)
+- **Полная координация**: schemas.py + constants.py + client.py + tools.py + tests обновлены согласованно
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
 
 ### Выполнено
 

@@ -26,7 +26,7 @@ async def test_poisk_med_organizatsiy_found():
             "nazvanie": "Городская больница №1",
             "tip": "Больница",
             "region": "Москва",
-            "city": "Москва",
+            "gorod": "Москва",
         },
     ]
     with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
@@ -127,7 +127,7 @@ async def test_statistika_zabolevaniy_found():
         },
     ]
     with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=mock_data):
-        result = await minzdrav_tools.statistika_zabolevaniy(ctx, mkb_code="I00-I99")
+        result = await minzdrav_tools.statistika_zabolevaniy(ctx, kod_mkb="I00-I99")
     assert "кровообращения" in result
 
 

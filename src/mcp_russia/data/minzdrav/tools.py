@@ -48,7 +48,7 @@ async def poisk_med_organizatsiy(
             o.get("nazvanie", ""),
             o.get("tip", ""),
             o.get("region", ""),
-            o.get("city", ""),
+            o.get("gorod", ""),
         )
         for o in orgs
     ]
@@ -60,22 +60,22 @@ async def poisk_med_organizatsiy(
 
 async def info_med_organizatsii(
     ctx: Context,
-    id_mo: str,
+    identifikator_mo: str,
 ) -> str:
     """Получить информацию о конкретной медицинской организации.
 
     Аргументы:
-        id_mo: Идентификатор медицинской организации (ОГРН или ИНН).
+        identifikator_mo: Идентификатор медицинской организации (ОГРН или ИНН).
 
     Возвращает:
         Подробная информация о медицинской организации.
     """
-    await ctx.info(f"Запрос информации о МО {id_mo}...")
-    mo = await client.info_med_organizatsii(id_mo)
+    await ctx.info(f"Запрос информации о МО {identifikator_mo}...")
+    mo = await client.info_med_organizatsii(identifikator_mo)
 
     if not mo:
         return (
-            f"Медицинская организация с ID {id_mo} не найдена.\n\n"
+            f"Медицинская организация с ID {identifikator_mo} не найдена.\n\n"
             f"Используйте poisk_med_organizatsiy() для поиска."
         )
 
@@ -84,7 +84,7 @@ async def info_med_organizatsii(
         f"- Тип: {mo.get('tip', '')}",
         f"- Адрес: {mo.get('adres', '')}",
         f"- Регион: {mo.get('region', '')}",
-        f"- Город: {mo.get('city', '')}",
+        f"- Город: {mo.get('gorod', '')}",
         f"- Телефон: {mo.get('telefon', '')}",
         f"- Лицензия: {mo.get('litsenzia', '')}",
         f"- Коек: {mo.get('krovatey', 0)}",
@@ -172,26 +172,26 @@ async def pokazateli_zdorovya(
 
 async def statistika_zabolevaniy(
     ctx: Context,
-    mkb_code: str = "",
+    kod_mkb: str = "",
     region: str = "",
     god: int = 0,
 ) -> str:
     """Получить статистику заболеваний по МКБ-10.
 
     Аргументы:
-        mkb_code: Код МКБ-10 (например, 'I00-I99' для болезней кровообращения).
+        kod_mkb: Код МКБ-10 (например, 'I00-I99' для болезней кровообращения).
         region: Субъект РФ.
         god: Год данных.
 
     Возвращает:
         Статистика заболеваний.
     """
-    await ctx.info(f"Запрос статистики заболеваний: {mkb_code or 'все'}, {god or 'последние'}...")
-    data = await client.statistika_zabolevaniy(mkb_code=mkb_code, region=region, god=god)
+    await ctx.info(f"Запрос статистики заболеваний: {kod_mkb or 'все'}, {god or 'последние'}...")
+    data = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, region=region, god=god)
     if not data:
         header = "**Статистика заболеваний**\n\n"
-        if mkb_code:
-            header += f"Код МКБ-10: {mkb_code}\n"
+        if kod_mkb:
+            header += f"Код МКБ-10: {kod_mkb}\n"
         if region:
             header += f"Регион: {region}\n"
         header += (
@@ -223,7 +223,7 @@ async def spravochnik_mo(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника типов медицинских организаций...")
     tipy = client.get_tipy_mo()
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы медицинских организаций**\n\n"
     return header + markdown_table(["Код", "Тип организации"], rows)
 
@@ -236,7 +236,7 @@ async def spravochnik_spetsialnostey(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.get_spetsialnosti()
-    rows = [(s["code"], s["name"]) for s in spetsialnosti]
+    rows = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
     header = "**Врачебные специальности**\n\n"
     return header + markdown_table(["Код", "Специальность"], rows)
 
@@ -249,6 +249,6 @@ async def spravochnik_mkb10(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника МКБ-10...")
     mkb_classes = client.get_mkb10_classes()
-    rows = [(m["code"], m["name"]) for m in mkb_classes]
+    rows = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
     header = "**Классы МКБ-10**\n\n"
     return header + markdown_table(["Код", "Класс заболеваний"], rows)

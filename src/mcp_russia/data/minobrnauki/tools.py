@@ -24,7 +24,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
     Возвращает:
         Список типов вузов (университет, академия, институт и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TIPY_VUZOV]
+    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_VUZOV]
     return markdown_table(["Код", "Тип вуза"], rows)
 
 
@@ -34,7 +34,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
     Возвращает:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
-    rows = [(f["code"], f["name"]) for f in FORMY_OBUCHENIYA]
+    rows = [(f["kod"], f["nazvanie"]) for f in FORMY_OBUCHENIYA]
     return markdown_table(["Код", "Форма обучения"], rows)
 
 
@@ -44,7 +44,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
     Возвращает:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
-    rows = [(u["code"], u["name"]) for u in UROVNI_OBRAZOVANIYA]
+    rows = [(u["kod"], u["nazvanie"]) for u in UROVNI_OBRAZOVANIYA]
     return markdown_table(["Код", "Уровень образования"], rows)
 
 
@@ -54,7 +54,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
     Возвращает:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
-    rows = [(o["code"], o["name"]) for o in OTRASLI_NAUKI]
+    rows = [(o["kod"], o["nazvanie"]) for o in OTRASLI_NAUKI]
     return markdown_table(["Код", "Отрасль науки"], rows)
 
 
@@ -64,7 +64,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
     Возвращает:
         Список грантовых фондов и программ.
     """
-    rows = [(g["code"], g["name"]) for g in TIPY_GRANTOV]
+    rows = [(g["kod"], g["nazvanie"]) for g in TIPY_GRANTOV]
     return markdown_table(["Код", "Тип гранта"], rows)
 
 
@@ -74,7 +74,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
     Возвращает:
         Список статусов (действует, приостановлена, отменена).
     """
-    rows = [(s["code"], s["name"]) for s in STATUSY_AKKREDITATSII]
+    rows = [(s["kod"], s["nazvanie"]) for s in STATUSY_AKKREDITATSII]
     return markdown_table(["Код", "Статус аккредитации"], rows)
 
 
@@ -84,7 +84,7 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
     Возвращает:
         Список федеральных округов.
     """
-    rows = [(f["code"], f["name"]) for f in FEDERALNYE_OKRUGA]
+    rows = [(f["kod"], f["nazvanie"]) for f in FEDERALNYE_OKRUGA]
     return markdown_table(["Код", "Федеральный округ"], rows)
 
 

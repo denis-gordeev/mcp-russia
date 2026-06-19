@@ -15,13 +15,13 @@ from .constants import CBR_DAILY_JSON
 from .schemas import ZnachenieValyuty
 
 
-def _parse_valyuta(code: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
+def _parse_valyuta(kod: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
     """Разбор данных о валютах из JSON API ЦБ РФ."""
-    entry = data.get(code, {})
+    entry = data.get(kod, {})
     if not entry:
         return ZnachenieValyuty(
-            kod=code,
-            nazvanie=code,
+            kod=kod,
+            nazvanie=kod,
             nominal=1,
             znachenie=0.0,
         )
@@ -33,8 +33,8 @@ def _parse_valyuta(code: str, data: dict[str, Any], date_str: str = "") -> Znach
     znachenie_za_edinitsu = value / nominal if nominal else value
 
     return ZnachenieValyuty(
-        kod=code,
-        nazvanie=entry.get("Name", code),
+        kod=kod,
+        nazvanie=entry.get("Name", kod),
         nominal=nominal,
         znachenie=znachenie_za_edinitsu,
         predydushchee_znachenie=previous / nominal if previous and nominal else previous,
@@ -55,11 +55,11 @@ async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
     return await http_get(url)
 
 
-async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyuty | None:
+async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyuty | None:
     """Получение курса отдельной валюты.
 
     Аргументы:
-        code: Код валюты (напр. «USD», «EUR», «CNY»).
+        kod: Код валюты (напр. «USD», «EUR», «CNY»).
         data: Дата в формате ГГГГ-ММ-ДД (необязательно).
 
     Возвращает:
@@ -69,16 +69,16 @@ async def poluchit_valyutu(code: str, data: str | None = None) -> ZnachenieValyu
     valute_data = result.get("Valute", {})
     date_str = result.get("Date", "")
 
-    if code in valute_data:
-        return _parse_valyuta(code, valute_data, date_str)
+    if kod in valute_data:
+        return _parse_valyuta(kod, valute_data, date_str)
     return None
 
 
-async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
+async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
     """Получение нескольких курсов валют параллельно.
 
     Аргументы:
-        codes: Список кодов валют.
+        kody: Список кодов валют.
 
     Возвращает:
         Список данных о валютах.
@@ -87,7 +87,7 @@ async def poluchit_valyuty_spisok(codes: list[str]) -> list[ZnachenieValyuty]:
     valute_data = result.get("Valute", {})
     date_str = result.get("Date", "")
 
-    return [_parse_valyuta(c, valute_data, date_str) for c in codes if c in valute_data]
+    return [_parse_valyuta(c, valute_data, date_str) for c in kody if c in valute_data]
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:
@@ -100,20 +100,20 @@ async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:
     return await poluchit_valyuty_spisok(osnovnyye)
 
 
-async def poluchit_dinamiku_kursa(code: str) -> dict[str, Any]:
+async def poluchit_dinamiku_kursa(kod: str) -> dict[str, Any]:
     """Получение динамики исторических данных для валюты.
 
     Использует API динамики ЦБ РФ для исторических данных.
     API: https://www.cbr-xml-daily.ru/dynamics_json.js
 
     Аргументы:
-        code: Код валюты.
+        kod: Код валюты.
 
     Возвращает:
         Исторические данные о валюте.
     """
-    url = f"https://www.cbr-xml-daily.ru/dynamics/{code}/dynamic_json.js"
+    url = f"https://www.cbr-xml-daily.ru/dynamics/{kod}/dynamic_json.js"
     try:
         return await http_get(url)
     except Exception:
-        return {"error": f"Нет данных для валюты {code}"}
+        return {"error": f"Нет данных для валюты {kod}"}

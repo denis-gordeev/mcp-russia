@@ -29,7 +29,7 @@ class TestParserRezultatyPoiska:
         ]
         results = kad_client._parse_rezultaty_poiska(data)
         assert len(results) == 1
-        assert results[0].number == "А40-12345/2024"
+        assert results[0].nomer == "А40-12345/2024"
         assert results[0].nazvanie_suda == "АС г. Москвы"
         assert results[0].summa_iska == 1000000.0
         assert "ООО Альфа" in results[0].istorcy
@@ -51,7 +51,7 @@ class TestParserRezultatyPoiska:
         }
         results = kad_client._parse_rezultaty_poiska(data)
         assert len(results) == 1
-        assert results[0].number == "А77-5678/2023"
+        assert results[0].nomer == "А77-5678/2023"
 
     def test_parse_empty(self) -> None:
         assert kad_client._parse_rezultaty_poiska(None) == []
@@ -89,8 +89,8 @@ class TestParserKartochkaDela:
         }
         result = kad_client._parse_kartochka_dela(data)
         assert result is not None
-        assert result.number == "А40-11111/2025"
-        assert result.category == "Банкротство"
+        assert result.nomer == "А40-11111/2025"
+        assert result.kategoriya == "Банкротство"
         assert result.summa_iska == 5000000.0
 
     def test_parse_none(self) -> None:
@@ -118,7 +118,7 @@ class TestParserAkty:
         results = kad_client._parse_akty(data, "А40-12345/2024")
         assert len(results) == 1
         assert results[0].tip_akta == "Решение"
-        assert results[0].delo_number == "А40-12345/2024"
+        assert results[0].delo_nomer == "А40-12345/2024"
 
     def test_parse_empty(self) -> None:
         assert kad_client._parse_akty(None, "А40-1/2024") == []
@@ -158,8 +158,8 @@ async def test_poisk_del_with_results():
     ctx = _mock_ctx()
     mock_dela = [
         SudebnoeDelo(
-            number="А40-12345/2024",
-            category="Банкротство",
+            nomer="А40-12345/2024",
+            kategoriya="Банкротство",
             status="На рассмотрении",
             sudya="Иванов И.И.",
             nazvanie_suda="АС г. Москвы",
@@ -192,8 +192,8 @@ async def test_info_dela_not_found():
 async def test_info_dela_found():
     ctx = _mock_ctx()
     mock_delo = SudebnoeDelo(
-        number="А40-12345/2024",
-        category="Банкротство",
+        nomer="А40-12345/2024",
+        kategoriya="Банкротство",
         status="На рассмотрении",
         sudya="Иванов И.И.",
         sud_name="АС г. Москвы",

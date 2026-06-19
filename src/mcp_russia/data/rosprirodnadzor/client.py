@@ -31,7 +31,7 @@ async def poisk_proverok(
     organizaciya: str = "",
     vid_nadzora: str = "",
     god: int = 0,
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск экологических проверок Росприроднадзора.
 
@@ -39,14 +39,14 @@ async def poisk_proverok(
         organizaciya: Название организации.
         vid_nadzora: Код вида надзора.
         god: Год проверки.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список проверок.
     """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             params["organization"] = organizaciya
         if vid_nadzora:
@@ -62,7 +62,7 @@ async def poisk_proverok(
 
     try:
         url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/inspections"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             params["organization"] = organizaciya
         if god:
@@ -99,21 +99,21 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
 async def poisk_obektov_negativnogo(
     organizaciya: str = "",
     kategoriya: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск объектов негативного воздействия в реестре ОНВ.
 
     Аргументы:
         organizaciya: Название организации.
         kategoriya: Категория ОНВ.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список объектов ОНВ.
     """
     try:
         url = f"{ONV_REGISTER_BASE}/search"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             params["name"] = organizaciya
         if kategoriya:
@@ -127,7 +127,7 @@ async def poisk_obektov_negativnogo(
 
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/onv"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             params["organization"] = organizaciya
         if kategoriya:
@@ -143,25 +143,25 @@ async def poisk_obektov_negativnogo(
 
 
 async def poisk_litsenziy_nedra(
-    territory: str = "",
+    territoriya: str = "",
     vid_litsenzii: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск лицензий на недропользование.
 
     Аргументы:
-        territory: Территория действия лицензии.
+        territoriya: Территория действия лицензии.
         vid_litsenzii: Вид лицензии.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список лицензий.
     """
     try:
         url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
-        params: dict[str, Any] = {"limit": limit}
-        if territory:
-            params["territory"] = territory
+        params: dict[str, Any] = {"limit": ogranichenie}
+        if territoriya:
+            params["territory"] = territoriya
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_get(url, params=params, timeout=15.0)
@@ -173,9 +173,9 @@ async def poisk_litsenziy_nedra(
 
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/licenses"
-        params: dict[str, Any] = {"limit": limit}
-        if territory:
-            params["territory"] = territory
+        params: dict[str, Any] = {"limit": ogranichenie}
+        if territoriya:
+            params["territory"] = territoriya
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_get(url, params=params, timeout=15.0)
@@ -273,7 +273,7 @@ def _parse_litsenziya(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "vid_litsenzii": data.get("licenseType", "") or data.get("vid_litsenzii", ""),
-        "territory": data.get("territory", "") or data.get("region", ""),
+        "territoriya": data.get("territory", "") or data.get("region", ""),
         "srok_deystviya": data.get("validityPeriod", "") or data.get("srok_deystviya", ""),
         "derzhatel": data.get("holder", "") or data.get("derzhatel", ""),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",

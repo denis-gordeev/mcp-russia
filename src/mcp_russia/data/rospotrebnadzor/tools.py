@@ -22,7 +22,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
     Возвращает:
         Список направлений с кодами и названиями.
     """
-    rows = [(n["code"], n["name"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
     return markdown_table(["Код", "Направление"], rows)
 
 
@@ -32,7 +32,7 @@ async def spisok_tipov_proverok(ctx: Context) -> str:
     Возвращает:
         Список типов проверок (плановая, внеплановая и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TIPY_PROVEROK]
+    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_PROVEROK]
     return markdown_table(["Код", "Тип проверки"], rows)
 
 
@@ -42,7 +42,7 @@ async def spisok_kategoriy_obiektov(ctx: Context) -> str:
     Возвращает:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
-    rows = [(k["code"], k["name"]) for k in KATEGORII_OBIEKTOV]
+    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_OBIEKTOV]
     return markdown_table(["Код", "Категория объекта"], rows)
 
 
@@ -52,7 +52,7 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
     Возвращает:
         Список управлений по федеральным округам.
     """
-    rows = [(r["code"], r["name"]) for r in REGIONALNYE_UPRAVLENIYA]
+    rows = [(r["kod"], r["nazvanie"]) for r in REGIONALNYE_UPRAVLENIYA]
     return markdown_table(["Код", "Управление"], rows)
 
 
@@ -102,8 +102,8 @@ async def poisk_proverok(
     """
     await ctx.info("Поиск проверок в реестре Роспотребнадзора...")
     proverki = await client.poisk_proverok(
-        target_inn=inn,
-        target_name=nazvanie,
+        inn_tseli=inn,
+        nazvanie_tseli=nazvanie,
         region=region,
     )
     if not proverki:
@@ -169,7 +169,7 @@ async def spisok_sanpinov(ctx: Context) -> str:
     Возвращает:
         Справочник основных СанПиН с кодами и названиями.
     """
-    rows = [(s["code"], s["name"]) for s in SANPIN_OSNOVNYE]
+    rows = [(s["kod"], s["nazvanie"]) for s in SANPIN_OSNOVNYE]
     return markdown_table(["Код", "СанПиН"], rows)
 
 
@@ -215,8 +215,8 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     """
     await ctx.info("Поиск нарушений в реестре проверок...")
     proverki = await client.poisk_proverok(
-        target_inn=inn,
-        target_name=organizaciya,
+        inn_tseli=inn,
+        nazvanie_tseli=organizaciya,
     )
     narusheniya = [p for p in proverki if p.get("vyavleno_narusheniy", 0) > 0]
     if not narusheniya:

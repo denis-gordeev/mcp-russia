@@ -18,7 +18,7 @@ async def spisok_vidov_nadzora(ctx: Context) -> str:
     """Получить список видов надзора Россельхознадзора."""
     await ctx.info("Запрос списка видов надзора...")
     vidy = client.get_vidy_nadzora_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды надзора Россельхознадзора**\n\n"
     return header + markdown_table(["Код", "Вид надзора"], rows)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_proverok(ctx: Context) -> str:
     """Получить список категорий проверок."""
     await ctx.info("Запрос списка категорий проверок...")
     kategorii = client.get_kategorii_proverok_list()
-    rows = [(k["code"], k["name"]) for k in kategorii]
+    rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории проверок Россельхознадзора**\n\n"
     return header + markdown_table(["Код", "Категория"], rows)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
     """Получить список видов нарушений."""
     await ctx.info("Запрос списка видов нарушений...")
     vidy = client.get_vidy_narusheniy_list()
-    rows = [(v["code"], v["name"]) for v in vidy]
+    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды нарушений Россельхознадзора**\n\n"
     return header + markdown_table(["Код", "Вид нарушений"], rows)
 
@@ -45,7 +45,7 @@ async def spisok_tipov_produktsii(ctx: Context) -> str:
     """Получить список типов поднадзорной продукции."""
     await ctx.info("Запрос списка типов продукции...")
     tipy = client.get_tipy_produktsii_list()
-    rows = [(t["code"], t["name"]) for t in tipy]
+    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы поднадзорной продукции**\n\n"
     return header + markdown_table(["Код", "Тип продукции"], rows)
 

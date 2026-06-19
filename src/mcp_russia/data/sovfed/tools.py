@@ -37,25 +37,25 @@ async def spisok_senatorov(ctx: Context) -> str:
     )
 
 
-async def info_senatora(senator_id: str, ctx: Context) -> str:
+async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
     """Получить информацию о сенаторе Совета Федерации.
 
     Аргументы:
-        senator_id: Идентификатор сенатора.
+        identifikator_senatora: Идентификатор сенатора.
 
     Возвращает:
         Информация о сенаторе.
     """
-    await ctx.info(f"Запрос информации о сенаторе {senator_id}...")
-    data = await client.info_senatora(senator_id)
+    await ctx.info(f"Запрос информации о сенаторе {identifikator_senatora}...")
+    data = await client.info_senatora(identifikator_senatora)
     if not data:
         return (
-            f"Сенатор '{senator_id}' не найден.\n\n"
+            f"Сенатор '{identifikator_senatora}' не найден.\n\n"
             f"Проверьте идентификатор на сайте Совета Федерации: sovfed.ru/senators"
         )
     fio = f"{data.get('familiya', '')} {data.get('imya', '')} {data.get('otchestvo', '')}".strip()
     lines = [
-        f"**{fio}** (№ {data.get('nomer', senator_id)})",
+        f"**{fio}** (№ {data.get('nomer', identifikator_senatora)})",
         f"- Регион: {data.get('region', '')}",
         f"- Должность: {data.get('dolzhnost', '')}",
     ]
@@ -85,7 +85,7 @@ async def spisok_komitetov(ctx: Context) -> str:
         header = "**Комитеты Совета Федерации РФ**\n\n"
         return header + markdown_table(["Комитет", "Председатель", "Членов"], rows)
     komitety = client.get_komitety_list()
-    rows = [(k["code"], k["name"]) for k in komitety]
+    rows = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
     return header + markdown_table(["Код", "Комитет"], rows)
 
@@ -106,7 +106,7 @@ async def spisok_komissiy(ctx: Context) -> str:
         header = "**Комиссии Совета Федерации РФ**\n\n"
         return header + markdown_table(["Комиссия", "Председатель", "Членов"], rows)
     komissii = client.get_komissii_list()
-    rows = [(k["code"], k["name"]) for k in komissii]
+    rows = [(k["kod"], k["nazvanie"]) for k in komissii]
     header = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
     return header + markdown_table(["Код", "Комиссия"], rows)
 

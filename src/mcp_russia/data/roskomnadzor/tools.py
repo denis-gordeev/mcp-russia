@@ -23,7 +23,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
     Возвращает:
         Список направлений с кодами и названиями.
     """
-    rows = [(n["code"], n["name"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
     return markdown_table(["Код", "Направление"], rows)
 
 
@@ -33,7 +33,7 @@ async def spisok_tipov_licenziy(ctx: Context) -> str:
     Возвращает:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TIPY_LICENZIY_SVYAZI]
+    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_LICENZIY_SVYAZI]
     return markdown_table(["Код", "Тип лицензии"], rows)
 
 
@@ -43,7 +43,7 @@ async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
     Возвращает:
         Список категорий нарушений (утечка ПД, запрещённый контент и т.д.).
     """
-    rows = [(k["code"], k["name"]) for k in KATEGORII_NARUSHENIY]
+    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_NARUSHENIY]
     return markdown_table(["Код", "Категория нарушения"], rows)
 
 
@@ -53,7 +53,7 @@ async def spisok_reestrov(ctx: Context) -> str:
     Возвращает:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
-    rows = [(r["code"], r["name"]) for r in REGISTRY_RKN]
+    rows = [(r["kod"], r["nazvanie"]) for r in REGISTRY_RKN]
     return markdown_table(["Код", "Реестр"], rows)
 
 
@@ -63,7 +63,7 @@ async def spisok_tipov_smi(ctx: Context) -> str:
     Возвращает:
         Справочник типов СМИ (печатные, сетевые, ТВ, радио и т.д.).
     """
-    rows = [(t["code"], t["name"]) for t in TIPY_SMI]
+    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_SMI]
     return markdown_table(["Код", "Тип СМИ"], rows)
 
 
@@ -73,7 +73,7 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
     Возвращает:
         Справочник категорий операторов ПД.
     """
-    rows = [(k["code"], k["name"]) for k in KATEGORII_PD_OPERATOROV]
+    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_PD_OPERATOROV]
     return markdown_table(["Код", "Категория оператора"], rows)
 
 
@@ -191,20 +191,20 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     )
 
 
-async def proverka_blokirovki(ctx: Context, domain: str) -> str:
+async def proverka_blokirovki(ctx: Context, domen: str) -> str:
     """Проверка наличия сайта в реестре запрещённых сайтов.
 
     Аргументы:
-        domain: Доменное имя для проверки (напр. «example.com»).
+        domen: Доменное имя для проверки (напр. «example.com»).
 
     Возвращает:
         Информация о наличии сайта в реестре блокировок.
     """
-    await ctx.info(f"Проверка блокировки {domain}...")
-    data = await client.proverka_blokirovki(domain)
+    await ctx.info(f"Проверка блокировки {domen}...")
+    data = await client.proverka_blokirovki(domen)
     if data.get("blokirovka"):
         lines = [
-            f"**Домен {domain} — ЗАБЛОКИРОВАН**",
+            f"**Домен {domen} — ЗАБЛОКИРОВАН**",
             f"- Основание: {data.get('osnovanie', '')}",
             f"- Дата включения: {data.get('data_vklyucheniya', '')}",
             f"- Решившие органы: {data.get('organy', '')}",
@@ -212,7 +212,7 @@ async def proverka_blokirovki(ctx: Context, domain: str) -> str:
         ]
     else:
         lines = [
-            f"**Домен {domain} — НЕ найден** в реестре запрещённых сайтов",
+            f"**Домен {domen} — НЕ найден** в реестре запрещённых сайтов",
             f"- Источник: {data.get('istochnik', 'ЕАИС (eais.rkn.gov.ru)')}",
         ]
     return "\n".join(lines)
@@ -251,22 +251,22 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     )
 
 
-async def zapisi_reestra(ctx: Context, reestr_code: str, zapisi_id: str = "") -> str:
+async def zapisi_reestra(ctx: Context, kod_reestra: str, identifikator_zapisi: str = "") -> str:
     """Информация о реестре Роскомнадзора.
 
     Аргументы:
-        reestr_code: Код реестра (zapreshchennye_sayty, operatory_pd, ori и т.д.).
-        zapisi_id: ID конкретной записи (необязательно).
+        kod_reestra: Код реестра (zapreshchennye_sayty, operatory_pd, ori и т.д.).
+        identifikator_zapisi: ID конкретной записи (необязательно).
 
     Возвращает:
         Описание реестра и ссылка на источник.
     """
-    reestr = next((r for r in REGISTRY_RKN if r["code"] == reestr_code), None)
+    reestr = next((r for r in REGISTRY_RKN if r["kod"] == kod_reestra), None)
     if not reestr:
-        return f"Реестр «{reestr_code}» не найден. Используйте spisok_reestrov()."
+        return f"Реестр «{kod_reestra}» не найден. Используйте spisok_reestrov()."
     lines = [
-        f"**{reestr['name']}**",
-        f"- Код: {reestr['code']}",
-        f"- URL: {reestr['url']}",
+        f"**{reestr['nazvanie']}**",
+        f"- Код: {reestr['kod']}",
+        f"- URL: {reestr['ssylka']}",
     ]
     return "\n".join(lines)

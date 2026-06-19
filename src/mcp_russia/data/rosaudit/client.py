@@ -27,7 +27,7 @@ async def poisk_kontrolnyh_meropriyatiy(
     napravlenie: str = "",
     status: str = "",
     god: int = 0,
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск контрольных мероприятий Счётной палаты.
 
@@ -35,14 +35,14 @@ async def poisk_kontrolnyh_meropriyatiy(
         napravlenie: Код направления контроля.
         status: Статус мероприятия.
         god: Год.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список контрольных мероприятий.
     """
     try:
         url = f"{ACH_API_BASE}/controls"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if napravlenie:
             params["direction"] = napravlenie
         if status:

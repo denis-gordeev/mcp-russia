@@ -72,25 +72,25 @@ async def poisk_senatorov(
     return SENATORY_SPRAVOCHNIK
 
 
-async def info_senatora(senator_id: str) -> dict[str, Any] | None:
+async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
     """Получить подробную информацию о сенаторе.
 
     Аргументы:
-        senator_id: Идентификатор или фамилия сенатора.
+        identifikator_senatora: Идентификатор или фамилия сенатора.
 
     Возвращает:
         Данные сенатора или None.
     """
     try:
-        url = f"{SOVFED_API_BASE}/senators/{senator_id}"
+        url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_senator(data)
     except Exception:
-        logger.debug("sovfed.ru API недоступен для сенатора %s", senator_id)
+        logger.debug("sovfed.ru API недоступен для сенатора %s", identifikator_senatora)
 
     for s in SENATORY_SPRAVOCHNIK:
-        if senator_id in (s.get("familiya", ""), str(s.get("nomer", ""))):
+        if identifikator_senatora in (s.get("familiya", ""), str(s.get("nomer", ""))):
             return s
     return None
 

@@ -17,7 +17,7 @@ class NormativnyyAkt(BaseModel):
     status: str = ""  # deystvuyushchiy, utratil_silu, и т.д.
     otrysl: str = ""
     kratkoe_opisanie: str = ""
-    tekst_url: str = ""
+    tekst_ssylka: str = ""
     izmeneniya: list[str] = []
 
 
@@ -31,7 +31,7 @@ class ZakonProekt(BaseModel):
     vnesen_subiekt: str = ""
     otvetstvennyy_komitet: str = ""
     chteniya: list[dict[str, str]] = []
-    tekst_url: str = ""
+    tekst_ssylka: str = ""
 
 
 class OficialnayaPublikatsiya(BaseModel):
@@ -44,7 +44,7 @@ class OficialnayaPublikatsiya(BaseModel):
     istochnik: str = ""
     rubrika: str = ""
     annotaciya: str = ""
-    tekst_url: str = ""
+    tekst_ssylka: str = ""
 
 
 class IzmenenieAkta(BaseModel):
@@ -56,4 +56,4 @@ class IzmenenieAkta(BaseModel):
     izmenenie_data: str = ""
     izmenenie_opisanie: str = ""
     data_vstupleniya_v_silu: str = ""
-    tekst_url: str = ""
+    tekst_ssylka: str = ""

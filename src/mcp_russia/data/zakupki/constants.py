@@ -11,41 +11,41 @@ ZAKON_223_FZ = "223-ФЗ (Федеральный закон о закупках 
 
 # Основные типы данных
 TIPLY_DANNYKH = [
-    {"code": "zakupki_44", "name": "Закупки по 44-ФЗ"},
-    {"code": "zakupki_223", "name": "Закупки по 223-ФЗ"},
-    {"code": "kontrakty", "name": "Реестр контрактов"},
-    {"code": "plany", "name": "Планы-графики закупок"},
-    {"code": "postavshchiki", "name": "Реестр недобросовестных поставщиков"},
+    {"kod": "zakupki_44", "nazvanie": "Закупки по 44-ФЗ"},
+    {"kod": "zakupki_223", "nazvanie": "Закупки по 223-ФЗ"},
+    {"kod": "kontrakty", "nazvanie": "Реестр контрактов"},
+    {"kod": "plany", "nazvanie": "Планы-графики закупок"},
+    {"kod": "postavshchiki", "nazvanie": "Реестр недобросовестных поставщиков"},
 ]
 
 # Способы определения поставщиков
 SPOSOBY_ZAKUPOK = [
-    {"code": "otkrytyy_konkurs", "name": "Открытый конкурс"},
-    {"code": "elektronnyy_auktsion", "name": "Электронный аукцион"},
-    {"code": "zapros_kotirovok", "name": "Запрос котировок"},
-    {"code": "edinyy_postavshchik", "name": "Закупка у единственного поставщика"},
-    {"code": "zakrytyy_konkurs", "name": "Закрытый конкурс"},
-    {"code": "ogranichennoe_uchastie", "name": "Закупка с ограниченным участием"},
+    {"kod": "otkrytyy_konkurs", "nazvanie": "Открытый конкурс"},
+    {"kod": "elektronnyy_auktsion", "nazvanie": "Электронный аукцион"},
+    {"kod": "zapros_kotirovok", "nazvanie": "Запрос котировок"},
+    {"kod": "edinyy_postavshchik", "nazvanie": "Закупка у единственного поставщика"},
+    {"kod": "zakrytyy_konkurs", "nazvanie": "Закрытый конкурс"},
+    {"kod": "ogranichennoe_uchastie", "nazvanie": "Закупка с ограниченным участием"},
 ]
 
 # Основные отрасли (ОКВЭД верхнего уровня)
 OTRASLI = [
-    {"code": "stroitelstvo", "name": "Строительство"},
-    {"code": "informatsionnye_tekhnologii", "name": "Информационные технологии"},
-    {"code": "meditsina_i_farmvtsevtika", "name": "Медицина и фармацевтика"},
-    {"code": "obrazovanie", "name": "Образование"},
-    {"code": "transport_i_logistika", "name": "Транспорт и логистика"},
-    {"code": "energetika", "name": "Энергетика"},
-    {"code": "prodovolstvie", "name": "Продовольствие"},
-    {"code": "bezopasnost_i_oborona", "name": "Безопасность и оборона"},
+    {"kod": "stroitelstvo", "nazvanie": "Строительство"},
+    {"kod": "informatsionnye_tekhnologii", "nazvanie": "Информационные технологии"},
+    {"kod": "meditsina_i_farmvtsevtika", "nazvanie": "Медицина и фармацевтика"},
+    {"kod": "obrazovanie", "nazvanie": "Образование"},
+    {"kod": "transport_i_logistika", "nazvanie": "Транспорт и логистика"},
+    {"kod": "energetika", "nazvanie": "Энергетика"},
+    {"kod": "prodovolstvie", "nazvanie": "Продовольствие"},
+    {"kod": "bezopasnost_i_oborona", "nazvanie": "Безопасность и оборона"},
 ]
 
 # Статусы закупок
 STATUSY_ZAKUPOK = [
-    {"code": "planirovanie", "name": "Планирование"},
-    {"code": "opublikovana", "name": "Опубликована"},
-    {"code": "priem_zayavok", "name": "Приём заявок"},
-    {"code": "rassmotrenie_zayavok", "name": "Рассмотрение заявок"},
-    {"code": "zavershena", "name": "Завершена"},
-    {"code": "otmenena", "name": "Отменена"},
+    {"kod": "planirovanie", "nazvanie": "Планирование"},
+    {"kod": "opublikovana", "nazvanie": "Опубликована"},
+    {"kod": "priem_zayavok", "nazvanie": "Приём заявок"},
+    {"kod": "rassmotrenie_zayavok", "nazvanie": "Рассмотрение заявок"},
+    {"kod": "zavershena", "nazvanie": "Завершена"},
+    {"kod": "otmenena", "nazvanie": "Отменена"},
 ]

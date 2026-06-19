@@ -35,82 +35,82 @@ from .schemas import (
 logger = logging.getLogger(__name__)
 
 
-async def poluchit_indikator(code: str, date_range: str = "") -> list[PokazatelRosstata]:
+async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[PokazatelRosstata]:
     """Получение статистического показателя из ЕМИСС/Росстата.
 
     Аргументы:
-        code: Код показателя (напр. 'ipcz', 'naselenie').
-        date_range: Фильтр по диапазону дат (необязательно).
+        kod: Код показателя (напр. 'ipcz', 'naselenie').
+        diapazon_dat: Фильтр по диапазону дат (необязательно).
 
     Возвращает:
         Список значений показателя.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get(code, code)
+    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if date_range:
-            params["date"] = date_range
+        if diapazon_dat:
+            params["date"] = diapazon_dat
         data = await http_get(url, params=params, timeout=20.0)
-        return _parse_indikator_response(data, code)
+        return _parse_indikator_response(data, kod)
     except Exception:
-        logger.exception("Ошибка при получении индикатора %s", code)
+        logger.exception("Ошибка при получении индикатора %s", kod)
         return []
 
 
-async def poluchit_dannye_regiona(code: str) -> RegionData | None:
+async def poluchit_dannye_regiona(kod: str) -> RegionData | None:
     """Получение данных о субъекте РФ.
 
     Аргументы:
-        code: Код региона (ОКАТО/ОКТМО).
+        kod: Код региона (ОКАТО/ОКТМО).
 
     Возвращает:
         Данные региона или None.
     """
-    region_info = next((r for r in SUBIEKTY_RF if r["code"] == code), None)
+    region_info = next((r for r in SUBIEKTY_RF if r["kod"] == kod), None)
     if not region_info:
         return None
     try:
-        url = f"{EMISS_API_BASE}/region/{code}"
+        url = f"{EMISS_API_BASE}/region/{kod}"
         data = await http_get(url, timeout=20.0)
         if isinstance(data, dict):
             return RegionData(
-                kod=code,
-                nazvanie=region_info["name"],
+                kod=kod,
+                nazvanie=region_info["nazvanie"],
                 federalny_okrug=region_info.get("okrug", ""),
-                population=data.get("population"),
+                naselenie=data.get("population"),
                 vrp=data.get("gdp") or data.get("vrp"),
                 srednyaya_zp=data.get("avgWage") or data.get("srednyaya_zp"),
             )
     except Exception:
-        logger.exception("Ошибка при получении данных региона %s", code)
+        logger.exception("Ошибка при получении данных региона %s", kod)
 
     return RegionData(
-        kod=code,
-        nazvanie=region_info["name"],
+        kod=kod,
+        nazvanie=region_info["nazvanie"],
         federalny_okrug=region_info.get("okrug", ""),
     )
 
 
-async def poluchit_federalny_okrug(code: str) -> dict[str, Any]:
+async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     """Получение данных о федеральном округе.
 
     Аргументы:
-        code: Код федерального округа.
+        kod: Код федерального округа.
 
     Возвращает:
         Данные федерального округа.
     """
-    okrug_info = next((o for o in FEDERALNYE_OKRUGA if o["code"] == code), None)
+    okrug_info = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
     if not okrug_info:
-        return {"error": f"Федеральный округ '{code}' не найден"}
+        return {"error": f"Федеральный округ '{kod}' не найден"}
 
-    regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == code]
+    regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == kod]
     return {
-        "kod": code,
-        "nazvanie": okrug_info["name"],
+        "kod": kod,
+        "nazvanie": okrug_info["nazvanie"],
         "kolichestvo_subiektov": len(regiony),
-        "subiekty": [r["name"] for r in regiony],
+        "subiekty": [r["nazvanie"] for r in regiony],
     }
 
 
@@ -214,15 +214,15 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
                     region_name = ""
                     reg_code = item.get("region", region)
                     if reg_code:
-                        ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
-                            region_name = ri["name"]
+                            region_name = ri["nazvanie"]
                     results.append(
                         VRPData(
                             period=item.get("date", item.get("period", "")),
                             region=region_name,
                             vrp=item.get("value"),
-                            vrp_per_capita=item.get("perCapita"),
+                            vrp_na_dushu=item.get("perCapita"),
                         )
                     )
                 return results
@@ -261,9 +261,9 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
                     region_name = ""
                     reg_code = item.get("region", region)
                     if reg_code:
-                        ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
-                            region_name = ri["name"]
+                            region_name = ri["nazvanie"]
                     results.append(
                         WagesData(
                             period=item.get("date", item.get("period", "")),
@@ -304,9 +304,9 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                     region_code = str(item.get("region", item.get("okato", "")))
                     region_name = item.get("regionName", "")
                     if not region_name:
-                        ri = next((r for r in SUBIEKTY_RF if r["code"] == region_code), None)
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region_code), None)
                         if ri:
-                            region_name = ri["name"]
+                            region_name = ri["nazvanie"]
                     results.append(
                         {
                             "region": region_name,
@@ -339,7 +339,7 @@ async def poluchit_indikator_dannye(
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
     indicator_name = next(
-        (p["name"] for p in KLYUCHEVYE_INDIKATORY if p["code"] == kod),
+        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
     )
     try:
@@ -362,9 +362,9 @@ async def poluchit_indikator_dannye(
             region_name = ""
             reg_code = item.get("region", region)
             if reg_code:
-                ri = next((r for r in SUBIEKTY_RF if r["code"] == str(reg_code)), None)
+                ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                 if ri:
-                    region_name = ri["name"]
+                    region_name = ri["nazvanie"]
             results.append(
                 IndikatorDannye(
                     kod_emiss=emiss_code,
@@ -400,7 +400,7 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
                     kod=code,
                     nazvanie=item.get("name", code),
                     znachenie=float(item.get("value", 0)),
-                    unit=item.get("unit", ""),
+                    edinitsa=item.get("unit", ""),
                     data=item.get("date", ""),
                 )
             )
@@ -448,16 +448,16 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             return _fallback_otraslevaya_struktura(region, god)
         region_name = ""
         if region:
-            ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+            ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
             if ri:
-                region_name = ri["name"]
+                region_name = ri["nazvanie"]
         results = []
         for item in items:
             if not isinstance(item, dict):
                 continue
             okved = item.get("okved", item.get("code", ""))
             otrasl = next(
-                (o["name"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["code"] == okved),
+                (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == okved),
                 item.get("name", okved),
             )
             results.append(
@@ -486,15 +486,15 @@ def _fallback_otraslevaya_struktura(
     """
     region_name = ""
     if region:
-        ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
         if ri:
-            region_name = ri["name"]
+            region_name = ri["nazvanie"]
     return [
         OtraslevayaStrukturaVRP(
             region=region_name,
             period=god or "2022",
-            otrasl=o["name"],
-            kod_okved=o["code"],
+            otrasl=o["nazvanie"],
+            kod_okved=o["kod"],
             dolya_vvp=o.get("dolya_2022"),
             vrp=o.get("vrp_2022"),
         )
@@ -531,16 +531,16 @@ async def poluchit_investitsii_po_vidam(
             return _fallback_investitsii_po_vidam(region, god)
         region_name = ""
         if region:
-            ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+            ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
             if ri:
-                region_name = ri["name"]
+                region_name = ri["nazvanie"]
         results = []
         for item in items:
             if not isinstance(item, dict):
                 continue
             okved = item.get("okved", item.get("activityCode", ""))
             vid = next(
-                (v["name"] for v in VIDY_DEYATELNOSTI_INVESTITSII if v["code"] == okved),
+                (v["nazvanie"] for v in VIDY_DEYATELNOSTI_INVESTITSII if v["kod"] == okved),
                 item.get("activityName", item.get("name", okved)),
             )
             results.append(
@@ -569,15 +569,15 @@ def _fallback_investitsii_po_vidam(
     """
     region_name = ""
     if region:
-        ri = next((r for r in SUBIEKTY_RF if r["code"] == region), None)
+        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
         if ri:
-            region_name = ri["name"]
+            region_name = ri["nazvanie"]
     return [
         InvestitsiiPoVidam(
             region=region_name,
             period=god or "2022",
-            vid_deyatelnosti=v["name"],
-            kod_okved=v["code"],
+            vid_deyatelnosti=v["nazvanie"],
+            kod_okved=v["kod"],
             investitsii=v.get("inv_2022"),
             dolya=v.get("dolya_2022"),
         )

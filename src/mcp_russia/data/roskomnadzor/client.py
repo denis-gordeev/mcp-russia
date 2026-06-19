@@ -82,28 +82,28 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
         return []
 
 
-async def proverka_blokirovki(domain: str = "") -> dict[str, Any]:
+async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
     """Проверка наличия сайта в реестре запрещённых сайтов.
 
     Аргументы:
-        domain: Доменное имя для проверки.
+        domen: Доменное имя для проверки.
 
     Возвращает:
         Информация о блокировке.
     """
-    if not domain:
+    if not domen:
         return {"blokirovka": False, "osnovanie": ""}
     try:
         url = f"{EAIS_API_BASE}/api/check"
-        params = {"domain": domain}
+        params = {"domain": domen}
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_blokirovka(data, domain)
-        return {"domain": domain, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
+            return _parse_blokirovka(data, domen)
+        return {"domain": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
     except Exception:
-        logger.exception("Ошибка при проверке блокировки %s", domain)
+        logger.exception("Ошибка при проверке блокировки %s", domen)
         return {
-            "domain": domain,
+            "domain": domen,
             "blokirovka": False,
             "osnovanie": "Не удалось проверить",
             "istochnik": "ЕАИС (eais.rkn.gov.ru)",

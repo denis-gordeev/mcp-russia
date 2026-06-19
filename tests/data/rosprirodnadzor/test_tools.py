@@ -114,7 +114,7 @@ async def test_poisk_litsenziy_nedra_found():
         {
             "nomer": "ЛЦ-001",
             "vid_litsenzii": "Добыча полезных ископаемых",
-            "territory": "ХМАО-Югра",
+            "territoriya": "ХМАО-Югра",
             "srok_deystviya": "2020–2030",
             "derzhatel": "ПАО «Газпром»",
         },

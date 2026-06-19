@@ -6,42 +6,42 @@ ROSKAZNA_OPENDATA_BASE = "https://roskazna.gov.ru/opendata"
 BUDGET_GOV_RU_BASE = "https://budget.gov.ru/api"
 
 VIDY_BUDZHETOV = [
-    {"code": "federalnyy", "name": "Федеральный бюджет"},
-    {"code": "subiekta_rf", "name": "Бюджет субъекта РФ"},
-    {"code": "mestnyy", "name": "Местный бюджет"},
-    {"code": "byudzhet_gf", "name": "Бюджет государственного внебюджетного фонда"},
-    {"code": "byudzhet_tf", "name": "Бюджет территориального внебюджетного фонда"},
-    {"code": "svodnyy", "name": "Сводный бюджет"},
+    {"kod": "federalnyy", "nazvanie": "Федеральный бюджет"},
+    {"kod": "subiekta_rf", "nazvanie": "Бюджет субъекта РФ"},
+    {"kod": "mestnyy", "nazvanie": "Местный бюджет"},
+    {"kod": "byudzhet_gf", "nazvanie": "Бюджет государственного внебюджетного фонда"},
+    {"kod": "byudzhet_tf", "nazvanie": "Бюджет территориального внебюджетного фонда"},
+    {"kod": "svodnyy", "nazvanie": "Сводный бюджет"},
 ]
 
 UROVNI_BUDZHETOV = [
-    {"code": "federalnyy", "name": "Федеральный уровень"},
-    {"code": "regionalnyy", "name": "Региональный уровень"},
-    {"code": "municipalnyy", "name": "Муниципальный уровень"},
+    {"kod": "federalnyy", "nazvanie": "Федеральный уровень"},
+    {"kod": "regionalnyy", "nazvanie": "Региональный уровень"},
+    {"kod": "municipalnyy", "nazvanie": "Муниципальный уровень"},
 ]
 
 KATEGORII_RASKHODOV = [
-    {"code": "obshhegosudarstvennye", "name": "Общегосударственные вопросы"},
-    {"code": "nacionalnaya_oborona", "name": "Национальная оборона"},
+    {"kod": "obshhegosudarstvennye", "nazvanie": "Общегосударственные вопросы"},
+    {"kod": "nacionalnaya_oborona", "nazvanie": "Национальная оборона"},
     {
-        "code": "nacionalnaya_bezopasnost",
-        "name": "Национальная безопасность и правоохранительная деятельность",
+        "kod": "nacionalnaya_bezopasnost",
+        "nazvanie": "Национальная безопасность и правоохранительная деятельность",
     },
-    {"code": "nacionalnaya_ekonomika", "name": "Национальная экономика"},
-    {"code": "zhkkh", "name": "Жилищно-коммунальное хозяйство"},
-    {"code": "ohrana_okruzhayushhej_sredy", "name": "Охрана окружающей среды"},
-    {"code": "obrazovanie", "name": "Образование"},
-    {"code": "kulutura", "name": "Культура и кинематография"},
-    {"code": "zdravoohranenie", "name": "Здравоохранение"},
-    {"code": "socialnaya_politika", "name": "Социальная политика"},
-    {"code": "fizicheskaya_kultura", "name": "Физическая культура и спорт"},
-    {"code": "smi", "name": "Средства массовой информации"},
+    {"kod": "nacionalnaya_ekonomika", "nazvanie": "Национальная экономика"},
+    {"kod": "zhkkh", "nazvanie": "Жилищно-коммунальное хозяйство"},
+    {"kod": "ohrana_okruzhayushhej_sredy", "nazvanie": "Охрана окружающей среды"},
+    {"kod": "obrazovanie", "nazvanie": "Образование"},
+    {"kod": "kulutura", "nazvanie": "Культура и кинематография"},
+    {"kod": "zdravoohranenie", "nazvanie": "Здравоохранение"},
+    {"kod": "socialnaya_politika", "nazvanie": "Социальная политика"},
+    {"kod": "fizicheskaya_kultura", "nazvanie": "Физическая культура и спорт"},
+    {"kod": "smi", "nazvanie": "Средства массовой информации"},
     {
-        "code": "obsluzhivanie_dolga",
-        "name": "Обслуживание государственного и муниципального долга",
+        "kod": "obsluzhivanie_dolga",
+        "nazvanie": "Обслуживание государственного и муниципального долга",
     },
-    {"code": "mezhdunarodnaya_deyatelnost", "name": "Международная деятельность"},
-    {"code": "uslugi_obshhego_haraktera", "name": "Услуги общего характера"},
+    {"kod": "mezhdunarodnaya_deyatelnost", "nazvanie": "Международная деятельность"},
+    {"kod": "uslugi_obshhego_haraktera", "nazvanie": "Услуги общего характера"},
 ]
 
 STATUSY_ISPOLNENIYA = {

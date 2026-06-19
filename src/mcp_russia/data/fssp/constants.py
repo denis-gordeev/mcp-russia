@@ -33,45 +33,45 @@ KODY_REGIONOV_FSSP: dict[str, int] = {
 }
 
 VidyIspolnitelnyhProizvodstv = [
-    {"code": "imushchestvennoe", "name": "Имущественного характера"},
-    {"code": "neimushchestvennoe", "name": "Неимущественного характера"},
-    {"code": "shtrafy_gibdd", "name": "Штрафы ГИБДД"},
-    {"code": "nalogovye_vzyskaniya", "name": "Налоговые взыскания"},
-    {"code": "kreditnye_dolgi", "name": "Кредитные задолженности"},
-    {"code": "alimenty", "name": "Алименты"},
-    {"code": "zhkx", "name": "Задолженности по ЖКХ"},
+    {"kod": "imushchestvennoe", "nazvanie": "Имущественного характера"},
+    {"kod": "neimushchestvennoe", "nazvanie": "Неимущественного характера"},
+    {"kod": "shtrafy_gibdd", "nazvanie": "Штрафы ГИБДД"},
+    {"kod": "nalogovye_vzyskaniya", "nazvanie": "Налоговые взыскания"},
+    {"kod": "kreditnye_dolgi", "nazvanie": "Кредитные задолженности"},
+    {"kod": "alimenty", "nazvanie": "Алименты"},
+    {"kod": "zhkx", "nazvanie": "Задолженности по ЖКХ"},
 ]
 
 StatusyProizvodstva = [
-    {"code": "vozbuzhdeno", "name": "Возбуждено"},
-    {"code": "v_proizvodstve", "name": "В производстве"},
-    {"code": "priostanovleno", "name": "Приостановлено"},
-    {"code": "okoncheno", "name": "Окончено"},
-    {"code": "prekrashcheno", "name": "Прекращено"},
-    {"code": "peredano", "name": "Передано в другое подразделение"},
+    {"kod": "vozbuzhdeno", "nazvanie": "Возбуждено"},
+    {"kod": "v_proizvodstve", "nazvanie": "В производстве"},
+    {"kod": "priostanovleno", "nazvanie": "Приостановлено"},
+    {"kod": "okoncheno", "nazvanie": "Окончено"},
+    {"kod": "prekrashcheno", "nazvanie": "Прекращено"},
+    {"kod": "peredano", "nazvanie": "Передано в другое подразделение"},
 ]
 
 Ogranicheniya = [
-    {"code": "vyezd", "name": "Временное ограничение на выезд из РФ"},
+    {"kod": "vyezd", "nazvanie": "Временное ограничение на выезд из РФ"},
     {
-        "code": "upravlenie_transportom",
-        "name": "Ограничение специального права управления транспортом",
+        "kod": "upravlenie_transportom",
+        "nazvanie": "Ограничение специального права управления транспортом",
     },
-    {"code": "arest_schetov", "name": "Арест банковских счетов"},
-    {"code": "arest_imushchestva", "name": "Арест имущества"},
-    {"code": "zapret_registracii", "name": "Запрет на регистрационные действия с имуществом"},
+    {"kod": "arest_schetov", "nazvanie": "Арест банковских счетов"},
+    {"kod": "arest_imushchestva", "nazvanie": "Арест имущества"},
+    {"kod": "zapret_registracii", "nazvanie": "Запрет на регистрационные действия с имуществом"},
 ]
 
 KategoriiDolzhnikov = [
-    {"code": "fizicheskoe_lico", "name": "Физическое лицо"},
-    {"code": "yuridicheskoe_lico", "name": "Юридическое лицо"},
-    {"code": "ip", "name": "Индивидуальный предприниматель"},
+    {"kod": "fizicheskoe_lico", "nazvanie": "Физическое лицо"},
+    {"kod": "yuridicheskoe_lico", "nazvanie": "Юридическое лицо"},
+    {"kod": "ip", "nazvanie": "Индивидуальный предприниматель"},
 ]
 
 OsnovaniyaVozbuzhdeniya = [
-    {"code": "sudebnyy_akt", "name": "Судебный акт"},
-    {"code": "akt_upolnomochennogo_organom", "name": "Акт уполномоченного органа"},
-    {"code": "postanovlenie_nalogovogo_organom", "name": "Постановление налогового органа"},
-    {"code": "postanovlenie_gibdd", "name": "Постановление ГИБДД"},
-    {"code": "ispolnitelnaya_nadpis_notariusa", "name": "Исполнительная надпись нотариуса"},
+    {"kod": "sudebnyy_akt", "nazvanie": "Судебный акт"},
+    {"kod": "akt_upolnomochennogo_organom", "nazvanie": "Акт уполномоченного органа"},
+    {"kod": "postanovlenie_nalogovogo_organom", "nazvanie": "Постановление налогового органа"},
+    {"kod": "postanovlenie_gibdd", "nazvanie": "Постановление ГИБДД"},
+    {"kod": "ispolnitelnaya_nadpis_notariusa", "nazvanie": "Исполнительная надпись нотариуса"},
 ]

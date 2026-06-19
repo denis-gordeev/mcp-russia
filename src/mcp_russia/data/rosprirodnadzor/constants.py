@@ -8,41 +8,41 @@ GOSUSLUGI_EKO_BASE = "https://gosuslugi.ru/api/eco"
 
 VIDY_NADZORA = [
     {
-        "code": "ekologicheskiy",
-        "name": "Государственный экологический надзор",
+        "kod": "ekologicheskiy",
+        "nazvanie": "Государственный экологический надзор",
     },
     {
-        "code": "zemelnyy",
-        "name": "Государственный земельный надзор",
+        "kod": "zemelnyy",
+        "nazvanie": "Государственный земельный надзор",
     },
     {
-        "code": "geologicheskiy",
-        "name": "Государственный надзор за геологическим изучением",
+        "kod": "geologicheskiy",
+        "nazvanie": "Государственный надзор за геологическим изучением",
     },
     {
-        "code": "rybolovstvo",
-        "name": "Государственный контроль и надзор в сфере рыболовства",
+        "kod": "rybolovstvo",
+        "nazvanie": "Государственный контроль и надзор в сфере рыболовства",
     },
     {
-        "code": "radiacionnyy",
-        "name": "Радиационный контроль",
+        "kod": "radiacionnyy",
+        "nazvanie": "Радиационный контроль",
     },
 ]
 
 KATEGORII_OBNV = [
-    {"code": "I", "name": "I — значительное негативное воздействие"},
-    {"code": "II", "name": "II — умеренное негативное воздействие"},
-    {"code": "III", "name": "III — незначительное негативное воздействие"},
-    {"code": "IV", "name": "IV — минимальное негативное воздействие"},
+    {"kod": "I", "nazvanie": "I — значительное негативное воздействие"},
+    {"kod": "II", "nazvanie": "II — умеренное негативное воздействие"},
+    {"kod": "III", "nazvanie": "III — незначительное негативное воздействие"},
+    {"kod": "IV", "nazvanie": "IV — минимальное негативное воздействие"},
 ]
 
 VIDY_LITSENZIY_NEDRA = [
-    {"code": "dobycha", "name": "Добыча полезных ископаемых"},
-    {"code": "geologicheskoe", "name": "Геологическое изучение"},
-    {"code": "razvedka_dobycha", "name": "Разведка и добыча"},
+    {"kod": "dobycha", "nazvanie": "Добыча полезных ископаемых"},
+    {"kod": "geologicheskoe", "nazvanie": "Геологическое изучение"},
+    {"kod": "razvedka_dobycha", "nazvanie": "Разведка и добыча"},
     {
-        "code": "podzemnye_soouruzheniya",
-        "name": "Строительство и эксплуатация подземных сооружений",
+        "kod": "podzemnye_soouruzheniya",
+        "nazvanie": "Строительство и эксплуатация подземных сооружений",
     },
 ]
 

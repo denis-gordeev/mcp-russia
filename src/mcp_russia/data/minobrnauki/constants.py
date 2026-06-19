@@ -15,64 +15,64 @@ OBRNADZOR_LICENSE_URL = f"{OBRNADZOR_API_BASE}/opendata/7710542907-FS_LICENSE/da
 VUZ_RATING_URL = "https://vuz.minobrnauki.gov.ru"
 
 TIPY_VUZOV = [
-    {"code": "universitet", "name": "Университет"},
-    {"code": "akademiya", "name": "Академия"},
-    {"code": "institut", "name": "Институт"},
-    {"code": "filial", "name": "Филиал"},
-    {"code": "nii", "name": "Научно-исследовательский институт"},
+    {"kod": "universitet", "nazvanie": "Университет"},
+    {"kod": "akademiya", "nazvanie": "Академия"},
+    {"kod": "institut", "nazvanie": "Институт"},
+    {"kod": "filial", "nazvanie": "Филиал"},
+    {"kod": "nii", "nazvanie": "Научно-исследовательский институт"},
 ]
 
 FORMY_OBUCHENIYA = [
-    {"code": "ochnaya", "name": "Очная"},
-    {"code": "ochno_zaochnaya", "name": "Очно-заочная (вечерняя)"},
-    {"code": "zaochnaya", "name": "Заочная"},
-    {"code": "distancionnaya", "name": "Дистанционная"},
+    {"kod": "ochnaya", "nazvanie": "Очная"},
+    {"kod": "ochno_zaochnaya", "nazvanie": "Очно-заочная (вечерняя)"},
+    {"kod": "zaochnaya", "nazvanie": "Заочная"},
+    {"kod": "distancionnaya", "nazvanie": "Дистанционная"},
 ]
 
 UROVNI_OBRAZOVANIYA = [
-    {"code": "bakalavriat", "name": "Бакалавриат"},
-    {"code": "specialitet", "name": "Специалитет"},
-    {"code": "magistratura", "name": "Магистратура"},
-    {"code": "aspirantura", "name": "Аспирантура"},
-    {"code": "doktorantura", "name": "Докторантура"},
-    {"code": "srednee_prof", "name": "Среднее профессиональное"},
+    {"kod": "bakalavriat", "nazvanie": "Бакалавриат"},
+    {"kod": "specialitet", "nazvanie": "Специалитет"},
+    {"kod": "magistratura", "nazvanie": "Магистратура"},
+    {"kod": "aspirantura", "nazvanie": "Аспирантура"},
+    {"kod": "doktorantura", "nazvanie": "Докторантура"},
+    {"kod": "srednee_prof", "nazvanie": "Среднее профессиональное"},
 ]
 
 OTRASLI_NAUKI = [
-    {"code": "estestvennye", "name": "Естественные науки"},
-    {"code": "tehnicheskie", "name": "Технические науки"},
-    {"code": "medicinskie", "name": "Медицинские науки"},
-    {"code": "selskohozyaystvennye", "name": "Сельскохозяйственные науки"},
-    {"code": "obschestvennye", "name": "Общественные науки"},
-    {"code": "gumanitarnye", "name": "Гуманитарные науки"},
-    {"code": "pedagogicheskie", "name": "Педагогические науки"},
+    {"kod": "estestvennye", "nazvanie": "Естественные науки"},
+    {"kod": "tehnicheskie", "nazvanie": "Технические науки"},
+    {"kod": "medicinskie", "nazvanie": "Медицинские науки"},
+    {"kod": "selskohozyaystvennye", "nazvanie": "Сельскохозяйственные науки"},
+    {"kod": "obschestvennye", "nazvanie": "Общественные науки"},
+    {"kod": "gumanitarnye", "nazvanie": "Гуманитарные науки"},
+    {"kod": "pedagogicheskie", "nazvanie": "Педагогические науки"},
 ]
 
 TIPY_GRANTOV = [
-    {"code": "rnf", "name": "Гранты РНФ (Российский научный фонд)"},
-    {"code": "rffi", "name": "Гранты РФФИ (Российский фонд фундаментальных исследований)"},
-    {"code": "prezident", "name": "Гранты Президента РФ"},
-    {"code": "minobrnauki_goszadanie", "name": "Государственное задание Минобрнауки"},
-    {"code": "fund_potanina", "name": "Фонд Потанина"},
-    {"code": "fund_skolkovo", "name": "Фонд «Сколково»"},
+    {"kod": "rnf", "nazvanie": "Гранты РНФ (Российский научный фонд)"},
+    {"kod": "rffi", "nazvanie": "Гранты РФФИ (Российский фонд фундаментальных исследований)"},
+    {"kod": "prezident", "nazvanie": "Гранты Президента РФ"},
+    {"kod": "minobrnauki_goszadanie", "nazvanie": "Государственное задание Минобрнауки"},
+    {"kod": "fund_potanina", "nazvanie": "Фонд Потанина"},
+    {"kod": "fund_skolkovo", "nazvanie": "Фонд «Сколково»"},
 ]
 
 STATUSY_AKKREDITATSII = [
-    {"code": "deystvuet", "name": "Действует"},
-    {"code": "priznak_ostanovki", "name": "Приостановлена"},
-    {"code": "otmenena", "name": "Отменена"},
-    {"code": "isklyuchena", "name": "Исключена из реестра"},
+    {"kod": "deystvuet", "nazvanie": "Действует"},
+    {"kod": "priznak_ostanovki", "nazvanie": "Приостановлена"},
+    {"kod": "otmenena", "nazvanie": "Отменена"},
+    {"kod": "isklyuchena", "nazvanie": "Исключена из реестра"},
 ]
 
 FEDERALNYE_OKRUGA = [
-    {"code": "cfo", "name": "Центральный федеральный округ"},
-    {"code": "szfo", "name": "Северо-Западный федеральный округ"},
-    {"code": "yuzfo", "name": "Южный федеральный округ"},
-    {"code": "skfo", "name": "Северо-Кавказский федеральный округ"},
-    {"code": "pfo", "name": "Приволжский федеральный округ"},
-    {"code": "urfo", "name": "Уральский федеральный округ"},
-    {"code": "sfo", "name": "Сибирский федеральный округ"},
-    {"code": "dvfo", "name": "Дальневосточный федеральный округ"},
+    {"kod": "cfo", "nazvanie": "Центральный федеральный округ"},
+    {"kod": "szfo", "nazvanie": "Северо-Западный федеральный округ"},
+    {"kod": "yuzfo", "nazvanie": "Южный федеральный округ"},
+    {"kod": "skfo", "nazvanie": "Северо-Кавказский федеральный округ"},
+    {"kod": "pfo", "nazvanie": "Приволжский федеральный округ"},
+    {"kod": "urfo", "nazvanie": "Уральский федеральный округ"},
+    {"kod": "sfo", "nazvanie": "Сибирский федеральный округ"},
+    {"kod": "dvfo", "nazvanie": "Дальневосточный федеральный округ"},
 ]
 
 STATUSY_AKKREDITATSII_MAP = {

@@ -86,8 +86,8 @@ def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
 
         results.append(
             SudebnoeDelo(
-                number=number,
-                category=category,
+                nomer=number,
+                kategoriya=category,
                 status=case_info.get("Status", item.get("status", "")),
                 sudya=case_info.get("Judge", item.get("judge", "")),
                 nazvanie_suda=sud_name,
@@ -143,8 +143,8 @@ def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
             summa = float(summa_raw)
 
     return SudebnoeDelo(
-        number=number,
-        category=category,
+        nomer=number,
+        kategoriya=category,
         status=case_info.get("Status", data.get("status", "")),
         sudya=case_info.get("Judge", data.get("judge", "")),
         nazvanie_suda=sud_name,
@@ -172,15 +172,15 @@ def _parse_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
         doc = item.get("Document", item)
         results.append(
             SudebnyyAkt(
-                id=str(doc.get("Id", doc.get("id", ""))),
-                delo_number=delo_number,
+                identifikator=str(doc.get("Id", doc.get("id", ""))),
+                delo_nomer=delo_number,
                 tip_akta=doc.get("DocumentType", doc.get("type", "")),
                 data_akta=doc.get("DocumentDate", doc.get("date", "")),
                 sud=doc.get("CourtName", doc.get("court", "")),
                 sudya=doc.get("Judge", doc.get("judge", "")),
                 kratkoe_soderzhanie=doc.get("ShortContent", doc.get("summary", "")),
                 rezolyutsiya=doc.get("Resolution", doc.get("resolution", "")),
-                pdf_url=doc.get("PdfUrl", doc.get("pdfUrl", "")),
+                pdf_ssylka=doc.get("PdfUrl", doc.get("pdfUrl", "")),
             )
         )
     return results
@@ -217,26 +217,26 @@ def _parse_storony(data: Any, delo_number: str) -> list[StoronaDela]:
 
 
 async def poisk_del(
-    number: str = "",
+    nomer: str = "",
     istorcz: str = "",
     otvetchik: str = "",
     inn: str = "",
-    category: str = "",
+    kategoriya: str = "",
     status: str = "",
     sudya: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[SudebnoeDelo]:
     """Поиск дел в Картотеке арбитражных дел через API kad.arbitr.ru.
 
     Аргументы:
-        number: Номер дела (например, 'А40-12345/2024').
+        nomer: Номер дела (например, 'А40-12345/2024').
         istorcz: Название истца.
         otvetchik: Название ответчика.
         inn: ИНН участника.
-        category: Категория дела.
+        kategoriya: Категория дела.
         status: Статус дела.
         sudya: Фамилия судьи.
-        limit: Максимальное количество результатов.
+        ogranichenie: Максимальное количество результатов.
 
     Возвращает:
         Список судебных дел.
@@ -251,13 +251,13 @@ async def poisk_del(
 
     body: dict[str, Any] = {
         "Page": 1,
-        "Count": min(limit, 25),
+        "Count": min(ogranichenie, 25),
         "Courts": [],
         "Judges": [sudya] if sudya else [],
         "DateFrom": None,
         "DateTo": None,
         "Sides": sides,
-        "CaseNumber": number,
+        "CaseNumber": nomer,
         "WithNewInstances": False,
         "OnlyNew": False,
     }
@@ -273,18 +273,18 @@ async def poisk_del(
         return []
 
 
-async def info_dela(number: str) -> SudebnoeDelo | None:
+async def info_dela(nomer: str) -> SudebnoeDelo | None:
     """Получить подробную информацию о судебном деле.
 
     Аргументы:
-        number: Номер дела.
+        nomer: Номер дела.
 
     Возвращает:
         Данные дела или None.
     """
     try:
         data = await http_get(
-            f"https://kad.arbitr.ru/Kad/Case/{number}",
+            f"https://kad.arbitr.ru/Kad/Case/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         return _parse_kartochka_dela(data)
@@ -292,69 +292,69 @@ async def info_dela(number: str) -> SudebnoeDelo | None:
         return None
 
 
-async def akty_po_delu(number: str) -> list[SudebnyyAkt]:
+async def akty_po_delu(nomer: str) -> list[SudebnyyAkt]:
     """Получить судебные акты по делу.
 
     Аргументы:
-        number: Номер дела.
+        nomer: Номер дела.
 
     Возвращает:
         Список судебных актов.
     """
     try:
         data = await http_get(
-            f"https://kad.arbitr.ru/Kad/Documents/{number}",
+            f"https://kad.arbitr.ru/Kad/Documents/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_akty(data, number)
+        return _parse_akty(data, nomer)
     except Exception:
         return []
 
 
-async def info_akta(id_akta: str) -> SudebnyyAkt | None:
+async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
     """Получить подробную информацию о судебном акте.
 
     Аргументы:
-        id_akta: Идентификатор судебного акта.
+        identifikator_akta: Идентификатор судебного акта.
 
     Возвращает:
         Данные акта или None.
     """
     try:
         data = await http_get(
-            f"https://kad.arbitr.ru/Kad/Document/{id_akta}",
+            f"https://kad.arbitr.ru/Kad/Document/{identifikator_akta}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         if isinstance(data, dict):
             doc = data.get("Document", data)
             return SudebnyyAkt(
-                id=str(doc.get("Id", id_akta)),
-                delo_number=doc.get("CaseNumber", ""),
+                identifikator=str(doc.get("Id", identifikator_akta)),
+                delo_nomer=doc.get("CaseNumber", ""),
                 tip_akta=doc.get("DocumentType", ""),
                 data_akta=doc.get("DocumentDate", ""),
                 sud=doc.get("CourtName", ""),
                 sudya=doc.get("Judge", ""),
                 kratkoe_soderzhanie=doc.get("ShortContent", ""),
                 rezolyutsiya=doc.get("Resolution", ""),
-                pdf_url=doc.get("PdfUrl", ""),
+                pdf_ssylka=doc.get("PdfUrl", ""),
             )
     except Exception:
         pass
     return None
 
 
-async def zasedaniya_po_delu(number: str) -> list[SudebnoeZasedanie]:
+async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
     """Получить информацию о заседаниях по делу.
 
     Аргументы:
-        number: Номер дела.
+        nomer: Номер дела.
 
     Возвращает:
         Список заседаний.
     """
     try:
         data = await http_get(
-            f"https://kad.arbitr.ru/Kad/Sessions/{number}",
+            f"https://kad.arbitr.ru/Kad/Sessions/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         if isinstance(data, dict):
@@ -370,8 +370,8 @@ async def zasedaniya_po_delu(number: str) -> list[SudebnoeZasedanie]:
                 continue
             results.append(
                 SudebnoeZasedanie(
-                    id=str(item.get("Id", "")),
-                    delo_number=number,
+                    identifikator=str(item.get("Id", "")),
+                    delo_nomer=nomer,
                     data_zasedaniya=item.get("Date", ""),
                     vremya=item.get("Time", ""),
                     sudya=item.get("Judge", ""),
@@ -398,21 +398,21 @@ async def poisk_sudey(familiya: str = "", sud_name: str = "") -> list[Sudy]:
     return []
 
 
-async def storony_dela(number: str) -> list[StoronaDela]:
+async def storony_dela(nomer: str) -> list[StoronaDela]:
     """Получить стороны судебного дела.
 
     Аргументы:
-        number: Номер дела.
+        nomer: Номер дела.
 
     Возвращает:
         Список сторон (истцы и ответчики).
     """
     try:
         data = await http_get(
-            f"https://kad.arbitr.ru/Kad/Sides/{number}",
+            f"https://kad.arbitr.ru/Kad/Sides/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_storony(data, number)
+        return _parse_storony(data, nomer)
     except Exception:
         return []
 

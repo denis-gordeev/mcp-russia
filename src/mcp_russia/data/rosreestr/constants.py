@@ -12,55 +12,55 @@ ROSREESTR_API_BASE = "https://rosreestr.gov.ru/api"
 PKK_API_BASE = "https://pkk.rosreestr.ru/api/features"
 
 TipyNedvizhimosti = [
-    {"code": "zemelnyy_uchastok", "name": "Земельный участок"},
-    {"code": "zdanie", "name": "Здание"},
-    {"code": "pomeshchenie", "name": "Помещение"},
-    {"code": "sooruzhenie", "name": "Сооружение"},
-    {"code": "obekt_nedostroenny", "name": "Объект незавершённого строительства"},
-    {"code": "mnogokvartirnyy_dom", "name": "Многоквартирный дом"},
+    {"kod": "zemelnyy_uchastok", "nazvanie": "Земельный участок"},
+    {"kod": "zdanie", "nazvanie": "Здание"},
+    {"kod": "pomeshchenie", "nazvanie": "Помещение"},
+    {"kod": "sooruzhenie", "nazvanie": "Сооружение"},
+    {"kod": "obekt_nedostroenny", "nazvanie": "Объект незавершённого строительства"},
+    {"kod": "mnogokvartirnyy_dom", "nazvanie": "Многоквартирный дом"},
 ]
 
 KategoriiZemel = [
     {
-        "code": "selskohozyaystvennogo_naznacheniya",
-        "name": "Земли сельскохозяйственного назначения",
+        "kod": "selskohozyaystvennogo_naznacheniya",
+        "nazvanie": "Земли сельскохозяйственного назначения",
     },
-    {"code": "naselennyh_punktov", "name": "Земли населённых пунктов"},
-    {"code": "promyshlennosti", "name": "Земли промышленности"},
-    {"code": "osobo_ohranyaemyh_territoriy", "name": "Земли особо охраняемых территорий"},
-    {"code": "lesnogo_fonda", "name": "Земли лесного фонда"},
-    {"code": "vodnogo_fonda", "name": "Земли водного фонда"},
-    {"code": "zapasa", "name": "Земли запаса"},
+    {"kod": "naselennyh_punktov", "nazvanie": "Земли населённых пунктов"},
+    {"kod": "promyshlennosti", "nazvanie": "Земли промышленности"},
+    {"kod": "osobo_ohranyaemyh_territoriy", "nazvanie": "Земли особо охраняемых территорий"},
+    {"kod": "lesnogo_fonda", "nazvanie": "Земли лесного фонда"},
+    {"kod": "vodnogo_fonda", "nazvanie": "Земли водного фонда"},
+    {"kod": "zapasa", "nazvanie": "Земли запаса"},
 ]
 
 VidyIspolzovaniya = [
-    {"code": "zhiloe", "name": "Жилое использование"},
-    {"code": "obschestvennoe", "name": "Общественное использование"},
-    {"code": "promyshlennoe", "name": "Промышленное использование"},
-    {"code": "selskohozyaystvennoe", "name": "Сельскохозяйственное использование"},
-    {"code": "rekreacionnoe", "name": "Рекреационное использование"},
-    {"code": "transportnoe", "name": "Транспортное использование"},
-    {"code": "specialnoe", "name": "Специальное использование"},
+    {"kod": "zhiloe", "nazvanie": "Жилое использование"},
+    {"kod": "obschestvennoe", "nazvanie": "Общественное использование"},
+    {"kod": "promyshlennoe", "nazvanie": "Промышленное использование"},
+    {"kod": "selskohozyaystvennoe", "nazvanie": "Сельскохозяйственное использование"},
+    {"kod": "rekreacionnoe", "nazvanie": "Рекреационное использование"},
+    {"kod": "transportnoe", "nazvanie": "Транспортное использование"},
+    {"kod": "specialnoe", "nazvanie": "Специальное использование"},
 ]
 
 StatusyObiekta = [
-    {"code": "uchtenny", "name": "Учтённый"},
-    {"code": "ranee_uchtenny", "name": "Ранее учтённый"},
-    {"code": "vremennyy", "name": "Временный"},
-    {"code": "annulirovannyy", "name": "Аннулированный"},
-    {"code": "snyatyy_s_ucheta", "name": "Снятый с учёта"},
+    {"kod": "uchtenny", "nazvanie": "Учтённый"},
+    {"kod": "ranee_uchtenny", "nazvanie": "Ранее учтённый"},
+    {"kod": "vremennyy", "nazvanie": "Временный"},
+    {"kod": "annulirovannyy", "nazvanie": "Аннулированный"},
+    {"kod": "snyatyy_s_ucheta", "nazvanie": "Снятый с учёта"},
 ]
 
 FormySobstvennosti = [
-    {"code": "chastnaya", "name": "Частная собственность"},
-    {"code": "gosudarstvennaya", "name": "Государственная собственность"},
-    {"code": "municipalnaya", "name": "Муниципальная собственность"},
-    {"code": "obschaya_dolevaya", "name": "Общая долевая собственность"},
-    {"code": "obschaya_sovmestnaya", "name": "Общая совместная собственность"},
+    {"kod": "chastnaya", "nazvanie": "Частная собственность"},
+    {"kod": "gosudarstvennaya", "nazvanie": "Государственная собственность"},
+    {"kod": "municipalnaya", "nazvanie": "Муниципальная собственность"},
+    {"kod": "obschaya_dolevaya", "nazvanie": "Общая долевая собственность"},
+    {"kod": "obschaya_sovmestnaya", "nazvanie": "Общая совместная собственность"},
 ]
 
-TIPY_NEDVIZIMOSTI_MAP = {t["code"]: t["name"] for t in TipyNedvizhimosti}
-KATEGORII_ZEMEL_MAP = {k["code"]: k["name"] for k in KategoriiZemel}
-VIDY_ISPOLZOVANIYA_MAP = {v["code"]: v["name"] for v in VidyIspolzovaniya}
-STATUSY_UCHE_TA_MAP = {s["code"]: s["name"] for s in StatusyObiekta}
-FORMY_SOBSTVENNOSTI_MAP = {f["code"]: f["name"] for f in FormySobstvennosti}
+TIPY_NEDVIZIMOSTI_MAP = {t["kod"]: t["nazvanie"] for t in TipyNedvizhimosti}
+KATEGORII_ZEMEL_MAP = {k["kod"]: k["nazvanie"] for k in KategoriiZemel}
+VIDY_ISPOLZOVANIYA_MAP = {v["kod"]: v["nazvanie"] for v in VidyIspolzovaniya}
+STATUSY_UCHE_TA_MAP = {s["kod"]: s["nazvanie"] for s in StatusyObiekta}
+FORMY_SOBSTVENNOSTI_MAP = {f["kod"]: f["nazvanie"] for f in FormySobstvennosti}

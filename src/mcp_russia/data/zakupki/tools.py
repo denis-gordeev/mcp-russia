@@ -45,7 +45,7 @@ async def poisk_zakupok(
         await ctx.info(f"Поиск закупок: {zapros or 'все'}...")
 
     zakupki = await client.poisk_zakupok(
-        query=zapros,
+        zapros=zapros,
         zakon=zakon,
         region=region,
         status=status,
@@ -79,7 +79,7 @@ async def poisk_zakupok(
         return header
 
     rows = [
-        (z.number, z.title[:60], z.zakon, z.status, format_rub(z.initial_price))
+        (z.nomer, z.nazvanie[:60], z.zakon, z.status, format_rub(z.nachalnaya_tsena))
         for z in zakupki[:30]
     ]
     header = "**Результаты поиска в ЕИС закупок**\n\n"
@@ -113,8 +113,8 @@ async def info_zakupki(
         )
 
     lines = [
-        f"**Закупка {zakupka.number}**",
-        f"- Название: {zakupka.title}",
+        f"**Закупка {zakupka.nomer}**",
+        f"- Название: {zakupka.nazvanie}",
     ]
     if zakupka.zakon:
         lines.append(f"- Закон: {zakupka.zakon}")
@@ -122,16 +122,16 @@ async def info_zakupki(
         lines.append(f"- Способ: {zakupka.sposob}")
     if zakupka.status:
         lines.append(f"- Статус: {zakupka.status}")
-    if zakupka.initial_price:
-        lines.append(f"- Начальная цена: {format_rub(zakupka.initial_price)}")
+    if zakupka.nachalnaya_tsena:
+        lines.append(f"- Начальная цена: {format_rub(zakupka.nachalnaya_tsena)}")
     if zakupka.data_publikatsii:
         lines.append(f"- Дата публикации: {zakupka.data_publikatsii}")
-    if zakupka.deadline:
-        lines.append(f"- Срок подачи заявок: {zakupka.deadline}")
+    if zakupka.srok_podachi:
+        lines.append(f"- Срок подачи заявок: {zakupka.srok_podachi}")
     if zakupka.nazvanie_organizatora:
         lines.append(f"- Заказчик: {zakupka.nazvanie_organizatora}")
-    if zakupka.organizer_inn:
-        lines.append(f"- ИНН заказчика: {zakupka.organizer_inn}")
+    if zakupka.organizator_inn:
+        lines.append(f"- ИНН заказчика: {zakupka.organizator_inn}")
 
     lines.append("\nИсточник: ЕИС закупок / zakupki.gov.ru")
     return "\n".join(lines)
@@ -155,8 +155,8 @@ async def poisk_kontraktov(
         await ctx.info("Поиск контрактов в ЕИС...")
 
     kontrakty = await client.poisk_kontraktov(
-        contractor_inn=inn_postavshchika,
-        zakazchik_inn=inn_zakazchika,
+        inn_podryadchika=inn_postavshchika,
+        inn_zakazchika=inn_zakazchika,
     )
 
     if not kontrakty:
@@ -167,7 +167,7 @@ async def poisk_kontraktov(
         )
 
     rows = [
-        (k.number, k.nazvanie_podryadchika[:40], format_rub(k.price), k.status, k.data_podpisaniya)
+        (k.nomer, k.nazvanie_podryadchika[:40], format_rub(k.tsena), k.status, k.data_podpisaniya)
         for k in kontrakty[:30]
     ]
     header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
@@ -206,10 +206,10 @@ async def info_zakazchika(
         lines.append(f"- Регион: {zakazchik.region}")
     if zakazchik.adres:
         lines.append(f"- Адрес: {zakazchik.adres}")
-    if zakazchik.zakupki_count:
-        lines.append(f"- Количество закупок: {zakazchik.zakupki_count}")
-    if zakazchik.total_spent:
-        lines.append(f"- Общая сумма контрактов: {format_rub(zakazchik.total_spent)}")
+    if zakazchik.zakupki_kolichestvo:
+        lines.append(f"- Количество закупок: {zakazchik.zakupki_kolichestvo}")
+    if zakazchik.obshchie_raskhody:
+        lines.append(f"- Общая сумма контрактов: {format_rub(zakazchik.obshchie_raskhody)}")
 
     lines.append("\nИсточник: ЕГРЮЛ / egrul.nalog.ru")
     return "\n".join(lines)
@@ -241,12 +241,12 @@ async def info_postavshchika(
     if postavshchik.region:
         lines.append(f"- Регион: {postavshchik.region}")
     lines.append(f"- Статус: {status}")
-    if postavshchik.contracts_won:
-        lines.append(f"- Выиграно контрактов: {postavshchik.contracts_won}")
-    if postavshchik.contracts_executed:
-        lines.append(f"- Исполнено контрактов: {postavshchik.contracts_executed}")
-    if postavshchik.total_revenue:
-        lines.append(f"- Общая выручка: {format_rub(postavshchik.total_revenue)}")
+    if postavshchik.kontraktov_vyigrano:
+        lines.append(f"- Выиграно контрактов: {postavshchik.kontraktov_vyigrano}")
+    if postavshchik.kontraktov_ispolneno:
+        lines.append(f"- Исполнено контрактов: {postavshchik.kontraktov_ispolneno}")
+    if postavshchik.obshchiy_dokhod:
+        lines.append(f"- Общая выручка: {format_rub(postavshchik.obshchiy_dokhod)}")
 
     lines.append("\nИсточник: ЕГРЮЛ/ЕГРИП / egrul.nalog.ru")
     return "\n".join(lines)
@@ -261,7 +261,7 @@ async def statusy_zakupok(ctx: Context) -> str:
     await ctx.info("Запрос справочника статусов закупок...")
     statusy = client.get_statusy_zakupok()
 
-    rows = [(s["code"], s["name"]) for s in statusy]
+    rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы закупок в ЕИС**\n\n"
     return header + markdown_table(["Код", "Статус"], rows)
 
@@ -275,7 +275,7 @@ async def sposoby_zakupok(ctx: Context) -> str:
     await ctx.info("Запрос справочника способов закупок...")
     sposoby = client.get_sposoby_zakupok()
 
-    rows = [(s["code"], s["name"]) for s in sposoby]
+    rows = [(s["kod"], s["nazvanie"]) for s in sposoby]
     header = "**Способы определения поставщиков**\n\n"
     return header + markdown_table(["Код", "Способ закупки"], rows)
 
@@ -295,7 +295,7 @@ async def plany_zakupok(
     if ctx:
         await ctx.info(f"Запрос планов закупок на {god} год...")
 
-    plany = await client.plany_zakupok(year=god)
+    plany = await client.plany_zakupok(god=god)
 
     if not plany:
         return (
@@ -309,9 +309,9 @@ async def plany_zakupok(
     rows = [
         (
             p.nazvanie_organizatora[:40],
-            p.organizer_inn,
-            str(p.items_count),
-            format_rub(p.total_budget),
+            p.organizator_inn,
+            str(p.kolichestvo_pozitsiy),
+            format_rub(p.obshchiy_byudzhet),
         )
         for p in plany[:30]
     ]

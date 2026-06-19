@@ -30,7 +30,7 @@ async def poisk_vodnykh_obektov(
     tip: str = "",
     basseyn: str = "",
     region: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск водных объектов в Государственном водном реестре.
 
@@ -39,7 +39,7 @@ async def poisk_vodnykh_obektov(
         tip: Тип водного объекта (reka, ozero и т.д.).
         basseyn: Код бассейнового округа.
         region: Регион.
-        limit: Максимум результатов.
+        ogranichenie: Максимум результатов.
 
     Возвращает:
         Список водных объектов.
@@ -55,7 +55,7 @@ async def poisk_vodnykh_obektov(
             params["basin"] = basseyn
         if region:
             params["region"] = region
-        params["limit"] = limit
+        params["limit"] = ogranichenie
         data = await http_get(url, params=params, timeout=15.0)
         items = _extract_list(data)
         return [_parse_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
@@ -64,35 +64,35 @@ async def poisk_vodnykh_obektov(
         return []
 
 
-async def info_vodnogo_obekta(code: str) -> dict[str, Any] | None:
+async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
     """Получить информацию о водном объекте из Государственного водного реестра.
 
     Аргументы:
-        code: Код водного объекта.
+        kod: Код водного объекта.
 
     Возвращает:
         Данные о водном объекте или None.
     """
     try:
-        url = f"{VODNYY_REESTR_BASE}/api/objects/{code}"
+        url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_vodnyy_obekt(data)
         return None
     except Exception:
-        logger.exception("Ошибка при получении водного объекта %s", code)
+        logger.exception("Ошибка при получении водного объекта %s", kod)
         return None
 
 
 async def poluchit_gidro_dannye(
-    post_id: str = "",
+    identifikator_posta: str = "",
     region: str = "",
     tip_dannykh: str = "uroven",
 ) -> list[dict[str, Any]]:
     """Получить гидрологические данные с мониторинговых постов ГМВО.
 
     Аргументы:
-        post_id: Идентификатор гидрологического поста.
+        identifikator_posta: Идентификатор гидрологического поста.
         region: Регион.
         tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
@@ -102,8 +102,8 @@ async def poluchit_gidro_dannye(
     try:
         url = f"{GMVO_API_BASE}/api/data"
         params: dict[str, Any] = {"type": tip_dannykh}
-        if post_id:
-            params["post"] = post_id
+        if identifikator_posta:
+            params["post"] = identifikator_posta
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
@@ -114,23 +114,23 @@ async def poluchit_gidro_dannye(
         return []
 
 
-async def poluchit_dannye_vodokhranilishcha(code: str) -> dict[str, Any] | None:
+async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
     """Получить актуальные данные о водохранилище.
 
     Аргументы:
-        code: Код водохранилища.
+        kod: Код водохранилища.
 
     Возвращает:
         Данные о водохранилище или None.
     """
     try:
-        url = f"{GMVO_API_BASE}/api/reservoirs/{code}"
+        url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_vodokhranilishche(data)
         return None
     except Exception:
-        logger.exception("Ошибка при получении данных водохранилища %s", code)
+        logger.exception("Ошибка при получении данных водохранилища %s", kod)
         return None
 
 
@@ -180,7 +180,7 @@ def get_tipy_gidro_list() -> list[dict[str, str]]:
 def get_vodokhranilishcha_list() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
-        {"kod": v["code"], "nazvanie": v["name"], "region": v["region"]}
+        {"kod": v["kod"], "nazvanie": v["nazvanie"], "region": v["region"]}
         for v in KRUPNYE_VODOKHRANILISHCHA
     ]
 

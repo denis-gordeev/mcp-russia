@@ -8,69 +8,69 @@ from pydantic import BaseModel
 class Zakupka(BaseModel):
     """Закупка в ЕИС."""
 
-    id: str
-    number: str = ""
-    title: str
-    zakon: str = ""  # "44-ФЗ" или "223-ФЗ"
-    sposob: str = ""  # способ определения поставщика
+    identifikator: str
+    nomer: str = ""
+    nazvanie: str
+    zakon: str = ""
+    sposob: str = ""
     status: str = ""
-    initial_price: float = 0.0
-    currency: str = "RUB"
+    nachalnaya_tsena: float = 0.0
+    valyuta: str = "RUB"
     data_publikatsii: str = ""
-    deadline: str = ""
+    srok_podachi: str = ""
     nazvanie_organizatora: str = ""
-    organizer_inn: str = ""
+    organizator_inn: str = ""
 
 
 class Kontrakt(BaseModel):
     """Контракт в реестре контрактов."""
 
-    id: str
-    number: str = ""
-    zakupka_number: str = ""
+    identifikator: str
+    nomer: str = ""
+    zakupka_nomer: str = ""
     nazvanie_podryadchika: str = ""
-    contractor_inn: str = ""
-    price: float = 0.0
-    currency: str = "RUB"
+    podryadchik_inn: str = ""
+    tsena: float = 0.0
+    valyuta: str = "RUB"
     data_podpisaniya: str = ""
     status: str = ""
-    execution_deadline: str = ""
+    srok_ispolneniya: str = ""
 
 
 class Zakazchik(BaseModel):
     """Заказчик (государственный/муниципальный орган)."""
 
-    id: str
+    identifikator: str
     nazvanie: str
     inn: str = ""
     kpp: str = ""
     region: str = ""
     adres: str = ""
-    zakupki_count: int = 0
-    total_spent: float = 0.0
+    zakupki_kolichestvo: int = 0
+    obshchie_raskhody: float = 0.0
 
 
 class Postavshchik(BaseModel):
     """Поставщик (участник закупки)."""
 
-    id: str
+    identifikator: str
     nazvanie: str
     inn: str = ""
     region: str = ""
-    contracts_won: int = 0
-    contracts_executed: int = 0
-    total_revenue: float = 0.0
+    kontraktov_vyigrano: int = 0
+    kontraktov_ispolneno: int = 0
+    obshchiy_dokhod: float = 0.0
     is_dobrosovestny: bool = True
 
 
 class PlanZakupki(BaseModel):
     """План-график закупки."""
 
-    id: str
-    year: int
+    identifikator: str
+    god: int
     nazvanie_organizatora: str = ""
-    organizer_inn: str = ""
-    items_count: int = 0
-    total_budget: float = 0.0
+    organizator_inn: str = ""
+    kolichestvo_pozitsiy: int = 0
+    obshchiy_byudzhet: float = 0.0
     data_sozdaniya: str = ""
     data_obnovleniya: str = ""

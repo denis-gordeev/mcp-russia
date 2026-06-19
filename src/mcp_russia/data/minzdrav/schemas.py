@@ -8,11 +8,11 @@ from pydantic import BaseModel
 class MedOrganizatsia(BaseModel):
     """Медицинская организация."""
 
-    id: str
+    identifikator: str
     nazvanie: str
-    tip: str = ""  # тип МО (больница, поликлиника и т.д.)
+    tip: str = ""
     region: str = ""
-    city: str = ""
+    gorod: str = ""
     adres: str = ""
     telefon: str = ""
     litsenzia: str = ""
@@ -23,7 +23,7 @@ class MedOrganizatsia(BaseModel):
 class VrachebnyyKadr(BaseModel):
     """Кадровая единица врача."""
 
-    id: str
+    identifikator: str
     familiya: str
     imya: str
     otchestvo: str = ""

@@ -19,15 +19,15 @@ logger = logging.getLogger(__name__)
 
 
 async def poisk_proverok(
-    target_inn: str = "",
-    target_name: str = "",
+    inn_tseli: str = "",
+    nazvanie_tseli: str = "",
     region: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск проверок в реестре proverki.rospotrebnadzor.ru.
 
     Аргументы:
-        target_inn: ИНН проверяемого лица.
-        target_name: Название проверяемого лица.
+        inn_tseli: ИНН проверяемого лица.
+        nazvanie_tseli: Название проверяемого лица.
         region: Код региона.
 
     Возвращает:
@@ -36,10 +36,10 @@ async def poisk_proverok(
     try:
         url = f"{PROVERKI_API_BASE}/api/procedure"
         params: dict[str, Any] = {}
-        if target_inn:
-            params["targetInn"] = target_inn
-        if target_name:
-            params["targetName"] = target_name
+        if inn_tseli:
+            params["targetInn"] = inn_tseli
+        if nazvanie_tseli:
+            params["targetName"] = nazvanie_tseli
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)

@@ -64,7 +64,7 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     await ctx.info("Запрос федеральных избирательных должностей...")
     dolzhnosti = await client.dolzhnosti_federal()
 
-    rows = [(str(d.kod), d.nazvanie, d.level) for d in dolzhnosti]
+    rows = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
     header = "**Федеральные избирательные должности**\n\n"
     return header + markdown_table(["Код", "Должность", "Уровень"], rows)
 
@@ -78,7 +78,7 @@ async def partii_rf(ctx: Context) -> str:
     await ctx.info("Запрос справочника партий РФ...")
     partii = await client.partii_rf()
 
-    rows = [(p.kratkoe_nazvanie, p.nazvanie, p.color) for p in partii]
+    rows = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
     header = f"**Политические партии РФ** — {len(rows)} партий\n\n"
     return header + markdown_table(["Краткое", "Наименование", "Цвет"], rows)
 
@@ -121,7 +121,7 @@ async def spisok_vyborov(
         return "Выборы не найдены. Уточните параметры запроса."
 
     rows = [
-        (v.get("name", ""), str(v.get("god", "")), v.get("data", ""), v.get("key", ""))
+        (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("key", ""))
         for v in vybory
     ]
     header = f"**Найдено выборов: {len(vybory)}**\n\n"
@@ -144,7 +144,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     if not kandidaty:
         return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ATTRIBUTION}"
 
-    rows = [(k.id, k.fio, k.partia, k.dolzhnost, k.status) for k in kandidaty]
+    rows = [(k.identifikator, k.fio, k.partia, k.dolzhnost, k.status) for k in kandidaty]
     header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
     return header + markdown_table(
         ["ID", "ФИО", "Партия", "Должность", "Статус"],
@@ -176,7 +176,7 @@ async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = No
 
     lines = [
         f"**{kandidat.fio}**",
-        f"- ID: {kandidat.id}",
+        f"- ID: {kandidat.identifikator}",
         f"- Партия: {kandidat.partia or 'Самовыдвижение'}",
         f"- Должность: {kandidat.dolzhnost}",
         f"- Регион: {kandidat.region or 'Не указан'}",

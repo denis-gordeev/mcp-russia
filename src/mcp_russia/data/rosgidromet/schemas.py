@@ -12,7 +12,7 @@ class PogodaData(BaseModel):
     gorod: str = ""
     region: str = ""
     temperatura: float | None = None
-    feels_like: float | None = None
+    oshchushchaetsya_kak: float | None = None
     vlazhnost: float | None = None
     davlenie: float | None = None
     veter_skorost: float | None = None
@@ -69,4 +69,4 @@ class SputnikMonitoring(BaseModel):
     region: str = ""
     tip_dannykh: str = ""  # lesa, voda, požary, snezhnyy pokrov
     razreshenie: str = ""
-    izobrazhenie_url: str = ""
+    izobrazhenie_ssylka: str = ""

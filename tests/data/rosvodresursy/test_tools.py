@@ -75,7 +75,7 @@ async def test_info_vodnogo_obekta_found():
 async def test_gidro_monitoring_no_data():
     ctx = _mock_ctx()
     with patch.object(rosvodresursy_tools.client, "poluchit_gidro_dannye", return_value=[]):
-        result = await rosvodresursy_tools.gidro_monitoring(ctx, post_id="test")
+        result = await rosvodresursy_tools.gidro_monitoring(ctx, identifikator_posta="test")
     assert "не получены" in result or "Мониторинг" in result
 
 
@@ -91,7 +91,7 @@ async def test_gidro_monitoring_with_data():
         },
     ]
     with patch.object(rosvodresursy_tools.client, "poluchit_gidro_dannye", return_value=mock_data):
-        result = await rosvodresursy_tools.gidro_monitoring(ctx, post_id="nn")
+        result = await rosvodresursy_tools.gidro_monitoring(ctx, identifikator_posta="nn")
     assert "Нижний Новгород" in result
 
 

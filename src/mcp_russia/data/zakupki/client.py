@@ -32,30 +32,30 @@ def _get_api_token() -> str:
 
 
 async def poisk_zakupok(
-    query: str = "",
+    zapros: str = "",
     zakon: str = "",
     region: str = "",
     status: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[Zakupka]:
     """Поиск закупок в ЕИС по параметрам.
 
     Аргументы:
-        query: Поисковый запрос (название закупки).
+        zapros: Поисковый запрос (название закупки).
         zakon: Тип закона ("44-ФЗ" или "223-ФЗ").
         region: Регион заказчика.
         status: Статус закупки.
-        limit: Максимальное количество результатов.
+        ogranichenie: Максимальное количество результатов.
 
     Возвращает:
         Список закупок.
     """
     params: dict[str, str | int] = {
         "pageNumber": 1,
-        "pageSize": min(limit, 50),
+        "pageSize": min(ogranichenie, 50),
     }
-    if query:
-        params["searchString"] = query
+    if zapros:
+        params["searchString"] = zapros
     if zakon:
         if "44" in zakon:
             params["fz44"] = "on"
@@ -93,18 +93,18 @@ def _parse_zakupki_search(data: Any) -> list[Zakupka]:
             continue
         results.append(
             Zakupka(
-                id=str(item.get("id", item.get("regNumber", ""))),
-                number=item.get("regNumber", item.get("number", "")),
-                title=item.get("name", item.get("title", item.get("objectInfo", ""))),
+                identifikator=str(item.get("id", item.get("regNumber", ""))),
+                nomer=item.get("regNumber", item.get("number", "")),
+                nazvanie=item.get("name", item.get("title", item.get("objectInfo", ""))),
                 zakon=_determine_zakon(item),
                 sposob=item.get("purchaseMethod", item.get("method", "")),
                 status=item.get("status", item.get("commonStatus", "")),
-                initial_price=_safe_float(item.get("price", item.get("maxPrice", 0))),
-                currency=item.get("currency", "RUB"),
+                nachalnaya_tsena=_safe_float(item.get("price", item.get("maxPrice", 0))),
+                valyuta=item.get("currency", "RUB"),
                 data_publikatsii=item.get("publishDate", item.get("docPublishDate", "")),
-                deadline=item.get("endDate", item.get("bidEndDate", "")),
+                srok_podachi=item.get("endDate", item.get("bidEndDate", "")),
                 nazvanie_organizatora=item.get("customerName", item.get("organizerName", "")),
-                organizer_inn=item.get("customerInn", item.get("organizerInn", "")),
+                organizator_inn=item.get("customerInn", item.get("organizerInn", "")),
             )
         )
     return results
@@ -132,11 +132,11 @@ def _safe_float(value: Any) -> float:
         return 0.0
 
 
-async def poluchit_zakupku(id_zakupki: str) -> Zakupka | None:
+async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     """Получить подробную информацию о конкретной закупке.
 
     Аргументы:
-        id_zakupki: Идентификатор закупки в ЕИС (реестровый номер).
+        identifikator_zakupki: Идентификатор закупки в ЕИС (реестровый номер).
 
     Возвращает:
         Данные закупки или None.
@@ -146,7 +146,7 @@ async def poluchit_zakupku(id_zakupki: str) -> Zakupka | None:
     if token:
         params["token"] = token
 
-    url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{id_zakupki}"
+    url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{identifikator_zakupki}"
     try:
         data = await http_get(url, params=params)
         if isinstance(data, dict):
@@ -158,28 +158,28 @@ async def poluchit_zakupku(id_zakupki: str) -> Zakupka | None:
 
 
 async def poisk_kontraktov(
-    contractor_inn: str = "",
-    zakazchik_inn: str = "",
-    limit: int = 20,
+    inn_podryadchika: str = "",
+    inn_zakazchika: str = "",
+    ogranichenie: int = 20,
 ) -> list[Kontrakt]:
     """Поиск контрактов в реестре.
 
     Аргументы:
-        contractor_inn: ИНН поставщика.
-        zakazchik_inn: ИНН заказчика.
-        limit: Максимальное количество результатов.
+        inn_podryadchika: ИНН поставщика.
+        inn_zakazchika: ИНН заказчика.
+        ogranichenie: Максимальное количество результатов.
 
     Возвращает:
         Список контрактов.
     """
     params: dict[str, str | int] = {
         "pageNumber": 1,
-        "pageSize": min(limit, 50),
+        "pageSize": min(ogranichenie, 50),
     }
-    if contractor_inn:
-        params["supplierInn"] = contractor_inn
-    if zakazchik_inn:
-        params["customerInn"] = zakazchik_inn
+    if inn_podryadchika:
+        params["supplierInn"] = inn_podryadchika
+    if inn_zakazchika:
+        params["customerInn"] = inn_zakazchika
 
     token = _get_api_token()
     if token:
@@ -208,16 +208,16 @@ def _parse_kontrakty(data: Any) -> list[Kontrakt]:
             continue
         results.append(
             Kontrakt(
-                id=str(item.get("id", "")),
-                number=item.get("regNum", item.get("contractNumber", "")),
-                zakupka_number=item.get("purchaseNumber", ""),
+                identifikator=str(item.get("id", "")),
+                nomer=item.get("regNum", item.get("contractNumber", "")),
+                zakupka_nomer=item.get("purchaseNumber", ""),
                 nazvanie_podryadchika=item.get("supplierName", item.get("contractorName", "")),
-                contractor_inn=item.get("supplierInn", item.get("contractorInn", "")),
-                price=_safe_float(item.get("price", item.get("contractPrice", 0))),
-                currency=item.get("currency", "RUB"),
+                podryadchik_inn=item.get("supplierInn", item.get("contractorInn", "")),
+                tsena=_safe_float(item.get("price", item.get("contractPrice", 0))),
+                valyuta=item.get("currency", "RUB"),
                 data_podpisaniya=item.get("signDate", item.get("contractDate", "")),
                 status=item.get("status", item.get("contractStatus", "")),
-                execution_deadline=item.get("executionDate", item.get("endDate", "")),
+                srok_ispolneniya=item.get("executionDate", item.get("endDate", "")),
             )
         )
     return results
@@ -240,14 +240,14 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
         org = await poluchit_organizaciyu(inn)
         if org:
             return Zakazchik(
-                id=org.inn,
+                identifikator=org.inn,
                 nazvanie=org.nazvanie,
                 inn=org.inn,
                 kpp="",
                 region="",
                 adres=org.yuridicheskiy_adres,
-                zakupki_count=0,
-                total_spent=0.0,
+                zakupki_kolichestvo=0,
+                obshchie_raskhody=0.0,
             )
     except Exception:
         pass
@@ -272,26 +272,26 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
             org = await poluchit_organizaciyu(inn)
             if org:
                 return Postavshchik(
-                    id=org.inn,
+                    identifikator=org.inn,
                     nazvanie=org.nazvanie,
                     inn=org.inn,
                     region="",
-                    contracts_won=0,
-                    contracts_executed=0,
-                    total_revenue=0.0,
+                    kontraktov_vyigrano=0,
+                    kontraktov_ispolneno=0,
+                    obshchiy_dokhod=0.0,
                     is_dobrosovestny=True,
                 )
         elif len(inn) == 12:
             ip = await poluchit_ip(inn)
             if ip:
                 return Postavshchik(
-                    id=ip.inn,
+                    identifikator=ip.inn,
                     nazvanie=ip.fio,
                     inn=ip.inn,
                     region="",
-                    contracts_won=0,
-                    contracts_executed=0,
-                    total_revenue=0.0,
+                    kontraktov_vyigrano=0,
+                    kontraktov_ispolneno=0,
+                    obshchiy_dokhod=0.0,
                     is_dobrosovestny=True,
                 )
     except Exception:
@@ -299,22 +299,22 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
     return None
 
 
-async def plany_zakupok(year: int = 2026, organizer_inn: str = "") -> list[PlanZakupki]:
+async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[PlanZakupki]:
     """Получить планы-графики закупок.
 
     Аргументы:
-        year: Год плана.
-        organizer_inn: ИНН организатора (опционально).
+        god: Год плана.
+        inn_organizatora: ИНН организатора (опционально).
 
     Возвращает:
         Список планов-графиков.
     """
     params: dict[str, str | int] = {
-        "year": year,
+        "year": god,
         "pageSize": 50,
     }
-    if organizer_inn:
-        params["customerInn"] = organizer_inn
+    if inn_organizatora:
+        params["customerInn"] = inn_organizatora
 
     token = _get_api_token()
     if token:
@@ -343,12 +343,12 @@ def _parse_plany(data: Any) -> list[PlanZakupki]:
             continue
         results.append(
             PlanZakupki(
-                id=str(item.get("id", "")),
-                year=item.get("year", 0),
+                identifikator=str(item.get("id", "")),
+                god=item.get("year", 0),
                 nazvanie_organizatora=item.get("customerName", ""),
-                organizer_inn=item.get("customerInn", ""),
-                items_count=item.get("positionsCount", 0),
-                total_budget=_safe_float(item.get("totalSum", 0)),
+                organizator_inn=item.get("customerInn", ""),
+                kolichestvo_pozitsiy=item.get("positionsCount", 0),
+                obshchiy_byudzhet=_safe_float(item.get("totalSum", 0)),
                 data_sozdaniya=item.get("createDate", ""),
                 data_obnovleniya=item.get("updateDate", ""),
             )

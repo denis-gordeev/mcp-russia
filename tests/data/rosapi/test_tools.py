@@ -25,10 +25,10 @@ async def test_konsul_adres_po_indeksu_success():
         return_value=AdresRF(
             pochtovyy_indeks="101000",
             region="г Москва",
-            city="Москва",
-            street="Красная площадь",
-            house="1",
-            full_address="г Москва, Красная площадь, д 1",
+            gorod="Москва",
+            ulitsa="Красная площадь",
+            dom="1",
+            polnyy_adres="г Москва, Красная площадь, д 1",
         ),
     ):
         result = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
@@ -66,9 +66,9 @@ async def test_poisk_adresa_success():
                 "value": "г Москва, Красная площадь",
                 "pochtovyy_indeks": "101000",
                 "region": "г Москва",
-                "city": "Москва",
-                "street": "Красная площадь",
-                "house": "",
+                "gorod": "Москва",
+                "ulitsa": "Красная площадь",
+                "dom": "",
                 "fias_id": "abc123",
             }
         ],
@@ -90,8 +90,8 @@ async def test_poisk_org_po_inn_success():
             nazvanie_polnoe="Публичное акционерное общество «Сбербанк России»",
             nazvanie_kratkoe="ПАО Сбербанк",
             status="ACTIVE",
-            address="г Москва, ул Вавилова, д 19",
-            director="Греф Герман Оскарович",
+            adres="г Москва, ул Вавилова, д 19",
+            rukovoditel="Греф Герман Оскарович",
             data_registratsii="2002-08-23",
         ),
     ):
@@ -140,8 +140,8 @@ async def test_konsul_bank_po_bik_dadata():
             bik="044525225",
             nazvanie="Публичное акционерное общество «Сбербанк России»",
             nazvanie_kratkoe="ПАО Сбербанк",
-            city="Москва",
-            swift="SABRRUMM",
+            gorod="Москва",
+            svift="SABRRUMM",
         ),
     ):
         result = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)

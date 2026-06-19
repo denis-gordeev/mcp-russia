@@ -65,7 +65,7 @@ def _parse_deputats(data: Any) -> list[Deputat]:
         frakciya_raw = d.get("factionName", d.get("faction", ""))
         results.append(
             Deputat(
-                id=d.get("id", 0),
+                identifikator=d.get("id", 0),
                 фамилия=d.get("surname", d.get("lastName", "")),
                 имя=d.get("name", d.get("firstName", "")),
                 отчество=d.get("patronymic", d.get("middleName", "")),
@@ -73,17 +73,17 @@ def _parse_deputats(data: Any) -> list[Deputat]:
                 комитет=d.get("committeeName", d.get("committee", "")),
                 регион=d.get("districtName", d.get("region", "")),
                 созыв=str(d.get("convocation", d.get("sozyv", ""))),
-                foto_url=d.get("photoUrl", d.get("photo", "")),
+                foto_ssylka=d.get("photoUrl", d.get("photo", "")),
             )
         )
     return results
 
 
-async def poluchit_deputata(id: int) -> Deputat | None:
+async def poluchit_deputata(identifikator: int) -> Deputat | None:
     """Получение конкретного депутата по ID.
 
     Аргументы:
-        id: ID депутата.
+        identifikator: ID депутата.
 
     Возвращает:
         Данные депутата или None.
@@ -93,7 +93,7 @@ async def poluchit_deputata(id: int) -> Deputat | None:
     if token:
         params["app_token"] = token
 
-    url = f"{DUMA_DEPUTATS}/{id}"
+    url = f"{DUMA_DEPUTATS}/{identifikator}"
     try:
         data = await http_get(url, params=params)
         if isinstance(data, dict):
@@ -103,7 +103,7 @@ async def poluchit_deputata(id: int) -> Deputat | None:
 
     deputats = await poluchit_deputatov()
     for d in deputats:
-        if d.id == id:
+        if d.identifikator == identifikator:
             return d
     return None
 
@@ -113,7 +113,7 @@ def _parse_one_deputat(data: dict[str, Any]) -> Deputat | None:
     if not isinstance(data, dict):
         return None
     return Deputat(
-        id=data.get("id", 0),
+        identifikator=data.get("id", 0),
         фамилия=data.get("surname", data.get("lastName", "")),
         имя=data.get("name", data.get("firstName", "")),
         отчество=data.get("patronymic", data.get("middleName", "")),
@@ -121,26 +121,26 @@ def _parse_one_deputat(data: dict[str, Any]) -> Deputat | None:
         комитет=data.get("committeeName", data.get("committee", "")),
         регион=data.get("districtName", data.get("region", "")),
         созыв=str(data.get("convocation", data.get("sozyv", ""))),
-        foto_url=data.get("photoUrl", data.get("photo", "")),
+        foto_ssylka=data.get("photoUrl", data.get("photo", "")),
     )
 
 
 async def poluchit_zakonoproekty(
     status: str = "",
-    limit: int = 20,
-    page: int = 1,
+    ogranichenie: int = 20,
+    stranitsa: int = 1,
 ) -> list[Zakonoproekt]:
     """Получение законопроектов из API СОЗД.
 
     Аргументы:
         status: Фильтр по статусу (необязательно).
-        limit: Максимальное количество результатов.
-        page: Номер страницы.
+        ogranichenie: Максимальное количество результатов.
+        stranitsa: Номер страницы.
 
     Возвращает:
         Список законопроектов.
     """
-    params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
+    params: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
     if status:
         params["status"] = status
 
@@ -170,13 +170,13 @@ def _parse_zakonoproekty(data: Any) -> list[Zakonoproekt]:
             continue
         results.append(
             Zakonoproekt(
-                id=str(item.get("id", "")),
-                number=item.get("number", ""),
-                title=item.get("name", item.get("title", "")),
+                identifikator=str(item.get("id", "")),
+                nomer=item.get("number", ""),
+                nazvanie=item.get("name", item.get("title", "")),
                 status=item.get("statusName", item.get("status", "")),
                 data_vneseniya=item.get("dateIntroduction", item.get("introductionDate", "")),
-                author=item.get("subjectName", item.get("author", "")),
-                readings=item.get("readingsCount", item.get("readings", 0)),
+                avtor=item.get("subjectName", item.get("author", "")),
+                chteniya=item.get("readingsCount", item.get("readings", 0)),
             )
         )
     return results
@@ -184,20 +184,20 @@ def _parse_zakonoproekty(data: Any) -> list[Zakonoproekt]:
 
 async def poluchit_golosovaniya(
     sozyv: str = "",
-    limit: int = 20,
-    page: int = 1,
+    ogranichenie: int = 20,
+    stranitsa: int = 1,
 ) -> list[Golosovanie]:
     """Получение результатов голосований из API Госдумы.
 
     Аргументы:
         sozyv: Номер созыва.
-        limit: Максимальное количество результатов.
-        page: Номер страницы.
+        ogranichenie: Максимальное количество результатов.
+        stranitsa: Номер страницы.
 
     Возвращает:
         Список результатов голосований.
     """
-    params: dict[str, str | int] = {"limit": min(limit, 50), "page": page}
+    params: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
     if sozyv:
         params["convocation"] = sozyv
 
@@ -227,8 +227,8 @@ def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
             continue
         results.append(
             Golosovanie(
-                zakonoproekt_id=str(item.get("billId", item.get("id", ""))),
-                title=item.get("subject", item.get("title", "")),
+                zakonoproekt_identifikator=str(item.get("billId", item.get("id", ""))),
+                nazvanie=item.get("subject", item.get("title", "")),
                 data=item.get("date", item.get("voteDate", "")),
                 za=item.get("totalFor", item.get("for", 0)),
                 protiv=item.get("totalAgainst", item.get("against", 0)),
@@ -245,7 +245,7 @@ async def poluchit_frakcii() -> list[Frakciya]:
     Возвращает:
         Список фракций.
     """
-    return [Frakciya(kod=f["code"], nazvanie=f["name"]) for f in FRAKCII]
+    return [Frakciya(kod=f["kod"], nazvanie=f["nazvanie"]) for f in FRAKCII]
 
 
 def get_sozyvy() -> list[dict[str, str]]:

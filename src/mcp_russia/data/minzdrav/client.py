@@ -31,7 +31,7 @@ async def poisk_med_organizatsiy(
     region: str = "",
     tip: str = "",
     gorod: str = "",
-    limit: int = 20,
+    ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск медицинских организаций через ФРМО.
 
@@ -39,14 +39,14 @@ async def poisk_med_organizatsiy(
         region: Субъект РФ.
         tip: Тип организации (больница, поликлиника и т.д.).
         gorod: Город.
-        limit: Максимальное количество результатов.
+        ogranichenie: Максимальное количество результатов.
 
     Возвращает:
         Список медицинских организаций.
     """
     try:
         url = f"{FRMO_API_BASE}/organizations"
-        params: dict[str, Any] = {"limit": limit}
+        params: dict[str, Any] = {"limit": ogranichenie}
         if region:
             params["region"] = region
         if tip:
@@ -61,23 +61,23 @@ async def poisk_med_organizatsiy(
         return []
 
 
-async def info_med_organizatsii(id_mo: str) -> dict[str, Any] | None:
+async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
     """Получить подробную информацию о медицинской организации.
 
     Аргументы:
-        id_mo: Идентификатор медицинской организации (ОГРН/ИНН).
+        identifikator_mo: Идентификатор медицинской организации (ОГРН/ИНН).
 
     Возвращает:
         Данные организации или None.
     """
     try:
-        url = f"{FRMO_API_BASE}/organizations/{id_mo}"
+        url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_med_organizatsia(data)
         return None
     except Exception:
-        logger.exception("Ошибка при получении МО %s", id_mo)
+        logger.exception("Ошибка при получении МО %s", identifikator_mo)
         return None
 
 
@@ -146,14 +146,14 @@ async def pokazateli_zdorovya(
 
 
 async def statistika_zabolevaniy(
-    mkb_code: str = "",
+    kod_mkb: str = "",
     region: str = "",
     god: int = 0,
 ) -> list[dict[str, Any]]:
     """Получить статистику заболеваний из открытых данных Минздрава.
 
     Аргументы:
-        mkb_code: Код МКБ-10.
+        kod_mkb: Код МКБ-10.
         region: Субъект РФ.
         god: Год данных.
 
@@ -163,8 +163,8 @@ async def statistika_zabolevaniy(
     try:
         url = f"{MINZDRAV_OPEN_DATA}/morbidity"
         params: dict[str, Any] = {}
-        if mkb_code:
-            params["mkb"] = mkb_code
+        if kod_mkb:
+            params["mkb"] = kod_mkb
         if region:
             params["region"] = region
         if god:
@@ -217,11 +217,11 @@ def _extract_list(data: Any) -> list[Any]:
 def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных медицинской организации."""
     return {
-        "id": item.get("id", "") or item.get("ogrn", ""),
+        "identifikator": item.get("id", "") or item.get("ogrn", ""),
         "nazvanie": item.get("name", "") or item.get("fullName", ""),
         "tip": item.get("type", "") or item.get("tip", ""),
         "region": item.get("region", "") or item.get("subject", ""),
-        "city": item.get("city", "") or item.get("settlement", ""),
+        "gorod": item.get("city", "") or item.get("settlement", ""),
         "adres": item.get("address", "") or item.get("adres", ""),
         "telefon": item.get("phone", "") or item.get("telefon", ""),
         "litsenzia": item.get("license", "") or item.get("litsenzia", ""),

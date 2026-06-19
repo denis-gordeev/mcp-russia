@@ -25,7 +25,7 @@ async def spisok_vidov_proizvodstv(ctx: Context) -> str:
     Возвращает:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
-    rows = [(v["code"], v["name"]) for v in VidyIspolnitelnyhProizvodstv]
+    rows = [(v["kod"], v["nazvanie"]) for v in VidyIspolnitelnyhProizvodstv]
     return markdown_table(["Код", "Вид производства"], rows) + _ATTRIBUTION
 
 
@@ -35,7 +35,7 @@ async def spisok_statusov_proizvodstva(ctx: Context) -> str:
     Возвращает:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
-    rows = [(s["code"], s["name"]) for s in StatusyProizvodstva]
+    rows = [(s["kod"], s["nazvanie"]) for s in StatusyProizvodstva]
     return markdown_table(["Код", "Статус"], rows) + _ATTRIBUTION
 
 
@@ -45,7 +45,7 @@ async def spisok_ogranicheniy(ctx: Context) -> str:
     Возвращает:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
-    rows = [(o["code"], o["name"]) for o in Ogranicheniya]
+    rows = [(o["kod"], o["nazvanie"]) for o in Ogranicheniya]
     return markdown_table(["Код", "Ограничение"], rows) + _ATTRIBUTION
 
 
@@ -55,7 +55,7 @@ async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
     Возвращает:
         Список категорий (физлицо, юрлицо, ИП).
     """
-    rows = [(k["code"], k["name"]) for k in KategoriiDolzhnikov]
+    rows = [(k["kod"], k["nazvanie"]) for k in KategoriiDolzhnikov]
     return markdown_table(["Код", "Категория"], rows) + _ATTRIBUTION
 
 
@@ -65,7 +65,7 @@ async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
     Возвращает:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
-    rows = [(o["code"], o["name"]) for o in OsnovaniyaVozbuzhdeniya]
+    rows = [(o["kod"], o["nazvanie"]) for o in OsnovaniyaVozbuzhdeniya]
     return markdown_table(["Код", "Основание"], rows) + _ATTRIBUTION
 
 

@@ -8,8 +8,8 @@ from pydantic import BaseModel
 class SudebnoeDelo(BaseModel):
     """Судебное дело в Картотеке арбитражных дел."""
 
-    number: str  # номер дела (например, А40-12345/2024)
-    category: str = ""
+    nomer: str
+    kategoriya: str = ""
     status: str = ""
     sudya: str = ""
     nazvanie_suda: str = ""
@@ -18,28 +18,28 @@ class SudebnoeDelo(BaseModel):
     istorcy: list[str] = []
     otvetchiki: list[str] = []
     summa_iska: float = 0.0
-    currency: str = "RUB"
+    valyuta: str = "RUB"
 
 
 class SudebnyyAkt(BaseModel):
     """Судебный акт (решение, определение, постановление)."""
 
-    id: str
-    delo_number: str
-    tip_akta: str  # решение, определение, постановление
+    identifikator: str
+    delo_nomer: str
+    tip_akta: str
     data_akta: str = ""
     sud: str = ""
     sudya: str = ""
     kratkoe_soderzhanie: str = ""
     rezolyutsiya: str = ""
-    pdf_url: str = ""
+    pdf_ssylka: str = ""
 
 
 class SudebnoeZasedanie(BaseModel):
     """Судебное заседание."""
 
-    id: str
-    delo_number: str
+    identifikator: str
+    delo_nomer: str
     data_zasedaniya: str
     vremya: str = ""
     sudya: str = ""
@@ -51,7 +51,7 @@ class SudebnoeZasedanie(BaseModel):
 class Sudy(BaseModel):
     """Судья арбитражного суда."""
 
-    id: str
+    identifikator: str
     familiya_imya: str
     nazvanie_suda: str = ""
     dolzhnost: str = ""  # председатель, судья

@@ -14,58 +14,61 @@ ZPP_API_BASE = "https://zpp.rospotrebnadzor.ru"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
-    {"code": "sanitarnyy_nadzor", "name": "Санитарно-эпидемиологический надзор"},
-    {"code": "zashchita_prav_potrebiteley", "name": "Защита прав потребителей"},
-    {"code": "radiatsionnaya_bezopasnost", "name": "Радиационная безопасность"},
-    {"code": "bezopasnost_vodnykh", "name": "Безопасность водных объектов"},
-    {"code": "kachestvo_atmosfernogo_vozdukha", "name": "Контроль качества атмосферного воздуха"},
-    {"code": "bezopasnost_pishchevykh", "name": "Безопасность пищевых продуктов"},
+    {"kod": "sanitarnyy_nadzor", "nazvanie": "Санитарно-эпидемиологический надзор"},
+    {"kod": "zashchita_prav_potrebiteley", "nazvanie": "Защита прав потребителей"},
+    {"kod": "radiatsionnaya_bezopasnost", "nazvanie": "Радиационная безопасность"},
+    {"kod": "bezopasnost_vodnykh", "nazvanie": "Безопасность водных объектов"},
     {
-        "code": "bezopasnost_neprodovolstvennykh",
-        "name": "Безопасность непродовольственных товаров",
+        "kod": "kachestvo_atmosfernogo_vozdukha",
+        "nazvanie": "Контроль качества атмосферного воздуха",
+    },
+    {"kod": "bezopasnost_pishchevykh", "nazvanie": "Безопасность пищевых продуктов"},
+    {
+        "kod": "bezopasnost_neprodovolstvennykh",
+        "nazvanie": "Безопасность непродовольственных товаров",
     },
 ]
 
 # Типы проверок
 TIPY_PROVEROK = [
-    {"code": "planovaya", "name": "Плановая проверка"},
-    {"code": "vneplanovaya", "name": "Внеплановая проверка"},
-    {"code": "dokumentalnaya", "name": "Документарная проверка"},
-    {"code": "vyezdnaya", "name": "Выездная проверка"},
-    {"code": "kontrolnaya", "name": "Контрольная проверка"},
+    {"kod": "planovaya", "nazvanie": "Плановая проверка"},
+    {"kod": "vneplanovaya", "nazvanie": "Внеплановая проверка"},
+    {"kod": "dokumentalnaya", "nazvanie": "Документарная проверка"},
+    {"kod": "vyezdnaya", "nazvanie": "Выездная проверка"},
+    {"kod": "kontrolnaya", "nazvanie": "Контрольная проверка"},
 ]
 
 # Категории объектов надзора
 KATEGORII_OBIEKTOV = [
-    {"code": "pishchevye_predpriyatiya", "name": "Предприятия пищевой промышленности"},
-    {"code": "obshchestvennoe_pitanie", "name": "Общественное питание"},
-    {"code": "obrazovatelnye_uchrezhdeniya", "name": "Образовательные учреждения"},
-    {"code": "meditsinskie_organizatsii", "name": "Медицинские организации"},
-    {"code": "vodosnabzhayushchie", "name": "Водоснабжающие организации"},
-    {"code": "obekty_torgovli", "name": "Объекты торговли"},
-    {"code": "promyshlennye_predpriyatiya", "name": "Промышленные предприятия"},
-    {"code": "zhilye_zdaniya", "name": "Жилые здания"},
+    {"kod": "pishchevye_predpriyatiya", "nazvanie": "Предприятия пищевой промышленности"},
+    {"kod": "obshchestvennoe_pitanie", "nazvanie": "Общественное питание"},
+    {"kod": "obrazovatelnye_uchrezhdeniya", "nazvanie": "Образовательные учреждения"},
+    {"kod": "meditsinskie_organizatsii", "nazvanie": "Медицинские организации"},
+    {"kod": "vodosnabzhayushchie", "nazvanie": "Водоснабжающие организации"},
+    {"kod": "obekty_torgovli", "nazvanie": "Объекты торговли"},
+    {"kod": "promyshlennye_predpriyatiya", "nazvanie": "Промышленные предприятия"},
+    {"kod": "zhilye_zdaniya", "nazvanie": "Жилые здания"},
 ]
 
 # Региональные управления (по федеральным округам)
 REGIONALNYE_UPRAVLENIYA = [
-    {"code": "CFD", "name": "Управление по Центральному федеральному округу"},
-    {"code": "SZFD", "name": "Управление по Северо-Западному федеральному округу"},
-    {"code": "YuFD", "name": "Управление по Южному федеральному округу"},
-    {"code": "SKFD", "name": "Управление по Северо-Кавказскому федеральному округу"},
-    {"code": "PFD", "name": "Управление по Приволжскому федеральному округу"},
-    {"code": "UFD", "name": "Управление по Уральскому федеральному округу"},
-    {"code": "SFD", "name": "Управление по Сибирскому федеральному округу"},
-    {"code": "DFD", "name": "Управление по Дальневосточному федеральному округу"},
+    {"kod": "CFD", "nazvanie": "Управление по Центральному федеральному округу"},
+    {"kod": "SZFD", "nazvanie": "Управление по Северо-Западному федеральному округу"},
+    {"kod": "YuFD", "nazvanie": "Управление по Южному федеральному округу"},
+    {"kod": "SKFD", "nazvanie": "Управление по Северо-Кавказскому федеральному округу"},
+    {"kod": "PFD", "nazvanie": "Управление по Приволжскому федеральному округу"},
+    {"kod": "UFD", "nazvanie": "Управление по Уральскому федеральному округу"},
+    {"kod": "SFD", "nazvanie": "Управление по Сибирскому федеральному округу"},
+    {"kod": "DFD", "nazvanie": "Управление по Дальневосточному федеральному округу"},
 ]
 
 # Основные санитарные правила и нормативы (СанПиН)
 SANPIN_OSNOVNYE = [
-    {"code": "2.1.3684-21", "name": "СанПиН по содержанию территорий населённых мест"},
-    {"code": "2.3/2.4.3590-20", "name": "СанПиН по организации общественного питания"},
-    {"code": "1.2.3685-21", "name": "Гигиенические нормативы и требования к безопасности"},
-    {"code": "2.4.3648-20", "name": "СанПиН к организациям воспитания и обучения"},
-    {"code": "2.1.4.1074-01", "name": "СанПиН по питьевой воде"},
+    {"kod": "2.1.3684-21", "nazvanie": "СанПиН по содержанию территорий населённых мест"},
+    {"kod": "2.3/2.4.3590-20", "nazvanie": "СанПиН по организации общественного питания"},
+    {"kod": "1.2.3685-21", "nazvanie": "Гигиенические нормативы и требования к безопасности"},
+    {"kod": "2.4.3648-20", "nazvanie": "СанПиН к организациям воспитания и обучения"},
+    {"kod": "2.1.4.1074-01", "nazvanie": "СанПиН по питьевой воде"},
 ]
 
 # Статусы проверок

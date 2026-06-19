@@ -16,40 +16,40 @@ DATA_GOV_RU_BASE = "https://data.gov.ru"
 
 KOMITETY_SOVFEDA = [
     {
-        "code": "konst_zakon",
-        "name": "Конституционное законодательство и государственное строительство",
+        "kod": "konst_zakon",
+        "nazvanie": "Конституционное законодательство и государственное строительство",
     },
-    {"code": "oborona", "name": "Оборона и безопасность"},
-    {"code": "byudzhet", "name": "Бюджет и финансовые рынки"},
-    {"code": "ekonom_politika", "name": "Экономическая политика"},
-    {"code": "sotc_politika", "name": "Социальная политика"},
-    {"code": "agrarno_pish", "name": "Аграрно-продовольственная политика"},
-    {"code": "nauka", "name": "Наука, образование и культура"},
-    {"code": "mezhdunarodnye", "name": "Международные дела"},
+    {"kod": "oborona", "nazvanie": "Оборона и безопасность"},
+    {"kod": "byudzhet", "nazvanie": "Бюджет и финансовые рынки"},
+    {"kod": "ekonom_politika", "nazvanie": "Экономическая политика"},
+    {"kod": "sotc_politika", "nazvanie": "Социальная политика"},
+    {"kod": "agrarno_pish", "nazvanie": "Аграрно-продовольственная политика"},
+    {"kod": "nauka", "nazvanie": "Наука, образование и культура"},
+    {"kod": "mezhdunarodnye", "nazvanie": "Международные дела"},
     {
-        "code": "federalnoe",
-        "name": "Федеративное устройство, региональная политика и местное самоуправление",
+        "kod": "federalnoe",
+        "nazvanie": "Федеративное устройство, региональная политика и местное самоуправление",
     },
-    {"code": "reglament", "name": "Регламент и организация парламентской деятельности"},
-    {"code": "pravovye", "name": "Правовые вопросы"},
-    {"code": "soprav_trud", "name": "Совместное ведение и социальная защита"},
-    {"code": "ekologiya", "name": "Природная среда и экология"},
-    {"code": "promyshlennost", "name": "Промышленная политика и предпринимательство"},
-    {"code": "transport", "name": "Транспорт и связь"},
-    {"code": "oborona_prav", "name": "Защита прав человека и гражданина"},
+    {"kod": "reglament", "nazvanie": "Регламент и организация парламентской деятельности"},
+    {"kod": "pravovye", "nazvanie": "Правовые вопросы"},
+    {"kod": "soprav_trud", "nazvanie": "Совместное ведение и социальная защита"},
+    {"kod": "ekologiya", "nazvanie": "Природная среда и экология"},
+    {"kod": "promyshlennost", "nazvanie": "Промышленная политика и предпринимательство"},
+    {"kod": "transport", "nazvanie": "Транспорт и связь"},
+    {"kod": "oborona_prav", "nazvanie": "Защита прав человека и гражданина"},
 ]
 
 KOMISSII_SOVFEDA = [
     {
-        "code": "reglament",
-        "name": "Комиссия по Регламенту и организации парламентской деятельности",
+        "kod": "reglament",
+        "nazvanie": "Комиссия по Регламенту и организации парламентской деятельности",
     },
-    {"code": "etika", "name": "Комиссия по этике"},
-    {"code": "schetnaya_palata", "name": "Комиссия по взаимодействию со Счётной палатой РФ"},
-    {"code": "prirodnye_resursy", "name": "Комиссия по использованию природных ресурсов"},
-    {"code": "nats_bezopasnost", "name": "Комиссия по национальной морской политике"},
-    {"code": "inform_politika", "name": "Комиссия по информационной политике"},
-    {"code": "molodezh", "name": "Комиссия Совета Федерации по делам молодёжи и туризму"},
+    {"kod": "etika", "nazvanie": "Комиссия по этике"},
+    {"kod": "schetnaya_palata", "nazvanie": "Комиссия по взаимодействию со Счётной палатой РФ"},
+    {"kod": "prirodnye_resursy", "nazvanie": "Комиссия по использованию природных ресурсов"},
+    {"kod": "nats_bezopasnost", "nazvanie": "Комиссия по национальной морской политике"},
+    {"kod": "inform_politika", "nazvanie": "Комиссия по информационной политике"},
+    {"kod": "molodezh", "nazvanie": "Комиссия Совета Федерации по делам молодёжи и туризму"},
 ]
 
 STATUSY_ZAKONOPROEKTA = {
@@ -64,18 +64,18 @@ STATUSY_ZAKONOPROEKTA = {
 
 DOLZHNOSTI_SENATORA = [
     {
-        "code": "predstavitel_exec",
-        "name": "Представитель от исполнительного органа государственной власти субъекта РФ",
+        "kod": "predstavitel_exec",
+        "nazvanie": "Представитель от исполнительного органа государственной власти субъекта РФ",
     },
     {
-        "code": "predstavitel_zakon",
-        "name": "Представитель от законодательного органа государственной власти субъекта РФ",
+        "kod": "predstavitel_zakon",
+        "nazvanie": "Представитель от законодательного органа государственной власти субъекта РФ",
     },
-    {"code": "predsedatel_sf", "name": "Председатель Совета Федерации"},
-    {"code": "zam_predsedatelya", "name": "Заместитель Председателя Совета Федерации"},
-    {"code": "predsedatel_komiteta", "name": "Председатель комитета"},
-    {"code": "zam_predsedatelya_komiteta", "name": "Заместитель председателя комитета"},
-    {"code": "senator_rf", "name": "Сенатор Российской Федерации"},
+    {"kod": "predsedatel_sf", "nazvanie": "Председатель Совета Федерации"},
+    {"kod": "zam_predsedatelya", "nazvanie": "Заместитель Председателя Совета Федерации"},
+    {"kod": "predsedatel_komiteta", "nazvanie": "Председатель комитета"},
+    {"kod": "zam_predsedatelya_komiteta", "nazvanie": "Заместитель председателя комитета"},
+    {"kod": "senator_rf", "nazvanie": "Сенатор Российской Федерации"},
 ]
 
 SENATORY_SPRAVOCHNIK = [
