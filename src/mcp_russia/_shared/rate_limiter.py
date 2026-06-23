@@ -2,7 +2,7 @@
 
 Использование::
 
-    limiter = RateLimiter(max_requests=80, period=60.0)
+    limiter = OgranichitelChastoty(max_requests=80, period=60.0)
 
     async with limiter:
         await do_request()
@@ -15,7 +15,7 @@ import time
 from collections import deque
 
 
-class RateLimiter:
+class OgranichitelChastoty:
     """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
 
     Аргументы:
@@ -49,7 +49,7 @@ class RateLimiter:
                 wait = self._timestamps[0] + self._period - now
             await asyncio.sleep(max(wait, 0.01))
 
-    async def __aenter__(self) -> RateLimiter:
+    async def __aenter__(self) -> OgranichitelChastoty:
         """Вход в контекст: ожидание и резервирование слота."""
         await self.acquire()
         return self

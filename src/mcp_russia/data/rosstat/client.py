@@ -23,13 +23,13 @@ from .constants import (
     VIDY_DEYATELNOSTI_INVESTITSII,
 )
 from .schemas import (
+    DannyeRegiona,
+    DannyeZarplaty,
     IndikatorDannye,
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
     PokazatelRosstata,
-    RegionData,
     VRPData,
-    WagesData,
 )
 
 logger = logging.getLogger(__name__)
@@ -58,7 +58,7 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
         return []
 
 
-async def poluchit_dannye_regiona(kod: str) -> RegionData | None:
+async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
     """Получение данных о субъекте РФ.
 
     Аргументы:
@@ -67,17 +67,17 @@ async def poluchit_dannye_regiona(kod: str) -> RegionData | None:
     Возвращает:
         Данные региона или None.
     """
-    region_info = next((r for r in SUBIEKTY_RF if r["kod"] == kod), None)
-    if not region_info:
+    info_o_regionye = next((r for r in SUBIEKTY_RF if r["kod"] == kod), None)
+    if not info_o_regionye:
         return None
     try:
         url = f"{EMISS_API_BASE}/region/{kod}"
         data = await http_get(url, timeout=20.0)
         if isinstance(data, dict):
-            return RegionData(
+            return DannyeRegiona(
                 kod=kod,
-                nazvanie=region_info["nazvanie"],
-                federalny_okrug=region_info.get("okrug", ""),
+                nazvanie=info_o_regionye["nazvanie"],
+                federalny_okrug=info_o_regionye.get("okrug", ""),
                 naselenie=data.get("population"),
                 vrp=data.get("gdp") or data.get("vrp"),
                 srednyaya_zp=data.get("avgWage") or data.get("srednyaya_zp"),
@@ -85,10 +85,10 @@ async def poluchit_dannye_regiona(kod: str) -> RegionData | None:
     except Exception:
         logger.exception("Ошибка при получении данных региона %s", kod)
 
-    return RegionData(
+    return DannyeRegiona(
         kod=kod,
-        nazvanie=region_info["nazvanie"],
-        federalny_okrug=region_info.get("okrug", ""),
+        nazvanie=info_o_regionye["nazvanie"],
+        federalny_okrug=info_o_regionye.get("okrug", ""),
     )
 
 
@@ -101,14 +101,14 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     Возвращает:
         Данные федерального округа.
     """
-    okrug_info = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
-    if not okrug_info:
+    info_ob_okruge = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
+    if not info_ob_okruge:
         return {"error": f"Федеральный округ '{kod}' не найден"}
 
     regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == kod]
     return {
         "kod": kod,
-        "nazvanie": okrug_info["nazvanie"],
+        "nazvanie": info_ob_okruge["nazvanie"],
         "kolichestvo_subiektov": len(regiony),
         "subiekty": [r["nazvanie"] for r in regiony],
     }
@@ -232,7 +232,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
         return []
 
 
-async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
+async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarplaty]:
     """Получение данных о заработной плате из ЕМИСС.
 
     Аргументы:
@@ -265,7 +265,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[WagesData]:
                         if ri:
                             region_name = ri["nazvanie"]
                     results.append(
-                        WagesData(
+                        DannyeZarplaty(
                             period=item.get("date", item.get("period", "")),
                             region=region_name,
                             nominalnaya_zp=item.get("value"),
@@ -338,7 +338,7 @@ async def poluchit_indikator_dannye(
         Список точек данных показателя.
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
-    indicator_name = next(
+    imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
     )
@@ -368,7 +368,7 @@ async def poluchit_indikator_dannye(
             results.append(
                 IndikatorDannye(
                     kod_emiss=emiss_code,
-                    nazvanie=indicator_name or item.get("name", kod),
+                    nazvanie=imya_indikatora or item.get("name", kod),
                     period=item.get("date", item.get("period", "")),
                     znachenie=item.get("value"),
                     edinitsa=item.get("unit", ""),

@@ -15,7 +15,7 @@ from __future__ import annotations
 from typing import Any
 
 from mcp_russia._shared.http_client import http_post
-from mcp_russia.exceptions import AuthError
+from mcp_russia.exceptions import OshibkaAutentifikatsii
 from mcp_russia.settings import DADATA_API_KEY
 
 from .constants import PRAZDNIKI_RF
@@ -33,7 +33,7 @@ def _dadata_headers(token: str | None = None) -> dict[str, str]:
     }
     key = token or DADATA_API_KEY
     if not key:
-        raise AuthError(
+        raise OshibkaAutentifikatsii(
             "Для работы с Dadata API необходим ключ MCP_RUSSIA_DADATA_API_KEY. "
             "Зарегистрируйтесь: https://dadata.ru/api/"
         )
@@ -72,10 +72,10 @@ def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_bank_data(data: dict[str, Any], fallback_name: str = "") -> dict[str, Any]:
+def _parse_bank_data(data: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
     """Разбор данных банка из ответа Dadata."""
     name_obj = data.get("name")
-    name_full = name_obj.get("full") if isinstance(name_obj, dict) else fallback_name
+    name_full = name_obj.get("full") if isinstance(name_obj, dict) else rezervnoe_imya
     name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
     addr_obj = data.get("address")
     city = _nested_get(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
@@ -197,7 +197,7 @@ def get_holidays(god: int) -> list[dict[str, str]]:
             {
                 "data": full_date,
                 "nazvanie": name,
-                "tip": "national"
+                "tip": "natsionalnyy"
                 if date_str
                 in [
                     "01-01",
@@ -209,7 +209,7 @@ def get_holidays(god: int) -> list[dict[str, str]]:
                     "06-12",
                     "11-04",
                 ]
-                else "weekend",
+                else "vykhodnoy",
             }
         )
     return holidays

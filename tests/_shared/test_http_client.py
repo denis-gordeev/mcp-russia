@@ -7,7 +7,7 @@ import pytest
 import respx
 
 from mcp_russia._shared.http_client import create_client, http_get
-from mcp_russia.exceptions import HttpClientError
+from mcp_russia.exceptions import OshibkaHttpClienta
 
 
 class TestCreateClient:
@@ -64,7 +64,7 @@ class TestHttpGet:
         respx.get("https://api.example.com/missing").mock(
             return_value=httpx.Response(404, text="Not Found")
         )
-        with pytest.raises(HttpClientError, match="HTTP 404"):
+        with pytest.raises(OshibkaHttpClienta, match="HTTP 404"):
             await http_get("https://api.example.com/missing", max_retries=2)
 
     @pytest.mark.asyncio
@@ -96,13 +96,13 @@ class TestHttpGet:
     @pytest.mark.asyncio
     @respx.mock
     async def test_all_retries_exhausted(self) -> None:
-        """После исчерпания всех попыток возбуждает HttpClientError."""
+        """После исчерпания всех попыток возбуждает OshibkaHttpClienta."""
         respx.get("https://api.example.com/down").mock(
             return_value=httpx.Response(503, text="Service Unavailable")
         )
         with (
             patch("mcp_russia._shared.http_client.asyncio.sleep"),
-            pytest.raises(HttpClientError, match="не удался после"),
+            pytest.raises(OshibkaHttpClienta, match="не удался после"),
         ):
             await http_get("https://api.example.com/down", max_retries=1)
 
@@ -126,5 +126,5 @@ class TestHttpGet:
         respx.get("https://api.example.com/once").mock(
             return_value=httpx.Response(500, text="Error")
         )
-        with pytest.raises(HttpClientError, match="HTTP 500"):
+        with pytest.raises(OshibkaHttpClienta, match="HTTP 500"):
             await http_get("https://api.example.com/once", max_retries=0)

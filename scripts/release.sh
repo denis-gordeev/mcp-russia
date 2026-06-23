@@ -1,50 +1,50 @@
 #!/usr/bin/env bash
-# release.sh — Bump version, generate changelog, tag, and push.
-# Usage: ./scripts/release.sh patch|minor|major
+# release.sh — Обновить версию, сгенерировать журнал изменений, создать тег и отправить.
+# Использование: ./scripts/release.sh patch|minor|major
 set -euo pipefail
 
-BUMP_TYPE="${1:?Usage: $0 patch|minor|major}"
+TIP_OBNOVLENIYA="${1:?Использование: $0 patch|minor|major}"
 
-# Ensure clean working tree
+# Убедиться, что рабочее дерево чистое
 if [[ -n "$(git status --porcelain)" ]]; then
-    echo "ERROR: Working directory not clean. Commit or stash changes first."
+    echo "ОШИБКА: Рабочий каталог не чистый. Сделайте коммит или stash изменений."
     exit 1
 fi
 
-# Ensure on main branch
-BRANCH=$(git rev-parse --abbrev-ref HEAD)
-if [[ "$BRANCH" != "main" ]]; then
-    echo "ERROR: Must be on 'main' branch (currently on '$BRANCH')."
+# Убедиться, что мы на ветке main
+VETKA=$(git rev-parse --abbrev-ref HEAD)
+if [[ "$VETKA" != "main" ]]; then
+    echo "ОШИБКА: Необходимо быть на ветке 'main' (сейчас на '$VETKA')."
     exit 1
 fi
 
-# Bump version
-uv version --bump "$BUMP_TYPE"
-NEW_VERSION=$(uv version)
-echo "==> Bumped to v$NEW_VERSION"
+# Обновить версию
+uv version --bump "$TIP_OBNOVLENIYA"
+NOVAYA_VERSIYA=$(uv version)
+echo "==> Версия обновлена до v$NOVAYA_VERSIYA"
 
-# Generate changelog (if git-cliff is available)
+# Сгенерировать журнал изменений (если git-cliff доступен)
 if command -v git-cliff &>/dev/null; then
-    git-cliff --tag "v$NEW_VERSION" -o CHANGELOG.md
-    echo "==> Generated CHANGELOG.md"
-    CHANGELOG_FILES="CHANGELOG.md"
+    git-cliff --tag "v$NOVAYA_VERSIYA" -o CHANGELOG.md
+    echo "==> CHANGELOG.md сгенерирован"
+    FAYLY_CHANGELOG="CHANGELOG.md"
 else
-    echo "==> git-cliff not found, skipping changelog generation"
-    echo "    Install: brew install git-cliff"
-    CHANGELOG_FILES=""
+    echo "==> git-cliff не найден, пропуск генерации журнала изменений"
+    echo "    Установите: brew install git-cliff"
+    FAYLY_CHANGELOG=""
 fi
 
-# Commit version bump + changelog
-git add pyproject.toml uv.lock $CHANGELOG_FILES
-git commit -m "chore(release): v$NEW_VERSION"
+# Коммит обновления версии + журнал изменений
+git add pyproject.toml uv.lock $FAYLY_CHANGELOG
+git commit -m "chore(release): v$NOVAYA_VERSIYA"
 
-# Create annotated tag
-git tag -a "v$NEW_VERSION" -m "Release v$NEW_VERSION"
+# Создать аннотированный тег
+git tag -a "v$NOVAYA_VERSIYA" -m "Релиз v$NOVAYA_VERSIYA"
 
-echo "==> Created tag v$NEW_VERSION"
+echo "==> Создан тег v$NOVAYA_VERSIYA"
 echo ""
-echo "Ready to push. Run:"
+echo "Готово к отправке. Выполните:"
 echo "  git push origin main --follow-tags"
 echo ""
-echo "Or to also publish to PyPI:"
+echo "Или для публикации на PyPI:"
 echo "  git push origin main --follow-tags && uv build && uv publish"

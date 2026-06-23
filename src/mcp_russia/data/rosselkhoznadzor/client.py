@@ -55,7 +55,7 @@ async def poisk_proverok(
         if tip_proverki:
             params["inspectionType"] = tip_proverki
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_proverka(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -67,7 +67,7 @@ async def poisk_proverok(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_proverka(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -97,7 +97,7 @@ async def poisk_karantinnykh_obektov(
         if tip:
             params["type"] = tip
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_karantin(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -129,7 +129,7 @@ async def poisk_registratsiy_produktsii(
         if proizvoditel:
             params["manufacturer"] = proizvoditel
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_registratsiya(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -161,7 +161,7 @@ async def veterinarsnye_sertifikaty(
         if tip_produktsii:
             params["productType"] = tip_produktsii
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_sertifikat(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -187,7 +187,7 @@ async def preduprezhdeniya_karantina(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_preduprezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -231,7 +231,7 @@ def get_statistika_rskhn_static() -> dict[str, Any]:
     return STATISTIKA_RSKHN_2023
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API."""
     if isinstance(data, list):
         return data

@@ -2,6 +2,66 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-23 (сорок девятый проход — русификация имён классов, функций, переменных, строковых значений, заголовков Makefile и скриптов)
+
+### Выполнено
+
+- **Переименование публичных MCP-инструментов Росстата** (2 инструмента):
+  - `region_info` → `informatsiya_o_regionye` (tools.py, server.py, client.py, тесты)
+  - `okrug_info` → `informatsiya_ob_okruge` (tools.py, server.py, client.py, тесты)
+- **Русификация строковых значений в пользовательском выводе** (4 замены):
+  - `"national"` → `"natsionalnyy"` (rosapi/client.py — тип праздника)
+  - `"weekend"` → `"vykhodnoy"` (rosapi/client.py — тип праздника)
+  - `"ACTIVE, LIQUIDATED и т.д."` → `"DEYSTVUYUSHCHAYA, LIKVIDIROVANA и т.д."` (rosapi/schemas.py)
+  - `fallback_name` → `rezervnoe_imya` (параметр _parse_bank_data)
+- **Переименование классов Pydantic-схем** (3 класса):
+  - `RegionData` → `DannyeRegiona` (rosstat/schemas.py, client.py, тесты)
+  - `WagesData` → `DannyeZarplaty` (rosstat/schemas.py, client.py, тесты)
+  - `PostalCodeInfo` → `InformatsiyaPochtovogoIndeksa` (rosapi/schemas.py)
+- **Переименование классов исключений** (3 класса с алиасами для совместимости):
+  - `FeatureError` → `OshibkaFunktsii` (exceptions.py + алиас FeatureError)
+  - `HttpClientError` → `OshibkaHttpClienta` (exceptions.py, http_client.py, тесты + алиас)
+  - `AuthError` → `OshibkaAutentifikatsii` (exceptions.py, rosapi/client.py, тесты + алиас)
+- **Переименование инфраструктурных классов** (2 класса):
+  - `TTLCache` → `KeshSVremenemZhizni` (cache.py, тесты)
+  - `RateLimiter` → `OgranichitelChastoty` (rate_limiter.py, тесты)
+- **Переименование функций в _shared/** (6 функций):
+  - `build_catalog` → `postroit_katalog` (discovery.py, server.py, тесты)
+  - `build_dispatch` → `postroit_dispetcherizatsiyu` (batch.py, server.py, тесты)
+  - `execute_batch` → `vypolnit_paket_vnutrenniy` (batch.py, server.py, тесты)
+  - `ttl_cache` → `kesh_s_vremenem_zhizni` (cache.py, тесты)
+  - `_format_tool_signature` → `_formatirovat_signaturu_instrumenta` (discovery.py)
+  - `is_auth_available` → `dostupna_li_autentifikatsiya` (feature.py, тесты)
+- **Переименование `_extract_list` → `_izvlech_spisok`** (8 модулей: rosaudit, mchs, sovfed, rosvodresursy, rosselkhoznadzor, rosprirodnadzor, minzdrav, kaznacheistvo)
+- **Русификация локальных переменных** (5 переменных):
+  - `region_info` → `info_o_regionye` (rosstat/client.py)
+  - `okrug_info` → `info_ob_okruge` (rosstat/client.py)
+  - `indicator_name` → `imya_indikatora` (rosstat/client.py, tools.py)
+  - `status_map` → `karta_statusov` (rosapi/tools.py, fns/client.py)
+  - `fallback_name` → `rezervnoe_imya` (rosapi/client.py)
+- **Перевод заголовков секций Makefile** (6 замен):
+  - `Setup` → `Настройка`, `Quality` → `Качество`, `Server` → `Сервер`, `Release` → `Релиз`, `Docs` → `Документация`, `Misc` → `Разное`
+- **Перевод скриптов на русский**:
+  - `scripts/generate_diagrams.py`: все docstrings, комментарии, строки вывода, имена переменных и функций переведены
+  - `scripts/release.sh`: все комментарии, сообщения об ошибках и информационные выводы переведены
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (674 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Алиасы для классов исключений**: для обратной совместимости оставлены `FeatureError = OshibkaFunktsii`, `HttpClientError = OshibkaHttpClienta`, `AuthError = OshibkaAutentifikatsii` — существующий код может использовать оба имени
+- **Имена классов FeatureMeta/FeatureRegistry/RegisteredFeature сохранены**: это установившиеся программные конструкции, на которые ссылается множество модулей через FEATURE_META (подтверждено решением раунда 48)
+- **Все публичные MCP-инструменты теперь имеют русские имена**: `informatsiya_o_regionye`, `informatsiya_ob_okruge` — последние инструменты с английскими именами переименованы
+- **Строковые значения русифицированы**: типы праздников `"natsionalnyy"`/`"vykhodnoy"` вместо `"national"`/`"weekend"`, описание статуса организации на русском
+- **Скрипты полностью на русском**: generate_diagrams.py и release.sh — все выводы, комментарии и имена переменных
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских имён функций в client.py**: `_dadata_headers`, `_nested_get`, `_parse_org_data`, `_parse_bank_data`, `_suggest_address`, `_find_by_fias`, `_postal_by_index`, `_find_org_by_inn`, `_find_org_by_ogrn`, `_list_banks`, `_find_bank_by_bik`, `get_holidays`, `consult_address_by_postal`, `search_address`, `find_org_by_inn`, `find_org_by_ogrn`, `list_banks_public`, `find_bank_by_bik` (rosapi); `_extract_result`, `_parse_history`, `_parse_dtp`, `_parse_wanted`, `_parse_restrict`, `_parse_driver`, `_parse_statistika` (gibdd); `_parse_indikator_response`, `get_subiekty_list`, `get_federalny_okruga_list` (rosstat); `_get_api_token`, `_parse_zakupki_search`, `_determine_zakon`, `_safe_float`, `_parse_kontrakty`, `_parse_plany` (zakupki); `_egrul_search`, `_parse_egrul_organization`, `_parse_egrul_ip`, `_parse_status` (fns)
+- **Рассмотрение переименования FeatureMeta → MetaFunktsii, RegisteredFeature → ZaregistrirovannayaFunktsiya, FeatureRegistry → ReyestrFunktsiy**: потребует обновления всех __init__.py и ссылок на FEATURE_META
+
 ## Статус раунда 2026-06-19 (сорок восьмой проход — устранение термина «feature» из промптов, документации и Makefile)
 
 ### Выполнено

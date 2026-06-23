@@ -15,7 +15,7 @@ logger = logging.getLogger("mcp-russia.discovery")
 _catalog_cache: str = ""
 
 
-def _format_tool_signature(imya_modulya: str, tool_name: str, tool: object) -> str:
+def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool: object) -> str:
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
     Формирует вывод вида:
@@ -46,7 +46,7 @@ def _format_tool_signature(imya_modulya: str, tool_name: str, tool: object) -> s
     return f"- `{full_name}({signature})` — {desc}"
 
 
-def build_catalog(registry: object) -> str:
+def postroit_katalog(registry: object) -> str:
     """Построение подробного каталога всех инструментов из реестра.
 
     Использует FeatureMeta (имя, описание, авторизация) и схемы инструментов
@@ -81,7 +81,7 @@ def build_catalog(registry: object) -> str:
         server = feat.server
         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
             for tool_name, tool in server._tool_manager._tools.items():
-                lines.append(_format_tool_signature(meta.name, tool_name, tool))
+                lines.append(_formatirovat_signaturu_instrumenta(meta.name, tool_name, tool))
 
     _catalog_cache = "\n".join(lines)
     return _catalog_cache

@@ -51,7 +51,7 @@ async def spisok_okrugov(ctx: Context) -> str:
     return header + markdown_table(["Код", "Округ"], rows)
 
 
-async def region_info(kod: str, ctx: Context) -> str:
+async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
     """Получить информацию о субъекте РФ по коду.
 
     Аргументы:
@@ -85,7 +85,7 @@ async def region_info(kod: str, ctx: Context) -> str:
     return "\n".join(lines)
 
 
-async def okrug_info(kod: str, ctx: Context) -> str:
+async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
     """Получить информацию о федеральном округе.
 
     Аргументы:
@@ -298,11 +298,11 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     for i, d in enumerate(sorted_data, 1):
         val = format_number_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
         rows.append((i, d.get("region", "—"), d.get("kod", "—"), val, d.get("period", "—")))
-    indicator_name = next(
+    imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
         pokazatel,
     )
-    header = f"**Рейтинг регионов по показателю «{indicator_name}»**\n\n"
+    header = f"**Рейтинг регионов по показателю «{imya_indikatora}»**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + markdown_table(
         ["№", "Регион", "Код", "Значение", "Период"],
@@ -332,12 +332,12 @@ async def indikator_dannye(
     if ctx:
         await ctx.info(f"Запрос данных показателя '{kod}'...")
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
-    indicator_name = next(
+    imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
     )
-    if not indicator_name and kod in EMISS_KODY_POKAZATELEY:
-        indicator_name = next(
+    if not imya_indikatora and kod in EMISS_KODY_POKAZATELEY:
+        imya_indikatora = next(
             (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
             f"Показатель ЕМИСС {emiss_code}",
         )
@@ -350,7 +350,7 @@ async def indikator_dannye(
     filter_text = f" ({', '.join(filter_parts)})" if filter_parts else ""
     if not data:
         return (
-            f"**{indicator_name or kod}**{filter_text}\n\n"
+            f"**{imya_indikatora or kod}**{filter_text}\n\n"
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}\n\n"
             f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
@@ -359,7 +359,7 @@ async def indikator_dannye(
     for d in data:
         val = format_number_ru(d.znachenie, 2) if d.znachenie is not None else "—"
         rows.append((d.period, d.region or "—", val, d.edinitsa or "—"))
-    title = indicator_name or f"Показатель ЕМИСС {emiss_code}"
+    title = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
     header = f"**{title}**{filter_text}\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + markdown_table(

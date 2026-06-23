@@ -7,7 +7,7 @@ import pytest
 from mcp_russia.data.rosapi import tools as rosapi_tools
 from mcp_russia.data.rosapi.client import _dadata_headers
 from mcp_russia.data.rosapi.schemas import AdresRF, BankRF, Organizatsiya
-from mcp_russia.exceptions import AuthError
+from mcp_russia.exceptions import OshibkaAutentifikatsii
 
 
 def _mock_ctx():
@@ -186,7 +186,7 @@ async def test_nalogovye_stavki():
 async def test_dadata_headers_raises_auth_error_without_key():
     with (
         patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""),
-        pytest.raises(AuthError, match="MCP_RUSSIA_DADATA_API_KEY"),
+        pytest.raises(OshibkaAutentifikatsii, match="MCP_RUSSIA_DADATA_API_KEY"),
     ):
         _dadata_headers()
 

@@ -1,4 +1,4 @@
-"""Тесты асинхронного ограничителя запросов (RateLimiter)."""
+"""Тесты асинхронного ограничителя запросов (OgranichitelChastoty)."""
 
 from __future__ import annotations
 
@@ -7,13 +7,13 @@ import time
 
 import pytest
 
-from mcp_russia._shared.rate_limiter import RateLimiter
+from mcp_russia._shared.rate_limiter import OgranichitelChastoty
 
 
-class TestRateLimiter:
+class TestOgranichitelChastoty:
     @pytest.mark.asyncio
     async def test_allows_within_limit(self) -> None:
-        limiter = RateLimiter(max_requests=5, period=60.0)
+        limiter = OgranichitelChastoty(max_requests=5, period=60.0)
         for _ in range(5):
             async with limiter:
                 pass
@@ -21,7 +21,7 @@ class TestRateLimiter:
 
     @pytest.mark.asyncio
     async def test_blocks_when_exhausted(self) -> None:
-        limiter = RateLimiter(max_requests=2, period=60.0)
+        limiter = OgranichitelChastoty(max_requests=2, period=60.0)
         async with limiter:
             pass
         async with limiter:
@@ -33,7 +33,7 @@ class TestRateLimiter:
 
     @pytest.mark.asyncio
     async def test_allows_after_window_expires(self) -> None:
-        limiter = RateLimiter(max_requests=1, period=0.05)
+        limiter = OgranichitelChastoty(max_requests=1, period=0.05)
         async with limiter:
             pass
         # Ждём истечения окна
@@ -44,13 +44,13 @@ class TestRateLimiter:
 
     @pytest.mark.asyncio
     async def test_context_manager_protocol(self) -> None:
-        limiter = RateLimiter(max_requests=10, period=60.0)
+        limiter = OgranichitelChastoty(max_requests=10, period=60.0)
         async with limiter as ctx:
             assert ctx is limiter
 
     @pytest.mark.asyncio
     async def test_purge_removes_old_timestamps(self) -> None:
-        limiter = RateLimiter(max_requests=2, period=0.05)
+        limiter = OgranichitelChastoty(max_requests=2, period=0.05)
         now = time.monotonic()
         # Имитируем старые метки времени
         limiter._timestamps.append(now - 1.0)
@@ -62,7 +62,7 @@ class TestRateLimiter:
 
     @pytest.mark.asyncio
     async def test_concurrent_access(self) -> None:
-        limiter = RateLimiter(max_requests=3, period=60.0)
+        limiter = OgranichitelChastoty(max_requests=3, period=60.0)
         results: list[int] = []
 
         async def worker(i: int) -> None:

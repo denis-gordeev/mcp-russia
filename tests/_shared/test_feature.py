@@ -32,11 +32,11 @@ class TestFeatureMeta:
         assert meta.requires_auth is True
         assert meta.auth_env_var == "ZAKUPKI_API_KEY"
 
-    def test_is_auth_available_no_auth_required(self) -> None:
+    def test_dostupna_li_autentifikatsiya_no_auth_required(self) -> None:
         meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
-        assert meta.is_auth_available() is True
+        assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_is_auth_available_missing_env_var(self) -> None:
+    def test_dostupna_li_autentifikatsiya_missing_env_var(self) -> None:
         meta = FeatureMeta(
             name="t",
             description="T",
@@ -45,9 +45,9 @@ class TestFeatureMeta:
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
-            assert meta.is_auth_available() is False
+            assert meta.dostupna_li_autentifikatsiya() is False
 
-    def test_is_auth_available_env_var_set(self) -> None:
+    def test_dostupna_li_autentifikatsiya_env_var_set(self) -> None:
         meta = FeatureMeta(
             name="t",
             description="T",
@@ -55,13 +55,13 @@ class TestFeatureMeta:
             auth_env_var="TEST_MCP_KEY",
         )
         with patch.dict(os.environ, {"TEST_MCP_KEY": "secret"}):
-            assert meta.is_auth_available() is True
+            assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_is_auth_available_requires_auth_no_env_var(self) -> None:
+    def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
         meta = FeatureMeta(name="t", description="T", requires_auth=True)
-        assert meta.is_auth_available() is False
+        assert meta.dostupna_li_autentifikatsiya() is False
 
-    def test_is_auth_available_optional_auth_no_env(self) -> None:
+    def test_dostupna_li_autentifikatsiya_optional_auth_no_env(self) -> None:
         meta = FeatureMeta(
             name="t",
             description="T",
@@ -70,9 +70,9 @@ class TestFeatureMeta:
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
-            assert meta.is_auth_available() is True
+            assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_is_auth_available_optional_auth_with_env(self) -> None:
+    def test_dostupna_li_autentifikatsiya_optional_auth_with_env(self) -> None:
         meta = FeatureMeta(
             name="t",
             description="T",
@@ -80,7 +80,7 @@ class TestFeatureMeta:
             auth_env_var="TEST_OPT_KEY",
         )
         with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
-            assert meta.is_auth_available() is True
+            assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_frozen(self) -> None:
         meta = FeatureMeta(name="cbrf", description="ЦБ РФ")

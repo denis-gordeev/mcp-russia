@@ -4,41 +4,41 @@ import time
 
 import pytest
 
-from mcp_russia._shared.cache import TTLCache, ttl_cache
+from mcp_russia._shared.cache import KeshSVremenemZhizni, kesh_s_vremenem_zhizni
 
 
-class TestTTLCache:
+class TestKeshSVremenemZhizni:
     def test_set_and_get(self) -> None:
-        cache = TTLCache(ttl=60)
+        cache = KeshSVremenemZhizni(ttl=60)
         cache.set("key", "value")
         assert cache.get("key") == "value"
 
     def test_get_missing_key(self) -> None:
-        cache = TTLCache(ttl=60)
+        cache = KeshSVremenemZhizni(ttl=60)
         assert cache.get("missing") is None
 
     def test_expired_entry_returns_none(self) -> None:
-        cache = TTLCache(ttl=0.01)
+        cache = KeshSVremenemZhizni(ttl=0.01)
         cache.set("key", "value")
         time.sleep(0.02)
         assert cache.get("key") is None
 
     def test_clear(self) -> None:
-        cache = TTLCache(ttl=60)
+        cache = KeshSVremenemZhizni(ttl=60)
         cache.set("a", 1)
         cache.set("b", 2)
         cache.clear()
         assert cache.size == 0
 
     def test_maxsize_eviction(self) -> None:
-        cache = TTLCache(ttl=60, maxsize=2)
+        cache = KeshSVremenemZhizni(ttl=60, maxsize=2)
         cache.set("a", 1)
         cache.set("b", 2)
         cache.set("c", 3)  # должен вытеснить самый старый
         assert cache.size <= 2
 
     def test_evicts_expired_first(self) -> None:
-        cache = TTLCache(ttl=0.01, maxsize=2)
+        cache = KeshSVremenemZhizni(ttl=0.01, maxsize=2)
         cache.set("a", 1)
         time.sleep(0.02)  # «a» истекает
         cache.set("b", 2)
@@ -47,7 +47,7 @@ class TestTTLCache:
         assert cache.get("c") == 3
 
     def test_size_property(self) -> None:
-        cache = TTLCache(ttl=60)
+        cache = KeshSVremenemZhizni(ttl=60)
         assert cache.size == 0
         cache.set("x", 1)
         assert cache.size == 1
@@ -58,7 +58,7 @@ class TestTtlCacheDecorator:
     async def test_caches_result(self) -> None:
         call_count = 0
 
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def fetch_data(key: str) -> str:
             nonlocal call_count
             call_count += 1
@@ -74,7 +74,7 @@ class TestTtlCacheDecorator:
     async def test_different_args_different_cache(self) -> None:
         call_count = 0
 
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def fetch(key: str) -> str:
             nonlocal call_count
             call_count += 1
@@ -88,7 +88,7 @@ class TestTtlCacheDecorator:
     async def test_expired_cache_refetches(self) -> None:
         call_count = 0
 
-        @ttl_cache(ttl=0.01)
+        @kesh_s_vremenem_zhizni(ttl=0.01)
         async def fetch() -> str:
             nonlocal call_count
             call_count += 1
@@ -101,18 +101,18 @@ class TestTtlCacheDecorator:
 
     @pytest.mark.asyncio
     async def test_cache_attribute_exposed(self) -> None:
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def fetch() -> str:
             return "data"
 
         assert hasattr(fetch, "cache")
-        assert isinstance(fetch.cache, TTLCache)
+        assert isinstance(fetch.cache, KeshSVremenemZhizni)
 
     @pytest.mark.asyncio
     async def test_clear_cache(self) -> None:
         call_count = 0
 
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def fetch() -> str:
             nonlocal call_count
             call_count += 1
@@ -127,7 +127,7 @@ class TestTtlCacheDecorator:
     async def test_kwargs_in_cache_key(self) -> None:
         call_count = 0
 
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def fetch(uf: str = "SP") -> str:
             nonlocal call_count
             call_count += 1

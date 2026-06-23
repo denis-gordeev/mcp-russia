@@ -24,7 +24,9 @@ class Organizatsiya(BaseModel):
     ogrn: str | None = Field(default=None, description="ОГРН (13 или 15 цифр)")
     nazvanie_polnoe: str | None = None
     nazvanie_kratkoe: str | None = None
-    status: str | None = Field(default=None, description="Статус: ACTIVE, LIQUIDATED и т.д.")
+    status: str | None = Field(
+        default=None, description="Статус: DEYSTVUYUSHCHAYA, LIKVIDIROVANA и т.д."
+    )
     adres: str | None = None
     rukovoditel: str | None = None
     data_registratsii: str | None = None
@@ -50,7 +52,7 @@ class Prazdnik(BaseModel):
     tip: str = Field(description="Тип: национальный, профессиональный, памятный")
 
 
-class PostalCodeInfo(BaseModel):
+class InformatsiyaPochtovogoIndeksa(BaseModel):
     """Информация о почтовом индексе."""
 
     kod: str = Field(description="Почтовый индекс (6 цифр)")

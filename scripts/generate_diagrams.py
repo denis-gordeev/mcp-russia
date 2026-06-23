@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # ruff: noqa: F841, RUF001
-"""Generate architecture diagrams for mcp-russia documentation.
+"""Генерация диаграмм архитектуры для документации mcp-russia.
 
-Produces 4 PNG diagrams in docs/concepts/img/:
+Создаёт 4 PNG-диаграммы в docs/concepts/img/:
   - system_overview.png
   - feature_anatomy.png
   - auto_registry_flow.png
   - data_flow.png
 
-Requirements: graphviz (brew install graphviz), diagrams (pip install diagrams)
-Usage: python scripts/generate_diagrams.py
+Требования: graphviz (brew install graphviz), diagrams (pip install diagrams)
+Использование: python scripts/generate_diagrams.py
 """
 
 from __future__ import annotations
@@ -25,33 +25,33 @@ from diagrams.programming.flowchart import Action, Decision, StartEnd
 from diagrams.programming.framework import FastAPI
 from diagrams.programming.language import Python
 
-OUTPUT_DIR = Path(__file__).resolve().parent.parent / "docs" / "concepts" / "img"
-GRAPH_ATTR = {"fontsize": "14", "bgcolor": "white", "pad": "0.5"}
-NODE_ATTR = {"fontsize": "11"}
-EDGE_ATTR = {"fontsize": "10"}
+KATALOG_VYVODA = Path(__file__).resolve().parent.parent / "docs" / "concepts" / "img"
+ATRIBUBY_GRAFA = {"fontsize": "14", "bgcolor": "white", "pad": "0.5"}
+ATRIBUBY_UZLA = {"fontsize": "11"}
+ATRIBUBY_REBRA = {"fontsize": "10"}
 
 
-def system_overview() -> None:
-    """Diagram 1: High-level system architecture."""
+def obzor_sistemy() -> None:
+    """Диаграмма 1: Высокоуровневая архитектура системы."""
     with Diagram(
-        "mcp-russia — System Overview",
-        filename=str(OUTPUT_DIR / "system_overview"),
+        "mcp-russia — Обзор системы",
+        filename=str(KATALOG_VYVODA / "system_overview"),
         direction="TB",
         show=False,
-        graph_attr=GRAPH_ATTR,
-        node_attr=NODE_ATTR,
-        edge_attr=EDGE_ATTR,
+        graph_attr=ATRIBUBY_GRAFA,
+        node_attr=ATRIBUBY_UZLA,
+        edge_attr=ATRIBUBY_REBRA,
     ):
-        client = Client("MCP Client\n(Claude, GPT, ...)")
+        klient = Client("MCP-клиент\n(Claude, GPT, ...)")
 
-        with Cluster("mcp-russia Root Server"):
-            root = FastAPI("FastMCP\nserver.py")
-            registry = Python("FeatureRegistry")
+        with Cluster("Корневой сервер mcp-russia"):
+            koren = FastAPI("FastMCP\nserver.py")
+            reyestr = Python("ReyestrFunktsiy")
             meta = Python("Мета-инструменты\n(spisok, rekomendovat,\nsplanirovat, paket)")
-            root - registry
-            root - meta
+            koren - reyestr
+            koren - meta
 
-        client >> root
+        klient >> koren
 
         with Cluster("Экономика и финансы"):
             cbrf = Python("cbrf")
@@ -85,38 +85,38 @@ def system_overview() -> None:
         with Cluster("Агенты"):
             redator = Python("redator")
 
-        registry >> Edge(style="dashed") >> cbrf
-        registry >> Edge(style="dashed") >> gosduma
-        registry >> Edge(style="dashed") >> kad_arbitrazh
-        registry >> Edge(style="dashed") >> cekrf
-        registry >> Edge(style="dashed") >> rosaudit
-        registry >> Edge(style="dashed") >> rosgidromet
-        registry >> Edge(style="dashed") >> zakupki
-        registry >> Edge(style="dashed") >> redator
-        registry >> Edge(style="dashed") >> rosapi
+        reyestr >> Edge(style="dashed") >> cbrf
+        reyestr >> Edge(style="dashed") >> gosduma
+        reyestr >> Edge(style="dashed") >> kad_arbitrazh
+        reyestr >> Edge(style="dashed") >> cekrf
+        reyestr >> Edge(style="dashed") >> rosaudit
+        reyestr >> Edge(style="dashed") >> rosgidromet
+        reyestr >> Edge(style="dashed") >> zakupki
+        reyestr >> Edge(style="dashed") >> redator
+        reyestr >> Edge(style="dashed") >> rosapi
 
-        apis = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")
+        api = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")
 
-        cbrf >> apis
-        rosstat >> apis
-        gosduma >> apis
-        kad_arbitrazh >> apis
-        cekrf >> apis
-        rosaudit >> apis
-        rosgidromet >> apis
-        zakupki >> apis
+        cbrf >> api
+        rosstat >> api
+        gosduma >> api
+        kad_arbitrazh >> api
+        cekrf >> api
+        rosaudit >> api
+        rosgidromet >> api
+        zakupki >> api
 
 
-def feature_anatomy() -> None:
-    """Diagram 2: Internal structure of a feature package."""
+def anatomiya_modulya() -> None:
+    """Диаграмма 2: Внутреннее строение пакета модуля."""
     with Diagram(
-        "Анатомия feature-пакета (data/rosstat/)",
-        filename=str(OUTPUT_DIR / "feature_anatomy"),
+        "Анатомия модуля (data/rosstat/)",
+        filename=str(KATALOG_VYVODA / "feature_anatomy"),
         direction="LR",
         show=False,
-        graph_attr=GRAPH_ATTR,
-        node_attr=NODE_ATTR,
-        edge_attr=EDGE_ATTR,
+        graph_attr=ATRIBUBY_GRAFA,
+        node_attr=ATRIBUBY_UZLA,
+        edge_attr=ATRIBUBY_REBRA,
     ):
         with Cluster("data/rosstat/"):
             init = Python("__init__.py\nFEATURE_META")
@@ -130,7 +130,7 @@ def feature_anatomy() -> None:
             tools >> Edge(label="делегирует HTTP") >> client
             client >> Edge(label="возвращает") >> schemas
 
-        shared = Python("_shared/\nhttp_client\ncache\nformatting")
+        shared = Python("_shared/\nhttp_client\nkesh\nformatting")
         api = Server("API Росстата\nrosstat.gov.ru")
 
         tools >> Edge(style="dashed", label="использует") >> shared
@@ -138,94 +138,94 @@ def feature_anatomy() -> None:
         client >> api
 
 
-def auto_registry_flow() -> None:
-    """Diagram 3: Auto-registry discovery flowchart."""
+def potok_avtoobnaruzheniya() -> None:
+    """Диаграмма 3: Блок-схема потока автоматического обнаружения."""
     with Diagram(
-        "Auto-Registry — Поток обнаружения",
-        filename=str(OUTPUT_DIR / "auto_registry_flow"),
+        "Автообнаружение — Поток обнаружения",
+        filename=str(KATALOG_VYVODA / "auto_registry_flow"),
         direction="TB",
         show=False,
-        graph_attr=GRAPH_ATTR,
-        node_attr=NODE_ATTR,
-        edge_attr=EDGE_ATTR,
+        graph_attr=ATRIBUBY_GRAFA,
+        node_attr=ATRIBUBY_UZLA,
+        edge_attr=ATRIBUBY_REBRA,
     ):
         start = StartEnd("discover(pkg)")
         iter_mod = Action("iter_modules(pkg)")
-        skip_check = Decision("имя начинается\nс '_'?")
-        skip = Action("пропустить")
+        proverka_imeni = Decision("имя начинается\nс '_'?")
+        propusk = Action("пропустить")
         import_init = Action("import __init__.py")
-        meta_check = Decision("FEATURE_META\nсуществует?")
-        skip2 = Action("пропустить")
-        auth_check = Decision("requires_auth\nи env var OK?")
-        skip3 = Action("пропустить\n(молча)")
+        proverka_meta = Decision("FEATURE_META\nсуществует?")
+        propusk2 = Action("пропустить")
+        proverka_auth = Decision("requires_auth\nи env var OK?")
+        propusk3 = Action("пропустить\n(молча)")
         import_server = Action("import server.py")
         mount = Action("mount(mcp,\nnamespace=name)")
         end = StartEnd("следующий модуль\nили конец")
 
-        start >> iter_mod >> skip_check
-        skip_check >> Edge(label="да") >> skip >> end
-        skip_check >> Edge(label="нет") >> import_init >> meta_check
-        meta_check >> Edge(label="нет") >> skip2 >> end
-        meta_check >> Edge(label="да") >> auth_check
-        auth_check >> Edge(label="нет") >> skip3 >> end
-        auth_check >> Edge(label="да") >> import_server >> mount >> end
+        start >> iter_mod >> proverka_imeni
+        proverka_imeni >> Edge(label="да") >> propusk >> end
+        proverka_imeni >> Edge(label="нет") >> import_init >> proverka_meta
+        proverka_meta >> Edge(label="нет") >> propusk2 >> end
+        proverka_meta >> Edge(label="да") >> proverka_auth
+        proverka_auth >> Edge(label="нет") >> propusk3 >> end
+        proverka_auth >> Edge(label="да") >> import_server >> mount >> end
 
 
-def data_flow() -> None:
-    """Diagram 4: Request/response data flow pipeline."""
+def potok_dannykh() -> None:
+    """Диаграмма 4: Конвейер потока данных запрос/ответ."""
     with Diagram(
         "Поток данных — Запрос и ответ",
-        filename=str(OUTPUT_DIR / "data_flow"),
+        filename=str(KATALOG_VYVODA / "data_flow"),
         direction="LR",
         show=False,
-        graph_attr={**GRAPH_ATTR, "nodesep": "0.8"},
-        node_attr=NODE_ATTR,
-        edge_attr=EDGE_ATTR,
+        graph_attr={**ATRIBUBY_GRAFA, "nodesep": "0.8"},
+        node_attr=ATRIBUBY_UZLA,
+        edge_attr=ATRIBUBY_REBRA,
     ):
-        user = Client("Пользователь")
-        mcp_client = Client("MCP Client")
-        bm25 = Python("BM25 Filter\n(top-10 tools)")
+        polzovatel = Client("Пользователь")
+        mcp_klient = Client("MCP-клиент")
+        bm25 = Python("Фильтр BM25\n(top-10 инструментов)")
 
         with Cluster("mcp-russia"):
             tools = Python("tools.py\nоркестрирует")
             client = Python("client.py\nhttpx async")
-            rate = Python("Rate Limiter\nsliding window")
+            ogranichitel = Python("Ограничитель частоты\nскользящее окно")
 
         api = Server("Гос. API\n(JSON)")
 
-        # Request path
-        user >> Edge(label="вопрос") >> mcp_client
-        mcp_client >> Edge(label="tool call") >> bm25
-        bm25 >> Edge(label="dispatch") >> tools
-        tools >> client >> rate >> api
+        # Путь запроса
+        polzovatel >> Edge(label="вопрос") >> mcp_klient
+        mcp_klient >> Edge(label="вызов инструмента") >> bm25
+        bm25 >> Edge(label="диспетчеризация") >> tools
+        tools >> client >> ogranichitel >> api
 
-        # Response path (reverse labels)
+        # Путь ответа (обратные метки)
         api >> Edge(label="JSON", style="dashed", color="darkgreen") >> client
         client >> Edge(label="Pydantic", style="dashed", color="darkgreen") >> tools
-        tools >> Edge(label="Markdown", style="dashed", color="darkgreen") >> mcp_client
-        mcp_client >> Edge(label="ответ", style="dashed", color="darkgreen") >> user
+        tools >> Edge(label="Markdown", style="dashed", color="darkgreen") >> mcp_klient
+        mcp_klient >> Edge(label="ответ", style="dashed", color="darkgreen") >> polzovatel
 
-        # Retry annotation
+        # Аннотация повторных попыток
         _ = Blank("")
-        rate >> Edge(label="retry 429/5xx", style="dotted", color="red") >> rate
+        ogranichitel >> Edge(label="повтор 429/5xx", style="dotted", color="red") >> ogranichitel
 
 
 def main() -> None:
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    # diagrams lib uses cwd for temp files, so switch to output dir
-    original_cwd = os.getcwd()
-    os.chdir(OUTPUT_DIR)
+    KATALOG_VYVODA.mkdir(parents=True, exist_ok=True)
+    # библиотека diagrams использует cwd для временных файлов
+    iskhodnyy_cwd = os.getcwd()
+    os.chdir(KATALOG_VYVODA)
     try:
-        system_overview()
-        feature_anatomy()
-        auto_registry_flow()
-        data_flow()
+        obzor_sistemy()
+        anatomiya_modulya()
+        potok_avtoobnaruzheniya()
+        potok_dannykh()
     finally:
-        os.chdir(original_cwd)
+        os.chdir(iskhodnyy_cwd)
 
-    generated = sorted(OUTPUT_DIR.glob("*.png"))
-    print(f"Generated {len(generated)} diagrams in {OUTPUT_DIR}/")
-    for p in generated:
+    sgenerirovannye = sorted(KATALOG_VYVODA.glob("*.png"))
+    print(f"Сгенерировано {len(sgenerirovannye)} диаграмм в {KATALOG_VYVODA}/")
+    for p in sgenerirovannye:
         print(f"  {p.name}")
 
 

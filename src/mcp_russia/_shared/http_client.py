@@ -22,7 +22,7 @@ from typing import Any
 
 import httpx
 
-from mcp_russia.exceptions import HttpClientError
+from mcp_russia.exceptions import OshibkaHttpClienta
 from mcp_russia.settings import HTTP_BACKOFF_BASE, HTTP_MAX_RETRIES, HTTP_TIMEOUT, USER_AGENT
 
 logger = logging.getLogger(__name__)
@@ -85,7 +85,7 @@ async def http_get(
         Разобранный JSON-ответ.
 
     Вызывает:
-        HttpClientError: При неповторяемых ошибках или исчерпании попыток.
+        OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None
@@ -108,8 +108,7 @@ async def http_get(
                         )
                         await asyncio.sleep(wait)
                         continue
-                    # Последняя попытка завершилась повторяемой ошибкой
-                    raise HttpClientError(
+                    raise OshibkaHttpClienta(
                         f"Запрос к {url} не удался после {retries + 1} попыток "
                         f"(последняя: HTTP {response.status_code})"
                     )
@@ -118,7 +117,7 @@ async def http_get(
                 return response.json()
 
             except httpx.HTTPStatusError as exc:
-                raise HttpClientError(
+                raise OshibkaHttpClienta(
                     f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
                 ) from exc
 
@@ -137,7 +136,9 @@ async def http_get(
                     await asyncio.sleep(wait)
                     continue
 
-    raise HttpClientError(f"Запрос к {url} не удался после {retries + 1} попыток") from last_error
+    raise OshibkaHttpClienta(
+        f"Запрос к {url} не удался после {retries + 1} попыток"
+    ) from last_error
 
 
 async def http_post(
@@ -165,7 +166,7 @@ async def http_post(
         Разобранный JSON-ответ.
 
     Вызывает:
-        HttpClientError: При неповторяемых ошибках или исчерпании попыток.
+        OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None
@@ -188,7 +189,7 @@ async def http_post(
                         )
                         await asyncio.sleep(wait)
                         continue
-                    raise HttpClientError(
+                    raise OshibkaHttpClienta(
                         f"Запрос к {url} не удался после {retries + 1} попыток "
                         f"(последняя: HTTP {response.status_code})"
                     )
@@ -197,7 +198,7 @@ async def http_post(
                 return response.json()
 
             except httpx.HTTPStatusError as exc:
-                raise HttpClientError(
+                raise OshibkaHttpClienta(
                     f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
                 ) from exc
 
@@ -216,4 +217,6 @@ async def http_post(
                     await asyncio.sleep(wait)
                     continue
 
-    raise HttpClientError(f"Запрос к {url} не удался после {retries + 1} попыток") from last_error
+    raise OshibkaHttpClienta(
+        f"Запрос к {url} не удался после {retries + 1} попыток"
+    ) from last_error

@@ -54,7 +54,7 @@ async def statistika_pojarov(
         if vid_pozhara:
             params["fireType"] = vid_pozhara
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_pozhar(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -68,7 +68,7 @@ async def statistika_pojarov(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_pozhar(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -104,7 +104,7 @@ async def poisk_chs(
         if klass_chs:
             params["class"] = klass_chs
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_chs(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -118,7 +118,7 @@ async def poisk_chs(
         if vid_chs:
             params["type"] = vid_chs
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_chs(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -144,7 +144,7 @@ async def radiatsionnyy_monitoring(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_radiatsiya(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -170,7 +170,7 @@ async def gidrologicheskaya_obstanovka(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_gidrologiya(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -200,7 +200,7 @@ async def preduprezhdeniya_chs(
         if tip_opasnosti:
             params["dangerType"] = tip_opasnosti
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_preduprezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -239,7 +239,7 @@ def get_statistika_pojarov_static() -> dict[str, Any]:
     return STATISTIKA_POZHAROV_2023
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API."""
     if isinstance(data, list):
         return data

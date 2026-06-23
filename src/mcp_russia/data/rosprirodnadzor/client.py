@@ -54,7 +54,7 @@ async def poisk_proverok(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_proverka(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -68,7 +68,7 @@ async def poisk_proverok(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_proverka(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -119,7 +119,7 @@ async def poisk_obektov_negativnogo(
         if kategoriya:
             params["category"] = kategoriya
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -133,7 +133,7 @@ async def poisk_obektov_negativnogo(
         if kategoriya:
             params["category"] = kategoriya
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -165,7 +165,7 @@ async def poisk_litsenziy_nedra(
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -179,7 +179,7 @@ async def poisk_litsenziy_nedra(
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
@@ -207,7 +207,7 @@ async def poluchit_ekologicheskie_platezhi(
         if tip_platezha:
             params["paymentType"] = tip_platezha
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")
@@ -229,7 +229,7 @@ def get_vidy_litsenziy_nedra_list() -> list[dict[str, str]]:
     return VIDY_LITSENZIY_NEDRA
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data

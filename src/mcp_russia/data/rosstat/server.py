@@ -11,11 +11,11 @@ from .tools import (
     demografiya,
     indikator_dannye,
     inflyaciya,
+    informatsiya_o_regionye,
+    informatsiya_ob_okruge,
     investitsii_po_vidam,
-    okrug_info,
     otraslevaya_struktura_vrp,
     pokazateli_rosstata,
-    region_info,
     spisok_okrugov,
     spisok_regionov,
     sravnenie_regionov,
@@ -28,8 +28,8 @@ mcp = FastMCP("mcp-russia-rosstat")
 # Инструменты
 mcp.tool(spisok_regionov, tags={"регионы", "справочник"})
 mcp.tool(spisok_okrugov, tags={"федеральные-округа", "справочник"})
-mcp.tool(region_info, tags={"регион", "информация"})
-mcp.tool(okrug_info, tags={"федеральный-округ", "информация"})
+mcp.tool(informatsiya_o_regionye, tags={"регион", "информация"})
+mcp.tool(informatsiya_ob_okruge, tags={"федеральный-округ", "информация"})
 mcp.tool(pokazateli_rosstata, tags={"показатели", "справочник"})
 mcp.tool(inflyaciya, tags={"инфляция", "ИПЦ"})
 mcp.tool(demografiya, tags={"демография", "население"})

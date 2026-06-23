@@ -24,20 +24,20 @@ def _reset_dispatch() -> None:
 class TestBuildDispatch:
     def test_builds_from_registry(self) -> None:
         """Должен обнаруживать инструменты из модулей features."""
-        result = batch.build_dispatch(_real_registry())
+        result = batch.postroit_dispetcherizatsiyu(_real_registry())
         assert any(k.startswith("cbrf_") for k in result)
 
     def test_finds_nested_features(self) -> None:
         """Должен обнаруживать инструменты в подпакетах."""
-        result = batch.build_dispatch(_real_registry())
+        result = batch.postroit_dispetcherizatsiyu(_real_registry())
         assert any(k.startswith("sovfed_") for k in result)
         assert any(k.startswith("kaznacheistvo_") for k in result)
 
     def test_caches_result(self) -> None:
         """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
         reg = _real_registry()
-        first = batch.build_dispatch(reg)
-        second = batch.build_dispatch(reg)
+        first = batch.postroit_dispetcherizatsiyu(reg)
+        second = batch.postroit_dispetcherizatsiyu(reg)
         assert first is second
 
 
@@ -45,20 +45,22 @@ class TestExecuteBatch:
     @pytest.mark.asyncio
     async def test_empty_list(self) -> None:
         ctx = _mock_ctx()
-        result = await batch.execute_batch([], ctx)
+        result = await batch.vypolnit_paket_vnutrenniy([], ctx)
         assert "Нет запросов" in result
 
     @pytest.mark.asyncio
     async def test_exceeds_limit(self) -> None:
         ctx = _mock_ctx()
         queries = [{"tool": "x", "args": {}} for _ in range(11)]
-        result = await batch.execute_batch(queries, ctx)
+        result = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
         assert "Максимум 10" in result
 
     @pytest.mark.asyncio
     async def test_unknown_tool(self) -> None:
         ctx = _mock_ctx()
-        result = await batch.execute_batch([{"tool": "nonexistent_tool", "args": {}}], ctx)
+        result = await batch.vypolnit_paket_vnutrenniy(
+            [{"tool": "nonexistent_tool", "args": {}}], ctx
+        )
         assert "не найден" in result
 
     @pytest.mark.asyncio
@@ -71,7 +73,7 @@ class TestExecuteBatch:
         batch._dispatch["test_tool"] = mock_fn
 
         ctx = _mock_ctx()
-        result = await batch.execute_batch(
+        result = await batch.vypolnit_paket_vnutrenniy(
             [{"tool": "test_tool", "args": {"param": "value"}}], ctx
         )
         assert "rezultat ok" in result
@@ -87,7 +89,9 @@ class TestExecuteBatch:
         batch._dispatch["greet"] = no_ctx_tool
 
         ctx = _mock_ctx()
-        result = await batch.execute_batch([{"tool": "greet", "args": {"name": "world"}}], ctx)
+        result = await batch.vypolnit_paket_vnutrenniy(
+            [{"tool": "greet", "args": {"name": "world"}}], ctx
+        )
         assert "hello world" in result
 
     @pytest.mark.asyncio
@@ -103,7 +107,7 @@ class TestExecuteBatch:
         batch._dispatch["counter"] = counting_tool
 
         ctx = _mock_ctx()
-        result = await batch.execute_batch(
+        result = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"tool": "counter", "args": {"n": 1}},
                 {"tool": "counter", "args": {"n": 2}},
@@ -127,7 +131,7 @@ class TestExecuteBatch:
         batch._dispatch["fail"] = failing_tool
 
         ctx = _mock_ctx()
-        result = await batch.execute_batch([{"tool": "fail", "args": {}}], ctx)
+        result = await batch.vypolnit_paket_vnutrenniy([{"tool": "fail", "args": {}}], ctx)
         assert "Ошибка" in result
         assert "timeout" in result.lower()
 
@@ -146,7 +150,7 @@ class TestExecuteBatch:
         batch._dispatch["bad"] = bad_tool
 
         ctx = _mock_ctx()
-        result = await batch.execute_batch(
+        result = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"tool": "ok", "args": {}},
                 {"tool": "bad", "args": {}},

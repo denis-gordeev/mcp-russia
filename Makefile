@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := help
 .PHONY: help sync dev test test-feature lint fix types run serve inspect ci clean build changelog version release-patch release-minor release-major diagrams
 
-## —— Setup ——
+## —— Настройка ——
 
 help: ## Показать справку
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
@@ -14,7 +14,7 @@ sync: ## Установить production-зависимости
 dev: ## Установить все зависимости (prod + dev)
 	uv sync --group dev
 
-## —— Quality ——
+## —— Качество ——
 
 lint: ## Проверка линтером и форматирования
 	uv run ruff check src/ tests/ && uv run ruff format --check src/ tests/
@@ -33,7 +33,7 @@ test-feature: ## Запустить тесты одного модуля (исп
 
 ci: lint types test ## Полный CI-конвейер: линтер + типы + тесты
 
-## —— Server ——
+## —— Сервер ——
 
 run: ## Запустить MCP-сервер (stdio)
 	uv run python -m mcp_russia.server
@@ -44,7 +44,7 @@ serve: ## Запустить MCP-сервер (HTTP :8000)
 inspect: ## Показать инструменты/ресурсы/промпты MCP-сервера
 	uv run python -c "from mcp_russia.server import mcp, registry; print(registry.summary())"
 
-## —— Release ——
+## —— Релиз ——
 
 version: ## Показать текущую версию
 	@uv version
@@ -64,12 +64,12 @@ release-minor: ci ## Релиз минорной версии (0.1.0 → 0.2.0)
 release-major: ci ## Релиз мажорной версии (0.1.0 → 1.0.0)
 	@scripts/release.sh major
 
-## —— Docs ——
+## —— Документация ——
 
 diagrams: ## Сгенерировать диаграммы архитектуры (требуется graphviz)
 	uv run python scripts/generate_diagrams.py
 
-## —— Misc ——
+## —— Разное ——
 
 clean: ## Удалить артефакты сборки и кеши
 	rm -rf .pytest_cache .mypy_cache .ruff_cache dist/ build/ *.egg-info

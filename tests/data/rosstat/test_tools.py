@@ -4,12 +4,12 @@ from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosstat import tools as rosstat_tools
 from mcp_russia.data.rosstat.schemas import (
+    DannyeRegiona,
+    DannyeZarplaty,
     IndikatorDannye,
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
-    RegionData,
     VRPData,
-    WagesData,
 )
 
 
@@ -41,23 +41,25 @@ async def test_spisok_okrugov():
     assert "Центральн" in result
 
 
-async def test_region_info():
+async def test_informatsiya_o_regionye():
     ctx = _mock_ctx()
-    region = RegionData(kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000)
+    region = DannyeRegiona(
+        kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000
+    )
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
-        result = await rosstat_tools.region_info("77", ctx)
+        result = await rosstat_tools.informatsiya_o_regionye("77", ctx)
     assert "Москва" in result
     assert "13" in result
 
 
-async def test_region_info_not_found():
+async def test_informatsiya_o_regionye_not_found():
     ctx = _mock_ctx()
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=None):
-        result = await rosstat_tools.region_info("999", ctx)
+        result = await rosstat_tools.informatsiya_o_regionye("999", ctx)
     assert "не найден" in result
 
 
-async def test_okrug_info():
+async def test_informatsiya_ob_okruge():
     ctx = _mock_ctx()
     with patch.object(
         rosstat_tools.client,
@@ -69,19 +71,19 @@ async def test_okrug_info():
             "subiekty": ["г. Москва", "Московская область"],
         },
     ):
-        result = await rosstat_tools.okrug_info("CFO", ctx)
+        result = await rosstat_tools.informatsiya_ob_okruge("CFO", ctx)
     assert "Центральн" in result
     assert "18" in result
 
 
-async def test_okrug_info_not_found():
+async def test_informatsiya_ob_okruge_not_found():
     ctx = _mock_ctx()
     with patch.object(
         rosstat_tools.client,
         "poluchit_federalny_okrug",
         return_value={"error": "не найден"},
     ):
-        result = await rosstat_tools.okrug_info("ZZZ", ctx)
+        result = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
     assert "не найден" in result
 
 
@@ -190,7 +192,7 @@ async def test_zarplata_dannye_fallback():
 
 async def test_zarplata_dannye_with_data():
     mock_data = [
-        WagesData(
+        DannyeZarplaty(
             period="2024",
             region="г. Москва",
             nominalnaya_zp=125000.0,

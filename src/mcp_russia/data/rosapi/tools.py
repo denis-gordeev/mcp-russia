@@ -124,13 +124,13 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
     if result.ogrn:
         lines.append(f"- ОГРН: {result.ogrn}")
     if result.status:
-        status_map = {
+        karta_statusov = {
             "ACTIVE": "Действующая",
             "LIQUIDATING": "Ликвидируется",
             "LIQUIDATED": "Ликвидирована",
             "BANKRUPT": "Банкрот",
         }
-        lines.append(f"- Статус: {status_map.get(result.status, result.status)}")
+        lines.append(f"- Статус: {karta_statusov.get(result.status, result.status)}")
     if result.adres:
         lines.append(f"- Адрес: {result.adres}")
     if result.rukovoditel:

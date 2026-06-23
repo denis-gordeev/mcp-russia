@@ -184,7 +184,7 @@ def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
 
 def _parse_status(kod_statusa: Any) -> str:
     """Преобразование кода статуса ЕГРЮЛ в русское описание."""
-    status_map = {
+    karta_statusov = {
         "01": "Действующая",
         "02": "В процессе ликвидации",
         "03": "Ликвидирована",
@@ -199,5 +199,5 @@ def _parse_status(kod_statusa: Any) -> str:
         "12": "Прекратила деятельность через преобразование",
     }
     if isinstance(kod_statusa, str):
-        return status_map.get(kod_statusa, kod_statusa)
+        return karta_statusov.get(kod_statusa, kod_statusa)
     return str(kod_statusa) if kod_statusa else ""

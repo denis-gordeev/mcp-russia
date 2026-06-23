@@ -16,7 +16,7 @@ class PokazatelRosstata(BaseModel):
     istochnik: str = "Федеральная служба государственной статистики (Росстат)"
 
 
-class RegionData(BaseModel):
+class DannyeRegiona(BaseModel):
     """Данные по региону РФ."""
 
     kod: str
@@ -55,7 +55,7 @@ class VRPData(BaseModel):
     vrp_na_dushu: float | None = None
 
 
-class WagesData(BaseModel):
+class DannyeZarplaty(BaseModel):
     """Данные о заработной плате."""
 
     period: str

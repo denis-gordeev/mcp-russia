@@ -65,7 +65,7 @@ class FeatureMeta:
     enabled: bool = True
     tags: list[str] = field(default_factory=list)
 
-    def is_auth_available(self) -> bool:
+    def dostupna_li_autentifikatsiya(self) -> bool:
         """Проверка доступности учётных данных аутентификации."""
         if not self.requires_auth:
             return True
@@ -166,7 +166,7 @@ class FeatureRegistry:
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
-        if not meta.is_auth_available():
+        if not meta.dostupna_li_autentifikatsiya():
             self._skipped[short_name] = f"отсутствует переменная {meta.auth_env_var}"
             logger.warning(
                 "Функция '%s' требует %s (не задано), пропуск.",

@@ -45,7 +45,7 @@ async def poisk_senatorov(
         if komitet:
             params["committee"] = komitet
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_senator(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -55,7 +55,7 @@ async def poisk_senatorov(
         url = f"{DATA_GOV_RU_SOVFED}"
         params: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_senator(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -100,7 +100,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
     try:
         url = f"{SOVFED_API_BASE}/committees"
         data = await http_get(url, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -114,7 +114,7 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
     try:
         url = f"{SOVFED_API_BASE}/commissions"
         data = await http_get(url, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         if items:
             return [_parse_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -144,7 +144,7 @@ async def poisk_zakonoproektov(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_zakonoproekt(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
@@ -166,7 +166,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_zasedanie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
@@ -183,7 +183,7 @@ def get_komissii_list() -> list[dict[str, str]]:
     return KOMISSII_SOVFEDA
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data

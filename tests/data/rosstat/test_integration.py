@@ -19,8 +19,8 @@ async def test_has_tools(client):
     expected = {
         "spisok_regionov",
         "spisok_okrugov",
-        "region_info",
-        "okrug_info",
+        "informatsiya_o_regionye",
+        "informatsiya_ob_okruge",
         "pokazateli_rosstata",
         "inflyaciya",
         "demografiya",

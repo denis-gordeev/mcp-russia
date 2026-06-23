@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 _dispatch: dict[str, Any] = {}
 
 
-def build_dispatch(registry: FeatureRegistry) -> dict[str, Any]:
+def postroit_dispetcherizatsiyu(registry: FeatureRegistry) -> dict[str, Any]:
     """Построение отображения полных имён инструментов → асинхронные функции.
 
     Сканирует модули tools.py всех зарегистрированных функций, включая
@@ -67,7 +67,7 @@ def _scan_tools_module(module_path: str, namespace: str) -> None:
             _dispatch[key] = fn
 
 
-async def execute_batch(
+async def vypolnit_paket_vnutrenniy(
     queries: list[dict[str, Any]],
     ctx: Any,
 ) -> str:

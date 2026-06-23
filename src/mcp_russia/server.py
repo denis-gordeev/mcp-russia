@@ -18,7 +18,7 @@ from fastmcp.resources import ResourceResult
 from fastmcp.server.middleware import CallNext, Middleware, MiddlewareContext
 from fastmcp.tools import ToolResult
 
-from ._shared.batch import build_dispatch, execute_batch
+from ._shared.batch import postroit_dispetcherizatsiyu, vypolnit_paket_vnutrenniy
 from ._shared.feature import FeatureRegistry
 from ._shared.lifespan import http_lifespan
 from .settings import TOOL_SEARCH
@@ -90,7 +90,7 @@ registry.mount_all(mcp)
 logger.info("\n%s", registry.summary())
 
 # Формирование таблицы диспетчеризации для vypolnit_paket
-build_dispatch(registry)
+postroit_dispetcherizatsiyu(registry)
 
 
 # Мета-инструмент для интроспекции
@@ -118,10 +118,10 @@ async def rekomendovat_instrumenty(query: str, ctx: Context) -> str:
         query: Вопрос или описание потребности
                (напр.: «нужны данные о расходах федерального бюджета»).
     """
-    from ._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
+    from ._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 
     await ctx.info(f"Поиск рекомендаций для: {query}")
-    catalog = build_catalog(registry)
+    catalog = postroit_katalog(registry)
     return await rekomendovat_instrumenty_impl(query, catalog)
 
 
@@ -137,11 +137,11 @@ async def splanirovat_zapros(query: str, ctx: Context) -> str:
         query: Вопрос на естественном языке
                (напр.: «сравните расходы депутата X со средним значением»).
     """
-    from ._shared.discovery import build_catalog
+    from ._shared.discovery import postroit_katalog
     from ._shared.planner import splanirovat_zapros_impl
 
     await ctx.info(f"Планирование запроса: {query}")
-    catalog = build_catalog(registry)
+    catalog = postroit_katalog(registry)
     return await splanirovat_zapros_impl(query, catalog)
 
 
@@ -168,7 +168,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
                  ]
     """
     await ctx.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
-    return await execute_batch(zaprosy, ctx)
+    return await vypolnit_paket_vnutrenniy(zaprosy, ctx)
 
 
 # ---------------------------------------------------------------------------

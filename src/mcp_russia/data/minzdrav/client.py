@@ -54,7 +54,7 @@ async def poisk_med_organizatsiy(
         if gorod:
             params["city"] = gorod
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_med_organizatsia(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
@@ -106,7 +106,7 @@ async def poisk_litsenziy(
         if status:
             params["status"] = status
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -138,7 +138,7 @@ async def pokazateli_zdorovya(
         if kod_pokazatelya:
             params["code"] = kod_pokazatelya
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_pokazatel(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
@@ -170,7 +170,7 @@ async def statistika_zabolevaniy(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_zabolevanie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
@@ -202,7 +202,7 @@ def get_pokazateli_zdorovya_list() -> list[dict[str, str]]:
     return POKAZATELI_ZDOROVYA
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data

@@ -57,7 +57,7 @@ async def poisk_vodnykh_obektov(
             params["region"] = region
         params["limit"] = ogranichenie
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске водных объектов")
@@ -107,7 +107,7 @@ async def poluchit_gidro_dannye(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_gidro_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении гидрологических данных")
@@ -155,7 +155,7 @@ async def poluchit_vodopolzovanie(
         if god:
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_vodopolzovanie_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении данных о водопользовании")
@@ -190,7 +190,7 @@ def get_vodokhranilishcha_detailed() -> list[dict[str, Any]]:
     return KRUPNYE_VODOKHRANILISHCHA
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data

@@ -87,7 +87,7 @@ async def poisk_uchastnikov_bp(
         if nazvanie:
             params["name"] = nazvanie
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_uchastnik_bp(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
@@ -119,7 +119,7 @@ async def poisk_uchrezhdeniy(
         if tip:
             params["type"] = tip
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_uchrezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
@@ -147,7 +147,7 @@ async def poluchit_mezhbyudzhetnye(
         if region:
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
-        items = _extract_list(data)
+        items = _izvlech_spisok(data)
         return [_parse_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("budget.gov.ru API недоступен для межбюджетных трансфертов")
@@ -183,7 +183,7 @@ def get_kategorii_raskhodov_list() -> list[dict[str, str]]:
     return KATEGORII_RASKHODOV
 
 
-def _extract_list(data: Any) -> list[Any]:
+def _izvlech_spisok(data: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
     if isinstance(data, list):
         return data

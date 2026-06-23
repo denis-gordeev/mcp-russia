@@ -4,9 +4,9 @@
 Использует словарь в памяти с посерийным истечением срока — без внешних зависимостей.
 
 Использование:
-    from mcp_russia._shared.cache import ttl_cache
+    from mcp_russia._shared.cache import kesh_s_vremenem_zhizni
 
-    cache = ttl_cache(ttl=300)  # 5 минут
+    cache = kesh_s_vremenem_zhizni(ttl=300)  # 5 минут
 
     @cache
     async def spisok_regionov() -> list[Region]:
@@ -23,7 +23,7 @@ from typing import Any, TypeVar
 F = TypeVar("F", bound=Callable[..., Any])
 
 
-class TTLCache:
+class KeshSVremenemZhizni:
     """Кэш в памяти с посерийным TTL-истечением.
 
     Потокобезопасен для asyncio (однопоточный цикл событий).
@@ -75,7 +75,7 @@ class TTLCache:
             del self._store[oldest_key]
 
 
-def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
+def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
     """Декоратор кэширования результатов асинхронных функций с TTL.
 
     Ключ кэша строится из имени функции + строковых аргументов/kwargs.
@@ -88,11 +88,11 @@ def ttl_cache(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
         Декоратор, оборачивающий асинхронную функцию кэшированием.
 
     Пример:
-        @ttl_cache(ttl=60)
+        @kesh_s_vremenem_zhizni(ttl=60)
         async def poluchit_region() -> list[Region]:
             return await http_get(...)
     """
-    cache = TTLCache(ttl=ttl, maxsize=maxsize)
+    cache = KeshSVremenemZhizni(ttl=ttl, maxsize=maxsize)
 
     def decorator(func: F) -> F:
         """Обёртка функции с привязкой к кэшу."""

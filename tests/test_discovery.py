@@ -12,7 +12,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastmcp import Client, FastMCP
 
-from mcp_russia._shared.discovery import build_catalog, rekomendovat_instrumenty_impl
+from mcp_russia._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 from mcp_russia._shared.planner import PlanZaprosa, splanirovat_zapros_impl
 
 
@@ -77,21 +77,21 @@ class TestBuildCatalog:
 
         disc._catalog_cache = ""
 
-    def test_build_catalog_with_empty_registry(self) -> None:
+    def test_postroit_katalog_with_empty_registry(self) -> None:
         mock_registry = MagicMock()
         mock_registry.features = {}
-        result = build_catalog(mock_registry)
+        result = postroit_katalog(mock_registry)
         assert result == ""
 
-    def test_build_catalog_caches_result(self) -> None:
+    def test_postroit_katalog_caches_result(self) -> None:
         import mcp_russia._shared.discovery as disc
 
         mock_registry = MagicMock()
         mock_registry.features = {}
-        build_catalog(mock_registry)
+        postroit_katalog(mock_registry)
 
         disc._catalog_cache = "cached"
-        result = build_catalog(mock_registry)
+        result = postroit_katalog(mock_registry)
         assert result == "cached"
 
 
