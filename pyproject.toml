@@ -81,7 +81,7 @@ line-length = 99
 select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
-# Russian text naturally contains Cyrillic characters that RUF001/RUF002 flags
+# Русский текст содержит кириллические символы, которые RUF001/RUF002 помечает
 "src/mcp_russia/data/rosapi/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/cbrf/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/rosstat/*" = ["RUF001", "RUF002", "RUF003", "E501"]
@@ -91,7 +91,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "src/mcp_russia/_shared/*" = ["RUF001", "RUF002", "RUF003"]
 "tests/agenty/redator/*" = ["RUF001", "RUF002"]
 "tests/_shared/*" = ["RUF001", "RUF002", "RUF003"]
-# Russian modules with Cyrillic text
+# Российские модули с кириллическим текстом
 "src/mcp_russia/data/zakupki/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "src/mcp_russia/data/minzdrav/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "src/mcp_russia/data/kad_arbitrazh/*" = ["RUF001", "RUF002", "RUF003", "E501"]
@@ -150,7 +150,7 @@ warn_unused_configs = true
 testpaths = ["tests"]
 asyncio_mode = "auto"
 
-# --- Release ---
+# --- Релиз ---
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:project.version"]

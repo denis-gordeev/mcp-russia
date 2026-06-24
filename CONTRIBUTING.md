@@ -35,20 +35,20 @@ src/mcp_russia/
 
 ```
 src/mcp_russia/data/{feature}/      # или agenty/{feature}/
-├── __init__.py     # FEATURE_META (обязательно для auto-discovery)
+├── __init__.py     # META_FUNKTSII (обязательно для автообнаружения)
 ├── server.py       # mcp: FastMCP (обязательно)
-├── tools.py        # Функции MCP tools
+├── tools.py        # Функции MCP-инструментов
 ├── client.py       # Асинхронный HTTP-клиент
 ├── schemas.py      # Pydantic-модели
 └── constants.py    # URL, enum, коды
 ```
 
-2. В `__init__.py` определите `FEATURE_META`:
+2. В `__init__.py` определите `META_FUNKTSII`:
 
 ```python
-from mcp_russia._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="primer-feature",
     description="Короткое описание API",
     version="0.1.0",
@@ -108,11 +108,11 @@ server.py → tools.py → client.py → schemas.py
 
 1. Корневой `server.py` не правится без крайней необходимости — auto-registry делает остальное
 2. `tools.py` не делает HTTP-запросы — делегирует в `client.py`
-3. `client.py` не форматирует ответы для LLM — возвращает Pydantic models
+3. `client.py` не форматирует ответы для LLM — возвращает модели Pydantic
 4. `schemas.py` без бизнес-логики — только модели
 5. `server.py` модуля только регистрирует — без предметной логики
 6. `constants.py` не импортирует другие модули проекта
-7. У каждой tool есть docstring — LLM использует ее при выборе вызова
+7. У каждого инструмента есть docstring — LLM использует её при выборе вызова
 8. Везде async — `async def` в tools и clients
 9. Полные type hints во всех функциях
 
@@ -131,7 +131,7 @@ server.py → tools.py → client.py → schemas.py
 
 ```bash
 make test                 # Все тесты
-make test-feature F=cbrf  # Тесты одной feature
+make test-feature F=cbrf  # Тесты одного модуля
 make lint                 # ruff check + format check
 make types                # mypy strict
 make ci                   # lint + types + test
@@ -218,7 +218,7 @@ refactor(gosduma): simplify pagination logic
 |----------|------|---------|
 | Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
 | Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): handle timeout` |
-| Breaking change (переименование tools, изменение API) | **major** | refactor, ломающий клиентов |
+| Критическое изменение (переименование инструментов, изменение API) | **major** | refactor, ломающий клиентов |
 | Только docs, тесты, внутренний refactor | **нет** | Релиз не обязателен |
 
 ### Как сделать релиз

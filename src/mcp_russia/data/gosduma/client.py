@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import Any
 
 from mcp_russia import settings
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import DUMA_DEPUTATS, DUMA_LAWS, DUMA_VOTES, FRAKCII, SOZYVY
 from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
@@ -43,7 +43,7 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
         params["app_token"] = token
 
     try:
-        data = await http_get(DUMA_DEPUTATS, params=params)
+        data = await http_poluchit(DUMA_DEPUTATS, params=params)
         return _razobrat_deputatov(data)
     except Exception:
         return []
@@ -95,7 +95,7 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
 
     url = f"{DUMA_DEPUTATS}/{identifikator}"
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         if isinstance(data, dict):
             return _razobrat_odnogo_deputata(data)
     except Exception:
@@ -149,7 +149,7 @@ async def poluchit_zakonoproekty(
         params["app_token"] = token
 
     try:
-        data = await http_get(f"{DUMA_LAWS}/bills", params=params)
+        data = await http_poluchit(f"{DUMA_LAWS}/bills", params=params)
         return _razobrat_zakonoproekty(data)
     except Exception:
         return []
@@ -206,7 +206,7 @@ async def poluchit_golosovaniya(
         params["app_token"] = token
 
     try:
-        data = await http_get(DUMA_VOTES, params=params)
+        data = await http_poluchit(DUMA_VOTES, params=params)
         return _razobrat_golosovaniya(data)
     except Exception:
         return []

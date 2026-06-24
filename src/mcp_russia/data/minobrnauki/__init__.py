@@ -1,8 +1,8 @@
 """Минобрнауки — данные Министерства науки и высшего образования РФ."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="minobrnauki",
     description=(
         "Данные Минобрнауки России: вузы, научные исследования, "

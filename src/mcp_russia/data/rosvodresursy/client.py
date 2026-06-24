@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     BASSEYNOVYE_OKRUGA,
@@ -56,7 +56,7 @@ async def poisk_vodnykh_obektov(
         if region:
             params["region"] = region
         params["limit"] = ogranichenie
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -75,7 +75,7 @@ async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_vodnyy_obekt(data)
         return None
@@ -106,7 +106,7 @@ async def poluchit_gidro_dannye(
             params["post"] = identifikator_posta
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_gidro_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -125,7 +125,7 @@ async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_vodokhranilishche(data)
         return None
@@ -154,7 +154,7 @@ async def poluchit_vodopolzovanie(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_vodopolzovanie_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:

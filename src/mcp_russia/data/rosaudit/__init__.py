@@ -1,8 +1,8 @@
 """Счётная палата РФ — данные аудиторов Счётной палаты Российской Федерации."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosaudit",
     description=(
         "Данные Счётной палаты РФ: результаты контрольных мероприятий, "

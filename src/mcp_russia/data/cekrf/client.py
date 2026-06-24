@@ -19,7 +19,7 @@ import re
 from html.parser import HTMLParser
 from typing import Any
 
-from mcp_russia._shared.http_client import create_client, http_get
+from mcp_russia._shared.http_client import http_poluchit, sozdat_klienta
 
 from .constants import (
     CIK_API_BASE,
@@ -157,7 +157,7 @@ async def _zaprosit_html_vyborov(
     }
     url = f"{VYBORY_API}/izbirkom"
     try:
-        async with create_client(
+        async with sozdat_klienta(
             base_url=VYBORY_API_BASE,
             headers={"Accept": "text/html,application/xhtml+xml"},
             timeout=30.0,
@@ -174,7 +174,7 @@ async def _zaprosit_json_tsik(path: str, params: dict[str, Any] | None = None) -
     """Получить JSON данные из API cikrf.ru."""
     url = f"{CIK_API_BASE}{path}"
     try:
-        return await http_get(url, params=params, timeout=15.0, max_retries=1)
+        return await http_poluchit(url, params=params, timeout=15.0, max_retries=1)
     except Exception as exc:
         logger.debug("CIK API %s недоступен: %s", url, exc)
         return None
@@ -416,7 +416,7 @@ async def spisok_vyborov(
             "type": 0,
         }
         try:
-            async with create_client(
+            async with sozdat_klienta(
                 base_url=VYBORY_API_BASE,
                 headers={"Accept": "text/html,application/xhtml+xml"},
                 timeout=20.0,
@@ -483,7 +483,7 @@ async def poisk_kandidata(
         params["vibid"] = vybory_info["vrn"]
 
     try:
-        async with create_client(
+        async with sozdat_klienta(
             base_url=VYBORY_API_BASE,
             headers={"Accept": "text/html,application/xhtml+xml"},
             timeout=20.0,

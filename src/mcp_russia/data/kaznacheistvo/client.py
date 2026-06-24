@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     BUDGET_GOV_RU_BASE,
@@ -44,7 +44,7 @@ async def poluchit_ispolnenie_byudzheta(
             params["year"] = god
         if tip:
             params["budgetType"] = tip
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_ispolnenie_byudzheta(data)
     except Exception:
@@ -57,7 +57,7 @@ async def poluchit_ispolnenie_byudzheta(
             params["year"] = god
         if tip:
             params["budgetType"] = tip
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_ispolnenie_byudzheta(data)
     except Exception:
@@ -86,7 +86,7 @@ async def poisk_uchastnikov_bp(
             params["inn"] = inn
         if nazvanie:
             params["name"] = nazvanie
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_uchastnik_bp(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -118,7 +118,7 @@ async def poisk_uchrezhdeniy(
             params["name"] = nazvanie
         if tip:
             params["type"] = tip
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_uchrezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -146,7 +146,7 @@ async def poluchit_mezhbyudzhetnye(
             params["year"] = god
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -165,7 +165,7 @@ async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_byudzhetnuyu_smetu(data)
     except Exception:

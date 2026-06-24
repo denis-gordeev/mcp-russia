@@ -1,8 +1,8 @@
 """Госдума — данные Государственной Думы Федерального Собрания РФ."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="gosduma",
     description=(
         "Данные Государственной Думы: депутаты, законопроекты, пленарные заседания, "

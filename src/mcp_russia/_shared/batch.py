@@ -22,7 +22,7 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_dispatch: dict[str, Any] = {}
+_dispetcher: dict[str, Any] = {}
 
 
 def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
@@ -31,9 +31,9 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
     Сканирует модули tools.py всех зарегистрированных функций, включая
     вложенные подпакеты (напр., zakupki/sub-module).
     """
-    global _dispatch
-    if _dispatch:
-        return _dispatch
+    global _dispetcher
+    if _dispetcher:
+        return _dispetcher
 
     for name, feat in registry.funktsii.items():
         base = feat.module_path
@@ -50,8 +50,8 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
         except Exception:
             pass
 
-    logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispatch))
-    return _dispatch
+    logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispetcher))
+    return _dispetcher
 
 
 def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
@@ -64,7 +64,7 @@ def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
     for fn_name, fn in inspect.getmembers(mod, inspect.iscoroutinefunction):
         if not fn_name.startswith("_"):
             key = f"{namespace}_{fn_name}"
-            _dispatch[key] = fn
+            _dispetcher[key] = fn
 
 
 async def vypolnit_paket_vnutrenniy(
@@ -90,7 +90,7 @@ async def vypolnit_paket_vnutrenniy(
         """Выполнение одного инструмента из пакета."""
         tool_name = q.get("tool", "")
         args = q.get("args", {})
-        fn = _dispatch.get(tool_name)
+        fn = _dispetcher.get(tool_name)
 
         if fn is None:
             return tool_name, f"Инструмент '{tool_name}' не найден."

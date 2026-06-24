@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     OPEN_METEO_AIR_QUALITY_BASE,
@@ -60,7 +60,7 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
         "timezone": "Europe/Moscow",
     }
     try:
-        data = await http_get(OPEN_METEO_BASE, params=params)
+        data = await http_poluchit(OPEN_METEO_BASE, params=params)
         return _razobrat_openmeteo_pogodu(data, info)
     except Exception:
         return None
@@ -91,7 +91,7 @@ async def poluchit_prognoz(
         "forecast_days": min(max(dni, 1), 16),
     }
     try:
-        data = await http_get(OPEN_METEO_BASE, params=params)
+        data = await http_poluchit(OPEN_METEO_BASE, params=params)
         return _razobrat_openmeteo_prognoz(data, info)
     except Exception:
         return []
@@ -125,7 +125,7 @@ async def poluchit_ekologiyu(
             "timezone": "Europe/Moscow",
         }
         try:
-            data = await http_get(OPEN_METEO_AIR_QUALITY_BASE, params=params)
+            data = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, params=params)
             parsed = _razobrat_openmeteo_ekologiyu(data, station)
             results.extend(parsed)
         except Exception:
@@ -169,7 +169,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
             "timezone": "Europe/Moscow",
         }
         try:
-            data = await http_get(OPEN_METEO_BASE, params=params)
+            data = await http_poluchit(OPEN_METEO_BASE, params=params)
             current = data.get("current", {})
             temp = current.get("temperature_2m")
             wind = current.get("wind_speed_10m")

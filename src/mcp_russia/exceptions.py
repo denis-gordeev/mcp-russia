@@ -20,7 +20,3 @@ class OshibkaAutentifikatsii(McpRussiaError):
 OshibkaFunktsii.__module__ = __name__
 OshibkaHttpClienta.__module__ = __name__
 OshibkaAutentifikatsii.__module__ = __name__
-
-FeatureError = OshibkaFunktsii
-HttpClientError = OshibkaHttpClienta
-AuthError = OshibkaAutentifikatsii

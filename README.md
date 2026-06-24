@@ -30,7 +30,7 @@ Python-пакет `mcp_russia` является единой точкой вхо
 - 24 российских модуля данных, подключённых к реальным API-интеграциям.
 - Все 27 legacy-модулей с бразильскими данными удалены из кодовой базы.
 - Устранены deprecated-алиасы: `format_brl`, `format_number_br`, `parse_brl_number` удалены.
-- Устранены Brazilian validators: `validate_cpf`, `validate_cnpj`, `validate_cep` удалены.
+- Устранены бразильские валидаторы: `validate_cpf`, `validate_cnpj`, `validate_cep` удалены.
 - Российские модули: ЦБ РФ (cbr-xml-daily.ru), Росгидромет (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru).
 - Универсальный инструмент Росстата `indikator_dannye` для запроса данных по произвольному коду ЕМИСС.
 - Инструменты отраслевой структуры ВРП (`otraslevaya_struktura_vrp`) и инвестиций по видам деятельности (`investitsii_po_vidam`).

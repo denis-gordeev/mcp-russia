@@ -1,9 +1,9 @@
 """Роспотребнадзор — данные Федеральной службы по надзору в сфере защиты
 прав потребителей и благополучия человека."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rospotrebnadzor",
     description=(
         "Данные Роспотребнадзора: санитарно-эпидемиологический надзор, "

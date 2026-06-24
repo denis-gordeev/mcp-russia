@@ -1,8 +1,8 @@
 """Минздрав РФ — данные Министерства здравоохранения и медицинских источников РФ."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="minzdrav",
     description=(
         "Данные здравоохранения РФ: медицинские организации, врачи, показатели здоровья, "

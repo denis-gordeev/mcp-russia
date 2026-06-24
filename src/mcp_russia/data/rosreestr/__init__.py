@@ -1,8 +1,8 @@
 """Росреестр — данные Федеральной службы государственной регистрации, кадастра и картографии."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosreestr",
     description=(
         "Данные Росреестра: кадастровая стоимость, объекты недвижимости, "

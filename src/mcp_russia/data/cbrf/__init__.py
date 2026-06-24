@@ -1,8 +1,8 @@
 """ЦБ РФ — данные Банка России (ключевая ставка, курсы валют, инфляция)."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="cbrf",
     description=(
         "Данные Центрального банка РФ: ключевая ставка, официальные курсы валют, "

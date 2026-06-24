@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     ACH_API_BASE,
@@ -49,7 +49,7 @@ async def poisk_kontrolnyh_meropriyatiy(
             params["status"] = status
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_kontrolnoe_meropriyatie(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -68,7 +68,7 @@ async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{ACH_API_BASE}/controls/{nomer}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_kontrolnoe_meropriyatie(data)
         return None
@@ -88,7 +88,7 @@ async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None
     """
     try:
         url = f"{ACH_API_BASE}/conclusions/{nomer}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_auditorskoe_zaklyuchenie(data)
         return None
@@ -113,7 +113,7 @@ async def poluchit_byudzhet_ispolnenie(
         params: dict[str, str] = {}
         if period:
             params["period"] = period
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_ispolnenie_byudzheta(data)
         return None
@@ -146,7 +146,7 @@ async def poisk_narusheniy(
             params["type"] = tip
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_narushenie(p) for p in items if isinstance(p, dict)]
     except Exception:

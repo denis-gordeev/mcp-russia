@@ -90,7 +90,7 @@ class PlanZaprosa(BaseModel):
         return "\n".join(lines)
 
 
-_SYSTEM_PROMPT = """\
+_SISTEMNYY_PROMPT = """\
 Ты строишь планы запросов для mcp-russia. Каталог ниже может содержать
 исторические названия модулей и инструментов, которые пока сохранены ради
 совместимости. Твоя задача: по вопросу пользователя и каталогу инструментов
@@ -247,7 +247,7 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
         )
 
     client = anthropic.AsyncAnthropic(api_key=api_key)
-    system_prompt = _SYSTEM_PROMPT.format(catalog=catalog)
+    system_prompt = _SISTEMNYY_PROMPT.format(catalog=catalog)
 
     try:
         response = await client.messages.create(

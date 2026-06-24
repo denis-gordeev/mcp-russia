@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     EMISS_API_BASE,
@@ -51,7 +51,7 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
         params: dict[str, str] = {}
         if diapazon_dat:
             params["date"] = diapazon_dat
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         return _razobrat_otvet_indikatora(data, kod)
     except Exception:
         logger.exception("Ошибка при получении индикатора %s", kod)
@@ -72,7 +72,7 @@ async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
         return None
     try:
         url = f"{EMISS_API_BASE}/region/{kod}"
-        data = await http_get(url, timeout=20.0)
+        data = await http_poluchit(url, timeout=20.0)
         if isinstance(data, dict):
             return DannyeRegiona(
                 kod=kod,
@@ -129,7 +129,7 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
         params: dict[str, str] = {}
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
             if isinstance(items, list):
@@ -164,7 +164,7 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         params: dict[str, str] = {}
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
             if isinstance(items, list):
@@ -203,7 +203,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
             if isinstance(items, list):
@@ -250,7 +250,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarpl
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
             if isinstance(items, list):
@@ -293,7 +293,7 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
         return []
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
-        data = await http_get(url, params={"groupByRegion": "true"}, timeout=20.0)
+        data = await http_poluchit(url, params={"groupByRegion": "true"}, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
             if isinstance(items, list):
@@ -349,7 +349,7 @@ async def poluchit_indikator_dannye(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return []
         items = data.get("data", [])
@@ -440,7 +440,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return _fallback_otraslevaya_struktura(region, god)
         items = data.get("data", [])
@@ -523,7 +523,7 @@ async def poluchit_investitsii_po_vidam(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=20.0)
+        data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return _fallback_investitsii_po_vidam(region, god)
         items = data.get("data", [])

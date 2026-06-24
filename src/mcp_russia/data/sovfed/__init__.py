@@ -1,8 +1,8 @@
 """Совет Федерации РФ — данные верхней палаты Федерального Собрания Российской Федерации."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="sovfed",
     description=(
         "Данные Совета Федерации РФ: сенаторы, комитеты и комиссии, "

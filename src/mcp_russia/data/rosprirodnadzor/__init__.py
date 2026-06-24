@@ -1,9 +1,9 @@
 """Росприроднадзор — государственный экологический надзор
 и контроль за использованием природных ресурсов."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosprirodnadzor",
     description=(
         "Данные Росприроднадзора: проверки природопользователей, "

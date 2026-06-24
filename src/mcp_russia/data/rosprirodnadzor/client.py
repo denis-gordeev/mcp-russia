@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     GOSUSLUGI_EKO_BASE,
@@ -53,7 +53,7 @@ async def poisk_proverok(
             params["supervisionType"] = vid_nadzora
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
@@ -67,7 +67,7 @@ async def poisk_proverok(
             params["organization"] = organizaciya
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
@@ -88,7 +88,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_proverku(data)
     except Exception:
@@ -118,7 +118,7 @@ async def poisk_obektov_negativnogo(
             params["name"] = organizaciya
         if kategoriya:
             params["category"] = kategoriya
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
@@ -132,7 +132,7 @@ async def poisk_obektov_negativnogo(
             params["organization"] = organizaciya
         if kategoriya:
             params["category"] = kategoriya
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
@@ -164,7 +164,7 @@ async def poisk_litsenziy_nedra(
             params["territory"] = territoriya
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
@@ -178,7 +178,7 @@ async def poisk_litsenziy_nedra(
             params["territory"] = territoriya
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -206,7 +206,7 @@ async def poluchit_ekologicheskie_platezhi(
             params["year"] = god
         if tip_platezha:
             params["paymentType"] = tip_platezha
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
     except Exception:

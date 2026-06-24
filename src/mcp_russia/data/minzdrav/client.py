@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA,
@@ -53,7 +53,7 @@ async def poisk_med_organizatsiy(
             params["type"] = tip
         if gorod:
             params["city"] = gorod
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_med_organizatsiyu(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -72,7 +72,7 @@ async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_med_organizatsiyu(data)
         return None
@@ -105,7 +105,7 @@ async def poisk_litsenziy(
             params["type"] = vid
         if status:
             params["status"] = status
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -137,7 +137,7 @@ async def pokazateli_zdorovya(
             params["year"] = god
         if kod_pokazatelya:
             params["code"] = kod_pokazatelya
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_pokazatel(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -169,7 +169,7 @@ async def statistika_zabolevaniy(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_zabolevanie(p) for p in items if isinstance(p, dict)]
     except Exception:

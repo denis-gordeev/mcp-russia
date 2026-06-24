@@ -1,8 +1,8 @@
 """Росгидромет — данные Федеральной службы по гидрометеорологии и мониторингу окружающей среды."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosgidromet",
     description=(
         "Данные Росгидромета: погода, климат, качество воздуха, загрязнение окружающей среды, "

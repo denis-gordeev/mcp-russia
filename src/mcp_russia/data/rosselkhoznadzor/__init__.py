@@ -1,8 +1,8 @@
 """Россельхознадзор — федеральная служба по ветеринарному и фитосанитарному надзору."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosselkhoznadzor",
     description=(
         "Данные Россельхознадзора: ветеринарный надзор, фитосанитарный контроль, "

@@ -4,14 +4,14 @@
 повторными попытками и экспоненциальной задержкой для transient-ошибок (5xx, 429, таймауты).
 
 Использование:
-    from mcp_russia._shared.http_client import create_client, http_get
+    from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit
 
     # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
-    async with create_client(base_url="https://api.example.com") as client:
+    async with sozdat_klienta(base_url="https://api.example.com") as client:
         response = await client.get("/endpoint")
 
     # Вариант 2: разовый запрос с автоматическими повторными попытками
-    data = await http_get("https://api.example.com/endpoint")
+    data = await http_poluchit("https://api.example.com/endpoint")
 """
 
 from __future__ import annotations
@@ -28,10 +28,10 @@ from mcp_russia.settings import HTTP_BACKOFF_BASE, HTTP_MAX_RETRIES, HTTP_TIMEOU
 logger = logging.getLogger(__name__)
 
 # Коды состояния, инициирующие повторную попытку
-_RETRYABLE_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
+_KODY_STATUSOV_DLYA_POVTORA = frozenset({429, 500, 502, 503, 504})
 
 
-def create_client(
+def sozdat_klienta(
     base_url: str = "",
     timeout: float | None = None,
     headers: dict[str, str] | None = None,
@@ -61,7 +61,7 @@ def create_client(
     )
 
 
-async def http_get(
+async def http_poluchit(
     url: str,
     *,
     params: dict[str, Any] | None = None,
@@ -90,12 +90,12 @@ async def http_get(
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None
 
-    async with create_client(timeout=timeout, headers=headers) as client:
+    async with sozdat_klienta(timeout=timeout, headers=headers) as client:
         for attempt in range(retries + 1):
             try:
                 response = await client.get(url, params=params)
 
-                if response.status_code in _RETRYABLE_STATUS_CODES:
+                if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
                         wait = HTTP_BACKOFF_BASE * (2**attempt)
                         logger.warning(
@@ -141,7 +141,7 @@ async def http_get(
     ) from last_error
 
 
-async def http_post(
+async def http_otpravit(
     url: str,
     *,
     json_body: Any | None = None,
@@ -171,12 +171,12 @@ async def http_post(
     retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
     last_error: Exception | None = None
 
-    async with create_client(timeout=timeout, headers=headers) as client:
+    async with sozdat_klienta(timeout=timeout, headers=headers) as client:
         for attempt in range(retries + 1):
             try:
                 response = await client.post(url, json=json_body, params=params)
 
-                if response.status_code in _RETRYABLE_STATUS_CODES:
+                if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
                         wait = HTTP_BACKOFF_BASE * (2**attempt)
                         logger.warning(

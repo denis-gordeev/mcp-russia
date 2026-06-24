@@ -169320,3 +169320,442 @@ Now let me commit and push. First, check git status:
 - `generate_diagrams.py` и `release.sh` полностью на русском
 
 **Проверки:** `ruff check` ✓, `ruff format` ✓, `pytest` 674 passed, 1 skipped
+[0m
+> build · glm-5.1
+[0m
+[0m# [0mTodos
+[ ] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[ ] Explore codebase structure (src/, tests/, docs/)
+[ ] Find and fix remaining non-Russian artifacts (Portuguese/Brazilian references)
+[ ] Adapt content to Russian/Russian-speaking realities
+[ ] Run checks/lint/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead .
+[0m→ [0mRead AUTOWORK_INSTRUCTIONS.md
+[0m→ [0mRead TODO.md
+[0m→ [0mRead README.md
+[0m→ [0mRead TODO.md[90m [offset=378][0m
+[0m→ [0mRead src/mcp_russia
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[ ] Explore codebase structure (src/, tests/, docs/) and find remaining English artifacts
+[ ] Find and fix remaining non-Russian artifacts (English function names in client.py)
+[ ] Consider renaming FeatureMeta/RegisteredFeature/FeatureRegistry
+[ ] Run checks/lint/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead src/mcp_russia/data
+[0m• [0mFind English function names in client.py[90m Explore Agent[0m
+[0m✓ [0mFind English function names in client.py[90m Explore Agent[0m
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[ ] Русификация функций rosapi/client.py (18 функций)
+[ ] Русификация функций gibdd/client.py (7 функций)
+[ ] Русификация функций rosstat/client.py (3 функции)
+[ ] Русификация функций zakupki/client.py (6+ функций)
+[ ] Русификация функций fns/client.py (4 функции)
+[ ] Русификация _parse_* → _razobrat_* в остальных модулях
+[ ] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[ ] Run checks/lint/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead src/mcp_russia/data/rosapi/client.py
+[0m→ [0mRead src/mcp_russia/data/rosapi/tools.py
+[0m→ [0mRead src/mcp_russia/data/gibdd/client.py
+[0m→ [0mRead src/mcp_russia/data/gibdd/tools.py
+[0m→ [0mRead src/mcp_russia/data/rosstat/client.py
+[0m→ [0mRead src/mcp_russia/data/zakupki/client.py
+[0m→ [0mRead src/mcp_russia/data/fns/client.py
+[0m• [0mRename rosapi client functions[90m General Agent[0m
+[0m• [0mRename gibdd+rosstat+zakupki+fns[90m General Agent[0m
+[0m✓ [0mRename rosapi client functions[90m General Agent[0m
+[0m✓ [0mRename gibdd+rosstat+zakupki+fns[90m General Agent[0m
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[ ] Русификация _parse_* → _razobrat_* в остальных модулях
+[ ] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[ ] Русификация других английских паттернов (_fetch_*, _find_*, _normalise_*, и т.д.)
+[ ] Run checks/lint/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m• [0mRename _parse_* in remaining modules[90m General Agent[0m
+[0m• [0mRename get_* and other English patterns[90m General Agent[0m
+[0m✓ [0mRename _parse_* in remaining modules[90m General Agent[0m
+[0m✓ [0mRename get_* and other English patterns[90m General Agent[0m
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && python -m ruff check src/ 2>&1 | tail -20
+/bin/sh: python: command not found
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && python -m pytest tests/ -x -q 2>&1 | tail -30
+/bin/sh: python: command not found
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && which python3 && python3 -m ruff check src/ 2>&1 | tail -20
+/opt/homebrew/bin/python3
+/opt/homebrew/opt/python@3.14/bin/python3.14: No module named ruff
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && ls .venv/bin/python* 2>/dev/null && .venv/bin/python -m ruff check src/ 2>&1 | tail -20
+.venv/bin/python
+.venv/bin/python3
+.venv/bin/python3.13
+All checks passed!
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff format --check src/ 2>&1 | tail -20
+Would reformat: src/mcp_russia/data/rosgidromet/client.py
+Would reformat: src/mcp_russia/data/zakupki/client.py
+2 files would be reformatted, 214 files already formatted
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/ -x -q 2>&1 | tail -30
+........................................................................ [ 10%]
+...................................s.................................... [ 21%]
+........................................................................ [ 31%]
+........................................................................ [ 42%]
+........................................................................ [ 52%]
+........................................................................ [ 63%]
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 95%]
+.................................                                        [100%]
+680 passed, 1 skipped in 57.51s
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff format src/ 2>&1
+2 files reformatted, 214 files left unchanged
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff check src/ 2>&1 && .venv/bin/python -m ruff format --check src/ 2>&1
+All checks passed!
+216 files already formatted
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[x] Русификация _parse_* → _razobrat_* в остальных модулях
+[x] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[x] Русификация других английских паттернов (_fetch_*, _find_*, _normalise_*, и т.д.)
+[ ] Русификация _shared/ инфраструктуры (formatting, validators, feature, cache, etc.)
+[ ] Run checks/lint/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m• [0mRename _shared/ English functions[90m General Agent[0m
+[0m✓ [0mRename _shared/ English functions[90m General Agent[0m
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff check src/ 2>&1 && .venv/bin/python -m ruff format --check src/ 2>&1
+All checks passed!
+Would reformat: src/mcp_russia/data/fns/tools.py
+Would reformat: src/mcp_russia/data/rosaudit/tools.py
+Would reformat: src/mcp_russia/data/rosvodresursy/tools.py
+Would reformat: src/mcp_russia/data/zakupki/tools.py
+4 files would be reformatted, 212 files already formatted
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/ -x -q 2>&1 | tail -10
+...................................s.................................... [ 21%]
+........................................................................ [ 31%]
+........................................................................ [ 42%]
+........................................................................ [ 52%]
+........................................................................ [ 63%]
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 95%]
+.................................                                        [100%]
+680 passed, 1 skipped in 73.52s (0:01:13)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff format src/ 2>&1
+4 files reformatted, 212 files left unchanged
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff check src/ 2>&1 && .venv/bin/python -m ruff format --check src/ 2>&1
+All checks passed!
+216 files already formatted
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[x] Русификация _parse_* → _razobrat_* в остальных модулях
+[x] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[x] Русификация других английских паттернов (_fetch_*, _find_*, _normalise_*, и т.д.)
+[x] Русификация _shared/ инфраструктуры (formatting, validators, feature, cache, etc.)
+[ ] Переименование FeatureMeta → MetaFunktsii, FeatureRegistry → ReyestrFunktsiy, RegisteredFeature → ZaregistrirovannayaFunktsiya
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m✱ [0mGrep "FeatureMeta|FeatureRegistry|RegisteredFeature"[90m in src · 73 matches[0m
+[0m✱ [0mGrep "FeatureMeta|FeatureRegistry|RegisteredFeature"[90m in tests · 36 matches[0m
+[0m• [0mRename FeatureMeta/Registry/Registered[90m General Agent[0m
+[0m✓ [0mRename FeatureMeta/Registry/Registered[90m General Agent[0m
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m ruff check src/ tests/ 2>&1 && .venv/bin/python -m ruff format src/ tests/ 2>&1 | tail -5
+All checks passed!
+306 files left unchanged
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/ -x -q 2>&1 | tail -10
+...................................s.................................... [ 21%]
+........................................................................ [ 31%]
+........................................................................ [ 42%]
+........................................................................ [ 52%]
+........................................................................ [ 63%]
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 95%]
+.................................                                        [100%]
+680 passed, 1 skipped in 57.01s
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[x] Русификация _parse_* → _razobrat_* в остальных модулях
+[x] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[x] Русификация других английских паттернов
+[x] Русификация _shared/ инфраструктуры
+[x] Переименование FeatureMeta → MetaFunktsii, FeatureRegistry → ReyestrFunktsiy, RegisteredFeature → ZaregistrirovannayaFunktsiya
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead TODO.md[90m [limit=65][0m
+[0m
+[0m← [0mEdit TODO.md
+Index: /Users/denis/programming/autowork/mcp-russia/TODO.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/TODO.md
++++ /Users/denis/programming/autowork/mcp-russia/TODO.md
+@@ -1,8 +1,68 @@
+ # TODO
+ 
+ Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
+ 
++## Статус раунда 2026-06-24 (пятидесятый проход — полная русификация имён функций, методов, классов инфраструктуры)
++
++### Выполнено
++
++- **Русификация функций rosapi/client.py** (18 функций):
++  - `_dadata_headers` → `_zagolovki_dadaty`, `_nested_get` → `_vlozhennoe_poluchenie`, `_parse_org_data` → `_razobrat_dannye_organizatsii`, `_parse_bank_data` → `_razobrat_dannye_banka`, `_suggest_address` → `_predlozhit_adres`, `_find_by_fias` → `_nayti_po_fias`, `_postal_by_index` → `_pochtovyy_po_indeksu`, `_find_org_by_inn` → `_nayti_organizatsiyu_po_inn`, `_find_org_by_ogrn` → `_nayti_organizatsiyu_po_ogrn`, `_list_banks` → `_spisok_bankov`, `_find_bank_by_bik` → `_nayti_bank_po_bik`, `get_holidays` → `poluchit_prazdniki`, `consult_address_by_postal` → `konsultirovat_adres_po_pochtovomu`, `search_address` → `poisk_adresa`, `find_org_by_inn` → `nayti_organizatsiyu_po_inn`, `find_org_by_ogrn` → `nayti_organizatsiyu_po_ogrn`, `list_banks_public` → `spisok_bankov_publichnyy`, `find_bank_by_bik` → `nayti_bank_po_bik`
++  - Обновлены ссылки в tools.py и test_tools.py
++- **Русификация функций gibdd/client.py** (7 функций):
++  - `_extract_result` → `_izvlech_rezultat`, `_parse_history` → `_razobrat_istoriyu`, `_parse_dtp` → `_razobrat_dtp`, `_parse_wanted` → `_razobrat_rozysk`, `_parse_restrict` → `_razobrat_ogranichenie`, `_parse_driver` → `_razobrat_voditelya`, `_parse_statistika` → `_razobrat_statistiku`
++- **Русификация функций rosstat/client.py** (3 функции):
++  - `_parse_indikator_response` → `_razobrat_otvet_indikatora`, `get_subiekty_list` → `poluchit_spisok_subiektov`, `get_federalny_okruga_list` → `poluchit_spisok_federalnykh_okrugov`
++  - Обновлены ссылки в tools.py
++- **Русификация функций zakupki/client.py** (10 функций):
++  - `_get_api_token` → `_poluchit_api_token`, `_parse_zakupki_search` → `_razobrat_poisk_zakupok`, `_determine_zakon` → `_opredelit_zakon`, `_safe_float` → `_bezopasnoe_veshchestvennoe`, `_parse_kontrakty` → `_razobrat_kontrakty`, `_parse_plany` → `_razobrat_plany`, `get_tipy_dannykh` → `poluchit_tipy_dannykh`, `get_sposoby_zakupok` → `poluchit_sposoby_zakupok`, `get_otrasli` → `poluchit_otrasli`, `get_statusy_zakupok` → `poluchit_statusy_zakupok`
++  - Обновлены ссылки в tools.py и test_tools.py
++- **Русификация функций fns/client.py** (4 функции):
++  - `_egrul_search` → `_poisk_egrul`, `_parse_egrul_organization` → `_razobrat_egrul_organizatsiyu`, `_parse_egrul_ip` → `_razobrat_egrul_ip`, `_parse_status` → `_razobrat_status`
++- **Русификация `_parse_*` → `_razobrat_*` в оставшихся 17 модулях** (~55 функций):
++  - cekrf (5), gosduma (4), fssp (2), rosreestr (1), cbrf (1), roskomnadzor (5), rospotrebnadzor (2), mchs (5), rosaudit (4), rosselkhoznadzor (5), rosprirodnadzor (4), rosvodresursy (4), rosgidromet (3), minzdrav (4), kaznacheistvo (5), publikatsii (4), minobrnauki (2)
++  - Обновлены ссылки в тестах (cekrf, gosduma)
++- **Русификация `get_*_list` → `poluchit_spisok_*` и `get_*` → `poluchit_*`** (~50 функций в 14 модулях):
++  - sovfed (2), mchs (6), rosaudit (3), rosselkhoznadzor (7), rosprirodnadzor (3), rosvodresursy (5), rosgidromet (4), minzdrav (5), kaznacheistvo (2), publikatsii (4), gosduma (3+1), kad_arbitrazh (4), cekrf (3)
++  - Обновлены ссылки в tools.py, server.py и тестах
++- **Русификация других английских паттернов** (~10 функций):
++  - `_fetch_*` → `_zaprosit_*` (cekrf), `_find_*` → `_nayti_*` (rosgidromet), `_normalise_*` → `_normlizovat_*` (fssp), `_search_results` → `_rezultaty_poiska` (publikatsii), `_granty_fallback` → `_granty_rezervnye` (minobrnauki), `_proverka_ts_full` → `_polnaya_proverka_ts` (gibdd/tools.py), `_hpa_to_mmhg` → `_gpa_v_mmrtst`, `_deg_to_napravlenie` → `_gradusy_v_napravlenie` (rosgidromet)
++- **Русификация `_shared/` инфраструктуры** (~39 функций/методов):
++  - formatting.py (6): `markdown_table` → `tablitsa_v_markdown`, `format_rub` → `formatirovat_rubli`, `format_number_ru` → `formatirovat_chislo_ru`, `format_percent` → `formatirovat_protsent`, `parse_rub_number` → `razobrat_rublevoe_chislo`, `truncate_list` → `usech_spisok`
++  - validators.py (9): `_only_digits` → `_tolko_tsifry`, `validate_inn` → `proverit_inn`, `format_inn` → `formatirovat_inn`, `validate_kpp` → `proverit_kpp`, `format_kpp` → `formatirovat_kpp`, `validate_snils` → `proverit_snils`, `format_snils` → `formatirovat_snils`, `validate_postal_code_ru` → `proverit_pochtovyy_indeks`, `format_postal_code_ru` → `formatirovat_pochtovyy_indeks`
++  - feature.py (7): `features` → `funktsii`, `skipped` → `propushcheno`, `discover` → `obnaruzhit`, `_try_register` → `_poprovat_zaregistrirovat`, `mount_all` → `smontirovat_vse`, `summary` → `svodka`, `get_feature` → `poluchit_funktsiyu`
++  - batch.py (2): `_scan_tools_module` → `_skanirovat_modul_instrumentov`, `_run_one` → `_vypolnit_odin`
++  - cache.py (2): `size` → `razmer`, `_evict` → `_ischislit`
++  - rate_limiter.py (2): `_purge` → `_ochistit`, `acquire` → `zakhvatit`
++  - lifespan.py (1): `http_lifespan` → `http_zhiznennyy_tsikl`
++  - planner.py (1): `to_markdown` → `v_markdown`
++  - server.py (3): `on_call_tool` → `pri_vyzove_instrumenta`, `on_read_resource` → `pri_chtenii_resursa`, `on_get_prompt` → `pri_zaprose_prompta`
++  - Обновлены ссылки во всех 24 tools.py, server.py, batch.py, discovery.py, тестах
++- **Переименование классов инфраструктуры** (3 класса с алиасами для совместимости):
++  - `FeatureMeta` → `MetaFunktsii` (feature.py + алиас FeatureMeta)
++  - `RegisteredFeature` → `ZaregistrirovannayaFunktsiya` (feature.py + алиас RegisteredFeature)
++  - `FeatureRegistry` → `ReyestrFunktsiy` (feature.py + алиас FeatureRegistry)
++  - Обновлены импорты в 25 __init__.py, server.py, batch.py, discovery.py, тестах
++- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
++
++### Ключевые архитектурные решения
++
++- **~198 английских имён функций/методов русифицированы** за один проход: все английские имена функций в client.py (5 приоритетных модулей + 17 остальных), _shared/ инфраструктура, server.py
++- **Паттерн `_parse_*` → `_razobrat_*`** унифицирован во всех 22 модулях данных
++- **Паттерн `get_*_list` → `poluchit_spisok_*`** унифицирован во всех 14 модулях со справочными функциями
++- **Алиасы для классов инфраструктуры**: `FeatureMeta = MetaFunktsii`, `RegisteredFeature = ZaregistrirovannayaFunktsiya`, `FeatureRegistry = ReyestrFunktsiy` — существующий код может использовать оба имени
++- **FEATURE_META сохранена**: константа `FEATURE_META` в __init__.py модулей не переименована — это установившийся API-контракт; импорт обновлён на `from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta`
++- **Инфраструктурные функции форматирования и валидации русифицированы**: `markdown_table` → `tablitsa_v_markdown`, `validate_inn` → `proverit_inn` и т.д. — затронуло все 24 tools.py, которые импортируют эти функции
++
++### Следующие действия
++
++- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
++- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
++- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
++- **Проверка оставшихся английских артефактов в _shared/http_client.py**: `create_client`, `http_get`, `http_post` — основные HTTP-функции; переименование может быть нежелательным из-за широты использования
++- **Зачистка FEATURE_META**: после стабилизации — убрать алиас `FeatureMeta` и обновить все __init__.py на использование `MetaFunktsii` напрямую
++
+ ## Статус раунда 2026-06-23 (сорок девятый проход — русификация имён классов, функций, переменных, строковых значений, заголовков Makefile и скриптов)
+ 
+ ### Выполнено
+ 
+
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[x] Русификация _parse_* → _razobrat_* в остальных модулях
+[x] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[x] Русификация других английских паттернов
+[x] Русификация _shared/ инфраструктуры
+[x] Переименование FeatureMeta → MetaFunktsii и т.д.
+[x] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git status --short 2>&1 | head -40
+M TODO.md
+ M autowork.log
+ M src/mcp_russia/_shared/batch.py
+ M src/mcp_russia/_shared/cache.py
+ M src/mcp_russia/_shared/discovery.py
+ M src/mcp_russia/_shared/feature.py
+ M src/mcp_russia/_shared/formatting.py
+ M src/mcp_russia/_shared/lifespan.py
+ M src/mcp_russia/_shared/planner.py
+ M src/mcp_russia/_shared/rate_limiter.py
+ M src/mcp_russia/_shared/validators.py
+ M src/mcp_russia/agenty/redator/__init__.py
+ M src/mcp_russia/data/cbrf/__init__.py
+ M src/mcp_russia/data/cbrf/client.py
+ M src/mcp_russia/data/cbrf/tools.py
+ M src/mcp_russia/data/cekrf/__init__.py
+ M src/mcp_russia/data/cekrf/client.py
+ M src/mcp_russia/data/cekrf/tools.py
+ M src/mcp_russia/data/fns/__init__.py
+ M src/mcp_russia/data/fns/client.py
+ M src/mcp_russia/data/fns/tools.py
+ M src/mcp_russia/data/fssp/__init__.py
+ M src/mcp_russia/data/fssp/client.py
+ M src/mcp_russia/data/fssp/tools.py
+ M src/mcp_russia/data/gibdd/__init__.py
+ M src/mcp_russia/data/gibdd/client.py
+ M src/mcp_russia/data/gibdd/tools.py
+ M src/mcp_russia/data/gosduma/__init__.py
+ M src/mcp_russia/data/gosduma/client.py
+ M src/mcp_russia/data/gosduma/tools.py
+ M src/mcp_russia/data/kad_arbitrazh/__init__.py
+ M src/mcp_russia/data/kad_arbitrazh/client.py
+ M src/mcp_russia/data/kad_arbitrazh/tools.py
+ M src/mcp_russia/data/kaznacheistvo/__init__.py
+ M src/mcp_russia/data/kaznacheistvo/client.py
+ M src/mcp_russia/data/kaznacheistvo/tools.py
+ M src/mcp_russia/data/mchs/__init__.py
+ M src/mcp_russia/data/mchs/client.py
+ M src/mcp_russia/data/mchs/tools.py
+ M src/mcp_russia/data/minobrnauki/__init__.py
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git log --oneline -5 2>&1
+e6486df Русификация имён классов (исключения, Pydantic-схемы, TTLCache, RateLimiter), функций (_shared, _extract_list), переменных, строковых значений, Makefile-заголовков и скриптов
+b71f32d Устранение термина «feature» из промптов/документации, русификация Makefile-комментариев, внутренних переменных
+6ac09be Русификация полей Pydantic-схем (~67 замен), ключей constants.py (~1915 замен), параметров функций (~60+ замен) — полная координация schemas/constants/client/tools/tests
+b49df03 Русификация документации: feature→модуль, tools→инструменты, Prompt:→Промпт:, английские заголовки (~140 замен в 16 файлах)
+53d18ce Русификация полей Pydantic-схем (49 замен в 10 модулях): code→kod, name→nazvanie, value→znachenie, date→data и составные формы
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git diff --stat 2>&1 | tail -30
+src/mcp_russia/data/rosselkhoznadzor/client.py   |   36 +-
+ src/mcp_russia/data/rosselkhoznadzor/tools.py    |   30 +-
+ src/mcp_russia/data/rosstat/__init__.py          |    2 +-
+ src/mcp_russia/data/rosstat/client.py            |    8 +-
+ src/mcp_russia/data/rosstat/tools.py             |   50 +-
+ src/mcp_russia/data/rosvodresursy/__init__.py    |    2 +-
+ src/mcp_russia/data/rosvodresursy/client.py      |   28 +-
+ src/mcp_russia/data/rosvodresursy/tools.py       |   42 +-
+ src/mcp_russia/data/sovfed/__init__.py           |    2 +-
+ src/mcp_russia/data/sovfed/client.py             |    4 +-
+ src/mcp_russia/data/sovfed/tools.py              |   20 +-
+ src/mcp_russia/data/zakupki/__init__.py          |    2 +-
+ src/mcp_russia/data/zakupki/client.py            |   46 +-
+ src/mcp_russia/data/zakupki/tools.py             |   40 +-
+ src/mcp_russia/server.py                         |   28 +-
+ tests/_shared/test_batch.py                      |   10 +-
+ tests/_shared/test_cache.py                      |   10 +-
+ tests/_shared/test_feature.py                    |  104 +-
+ tests/_shared/test_formatting.py                 |   70 +-
+ tests/_shared/test_lifespan.py                   |    8 +-
+ tests/_shared/test_rate_limiter.py               |    2 +-
+ tests/_shared/test_validators.py                 |   68 +-
+ tests/data/gibdd/test_integration.py             |    2 +-
+ tests/data/gibdd/test_tools.py                   |    2 +-
+ tests/data/gosduma/test_tools.py                 |   36 +-
+ tests/data/rosapi/test_tools.py                  |   28 +-
+ tests/data/rosgidromet/test_tools.py             |   44 +-
+ tests/data/zakupki/test_tools.py                 |   26 +-
+ tests/test_discovery.py                          |    8 +-
+ 99 files changed, 7073 insertions(+), 949 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git add -A && git commit -m "Русификация ~198 имён функций/методов во всех модулях: _parse_*→_razobrat_*, get_*_list→poluchit_spisok_*, _shared/ инфраструктура, FeatureMeta→MetaFunktsii (с алиасами)"
+[main 2689037] Русификация ~198 имён функций/методов во всех модулях: _parse_*→_razobrat_*, get_*_list→poluchit_spisok_*, _shared/ инфраструктура, FeatureMeta→MetaFunktsii (с алиасами)
+ 99 files changed, 7073 insertions(+), 949 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git push 2>&1
+To github.com:denis-gordeev/mcp-russia.git
+   e6486df..2689037  main -> main
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md to understand current state
+[x] Explore codebase structure and find remaining English artifacts
+[x] Русификация функций rosapi/client.py (18 функций)
+[x] Русификация функций gibdd/client.py (7 функций)
+[x] Русификация функций rosstat/client.py (3 функции)
+[x] Русификация функций zakupki/client.py (10 функций)
+[x] Русификация функций fns/client.py (4 функции)
+[x] Русификация _parse_* → _razobrat_* в остальных модулях
+[x] Русификация get_*_list → poluchit_spisok_* в остальных модулях
+[x] Русификация других английских паттернов
+[x] Русификация _shared/ инфраструктуры
+[x] Переименование FeatureMeta → MetaFunktsii и т.д.
+[x] Update TODO.md with completed items and next actions
+[x] Commit and push if ready
+[0m
+Now I have a comprehensive picture. The TODO.md explicitly lists the next action: **русификация оставшихся английских имён функций в client.py** across 5 modules (rosapi, gibdd, rosstat, zakupki, fns). Let me start working on this systematically.
+Let me read the remaining priority module files and their test files.
+Now I have a clear picture of all 5 priority modules. Let me use parallel agents to handle the renames efficiently across all modules simultaneously.
+Now let me handle the remaining `_parse_*` → `_razobrat_*` pattern across ALL other modules, plus the `get_*` → `poluchit_*` pattern and other English patterns.
+Good, both agents completed. Let me run the full test suite and lint checks.
+All checks pass: ruff check, ruff format, and 680 tests passed. Now let me also rename the `_shared/` infrastructure functions, which is the remaining category of English names.
+All checks pass. Now let me also handle the FeatureMeta → MetaFunktsii / FeatureRegistry → ReyestrFunktsiy / RegisteredFeature → ZaregistrirovannayaFunktsiya renaming that was listed as another TODO item.
+All 680 tests pass, ruff check and format clean. Now let me update TODO.md with the completed items.
+Now let me update TODO.md with the new round status.
+Now let me commit and push.
+Раунд 50 завершён. Итоги:
+
+**Русифицировано ~198 имён функций/методов** за один проход:
+
+- **5 приоритетных модулей** (rosapi 18, gibdd 7, rosstat 3, zakupki 10, fns 4) — все английские имена функций из TODO
+- **`_parse_*` → `_razobrat_*`** — унифицировано в 17 оставшихся модулях (~55 функций)
+- **`get_*_list` → `poluchit_spisok_*`** — унифицировано в 14 модулях (~50 функций)
+- **`_shared/` инфраструктура** — formatting, validators, feature, cache, rate_limiter, batch, lifespan, planner, server (~39 функций)
+- **`FeatureMeta` → `MetaFunktsii`**, **`FeatureRegistry` → `ReyestrFunktsiy`**, **`RegisteredFeature` → `ZaregistrirovannayaFunktsiya`** — с алиасами для совместимости
+- **Другие паттерны**: `_fetch_*`, `_find_*`, `_normalise_*`, `_search_results`, `_safe_float`, `_hpa_to_mmhg` и др.
+
+Проверки: `ruff check` — passed, `ruff format` — formatted, `pytest` — 680 passed, 1 skipped.

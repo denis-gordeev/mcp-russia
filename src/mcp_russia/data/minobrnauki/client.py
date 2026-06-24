@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     OBRNADZOR_ACCRED_URL,
@@ -38,7 +38,7 @@ async def poisk_akreditovannyh_vuzov(
         Список аккредитованных учреждений.
     """
     try:
-        data = await http_get(OBRNADZOR_ACCRED_URL, timeout=30.0)
+        data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
         if not isinstance(data, list):
             return []
         results = []
@@ -68,7 +68,7 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         Данные об аккредитации или None.
     """
     try:
-        data = await http_get(OBRNADZOR_ACCRED_URL, timeout=30.0)
+        data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
         if not isinstance(data, list):
             return None
         for item in data:
@@ -96,7 +96,7 @@ async def poisk_licenziy(
         Список лицензированных учреждений.
     """
     try:
-        data = await http_get(OBRNADZOR_LICENSE_URL, timeout=30.0)
+        data = await http_poluchit(OBRNADZOR_LICENSE_URL, timeout=30.0)
         if not isinstance(data, list):
             return []
         results = []
@@ -129,7 +129,7 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
         params: dict[str, Any] = {}
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if not isinstance(data, list):
             return []
         return [

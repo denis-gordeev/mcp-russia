@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import PROVERKI_API_BASE, ZPP_API_BASE
 
@@ -42,7 +42,7 @@ async def poisk_proverok(
             params["targetName"] = nazvanie_tseli
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
@@ -66,7 +66,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_proverku(data)
         return None
@@ -97,7 +97,7 @@ async def plan_proverok(
             params["year"] = god
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
@@ -130,7 +130,7 @@ async def poisk_zhalob(
             params["organizationName"] = organizaciya
         if inn:
             params["inn"] = inn
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):

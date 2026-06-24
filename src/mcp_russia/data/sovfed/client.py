@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     DATA_GOV_RU_SOVFED,
@@ -44,7 +44,7 @@ async def poisk_senatorov(
             params["region"] = region
         if komitet:
             params["committee"] = komitet
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_parse_senator(p) for p in items if isinstance(p, dict)]
@@ -54,7 +54,7 @@ async def poisk_senatorov(
     try:
         url = f"{DATA_GOV_RU_SOVFED}"
         params: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_parse_senator(p) for p in items if isinstance(p, dict)]
@@ -83,7 +83,7 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
     """
     try:
         url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
             return _parse_senator(data)
     except Exception:
@@ -99,7 +99,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
     """Получить список комитетов Совета Федерации из API sovfed.ru."""
     try:
         url = f"{SOVFED_API_BASE}/committees"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_parse_komitet(p) for p in items if isinstance(p, dict)]
@@ -113,7 +113,7 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
     """Получить список комиссий Совета Федерации из API sovfed.ru."""
     try:
         url = f"{SOVFED_API_BASE}/commissions"
-        data = await http_get(url, timeout=15.0)
+        data = await http_poluchit(url, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_parse_komitet(p) for p in items if isinstance(p, dict)]
@@ -143,7 +143,7 @@ async def poisk_zakonoproektov(
             params["status"] = status
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_parse_zakonoproekt(p) for p in items if isinstance(p, dict)]
     except Exception:
@@ -165,7 +165,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         params: dict[str, Any] = {}
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_parse_zasedanie(p) for p in items if isinstance(p, dict)]
     except Exception:

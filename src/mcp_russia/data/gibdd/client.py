@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import GIBDD_CHECK_BASE, GIBDD_STAT_BASE
 from .schemas import (
@@ -34,7 +34,7 @@ async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
     """
     url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_istoriyu(data, vin)
     except Exception:
         logger.exception("Ошибка при проверке истории ТС по VIN %s", vin)
@@ -52,7 +52,7 @@ async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
     """
     url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_dtp(data)
     except Exception:
         logger.exception("Ошибка при проверке ДТП по VIN %s", vin)
@@ -70,7 +70,7 @@ async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
     """
     url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_rozysk(data)
     except Exception:
         logger.exception("Ошибка при проверке розыска ТС по VIN %s", vin)
@@ -88,7 +88,7 @@ async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
     """
     url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_ogranichenie(data)
     except Exception:
         logger.exception("Ошибка при проверке ограничений ТС по VIN %s", vin)
@@ -106,7 +106,7 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     """
     url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_voditelya(data, nomer_vu)
     except Exception:
         logger.exception("Ошибка при проверке ВУ %s", nomer_vu)
@@ -126,7 +126,7 @@ async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
     url = f"{GIBDD_STAT_BASE}/map/dtp"
     params = {"region": region, "year": str(god)}
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_statistiku(data, region, god)
     except Exception:
         logger.exception("Ошибка при получении статистики ДТП для %s, %d", region, god)

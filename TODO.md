@@ -2,6 +2,63 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-24 (пятьдесят первый проход — русификация HTTP-клиента, зачистка алиасов, переименование констант)
+
+### Выполнено
+
+- **Русификация HTTP-клиента** (3 функции + 24 импорта):
+  - `create_client` → `sozdat_klienta` (http_client.py)
+  - `http_get` → `http_poluchit` (http_client.py)
+  - `http_post` → `http_otpravit` (http_client.py)
+  - Обновлены импорты и вызовы в 24 client.py, cache.py (docstring), test_http_client.py
+- **Удаление мёртвых алиасов** (5 алиасов, 0 внешних использований):
+  - `FeatureError = OshibkaFunktsii` удалён (exceptions.py)
+  - `HttpClientError = OshibkaHttpClienta` удалён (exceptions.py)
+  - `AuthError = OshibkaAutentifikatsii` удалён (exceptions.py)
+  - `FeatureMeta = MetaFunktsii` удалён (feature.py)
+  - `RegisteredFeature = ZaregistrirovannayaFunktsiya` удалён (feature.py)
+  - `FeatureRegistry = ReyestrFunktsiy` удалён (feature.py)
+- **Зачистка импортов FeatureMeta** (25 __init__.py):
+  - `from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta` → `from mcp_russia._shared.feature import MetaFunktsii`
+  - `FeatureMeta(` → `MetaFunktsii(` во всех 25 __init__.py
+- **Переименование FEATURE_META → META_FUNKTSII** (25 __init__.py + feature.py):
+  - Константа `FEATURE_META` → `META_FUNKTSII` во всех 25 __init__.py модулей
+  - Обновлены ссылки в feature.py: getattr, сообщения об ошибках, docstring
+  - Обновлена ссылка в tests/_shared/test_feature.py
+- **Русификация инфраструктурных имён** (6 замен):
+  - `RequestLoggingMiddleware` → `PosrednikLogirovaniyaZaprosov` (server.py)
+  - `_RETRYABLE_STATUS_CODES` → `_KODY_STATUSOV_DLYA_POVTORA` (http_client.py)
+  - `_dispatch` → `_dispetcher` (batch.py + test_batch.py)
+  - `_catalog_cache` → `_kesh_kataloga` (discovery.py + test_discovery.py)
+  - `_SYSTEM_PROMPT` → `_SISTEMNYY_PROMPT` (planner.py)
+  - `_always_visible` → `_vsegda_vidimye` (server.py)
+- **Русификация документации** (~20 замен в 8 файлах):
+  - cliff.toml: `# Changelog` → `# Журнал изменений`, `## [Unreleased]` → `## [Не выпущено]`, 8 group names (Features→Новые функции, Bug Fixes→Исправления, Documentation→Документация, Performance→Производительность, Refactoring→Рефакторинг, Styling→Стиль кода, Testing→Тестирование, Miscellaneous→Прочее, Build→Сборка)
+  - CONTRIBUTING.md: `FEATURE_META` → `META_FUNKTSII`, `FeatureMeta` → `MetaFunktsii`, `MCP tools` → `MCP-инструментов`, `Pydantic models` → `модели Pydantic`, `tool` → `инструмент`, `feature` → `модуль`, `auto-discovery` → `автообнаружения`, `Breaking change` → `Критическое изменение`
+  - pyproject.toml: 3 английских комментария → русские
+  - CHANGELOG.md: `# Changelog` → `# Журнал изменений`
+  - README.md: `Brazilian validators` → `бразильские валидаторы`
+  - docs/guide/development.md: `test suite` → `набор тестов`, `quality gate` → `контроль качества`
+  - docs/guide/adding-features.md: `auto-discovery` → `автообнаружение`, `root server` → `корневой сервер`
+  - docs/concepts/architecture.md: `root server` → `корневой сервер`, `tool-call` → `вызовов инструментов`
+  - docs/reference/smart-tools.md: `tool calls` → `вызовов инструментов`, `round-trips` → `обменов`, `tool name` → `имя инструмента`, `Tool` → `Инструмент`
+  - docs/examples/ofitsialnyy-redaktor.md: `resource` → `ресурс`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **HTTP-клиент полностью русифицирован**: `create_client` → `sozdat_klienta`, `http_get` → `http_poluchit`, `http_post` → `http_otpravit` — основные HTTP-функции теперь имеют русские имена; обновлены все 24 клиента данных
+- **Все мёртвые алиасы удалены**: `FeatureError`, `HttpClientError`, `AuthError`, `FeatureMeta`, `RegisteredFeature`, `FeatureRegistry` — 0 внешних использований, чистое удаление без алиасов
+- **FEATURE_META → META_FUNKTSII**: константа переименована, алиас `FeatureMeta` убран — все 25 __init__.py теперь используют `MetaFunktsii` напрямую
+- **cliff.toml русифицирован**: при следующей генерации CHANGELOG.md группы секций будут на русском
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских артефактов**: `McpRussiaError` (базовый класс исключений), поля dataclass MetaFunktsii (`name`, `description`, `version`, `api_base`, `requires_auth`, `auth_env_var`, `enabled`, `tags`), английские имена тестовых классов/функций (~47 классов, ~176 функций), `"error"` ключи словарей (5 модулей), параметры функций (`postal_code`, `max_requests`, `tool_name`, `tool`)
+
 ## Статус раунда 2026-06-24 (пятидесятый проход — полная русификация имён функций, методов, классов инфраструктуры)
 
 ### Выполнено

@@ -33,7 +33,7 @@ logger = logging.getLogger("mcp-russia")
 # ---------------------------------------------------------------------------
 # Промежуточный слой — логирование запросов
 # ---------------------------------------------------------------------------
-class RequestLoggingMiddleware(Middleware):
+class PosrednikLogirovaniyaZaprosov(Middleware):
     """Логирует все вызовы инструментов, чтения ресурсов и запросы промптов."""
 
     async def pri_vyzove_instrumenta(
@@ -79,7 +79,7 @@ class RequestLoggingMiddleware(Middleware):
 mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
 
 # Добавление промежуточного слоя
-mcp.add_middleware(RequestLoggingMiddleware())
+mcp.add_middleware(PosrednikLogirovaniyaZaprosov())
 
 # Автоматическое обнаружение и монтирование всех функций
 registry = ReyestrFunktsiy()
@@ -174,7 +174,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
 # ---------------------------------------------------------------------------
 # Трансформация поиска инструментов — настраивается через MCP_RUSSIA_TOOL_SEARCH
 # ---------------------------------------------------------------------------
-_always_visible = [
+_vsegda_vidimye = [
     "spisok_funktsiy",
     "rekomendovat_instrumenty",
     "splanirovat_zapros",
@@ -187,7 +187,7 @@ if TOOL_SEARCH == "bm25":
     mcp.add_transform(
         BM25SearchTransform(
             max_results=10,
-            always_visible=_always_visible,
+            always_visible=_vsegda_vidimye,
         )
     )
     logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
@@ -218,7 +218,7 @@ elif TOOL_SEARCH == "code_mode":
         mcp.add_transform(
             BM25SearchTransform(
                 max_results=10,
-                always_visible=_always_visible,
+                always_visible=_vsegda_vidimye,
             )
         )
 

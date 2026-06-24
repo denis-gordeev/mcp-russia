@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     ISTOCHNIKI_PUBLIKATSIY,
@@ -42,7 +42,7 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
     if tip:
         params["tip"] = tip
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_normativnyy_akt(data)
     except Exception:
         return None
@@ -59,7 +59,7 @@ async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     """
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_zakon_proekt(data)
     except Exception:
         return None
@@ -93,7 +93,7 @@ async def poluchit_publikatsii(
     if data_to:
         params["dateTo"] = data_to
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_publikatsii(data)
     except Exception:
         return []
@@ -110,7 +110,7 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     """
     url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
     try:
-        data = await http_get(url)
+        data = await http_poluchit(url)
         return _razobrat_izmeneniya(data)
     except Exception:
         return []
@@ -131,7 +131,7 @@ async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
     if tip:
         params["type"] = tip
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _rezultaty_poiska(data)
     except Exception:
         return []

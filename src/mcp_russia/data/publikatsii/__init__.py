@@ -1,8 +1,8 @@
 """Официальные публикации РФ — нормативные акты и публикации на pravo.gov.ru."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="publikatsii",
     description=(
         "Официальные публикации Российской Федерации: федеральные законы, "

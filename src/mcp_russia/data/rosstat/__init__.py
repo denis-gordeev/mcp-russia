@@ -1,8 +1,8 @@
 """Росстат — данные Федеральной службы государственной статистики."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosstat",
     description=(
         "Данные Росстата: демография, инфляция (ИПЦ), промышленное производство, "

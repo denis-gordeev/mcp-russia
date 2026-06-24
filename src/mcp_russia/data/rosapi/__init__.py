@@ -8,9 +8,9 @@
 - Почтовые индексы
 """
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosapi",
     description=(
         "Справочные данные для России: адреса (ФИАС), организации (ИНН/ОГРН), "

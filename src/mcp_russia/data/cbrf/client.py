@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import CBR_DAILY_JSON
 from .schemas import ZnachenieValyuty
@@ -52,7 +52,7 @@ async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
         Сырой JSON-ответ от API ЦБ РФ.
     """
     url = CBR_DAILY_JSON
-    return await http_get(url)
+    return await http_poluchit(url)
 
 
 async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyuty | None:
@@ -114,6 +114,6 @@ async def poluchit_dinamiku_kursa(kod: str) -> dict[str, Any]:
     """
     url = f"https://www.cbr-xml-daily.ru/dynamics/{kod}/dynamic_json.js"
     try:
-        return await http_get(url)
+        return await http_poluchit(url)
     except Exception:
         return {"error": f"Нет данных для валюты {kod}"}

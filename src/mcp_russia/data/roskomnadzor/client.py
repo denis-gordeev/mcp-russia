@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     EAIS_API_BASE,
@@ -39,7 +39,7 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
             params["inn"] = inn
         if nazvanie:
             params["name"] = nazvanie
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
@@ -69,7 +69,7 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
             params["name"] = nazvanie
         if inn:
             params["inn"] = inn
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
@@ -96,7 +96,7 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
     try:
         url = f"{EAIS_API_BASE}/api/check"
         params = {"domain": domen}
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_blokirovku(data, domen)
         return {"domain": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
@@ -127,7 +127,7 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
             params["number"] = nomer
         if inn:
             params["inn"] = inn
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
@@ -157,7 +157,7 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
             params["regNumber"] = registracionnyy_nomer
         if nazvanie:
             params["name"] = nazvanie
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):

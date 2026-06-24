@@ -12,7 +12,7 @@ from ..settings import ANTHROPIC_API_KEY
 
 logger = logging.getLogger("mcp-russia.discovery")
 
-_catalog_cache: str = ""
+_kesh_kataloga: str = ""
 
 
 def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool: object) -> str:
@@ -58,9 +58,9 @@ def postroit_katalog(registry: object) -> str:
     Возвращает:
         Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
     """
-    global _catalog_cache
-    if _catalog_cache:
-        return _catalog_cache
+    global _kesh_kataloga
+    if _kesh_kataloga:
+        return _kesh_kataloga
 
     lines: list[str] = []
     features = getattr(registry, "funktsii", {})
@@ -83,8 +83,8 @@ def postroit_katalog(registry: object) -> str:
             for tool_name, tool in server._tool_manager._tools.items():
                 lines.append(_formatirovat_signaturu_instrumenta(meta.name, tool_name, tool))
 
-    _catalog_cache = "\n".join(lines)
-    return _catalog_cache
+    _kesh_kataloga = "\n".join(lines)
+    return _kesh_kataloga
 
 
 async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:

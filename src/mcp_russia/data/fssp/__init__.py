@@ -1,8 +1,8 @@
 """ФССП — данные Федеральной службы судебных приставов."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="fssp",
     description=(
         "Данные ФССП России: исполнительные производства, взыскания, "

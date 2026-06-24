@@ -19,12 +19,12 @@ make dev
 |---------|------------|
 | `make sync` | установить production-зависимости |
 | `make dev` | установить production + dev зависимости |
-| `make test` | запустить весь test suite |
+| `make test` | запустить весь набор тестов |
 | `make test-feature F=cbrf` | прогнать тесты одного модуля |
 | `make lint` | `ruff check` + `ruff format --check` |
 | `make fix` | auto-fix для lint и форматирования |
 | `make types` | `mypy` по `src/mcp_russia/` |
-| `make ci` | полный локальный quality gate |
+| `make ci` | полный локальный контроль качества |
 | `make run` | запуск MCP-сервера по stdio |
 | `make serve` | запуск MCP-сервера по HTTP |
 | `make inspect` | вывести сводку зарегистрированных модулей |

@@ -90,7 +90,7 @@ def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[
     Пример:
         @kesh_s_vremenem_zhizni(ttl=60)
         async def poluchit_region() -> list[Region]:
-            return await http_get(...)
+            return await http_poluchit(...)
     """
     cache = KeshSVremenemZhizni(ttl=ttl, maxsize=maxsize)
 

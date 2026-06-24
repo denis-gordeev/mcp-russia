@@ -12,7 +12,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA_MCHS,
@@ -53,7 +53,7 @@ async def statistika_pojarov(
             params["year"] = god
         if vid_pozhara:
             params["fireType"] = vid_pozhara
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
@@ -67,7 +67,7 @@ async def statistika_pojarov(
             params["region"] = region
         if god:
             params["year"] = god
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
@@ -103,7 +103,7 @@ async def poisk_chs(
             params["type"] = vid_chs
         if klass_chs:
             params["class"] = klass_chs
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
@@ -117,7 +117,7 @@ async def poisk_chs(
             params["region"] = region
         if vid_chs:
             params["type"] = vid_chs
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
@@ -143,7 +143,7 @@ async def radiatsionnyy_monitoring(
         params: dict[str, Any] = {}
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_radiatsiyu(p) for p in items if isinstance(p, dict)]
@@ -169,7 +169,7 @@ async def gidrologicheskaya_obstanovka(
         params: dict[str, Any] = {}
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_gidrologiyu(p) for p in items if isinstance(p, dict)]
@@ -199,7 +199,7 @@ async def preduprezhdeniya_chs(
             params["region"] = region
         if tip_opasnosti:
             params["dangerType"] = tip_opasnosti
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]

@@ -1,8 +1,8 @@
 """ГИБДД/МВД — данные Госавтоинспекции и Министерства внутренних дел."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="gibdd",
     description=(
         "Данные ГИБДД/МВД России: штрафы, проверка транспортных средств, "

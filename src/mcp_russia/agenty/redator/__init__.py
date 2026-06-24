@@ -5,9 +5,9 @@
 на основе ГОСТ Р 7.0.97-2016 и правил делопроизводства РФ.
 """
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="deloproizvodstvo",
     description=(
         "Deloproizvodstvo v mcp-russia: "

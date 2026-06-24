@@ -18,7 +18,7 @@ def _mock_ctx() -> MagicMock:
 @pytest.fixture(autouse=True)
 def _reset_dispatch() -> None:
     """Очищает таблицу диспетчеризации перед каждым тестом."""
-    batch._dispatch.clear()
+    batch._dispetcher.clear()
 
 
 class TestBuildDispatch:
@@ -70,7 +70,7 @@ class TestExecuteBatch:
         async def _spec(ctx: object, param: str) -> str: ...
 
         mock_fn = AsyncMock(spec=_spec, return_value="rezultat ok")
-        batch._dispatch["test_tool"] = mock_fn
+        batch._dispetcher["test_tool"] = mock_fn
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
@@ -86,7 +86,7 @@ class TestExecuteBatch:
         async def no_ctx_tool(name: str) -> str:
             return f"hello {name}"
 
-        batch._dispatch["greet"] = no_ctx_tool
+        batch._dispetcher["greet"] = no_ctx_tool
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
@@ -104,7 +104,7 @@ class TestExecuteBatch:
             call_count += 1
             return f"result-{n}"
 
-        batch._dispatch["counter"] = counting_tool
+        batch._dispetcher["counter"] = counting_tool
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
@@ -128,7 +128,7 @@ class TestExecuteBatch:
             msg = "API timeout"
             raise TimeoutError(msg)
 
-        batch._dispatch["fail"] = failing_tool
+        batch._dispetcher["fail"] = failing_tool
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy([{"tool": "fail", "args": {}}], ctx)
@@ -146,8 +146,8 @@ class TestExecuteBatch:
             msg = "oops"
             raise ValueError(msg)
 
-        batch._dispatch["ok"] = ok_tool
-        batch._dispatch["bad"] = bad_tool
+        batch._dispetcher["ok"] = ok_tool
+        batch._dispetcher["bad"] = bad_tool
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(

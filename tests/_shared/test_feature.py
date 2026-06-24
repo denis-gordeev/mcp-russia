@@ -179,7 +179,7 @@ class TestReyestrFunktsiy:
 
     def test_summary_with_skipped(self) -> None:
         registry = ReyestrFunktsiy()
-        registry._skipped["broken"] = "отсутствует FEATURE_META"
+        registry._skipped["broken"] = "отсутствует META_FUNKTSII"
         summary = registry.svodka()
         assert "1 пропущено" in summary
         assert "broken" in summary

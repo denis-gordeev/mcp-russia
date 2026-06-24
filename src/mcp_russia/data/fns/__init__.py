@@ -1,8 +1,8 @@
 """ФНС — данные Федеральной налоговой службы."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="fns",
     description=(
         "Данные ФНС России: налоговые начисления, проверки, ЕГРЮЛ/ЕГРИП, "

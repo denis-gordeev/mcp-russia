@@ -1,7 +1,7 @@
 """Метаданные функций и автоматический реестр mcp-russia.
 
 Модуль реализует автоматическое обнаружение функций на основе конвенции.
-Любой подпакет mcp_russia, экспортирующий FEATURE_META и содержащий
+Любой подпакет mcp_russia, экспортирующий META_FUNKTSII и содержащий
 server.py с объектом `mcp`, будет автоматически обнаружен,
 провалидирован и смонтирован на корневой сервер.
 
@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 class MetaFunktsii:
     """Декларативные метаданные функции.
 
-    Каждая функция должна экспортировать экземпляр FEATURE_META в своём __init__.py.
+    Каждая функция должна экспортировать экземпляр META_FUNKTSII в своём __init__.py.
     Реестр использует эти метаданные для обнаружения, валидации, документации
     и решений во время выполнения (авторизация, флаги функций).
 
@@ -49,7 +49,7 @@ class MetaFunktsii:
         # src/mcp_russia/rosstat/__init__.py
         from mcp_russia._shared.feature import MetaFunktsii
 
-        FEATURE_META = MetaFunktsii(
+        META_FUNKTSII = MetaFunktsii(
             name="rosstat",
             description="Росстат: демография, ВРП, социальные показатели",
             api_base="https://rosstat.gov.ru/api",
@@ -74,9 +74,6 @@ class MetaFunktsii:
         return bool(os.environ.get(self.auth_env_var))
 
 
-FeatureMeta = MetaFunktsii
-
-
 @dataclass
 class ZaregistrirovannayaFunktsiya:
     """Обнаруженная, провалидированная и зарегистрированная функция."""
@@ -86,24 +83,21 @@ class ZaregistrirovannayaFunktsiya:
     module_path: str
 
 
-RegisteredFeature = ZaregistrirovannayaFunktsiya
-
-
 class ReyestrFunktsiy:
     """Автоматический реестр: обнаружение, валидация и монтирование функций.
 
     Использует pkgutil.iter_modules() для сканирования подпакетов mcp_russia,
-    импортирует те, что следуют конвенции (FEATURE_META + server.mcp),
+    импортирует те, что следуют конвенции (META_FUNKTSII + server.mcp),
     и монтирует их на корневой FastMCP-сервер.
 
     Конвенция (все условия обязательны для автообнаружения):
         1. Подпакет mcp_russia/ (директория с __init__.py)
         2. Имя НЕ начинается с '_'
-        3. __init__.py экспортирует FEATURE_META: MetaFunktsii
+        3. __init__.py экспортирует META_FUNKTSII: MetaFunktsii
         4. server.py экспортирует mcp: FastMCP
         5. Если requires_auth=True, auth_env_var должен быть задан в окружении
 
-    Для отключения функции: установите enabled=False в FEATURE_META.
+    Для отключения функции: установите enabled=False в META_FUNKTSII.
     """
 
     def __init__(self) -> None:
@@ -157,12 +151,12 @@ class ReyestrFunktsiy:
         # Шаг 1: Импорт __init__.py функции
         importiruyemyy_modul = importlib.import_module(module_path)
 
-        # Шаг 2: Проверка наличия и корректности FEATURE_META
-        meta = getattr(importiruyemyy_modul, "FEATURE_META", None)
+        # Шаг 2: Проверка наличия и корректности META_FUNKTSII
+        meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
         if meta is None:
-            raise ValueError(f"Нет FEATURE_META в {module_path}")
+            raise ValueError(f"Нет META_FUNKTSII в {module_path}")
         if not isinstance(meta, MetaFunktsii):
-            raise TypeError(f"FEATURE_META в {module_path} не является экземпляром MetaFunktsii")
+            raise TypeError(f"META_FUNKTSII в {module_path} не является экземпляром MetaFunktsii")
 
         # Шаг 3: Проверка активности функции
         if not meta.enabled:
@@ -240,6 +234,3 @@ class ReyestrFunktsiy:
     def poluchit_funktsiyu(self, name: str) -> ZaregistrirovannayaFunktsiya | None:
         """Получение зарегистрированной функции по имени."""
         return self._features.get(name)
-
-
-FeatureRegistry = ReyestrFunktsiy

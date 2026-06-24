@@ -79,7 +79,7 @@ class PlanZaprosa(BaseModel):
 
 ## `vypolnit_paket`
 
-Выполняет до 10 tool calls за одну MCP-команду и снижает число round-trips между моделью и сервером.
+Выполняет до 10 вызовов инструментов за одну MCP-команду и снижает число обменов между моделью и сервером.
 
 ```text
 → vypolnit_paket([
@@ -92,7 +92,7 @@ class PlanZaprosa(BaseModel):
 
 Как работает:
 
-1. `build_dispatch(registry)` строит отображение `tool name -> async function`
+1. `build_dispatch(registry)` строит отображение `имя инструмента -> асинхронная функция`
 2. `asyncio.gather()` выполняет вызовы параллельно
 3. Результаты возвращаются в исходном порядке
 
@@ -103,7 +103,7 @@ class PlanZaprosa(BaseModel):
 | Ситуация | Tool |
 |----------|------|
 | Нужно понять, что вообще доступно | `spisok_funktsiy` |
-| Нужно быстро подобрать tool под вопрос | `rekomendovat_instrumenty` |
+| Нужно быстро подобрать инструмент под вопрос | `rekomendovat_instrumenty` |
 | Нужно разложить сложный запрос на этапы | `splanirovat_zapros` |
 | Нужно получить несколько независимых ответов за один проход | `vypolnit_paket` |
 

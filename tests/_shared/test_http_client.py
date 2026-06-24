@@ -6,46 +6,46 @@ import httpx
 import pytest
 import respx
 
-from mcp_russia._shared.http_client import create_client, http_get
+from mcp_russia._shared.http_client import http_poluchit, sozdat_klienta
 from mcp_russia.exceptions import OshibkaHttpClienta
 
 
-class TestCreateClient:
+class TestSozdatKlienta:
     def test_returns_async_client(self) -> None:
-        client = create_client()
+        client = sozdat_klienta()
         assert isinstance(client, httpx.AsyncClient)
 
     def test_sets_default_headers(self) -> None:
-        client = create_client()
+        client = sozdat_klienta()
         assert "mcp-russia" in client.headers["user-agent"]
         assert client.headers["accept"] == "application/json"
 
     def test_custom_base_url(self) -> None:
-        client = create_client(base_url="https://www.cbr.ru")
+        client = sozdat_klienta(base_url="https://www.cbr.ru")
         assert str(client.base_url) == "https://www.cbr.ru"
 
     def test_custom_timeout(self) -> None:
-        client = create_client(timeout=5.0)
+        client = sozdat_klienta(timeout=5.0)
         assert client.timeout.connect == 5.0
 
     def test_custom_headers_merged(self) -> None:
-        client = create_client(headers={"X-Api-Key": "secret"})
+        client = sozdat_klienta(headers={"X-Api-Key": "secret"})
         assert client.headers["x-api-key"] == "secret"
         assert "mcp-russia" in client.headers["user-agent"]
 
     def test_follow_redirects_enabled(self) -> None:
-        client = create_client()
+        client = sozdat_klienta()
         assert client.follow_redirects is True
 
 
-class TestHttpGet:
+class TestHttpPoluchit:
     @pytest.mark.asyncio
     @respx.mock
     async def test_success_returns_json(self) -> None:
         respx.get("https://api.example.com/data").mock(
             return_value=httpx.Response(200, json={"ok": True})
         )
-        result = await http_get("https://api.example.com/data")
+        result = await http_poluchit("https://api.example.com/data")
         assert result == {"ok": True}
 
     @pytest.mark.asyncio
@@ -54,7 +54,7 @@ class TestHttpGet:
         respx.get("https://api.example.com/search").mock(
             return_value=httpx.Response(200, json=[1, 2, 3])
         )
-        result = await http_get("https://api.example.com/search", params={"q": "test"})
+        result = await http_poluchit("https://api.example.com/search", params={"q": "test"})
         assert result == [1, 2, 3]
 
     @pytest.mark.asyncio
@@ -65,7 +65,7 @@ class TestHttpGet:
             return_value=httpx.Response(404, text="Not Found")
         )
         with pytest.raises(OshibkaHttpClienta, match="HTTP 404"):
-            await http_get("https://api.example.com/missing", max_retries=2)
+            await http_poluchit("https://api.example.com/missing", max_retries=2)
 
     @pytest.mark.asyncio
     @respx.mock
@@ -77,7 +77,7 @@ class TestHttpGet:
             httpx.Response(200, json={"recovered": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_get("https://api.example.com/flaky", max_retries=2)
+            result = await http_poluchit("https://api.example.com/flaky", max_retries=2)
         assert result == {"recovered": True}
 
     @pytest.mark.asyncio
@@ -90,7 +90,7 @@ class TestHttpGet:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_get("https://api.example.com/limited", max_retries=2)
+            result = await http_poluchit("https://api.example.com/limited", max_retries=2)
         assert result == {"ok": True}
 
     @pytest.mark.asyncio
@@ -104,7 +104,7 @@ class TestHttpGet:
             patch("mcp_russia._shared.http_client.asyncio.sleep"),
             pytest.raises(OshibkaHttpClienta, match="не удался после"),
         ):
-            await http_get("https://api.example.com/down", max_retries=1)
+            await http_poluchit("https://api.example.com/down", max_retries=1)
 
     @pytest.mark.asyncio
     @respx.mock
@@ -116,7 +116,7 @@ class TestHttpGet:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_get("https://api.example.com/slow", max_retries=2)
+            result = await http_poluchit("https://api.example.com/slow", max_retries=2)
         assert result == {"ok": True}
 
     @pytest.mark.asyncio
@@ -127,4 +127,4 @@ class TestHttpGet:
             return_value=httpx.Response(500, text="Error")
         )
         with pytest.raises(OshibkaHttpClienta, match="HTTP 500"):
-            await http_get("https://api.example.com/once", max_retries=0)
+            await http_poluchit("https://api.example.com/once", max_retries=0)

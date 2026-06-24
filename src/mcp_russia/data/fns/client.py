@@ -13,7 +13,7 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get, http_post
+from mcp_russia._shared.http_client import http_otpravit, http_poluchit
 
 from .constants import EGRUL_API_BASE
 from .schemas import (
@@ -137,7 +137,7 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     search_url = EGRUL_API_BASE
     result_url = f"{EGRUL_API_BASE}/search-result/"
 
-    task_data = await http_post(
+    task_data = await http_otpravit(
         search_url,
         headers={"Content-Type": "application/x-www-form-urlencoded"},
         json_body=None,
@@ -150,7 +150,7 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
 
     await asyncio.sleep(0.5)
 
-    result = await http_get(f"{result_url}{token}")
+    result = await http_poluchit(f"{result_url}{token}")
     return result
 
 

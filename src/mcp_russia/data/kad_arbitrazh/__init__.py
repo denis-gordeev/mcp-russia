@@ -1,8 +1,8 @@
 """Кадр Арбитраж — данные Картотеки арбитражных дел."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="kad_arbitrazh",
     description=(
         "Данные Картотеки арбитражных дел (КАД): судебные дела, решения, определения, "

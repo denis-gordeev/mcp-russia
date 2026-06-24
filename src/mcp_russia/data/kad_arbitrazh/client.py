@@ -13,7 +13,7 @@ from __future__ import annotations
 import contextlib
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get, http_post
+from mcp_russia._shared.http_client import http_otpravit, http_poluchit
 
 from .constants import (
     INSTANTSII_SUDOV,
@@ -263,7 +263,7 @@ async def poisk_del(
     }
 
     try:
-        data = await http_post(
+        data = await http_otpravit(
             "https://kad.arbitr.ru/Kad/Search",
             json_body=body,
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
@@ -283,7 +283,7 @@ async def info_dela(nomer: str) -> SudebnoeDelo | None:
         Данные дела или None.
     """
     try:
-        data = await http_get(
+        data = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Case/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
@@ -302,7 +302,7 @@ async def akty_po_delu(nomer: str) -> list[SudebnyyAkt]:
         Список судебных актов.
     """
     try:
-        data = await http_get(
+        data = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Documents/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
@@ -321,7 +321,7 @@ async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
         Данные акта или None.
     """
     try:
-        data = await http_get(
+        data = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Document/{identifikator_akta}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
@@ -353,7 +353,7 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
         Список заседаний.
     """
     try:
-        data = await http_get(
+        data = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Sessions/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
@@ -408,7 +408,7 @@ async def storony_dela(nomer: str) -> list[StoronaDela]:
         Список сторон (истцы и ответчики).
     """
     try:
-        data = await http_get(
+        data = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Sides/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )

@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import Any
 
 from mcp_russia import settings
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     OTRASLI,
@@ -72,7 +72,7 @@ async def poisk_zakupok(
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/search"
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_poisk_zakupok(data)
     except Exception:
         return []
@@ -150,7 +150,7 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{identifikator_zakupki}"
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         if isinstance(data, dict):
             items = _razobrat_poisk_zakupok([data])
             return items[0] if items else None
@@ -189,7 +189,7 @@ async def poisk_kontraktov(
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/contracts"
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_kontrakty(data)
     except Exception:
         return []
@@ -324,7 +324,7 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/plans"
     try:
-        data = await http_get(url, params=params)
+        data = await http_poluchit(url, params=params)
         return _razobrat_plany(data)
     except Exception:
         return []

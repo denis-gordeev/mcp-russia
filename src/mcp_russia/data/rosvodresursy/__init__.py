@@ -1,8 +1,8 @@
 """Росводресурсы — данные Федерального агентства водных ресурсов."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="rosvodresursy",
     description=(
         "Данные Росводресурсов: водные объекты РФ, бассейновые округа, "

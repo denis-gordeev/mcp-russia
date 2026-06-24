@@ -11,7 +11,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA_RSKHN,
@@ -54,7 +54,7 @@ async def poisk_proverok(
             params["supervisionType"] = vid_nadzora
         if tip_proverki:
             params["inspectionType"] = tip_proverki
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
@@ -66,7 +66,7 @@ async def poisk_proverok(
         params = {"limit": ogranichenie}
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
@@ -96,7 +96,7 @@ async def poisk_karantinnykh_obektov(
             params["region"] = region
         if tip:
             params["type"] = tip
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_karantin(p) for p in items if isinstance(p, dict)]
@@ -128,7 +128,7 @@ async def poisk_registratsiy_produktsii(
             params["productType"] = tip_produktsii
         if proizvoditel:
             params["manufacturer"] = proizvoditel
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_registratsiyu(p) for p in items if isinstance(p, dict)]
@@ -160,7 +160,7 @@ async def veterinarsnye_sertifikaty(
             params["region"] = region
         if tip_produktsii:
             params["productType"] = tip_produktsii
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_sertifikat(p) for p in items if isinstance(p, dict)]
@@ -186,7 +186,7 @@ async def preduprezhdeniya_karantina(
         params: dict[str, Any] = {}
         if region:
             params["region"] = region
-        data = await http_get(url, params=params, timeout=15.0)
+        data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
             return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]

@@ -90,7 +90,7 @@ class TestBuildCatalog:
         mock_registry.funktsii = {}
         postroit_katalog(mock_registry)
 
-        disc._catalog_cache = "cached"
+        disc._kesh_kataloga = "cached"
         result = postroit_katalog(mock_registry)
         assert result == "cached"
 

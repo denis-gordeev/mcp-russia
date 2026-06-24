@@ -3,7 +3,7 @@
 
 [changelog]
 header = """
-# Changelog
+# Журнал изменений
 
 Все заметные изменения mcp-russia документированы в этом файле.\n
 """
@@ -12,7 +12,7 @@ body = """
 {% if version -%}
     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
 {% else -%}
-    ## [Unreleased]
+    ## [Не выпущено]
 {% endif -%}
 
 {% for group, commits in commits | group_by(attribute="group") %}
@@ -36,17 +36,17 @@ conventional_commits = true
 filter_unconventional = true
 split_commits = false
 commit_parsers = [
-    { message = "^feat", group = "Features" },
-    { message = "^fix", group = "Bug Fixes" },
-    { message = "^doc", group = "Documentation" },
-    { message = "^perf", group = "Performance" },
-    { message = "^refactor", group = "Refactoring" },
-    { message = "^style", group = "Styling" },
-    { message = "^test", group = "Testing" },
+    { message = "^feat", group = "Новые функции" },
+    { message = "^fix", group = "Исправления" },
+    { message = "^doc", group = "Документация" },
+    { message = "^perf", group = "Производительность" },
+    { message = "^refactor", group = "Рефакторинг" },
+    { message = "^style", group = "Стиль кода" },
+    { message = "^test", group = "Тестирование" },
     { message = "^chore\\(release\\)", skip = true },
-    { message = "^chore", group = "Miscellaneous" },
+    { message = "^chore", group = "Прочее" },
     { message = "^ci", group = "CI/CD" },
-    { message = "^build", group = "Build" },
+    { message = "^build", group = "Сборка" },
 ]
 filter_commits = false
 topo_order = false

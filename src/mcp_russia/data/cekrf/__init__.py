@@ -1,8 +1,8 @@
 """ЦИК РФ — данные Центральной избирательной комиссии Российской Федерации."""
 
-from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
-FEATURE_META = FeatureMeta(
+META_FUNKTSII = MetaFunktsii(
     name="cekrf",
     description=(
         "Данные ЦИК РФ: выборы, кандидаты, референдумы, "

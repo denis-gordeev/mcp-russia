@@ -14,7 +14,7 @@ from __future__ import annotations
 import contextlib
 from typing import Any
 
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import KATEGORII_ZEMEL_MAP, STATUSY_UCHE_TA_MAP
 from .schemas import KadastrovayaStoimost, KadastrovyyObekt
@@ -102,7 +102,7 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_get(url, headers={"Accept": "application/json"})
+        result = await http_poluchit(url, headers={"Accept": "application/json"})
         feature = result.get("feature", result)
         attrs = feature.get("attrs", feature)
         return _razobrat_obekt(kadastrovyy_nomer, attrs)
@@ -121,7 +121,7 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_get(url, headers={"Accept": "application/json"})
+        result = await http_poluchit(url, headers={"Accept": "application/json"})
         feature = result.get("feature", result)
         attrs = feature.get("attrs", feature)
 
@@ -167,7 +167,7 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_get(url, headers={"Accept": "application/json"})
+        result = await http_poluchit(url, headers={"Accept": "application/json"})
         feature = result.get("feature", result)
         rights = feature.get("rights", [])
         if not rights:
@@ -199,7 +199,7 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
     """
     try:
         url = f"{PKK_SEARCH_URL}"
-        result = await http_get(
+        result = await http_poluchit(
             url,
             params={"sqo": zapros},
             headers={"Accept": "application/json"},

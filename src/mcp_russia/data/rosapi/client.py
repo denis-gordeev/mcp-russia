@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp_russia._shared.http_client import http_post
+from mcp_russia._shared.http_client import http_otpravit
 from mcp_russia.exceptions import OshibkaAutentifikatsii
 from mcp_russia.settings import DADATA_API_KEY
 
@@ -90,7 +90,7 @@ async def _predlozhit_adres(zapros: str, token: str | None = None) -> dict[str, 
     """Получить подсказки по адресу через Dadata API."""
     body = {"query": zapros, "count": 10}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -103,7 +103,7 @@ async def _nayti_po_fias(identifikator_fias: str, token: str | None = None) -> d
     """Найти адрес по ФИАС-идентификатору через Dadata API."""
     body = {"query": identifikator_fias}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_FIND_URL}/address",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -116,7 +116,7 @@ async def _pochtovyy_po_indeksu(indeks: str, token: str | None = None) -> dict[s
     """Найти адрес по почтовому индексу через Dadata API."""
     body = {"query": indeks, "count": 1}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -129,7 +129,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dic
     """Найти организацию по ИНН через Dadata API."""
     body = {"query": inn}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -149,7 +149,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> d
     """Найти организацию по ОГРН через Dadata API."""
     body = {"query": ogrn}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -165,7 +165,7 @@ async def _spisok_bankov(token: str | None = None) -> list[dict[str, Any]]:
     """Получить список банков через Dadata API."""
     body = {"query": "", "count": 100}
     try:
-        result = await http_post(
+        result = await http_otpravit(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=body,
             headers=_zagolovki_dadaty(token),
@@ -179,7 +179,7 @@ async def _nayti_bank_po_bik(bik: str, token: str | None = None) -> dict[str, An
     """Найти банк по БИК через Dadata API."""
     body = {"query": bik}
     try:
-        return await http_post(
+        return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=body,
             headers=_zagolovki_dadaty(token),
