@@ -46,9 +46,9 @@ async def poisk_proverok(
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+                return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
         if isinstance(data, list):
-            return [_parse_proverka(p) for p in data if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске проверок")
@@ -68,7 +68,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_proverka(data)
+            return _razobrat_proverku(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении проверки №%s", nomer)
@@ -101,9 +101,9 @@ async def plan_proverok(
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+                return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
         if isinstance(data, list):
-            return [_parse_proverka(p) for p in data if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при получении плана проверок")
@@ -134,16 +134,16 @@ async def poisk_zhalob(
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_zhaloba(z) for z in items if isinstance(z, dict)]
+                return [_razobrat_zhalobu(z) for z in items if isinstance(z, dict)]
         if isinstance(data, list):
-            return [_parse_zhaloba(z) for z in data if isinstance(z, dict)]
+            return [_razobrat_zhalobu(z) for z in data if isinstance(z, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске жалоб потребителей")
         return []
 
 
-def _parse_proverka(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о проверке из реестра."""
     return {
         "nomer": item.get("id", "") or item.get("number", ""),
@@ -160,7 +160,7 @@ def _parse_proverka(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_zhaloba(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zhalobu(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о жалобе потребителя."""
     return {
         "tema": item.get("subject", "") or item.get("topic", ""),

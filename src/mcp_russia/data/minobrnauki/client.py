@@ -51,7 +51,7 @@ async def poisk_akreditovannyh_vuzov(
                 continue
             if region and region.lower() not in item.get("subjectRF", "").lower():
                 continue
-            results.append(_parse_akkreditaciya(item))
+            results.append(_razobrat_akkreditatsiyu(item))
         return results
     except Exception:
         logger.exception("Ошибка при поиске аккредитованных вузов")
@@ -75,7 +75,7 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
             if not isinstance(item, dict):
                 continue
             if item.get("inn") == inn:
-                return _parse_akkreditaciya(item)
+                return _razobrat_akkreditatsiyu(item)
         return None
     except Exception:
         logger.exception("Ошибка при получении информации об аккредитации")
@@ -107,7 +107,7 @@ async def poisk_licenziy(
                 continue
             if inn and inn != item.get("inn", ""):
                 continue
-            results.append(_parse_licenziya(item))
+            results.append(_razobrat_litsenziyu(item))
         return results
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -157,7 +157,7 @@ async def poluchit_granty(organizatsiya: str = "") -> list[dict[str, Any]]:
     Возвращает:
         Список грантов.
     """
-    return _granty_fallback(organizatsiya)
+    return _granty_rezervnye(organizatsiya)
 
 
 async def poluchit_aspirantov(organizatsiya: str = "") -> list[dict[str, Any]]:
@@ -172,7 +172,7 @@ async def poluchit_aspirantov(organizatsiya: str = "") -> list[dict[str, Any]]:
     return []
 
 
-def _granty_fallback(organizatsiya: str = "") -> list[dict[str, Any]]:
+def _granty_rezervnye(organizatsiya: str = "") -> list[dict[str, Any]]:
     """Справочная информация о фондах, выдающих гранты."""
     return [
         {
@@ -192,7 +192,7 @@ def _granty_fallback(organizatsiya: str = "") -> list[dict[str, Any]]:
     ]
 
 
-def _parse_akkreditaciya(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_akkreditatsiyu(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи аккредитации из открытых данных Рособрнадзора."""
     return {
         "inn": item.get("inn", ""),
@@ -210,7 +210,7 @@ def _parse_akkreditaciya(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_licenziya(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии из открытых данных Рособрнадзора."""
     return {
         "inn": item.get("inn", ""),

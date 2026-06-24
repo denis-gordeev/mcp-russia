@@ -19,7 +19,7 @@ from datetime import datetime
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 from .constants import NALOGOVYE_STAVKI, OSNOVNYE_BANKI
@@ -35,7 +35,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
         Адресная информация или сообщение об ошибке.
     """
     await ctx.info(f"Поиск адреса по индексу {indeks}...")
-    result = await client.consult_address_by_postal(indeks)
+    result = await client.konsultirovat_adres_po_pochtovomu(indeks)
 
     if isinstance(result, dict) and "error" in result:
         return (
@@ -72,7 +72,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
         Список найденных адресов.
     """
     await ctx.info(f"Поиск адреса: {zapros}...")
-    results = await client.search_address(zapros)
+    results = await client.poisk_adresa(zapros)
 
     if not results:
         return (
@@ -92,7 +92,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
 
     header = f"**Результаты поиска: {zapros}**\n\n"
     header += "Источник: ФИАС / Dadata\n\n"
-    return header + markdown_table(["#", "Адрес", "Индекс"], rows)
+    return header + tablitsa_v_markdown(["#", "Адрес", "Индекс"], rows)
 
 
 async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
@@ -105,7 +105,7 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ИНН {inn}...")
-    result = await client.find_org_by_inn(inn)
+    result = await client.nayti_organizatsiyu_po_inn(inn)
 
     if isinstance(result, dict) and "error" in result:
         return (
@@ -152,7 +152,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
-    result = await client.find_org_by_ogrn(ogrn)
+    result = await client.nayti_organizatsiyu_po_ogrn(ogrn)
 
     if isinstance(result, dict) and "error" in result:
         return f"**ОГРН: {ogrn}**\n\n{result['error']}"
@@ -194,7 +194,7 @@ async def spisok_bankov(ctx: Context) -> str:
         "Для полного справочника всех банков ЦБ РФ "
         "используйте konsul_bank_po_bik или подключите API Dadata.\n\n"
     )
-    return header + markdown_table(["БИК", "Название"], rows)
+    return header + tablitsa_v_markdown(["БИК", "Название"], rows)
 
 
 async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
@@ -208,7 +208,7 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     """
     await ctx.info(f"Поиск банка по БИК {bik}...")
 
-    result = await client.find_bank_by_bik(bik)
+    result = await client.nayti_bank_po_bik(bik)
 
     if isinstance(result, dict) and "error" in result:
         found = None
@@ -256,7 +256,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
         god = datetime.now().year
 
     await ctx.info(f"Запрос праздников на {god} год...")
-    holidays = client.get_holidays(god)
+    holidays = client.poluchit_prazdniki(god)
 
     rows = []
     for h in holidays:
@@ -264,7 +264,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
         rows.append((date_str, h["nazvanie"], h["tip"]))
 
     header = f"**Национальные праздники РФ ({god})**\n\n"
-    return header + markdown_table(["Дата", "Праздник", "Тип"], rows)
+    return header + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], rows)
 
 
 async def nalogovye_stavki(ctx: Context) -> str:
@@ -291,4 +291,4 @@ async def nalogovye_stavki(ctx: Context) -> str:
 
     header = "**Основные налоговые ставки РФ**\n\n"
     header += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
-    return header + markdown_table(["Код", "Налог", "Ставка"], rows)
+    return header + tablitsa_v_markdown(["Код", "Налог", "Ставка"], rows)

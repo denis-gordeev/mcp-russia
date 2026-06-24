@@ -30,18 +30,18 @@ class OgranichitelChastoty:
         self._timestamps: deque[float] = deque()
         self._lock = asyncio.Lock()
 
-    def _purge(self, now: float) -> None:
+    def _ochistit(self, now: float) -> None:
         """Удаление меток времени за пределами текущего окна."""
         cutoff = now - self._period
         while self._timestamps and self._timestamps[0] <= cutoff:
             self._timestamps.popleft()
 
-    async def acquire(self) -> None:
+    async def zakhvatit(self) -> None:
         """Ожидание доступного слота запроса и его резервирование."""
         while True:
             async with self._lock:
                 now = time.monotonic()
-                self._purge(now)
+                self._ochistit(now)
                 if len(self._timestamps) < self._max_requests:
                     self._timestamps.append(now)
                     return
@@ -51,7 +51,7 @@ class OgranichitelChastoty:
 
     async def __aenter__(self) -> OgranichitelChastoty:
         """Вход в контекст: ожидание и резервирование слота."""
-        await self.acquire()
+        await self.zakhvatit()
         return self
 
     async def __aexit__(self, *exc: object) -> None:

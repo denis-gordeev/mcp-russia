@@ -43,9 +43,9 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_operator_pd(o) for o in items if isinstance(o, dict)]
+                return [_razobrat_operatora_pd(o) for o in items if isinstance(o, dict)]
         if isinstance(data, list):
-            return [_parse_operator_pd(o) for o in data if isinstance(o, dict)]
+            return [_razobrat_operatora_pd(o) for o in data if isinstance(o, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске оператора ПД")
@@ -73,9 +73,9 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_ori(o) for o in items if isinstance(o, dict)]
+                return [_razobrat_ori(o) for o in items if isinstance(o, dict)]
         if isinstance(data, list):
-            return [_parse_ori(o) for o in data if isinstance(o, dict)]
+            return [_razobrat_ori(o) for o in data if isinstance(o, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске ОРИ")
@@ -98,7 +98,7 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
         params = {"domain": domen}
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_blokirovka(data, domen)
+            return _razobrat_blokirovku(data, domen)
         return {"domain": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
     except Exception:
         logger.exception("Ошибка при проверке блокировки %s", domen)
@@ -131,9 +131,9 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_licenziya(item) for item in items if isinstance(item, dict)]
+                return [_razobrat_litsenziyu(item) for item in items if isinstance(item, dict)]
         if isinstance(data, list):
-            return [_parse_licenziya(item) for item in data if isinstance(item, dict)]
+            return [_razobrat_litsenziyu(item) for item in data if isinstance(item, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -161,16 +161,16 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
             if isinstance(items, list):
-                return [_parse_smi(s) for s in items if isinstance(s, dict)]
+                return [_razobrat_smi(s) for s in items if isinstance(s, dict)]
         if isinstance(data, list):
-            return [_parse_smi(s) for s in data if isinstance(s, dict)]
+            return [_razobrat_smi(s) for s in data if isinstance(s, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске СМИ")
         return []
 
 
-def _parse_operator_pd(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_operatora_pd(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи оператора ПД."""
     return {
         "naimenovanie": item.get("name", "") or item.get("naimenovanie", ""),
@@ -184,7 +184,7 @@ def _parse_operator_pd(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_ori(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ori(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи ОРИ."""
     return {
         "naimenovanie": item.get("name", "") or item.get("naimenovanie", ""),
@@ -197,7 +197,7 @@ def _parse_ori(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_blokirovka(item: dict[str, Any], domain: str) -> dict[str, Any]:
+def _razobrat_blokirovku(item: dict[str, Any], domain: str) -> dict[str, Any]:
     """Парсинг результата проверки блокировки."""
     return {
         "domain": domain,
@@ -209,7 +209,7 @@ def _parse_blokirovka(item: dict[str, Any], domain: str) -> dict[str, Any]:
     }
 
 
-def _parse_licenziya(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии связи."""
     return {
         "nomer": item.get("number", "") or item.get("nomer", ""),
@@ -223,7 +223,7 @@ def _parse_licenziya(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_smi(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_smi(item: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи СМИ."""
     return {
         "registracionnyy_nomer": item.get("regNumber", "") or item.get("nomer", ""),

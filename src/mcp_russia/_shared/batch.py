@@ -18,14 +18,14 @@ if TYPE_CHECKING:
 
     ToolFn = Callable[..., Coroutine[Any, Any, str]]
 
-    from mcp_russia._shared.feature import FeatureRegistry
+    from mcp_russia._shared.feature import ReyestrFunktsiy
 
 logger = logging.getLogger(__name__)
 
 _dispatch: dict[str, Any] = {}
 
 
-def postroit_dispetcherizatsiyu(registry: FeatureRegistry) -> dict[str, Any]:
+def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
     """Построение отображения полных имён инструментов → асинхронные функции.
 
     Сканирует модули tools.py всех зарегистрированных функций, включая
@@ -35,9 +35,9 @@ def postroit_dispetcherizatsiyu(registry: FeatureRegistry) -> dict[str, Any]:
     if _dispatch:
         return _dispatch
 
-    for name, feat in registry.features.items():
+    for name, feat in registry.funktsii.items():
         base = feat.module_path
-        _scan_tools_module(base, name)
+        _skanirovat_modul_instrumentov(base, name)
 
         # Подпакеты (напр., модуль данных с подфункциями)
         try:
@@ -46,7 +46,7 @@ def postroit_dispetcherizatsiyu(registry: FeatureRegistry) -> dict[str, Any]:
                 for _, sub_path, is_pkg in pkgutil.iter_modules(pkg.__path__, base + "."):
                     sub_name = sub_path.rsplit(".", 1)[-1]
                     if is_pkg and not sub_name.startswith("_"):
-                        _scan_tools_module(sub_path, f"{name}_{sub_name}")
+                        _skanirovat_modul_instrumentov(sub_path, f"{name}_{sub_name}")
         except Exception:
             pass
 
@@ -54,7 +54,7 @@ def postroit_dispetcherizatsiyu(registry: FeatureRegistry) -> dict[str, Any]:
     return _dispatch
 
 
-def _scan_tools_module(module_path: str, namespace: str) -> None:
+def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
     """Импорт модуля инструментов и регистрация его асинхронных функций."""
     try:
         mod = importlib.import_module(f"{module_path}.tools")
@@ -86,7 +86,7 @@ async def vypolnit_paket_vnutrenniy(
     if len(queries) > 10:
         return "Максимум 10 запросов на пакет. Уменьшите список."
 
-    async def _run_one(q: dict[str, Any]) -> tuple[str, str]:
+    async def _vypolnit_odin(q: dict[str, Any]) -> tuple[str, str]:
         """Выполнение одного инструмента из пакета."""
         tool_name = q.get("tool", "")
         args = q.get("args", {})
@@ -105,7 +105,7 @@ async def vypolnit_paket_vnutrenniy(
         except Exception as exc:
             return tool_name, f"Ошибка при выполнении '{tool_name}': {exc}"
 
-    results = await asyncio.gather(*[_run_one(q) for q in queries])
+    results = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
 
     parts: list[str] = []
     for tool_name, output in results:

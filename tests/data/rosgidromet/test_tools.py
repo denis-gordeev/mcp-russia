@@ -4,11 +4,11 @@ from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.rosgidromet import tools as rosgidromet_tools
 from mcp_russia.data.rosgidromet.client import (
-    _deg_to_napravlenie,
-    _hpa_to_mmhg,
-    _parse_openmeteo_ekologiya,
-    _parse_openmeteo_pogoda,
-    _parse_openmeteo_prognoz,
+    _gpa_v_mmrtst,
+    _gradusy_v_napravlenie,
+    _razobrat_openmeteo_ekologiyu,
+    _razobrat_openmeteo_pogodu,
+    _razobrat_openmeteo_prognoz,
 )
 from mcp_russia.data.rosgidromet.constants import STANCII_MONITORINGA
 
@@ -69,7 +69,7 @@ async def test_sputnik_monitoring_empty():
     assert "недоступны" in result
 
 
-def test_parse_openmeteo_pogoda():
+def test_razobrat_openmeteo_pogodu():
     data = {
         "current": {
             "temperature_2m": 5.3,
@@ -84,7 +84,7 @@ def test_parse_openmeteo_pogoda():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _parse_openmeteo_pogoda(data, info)
+    result = _razobrat_openmeteo_pogodu(data, info)
     assert result.gorod == "Москва"
     assert result.temperatura == 5.3
     assert result.oshchushchaetsya_kak == 2.1
@@ -93,7 +93,7 @@ def test_parse_openmeteo_pogoda():
     assert result.veter_napravlenie == "Ю"
 
 
-def test_parse_openmeteo_prognoz():
+def test_razobrat_openmeteo_prognoz():
     data = {
         "daily": {
             "time": ["2026-06-01", "2026-06-02"],
@@ -105,7 +105,7 @@ def test_parse_openmeteo_prognoz():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _parse_openmeteo_prognoz(data, info)
+    result = _razobrat_openmeteo_prognoz(data, info)
     assert len(result) == 2
     assert result[0].gorod == "Москва"
     assert result[0].temperatura_dnem == 22.0
@@ -114,7 +114,7 @@ def test_parse_openmeteo_prognoz():
     assert result[1].opisaniye == "Ясно"
 
 
-def test_parse_openmeteo_ekologiya():
+def test_razobrat_openmeteo_ekologiyu():
     data = {
         "current": {
             "pm2_5": 12.5,
@@ -127,7 +127,7 @@ def test_parse_openmeteo_ekologiya():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _parse_openmeteo_ekologiya(data, info)
+    result = _razobrat_openmeteo_ekologiyu(data, info)
     assert len(result) == 6
     assert result[0].pokazatel == "PM2.5"
     assert result[0].znachenie == 12.5
@@ -137,7 +137,7 @@ def test_parse_openmeteo_ekologiya():
     assert result[1].prevyshenie is False
 
 
-def test_parse_openmeteo_ekologiya_prevyshenie():
+def test_razobrat_openmeteo_ekologiyu_prevyshenie():
     data = {
         "current": {
             "pm2_5": 55.0,
@@ -150,7 +150,7 @@ def test_parse_openmeteo_ekologiya_prevyshenie():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _parse_openmeteo_ekologiya(data, info)
+    result = _razobrat_openmeteo_ekologiyu(data, info)
     assert result[0].prevyshenie is True
     assert result[1].prevyshenie is True
     assert result[3].prevyshenie is True
@@ -158,14 +158,14 @@ def test_parse_openmeteo_ekologiya_prevyshenie():
     assert result[5].prevyshenie is True
 
 
-def test_hpa_to_mmhg():
-    assert _hpa_to_mmhg(None) is None
-    assert _hpa_to_mmhg(1013.25) == 760.0
-    assert _hpa_to_mmhg(1000.0) == 750.1
+def test_gpa_v_mmrtst():
+    assert _gpa_v_mmrtst(None) is None
+    assert _gpa_v_mmrtst(1013.25) == 760.0
+    assert _gpa_v_mmrtst(1000.0) == 750.1
 
 
-def test_deg_to_napravlenie():
-    assert _deg_to_napravlenie(0) == "С"
-    assert _deg_to_napravlenie(90) == "В"
-    assert _deg_to_napravlenie(180) == "Ю"
-    assert _deg_to_napravlenie(270) == "З"
+def test_gradusy_v_napravlenie():
+    assert _gradusy_v_napravlenie(0) == "С"
+    assert _gradusy_v_napravlenie(90) == "В"
+    assert _gradusy_v_napravlenie(180) == "Ю"
+    assert _gradusy_v_napravlenie(270) == "З"

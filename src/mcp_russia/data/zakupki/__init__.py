@@ -1,6 +1,6 @@
 """ЕИС (zakupki) — данные Единой информационной системы в сфере закупок."""
 
-from mcp_russia._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="zakupki",

@@ -15,7 +15,7 @@ from .constants import CBR_DAILY_JSON
 from .schemas import ZnachenieValyuty
 
 
-def _parse_valyuta(kod: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
+def _razobrat_valyutu(kod: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
     """Разбор данных о валютах из JSON API ЦБ РФ."""
     entry = data.get(kod, {})
     if not entry:
@@ -70,7 +70,7 @@ async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyut
     date_str = result.get("Date", "")
 
     if kod in valute_data:
-        return _parse_valyuta(kod, valute_data, date_str)
+        return _razobrat_valyutu(kod, valute_data, date_str)
     return None
 
 
@@ -87,7 +87,7 @@ async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
     valute_data = result.get("Valute", {})
     date_str = result.get("Date", "")
 
-    return [_parse_valyuta(c, valute_data, date_str) for c in kody if c in valute_data]
+    return [_razobrat_valyutu(c, valute_data, date_str) for c in kody if c in valute_data]
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:

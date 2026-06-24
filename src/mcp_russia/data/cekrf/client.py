@@ -119,13 +119,13 @@ class _VyboryTableParser(HTMLParser):
             self.stats_text += text + " "
 
 
-def _parse_number(text: str) -> int:
+def _razobrat_chislo(text: str) -> int:
     """Извлечь целое число из текста (убрать пробелы, %, и т.д.)."""
     cleaned = re.sub(r"[^\d]", "", text.split(",")[0].split(".")[0])
     return int(cleaned) if cleaned else 0
 
 
-def _parse_float(text: str) -> float:
+def _razobrat_veshchestvennoe(text: str) -> float:
     """Извлечь число с плавающей точкой из текста."""
     m = re.search(r"[\d]+[.,][\d]+", text)
     if m:
@@ -134,7 +134,7 @@ def _parse_float(text: str) -> float:
     return float(m.group()) if m else 0.0
 
 
-async def _fetch_vybory_html(
+async def _zaprosit_html_vyborov(
     tvd: str,
     vrn: str,
     region: int = 0,
@@ -170,7 +170,7 @@ async def _fetch_vybory_html(
         return None
 
 
-async def _fetch_cik_json(path: str, params: dict[str, Any] | None = None) -> Any:
+async def _zaprosit_json_tsik(path: str, params: dict[str, Any] | None = None) -> Any:
     """Получить JSON данные из API cikrf.ru."""
     url = f"{CIK_API_BASE}{path}"
     try:
@@ -180,7 +180,7 @@ async def _fetch_cik_json(path: str, params: dict[str, Any] | None = None) -> An
         return None
 
 
-def _find_vybory_by_god_tip(god: int, tip: int | None = None) -> dict[str, Any] | None:
+def _nayti_vybory_po_godu_tipu(god: int, tip: int | None = None) -> dict[str, Any] | None:
     """Найти известные выборы по году и типу."""
     for v in IZVESTNYE_VYBORY.values():
         if v["god"] == god and (tip is None or v["tip"] == tip):
@@ -188,7 +188,7 @@ def _find_vybory_by_god_tip(god: int, tip: int | None = None) -> dict[str, Any] 
     return None
 
 
-def _parse_results_from_html(html: str) -> list[ResultatKandidata]:
+def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
     """Извлечь результаты кандидатов из HTML ГАС «Выборы»."""
     parser = _VyboryTableParser()
     try:
@@ -214,7 +214,7 @@ def _parse_results_from_html(html: str) -> list[ResultatKandidata]:
             elif i == 2 and len(cell) > 1:
                 partia = cell
             if "%" in cell:
-                procent = _parse_float(cell)
+                procent = _razobrat_veshchestvennoe(cell)
             if "избран" in cell_lower or "избрана" in cell_lower:
                 izbrann = True
 
@@ -228,7 +228,7 @@ def _parse_results_from_html(html: str) -> list[ResultatKandidata]:
             for cell in row:
                 m = re.match(r"^[\d\s]+$", cell.replace("\xa0", "").strip())
                 if m and fio:
-                    val = _parse_number(cell)
+                    val = _razobrat_chislo(cell)
                     if val > 0:
                         golosov = val
                         break
@@ -248,7 +248,7 @@ def _parse_results_from_html(html: str) -> list[ResultatKandidata]:
     return results
 
 
-def _parse_turnout_from_html(html: str) -> dict[str, Any]:
+def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
     """Извлечь данные о явке из HTML ГАС «Выборы»."""
     result: dict[str, Any] = {
         "yavka_procent": 0.0,
@@ -264,24 +264,24 @@ def _parse_turnout_from_html(html: str) -> dict[str, Any]:
 
     vse_match = re.search(r"число избирателей[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if vse_match:
-        result["vseh_izbirateley"] = _parse_number(vse_match.group(1))
+        result["vseh_izbirateley"] = _razobrat_chislo(vse_match.group(1))
 
     progol_match = re.search(r"проголосовало[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if progol_match:
-        result["progalosovalo"] = _parse_number(progol_match.group(1))
+        result["progalosovalo"] = _razobrat_chislo(progol_match.group(1))
 
     deystv_match = re.search(r"действительн[а-яё]+[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if deystv_match:
-        result["deystvitelnykh_byulleteney"] = _parse_number(deystv_match.group(1))
+        result["deystvitelnykh_byulleteney"] = _razobrat_chislo(deystv_match.group(1))
 
     nedeystv_match = re.search(r"недействительн[а-яё]+[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if nedeystv_match:
-        result["nedeystvitelnykh_byulleteney"] = _parse_number(nedeystv_match.group(1))
+        result["nedeystvitelnykh_byulleteney"] = _razobrat_chislo(nedeystv_match.group(1))
 
     return result
 
 
-def _parse_candidates_from_html(html: str) -> list[KandidatKratko]:
+def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
     """Извлечь список кандидатов из HTML ГАС «Выборы»."""
     parser = _VyboryTableParser()
     try:
@@ -393,7 +393,7 @@ async def spisok_vyborov(
         Список выборов с метаданными.
     """
     if god is not None and tip is not None:
-        vybory = _find_vybory_by_god_tip(god, tip)
+        vybory = _nayti_vybory_po_godu_tipu(god, tip)
         if vybory:
             return [vybory]
 
@@ -491,7 +491,7 @@ async def poisk_kandidata(
             resp = await c.get(search_url, params=params)
             resp.raise_for_status()
             html = resp.text
-            all_kandidaty = _parse_candidates_from_html(html)
+            all_kandidaty = _razobrat_kandidatov_iz_html(html)
 
             fio_lower = fio.lower()
             filtered = [k for k in all_kandidaty if fio_lower in k.fio.lower()]
@@ -503,7 +503,7 @@ async def poisk_kandidata(
     except Exception as exc:
         logger.warning("Поиск кандидата '%s' не удался: %s", fio, exc)
 
-    cik_data = await _fetch_cik_json(
+    cik_data = await _zaprosit_json_tsik(
         "/api/elections/candidates",
         {"fio": fio, "year": god, "region": region},
     )
@@ -540,7 +540,7 @@ async def kandidat_podrobno(
     Возвращает:
         Подробная информация о кандидате или None.
     """
-    cik_data = await _fetch_cik_json(
+    cik_data = await _zaprosit_json_tsik(
         f"/api/elections/candidates/{kandidat_id}",
         {"year": god},
     )
@@ -573,14 +573,14 @@ async def kandidat_podrobno(
                 break
 
     if vybory_info:
-        html = await _fetch_vybory_html(
+        html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=0,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
-            kandidaty = _parse_candidates_from_html(html)
+            kandidaty = _razobrat_kandidatov_iz_html(html)
             for k in kandidaty:
                 if k.identifikator == kandidat_id or kandidat_id.lower() in k.fio.lower():
                     return Kandidat(
@@ -610,25 +610,25 @@ async def rezultaty_vyborov(
     Возвращает:
         Список результатов кандидатов.
     """
-    vybory_info = _find_vybory_by_god_tip(god, tip)
+    vybory_info = _nayti_vybory_po_godu_tipu(god, tip)
 
     if vybory_info:
         region_num = 0
         if region and region in IZBIRATELNYY_KOD_REGIONA:
             region_num = IZBIRATELNYY_KOD_REGIONA[region]
 
-        html = await _fetch_vybory_html(
+        html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
-            results = _parse_results_from_html(html)
+            results = _razobrat_rezultaty_iz_html(html)
             if results:
                 return results
 
-    cik_data = await _fetch_cik_json(
+    cik_data = await _zaprosit_json_tsik(
         "/api/elections/results",
         {"year": god, "type": tip, "region": region},
     )
@@ -669,21 +669,21 @@ async def yavka_i_itogi(
     Возвращает:
         Словарь с итогами выборов.
     """
-    vybory_info = _find_vybory_by_god_tip(god, tip)
+    vybory_info = _nayti_vybory_po_godu_tipu(god, tip)
 
     if vybory_info:
         region_num = 0
         if region and region in IZBIRATELNYY_KOD_REGIONA:
             region_num = IZBIRATELNYY_KOD_REGIONA[region]
 
-        html = await _fetch_vybory_html(
+        html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             region=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
-            turnout = _parse_turnout_from_html(html)
+            turnout = _razobrat_yavku_iz_html(html)
             if turnout["vseh_izbirateley"] > 0 or turnout["yavka_procent"] > 0:
                 return {
                     "god": god,
@@ -695,7 +695,7 @@ async def yavka_i_itogi(
                     "istochnik": f"ГАС «Выборы» ({VYBORY_API_BASE})",
                 }
 
-    cik_data = await _fetch_cik_json(
+    cik_data = await _zaprosit_json_tsik(
         "/api/elections/turnout",
         {"year": god, "type": tip, "region": region},
     )

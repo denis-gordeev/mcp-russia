@@ -43,7 +43,7 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
         params["tip"] = tip
     try:
         data = await http_get(url, params=params)
-        return _parse_normativnyy_akt(data)
+        return _razobrat_normativnyy_akt(data)
     except Exception:
         return None
 
@@ -60,7 +60,7 @@ async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
     try:
         data = await http_get(url)
-        return _parse_zakon_proekt(data)
+        return _razobrat_zakon_proekt(data)
     except Exception:
         return None
 
@@ -94,7 +94,7 @@ async def poluchit_publikatsii(
         params["dateTo"] = data_to
     try:
         data = await http_get(url, params=params)
-        return _parse_publikatsii(data)
+        return _razobrat_publikatsii(data)
     except Exception:
         return []
 
@@ -111,7 +111,7 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
     try:
         data = await http_get(url)
-        return _parse_izmeneniya(data)
+        return _razobrat_izmeneniya(data)
     except Exception:
         return []
 
@@ -132,27 +132,27 @@ async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
         params["type"] = tip
     try:
         data = await http_get(url, params=params)
-        return _search_results(data)
+        return _rezultaty_poiska(data)
     except Exception:
         return []
 
 
-def get_tipy_aktov_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_aktov() -> list[dict[str, str]]:
     """Возвращает список типов нормативных актов."""
     return TIPY_NORMATIVNYKH_AKTOV
 
 
-def get_otrasli_list() -> list[dict[str, str]]:
+def poluchit_spisok_otrasley() -> list[dict[str, str]]:
     """Возвращает список отраслей права."""
     return OTRASLI_ZAKONODATELSTVA
 
 
-def get_istochniki_list() -> list[dict[str, str]]:
+def poluchit_spisok_istochnikov() -> list[dict[str, str]]:
     """Возвращает список источников публикаций."""
     return ISTOCHNIKI_PUBLIKATSIY
 
 
-def get_statusy_list() -> list[dict[str, str]]:
+def poluchit_spisok_statusov() -> list[dict[str, str]]:
     """Возвращает список статусов документов."""
     return STATUSY_DOKUMENTOV
 
@@ -160,7 +160,7 @@ def get_statusy_list() -> list[dict[str, str]]:
 # --- Разборщики ответов ---
 
 
-def _parse_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
+def _razobrat_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
     """Разбор ответа открытых данных pravo.gov.ru в NormativnyyAkt."""
     if not isinstance(data, dict):
         return None
@@ -181,7 +181,7 @@ def _parse_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
     )
 
 
-def _parse_zakon_proekt(data: Any) -> ZakonProekt | None:
+def _razobrat_zakon_proekt(data: Any) -> ZakonProekt | None:
     """Разбор ответа открытых данных pravo.gov.ru в ZakonProekt."""
     if not isinstance(data, dict):
         return None
@@ -197,7 +197,7 @@ def _parse_zakon_proekt(data: Any) -> ZakonProekt | None:
     )
 
 
-def _parse_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
+def _razobrat_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
     """Разбор поискового ответа открытых данных pravo.gov.ru в список OficialnayaPublikatsiya."""
     items = data
     if isinstance(data, dict):
@@ -223,7 +223,7 @@ def _parse_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
     return results
 
 
-def _parse_izmeneniya(data: Any) -> list[IzmenenieAkta]:
+def _razobrat_izmeneniya(data: Any) -> list[IzmenenieAkta]:
     """Разбор ответа поправок открытых данных pravo.gov.ru в список IzmenenieAkta."""
     items = data
     if isinstance(data, dict):
@@ -250,7 +250,7 @@ def _parse_izmeneniya(data: Any) -> list[IzmenenieAkta]:
     return results
 
 
-def _search_results(data: Any) -> list[NormativnyyAkt]:
+def _rezultaty_poiska(data: Any) -> list[NormativnyyAkt]:
     """Разбор результатов поиска открытых данных pravo.gov.ru в список NormativnyyAkt."""
     items = data
     if isinstance(data, dict):

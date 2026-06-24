@@ -57,7 +57,7 @@ async def poisk_proverok(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для проверок")
 
@@ -69,7 +69,7 @@ async def poisk_proverok(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("data.fsvps.gov.ru недоступен")
 
@@ -99,7 +99,7 @@ async def poisk_karantinnykh_obektov(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_karantin(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_karantin(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для карантинных объектов")
 
@@ -131,7 +131,7 @@ async def poisk_registratsiy_produktsii(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_registratsiya(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_registratsiyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для регистрации продукции")
 
@@ -163,7 +163,7 @@ async def veterinarsnye_sertifikaty(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_sertifikat(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_sertifikat(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для ветеринарных сертификатов")
 
@@ -189,44 +189,44 @@ async def preduprezhdeniya_karantina(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_preduprezhdenie(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для предупреждений")
 
     return []
 
 
-def get_vidy_nadzora_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_nadzora() -> list[dict[str, str]]:
     """Вернуть справочник видов надзора."""
     return VIDY_NADZORA
 
 
-def get_kategorii_proverok_list() -> list[dict[str, str]]:
+def poluchit_spisok_kategoriy_proverok() -> list[dict[str, str]]:
     """Вернуть справочник категорий проверок."""
     return KATEGORII_PROVEROK
 
 
-def get_vidy_narusheniy_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_narusheniy() -> list[dict[str, str]]:
     """Вернуть справочник видов нарушений."""
     return VIDY_NARUSHENIY_RSKHN
 
 
-def get_tipy_produktsii_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_produktsii() -> list[dict[str, str]]:
     """Вернуть справочник типов продукции."""
     return TIPY_PRODUKTSII
 
 
-def get_karantinnye_obekty_list() -> list[dict[str, str]]:
+def poluchit_spisok_karantinnykh_obektov() -> list[dict[str, str]]:
     """Вернуть справочник карантинных объектов."""
     return KARANTINNYE_OBYEKTY
 
 
-def get_federalnye_okruga_list() -> list[dict[str, Any]]:
+def poluchit_spisok_federalnykh_okrugov() -> list[dict[str, Any]]:
     """Вернуть справочник федеральных округов Россельхознадзора."""
     return FEDERALNYE_OKRUGA_RSKHN
 
 
-def get_statistika_rskhn_static() -> dict[str, Any]:
+def poluchit_statistiku_rskhn_staticheskie() -> dict[str, Any]:
     """Вернуть статическую статистику Россельхознадзора (2023)."""
     return STATISTIKA_RSKHN_2023
 
@@ -243,7 +243,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о проверке."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -257,7 +257,7 @@ def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_karantin(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_karantin(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о карантинном объекте."""
     return {
         "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
@@ -270,7 +270,7 @@ def _parse_karantin(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_registratsiya(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_registratsiyu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о регистрации продукции."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -284,7 +284,7 @@ def _parse_registratsiya(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_sertifikat(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_sertifikat(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о ветеринарном сертификате."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -298,7 +298,7 @@ def _parse_sertifikat(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных предупреждения о карантине."""
     return {
         "nomer": data.get("id", "") or data.get("nomer", ""),

@@ -1,7 +1,7 @@
 """МЧС России — гражданская оборона, чрезвычайные ситуации и ликвидация
 последствий стихийных бедствий."""
 
-from mcp_russia._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="mchs",

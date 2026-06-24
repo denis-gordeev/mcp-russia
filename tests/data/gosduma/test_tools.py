@@ -17,7 +17,7 @@ def _mock_ctx():
 # --- Тесты парсера ---
 
 
-def test_parse_deputats_list():
+def test_razobrat_deputatov_list():
     data = [
         {
             "id": 1,
@@ -30,13 +30,13 @@ def test_parse_deputats_list():
             "convocation": 8,
         }
     ]
-    result = gosduma_client._parse_deputats(data)
+    result = gosduma_client._razobrat_deputatov(data)
     assert len(result) == 1
     assert result[0].фамилия == "Иванов"
     assert result[0].фракция == "Единая Россия"
 
 
-def test_parse_deputats_dict():
+def test_razobrat_deputatov_dict():
     data = {
         "deputies": [
             {
@@ -51,18 +51,18 @@ def test_parse_deputats_dict():
             }
         ]
     }
-    result = gosduma_client._parse_deputats(data)
+    result = gosduma_client._razobrat_deputatov(data)
     assert len(result) == 1
     assert result[0].фамилия == "Петров"
     assert result[0].фракция == "КПРФ"
 
 
-def test_parse_deputats_empty():
-    assert gosduma_client._parse_deputats(None) == []
-    assert gosduma_client._parse_deputats("not a list") == []
+def test_razobrat_deputatov_empty():
+    assert gosduma_client._razobrat_deputatov(None) == []
+    assert gosduma_client._razobrat_deputatov("not a list") == []
 
 
-def test_parse_zakonoproekty():
+def test_razobrat_zakonoproekty():
     data = {
         "bills": [
             {
@@ -76,13 +76,13 @@ def test_parse_zakonoproekty():
             }
         ]
     }
-    result = gosduma_client._parse_zakonoproekty(data)
+    result = gosduma_client._razobrat_zakonoproekty(data)
     assert len(result) == 1
     assert result[0].nomer == "12345-8"
     assert result[0].status == "Рассматривается"
 
 
-def test_parse_golosovaniya():
+def test_razobrat_golosovaniya():
     data = {
         "votes": [
             {
@@ -96,13 +96,13 @@ def test_parse_golosovaniya():
             }
         ]
     }
-    result = gosduma_client._parse_golosovaniya(data)
+    result = gosduma_client._razobrat_golosovaniya(data)
     assert len(result) == 1
     assert result[0].za == 300
     assert result[0].protiv == 50
 
 
-def test_parse_one_deputat():
+def test_razobrat_odnogo_deputata():
     data = {
         "id": 1,
         "surname": "Сидоров",
@@ -110,14 +110,14 @@ def test_parse_one_deputat():
         "patronymic": "Сидорович",
         "factionName": "ЛДПР",
     }
-    result = gosduma_client._parse_one_deputat(data)
+    result = gosduma_client._razobrat_odnogo_deputata(data)
     assert result is not None
     assert result.фамилия == "Сидоров"
 
 
-def test_parse_one_deputat_none():
-    assert gosduma_client._parse_one_deputat(None) is None
-    assert gosduma_client._parse_one_deputat("string") is None
+def test_razobrat_odnogo_deputata_none():
+    assert gosduma_client._razobrat_odnogo_deputata(None) is None
+    assert gosduma_client._razobrat_odnogo_deputata("string") is None
 
 
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---
@@ -254,10 +254,10 @@ async def test_golosovaniya_with_data():
 
 
 async def test_auth_note_without_token():
-    with patch.object(gosduma_tools.client, "_get_api_token", return_value=""):
+    with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value=""):
         assert "MCP_RUSSIA_DUMA_API_TOKEN" in gosduma_tools._auth_note()
 
 
 async def test_auth_note_with_token():
-    with patch.object(gosduma_tools.client, "_get_api_token", return_value="secret"):
+    with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value="secret"):
         assert gosduma_tools._auth_note() == ""

@@ -16,7 +16,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_rub, markdown_table
+from mcp_russia._shared.formatting import formatirovat_rubli, tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -114,7 +114,7 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
     if obekt.kadastrovaya_stoimost:
         try:
             stoimost_val = float(obekt.kadastrovaya_stoimost)
-            lines.append(f"**Кадастровая стоимость:** {format_rub(stoimost_val)}")
+            lines.append(f"**Кадастровая стоимость:** {formatirovat_rubli(stoimost_val)}")
         except (ValueError, TypeError):
             lines.append(f"**Кадастровая стоимость:** {obekt.kadastrovaya_stoimost}")
     if obekt.data_opredeleniya_stoimosti:
@@ -150,7 +150,7 @@ async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
     lines = [f"**Кадастровый номер:** {result.kadastrovyy_nomer}"]
 
     if result.stoimost is not None:
-        lines.append(f"**Кадастровая стоимость:** {format_rub(result.stoimost)}")
+        lines.append(f"**Кадастровая стоимость:** {formatirovat_rubli(result.stoimost)}")
     else:
         lines.append("**Кадастровая стоимость:** Не определена")
 
@@ -198,7 +198,7 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
 
     header = f"**Зарегистрированные права на объект {kadastrovyy_nomer}**\n\n"
     header += "Источник: Росреестр / pkk.rosreestr.ru\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Тип права", "Правообладатель", "Дата регистрации", "Номер регистрации"],
         rows,
     )

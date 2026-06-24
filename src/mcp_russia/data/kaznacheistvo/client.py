@@ -46,7 +46,7 @@ async def poluchit_ispolnenie_byudzheta(
             params["budgetType"] = tip
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_ispolnenie_byudzheta(data)
+            return _razobrat_ispolnenie_byudzheta(data)
     except Exception:
         logger.debug("budget.gov.ru API недоступен")
 
@@ -59,7 +59,7 @@ async def poluchit_ispolnenie_byudzheta(
             params["budgetType"] = tip
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_ispolnenie_byudzheta(data)
+            return _razobrat_ispolnenie_byudzheta(data)
     except Exception:
         logger.debug("roskazna.gov.ru API недоступен")
 
@@ -88,7 +88,7 @@ async def poisk_uchastnikov_bp(
             params["name"] = nazvanie
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_uchastnik_bp(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_uchastnik_bp(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -120,7 +120,7 @@ async def poisk_uchrezhdeniy(
             params["type"] = tip
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_uchrezhdenie(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_uchrezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -148,7 +148,7 @@ async def poluchit_mezhbyudzhetnye(
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("budget.gov.ru API недоступен для межбюджетных трансфертов")
         return []
@@ -167,18 +167,18 @@ async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
         url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_byudzhetnaya_smeta(data)
+            return _razobrat_byudzhetnuyu_smetu(data)
     except Exception:
         logger.debug("roskazna.gov.ru API недоступен для сметы №%s", nomer)
         return None
 
 
-def get_vidy_byudzhetov_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_byudzhetov() -> list[dict[str, str]]:
     """Вернуть справочник видов бюджетов."""
     return VIDY_BUDZHETOV
 
 
-def get_kategorii_raskhodov_list() -> list[dict[str, str]]:
+def poluchit_spisok_kategoriy_raskhodov() -> list[dict[str, str]]:
     """Вернуть справочник категорий расходов."""
     return KATEGORII_RASKHODOV
 
@@ -195,7 +195,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных об исполнении бюджета."""
     return {
         "period": data.get("period", "") or data.get("year", ""),
@@ -208,7 +208,7 @@ def _parse_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных участника бюджетного процесса."""
     return {
         "inn": data.get("inn", "") or data.get("id", ""),
@@ -219,7 +219,7 @@ def _parse_uchastnik_bp(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных казённого учреждения."""
     return {
         "inn": data.get("inn", "") or data.get("id", ""),
@@ -232,7 +232,7 @@ def _parse_uchrezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных межбюджетного трансферта."""
     return {
         "vid": data.get("type", "") or data.get("vid", ""),
@@ -244,7 +244,7 @@ def _parse_mezhbyudzhetnyy_transfer(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_byudzhetnaya_smeta(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_byudzhetnuyu_smetu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных бюджетной сметы."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),

@@ -4,11 +4,11 @@ import contextlib
 
 import pytest
 
-from mcp_russia._shared.lifespan import http_lifespan
+from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
 
 
 class TestHttpLifespan:
-    """Проверяет, что http_lifespan создаёт и закрывает httpx.AsyncClient."""
+    """Проверяет, что http_zhiznennyy_tsikl создаёт и закрывает httpx.AsyncClient."""
 
     @pytest.mark.asyncio
     async def test_lifespan_creates_and_closes_client(self) -> None:
@@ -18,7 +18,7 @@ class TestHttpLifespan:
         server = FastMCP("test")
 
         # Имитируем генератор жизненного цикла
-        gen = http_lifespan._fn(server)
+        gen = http_zhiznennyy_tsikl._fn(server)
         context = await gen.__anext__()
 
         assert context is not None
@@ -40,7 +40,7 @@ class TestHttpLifespan:
 
         server = FastMCP("test")
 
-        gen = http_lifespan._fn(server)
+        gen = http_zhiznennyy_tsikl._fn(server)
         context = await gen.__anext__()
 
         assert context is not None

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -52,7 +52,7 @@ async def poisk_med_organizatsiy(
         )
         for o in orgs
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Город"],
         rows,
     )
@@ -125,7 +125,7 @@ async def poisk_litsenziy(
         )
         for lit in litsenzii
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№ лицензии", "Организация", "Вид деятельности", "Статус", "Действует до"],
         rows,
     )
@@ -164,7 +164,7 @@ async def pokazateli_zdorovya(
         )
         for p in data
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Показатель", "Значение", "Ед. изм.", "Год", "Регион"],
         rows,
     )
@@ -209,7 +209,7 @@ async def statistika_zabolevaniy(
         )
         for z in data
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["МКБ-10", "Заболевание", "Заболевших", "Летальных", "Год"],
         rows,
     )
@@ -222,10 +222,10 @@ async def spravochnik_mo(ctx: Context) -> str:
         Справочник типов МО.
     """
     await ctx.info("Запрос справочника типов медицинских организаций...")
-    tipy = client.get_tipy_mo()
+    tipy = client.poluchit_tipy_mo()
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы медицинских организаций**\n\n"
-    return header + markdown_table(["Код", "Тип организации"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип организации"], rows)
 
 
 async def spravochnik_spetsialnostey(ctx: Context) -> str:
@@ -235,10 +235,10 @@ async def spravochnik_spetsialnostey(ctx: Context) -> str:
         Справочник специальностей.
     """
     await ctx.info("Запрос справочника врачебных специальностей...")
-    spetsialnosti = client.get_spetsialnosti()
+    spetsialnosti = client.poluchit_spetsialnosti()
     rows = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
     header = "**Врачебные специальности**\n\n"
-    return header + markdown_table(["Код", "Специальность"], rows)
+    return header + tablitsa_v_markdown(["Код", "Специальность"], rows)
 
 
 async def spravochnik_mkb10(ctx: Context) -> str:
@@ -248,7 +248,7 @@ async def spravochnik_mkb10(ctx: Context) -> str:
         Классы МКБ-10.
     """
     await ctx.info("Запрос справочника МКБ-10...")
-    mkb_classes = client.get_mkb10_classes()
+    mkb_classes = client.poluchit_klassy_mkb10()
     rows = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
     header = "**Классы МКБ-10**\n\n"
-    return header + markdown_table(["Код", "Класс заболеваний"], rows)
+    return header + tablitsa_v_markdown(["Код", "Класс заболеваний"], rows)

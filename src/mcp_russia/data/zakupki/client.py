@@ -26,7 +26,7 @@ from .constants import (
 from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
 
 
-def _get_api_token() -> str:
+def _poluchit_api_token() -> str:
     """Получение токена API Закупок из настроек."""
     return settings.ZAKUPKI_API_TOKEN
 
@@ -66,19 +66,19 @@ async def poisk_zakupok(
     if status:
         params["statuses"] = status
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["token"] = token
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/search"
     try:
         data = await http_get(url, params=params)
-        return _parse_zakupki_search(data)
+        return _razobrat_poisk_zakupok(data)
     except Exception:
         return []
 
 
-def _parse_zakupki_search(data: Any) -> list[Zakupka]:
+def _razobrat_poisk_zakupok(data: Any) -> list[Zakupka]:
     """Разбор результатов поиска в список Zakupka."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
@@ -96,10 +96,12 @@ def _parse_zakupki_search(data: Any) -> list[Zakupka]:
                 identifikator=str(item.get("id", item.get("regNumber", ""))),
                 nomer=item.get("regNumber", item.get("number", "")),
                 nazvanie=item.get("name", item.get("title", item.get("objectInfo", ""))),
-                zakon=_determine_zakon(item),
+                zakon=_opredelit_zakon(item),
                 sposob=item.get("purchaseMethod", item.get("method", "")),
                 status=item.get("status", item.get("commonStatus", "")),
-                nachalnaya_tsena=_safe_float(item.get("price", item.get("maxPrice", 0))),
+                nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
+                    item.get("price", item.get("maxPrice", 0))
+                ),
                 valyuta=item.get("currency", "RUB"),
                 data_publikatsii=item.get("publishDate", item.get("docPublishDate", "")),
                 srok_podachi=item.get("endDate", item.get("bidEndDate", "")),
@@ -110,7 +112,7 @@ def _parse_zakupki_search(data: Any) -> list[Zakupka]:
     return results
 
 
-def _determine_zakon(item: dict[str, Any]) -> str:
+def _opredelit_zakon(item: dict[str, Any]) -> str:
     """Определение применяемого закона (44-ФЗ или 223-ФЗ)."""
     fz = item.get("fz", item.get("law", ""))
     if isinstance(fz, (int, float)):
@@ -122,7 +124,7 @@ def _determine_zakon(item: dict[str, Any]) -> str:
     return ""
 
 
-def _safe_float(value: Any) -> float:
+def _bezopasnoe_veshchestvennoe(value: Any) -> float:
     """Безопасное преобразование значения в float."""
     if value is None:
         return 0.0
@@ -141,7 +143,7 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     Возвращает:
         Данные закупки или None.
     """
-    token = _get_api_token()
+    token = _poluchit_api_token()
     params: dict[str, str] = {}
     if token:
         params["token"] = token
@@ -150,7 +152,7 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     try:
         data = await http_get(url, params=params)
         if isinstance(data, dict):
-            items = _parse_zakupki_search([data])
+            items = _razobrat_poisk_zakupok([data])
             return items[0] if items else None
     except Exception:
         pass
@@ -181,19 +183,19 @@ async def poisk_kontraktov(
     if inn_zakazchika:
         params["customerInn"] = inn_zakazchika
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["token"] = token
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/contracts"
     try:
         data = await http_get(url, params=params)
-        return _parse_kontrakty(data)
+        return _razobrat_kontrakty(data)
     except Exception:
         return []
 
 
-def _parse_kontrakty(data: Any) -> list[Kontrakt]:
+def _razobrat_kontrakty(data: Any) -> list[Kontrakt]:
     """Разбор результатов поиска контрактов."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
@@ -213,7 +215,7 @@ def _parse_kontrakty(data: Any) -> list[Kontrakt]:
                 zakupka_nomer=item.get("purchaseNumber", ""),
                 nazvanie_podryadchika=item.get("supplierName", item.get("contractorName", "")),
                 podryadchik_inn=item.get("supplierInn", item.get("contractorInn", "")),
-                tsena=_safe_float(item.get("price", item.get("contractPrice", 0))),
+                tsena=_bezopasnoe_veshchestvennoe(item.get("price", item.get("contractPrice", 0))),
                 valyuta=item.get("currency", "RUB"),
                 data_podpisaniya=item.get("signDate", item.get("contractDate", "")),
                 status=item.get("status", item.get("contractStatus", "")),
@@ -316,19 +318,19 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
     if inn_organizatora:
         params["customerInn"] = inn_organizatora
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["token"] = token
 
     url = f"{ZAKUPKI_API_BASE}/api/nsi/plans"
     try:
         data = await http_get(url, params=params)
-        return _parse_plany(data)
+        return _razobrat_plany(data)
     except Exception:
         return []
 
 
-def _parse_plany(data: Any) -> list[PlanZakupki]:
+def _razobrat_plany(data: Any) -> list[PlanZakupki]:
     """Разбор планов закупок."""
     if isinstance(data, dict):
         items = data.get("results", data.get("items", data.get("list", [])))
@@ -348,7 +350,7 @@ def _parse_plany(data: Any) -> list[PlanZakupki]:
                 nazvanie_organizatora=item.get("customerName", ""),
                 organizator_inn=item.get("customerInn", ""),
                 kolichestvo_pozitsiy=item.get("positionsCount", 0),
-                obshchiy_byudzhet=_safe_float(item.get("totalSum", 0)),
+                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(item.get("totalSum", 0)),
                 data_sozdaniya=item.get("createDate", ""),
                 data_obnovleniya=item.get("updateDate", ""),
             )
@@ -356,21 +358,21 @@ def _parse_plany(data: Any) -> list[PlanZakupki]:
     return results
 
 
-def get_tipy_dannykh() -> list[dict[str, str]]:
+def poluchit_tipy_dannykh() -> list[dict[str, str]]:
     """Получить список типов данных ЕИС."""
     return TIPLY_DANNYKH
 
 
-def get_sposoby_zakupok() -> list[dict[str, str]]:
+def poluchit_sposoby_zakupok() -> list[dict[str, str]]:
     """Получить список способов определения поставщиков."""
     return SPOSOBY_ZAKUPOK
 
 
-def get_otrasli() -> list[dict[str, str]]:
+def poluchit_otrasli() -> list[dict[str, str]]:
     """Получить список основных отраслей."""
     return OTRASLI
 
 
-def get_statusy_zakupok() -> list[dict[str, str]]:
+def poluchit_statusy_zakupok() -> list[dict[str, str]]:
     """Получить список статусов закупок."""
     return STATUSY_ZAKUPOK

@@ -1,6 +1,6 @@
 """Корневой сервер mcp-russia — автоматическое обнаружение и монтирование функций.
 
-Использует FeatureRegistry для подключения функций без ручного редактирования.
+Использует ReyestrFunktsiy для подключения функций без ручного редактирования.
 Для добавления новой функции достаточно создать директорию по конвенции ADR-001/002.
 
 Запуск:
@@ -19,8 +19,8 @@ from fastmcp.server.middleware import CallNext, Middleware, MiddlewareContext
 from fastmcp.tools import ToolResult
 
 from ._shared.batch import postroit_dispetcherizatsiyu, vypolnit_paket_vnutrenniy
-from ._shared.feature import FeatureRegistry
-from ._shared.lifespan import http_lifespan
+from ._shared.feature import ReyestrFunktsiy
+from ._shared.lifespan import http_zhiznennyy_tsikl
 from .settings import TOOL_SEARCH
 
 logging.basicConfig(
@@ -36,7 +36,7 @@ logger = logging.getLogger("mcp-russia")
 class RequestLoggingMiddleware(Middleware):
     """Логирует все вызовы инструментов, чтения ресурсов и запросы промптов."""
 
-    async def on_call_tool(
+    async def pri_vyzove_instrumenta(
         self,
         context: MiddlewareContext[mt.CallToolRequestParams],
         call_next: CallNext[mt.CallToolRequestParams, ToolResult],
@@ -50,7 +50,7 @@ class RequestLoggingMiddleware(Middleware):
         logger.info("Инструмент %s завершён за %.2fс", name, elapsed)
         return result
 
-    async def on_read_resource(
+    async def pri_chtenii_resursa(
         self,
         context: MiddlewareContext[mt.ReadResourceRequestParams],
         call_next: CallNext[mt.ReadResourceRequestParams, ResourceResult],
@@ -60,7 +60,7 @@ class RequestLoggingMiddleware(Middleware):
         logger.info("Чтение ресурса: %s", uri)
         return await call_next(context)
 
-    async def on_get_prompt(
+    async def pri_zaprose_prompta(
         self,
         context: MiddlewareContext[mt.GetPromptRequestParams],
         call_next: CallNext[mt.GetPromptRequestParams, PromptResult],
@@ -76,18 +76,18 @@ class RequestLoggingMiddleware(Middleware):
 # ---------------------------------------------------------------------------
 
 # Создание корневого сервера
-mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
+mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
 
 # Добавление промежуточного слоя
 mcp.add_middleware(RequestLoggingMiddleware())
 
 # Автоматическое обнаружение и монтирование всех функций
-registry = FeatureRegistry()
-registry.discover("mcp_russia.data")
-registry.discover("mcp_russia.agenty")
-registry.mount_all(mcp)
+registry = ReyestrFunktsiy()
+registry.obnaruzhit("mcp_russia.data")
+registry.obnaruzhit("mcp_russia.agenty")
+registry.smontirovat_vse(mcp)
 
-logger.info("\n%s", registry.summary())
+logger.info("\n%s", registry.svodka())
 
 # Формирование таблицы диспетчеризации для vypolnit_paket
 postroit_dispetcherizatsiyu(registry)
@@ -104,7 +104,7 @@ def spisok_funktsiy() -> str:
     Возвращает:
         Сводка активных функций с описанием и статусом аутентификации.
     """
-    return registry.summary()
+    return registry.svodka()
 
 
 @mcp.tool(tags={"meta", "discovery"})
@@ -225,7 +225,7 @@ elif TOOL_SEARCH == "code_mode":
 else:
     logger.info(
         "Поиск инструментов: отключён (все %d+ инструментов видны)",
-        len(registry.features),
+        len(registry.funktsii),
     )
 
 

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from mcp_russia.data.rosapi import tools as rosapi_tools
-from mcp_russia.data.rosapi.client import _dadata_headers
+from mcp_russia.data.rosapi.client import _zagolovki_dadaty
 from mcp_russia.data.rosapi.schemas import AdresRF, BankRF, Organizatsiya
 from mcp_russia.exceptions import OshibkaAutentifikatsii
 
@@ -21,7 +21,7 @@ async def test_konsul_adres_po_indeksu_success():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "consult_address_by_postal",
+        "konsultirovat_adres_po_pochtovomu",
         return_value=AdresRF(
             pochtovyy_indeks="101000",
             region="г Москва",
@@ -41,7 +41,7 @@ async def test_konsul_adres_po_indeksu_error():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "consult_address_by_postal",
+        "konsultirovat_adres_po_pochtovomu",
         return_value={"error": "Адрес по индексу 000000 не найден"},
     ):
         result = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
@@ -51,7 +51,7 @@ async def test_konsul_adres_po_indeksu_error():
 
 async def test_poisk_adresa_empty():
     ctx = _mock_ctx()
-    with patch.object(rosapi_tools.client, "search_address", return_value=[]):
+    with patch.object(rosapi_tools.client, "poisk_adresa", return_value=[]):
         result = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
     assert "не найден" in result
 
@@ -60,7 +60,7 @@ async def test_poisk_adresa_success():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "search_address",
+        "poisk_adresa",
         return_value=[
             {
                 "value": "г Москва, Красная площадь",
@@ -82,7 +82,7 @@ async def test_poisk_org_po_inn_success():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_org_by_inn",
+        "nayti_organizatsiyu_po_inn",
         return_value=Organizatsiya(
             inn="7707083893",
             kpp="773601001",
@@ -105,7 +105,7 @@ async def test_poisk_org_po_inn_error():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_org_by_inn",
+        "nayti_organizatsiyu_po_inn",
         return_value={"error": "Не удалось подключиться к API Dadata"},
     ):
         result = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
@@ -116,7 +116,7 @@ async def test_poisk_org_po_ogrn_error():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_org_by_ogrn",
+        "nayti_organizatsiyu_po_ogrn",
         return_value={"error": "не найдена"},
     ):
         result = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
@@ -135,7 +135,7 @@ async def test_konsul_bank_po_bik_dadata():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_bank_by_bik",
+        "nayti_bank_po_bik",
         return_value=BankRF(
             bik="044525225",
             nazvanie="Публичное акционерное общество «Сбербанк России»",
@@ -153,7 +153,7 @@ async def test_konsul_bank_po_bik_not_found():
     ctx = _mock_ctx()
     with patch.object(
         rosapi_tools.client,
-        "find_bank_by_bik",
+        "nayti_bank_po_bik",
         return_value={"error": "Банк с БИК 000000000 не найден"},
     ):
         result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
@@ -183,15 +183,15 @@ async def test_nalogovye_stavki():
     assert "13%" in result
 
 
-async def test_dadata_headers_raises_auth_error_without_key():
+async def test_zagolovki_dadaty_raises_auth_error_without_key():
     with (
         patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""),
         pytest.raises(OshibkaAutentifikatsii, match="MCP_RUSSIA_DADATA_API_KEY"),
     ):
-        _dadata_headers()
+        _zagolovki_dadaty()
 
 
-async def test_dadata_headers_with_key():
+async def test_zagolovki_dadaty_with_key():
     with patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", "test-key"):
-        headers = _dadata_headers()
+        headers = _zagolovki_dadaty()
         assert headers["Authorization"] == "Token test-key"

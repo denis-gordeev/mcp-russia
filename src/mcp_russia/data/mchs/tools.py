@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -17,37 +17,37 @@ from . import client
 async def spisok_vidov_chs(ctx: Context) -> str:
     """Получить список видов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка видов ЧС...")
-    vidy = client.get_vidy_chs_list()
+    vidy = client.poluchit_spisok_vidov_chs()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды чрезвычайных ситуаций**\n\n"
-    return header + markdown_table(["Код", "Вид ЧС"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид ЧС"], rows)
 
 
 async def spisok_klassov_chs(ctx: Context) -> str:
     """Получить список классов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка классов ЧС...")
-    klassy = client.get_klassy_chs_list()
+    klassy = client.poluchit_spisok_klassov_chs()
     rows = [(k["kod"], k["nazvanie"]) for k in klassy]
     header = "**Классы чрезвычайных ситуаций**\n\n"
-    return header + markdown_table(["Код", "Класс ЧС"], rows)
+    return header + tablitsa_v_markdown(["Код", "Класс ЧС"], rows)
 
 
 async def spisok_vidov_pojarov(ctx: Context) -> str:
     """Получить список видов пожаров."""
     await ctx.info("Запрос списка видов пожаров...")
-    vidy = client.get_vidy_pojarov_list()
+    vidy = client.poluchit_spisok_vidov_pozharov()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды пожаров**\n\n"
-    return header + markdown_table(["Код", "Вид пожара"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид пожара"], rows)
 
 
 async def spisok_tipov_opasnosti(ctx: Context) -> str:
     """Получить список типов опасностей."""
     await ctx.info("Запрос списка типов опасностей...")
-    tipy = client.get_tipy_opasnosti_list()
+    tipy = client.poluchit_spisok_tipov_opasnosti()
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы опасностей для предупреждений МЧС**\n\n"
-    return header + markdown_table(["Код", "Тип опасности"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип опасности"], rows)
 
 
 async def statistika_pojarov(
@@ -73,7 +73,7 @@ async def statistika_pojarov(
         vid_pozhara=vid_pozhara,
     )
     if not pojarov_data:
-        static = client.get_statistika_pojarov_static()
+        static = client.poluchit_statistiku_pozharov_staticheskie()
         if static:
             lines = [
                 "**Статистика пожаров в РФ (2023, резервные данные)**\n",
@@ -114,7 +114,7 @@ async def statistika_pojarov(
         for p in pojarov_data
     ]
     header = f"**Статистика пожаров** — найдено: {len(pojarov_data)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Дата", "Регион", "Вид", "Погибших", "Пострадавших"],
         rows,
     )
@@ -168,7 +168,7 @@ async def poisk_chs(
         for c in chs_data
     ]
     header = f"**Чрезвычайные ситуации** — найдено: {len(chs_data)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Вид", "Класс", "Дата", "Регион", "Погибших", "Пострадавших"],
         rows,
     )
@@ -205,7 +205,7 @@ async def radiatsionnyy_monitoring(
         for m in monitoring_data
     ]
     header = f"**Радиационный мониторинг** — станций: {len(monitoring_data)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Станция", "Регион", "Уровень", "Ед.", "Норма", "Дата"],
         rows,
     )
@@ -242,7 +242,7 @@ async def gidrologicheskaya_obstanovka(
         for g in gidro_data
     ]
     header = f"**Гидрологическая обстановка** — пунктов: {len(gidro_data)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Река", "Пункт", "Уровень (см)", "Опасный (см)", "Тенденция", "Дата"],
         rows,
     )
@@ -284,7 +284,7 @@ async def preduprezhdeniya_chs(
         for p in preduprezhdeniya
     ]
     header = f"**Предупреждения о ЧС** — активно: {len(preduprezhdeniya)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Тип опасности", "Регион", "Описание", "Начало", "Окончание"],
         rows,
     )

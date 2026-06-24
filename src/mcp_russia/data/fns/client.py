@@ -35,7 +35,7 @@ async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
         Данные организации или None.
     """
     try:
-        result = await _egrul_search(inn)
+        result = await _poisk_egrul(inn)
         if not result:
             return None
 
@@ -44,7 +44,7 @@ async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
             return None
 
         entry = entries[0]
-        return _parse_egrul_organization(entry)
+        return _razobrat_egrul_organizatsiyu(entry)
     except Exception:
         return None
 
@@ -59,7 +59,7 @@ async def poluchit_ip(inn: str) -> IPEGRIP | None:
         Данные ИП или None.
     """
     try:
-        result = await _egrul_search(inn)
+        result = await _poisk_egrul(inn)
         if not result:
             return None
 
@@ -68,7 +68,7 @@ async def poluchit_ip(inn: str) -> IPEGRIP | None:
             return None
 
         entry = entries[0]
-        return _parse_egrul_ip(entry)
+        return _razobrat_egrul_ip(entry)
     except Exception:
         return None
 
@@ -122,7 +122,7 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
     )
 
 
-async def _egrul_search(zapros: str) -> dict[str, Any] | None:
+async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     """Двухшаговый поиск через API ЕГРЮЛ nalog.ru.
 
     Шаг 1: POST-запрос поиска → получение ID задачи.
@@ -154,7 +154,7 @@ async def _egrul_search(zapros: str) -> dict[str, Any] | None:
     return result
 
 
-def _parse_egrul_organization(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
+def _razobrat_egrul_organizatsiyu(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
     """Разбор записи ЕГРЮЛ в схему OrganizaciyaEGRUL."""
     return OrganizaciyaEGRUL(
         inn=entry.get("inn", "") or entry.get("t", ""),
@@ -163,26 +163,26 @@ def _parse_egrul_organization(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
         polnoe_nazvanie=entry.get("n", ""),
         yuridicheskiy_adres=entry.get("a", ""),
         data_registracii=entry.get("r", "") or entry.get("g", ""),
-        status=_parse_status(entry.get("s", "")),
+        status=_razobrat_status(entry.get("s", "")),
         vid_deyatelnosti=entry.get("k", ""),
         ustroyennyy_kapital="",
         rukovoditel="",
     )
 
 
-def _parse_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
+def _razobrat_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
     """Разбор записи ЕГРИП в схему IPEGRIP."""
     return IPEGRIP(
         inn=entry.get("inn", "") or entry.get("t", ""),
         ogrnip=entry.get("ogrn", "") or entry.get("o", ""),
         fio=entry.get("n", "") or entry.get("c", ""),
         data_registracii=entry.get("r", "") or entry.get("g", ""),
-        status=_parse_status(entry.get("s", "")),
+        status=_razobrat_status(entry.get("s", "")),
         vid_deyatelnosti=entry.get("k", ""),
     )
 
 
-def _parse_status(kod_statusa: Any) -> str:
+def _razobrat_status(kod_statusa: Any) -> str:
     """Преобразование кода статуса ЕГРЮЛ в русское описание."""
     karta_statusov = {
         "01": "Действующая",

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -24,7 +24,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
         Список направлений с кодами и названиями.
     """
     rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
-    return markdown_table(["Код", "Направление"], rows)
+    return tablitsa_v_markdown(["Код", "Направление"], rows)
 
 
 async def spisok_tipov_licenziy(ctx: Context) -> str:
@@ -34,7 +34,7 @@ async def spisok_tipov_licenziy(ctx: Context) -> str:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TIPY_LICENZIY_SVYAZI]
-    return markdown_table(["Код", "Тип лицензии"], rows)
+    return tablitsa_v_markdown(["Код", "Тип лицензии"], rows)
 
 
 async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
@@ -44,7 +44,7 @@ async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
         Список категорий нарушений (утечка ПД, запрещённый контент и т.д.).
     """
     rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_NARUSHENIY]
-    return markdown_table(["Код", "Категория нарушения"], rows)
+    return tablitsa_v_markdown(["Код", "Категория нарушения"], rows)
 
 
 async def spisok_reestrov(ctx: Context) -> str:
@@ -54,7 +54,7 @@ async def spisok_reestrov(ctx: Context) -> str:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
     rows = [(r["kod"], r["nazvanie"]) for r in REGISTRY_RKN]
-    return markdown_table(["Код", "Реестр"], rows)
+    return tablitsa_v_markdown(["Код", "Реестр"], rows)
 
 
 async def spisok_tipov_smi(ctx: Context) -> str:
@@ -64,7 +64,7 @@ async def spisok_tipov_smi(ctx: Context) -> str:
         Справочник типов СМИ (печатные, сетевые, ТВ, радио и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TIPY_SMI]
-    return markdown_table(["Код", "Тип СМИ"], rows)
+    return tablitsa_v_markdown(["Код", "Тип СМИ"], rows)
 
 
 async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
@@ -74,7 +74,7 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
         Справочник категорий операторов ПД.
     """
     rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_PD_OPERATOROV]
-    return markdown_table(["Код", "Категория оператора"], rows)
+    return tablitsa_v_markdown(["Код", "Категория оператора"], rows)
 
 
 async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -> str:
@@ -132,7 +132,7 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
         )
         for s in smi
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Рег. номер", "Название", "Тип", "Учредитель", "Язык"],
         rows,
     )
@@ -165,7 +165,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
         )
         for o in operatory
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Категория", "Цель обработки", "Статус"],
         rows,
     )
@@ -245,7 +245,7 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
         )
         for o in ori
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Тип ОРИ", "Статус", "Дата включения"],
         rows,
     )

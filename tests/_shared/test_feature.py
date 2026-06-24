@@ -1,4 +1,4 @@
-"""Тесты FeatureRegistry и FeatureMeta."""
+"""Тесты ReyestrFunktsiy и MetaFunktsii."""
 
 import os
 from unittest.mock import patch
@@ -6,16 +6,16 @@ from unittest.mock import patch
 import pytest
 from fastmcp import Client, FastMCP
 
-from mcp_russia._shared.feature import FeatureMeta, FeatureRegistry, RegisteredFeature
+from mcp_russia._shared.feature import MetaFunktsii, ReyestrFunktsiy, ZaregistrirovannayaFunktsiya
 
 # ---------------------------------------------------------------------------
-# FeatureMeta (метаданные модуля)
+# MetaFunktsii (метаданные модуля)
 # ---------------------------------------------------------------------------
 
 
-class TestFeatureMeta:
+class TestMetaFunktsii:
     def test_create_minimal(self) -> None:
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ API")
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ API")
         assert meta.name == "cbrf"
         assert meta.description == "ЦБ РФ API"
         assert meta.version == "0.1.0"
@@ -23,7 +23,7 @@ class TestFeatureMeta:
         assert meta.requires_auth is False
 
     def test_create_with_auth(self) -> None:
-        meta = FeatureMeta(
+        meta = MetaFunktsii(
             name="zakupki",
             description="ЕИС Закупки",
             requires_auth=True,
@@ -33,11 +33,11 @@ class TestFeatureMeta:
         assert meta.auth_env_var == "ZAKUPKI_API_KEY"
 
     def test_dostupna_li_autentifikatsiya_no_auth_required(self) -> None:
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
         assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_missing_env_var(self) -> None:
-        meta = FeatureMeta(
+        meta = MetaFunktsii(
             name="t",
             description="T",
             requires_auth=True,
@@ -48,7 +48,7 @@ class TestFeatureMeta:
             assert meta.dostupna_li_autentifikatsiya() is False
 
     def test_dostupna_li_autentifikatsiya_env_var_set(self) -> None:
-        meta = FeatureMeta(
+        meta = MetaFunktsii(
             name="t",
             description="T",
             requires_auth=True,
@@ -58,11 +58,11 @@ class TestFeatureMeta:
             assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
-        meta = FeatureMeta(name="t", description="T", requires_auth=True)
+        meta = MetaFunktsii(name="t", description="T", requires_auth=True)
         assert meta.dostupna_li_autentifikatsiya() is False
 
     def test_dostupna_li_autentifikatsiya_optional_auth_no_env(self) -> None:
-        meta = FeatureMeta(
+        meta = MetaFunktsii(
             name="t",
             description="T",
             requires_auth=False,
@@ -73,7 +73,7 @@ class TestFeatureMeta:
             assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_optional_auth_with_env(self) -> None:
-        meta = FeatureMeta(
+        meta = MetaFunktsii(
             name="t",
             description="T",
             requires_auth=False,
@@ -83,69 +83,69 @@ class TestFeatureMeta:
             assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_frozen(self) -> None:
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
         with pytest.raises(AttributeError):
             meta.name = "other"  # type: ignore[misc]
 
     def test_tags_default_empty(self) -> None:
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ")
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
         assert meta.tags == []
 
     def test_tags_custom(self) -> None:
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ", tags=["валюта", "курсы"])
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ", tags=["валюта", "курсы"])
         assert meta.tags == ["валюта", "курсы"]
 
 
 # ---------------------------------------------------------------------------
-# FeatureRegistry (реестр модулей)
+# ReyestrFunktsiy (реестр модулей)
 # ---------------------------------------------------------------------------
 
 
-class TestFeatureRegistry:
+class TestReyestrFunktsiy:
     def test_empty_registry(self) -> None:
-        registry = FeatureRegistry()
-        assert registry.features == {}
-        assert registry.skipped == {}
+        registry = ReyestrFunktsiy()
+        assert registry.funktsii == {}
+        assert registry.propushcheno == {}
 
     def test_discover_returns_self_for_chaining(self) -> None:
-        """discover() возвращает self для цепочки вызовов."""
-        registry = FeatureRegistry()
-        result = registry.discover("mcp_russia.data")
+        """obnaruzhit() возвращает self для цепочки вызовов."""
+        registry = ReyestrFunktsiy()
+        result = registry.obnaruzhit("mcp_russia.data")
         assert result is registry
 
     def test_discover_finds_cbrf(self) -> None:
         """Discovery находит feature cbrf в пакете data."""
-        registry = FeatureRegistry()
-        registry.discover("mcp_russia.data")
-        assert "cbrf" in registry.features
+        registry = ReyestrFunktsiy()
+        registry.obnaruzhit("mcp_russia.data")
+        assert "cbrf" in registry.funktsii
 
     def test_discover_finds_redator(self) -> None:
         """Discovery находит feature redator в пакете agenty."""
-        registry = FeatureRegistry()
-        registry.discover("mcp_russia.agenty")
-        assert "redator" in registry.features
+        registry = ReyestrFunktsiy()
+        registry.obnaruzhit("mcp_russia.agenty")
+        assert "redator" in registry.funktsii
 
     def test_summary_empty(self) -> None:
-        registry = FeatureRegistry()
-        summary = registry.summary()
+        registry = ReyestrFunktsiy()
+        summary = registry.svodka()
         assert "0 функция(й) активно" in summary
         assert "0 пропущено" in summary
 
     def test_get_feature_not_found(self) -> None:
-        registry = FeatureRegistry()
-        assert registry.get_feature("nonexistent") is None
+        registry = ReyestrFunktsiy()
+        assert registry.poluchit_funktsiyu("nonexistent") is None
 
     def test_mount_all_empty(self) -> None:
         """Mount с пустым registry не вызывает исключение."""
-        registry = FeatureRegistry()
+        registry = ReyestrFunktsiy()
         root = FastMCP("test-root")
-        registry.mount_all(root)  # не должен вызывать исключение
+        registry.smontirovat_vse(root)  # не должен вызывать исключение
 
     def test_register_and_mount_manual(self) -> None:
         """Регистрирует feature вручную и монтирует в root."""
-        registry = FeatureRegistry()
+        registry = ReyestrFunktsiy()
 
-        meta = FeatureMeta(name="test_feat", description="Тестовая функция")
+        meta = MetaFunktsii(name="test_feat", description="Тестовая функция")
         sub_server = FastMCP("test-sub")
 
         @sub_server.tool
@@ -153,45 +153,47 @@ class TestFeatureRegistry:
             """Инструмент проверки связи."""
             return "pong"
 
-        registry._features["test_feat"] = RegisteredFeature(
+        registry._features["test_feat"] = ZaregistrirovannayaFunktsiya(
             meta=meta,
             server=sub_server,
             module_path="fake.module",
         )
 
         root = FastMCP("test-root")
-        registry.mount_all(root)
+        registry.smontirovat_vse(root)
 
-        assert registry.get_feature("test_feat") is not None
-        assert "test_feat" in registry.summary()
+        assert registry.poluchit_funktsiyu("test_feat") is not None
+        assert "test_feat" in registry.svodka()
 
     def test_summary_with_features(self) -> None:
-        registry = FeatureRegistry()
-        meta = FeatureMeta(name="cbrf", description="ЦБ РФ данные")
+        registry = ReyestrFunktsiy()
+        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ данные")
         sub = FastMCP("sub")
-        registry._features["cbrf"] = RegisteredFeature(meta=meta, server=sub, module_path="m")
-        summary = registry.summary()
+        registry._features["cbrf"] = ZaregistrirovannayaFunktsiya(
+            meta=meta, server=sub, module_path="m"
+        )
+        summary = registry.svodka()
         assert "1 функция(й) активно" in summary
         assert "cbrf" in summary
         assert "ЦБ РФ данные" in summary
 
     def test_summary_with_skipped(self) -> None:
-        registry = FeatureRegistry()
+        registry = ReyestrFunktsiy()
         registry._skipped["broken"] = "отсутствует FEATURE_META"
-        summary = registry.summary()
+        summary = registry.svodka()
         assert "1 пропущено" in summary
         assert "broken" in summary
 
     def test_skipped_returns_copy(self) -> None:
-        registry = FeatureRegistry()
+        registry = ReyestrFunktsiy()
         registry._skipped["x"] = "reason"
-        skipped = registry.skipped
+        skipped = registry.propushcheno
         skipped["y"] = "other"
         assert "y" not in registry._skipped
 
     def test_features_returns_copy(self) -> None:
-        registry = FeatureRegistry()
-        features = registry.features
+        registry = ReyestrFunktsiy()
+        features = registry.funktsii
         features["fake"] = None  # type: ignore[assignment]
         assert "fake" not in registry._features
 

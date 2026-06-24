@@ -28,14 +28,14 @@ class TestKeshSVremenemZhizni:
         cache.set("a", 1)
         cache.set("b", 2)
         cache.clear()
-        assert cache.size == 0
+        assert cache.razmer == 0
 
     def test_maxsize_eviction(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60, maxsize=2)
         cache.set("a", 1)
         cache.set("b", 2)
         cache.set("c", 3)  # должен вытеснить самый старый
-        assert cache.size <= 2
+        assert cache.razmer <= 2
 
     def test_evicts_expired_first(self) -> None:
         cache = KeshSVremenemZhizni(ttl=0.01, maxsize=2)
@@ -46,11 +46,11 @@ class TestKeshSVremenemZhizni:
         assert cache.get("b") == 2
         assert cache.get("c") == 3
 
-    def test_size_property(self) -> None:
+    def test_razmer_property(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60)
-        assert cache.size == 0
+        assert cache.razmer == 0
         cache.set("x", 1)
-        assert cache.size == 1
+        assert cache.razmer == 1
 
 
 class TestTtlCacheDecorator:

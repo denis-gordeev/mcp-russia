@@ -32,7 +32,7 @@ TIPY_OBEKTA_CODE = {
 }
 
 
-def _parse_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObekt:
+def _razobrat_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObekt:
     """Разбор данных объекта недвижимости из ответа pkk.rosreestr.ru."""
     tip = data.get("type", "").lower()
     tip_code = TIPY_OBEKTA_CODE.get(tip, "")
@@ -105,7 +105,7 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
         result = await http_get(url, headers={"Accept": "application/json"})
         feature = result.get("feature", result)
         attrs = feature.get("attrs", feature)
-        return _parse_obekt(kadastrovyy_nomer, attrs)
+        return _razobrat_obekt(kadastrovyy_nomer, attrs)
     except Exception:
         return None
 

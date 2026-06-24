@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -26,11 +26,11 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
         Список типов актов.
     """
     await ctx.info("Запрос списка типов актов...")
-    tipy = client.get_tipy_aktov_list()
+    tipy = client.poluchit_spisok_tipov_aktov()
 
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы нормативных актов РФ**\n\n"
-    return header + markdown_table(["Код", "Тип"], rows) + _PRAVO_ATTRIBUTION
+    return header + tablitsa_v_markdown(["Код", "Тип"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_otrasley(ctx: Context) -> str:
@@ -40,11 +40,11 @@ async def spisok_otrasley(ctx: Context) -> str:
         Список отраслей.
     """
     await ctx.info("Запрос списка отраслей законодательства...")
-    otrsli = client.get_otrasli_list()
+    otrsli = client.poluchit_spisok_otrasley()
 
     rows = [(o["kod"], o["nazvanie"]) for o in otrsli]
     header = "**Отрасли законодательства РФ**\n\n"
-    return header + markdown_table(["Код", "Отрасль"], rows) + _PRAVO_ATTRIBUTION
+    return header + tablitsa_v_markdown(["Код", "Отрасль"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_istochnikov(ctx: Context) -> str:
@@ -54,11 +54,11 @@ async def spisok_istochnikov(ctx: Context) -> str:
         Список источников.
     """
     await ctx.info("Запрос списка источников публикаций...")
-    istochniki = client.get_istochniki_list()
+    istochniki = client.poluchit_spisok_istochnikov()
 
     rows = [(i["kod"], i["nazvanie"]) for i in istochniki]
     header = "**Источники официальных публикаций**\n\n"
-    return header + markdown_table(["Код", "Источник"], rows) + _PRAVO_ATTRIBUTION
+    return header + tablitsa_v_markdown(["Код", "Источник"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_statusov(ctx: Context) -> str:
@@ -68,11 +68,11 @@ async def spisok_statusov(ctx: Context) -> str:
         Список статусов.
     """
     await ctx.info("Запрос списка статусов документов...")
-    statusy = client.get_statusy_list()
+    statusy = client.poluchit_spisok_statusov()
 
     rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы документов**\n\n"
-    return header + markdown_table(["Код", "Статус"], rows) + _PRAVO_ATTRIBUTION
+    return header + tablitsa_v_markdown(["Код", "Статус"], rows) + _PRAVO_ATTRIBUTION
 
 
 async def info_normativnogo_akta(

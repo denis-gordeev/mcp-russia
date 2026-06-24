@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -165,7 +165,7 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
 
     rows = [(p.tip_proverki, p.period_proverki, p.status) for p in data]
     header = f"**Налоговые проверки** — ИНН {inn}\n\n"
-    return header + markdown_table(["Тип", "Период", "Статус"], rows)
+    return header + tablitsa_v_markdown(["Тип", "Период", "Статус"], rows)
 
 
 async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None = None) -> str:
@@ -193,7 +193,8 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
         )
 
     rows = [
-        (n.vid_naloga, n.period, format_number_ru(n.summa, 2) if n.summa else "—") for n in data
+        (n.vid_naloga, n.period, formatirovat_chislo_ru(n.summa, 2) if n.summa else "—")
+        for n in data
     ]
     header = f"**Налоговые начисления** — ИНН {inn}\n\n"
-    return header + markdown_table(["Вид налога", "Период", "Сумма"], rows)
+    return header + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], rows)

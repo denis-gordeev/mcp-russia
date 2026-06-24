@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -25,7 +25,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
         Список типов вузов (университет, академия, институт и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TIPY_VUZOV]
-    return markdown_table(["Код", "Тип вуза"], rows)
+    return tablitsa_v_markdown(["Код", "Тип вуза"], rows)
 
 
 async def spisok_form_obucheniya(ctx: Context) -> str:
@@ -35,7 +35,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
     rows = [(f["kod"], f["nazvanie"]) for f in FORMY_OBUCHENIYA]
-    return markdown_table(["Код", "Форма обучения"], rows)
+    return tablitsa_v_markdown(["Код", "Форма обучения"], rows)
 
 
 async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
@@ -45,7 +45,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
     rows = [(u["kod"], u["nazvanie"]) for u in UROVNI_OBRAZOVANIYA]
-    return markdown_table(["Код", "Уровень образования"], rows)
+    return tablitsa_v_markdown(["Код", "Уровень образования"], rows)
 
 
 async def spisok_otrasley_nauki(ctx: Context) -> str:
@@ -55,7 +55,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
     rows = [(o["kod"], o["nazvanie"]) for o in OTRASLI_NAUKI]
-    return markdown_table(["Код", "Отрасль науки"], rows)
+    return tablitsa_v_markdown(["Код", "Отрасль науки"], rows)
 
 
 async def spisok_tipov_grantov(ctx: Context) -> str:
@@ -65,7 +65,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
         Список грантовых фондов и программ.
     """
     rows = [(g["kod"], g["nazvanie"]) for g in TIPY_GRANTOV]
-    return markdown_table(["Код", "Тип гранта"], rows)
+    return tablitsa_v_markdown(["Код", "Тип гранта"], rows)
 
 
 async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
@@ -75,7 +75,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
         Список статусов (действует, приостановлена, отменена).
     """
     rows = [(s["kod"], s["nazvanie"]) for s in STATUSY_AKKREDITATSII]
-    return markdown_table(["Код", "Статус аккредитации"], rows)
+    return tablitsa_v_markdown(["Код", "Статус аккредитации"], rows)
 
 
 async def spisok_federalnyh_okrugov(ctx: Context) -> str:
@@ -85,7 +85,7 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
         Список федеральных округов.
     """
     rows = [(f["kod"], f["nazvanie"]) for f in FEDERALNYE_OKRUGA]
-    return markdown_table(["Код", "Федеральный округ"], rows)
+    return tablitsa_v_markdown(["Код", "Федеральный округ"], rows)
 
 
 async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
@@ -168,7 +168,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     rows = []
     for g in granty:
         summ = (
-            format_number_ru(g.get("summa_finansirovaniya", 0), 0)
+            formatirovat_chislo_ru(g.get("summa_finansirovaniya", 0), 0)
             if g.get("summa_finansirovaniya")
             else "—"
         )
@@ -181,7 +181,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
                 g.get("status", ""),
             )
         )
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Тип гранта", "Название", "Руководитель", "Сумма (₽)", "Статус"],
         rows,
     )
@@ -212,11 +212,11 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
             (
                 str(r.get("mesto_v_reytinge", "")),
                 r.get("nazvanie", ""),
-                format_number_ru(r.get("ball", 0), 1) if r.get("ball") else "—",
+                formatirovat_chislo_ru(r.get("ball", 0), 1) if r.get("ball") else "—",
                 r.get("tip_reytinga", ""),
             )
         )
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Место", "Вуз", "Балл", "Тип рейтинга"],
         rows,
     )
@@ -266,7 +266,7 @@ async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str
                 r.get("srok_deystviya", ""),
             )
         )
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№ лицензии", "Организация", "Статус", "Срок действия"],
         rows,
     )

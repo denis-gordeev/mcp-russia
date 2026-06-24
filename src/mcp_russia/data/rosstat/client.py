@@ -52,7 +52,7 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
         if diapazon_dat:
             params["date"] = diapazon_dat
         data = await http_get(url, params=params, timeout=20.0)
-        return _parse_indikator_response(data, kod)
+        return _razobrat_otvet_indikatora(data, kod)
     except Exception:
         logger.exception("Ошибка при получении индикатора %s", kod)
         return []
@@ -381,7 +381,7 @@ async def poluchit_indikator_dannye(
         return []
 
 
-def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
+def _razobrat_otvet_indikatora(data: Any, code: str) -> list[PokazatelRosstata]:
     """Разбор ответа API ЕМИСС в объекты PokazatelRosstata."""
     if not isinstance(data, dict):
         return []
@@ -409,12 +409,12 @@ def _parse_indikator_response(data: Any, code: str) -> list[PokazatelRosstata]:
     return results
 
 
-def get_subiekty_list() -> list[dict[str, str]]:
+def poluchit_spisok_subiektov() -> list[dict[str, str]]:
     """Возвращает список субъектов РФ, доступных для запросов."""
     return SUBIEKTY_RF
 
 
-def get_federalny_okruga_list() -> list[dict[str, str]]:
+def poluchit_spisok_federalnykh_okrugov() -> list[dict[str, str]]:
     """Возвращает список федеральных округов, доступных для запросов."""
     return FEDERALNYE_OKRUGA
 

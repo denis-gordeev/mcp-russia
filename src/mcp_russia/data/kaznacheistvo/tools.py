@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 
@@ -17,19 +17,19 @@ from . import client
 async def spisok_vidov_byudzhetov(ctx: Context) -> str:
     """Получить список видов бюджетов бюджетной системы РФ."""
     await ctx.info("Запрос списка видов бюджетов...")
-    vidy = client.get_vidy_byudzhetov_list()
+    vidy = client.poluchit_spisok_vidov_byudzhetov()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды бюджетов бюджетной системы РФ**\n\n"
-    return header + markdown_table(["Код", "Вид бюджета"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид бюджета"], rows)
 
 
 async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
     """Получить список категорий расходов бюджета."""
     await ctx.info("Запрос списка категорий расходов...")
-    kategorii = client.get_kategorii_raskhodov_list()
+    kategorii = client.poluchit_spisok_kategoriy_raskhodov()
     rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории расходов бюджета**\n\n"
-    return header + markdown_table(["Код", "Категория"], rows)
+    return header + tablitsa_v_markdown(["Код", "Категория"], rows)
 
 
 async def ispolnenie_byudzheta(
@@ -61,11 +61,11 @@ async def ispolnenie_byudzheta(
     if data.get("tip"):
         lines.append(f"- Тип бюджета: {data['tip']}")
     if data.get("dohody"):
-        lines.append(f"- Доходы: {format_number_ru(data['dohody'], 2)} млрд руб.")
+        lines.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
     if data.get("raskhody"):
-        lines.append(f"- Расходы: {format_number_ru(data['raskhody'], 2)} млрд руб.")
+        lines.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
     if data.get("deficit") is not None:
-        lines.append(f"- Дефицит: {format_number_ru(data['deficit'], 2)} млрд руб.")
+        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['deficit'], 2)} млрд руб.")
     if data.get("status"):
         lines.append(f"- Статус: {data['status']}")
     lines.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
@@ -109,7 +109,7 @@ async def poisk_uchastnikov_bp(
         for u in uchastniki
     ]
     header = f"**Участники бюджетного процесса** — найдено: {len(uchastniki)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Бюджет"],
         rows,
     )
@@ -156,7 +156,7 @@ async def poisk_uchrezhdeniy(
         for u in uchrezhdeniya
     ]
     header = f"**Учреждения** — найдено: {len(uchrezhdeniya)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Основной вид деятельности"],
         rows,
     )
@@ -196,7 +196,7 @@ async def mezhbyudzhetnye_transferty(
         for t in transferty
     ]
     header = f"**Межбюджетные трансферты** — найдено: {len(transferty)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Вид", "Отправитель", "Получатель", "Сумма (руб.)", "Год"],
         rows,
     )

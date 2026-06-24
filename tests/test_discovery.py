@@ -79,7 +79,7 @@ class TestBuildCatalog:
 
     def test_postroit_katalog_with_empty_registry(self) -> None:
         mock_registry = MagicMock()
-        mock_registry.features = {}
+        mock_registry.funktsii = {}
         result = postroit_katalog(mock_registry)
         assert result == ""
 
@@ -87,7 +87,7 @@ class TestBuildCatalog:
         import mcp_russia._shared.discovery as disc
 
         mock_registry = MagicMock()
-        mock_registry.features = {}
+        mock_registry.funktsii = {}
         postroit_katalog(mock_registry)
 
         disc._catalog_cache = "cached"
@@ -362,7 +362,7 @@ class TestSplanirovatZapros:
 class TestPlanZaprosaMarkdown:
     def test_to_markdown_renders_steps(self) -> None:
         plan = PlanZaprosa.model_validate(json.loads(_VALID_PLAN_JSON))
-        md = plan.to_markdown()
+        md = plan.v_markdown()
         assert "## План запроса" in md
         assert "**Сложность:** umerennyy" in md
         assert "### Этап 1:" in md
@@ -388,6 +388,6 @@ class TestPlanZaprosaMarkdown:
             ],
             primechaniya="Требуется авторизация на портале Росстата.",
         )
-        md = plan.to_markdown()
+        md = plan.v_markdown()
         assert "**Примечания:**" in md
         assert "Росстата" in md

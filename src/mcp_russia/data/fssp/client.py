@@ -16,7 +16,7 @@ from .constants import FSSP_IP_BASE, FSSP_SEARCH_API
 logger = logging.getLogger(__name__)
 
 
-def _parse_fio(fio: str) -> dict[str, str]:
+def _razobrat_fio(fio: str) -> dict[str, str]:
     """Разбор ФИО на компоненты (фамилия, имя, отчество)."""
     parts = fio.strip().split()
     result: dict[str, str] = {}
@@ -29,7 +29,7 @@ def _parse_fio(fio: str) -> dict[str, str]:
     return result
 
 
-def _parse_proizvodstva(data: Any) -> list[dict[str, Any]]:
+def _razobrat_proizvodstva(data: Any) -> list[dict[str, Any]]:
     """Разбор ответа API ФССП в список исполнительных производств."""
     if not isinstance(data, dict):
         return []
@@ -43,11 +43,11 @@ def _parse_proizvodstva(data: Any) -> list[dict[str, Any]]:
     for item in result:
         if not isinstance(item, dict):
             continue
-        records.append(_normalise_proizvodstvo(item))
+        records.append(_normlizovat_proizvodstvo(item))
     return records
 
 
-def _normalise_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
+def _normlizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
     """Нормализация записи исполнительного производства."""
     return {
         "nomer": item.get("number", item.get("номер", "")),
@@ -78,7 +78,7 @@ async def poisk_proizvodstv(
     Возвращает:
         Список исполнительных производств.
     """
-    fio_parts = _parse_fio(fio)
+    fio_parts = _razobrat_fio(fio)
     body: dict[str, Any] = {"is": fio_parts}
     if data_rozhdeniya:
         body["is"]["date"] = data_rozhdeniya
@@ -86,7 +86,7 @@ async def poisk_proizvodstv(
         body["is"]["region"] = region
     try:
         data = await http_post(FSSP_SEARCH_API, json_body=body)
-        return _parse_proizvodstva(data)
+        return _razobrat_proizvodstva(data)
     except Exception:
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
         try:
@@ -102,7 +102,7 @@ async def poisk_proizvodstv(
             if region:
                 params["is[region]"] = region
             data = await http_get(FSSP_IP_BASE, params=params)
-            return _parse_proizvodstva(data)
+            return _razobrat_proizvodstva(data)
         except Exception:
             logger.exception("Ошибка при резервном поиске производств по ФИО «%s»", fio)
             return []
@@ -119,7 +119,7 @@ async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
     """
     try:
         data = await http_get(f"{FSSP_IP_BASE}", params={"number": nomer})
-        records = _parse_proizvodstva(data)
+        records = _razobrat_proizvodstva(data)
         for r in records:
             if r.get("nomer") == nomer:
                 return r

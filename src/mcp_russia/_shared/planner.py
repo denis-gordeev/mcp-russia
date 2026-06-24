@@ -57,7 +57,7 @@ class PlanZaprosa(BaseModel):
     primechaniya: str = ""
     """Необязательные заметки (требования авторизации, оговорки)."""
 
-    def to_markdown(self) -> str:
+    def v_markdown(self) -> str:
         """Рендеринг плана в удобочитаемый Markdown."""
         lines: list[str] = [
             "## План запроса",
@@ -261,7 +261,7 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
 
         try:
             plan = PlanZaprosa.model_validate(json.loads(raw_text))
-            return plan.to_markdown()
+            return plan.v_markdown()
         except (json.JSONDecodeError, Exception):
             logger.warning("Не удалось разобрать JSON плана; возврат сырого текста")
             return raw_text

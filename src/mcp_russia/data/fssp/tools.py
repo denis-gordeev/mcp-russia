@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -26,7 +26,7 @@ async def spisok_vidov_proizvodstv(ctx: Context) -> str:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
     rows = [(v["kod"], v["nazvanie"]) for v in VidyIspolnitelnyhProizvodstv]
-    return markdown_table(["Код", "Вид производства"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Вид производства"], rows) + _ATTRIBUTION
 
 
 async def spisok_statusov_proizvodstva(ctx: Context) -> str:
@@ -36,7 +36,7 @@ async def spisok_statusov_proizvodstva(ctx: Context) -> str:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
     rows = [(s["kod"], s["nazvanie"]) for s in StatusyProizvodstva]
-    return markdown_table(["Код", "Статус"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Статус"], rows) + _ATTRIBUTION
 
 
 async def spisok_ogranicheniy(ctx: Context) -> str:
@@ -46,7 +46,7 @@ async def spisok_ogranicheniy(ctx: Context) -> str:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
     rows = [(o["kod"], o["nazvanie"]) for o in Ogranicheniya]
-    return markdown_table(["Код", "Ограничение"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Ограничение"], rows) + _ATTRIBUTION
 
 
 async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
@@ -56,7 +56,7 @@ async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
         Список категорий (физлицо, юрлицо, ИП).
     """
     rows = [(k["kod"], k["nazvanie"]) for k in KategoriiDolzhnikov]
-    return markdown_table(["Код", "Категория"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Категория"], rows) + _ATTRIBUTION
 
 
 async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
@@ -66,7 +66,7 @@ async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
     rows = [(o["kod"], o["nazvanie"]) for o in OsnovaniyaVozbuzhdeniya]
-    return markdown_table(["Код", "Основание"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Основание"], rows) + _ATTRIBUTION
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -78,7 +78,7 @@ async def spisok_regionov(ctx: Context) -> str:
     rows = [
         (str(code), name) for name, code in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
     ]
-    return markdown_table(["Код", "Регион"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Регион"], rows) + _ATTRIBUTION
 
 
 async def info_proizvodstva(ctx: Context, nomer: str) -> str:
@@ -142,7 +142,7 @@ async def poisk_dolzhnika(
         for r in results
     ]
     return (
-        markdown_table(
+        tablitsa_v_markdown(
             ["Номер", "Должник", "Предмет", "Сумма", "Отдел", "Статус"],
             rows,
         )
@@ -178,7 +178,7 @@ async def ogranicheniya_dolzhnika(
         for r in results
     ]
     return (
-        markdown_table(
+        tablitsa_v_markdown(
             ["Номер ИП", "Должник", "Ограничение", "Статус"],
             rows,
         )
@@ -209,7 +209,7 @@ async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
         for r in results
     ]
     return (
-        markdown_table(
+        tablitsa_v_markdown(
             ["Номер ИП", "Должник", "Предмет розыска", "Отдел"],
             rows,
         )

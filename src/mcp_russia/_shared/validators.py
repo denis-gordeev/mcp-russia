@@ -7,7 +7,7 @@ import re
 _DIGITS_RE = re.compile(r"\D")
 
 
-def _only_digits(value: str) -> str:
+def _tolko_tsifry(value: str) -> str:
     """Удаление всех нецифровых символов."""
     return _DIGITS_RE.sub("", value)
 
@@ -17,7 +17,7 @@ def _only_digits(value: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def validate_inn(inn: str) -> bool:
+def proverit_inn(inn: str) -> bool:
     """Валидация российского ИНН (идентификационный номер налогоплательщика).
 
     Поддерживает форматы 10 цифр (юридические лица) и 12 цифр (физические лица).
@@ -28,7 +28,7 @@ def validate_inn(inn: str) -> bool:
     Возвращает:
         True если валиден, иначе False.
     """
-    digits = _only_digits(inn)
+    digits = _tolko_tsifry(inn)
     if len(digits) not in (10, 12):
         return False
 
@@ -54,7 +54,7 @@ def validate_inn(inn: str) -> bool:
     return int(digits[11]) == check2
 
 
-def format_inn(inn: str) -> str:
+def formatirovat_inn(inn: str) -> str:
     """Форматирование ИНН для отображения.
 
     Аргументы:
@@ -66,7 +66,7 @@ def format_inn(inn: str) -> str:
     Вызывает:
         ValueError: Если ИНН не содержит 10 или 12 цифр.
     """
-    digits = _only_digits(inn)
+    digits = _tolko_tsifry(inn)
     if len(digits) == 10:
         return digits
     if len(digits) == 12:
@@ -79,7 +79,7 @@ def format_inn(inn: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def validate_kpp(kpp: str) -> bool:
+def proverit_kpp(kpp: str) -> bool:
     """Валидация российского КПП (код причины постановки на учёт).
 
     КПП — 9-значный код, используемый совместно с ИНН для юридических лиц.
@@ -90,13 +90,13 @@ def validate_kpp(kpp: str) -> bool:
     Возвращает:
         True если формат корректен, иначе False.
     """
-    digits = _only_digits(kpp)
+    digits = _tolko_tsifry(kpp)
     if len(digits) != 9:
         return False
     return digits[:2] != "00"
 
 
-def format_kpp(kpp: str) -> str:
+def formatirovat_kpp(kpp: str) -> str:
     """Форматирование КПП для отображения.
 
     Аргументы:
@@ -108,7 +108,7 @@ def format_kpp(kpp: str) -> str:
     Вызывает:
         ValueError: Если КПП не содержит ровно 9 цифр.
     """
-    digits = _only_digits(kpp)
+    digits = _tolko_tsifry(kpp)
     if len(digits) != 9:
         raise ValueError(f"КПП должен содержать 9 цифр, получено {len(digits)}")
     return digits
@@ -119,7 +119,7 @@ def format_kpp(kpp: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def validate_snils(snils: str) -> bool:
+def proverit_snils(snils: str) -> bool:
     """Валидация российского СНИЛС (страховой номер индивидуального лицевого счёта).
 
     СНИЛС — 11-значное число (9 цифр + 2 контрольные цифры).
@@ -130,7 +130,7 @@ def validate_snils(snils: str) -> bool:
     Возвращает:
         True если валиден, иначе False.
     """
-    digits = _only_digits(snils)
+    digits = _tolko_tsifry(snils)
     if len(digits) != 11:
         return False
 
@@ -150,7 +150,7 @@ def validate_snils(snils: str) -> bool:
     return digits[9:] == check_str
 
 
-def format_snils(snils: str) -> str:
+def formatirovat_snils(snils: str) -> str:
     """Форматирование СНИЛС в виде XXX-XXX-XXX XX.
 
     Аргументы:
@@ -162,7 +162,7 @@ def format_snils(snils: str) -> str:
     Вызывает:
         ValueError: Если СНИЛС не содержит ровно 11 цифр.
     """
-    digits = _only_digits(snils)
+    digits = _tolko_tsifry(snils)
     if len(digits) != 11:
         raise ValueError(f"СНИЛС должен содержать 11 цифр, получено {len(digits)}")
     return f"{digits[:3]}-{digits[3:6]}-{digits[6:9]} {digits[9:]}"
@@ -173,7 +173,7 @@ def format_snils(snils: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def validate_postal_code_ru(postal_code: str) -> bool:
+def proverit_pochtovyy_indeks(postal_code: str) -> bool:
     """Валидация российского почтового индекса (6 цифр).
 
     Аргументы:
@@ -182,13 +182,13 @@ def validate_postal_code_ru(postal_code: str) -> bool:
     Возвращает:
         True если формат корректен, иначе False.
     """
-    digits = _only_digits(postal_code)
+    digits = _tolko_tsifry(postal_code)
     if len(digits) != 6:
         return False
     return digits[0] in "123456"
 
 
-def format_postal_code_ru(postal_code: str) -> str:
+def formatirovat_pochtovyy_indeks(postal_code: str) -> str:
     """Форматирование российского почтового индекса как XXXXXX.
 
     Аргументы:
@@ -200,7 +200,7 @@ def format_postal_code_ru(postal_code: str) -> str:
     Вызывает:
         ValueError: Если почтовый индекс не содержит ровно 6 цифр.
     """
-    digits = _only_digits(postal_code)
+    digits = _tolko_tsifry(postal_code)
     if len(digits) != 6:
         raise ValueError(
             f"Российский почтовый индекс должен содержать 6 цифр, получено {len(digits)}"

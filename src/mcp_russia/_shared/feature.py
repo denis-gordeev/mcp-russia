@@ -12,12 +12,12 @@ pytest plugin discovery, FastAPI router auto-include.
 
 Использование:
     from fastmcp import FastMCP
-    from mcp_russia._shared.feature import FeatureRegistry
+    from mcp_russia._shared.feature import ReyestrFunktsiy
 
     mcp = FastMCP("mcp-russia")
-    registry = FeatureRegistry()
-    registry.discover()
-    registry.mount_all(mcp)
+    registry = ReyestrFunktsiy()
+    registry.obnaruzhit()
+    registry.smontirovat_vse(mcp)
 """
 
 from __future__ import annotations
@@ -38,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
-class FeatureMeta:
+class MetaFunktsii:
     """Декларативные метаданные функции.
 
     Каждая функция должна экспортировать экземпляр FEATURE_META в своём __init__.py.
@@ -47,9 +47,9 @@ class FeatureMeta:
 
     Пример:
         # src/mcp_russia/rosstat/__init__.py
-        from mcp_russia._shared.feature import FeatureMeta
+        from mcp_russia._shared.feature import MetaFunktsii
 
-        FEATURE_META = FeatureMeta(
+        FEATURE_META = MetaFunktsii(
             name="rosstat",
             description="Росстат: демография, ВРП, социальные показатели",
             api_base="https://rosstat.gov.ru/api",
@@ -74,16 +74,22 @@ class FeatureMeta:
         return bool(os.environ.get(self.auth_env_var))
 
 
+FeatureMeta = MetaFunktsii
+
+
 @dataclass
-class RegisteredFeature:
+class ZaregistrirovannayaFunktsiya:
     """Обнаруженная, провалидированная и зарегистрированная функция."""
 
-    meta: FeatureMeta
+    meta: MetaFunktsii
     server: FastMCP
     module_path: str
 
 
-class FeatureRegistry:
+RegisteredFeature = ZaregistrirovannayaFunktsiya
+
+
+class ReyestrFunktsiy:
     """Автоматический реестр: обнаружение, валидация и монтирование функций.
 
     Использует pkgutil.iter_modules() для сканирования подпакетов mcp_russia,
@@ -93,7 +99,7 @@ class FeatureRegistry:
     Конвенция (все условия обязательны для автообнаружения):
         1. Подпакет mcp_russia/ (директория с __init__.py)
         2. Имя НЕ начинается с '_'
-        3. __init__.py экспортирует FEATURE_META: FeatureMeta
+        3. __init__.py экспортирует FEATURE_META: MetaFunktsii
         4. server.py экспортирует mcp: FastMCP
         5. Если requires_auth=True, auth_env_var должен быть задан в окружении
 
@@ -102,20 +108,20 @@ class FeatureRegistry:
 
     def __init__(self) -> None:
         """Инициализация пустого реестра функций."""
-        self._features: dict[str, RegisteredFeature] = {}
+        self._features: dict[str, ZaregistrirovannayaFunktsiya] = {}
         self._skipped: dict[str, str] = {}
 
     @property
-    def features(self) -> dict[str, RegisteredFeature]:
+    def funktsii(self) -> dict[str, ZaregistrirovannayaFunktsiya]:
         """Все обнаруженные и зарегистрированные функции."""
         return dict(self._features)
 
     @property
-    def skipped(self) -> dict[str, str]:
+    def propushcheno(self) -> dict[str, str]:
         """Пропущенные функции с причинами."""
         return dict(self._skipped)
 
-    def discover(self, package_name: str = "mcp_russia") -> FeatureRegistry:
+    def obnaruzhit(self, package_name: str = "mcp_russia") -> ReyestrFunktsiy:
         """Обнаружение всех функций в пакете.
 
         Сканирует подпакеты `package_name` и регистрирует те, что
@@ -126,7 +132,7 @@ class FeatureRegistry:
             package_name: Базовый пакет для сканирования. По умолчанию: «mcp_russia».
 
         Возвращает:
-            self для цепочки вызовов: registry.discover().mount_all(mcp)
+            self для цепочки вызовов: registry.obnaruzhit().smontirovat_vse(mcp)
         """
         package = importlib.import_module(package_name)
 
@@ -138,7 +144,7 @@ class FeatureRegistry:
                 continue
 
             try:
-                self._try_register(name, short_name)
+                self._poprovat_zaregistrirovat(name, short_name)
             except Exception as exc:
                 reason = str(exc)
                 self._skipped[short_name] = reason
@@ -146,7 +152,7 @@ class FeatureRegistry:
 
         return self
 
-    def _try_register(self, module_path: str, short_name: str) -> None:
+    def _poprovat_zaregistrirovat(self, module_path: str, short_name: str) -> None:
         """Попытка импорта и регистрации отдельной функции."""
         # Шаг 1: Импорт __init__.py функции
         importiruyemyy_modul = importlib.import_module(module_path)
@@ -155,9 +161,8 @@ class FeatureRegistry:
         meta = getattr(importiruyemyy_modul, "FEATURE_META", None)
         if meta is None:
             raise ValueError(f"Нет FEATURE_META в {module_path}")
-
-        if not isinstance(meta, FeatureMeta):
-            raise TypeError(f"FEATURE_META в {module_path} не является экземпляром FeatureMeta")
+        if not isinstance(meta, MetaFunktsii):
+            raise TypeError(f"FEATURE_META в {module_path} не является экземпляром MetaFunktsii")
 
         # Шаг 3: Проверка активности функции
         if not meta.enabled:
@@ -183,7 +188,7 @@ class FeatureRegistry:
             raise ValueError(f"Нет объекта `mcp` в {module_path}.server")
 
         # Шаг 6: Регистрация
-        self._features[short_name] = RegisteredFeature(
+        self._features[short_name] = ZaregistrirovannayaFunktsiya(
             meta=meta,
             server=server,
             module_path=module_path,
@@ -194,7 +199,7 @@ class FeatureRegistry:
             meta.version,
         )
 
-    def mount_all(self, root_server: FastMCP) -> None:
+    def smontirovat_vse(self, root_server: FastMCP) -> None:
         """Монтирование всех обнаруженных функций на корневой сервер.
 
         Каждая функция получает пространство имён по названию
@@ -207,7 +212,7 @@ class FeatureRegistry:
             root_server.mount(modul.server, namespace=name)
             logger.info("Смонтирована '%s' — %s", name, modul.meta.description)
 
-    def summary(self) -> str:
+    def svodka(self) -> str:
         """Читаемая сводка зарегистрированных функций.
 
         Полезно для логирования при запуске и генерации документации.
@@ -232,6 +237,9 @@ class FeatureRegistry:
 
         return "\n".join(lines)
 
-    def get_feature(self, name: str) -> RegisteredFeature | None:
+    def poluchit_funktsiyu(self, name: str) -> ZaregistrirovannayaFunktsiya | None:
         """Получение зарегистрированной функции по имени."""
         return self._features.get(name)
+
+
+FeatureRegistry = ReyestrFunktsiy

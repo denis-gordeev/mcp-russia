@@ -50,7 +50,7 @@ async def test_spisok_regionov_registratsii():
 
 async def test_info_ts_not_found():
     ctx = _mock_ctx()
-    with patch.object(gibdd_tools, "_proverka_ts_full", return_value=([], [], [], [])):
+    with patch.object(gibdd_tools, "_polnaya_proverka_ts", return_value=([], [], [], [])):
         result = await gibdd_tools.info_ts(ctx=ctx, vin="XTA21140052XXXXXX")
     assert "не найден" in result
 

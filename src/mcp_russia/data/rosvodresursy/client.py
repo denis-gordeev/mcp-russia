@@ -58,7 +58,7 @@ async def poisk_vodnykh_obektov(
         params["limit"] = ogranichenie
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_vodnyy_obekt(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске водных объектов")
         return []
@@ -77,7 +77,7 @@ async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
         url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_vodnyy_obekt(data)
+            return _razobrat_vodnyy_obekt(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении водного объекта %s", kod)
@@ -108,7 +108,7 @@ async def poluchit_gidro_dannye(
             params["region"] = region
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_gidro_zapis(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_gidro_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении гидрологических данных")
         return []
@@ -127,7 +127,7 @@ async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
         url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_vodokhranilishche(data)
+            return _razobrat_vodokhranilishche(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении данных водохранилища %s", kod)
@@ -156,28 +156,28 @@ async def poluchit_vodopolzovanie(
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_vodopolzovanie_zapis(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_vodopolzovanie_zapis(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении данных о водопользовании")
         return []
 
 
-def get_basseynovye_okruga_list() -> list[dict[str, str]]:
+def poluchit_spisok_basseynovykh_okrugov() -> list[dict[str, str]]:
     """Вернуть справочник бассейновых округов."""
     return BASSEYNOVYE_OKRUGA
 
 
-def get_tipy_vodnykh_obektov_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_vodnykh_obektov() -> list[dict[str, str]]:
     """Вернуть справочник типов водных объектов."""
     return TIPY_VODNYKH_OBIEKTOV
 
 
-def get_tipy_gidro_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_gidro() -> list[dict[str, str]]:
     """Вернуть справочник типов гидрологических данных."""
     return TIPY_GIDRO_DANNYKH
 
 
-def get_vodokhranilishcha_list() -> list[dict[str, str]]:
+def poluchit_spisok_vodokhranilishch() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
         {"kod": v["kod"], "nazvanie": v["nazvanie"], "region": v["region"]}
@@ -185,7 +185,7 @@ def get_vodokhranilishcha_list() -> list[dict[str, str]]:
     ]
 
 
-def get_vodokhranilishcha_detailed() -> list[dict[str, Any]]:
+def poluchit_vodokhranilishche_podrobno() -> list[dict[str, Any]]:
     """Вернуть подробный справочник водохранилищ."""
     return KRUPNYE_VODOKHRANILISHCHA
 
@@ -202,7 +202,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водного объекта."""
     return {
         "kod": item.get("code", "") or item.get("id", ""),
@@ -217,7 +217,7 @@ def _parse_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор записи гидрологических данных."""
     return {
         "post": item.get("post", "") or item.get("postName", ""),
@@ -233,7 +233,7 @@ def _parse_gidro_zapis(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водохранилища."""
     return {
         "kod": item.get("code", "") or item.get("id", ""),
@@ -248,7 +248,7 @@ def _parse_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_vodopolzovanie_zapis(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodopolzovanie_zapis(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор записи о водопользовании."""
     return {
         "region": item.get("region", ""),

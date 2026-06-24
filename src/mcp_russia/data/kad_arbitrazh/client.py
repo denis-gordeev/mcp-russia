@@ -417,21 +417,21 @@ async def storony_dela(nomer: str) -> list[StoronaDela]:
         return []
 
 
-def get_instantsii() -> list[dict[str, str]]:
+def poluchit_instantsii() -> list[dict[str, str]]:
     """Вернуть справочник инстанций судов."""
     return INSTANTSII_SUDOV
 
 
-def get_kategorii_del() -> list[dict[str, str]]:
+def poluchit_kategorii_del() -> list[dict[str, str]]:
     """Вернуть справочник категорий дел."""
     return KATEGORII_DEL
 
 
-def get_statusy_del() -> list[dict[str, str]]:
+def poluchit_statusy_del() -> list[dict[str, str]]:
     """Вернуть справочник статусов дел."""
     return STATUSY_DEL
 
 
-def get_tipy_aktov() -> list[dict[str, str]]:
+def poluchit_tipy_aktov() -> list[dict[str, str]]:
     """Вернуть справочник типов актов."""
     return TIPLY_AKTOV

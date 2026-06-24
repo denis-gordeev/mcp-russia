@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -26,7 +26,7 @@ async def spisok_tipov_ts(ctx: Context) -> str:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TipyTransportnykhSredstv]
-    return markdown_table(["Код", "Тип ТС"], rows)
+    return tablitsa_v_markdown(["Код", "Тип ТС"], rows)
 
 
 async def spisok_kategoriyy_vu(ctx: Context) -> str:
@@ -36,7 +36,7 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
         Список категорий ВУ (A, B, C, D, M и т.д.).
     """
     rows = [(k["kod"], k["nazvanie"]) for k in KategoriiVoditelskihUdostovereniy]
-    return markdown_table(["Категория", "Описание"], rows)
+    return tablitsa_v_markdown(["Категория", "Описание"], rows)
 
 
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
@@ -46,7 +46,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
     """
     rows = [(n["kod"], n["nazvanie"]) for n in VidyNarusheniy]
-    return markdown_table(["Код", "Вид нарушения"], rows)
+    return tablitsa_v_markdown(["Код", "Вид нарушения"], rows)
 
 
 async def spisok_statusov_shtrafov(ctx: Context) -> str:
@@ -56,7 +56,7 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
     rows = [(s["kod"], s["nazvanie"]) for s in StatusyShtrafov]
-    return markdown_table(["Код", "Статус штрафа"], rows)
+    return tablitsa_v_markdown(["Код", "Статус штрафа"], rows)
 
 
 async def spisok_tipov_dtp(ctx: Context) -> str:
@@ -66,7 +66,7 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TipyDTP]
-    return markdown_table(["Код", "Тип ДТП"], rows)
+    return tablitsa_v_markdown(["Код", "Тип ДТП"], rows)
 
 
 async def spisok_regionov_registratsii(ctx: Context) -> str:
@@ -76,7 +76,7 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
         Список регионов с кодами.
     """
     rows = [(r["kod"], r["nazvanie"]) for r in RegionyRegistratsii]
-    return markdown_table(["Код региона", "Регион"], rows)
+    return tablitsa_v_markdown(["Код региона", "Регион"], rows)
 
 
 async def info_ts(ctx: Context, vin: str) -> str:
@@ -88,28 +88,28 @@ async def info_ts(ctx: Context, vin: str) -> str:
     Возвращает:
         Сведения о ТС: история регистраций, розыск, ограничения, ДТП.
     """
-    history, dtp, wanted, restrict = await _proverka_ts_full(vin)
+    history, dtp, wanted, restrict = await _polnaya_proverka_ts(vin)
 
     lines = [f"**Транспортное средство** (VIN: {vin})"]
 
     if history:
         lines.append(f"\n**История регистраций** ({len(history)} записей)")
         rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in history]
-        lines.append(markdown_table(["Дата", "Действие", "Госномер", "Регион"], rows))
+        lines.append(tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows))
     else:
         lines.append("\nИстория регистраций: данные не найдены.")
 
     if dtp:
         lines.append(f"\n**ДТП** ({len(dtp)} записей)")
         rows = [(d["data_dtp"], d["tip_dtp"], d["region_dtp"], d["model_ts"]) for d in dtp]
-        lines.append(markdown_table(["Дата ДТП", "Тип", "Регион", "Модель ТС"], rows))
+        lines.append(tablitsa_v_markdown(["Дата ДТП", "Тип", "Регион", "Модель ТС"], rows))
     else:
         lines.append("\nДТП: данные не найдены.")
 
     if wanted:
         lines.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
         rows = [(w["data_rozyska"], w["region"], w["initiator"], w["model_ts"]) for w in wanted]
-        lines.append(markdown_table(["Дата", "Регион", "Инициатор", "Модель ТС"], rows))
+        lines.append(tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], rows))
     else:
         lines.append("\nРозыск: не числится.")
 
@@ -119,14 +119,14 @@ async def info_ts(ctx: Context, vin: str) -> str:
             (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["region"], r["initiator"])
             for r in restrict
         ]
-        lines.append(markdown_table(["Дата", "Тип ограничения", "Регион", "Инициатор"], rows))
+        lines.append(tablitsa_v_markdown(["Дата", "Тип ограничения", "Регион", "Инициатор"], rows))
     else:
         lines.append("\nОграничения: не найдены.")
 
     return "\n".join(lines) + _ATTRIBUTION
 
 
-async def _proverka_ts_full(vin: str) -> tuple:
+async def _polnaya_proverka_ts(vin: str) -> tuple:
     """Выполнение всех проверок транспортного средства параллельно."""
     import asyncio
 
@@ -220,12 +220,12 @@ async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
 
     lines = [
         f"**Статистика ДТП** — {data.region}, {data.god} г.",
-        f"- Всего ДТП: {format_number_ru(data.kolichestvo_dtp, 0)}",
-        f"- Погибшие: {format_number_ru(data.pogibshie, 0)}",
-        f"- Раненые: {format_number_ru(data.ranennye, 0)}",
-        f"- ДТП с пешеходами: {format_number_ru(data.dtp_s_peshchodami, 0)}",
-        f"- ДТП с участием детей: {format_number_ru(data.dtp_s_detmi, 0)}",
-        f"- ДТП по вине нетрезвых: {format_number_ru(data.alco_gibdd, 0)}",
+        f"- Всего ДТП: {formatirovat_chislo_ru(data.kolichestvo_dtp, 0)}",
+        f"- Погибшие: {formatirovat_chislo_ru(data.pogibshie, 0)}",
+        f"- Раненые: {formatirovat_chislo_ru(data.ranennye, 0)}",
+        f"- ДТП с пешеходами: {formatirovat_chislo_ru(data.dtp_s_peshchodami, 0)}",
+        f"- ДТП с участием детей: {formatirovat_chislo_ru(data.dtp_s_detmi, 0)}",
+        f"- ДТП по вине нетрезвых: {formatirovat_chislo_ru(data.alco_gibdd, 0)}",
     ]
     return "\n".join(lines) + _ATTRIBUTION
 
@@ -244,4 +244,4 @@ async def istoriya_registraciy(ctx: Context, vin: str) -> str:
         return f"История регистраций по VIN {vin} не найдена." + _ATTRIBUTION
 
     rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in records]
-    return markdown_table(["Дата", "Действие", "Госномер", "Регион"], rows) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows) + _ATTRIBUTION

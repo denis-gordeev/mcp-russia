@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -17,37 +17,37 @@ from . import client
 async def spisok_vidov_nadzora(ctx: Context) -> str:
     """Получить список видов надзора Россельхознадзора."""
     await ctx.info("Запрос списка видов надзора...")
-    vidy = client.get_vidy_nadzora_list()
+    vidy = client.poluchit_spisok_vidov_nadzora()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды надзора Россельхознадзора**\n\n"
-    return header + markdown_table(["Код", "Вид надзора"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид надзора"], rows)
 
 
 async def spisok_kategoriy_proverok(ctx: Context) -> str:
     """Получить список категорий проверок."""
     await ctx.info("Запрос списка категорий проверок...")
-    kategorii = client.get_kategorii_proverok_list()
+    kategorii = client.poluchit_spisok_kategoriy_proverok()
     rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории проверок Россельхознадзора**\n\n"
-    return header + markdown_table(["Код", "Категория"], rows)
+    return header + tablitsa_v_markdown(["Код", "Категория"], rows)
 
 
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
     """Получить список видов нарушений."""
     await ctx.info("Запрос списка видов нарушений...")
-    vidy = client.get_vidy_narusheniy_list()
+    vidy = client.poluchit_spisok_vidov_narusheniy()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды нарушений Россельхознадзора**\n\n"
-    return header + markdown_table(["Код", "Вид нарушений"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид нарушений"], rows)
 
 
 async def spisok_tipov_produktsii(ctx: Context) -> str:
     """Получить список типов поднадзорной продукции."""
     await ctx.info("Запрос списка типов продукции...")
-    tipy = client.get_tipy_produktsii_list()
+    tipy = client.poluchit_spisok_tipov_produktsii()
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы поднадзорной продукции**\n\n"
-    return header + markdown_table(["Код", "Тип продукции"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип продукции"], rows)
 
 
 async def poisk_proverok(
@@ -73,7 +73,7 @@ async def poisk_proverok(
         tip_proverki=tip_proverki,
     )
     if not proverki:
-        static = client.get_statistika_rskhn_static()
+        static = client.poluchit_statistiku_rskhn_staticheskie()
         if static:
             lines = [
                 "**Статистика проверок Россельхознадзора (2023, резервные данные)**\n",
@@ -109,7 +109,7 @@ async def poisk_proverok(
         for p in proverki
     ]
     header = f"**Проверки Россельхознадзора** — найдено: {len(proverki)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Вид надзора", "Дата", "Регион", "Статус", "Нарушений"],
         rows,
     )
@@ -147,7 +147,7 @@ async def poisk_karantinnykh_obektov(
         for o in obekty
     ]
     header = f"**Карантинные объекты** — найдено: {len(obekty)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Статус", "Дата введения"],
         rows,
     )
@@ -188,7 +188,7 @@ async def poisk_registratsiy_produktsii(
         for r in registratsii
     ]
     header = f"**Зарегистрированная продукция** — найдено: {len(registratsii)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Наименование", "Производитель", "Тип", "Статус"],
         rows,
     )
@@ -229,7 +229,7 @@ async def veterinarsnye_sertifikaty(
         for s in sertifikaty
     ]
     header = f"**Ветеринарные сертификаты** — найдено: {len(sertifikaty)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Тип продукции", "Регион отправки", "Дата", "Статус"],
         rows,
     )
@@ -266,7 +266,7 @@ async def preduprezhdeniya_karantina(
         for p in preduprezhdeniya
     ]
     header = f"**Предупреждения о карантине** — активно: {len(preduprezhdeniya)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Тип", "Регион", "Описание", "Начало", "Окончание"],
         rows,
     )

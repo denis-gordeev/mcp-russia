@@ -20,7 +20,7 @@ from .constants import DUMA_DEPUTATS, DUMA_LAWS, DUMA_VOTES, FRAKCII, SOZYVY
 from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
 
 
-def _get_api_token() -> str:
+def _poluchit_api_token() -> str:
     """Получение токена API Госдумы из настроек."""
     return settings.DUMA_API_TOKEN
 
@@ -38,18 +38,18 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
     if sozyv:
         params["convocation"] = sozyv
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["app_token"] = token
 
     try:
         data = await http_get(DUMA_DEPUTATS, params=params)
-        return _parse_deputats(data)
+        return _razobrat_deputatov(data)
     except Exception:
         return []
 
 
-def _parse_deputats(data: Any) -> list[Deputat]:
+def _razobrat_deputatov(data: Any) -> list[Deputat]:
     """Разбор данных депутатов из ответа API."""
     if isinstance(data, dict):
         items = data.get("deputies", data.get("items", []))
@@ -88,7 +88,7 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     Возвращает:
         Данные депутата или None.
     """
-    token = _get_api_token()
+    token = _poluchit_api_token()
     params: dict[str, str] = {}
     if token:
         params["app_token"] = token
@@ -97,7 +97,7 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     try:
         data = await http_get(url, params=params)
         if isinstance(data, dict):
-            return _parse_one_deputat(data)
+            return _razobrat_odnogo_deputata(data)
     except Exception:
         pass
 
@@ -108,7 +108,7 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     return None
 
 
-def _parse_one_deputat(data: dict[str, Any]) -> Deputat | None:
+def _razobrat_odnogo_deputata(data: dict[str, Any]) -> Deputat | None:
     """Разбор данных одного депутата из ответа API."""
     if not isinstance(data, dict):
         return None
@@ -144,18 +144,18 @@ async def poluchit_zakonoproekty(
     if status:
         params["status"] = status
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["app_token"] = token
 
     try:
         data = await http_get(f"{DUMA_LAWS}/bills", params=params)
-        return _parse_zakonoproekty(data)
+        return _razobrat_zakonoproekty(data)
     except Exception:
         return []
 
 
-def _parse_zakonoproekty(data: Any) -> list[Zakonoproekt]:
+def _razobrat_zakonoproekty(data: Any) -> list[Zakonoproekt]:
     """Разбор данных законопроектов из ответа API."""
     if isinstance(data, dict):
         items = data.get("bills", data.get("items", []))
@@ -201,18 +201,18 @@ async def poluchit_golosovaniya(
     if sozyv:
         params["convocation"] = sozyv
 
-    token = _get_api_token()
+    token = _poluchit_api_token()
     if token:
         params["app_token"] = token
 
     try:
         data = await http_get(DUMA_VOTES, params=params)
-        return _parse_golosovaniya(data)
+        return _razobrat_golosovaniya(data)
     except Exception:
         return []
 
 
-def _parse_golosovaniya(data: Any) -> list[Golosovanie]:
+def _razobrat_golosovaniya(data: Any) -> list[Golosovanie]:
     """Разбор результатов голосований из ответа API."""
     if isinstance(data, dict):
         items = data.get("votes", data.get("items", []))
@@ -248,17 +248,17 @@ async def poluchit_frakcii() -> list[Frakciya]:
     return [Frakciya(kod=f["kod"], nazvanie=f["nazvanie"]) for f in FRAKCII]
 
 
-def get_sozyvy() -> list[dict[str, str]]:
+def poluchit_sozyvy() -> list[dict[str, str]]:
     """Возвращает список созывов Государственной Думы."""
     return SOZYVY
 
 
-def get_frakcii() -> list[dict[str, str]]:
+def poluchit_fraktsii() -> list[dict[str, str]]:
     """Возвращает список текущих фракций."""
     return FRAKCII
 
 
-def get_komitety() -> list[dict[str, str]]:
+def poluchit_komitety() -> list[dict[str, str]]:
     """Возвращает список комитетов Государственной Думы."""
     from .constants import KOMITETY
 

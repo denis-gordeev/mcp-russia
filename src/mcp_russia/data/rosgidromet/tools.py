@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 
@@ -23,11 +23,11 @@ async def spisok_stanciy(ctx: Context) -> str:
         Список станций с кодами.
     """
     await ctx.info("Запрос списка станций мониторинга...")
-    stancii = client.get_stancii_list()
+    stancii = client.poluchit_spisok_stantsiy()
 
     rows = [(s["kod"], s["nazvanie"], s["region"]) for s in stancii]
     header = "**Станции мониторинга Росгидромета**\n\n"
-    return header + markdown_table(["Код", "Город", "Округ"], rows)
+    return header + tablitsa_v_markdown(["Код", "Город", "Округ"], rows)
 
 
 async def spisok_tipov_dannykh(ctx: Context) -> str:
@@ -37,16 +37,16 @@ async def spisok_tipov_dannykh(ctx: Context) -> str:
         Список типов данных.
     """
     await ctx.info("Запрос списка типов данных...")
-    meteo = client.get_tipy_meteo_list()
-    eko = client.get_tipy_eko_list()
+    meteo = client.poluchit_spisok_tipov_meteo()
+    eko = client.poluchit_spisok_tipov_eko()
 
     lines = ["**Типы метеорологических данных**\n"]
     rows = [(m["kod"], m["nazvanie"]) for m in meteo]
-    lines.append(markdown_table(["Код", "Тип"], rows))
+    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
 
     lines.append("\n**Типы экологических данных**\n")
     rows = [(e["kod"], e["nazvanie"]) for e in eko]
-    lines.append(markdown_table(["Код", "Тип"], rows))
+    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
 
     return "\n".join(lines)
 
@@ -71,19 +71,19 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
 
     lines = [f"**Погода: {data.gorod}** ({data.region})"]
     if data.temperatura:
-        lines.append(f"- Температура: {format_number_ru(data.temperatura, 1)}°C")
+        lines.append(f"- Температура: {formatirovat_chislo_ru(data.temperatura, 1)}°C")
     if data.oshchushchaetsya_kak:
-        lines.append(f"- Ощущается как: {format_number_ru(data.oshchushchaetsya_kak, 1)}°C")
+        lines.append(f"- Ощущается как: {formatirovat_chislo_ru(data.oshchushchaetsya_kak, 1)}°C")
     if data.vlazhnost:
-        lines.append(f"- Влажность: {format_number_ru(data.vlazhnost, 0)}%")
+        lines.append(f"- Влажность: {formatirovat_chislo_ru(data.vlazhnost, 0)}%")
     if data.davlenie:
-        lines.append(f"- Давление: {format_number_ru(data.davlenie, 0)} мм рт.ст.")
+        lines.append(f"- Давление: {formatirovat_chislo_ru(data.davlenie, 0)} мм рт.ст.")
     if data.veter_skorost:
         lines.append(
-            f"- Ветер: {format_number_ru(data.veter_skorost, 1)} м/с {data.veter_napravlenie}"
+            f"- Ветер: {formatirovat_chislo_ru(data.veter_skorost, 1)} м/с {data.veter_napravlenie}"
         )
     if data.osadki is not None:
-        lines.append(f"- Осадки: {format_number_ru(data.osadki, 1)} мм")
+        lines.append(f"- Осадки: {formatirovat_chislo_ru(data.osadki, 1)} мм")
     if data.opisaniye:
         lines.append(f"- Описание: {data.opisaniye}")
     if data.data_vremya:
@@ -119,11 +119,11 @@ async def prognoz_pogody(
     for p in prognoz:
         lines.append(f"**{p.data}**")
         if p.temperatura_dnem is not None:
-            lines.append(f"- Днём: {format_number_ru(p.temperatura_dnem, 1)}°C")
+            lines.append(f"- Днём: {formatirovat_chislo_ru(p.temperatura_dnem, 1)}°C")
         if p.temperatura_nochyu is not None:
-            lines.append(f"- Ночью: {format_number_ru(p.temperatura_nochyu, 1)}°C")
+            lines.append(f"- Ночью: {formatirovat_chislo_ru(p.temperatura_nochyu, 1)}°C")
         if p.osadki_veroyatnost is not None:
-            lines.append(f"- Осадки: {format_number_ru(p.osadki_veroyatnost, 0)}%")
+            lines.append(f"- Осадки: {formatirovat_chislo_ru(p.osadki_veroyatnost, 0)}%")
         if p.opisaniye:
             lines.append(f"- {p.opisaniye}")
         lines.append("")
@@ -165,7 +165,7 @@ async def ekologiya_regiona(
     for d in data[:10]:
         line = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
         if d.znachenie is not None:
-            line += f" = {format_number_ru(d.znachenie, 2)}"
+            line += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
         if d.prevyshenie:
             line += " ⚠️ ПРЕВЫШЕНИЕ нормы"
         lines.append(line)

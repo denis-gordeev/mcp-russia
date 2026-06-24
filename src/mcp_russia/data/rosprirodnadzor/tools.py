@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -17,28 +17,28 @@ from . import client
 async def spisok_vidov_nadzora(ctx: Context) -> str:
     """Получить список видов государственного надзора Росприроднадзора."""
     await ctx.info("Запрос списка видов надзора...")
-    vidy = client.get_vidy_nadzora_list()
+    vidy = client.poluchit_spisok_vidov_nadzora()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды государственного надзора Росприроднадзора**\n\n"
-    return header + markdown_table(["Код", "Вид надзора"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид надзора"], rows)
 
 
 async def spisok_kategoriy_obnv(ctx: Context) -> str:
     """Получить список категорий объектов негативного воздействия."""
     await ctx.info("Запрос списка категорий ОНВ...")
-    kategorii = client.get_kategori_obnv_list()
+    kategorii = client.poluchit_spisok_kategoriy_obnv()
     rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
-    return header + markdown_table(["Категория", "Описание"], rows)
+    return header + tablitsa_v_markdown(["Категория", "Описание"], rows)
 
 
 async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
     """Получить список видов лицензий на пользование недрами."""
     await ctx.info("Запрос списка видов лицензий...")
-    vidy = client.get_vidy_litsenziy_nedra_list()
+    vidy = client.poluchit_spisok_vidov_litsenziy_nedra()
     rows = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды лицензий на пользование недрами**\n\n"
-    return header + markdown_table(["Код", "Вид лицензии"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид лицензии"], rows)
 
 
 async def poisk_proverok(
@@ -78,7 +78,7 @@ async def poisk_proverok(
         )
         for p in proverki
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№", "Организация", "Вид надзора", "Статус", "Нарушений"],
         rows,
     )
@@ -157,7 +157,7 @@ async def poisk_obektov_negativnogo(
         for o in obekty
     ]
     header = f"**Объекты негативного воздействия** — найдено: {len(obekty)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Название", "Категория", "Регион"],
         rows,
     )
@@ -204,7 +204,7 @@ async def poisk_litsenziy_nedra(
         for lic in litsenzii
     ]
     header = f"**Лицензии на пользование недрами** — найдено: {len(litsenzii)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Вид лицензии", "Территория", "Держатель", "Срок действия"],
         rows,
     )
@@ -246,7 +246,7 @@ async def ekologicheskie_platezhi(
         for p in platezhi
     ]
     header = f"**Экологические платежи** — найдено: {len(platezhi)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Плательщик", "Тип платежа", "Сумма (руб.)", "Год"],
         rows,
     )

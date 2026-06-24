@@ -11,7 +11,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_rub, markdown_table
+from mcp_russia._shared.formatting import formatirovat_rubli, tablitsa_v_markdown
 
 from . import client
 
@@ -74,7 +74,7 @@ async def poisk_del(
 
     rows = []
     for d in dela[:20]:
-        summa = format_rub(d.summa_iska) if d.summa_iska > 0 else "—"
+        summa = formatirovat_rubli(d.summa_iska) if d.summa_iska > 0 else "—"
         rows.append(
             (
                 d.nomer,
@@ -86,7 +86,7 @@ async def poisk_del(
         )
 
     header += f"Найдено дел: {len(dela)}\n\n"
-    header += markdown_table(
+    header += tablitsa_v_markdown(
         ["Номер дела", "Категория", "Статус", "Суд", "Сумма иска"],
         rows,
     )
@@ -126,7 +126,7 @@ async def info_dela(
         f"- Ответчики: {', '.join(delo.otvetchiki)}",
     ]
     if delo.summa_iska > 0:
-        lines.append(f"- Сумма иска: {format_rub(delo.summa_iska)}")
+        lines.append(f"- Сумма иска: {formatirovat_rubli(delo.summa_iska)}")
     return "\n".join(lines)
 
 
@@ -153,7 +153,7 @@ async def akty_po_delu(
 
     rows = [(a.tip_akta, a.data_akta, a.sud, a.rezolyutsiya[:50]) for a in akty]
     header = f"**Судебные акты по делу {nomer_dela}**\n\n"
-    return header + markdown_table(["Тип акта", "Дата", "Суд", "Резолюция"], rows)
+    return header + tablitsa_v_markdown(["Тип акта", "Дата", "Суд", "Резолюция"], rows)
 
 
 async def storony_dela(
@@ -191,11 +191,11 @@ async def spravochnik_kategoriy(ctx: Context) -> str:
         Категории дел.
     """
     await ctx.info("Запрос справочника категорий дел...")
-    kategorii = client.get_kategorii_del()
+    kategorii = client.poluchit_kategorii_del()
 
     rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории арбитражных дел**\n\n"
-    return header + markdown_table(["Код", "Категория"], rows)
+    return header + tablitsa_v_markdown(["Код", "Категория"], rows)
 
 
 async def spravochnik_instantsiy(ctx: Context) -> str:
@@ -205,11 +205,11 @@ async def spravochnik_instantsiy(ctx: Context) -> str:
         Инстанции судов.
     """
     await ctx.info("Запрос справочника инстанций судов...")
-    instantsii = client.get_instantsii()
+    instantsii = client.poluchit_instantsii()
 
     rows = [(i["kod"], i["nazvanie"]) for i in instantsii]
     header = "**Инстанции арбитражных судов**\n\n"
-    return header + markdown_table(["Код", "Инстанция"], rows)
+    return header + tablitsa_v_markdown(["Код", "Инстанция"], rows)
 
 
 async def spravochnik_statusov(ctx: Context) -> str:
@@ -219,11 +219,11 @@ async def spravochnik_statusov(ctx: Context) -> str:
         Статусы дел.
     """
     await ctx.info("Запрос справочника статусов дел...")
-    statusy = client.get_statusy_del()
+    statusy = client.poluchit_statusy_del()
 
     rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы судебных дел**\n\n"
-    return header + markdown_table(["Код", "Статус"], rows)
+    return header + tablitsa_v_markdown(["Код", "Статус"], rows)
 
 
 async def spravochnik_aktov(ctx: Context) -> str:
@@ -233,8 +233,8 @@ async def spravochnik_aktov(ctx: Context) -> str:
         Типы актов.
     """
     await ctx.info("Запрос справочника типов актов...")
-    tipy = client.get_tipy_aktov()
+    tipy = client.poluchit_tipy_aktov()
 
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы судебных актов**\n\n"
-    return header + markdown_table(["Код", "Тип акта"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип акта"], rows)

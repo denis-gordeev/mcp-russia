@@ -11,14 +11,14 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
 
 def _auth_note() -> str:
     """Заметка о необходимости настройки API-токена при его отсутствии."""
-    if not client._get_api_token():
+    if not client._poluchit_api_token():
         return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_DUMA_API_TOKEN*"
     return ""
 
@@ -56,7 +56,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     if len(deputats) > 50:
         header += " (показано первых 50)"
     header += "\n\n"
-    return header + markdown_table(["ID", "ФИО", "Фракция", "Комитет"], rows) + _auth_note()
+    return header + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], rows) + _auth_note()
 
 
 async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
@@ -102,11 +102,11 @@ async def spisok_frakcii(ctx: Context) -> str:
         Список фракций.
     """
     await ctx.info("Запрос списка фракций Госдумы...")
-    frakcii = client.get_frakcii()
+    frakcii = client.poluchit_fraktsii()
 
     rows = [(f["kod"], f["nazvanie"]) for f in frakcii]
     header = "**Фракции Государственной Думы**\n\n"
-    return header + markdown_table(["Код", "Фракция"], rows)
+    return header + tablitsa_v_markdown(["Код", "Фракция"], rows)
 
 
 async def spisok_komitetov(ctx: Context) -> str:
@@ -116,11 +116,11 @@ async def spisok_komitetov(ctx: Context) -> str:
         Список комитетов.
     """
     await ctx.info("Запрос списка комитетов Госдумы...")
-    komitety = client.get_komitety()
+    komitety = client.poluchit_komitety()
 
     rows = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Государственной Думы**\n\n"
-    return header + markdown_table(["Код", "Комитет"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комитет"], rows)
 
 
 async def spisok_sozyvov(ctx: Context) -> str:
@@ -130,11 +130,11 @@ async def spisok_sozyvov(ctx: Context) -> str:
         Список созывов.
     """
     await ctx.info("Запрос списка созывов Госдумы...")
-    sozyvy = client.get_sozyvy()
+    sozyvy = client.poluchit_sozyvy()
 
     rows = [(s["kod"], s["nazvanie"]) for s in sozyvy]
     header = "**Созывы Государственной Думы**\n\n"
-    return header + markdown_table(["Код", "Созыв"], rows)
+    return header + tablitsa_v_markdown(["Код", "Созыв"], rows)
 
 
 async def zakonoproekty(
@@ -172,7 +172,7 @@ async def zakonoproekty(
     header += f"Найдено: {len(bills)} законопроектов\n\n"
     return (
         header
-        + markdown_table(["Номер", "Название", "Статус", "Дата внесения"], rows)
+        + tablitsa_v_markdown(["Номер", "Название", "Статус", "Дата внесения"], rows)
         + _auth_note()
     )
 
@@ -211,4 +211,4 @@ async def golosovaniya(
     ]
     header = "**Голосования Государственной Думы**\n\n"
     header += f"Найдено: {len(votes)} голосований\n\n"
-    return header + markdown_table(["ID", "Тема", "Дата", "Результат"], rows) + _auth_note()
+    return header + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], rows) + _auth_note()

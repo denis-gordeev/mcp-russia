@@ -173,12 +173,12 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         return []
 
 
-def get_komitety_list() -> list[dict[str, str]]:
+def poluchit_spisok_komitetov() -> list[dict[str, str]]:
     """Вернуть справочник комитетов Совета Федерации."""
     return KOMITETY_SOVFEDA
 
 
-def get_komissii_list() -> list[dict[str, str]]:
+def poluchit_spisok_komissiy() -> list[dict[str, str]]:
     """Вернуть справочник комиссий Совета Федерации."""
     return KOMISSII_SOVFEDA
 

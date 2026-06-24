@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 
@@ -33,7 +33,7 @@ async def tipy_vyborov(ctx: Context) -> str:
 
     rows = [(str(t.kod), t.nazvanie) for t in tipy]
     header = "**Типы выборов в РФ**\n\n"
-    return header + markdown_table(["Код", "Тип выборов"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип выборов"], rows)
 
 
 async def subyekty_rf(ctx: Context) -> str:
@@ -49,7 +49,7 @@ async def subyekty_rf(ctx: Context) -> str:
 
     rows = [(s.kod, s.nazvanie) for s in subyekty]
     header = f"**Субъекты Российской Федерации** — {len(rows)} субъектов\n\n"
-    return header + markdown_table(["Код", "Субъект РФ"], rows)
+    return header + tablitsa_v_markdown(["Код", "Субъект РФ"], rows)
 
 
 async def dolzhnosti_federal(ctx: Context) -> str:
@@ -66,7 +66,7 @@ async def dolzhnosti_federal(ctx: Context) -> str:
 
     rows = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
     header = "**Федеральные избирательные должности**\n\n"
-    return header + markdown_table(["Код", "Должность", "Уровень"], rows)
+    return header + tablitsa_v_markdown(["Код", "Должность", "Уровень"], rows)
 
 
 async def partii_rf(ctx: Context) -> str:
@@ -80,7 +80,7 @@ async def partii_rf(ctx: Context) -> str:
 
     rows = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
     header = f"**Политические партии РФ** — {len(rows)} партий\n\n"
-    return header + markdown_table(["Краткое", "Наименование", "Цвет"], rows)
+    return header + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], rows)
 
 
 async def gody_vyborov(ctx: Context) -> str:
@@ -125,7 +125,7 @@ async def spisok_vyborov(
         for v in vybory
     ]
     header = f"**Найдено выборов: {len(vybory)}**\n\n"
-    return header + markdown_table(["Наименование", "Год", "Дата", "Ключ"], rows)
+    return header + tablitsa_v_markdown(["Наименование", "Год", "Дата", "Ключ"], rows)
 
 
 async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str:
@@ -146,7 +146,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
 
     rows = [(k.identifikator, k.fio, k.partia, k.dolzhnost, k.status) for k in kandidaty]
     header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["ID", "ФИО", "Партия", "Должность", "Статус"],
         rows,
     )
@@ -224,14 +224,14 @@ async def rezultaty_vyborov(
         (
             r.fio,
             r.partia,
-            format_number_ru(r.golosov, 0),
-            f"{format_number_ru(r.procent, 2)}%",
+            formatirovat_chislo_ru(r.golosov, 0),
+            f"{formatirovat_chislo_ru(r.procent, 2)}%",
             "✓" if r.izbrann else "",
         )
         for r in rezultaty
     ]
     header = f"**Результаты выборов {god} года**\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Кандидат", "Партия", "Голоса", "%", "Избран"],
         rows,
     )
@@ -266,11 +266,11 @@ async def yavka_i_itogi(
 
     lines.extend(
         [
-            f"- Всего избирателей: {format_number_ru(itogi.get('vseh_izbirateley', 0), 0)}",
-            f"- Проголосовало: {format_number_ru(itogi.get('progalosovalo', 0), 0)}",
-            f"- Явка: {format_number_ru(itogi.get('yavka_procent', 0), 2)}%",
-            f"- Действительных бюллетеней: {format_number_ru(itogi.get('deystvitelnykh_byulleteney', 0), 0)}",
-            f"- Недействительных бюллетеней: {format_number_ru(itogi.get('nedeystvitelnykh_byulleteney', 0), 0)}",
+            f"- Всего избирателей: {formatirovat_chislo_ru(itogi.get('vseh_izbirateley', 0), 0)}",
+            f"- Проголосовало: {formatirovat_chislo_ru(itogi.get('progalosovalo', 0), 0)}",
+            f"- Явка: {formatirovat_chislo_ru(itogi.get('yavka_procent', 0), 2)}%",
+            f"- Действительных бюллетеней: {formatirovat_chislo_ru(itogi.get('deystvitelnykh_byulleteney', 0), 0)}",
+            f"- Недействительных бюллетеней: {formatirovat_chislo_ru(itogi.get('nedeystvitelnykh_byulleteney', 0), 0)}",
             f"- Источник: {_ATTRIBUTION}",
         ]
     )

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 from .constants import (
@@ -23,7 +23,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
         Список направлений с кодами и названиями.
     """
     rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
-    return markdown_table(["Код", "Направление"], rows)
+    return tablitsa_v_markdown(["Код", "Направление"], rows)
 
 
 async def spisok_tipov_proverok(ctx: Context) -> str:
@@ -33,7 +33,7 @@ async def spisok_tipov_proverok(ctx: Context) -> str:
         Список типов проверок (плановая, внеплановая и т.д.).
     """
     rows = [(t["kod"], t["nazvanie"]) for t in TIPY_PROVEROK]
-    return markdown_table(["Код", "Тип проверки"], rows)
+    return tablitsa_v_markdown(["Код", "Тип проверки"], rows)
 
 
 async def spisok_kategoriy_obiektov(ctx: Context) -> str:
@@ -43,7 +43,7 @@ async def spisok_kategoriy_obiektov(ctx: Context) -> str:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
     rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_OBIEKTOV]
-    return markdown_table(["Код", "Категория объекта"], rows)
+    return tablitsa_v_markdown(["Код", "Категория объекта"], rows)
 
 
 async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
@@ -53,7 +53,7 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
         Список управлений по федеральным округам.
     """
     rows = [(r["kod"], r["nazvanie"]) for r in REGIONALNYE_UPRAVLENIYA]
-    return markdown_table(["Код", "Управление"], rows)
+    return tablitsa_v_markdown(["Код", "Управление"], rows)
 
 
 async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
@@ -119,7 +119,7 @@ async def poisk_proverok(
         )
         for p in proverki
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№", "Тип", "Организация", "Дата начала", "Статус", "Нарушений"],
         rows,
     )
@@ -157,7 +157,7 @@ async def plan_proverok(
         )
         for p in proverki
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№", "Организация", "Тип проверки", "Начало", "Окончание"],
         rows,
     )
@@ -170,7 +170,7 @@ async def spisok_sanpinov(ctx: Context) -> str:
         Справочник основных СанПиН с кодами и названиями.
     """
     rows = [(s["kod"], s["nazvanie"]) for s in SANPIN_OSNOVNYE]
-    return markdown_table(["Код", "СанПиН"], rows)
+    return tablitsa_v_markdown(["Код", "СанПиН"], rows)
 
 
 async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
@@ -197,7 +197,7 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
         )
         for z in zhaloby
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["Тема", "Организация", "Дата подачи", "Статус", "Результат"],
         rows,
     )
@@ -231,7 +231,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
         )
         for p in narusheniya
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№ проверки", "Организация", "Нарушений", "Дата", "Результат"],
         rows,
     )

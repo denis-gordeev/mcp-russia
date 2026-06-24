@@ -49,11 +49,11 @@ def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool:
 def postroit_katalog(registry: object) -> str:
     """Построение подробного каталога всех инструментов из реестра.
 
-    Использует FeatureMeta (имя, описание, авторизация) и схемы инструментов
+    Использует MetaFunktsii (имя, описание, авторизация) и схемы инструментов
     (параметры, типы, описания) для формирования детального каталога для LLM.
 
     Аргументы:
-        registry: Экземпляр FeatureRegistry с обнаруженными функциями.
+        registry: Экземпляр ReyestrFunktsiy с обнаруженными функциями.
 
     Возвращает:
         Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
@@ -63,7 +63,7 @@ def postroit_katalog(registry: object) -> str:
         return _catalog_cache
 
     lines: list[str] = []
-    features = getattr(registry, "features", {})
+    features = getattr(registry, "funktsii", {})
     for feat in features.values():
         meta = feat.meta
         auth_info = (

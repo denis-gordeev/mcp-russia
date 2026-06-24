@@ -56,7 +56,7 @@ async def poisk_proverok(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
 
@@ -70,7 +70,7 @@ async def poisk_proverok(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_proverka(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен")
 
@@ -90,7 +90,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_proverka(data)
+            return _razobrat_proverku(data)
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для проверки №%s", nomer)
         return None
@@ -121,7 +121,7 @@ async def poisk_obektov_negativnogo(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("ONV реестр недоступен")
 
@@ -135,7 +135,7 @@ async def poisk_obektov_negativnogo(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для ОНВ")
 
@@ -167,7 +167,7 @@ async def poisk_litsenziy_nedra(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
@@ -180,7 +180,7 @@ async def poisk_litsenziy_nedra(
             params["licenseType"] = vid_litsenzii
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
         return []
@@ -208,23 +208,23 @@ async def poluchit_ekologicheskie_platezhi(
             params["paymentType"] = tip_platezha
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")
         return []
 
 
-def get_vidy_nadzora_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_nadzora() -> list[dict[str, str]]:
     """Вернуть справочник видов надзора Росприроднадзора."""
     return VIDY_NADZORA
 
 
-def get_kategori_obnv_list() -> list[dict[str, str]]:
+def poluchit_spisok_kategoriy_obnv() -> list[dict[str, str]]:
     """Вернуть справочник категорий ОНВ."""
     return KATEGORII_OBNV
 
 
-def get_vidy_litsenziy_nedra_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_litsenziy_nedra() -> list[dict[str, str]]:
     """Вернуть справочник видов лицензий на недропользование."""
     return VIDY_LITSENZIY_NEDRA
 
@@ -241,7 +241,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных проверки Росприроднадзора."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -256,7 +256,7 @@ def _parse_proverka(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных объекта негативного воздействия."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -268,7 +268,7 @@ def _parse_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_litsenziya(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии на недропользование."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -280,7 +280,7 @@ def _parse_litsenziya(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_ekologicheskiy_platezh(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ekologicheskiy_platezh(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных экологического платежа."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),

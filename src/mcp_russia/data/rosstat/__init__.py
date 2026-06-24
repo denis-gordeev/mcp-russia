@@ -1,6 +1,6 @@
 """Росстат — данные Федеральной службы государственной статистики."""
 
-from mcp_russia._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta
 
 FEATURE_META = FeatureMeta(
     name="rosstat",

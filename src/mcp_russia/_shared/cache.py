@@ -37,7 +37,7 @@ class KeshSVremenemZhizni:
         self._store: dict[str, tuple[float, Any]] = {}
 
     @property
-    def size(self) -> int:
+    def razmer(self) -> int:
         """Количество записей в кэше (включая просроченные)."""
         return len(self._store)
 
@@ -55,14 +55,14 @@ class KeshSVremenemZhizni:
     def set(self, key: str, value: Any) -> None:
         """Сохранение значения с TTL-истечением."""
         if len(self._store) >= self._maxsize:
-            self._evict()
+            self._ischislit()
         self._store[key] = (time.monotonic() + self._ttl, value)
 
     def clear(self) -> None:
         """Удаление всех записей."""
         self._store.clear()
 
-    def _evict(self) -> None:
+    def _ischislit(self) -> None:
         """Удаление просроченных записей; если кэш полон — удаление самой старой."""
         now = time.monotonic()
         expired = [k for k, (exp, _) in self._store.items() if now > exp]

@@ -29,7 +29,7 @@ class TestOgranichitelChastoty:
 
         # Третий запрос должен блокироваться; проверяем с коротким таймаутом
         with pytest.raises(asyncio.TimeoutError):
-            await asyncio.wait_for(limiter.acquire(), timeout=0.05)
+            await asyncio.wait_for(limiter.zakhvatit(), timeout=0.05)
 
     @pytest.mark.asyncio
     async def test_allows_after_window_expires(self) -> None:

@@ -34,15 +34,15 @@ def test_parse_zakupki_search():
             }
         ]
     }
-    result = zakupki_client._parse_zakupki_search(data)
+    result = zakupki_client._razobrat_poisk_zakupok(data)
     assert len(result) == 1
     assert result[0].nomer == "0123400000125000001"
     assert result[0].nachalnaya_tsena == 1500000.0
 
 
 def test_parse_zakupki_search_empty():
-    assert zakupki_client._parse_zakupki_search(None) == []
-    assert zakupki_client._parse_zakupki_search("not a list") == []
+    assert zakupki_client._razobrat_poisk_zakupok(None) == []
+    assert zakupki_client._razobrat_poisk_zakupok("not a list") == []
 
 
 def test_parse_kontrakty():
@@ -59,23 +59,23 @@ def test_parse_kontrakty():
             }
         ]
     }
-    result = zakupki_client._parse_kontrakty(data)
+    result = zakupki_client._razobrat_kontrakty(data)
     assert len(result) == 1
     assert result[0].nazvanie_podryadchika == "ООО Ромашка"
     assert result[0].tsena == 500000.0
 
 
 def test_determine_zakon():
-    assert zakupki_client._determine_zakon({"fz": "44"}) == "44-ФЗ"
-    assert zakupki_client._determine_zakon({"fz": "223"}) == "223-ФЗ"
-    assert zakupki_client._determine_zakon({"fz": ""}) == ""
+    assert zakupki_client._opredelit_zakon({"fz": "44"}) == "44-ФЗ"
+    assert zakupki_client._opredelit_zakon({"fz": "223"}) == "223-ФЗ"
+    assert zakupki_client._opredelit_zakon({"fz": ""}) == ""
 
 
 def test_safe_float():
-    assert zakupki_client._safe_float(None) == 0.0
-    assert zakupki_client._safe_float("abc") == 0.0
-    assert zakupki_client._safe_float(100) == 100.0
-    assert zakupki_client._safe_float("200.5") == 200.5
+    assert zakupki_client._bezopasnoe_veshchestvennoe(None) == 0.0
+    assert zakupki_client._bezopasnoe_veshchestvennoe("abc") == 0.0
+    assert zakupki_client._bezopasnoe_veshchestvennoe(100) == 100.0
+    assert zakupki_client._bezopasnoe_veshchestvennoe("200.5") == 200.5
 
 
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---
@@ -213,10 +213,10 @@ async def test_plany_zakupok_empty():
 
 
 async def test_auth_note_without_token():
-    with patch.object(zakupki_tools.client, "_get_api_token", return_value=""):
+    with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value=""):
         assert "MCP_RUSSIA_ZAKUPKI_API_TOKEN" in zakupki_tools._auth_note()
 
 
 async def test_auth_note_with_token():
-    with patch.object(zakupki_tools.client, "_get_api_token", return_value="secret"):
+    with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value="secret"):
         assert zakupki_tools._auth_note() == ""

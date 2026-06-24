@@ -3,9 +3,9 @@
 HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_client"].
 
 Использование:
-    from mcp_russia._shared.lifespan import http_lifespan
+    from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
 
-    mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
+    mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
 """
 
 from __future__ import annotations
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 
 
 @lifespan
-async def http_lifespan(server: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
+async def http_zhiznennyy_tsikl(server: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
     """Создание общего httpx.AsyncClient при запуске, закрытие при завершении."""
     logger.info("Запуск общего HTTP-клиента")
     client = httpx.AsyncClient(

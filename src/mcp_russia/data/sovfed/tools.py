@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import markdown_table
+from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
@@ -31,7 +31,7 @@ async def spisok_senatorov(ctx: Context) -> str:
         for s in senatory
     ]
     header = f"**Сенаторы Совета Федерации РФ** — найдено: {len(senatory)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Фамилия", "Имя", "Регион", "Комитет"],
         rows,
     )
@@ -83,11 +83,11 @@ async def spisok_komitetov(ctx: Context) -> str:
             for k in komitety_api
         ]
         header = "**Комитеты Совета Федерации РФ**\n\n"
-        return header + markdown_table(["Комитет", "Председатель", "Членов"], rows)
-    komitety = client.get_komitety_list()
+        return header + tablitsa_v_markdown(["Комитет", "Председатель", "Членов"], rows)
+    komitety = client.poluchit_spisok_komitetov()
     rows = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
-    return header + markdown_table(["Код", "Комитет"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комитет"], rows)
 
 
 async def spisok_komissiy(ctx: Context) -> str:
@@ -104,11 +104,11 @@ async def spisok_komissiy(ctx: Context) -> str:
             for k in komissii_api
         ]
         header = "**Комиссии Совета Федерации РФ**\n\n"
-        return header + markdown_table(["Комиссия", "Председатель", "Членов"], rows)
-    komissii = client.get_komissii_list()
+        return header + tablitsa_v_markdown(["Комиссия", "Председатель", "Членов"], rows)
+    komissii = client.poluchit_spisok_komissiy()
     rows = [(k["kod"], k["nazvanie"]) for k in komissii]
     header = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
-    return header + markdown_table(["Код", "Комиссия"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комиссия"], rows)
 
 
 async def poisk_zakonoproektov(
@@ -151,7 +151,7 @@ async def poisk_zakonoproektov(
         for z in zakonoproekty
     ]
     header = f"**Законопроекты Совета Федерации РФ** — найдено: {len(zakonoproekty)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Название", "Статус", "Дата рассмотрения"],
         rows,
     )
@@ -181,7 +181,7 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
         for z in zasedaniya
     ]
     header = f"**Заседания Совета Федерации РФ** — найдено: {len(zasedaniya)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["№", "Дата", "Статус", "Повестка"],
         rows,
     )

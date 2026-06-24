@@ -161,11 +161,11 @@ class TestExecuteBatch:
         assert "Ошибка" in result
 
 
-def _real_registry() -> batch.FeatureRegistry:
+def _real_registry() -> batch.ReyestrFunktsiy:
     """Собирает реальный registry проекта для интеграционного тестирования."""
-    from mcp_russia._shared.feature import FeatureRegistry
+    from mcp_russia._shared.feature import ReyestrFunktsiy
 
-    reg = FeatureRegistry()
-    reg.discover("mcp_russia.data")
-    reg.discover("mcp_russia.agenty")
+    reg = ReyestrFunktsiy()
+    reg.obnaruzhit("mcp_russia.data")
+    reg.obnaruzhit("mcp_russia.agenty")
     return reg

@@ -25,7 +25,7 @@ DADATA_SUGGEST_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/sugge
 DADATA_FIND_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
 
 
-def _dadata_headers(token: str | None = None) -> dict[str, str]:
+def _zagolovki_dadaty(token: str | None = None) -> dict[str, str]:
     """Сформировать заголовки для авторизации в API Dadata."""
     headers: dict[str, str] = {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ def _dadata_headers(token: str | None = None) -> dict[str, str]:
     return headers
 
 
-def _nested_get(data: dict, *keys: str, default: Any = None) -> Any:
+def _vlozhennoe_poluchenie(data: dict, *keys: str, default: Any = None) -> Any:
     """Безопасное извлечение вложенного значения из словаря."""
     for key in keys:
         if not isinstance(data, dict):
@@ -50,7 +50,7 @@ def _nested_get(data: dict, *keys: str, default: Any = None) -> Any:
     return data
 
 
-def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_dannye_organizatsii(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных организации из ответа Dadata."""
     name_obj = data.get("name")
     name_full = name_obj.get("full") if isinstance(name_obj, dict) else None
@@ -72,13 +72,13 @@ def _parse_org_data(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_bank_data(data: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
+def _razobrat_dannye_banka(data: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
     """Разбор данных банка из ответа Dadata."""
     name_obj = data.get("name")
     name_full = name_obj.get("full") if isinstance(name_obj, dict) else rezervnoe_imya
     name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
     addr_obj = data.get("address")
-    city = _nested_get(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
+    city = _vlozhennoe_poluchenie(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
     return {
         "nazvanie_polnoe": name_full,
         "nazvanie_kratkoe": name_short,
@@ -86,53 +86,53 @@ def _parse_bank_data(data: dict[str, Any], rezervnoe_imya: str = "") -> dict[str
     }
 
 
-async def _suggest_address(zapros: str, token: str | None = None) -> dict[str, Any]:
+async def _predlozhit_adres(zapros: str, token: str | None = None) -> dict[str, Any]:
     """Получить подсказки по адресу через Dadata API."""
     body = {"query": zapros, "count": 10}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {"suggestions": []}
 
 
-async def _find_by_fias(identifikator_fias: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_po_fias(identifikator_fias: str, token: str | None = None) -> dict[str, Any]:
     """Найти адрес по ФИАС-идентификатору через Dadata API."""
     body = {"query": identifikator_fias}
     try:
         return await http_post(
             f"{DADATA_FIND_URL}/address",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {"suggestions": []}
 
 
-async def _postal_by_index(indeks: str, token: str | None = None) -> dict[str, Any]:
+async def _pochtovyy_po_indeksu(indeks: str, token: str | None = None) -> dict[str, Any]:
     """Найти адрес по почтовому индексу через Dadata API."""
     body = {"query": indeks, "count": 1}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {"suggestions": []}
 
 
-async def _find_org_by_inn(inn: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dict[str, Any]:
     """Найти организацию по ИНН через Dadata API."""
     body = {"query": inn}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {
@@ -145,14 +145,14 @@ async def _find_org_by_inn(inn: str, token: str | None = None) -> dict[str, Any]
         }
 
 
-async def _find_org_by_ogrn(ogrn: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> dict[str, Any]:
     """Найти организацию по ОГРН через Dadata API."""
     body = {"query": ogrn}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {
@@ -161,34 +161,34 @@ async def _find_org_by_ogrn(ogrn: str, token: str | None = None) -> dict[str, An
         }
 
 
-async def _list_banks(token: str | None = None) -> list[dict[str, Any]]:
+async def _spisok_bankov(token: str | None = None) -> list[dict[str, Any]]:
     """Получить список банков через Dadata API."""
     body = {"query": "", "count": 100}
     try:
         result = await http_post(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
         return result.get("suggestions", [])
     except Exception:
         return []
 
 
-async def _find_bank_by_bik(bik: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_bank_po_bik(bik: str, token: str | None = None) -> dict[str, Any]:
     """Найти банк по БИК через Dadata API."""
     body = {"query": bik}
     try:
         return await http_post(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=body,
-            headers=_dadata_headers(token),
+            headers=_zagolovki_dadaty(token),
         )
     except Exception:
         return {"suggestions": []}
 
 
-def get_holidays(god: int) -> list[dict[str, str]]:
+def poluchit_prazdniki(god: int) -> list[dict[str, str]]:
     """Вернуть список государственных праздников РФ на указанный год."""
     holidays = []
     for date_str, name in PRAZDNIKI_RF.items():
@@ -215,7 +215,7 @@ def get_holidays(god: int) -> list[dict[str, str]]:
     return holidays
 
 
-async def consult_address_by_postal(pochtovyy_indeks: str) -> AdresRF | dict[str, str]:
+async def konsultirovat_adres_po_pochtovomu(pochtovyy_indeks: str) -> AdresRF | dict[str, str]:
     """Получить адрес по почтовому индексу.
 
     Аргументы:
@@ -224,7 +224,7 @@ async def consult_address_by_postal(pochtovyy_indeks: str) -> AdresRF | dict[str
     Возвращает:
         Адрес или словарь с ошибкой.
     """
-    result = await _postal_by_index(pochtovyy_indeks)
+    result = await _pochtovyy_po_indeksu(pochtovyy_indeks)
     suggestions = result.get("suggestions", [])
 
     if not suggestions:
@@ -248,7 +248,7 @@ async def consult_address_by_postal(pochtovyy_indeks: str) -> AdresRF | dict[str
     )
 
 
-async def search_address(zapros: str) -> list[dict[str, str]]:
+async def poisk_adresa(zapros: str) -> list[dict[str, str]]:
     """Поиск адресов по строковому запросу.
 
     Аргументы:
@@ -257,7 +257,7 @@ async def search_address(zapros: str) -> list[dict[str, str]]:
     Возвращает:
         Список найденных адресов.
     """
-    result = await _suggest_address(zapros)
+    result = await _predlozhit_adres(zapros)
     suggestions = result.get("suggestions", [])
 
     results = []
@@ -278,7 +278,7 @@ async def search_address(zapros: str) -> list[dict[str, str]]:
     return results
 
 
-async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
+async def nayti_organizatsiyu_po_inn(inn: str) -> Organizatsiya | dict[str, str]:
     """Найти организацию по ИНН через ЕГРЮЛ/ЕГРИП.
 
     Аргументы:
@@ -287,7 +287,7 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
     Возвращает:
         Данные организации или словарь с ошибкой.
     """
-    result = await _find_org_by_inn(inn)
+    result = await _nayti_organizatsiyu_po_inn(inn)
     if "error" in result and not result.get("suggestions"):
         return {"error": result["error"]}
 
@@ -296,7 +296,7 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
         return {"error": f"Организация с ИНН {inn} не найдена"}
 
     data = suggestions[0].get("data", {})
-    parsed = _parse_org_data(data)
+    parsed = _razobrat_dannye_organizatsii(data)
     return Organizatsiya(
         inn=data.get("inn", inn),
         kpp=data.get("kpp"),
@@ -310,7 +310,7 @@ async def find_org_by_inn(inn: str) -> Organizatsiya | dict[str, str]:
     )
 
 
-async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
+async def nayti_organizatsiyu_po_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
     """Найти организацию по ОГРН через ЕГРЮЛ/ЕГРИП.
 
     Аргументы:
@@ -319,7 +319,7 @@ async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
     Возвращает:
         Данные организации или словарь с ошибкой.
     """
-    result = await _find_org_by_ogrn(ogrn)
+    result = await _nayti_organizatsiyu_po_ogrn(ogrn)
     if "error" in result and not result.get("suggestions"):
         return {"error": result["error"]}
 
@@ -328,7 +328,7 @@ async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
         return {"error": f"Организация с ОГРН {ogrn} не найдена"}
 
     data = suggestions[0].get("data", {})
-    parsed = _parse_org_data(data)
+    parsed = _razobrat_dannye_organizatsii(data)
     return Organizatsiya(
         inn=data.get("inn", ""),
         kpp=data.get("kpp"),
@@ -340,13 +340,13 @@ async def find_org_by_ogrn(ogrn: str) -> Organizatsiya | dict[str, str]:
     )
 
 
-async def list_banks_public() -> list[BankRF]:
+async def spisok_bankov_publichnyy() -> list[BankRF]:
     """Получить список банков из справочника ЦБ РФ через Dadata."""
-    banks_raw = await _list_banks()
+    banks_raw = await _spisok_bankov()
     banks = []
     for b in banks_raw:
         data = b.get("data", {})
-        parsed = _parse_bank_data(data, b.get("value", ""))
+        parsed = _razobrat_dannye_banka(data, b.get("value", ""))
         banks.append(
             BankRF(
                 bik=data.get("bic", ""),
@@ -360,7 +360,7 @@ async def list_banks_public() -> list[BankRF]:
     return banks
 
 
-async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
+async def nayti_bank_po_bik(bik: str) -> BankRF | dict[str, str]:
     """Найти банк по БИК через справочник ЦБ РФ.
 
     Аргументы:
@@ -369,14 +369,14 @@ async def find_bank_by_bik(bik: str) -> BankRF | dict[str, str]:
     Возвращает:
         Данные банка или словарь с ошибкой.
     """
-    result = await _find_bank_by_bik(bik)
+    result = await _nayti_bank_po_bik(bik)
     suggestions = result.get("suggestions", [])
 
     if not suggestions:
         return {"error": f"Банк с БИК {bik} не найден"}
 
     data = suggestions[0].get("data", {})
-    parsed = _parse_bank_data(data, suggestions[0].get("value", ""))
+    parsed = _razobrat_dannye_banka(data, suggestions[0].get("value", ""))
     return BankRF(
         bik=data.get("bic", bik),
         nazvanie=parsed["nazvanie_polnoe"],

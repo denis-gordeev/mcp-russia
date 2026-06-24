@@ -11,14 +11,14 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_rub, markdown_table
+from mcp_russia._shared.formatting import formatirovat_rubli, tablitsa_v_markdown
 
 from . import client
 
 
 def _auth_note() -> str:
     """Заметка о необходимости настройки API-токена при его отсутствии."""
-    if not client._get_api_token():
+    if not client._poluchit_api_token():
         return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_ZAKUPKI_API_TOKEN*"
     return ""
 
@@ -79,14 +79,14 @@ async def poisk_zakupok(
         return header
 
     rows = [
-        (z.nomer, z.nazvanie[:60], z.zakon, z.status, format_rub(z.nachalnaya_tsena))
+        (z.nomer, z.nazvanie[:60], z.zakon, z.status, formatirovat_rubli(z.nachalnaya_tsena))
         for z in zakupki[:30]
     ]
     header = "**Результаты поиска в ЕИС закупок**\n\n"
     header += f"Найдено: {len(zakupki)} закупок\n\n"
     return (
         header
-        + markdown_table(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
+        + tablitsa_v_markdown(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
         + _auth_note()
     )
 
@@ -123,7 +123,7 @@ async def info_zakupki(
     if zakupka.status:
         lines.append(f"- Статус: {zakupka.status}")
     if zakupka.nachalnaya_tsena:
-        lines.append(f"- Начальная цена: {format_rub(zakupka.nachalnaya_tsena)}")
+        lines.append(f"- Начальная цена: {formatirovat_rubli(zakupka.nachalnaya_tsena)}")
     if zakupka.data_publikatsii:
         lines.append(f"- Дата публикации: {zakupka.data_publikatsii}")
     if zakupka.srok_podachi:
@@ -167,13 +167,19 @@ async def poisk_kontraktov(
         )
 
     rows = [
-        (k.nomer, k.nazvanie_podryadchika[:40], format_rub(k.tsena), k.status, k.data_podpisaniya)
+        (
+            k.nomer,
+            k.nazvanie_podryadchika[:40],
+            formatirovat_rubli(k.tsena),
+            k.status,
+            k.data_podpisaniya,
+        )
         for k in kontrakty[:30]
     ]
     header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
     return (
         header
-        + markdown_table(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
+        + tablitsa_v_markdown(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
         + _auth_note()
     )
 
@@ -209,7 +215,9 @@ async def info_zakazchika(
     if zakazchik.zakupki_kolichestvo:
         lines.append(f"- Количество закупок: {zakazchik.zakupki_kolichestvo}")
     if zakazchik.obshchie_raskhody:
-        lines.append(f"- Общая сумма контрактов: {format_rub(zakazchik.obshchie_raskhody)}")
+        lines.append(
+            f"- Общая сумма контрактов: {formatirovat_rubli(zakazchik.obshchie_raskhody)}"
+        )
 
     lines.append("\nИсточник: ЕГРЮЛ / egrul.nalog.ru")
     return "\n".join(lines)
@@ -246,7 +254,7 @@ async def info_postavshchika(
     if postavshchik.kontraktov_ispolneno:
         lines.append(f"- Исполнено контрактов: {postavshchik.kontraktov_ispolneno}")
     if postavshchik.obshchiy_dokhod:
-        lines.append(f"- Общая выручка: {format_rub(postavshchik.obshchiy_dokhod)}")
+        lines.append(f"- Общая выручка: {formatirovat_rubli(postavshchik.obshchiy_dokhod)}")
 
     lines.append("\nИсточник: ЕГРЮЛ/ЕГРИП / egrul.nalog.ru")
     return "\n".join(lines)
@@ -259,11 +267,11 @@ async def statusy_zakupok(ctx: Context) -> str:
         Справочник статусов.
     """
     await ctx.info("Запрос справочника статусов закупок...")
-    statusy = client.get_statusy_zakupok()
+    statusy = client.poluchit_statusy_zakupok()
 
     rows = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы закупок в ЕИС**\n\n"
-    return header + markdown_table(["Код", "Статус"], rows)
+    return header + tablitsa_v_markdown(["Код", "Статус"], rows)
 
 
 async def sposoby_zakupok(ctx: Context) -> str:
@@ -273,11 +281,11 @@ async def sposoby_zakupok(ctx: Context) -> str:
         Справочник способов.
     """
     await ctx.info("Запрос справочника способов закупок...")
-    sposoby = client.get_sposoby_zakupok()
+    sposoby = client.poluchit_sposoby_zakupok()
 
     rows = [(s["kod"], s["nazvanie"]) for s in sposoby]
     header = "**Способы определения поставщиков**\n\n"
-    return header + markdown_table(["Код", "Способ закупки"], rows)
+    return header + tablitsa_v_markdown(["Код", "Способ закупки"], rows)
 
 
 async def plany_zakupok(
@@ -311,10 +319,12 @@ async def plany_zakupok(
             p.nazvanie_organizatora[:40],
             p.organizator_inn,
             str(p.kolichestvo_pozitsiy),
-            format_rub(p.obshchiy_byudzhet),
+            formatirovat_rubli(p.obshchiy_byudzhet),
         )
         for p in plany[:30]
     ]
     header = f"**Планы-графики закупок на {god} год**\n\n"
     header += f"Найдено: {len(plany)}\n\n"
-    return header + markdown_table(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows) + _auth_note()
+    return (
+        header + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows) + _auth_note()
+    )

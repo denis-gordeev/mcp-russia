@@ -51,7 +51,7 @@ async def poisk_kontrolnyh_meropriyatiy(
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_kontrolnoe_meropriyatie(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_kontrolnoe_meropriyatie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске контрольных мероприятий")
         return []
@@ -70,7 +70,7 @@ async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
         url = f"{ACH_API_BASE}/controls/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_kontrolnoe_meropriyatie(data)
+            return _razobrat_kontrolnoe_meropriyatie(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении мероприятия №%s", nomer)
@@ -90,7 +90,7 @@ async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None
         url = f"{ACH_API_BASE}/conclusions/{nomer}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_auditorskoe_zaklyuchenie(data)
+            return _razobrat_auditorskoe_zaklyuchenie(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении заключения №%s", nomer)
@@ -115,7 +115,7 @@ async def poluchit_byudzhet_ispolnenie(
             params["period"] = period
         data = await http_get(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_byudzhet_ispolnenie(data)
+            return _razobrat_ispolnenie_byudzheta(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении данных об исполнении бюджета")
@@ -148,23 +148,23 @@ async def poisk_narusheniy(
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_narushenie(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_narushenie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске нарушений")
         return []
 
 
-def get_napravleniya_list() -> list[dict[str, str]]:
+def poluchit_spisok_napravleniy() -> list[dict[str, str]]:
     """Вернуть справочник направлений контроля."""
     return NAPRAVLENIYA_KONTROLYA
 
 
-def get_tipy_meropriyatiy_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_meropriyatiy() -> list[dict[str, str]]:
     """Вернуть справочник типов контрольных мероприятий."""
     return TIPY_MEROPRIYATIY
 
 
-def get_subiekty_audita_list() -> list[dict[str, str]]:
+def poluchit_spisok_subiektov_audita() -> list[dict[str, str]]:
     """Вернуть справочник субъектов аудита."""
     return SUBIEKTY_AUDITA
 
@@ -181,7 +181,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных контрольного мероприятия."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -197,7 +197,7 @@ def _parse_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных аудиторского заключения."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -214,7 +214,7 @@ def _parse_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_byudzhet_ispolnenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных об исполнении бюджета."""
     return {
         "period": data.get("period", "") or data.get("year", ""),
@@ -225,7 +225,7 @@ def _parse_byudzhet_ispolnenie(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_narushenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_narushenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о нарушении."""
     return {
         "opisanie": data.get("description", "") or data.get("opisanie", ""),

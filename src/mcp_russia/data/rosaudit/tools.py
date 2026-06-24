@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from fastmcp import Context
 
-from mcp_russia._shared.formatting import format_number_ru, markdown_table
+from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
 
 from . import client
 
@@ -17,28 +17,28 @@ from . import client
 async def spisok_napravleniy(ctx: Context) -> str:
     """Получить список направлений контрольной деятельности Счётной палаты."""
     await ctx.info("Запрос списка направлений контроля...")
-    napravleniya = client.get_napravleniya_list()
+    napravleniya = client.poluchit_spisok_napravleniy()
     rows = [(n["kod"], n["nazvanie"]) for n in napravleniya]
     header = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
-    return header + markdown_table(["Код", "Направление"], rows)
+    return header + tablitsa_v_markdown(["Код", "Направление"], rows)
 
 
 async def spisok_tipov_meropriyatiy(ctx: Context) -> str:
     """Получить список типов контрольных мероприятий."""
     await ctx.info("Запрос списка типов мероприятий...")
-    tipy = client.get_tipy_meropriyatiy_list()
+    tipy = client.poluchit_spisok_tipov_meropriyatiy()
     rows = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы контрольных мероприятий**\n\n"
-    return header + markdown_table(["Код", "Тип"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип"], rows)
 
 
 async def spisok_subiektov_audita(ctx: Context) -> str:
     """Получить список субъектов внешнего государственного аудита."""
     await ctx.info("Запрос списка субъектов аудита...")
-    subiekty = client.get_subiekty_audita_list()
+    subiekty = client.poluchit_spisok_subiektov_audita()
     rows = [(s["kod"], s["nazvanie"]) for s in subiekty]
     header = "**Субъекты внешнего государственного аудита**\n\n"
-    return header + markdown_table(["Код", "Субъект"], rows)
+    return header + tablitsa_v_markdown(["Код", "Субъект"], rows)
 
 
 async def poisk_kontrolnyh_meropriyatiy(
@@ -78,7 +78,7 @@ async def poisk_kontrolnyh_meropriyatiy(
         )
         for m in meropriyatiya
     ]
-    return markdown_table(
+    return tablitsa_v_markdown(
         ["№", "Название", "Тип", "Статус", "Объём средств"],
         rows,
     )
@@ -112,7 +112,7 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
     if data.get("status"):
         lines.append(f"- Статус: {data['status']}")
     if data.get("obiem_sredstv"):
-        lines.append(f"- Объём средств: {format_number_ru(data['obiem_sredstv'], 2)} руб.")
+        lines.append(f"- Объём средств: {formatirovat_chislo_ru(data['obiem_sredstv'], 2)} руб.")
     lines.append(f"- Источник: {data.get('istochnik', 'ach.gov.ru')}")
     return "\n".join(lines)
 
@@ -141,7 +141,9 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
         f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
     ]
     if data.get("summa_narusheniy"):
-        lines.append(f"- Сумма нарушений: {format_number_ru(data['summa_narusheniy'], 2)} руб.")
+        lines.append(
+            f"- Сумма нарушений: {formatirovat_chislo_ru(data['summa_narusheniy'], 2)} руб."
+        )
     rekomendacii = data.get("rekomendacii", [])
     if rekomendacii:
         lines.append(f"- Рекомендации: {', '.join(str(r)[:80] for r in rekomendacii[:5])}")
@@ -172,11 +174,11 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
         )
     lines = [f"**Исполнение федерального бюджета за {data.get('period', '')}**"]
     if data.get("dohody"):
-        lines.append(f"- Доходы: {format_number_ru(data['dohody'], 2)} млрд руб.")
+        lines.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
     if data.get("raskhody"):
-        lines.append(f"- Расходы: {format_number_ru(data['raskhody'], 2)} млрд руб.")
+        lines.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
     if data.get("deficit") is not None:
-        lines.append(f"- Дефицит: {format_number_ru(data['deficit'], 2)} млрд руб.")
+        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['deficit'], 2)} млрд руб.")
     lines.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
     return "\n".join(lines)
 
@@ -224,7 +226,7 @@ async def poisk_narusheniy(
         for n in narusheniya
     ]
     header = f"**Выявленные нарушения** — найдено: {len(narusheniya)}\n\n"
-    return header + markdown_table(
+    return header + tablitsa_v_markdown(
         ["Организация", "Тип", "Описание", "Сумма (руб.)"],
         rows,
     )

@@ -2,6 +2,66 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-24 (пятидесятый проход — полная русификация имён функций, методов, классов инфраструктуры)
+
+### Выполнено
+
+- **Русификация функций rosapi/client.py** (18 функций):
+  - `_dadata_headers` → `_zagolovki_dadaty`, `_nested_get` → `_vlozhennoe_poluchenie`, `_parse_org_data` → `_razobrat_dannye_organizatsii`, `_parse_bank_data` → `_razobrat_dannye_banka`, `_suggest_address` → `_predlozhit_adres`, `_find_by_fias` → `_nayti_po_fias`, `_postal_by_index` → `_pochtovyy_po_indeksu`, `_find_org_by_inn` → `_nayti_organizatsiyu_po_inn`, `_find_org_by_ogrn` → `_nayti_organizatsiyu_po_ogrn`, `_list_banks` → `_spisok_bankov`, `_find_bank_by_bik` → `_nayti_bank_po_bik`, `get_holidays` → `poluchit_prazdniki`, `consult_address_by_postal` → `konsultirovat_adres_po_pochtovomu`, `search_address` → `poisk_adresa`, `find_org_by_inn` → `nayti_organizatsiyu_po_inn`, `find_org_by_ogrn` → `nayti_organizatsiyu_po_ogrn`, `list_banks_public` → `spisok_bankov_publichnyy`, `find_bank_by_bik` → `nayti_bank_po_bik`
+  - Обновлены ссылки в tools.py и test_tools.py
+- **Русификация функций gibdd/client.py** (7 функций):
+  - `_extract_result` → `_izvlech_rezultat`, `_parse_history` → `_razobrat_istoriyu`, `_parse_dtp` → `_razobrat_dtp`, `_parse_wanted` → `_razobrat_rozysk`, `_parse_restrict` → `_razobrat_ogranichenie`, `_parse_driver` → `_razobrat_voditelya`, `_parse_statistika` → `_razobrat_statistiku`
+- **Русификация функций rosstat/client.py** (3 функции):
+  - `_parse_indikator_response` → `_razobrat_otvet_indikatora`, `get_subiekty_list` → `poluchit_spisok_subiektov`, `get_federalny_okruga_list` → `poluchit_spisok_federalnykh_okrugov`
+  - Обновлены ссылки в tools.py
+- **Русификация функций zakupki/client.py** (10 функций):
+  - `_get_api_token` → `_poluchit_api_token`, `_parse_zakupki_search` → `_razobrat_poisk_zakupok`, `_determine_zakon` → `_opredelit_zakon`, `_safe_float` → `_bezopasnoe_veshchestvennoe`, `_parse_kontrakty` → `_razobrat_kontrakty`, `_parse_plany` → `_razobrat_plany`, `get_tipy_dannykh` → `poluchit_tipy_dannykh`, `get_sposoby_zakupok` → `poluchit_sposoby_zakupok`, `get_otrasli` → `poluchit_otrasli`, `get_statusy_zakupok` → `poluchit_statusy_zakupok`
+  - Обновлены ссылки в tools.py и test_tools.py
+- **Русификация функций fns/client.py** (4 функции):
+  - `_egrul_search` → `_poisk_egrul`, `_parse_egrul_organization` → `_razobrat_egrul_organizatsiyu`, `_parse_egrul_ip` → `_razobrat_egrul_ip`, `_parse_status` → `_razobrat_status`
+- **Русификация `_parse_*` → `_razobrat_*` в оставшихся 17 модулях** (~55 функций):
+  - cekrf (5), gosduma (4), fssp (2), rosreestr (1), cbrf (1), roskomnadzor (5), rospotrebnadzor (2), mchs (5), rosaudit (4), rosselkhoznadzor (5), rosprirodnadzor (4), rosvodresursy (4), rosgidromet (3), minzdrav (4), kaznacheistvo (5), publikatsii (4), minobrnauki (2)
+  - Обновлены ссылки в тестах (cekrf, gosduma)
+- **Русификация `get_*_list` → `poluchit_spisok_*` и `get_*` → `poluchit_*`** (~50 функций в 14 модулях):
+  - sovfed (2), mchs (6), rosaudit (3), rosselkhoznadzor (7), rosprirodnadzor (3), rosvodresursy (5), rosgidromet (4), minzdrav (5), kaznacheistvo (2), publikatsii (4), gosduma (3+1), kad_arbitrazh (4), cekrf (3)
+  - Обновлены ссылки в tools.py, server.py и тестах
+- **Русификация других английских паттернов** (~10 функций):
+  - `_fetch_*` → `_zaprosit_*` (cekrf), `_find_*` → `_nayti_*` (rosgidromet), `_normalise_*` → `_normlizovat_*` (fssp), `_search_results` → `_rezultaty_poiska` (publikatsii), `_granty_fallback` → `_granty_rezervnye` (minobrnauki), `_proverka_ts_full` → `_polnaya_proverka_ts` (gibdd/tools.py), `_hpa_to_mmhg` → `_gpa_v_mmrtst`, `_deg_to_napravlenie` → `_gradusy_v_napravlenie` (rosgidromet)
+- **Русификация `_shared/` инфраструктуры** (~39 функций/методов):
+  - formatting.py (6): `markdown_table` → `tablitsa_v_markdown`, `format_rub` → `formatirovat_rubli`, `format_number_ru` → `formatirovat_chislo_ru`, `format_percent` → `formatirovat_protsent`, `parse_rub_number` → `razobrat_rublevoe_chislo`, `truncate_list` → `usech_spisok`
+  - validators.py (9): `_only_digits` → `_tolko_tsifry`, `validate_inn` → `proverit_inn`, `format_inn` → `formatirovat_inn`, `validate_kpp` → `proverit_kpp`, `format_kpp` → `formatirovat_kpp`, `validate_snils` → `proverit_snils`, `format_snils` → `formatirovat_snils`, `validate_postal_code_ru` → `proverit_pochtovyy_indeks`, `format_postal_code_ru` → `formatirovat_pochtovyy_indeks`
+  - feature.py (7): `features` → `funktsii`, `skipped` → `propushcheno`, `discover` → `obnaruzhit`, `_try_register` → `_poprovat_zaregistrirovat`, `mount_all` → `smontirovat_vse`, `summary` → `svodka`, `get_feature` → `poluchit_funktsiyu`
+  - batch.py (2): `_scan_tools_module` → `_skanirovat_modul_instrumentov`, `_run_one` → `_vypolnit_odin`
+  - cache.py (2): `size` → `razmer`, `_evict` → `_ischislit`
+  - rate_limiter.py (2): `_purge` → `_ochistit`, `acquire` → `zakhvatit`
+  - lifespan.py (1): `http_lifespan` → `http_zhiznennyy_tsikl`
+  - planner.py (1): `to_markdown` → `v_markdown`
+  - server.py (3): `on_call_tool` → `pri_vyzove_instrumenta`, `on_read_resource` → `pri_chtenii_resursa`, `on_get_prompt` → `pri_zaprose_prompta`
+  - Обновлены ссылки во всех 24 tools.py, server.py, batch.py, discovery.py, тестах
+- **Переименование классов инфраструктуры** (3 класса с алиасами для совместимости):
+  - `FeatureMeta` → `MetaFunktsii` (feature.py + алиас FeatureMeta)
+  - `RegisteredFeature` → `ZaregistrirovannayaFunktsiya` (feature.py + алиас RegisteredFeature)
+  - `FeatureRegistry` → `ReyestrFunktsiy` (feature.py + алиас FeatureRegistry)
+  - Обновлены импорты в 25 __init__.py, server.py, batch.py, discovery.py, тестах
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **~198 английских имён функций/методов русифицированы** за один проход: все английские имена функций в client.py (5 приоритетных модулей + 17 остальных), _shared/ инфраструктура, server.py
+- **Паттерн `_parse_*` → `_razobrat_*`** унифицирован во всех 22 модулях данных
+- **Паттерн `get_*_list` → `poluchit_spisok_*`** унифицирован во всех 14 модулях со справочными функциями
+- **Алиасы для классов инфраструктуры**: `FeatureMeta = MetaFunktsii`, `RegisteredFeature = ZaregistrirovannayaFunktsiya`, `FeatureRegistry = ReyestrFunktsiy` — существующий код может использовать оба имени
+- **FEATURE_META сохранена**: константа `FEATURE_META` в __init__.py модулей не переименована — это установившийся API-контракт; импорт обновлён на `from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta`
+- **Инфраструктурные функции форматирования и валидации русифицированы**: `markdown_table` → `tablitsa_v_markdown`, `validate_inn` → `proverit_inn` и т.д. — затронуло все 24 tools.py, которые импортируют эти функции
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Проверка оставшихся английских артефактов в _shared/http_client.py**: `create_client`, `http_get`, `http_post` — основные HTTP-функции; переименование может быть нежелательным из-за широты использования
+- **Зачистка FEATURE_META**: после стабилизации — убрать алиас `FeatureMeta` и обновить все __init__.py на использование `MetaFunktsii` напрямую
+
 ## Статус раунда 2026-06-23 (сорок девятый проход — русификация имён классов, функций, переменных, строковых значений, заголовков Makefile и скриптов)
 
 ### Выполнено

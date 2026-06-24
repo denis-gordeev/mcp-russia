@@ -56,7 +56,7 @@ async def statistika_pojarov(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_pozhar(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("fires.ru API недоступен")
 
@@ -70,7 +70,7 @@ async def statistika_pojarov(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_pozhar(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен")
 
@@ -106,7 +106,7 @@ async def poisk_chs(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_chs(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для ЧС")
 
@@ -120,7 +120,7 @@ async def poisk_chs(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_chs(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("data.mchs.gov.ru недоступен")
 
@@ -146,7 +146,7 @@ async def radiatsionnyy_monitoring(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_radiatsiya(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_radiatsiyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для радиационного мониторинга")
 
@@ -172,7 +172,7 @@ async def gidrologicheskaya_obstanovka(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_gidrologiya(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_gidrologiyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для гидрологии")
 
@@ -202,39 +202,39 @@ async def preduprezhdeniya_chs(
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_preduprezhdenie(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для предупреждений")
 
     return []
 
 
-def get_vidy_chs_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_chs() -> list[dict[str, str]]:
     """Вернуть справочник видов ЧС."""
     return VIDY_CHS
 
 
-def get_klassy_chs_list() -> list[dict[str, str]]:
+def poluchit_spisok_klassov_chs() -> list[dict[str, str]]:
     """Вернуть справочник классов ЧС."""
     return KLASSY_CHS
 
 
-def get_vidy_pojarov_list() -> list[dict[str, str]]:
+def poluchit_spisok_vidov_pozharov() -> list[dict[str, str]]:
     """Вернуть справочник видов пожаров."""
     return VIDY_POZHAROV
 
 
-def get_tipy_opasnosti_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_opasnosti() -> list[dict[str, str]]:
     """Вернуть справочник типов опасностей."""
     return TIPY_OPASNOSTI
 
 
-def get_federalnye_okruga_list() -> list[dict[str, Any]]:
+def poluchit_spisok_federalnykh_okrugov() -> list[dict[str, Any]]:
     """Вернуть справочник федеральных округов МЧС."""
     return FEDERALNYE_OKRUGA_MCHS
 
 
-def get_statistika_pojarov_static() -> dict[str, Any]:
+def poluchit_statistiku_pozharov_staticheskie() -> dict[str, Any]:
     """Вернуть статическую статистику пожаров (2023)."""
     return STATISTIKA_POZHAROV_2023
 
@@ -251,7 +251,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_pozhar(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_pozhar(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о пожаре."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -265,7 +265,7 @@ def _parse_pozhar(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_chs(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_chs(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о чрезвычайной ситуации."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -281,7 +281,7 @@ def _parse_chs(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_radiatsiya(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_radiatsiyu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных радиационного мониторинга."""
     return {
         "stantsiya": data.get("station", "") or data.get("stantsiya", ""),
@@ -294,7 +294,7 @@ def _parse_radiatsiya(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_gidrologiya(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_gidrologiyu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных гидрологической обстановки."""
     return {
         "reka": data.get("river", "") or data.get("reka", ""),
@@ -307,7 +307,7 @@ def _parse_gidrologiya(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных предупреждения о ЧС."""
     return {
         "nomer": data.get("id", "") or data.get("nomer", ""),

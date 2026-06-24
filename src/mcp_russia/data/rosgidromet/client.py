@@ -32,7 +32,7 @@ from .schemas import (
 )
 
 
-def _find_stanciya(code: str) -> dict[str, Any] | None:
+def _nayti_stantsiyu(code: str) -> dict[str, Any] | None:
     """Поиск станции мониторинга по коду."""
     for s in STANCII_MONITORINGA:
         if s["kod"] == code:
@@ -49,7 +49,7 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
     Возвращает:
         Данные о текущей погоде или None.
     """
-    info = _find_stanciya(stanciya)
+    info = _nayti_stantsiyu(stanciya)
     if not info:
         return None
 
@@ -61,7 +61,7 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
     }
     try:
         data = await http_get(OPEN_METEO_BASE, params=params)
-        return _parse_openmeteo_pogoda(data, info)
+        return _razobrat_openmeteo_pogodu(data, info)
     except Exception:
         return None
 
@@ -79,7 +79,7 @@ async def poluchit_prognoz(
     Возвращает:
         Список данных прогноза.
     """
-    info = _find_stanciya(stanciya)
+    info = _nayti_stantsiyu(stanciya)
     if not info:
         return []
 
@@ -92,7 +92,7 @@ async def poluchit_prognoz(
     }
     try:
         data = await http_get(OPEN_METEO_BASE, params=params)
-        return _parse_openmeteo_prognoz(data, info)
+        return _razobrat_openmeteo_prognoz(data, info)
     except Exception:
         return []
 
@@ -126,7 +126,7 @@ async def poluchit_ekologiyu(
         }
         try:
             data = await http_get(OPEN_METEO_AIR_QUALITY_BASE, params=params)
-            parsed = _parse_openmeteo_ekologiya(data, station)
+            parsed = _razobrat_openmeteo_ekologiyu(data, station)
             results.extend(parsed)
         except Exception:
             continue
@@ -241,22 +241,22 @@ async def poluchit_sputnik_dannye(
     return []
 
 
-def get_stancii_list() -> list[dict[str, Any]]:
+def poluchit_spisok_stantsiy() -> list[dict[str, Any]]:
     """Возвращает список мониторинговых станций."""
     return STANCII_MONITORINGA
 
 
-def get_tipy_meteo_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_meteo() -> list[dict[str, str]]:
     """Возвращает список типов метеорологических данных."""
     return TIPY_METEODANNYKH
 
 
-def get_tipy_eko_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_eko() -> list[dict[str, str]]:
     """Возвращает список типов экологических данных."""
     return TIPY_EKODANNYKH
 
 
-def get_tipy_preduprezhdeniy_list() -> list[dict[str, str]]:
+def poluchit_spisok_tipov_preduprezhdeniy() -> list[dict[str, str]]:
     """Возвращает список типов предупреждений."""
     return TIPY_PREDUPREZHDENIY
 
@@ -264,7 +264,7 @@ def get_tipy_preduprezhdeniy_list() -> list[dict[str, str]]:
 # --- Разборщики ответов Open-Meteo ---
 
 
-def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> PogodaData:
+def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> PogodaData:
     """Разбор ответа прогноза Open-Meteo в PogodaData."""
     current = data.get("current", {})
     wmo_code = current.get("weather_code", 0)
@@ -278,9 +278,9 @@ def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> Pogod
         temperatura=current.get("temperature_2m"),
         oshchushchaetsya_kak=current.get("apparent_temperature"),
         vlazhnost=current.get("relative_humidity_2m"),
-        davlenie=_hpa_to_mmhg(current.get("surface_pressure")),
+        davlenie=_gpa_v_mmrtst(current.get("surface_pressure")),
         veter_skorost=current.get("wind_speed_10m"),
-        veter_napravlenie=_deg_to_napravlenie(wind_dir_deg),
+        veter_napravlenie=_gradusy_v_napravlenie(wind_dir_deg),
         osadki=current.get("precipitation"),
         vidimost=None,
         opisaniye=opisaniye,
@@ -288,7 +288,7 @@ def _parse_openmeteo_pogoda(data: dict[str, Any], info: dict[str, Any]) -> Pogod
     )
 
 
-def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozData]:
+def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozData]:
     """Разбор ежедневного прогноза Open-Meteo в список PrognozData."""
     daily = data.get("daily", {})
     dates = daily.get("time", [])
@@ -315,7 +315,9 @@ def _parse_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list
     return results
 
 
-def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> list[EkologiyaData]:
+def _razobrat_openmeteo_ekologiyu(
+    data: dict[str, Any], info: dict[str, Any]
+) -> list[EkologiyaData]:
     """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaData."""
     current = data.get("current", {})
     time_str = current.get("time", "")
@@ -350,14 +352,14 @@ def _parse_openmeteo_ekologiya(data: dict[str, Any], info: dict[str, Any]) -> li
     return results
 
 
-def _hpa_to_mmhg(hpa: float | None) -> float | None:
+def _gpa_v_mmrtst(hpa: float | None) -> float | None:
     """Конвертация гектопаскалей в мм рт. ст."""
     if hpa is None:
         return None
     return round(hpa * 0.750062, 1)
 
 
-def _deg_to_napravlenie(deg: float) -> str:
+def _gradusy_v_napravlenie(deg: float) -> str:
     """Преобразование градусов направления ветра в российское компасное направление."""
     directions = [
         "С",

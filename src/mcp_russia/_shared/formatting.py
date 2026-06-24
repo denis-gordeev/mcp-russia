@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from typing import Any
 
 
-def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
+def tablitsa_v_markdown(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
     """Рендеринг табличных данных в Markdown.
 
     Аргументы:
@@ -30,7 +30,7 @@ def markdown_table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str
     return "\n".join([header_line, separator, *body_lines])
 
 
-def format_rub(value: float) -> str:
+def formatirovat_rubli(value: float) -> str:
     """Форматирование числа в российском рублёвом стиле.
 
     Аргументы:
@@ -50,7 +50,7 @@ def format_rub(value: float) -> str:
     return f"{sign}{int_str},{decimal_part:02d} ₽"
 
 
-def format_number_ru(value: float, decimals: int = 2) -> str:
+def formatirovat_chislo_ru(value: float, decimals: int = 2) -> str:
     """Форматирование числа в российском стиле (пробел — тысячи, запятая — десятичные).
 
     Аргументы:
@@ -64,7 +64,7 @@ def format_number_ru(value: float, decimals: int = 2) -> str:
     return formatted.replace(",", " ").replace(".", ",")
 
 
-def format_percent(value: float, decimals: int = 2) -> str:
+def formatirovat_protsent(value: float, decimals: int = 2) -> str:
     """Форматирование числового значения как процент.
 
     Аргументы:
@@ -74,10 +74,10 @@ def format_percent(value: float, decimals: int = 2) -> str:
     Возвращает:
         Отформатированная строка вида «5,00%».
     """
-    return f"{format_number_ru(value * 100, decimals)}%"
+    return f"{formatirovat_chislo_ru(value * 100, decimals)}%"
 
 
-def parse_rub_number(value: Any) -> float | None:
+def razobrat_rublevoe_chislo(value: Any) -> float | None:
     """Разбор локализованной строки числа в число с плавающей точкой.
 
     Обрабатывает строки вида «1 234,56» (пробел=тысячи, запятая=десятичные)
@@ -108,7 +108,7 @@ def parse_rub_number(value: Any) -> float | None:
     return None
 
 
-def truncate_list(items: Sequence[str], max_items: int = 50) -> str:
+def usech_spisok(items: Sequence[str], max_items: int = 50) -> str:
     """Объединение элементов через перевод строки с усечением длинных списков.
 
     Аргументы:

@@ -55,7 +55,7 @@ async def poisk_med_organizatsiy(
             params["city"] = gorod
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_med_organizatsia(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_med_organizatsiyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
         return []
@@ -74,7 +74,7 @@ async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
         url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
         data = await http_get(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_med_organizatsia(data)
+            return _razobrat_med_organizatsiyu(data)
         return None
     except Exception:
         logger.exception("Ошибка при получении МО %s", identifikator_mo)
@@ -107,7 +107,7 @@ async def poisk_litsenziy(
             params["status"] = status
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_litsenziya(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
         return []
@@ -139,7 +139,7 @@ async def pokazateli_zdorovya(
             params["code"] = kod_pokazatelya
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_pokazatel(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_pokazatel(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
         return []
@@ -171,33 +171,33 @@ async def statistika_zabolevaniy(
             params["year"] = god
         data = await http_get(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_zabolevanie(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_zabolevanie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
         return []
 
 
-def get_tipy_mo() -> list[dict[str, str]]:
+def poluchit_tipy_mo() -> list[dict[str, str]]:
     """Вернуть справочник типов медицинских организаций."""
     return TIPLY_MO
 
 
-def get_spetsialnosti() -> list[dict[str, str]]:
+def poluchit_spetsialnosti() -> list[dict[str, str]]:
     """Вернуть справочник врачебных специальностей."""
     return SPETSIALNOSTI_VRACHEY
 
 
-def get_mkb10_classes() -> list[dict[str, str]]:
+def poluchit_klassy_mkb10() -> list[dict[str, str]]:
     """Вернуть справочник классов МКБ-10."""
     return MKB10_CLASSES
 
 
-def get_federalnyye_okruga() -> list[dict[str, str]]:
+def poluchit_federalnyye_okruga() -> list[dict[str, str]]:
     """Вернуть справочник федеральных округов."""
     return FEDERALNYE_OKRUGA
 
 
-def get_pokazateli_zdorovya_list() -> list[dict[str, str]]:
+def poluchit_spisok_pokazateley_zdorovya() -> list[dict[str, str]]:
     """Вернуть справочник показателей здоровья."""
     return POKAZATELI_ZDOROVYA
 
@@ -214,7 +214,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_med_organizatsiyu(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных медицинской организации."""
     return {
         "identifikator": item.get("id", "") or item.get("ogrn", ""),
@@ -231,7 +231,7 @@ def _parse_med_organizatsia(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_litsenziya(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии."""
     return {
         "nomer": item.get("number", "") or item.get("nomer", ""),
@@ -246,7 +246,7 @@ def _parse_litsenziya(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных показателя здоровья."""
     return {
         "kod": item.get("code", "") or item.get("kod", ""),
@@ -259,7 +259,7 @@ def _parse_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о заболевании."""
     return {
         "kod_mkb": item.get("mkbCode", "") or item.get("mkb_code", ""),
