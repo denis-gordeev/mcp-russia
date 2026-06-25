@@ -50,28 +50,28 @@ class MetaFunktsii:
         from mcp_russia._shared.feature import MetaFunktsii
 
         META_FUNKTSII = MetaFunktsii(
-            name="rosstat",
-            description="Росстат: демография, ВРП, социальные показатели",
-            api_base="https://rosstat.gov.ru/api",
+            imya="rosstat",
+            opisanie="Росстат: демография, ВРП, социальные показатели",
+            baza_api="https://rosstat.gov.ru/api",
         )
     """
 
-    name: str
-    description: str
-    version: str = "0.1.0"
-    api_base: str = ""
-    requires_auth: bool = False
-    auth_env_var: str | None = None
-    enabled: bool = True
-    tags: list[str] = field(default_factory=list)
+    imya: str
+    opisanie: str
+    versiya: str = "0.1.0"
+    baza_api: str = ""
+    trebuet_autentifikatsii: bool = False
+    peremennaya_avt_env: str | None = None
+    vklyuchena: bool = True
+    tegi: list[str] = field(default_factory=list)
 
     def dostupna_li_autentifikatsiya(self) -> bool:
         """Проверка доступности учётных данных аутентификации."""
-        if not self.requires_auth:
+        if not self.trebuet_autentifikatsii:
             return True
-        if self.auth_env_var is None:
+        if self.peremennaya_avt_env is None:
             return False
-        return bool(os.environ.get(self.auth_env_var))
+        return bool(os.environ.get(self.peremennaya_avt_env))
 
 
 @dataclass
@@ -80,7 +80,7 @@ class ZaregistrirovannayaFunktsiya:
 
     meta: MetaFunktsii
     server: FastMCP
-    module_path: str
+    put_modulya: str
 
 
 class ReyestrFunktsiy:
@@ -146,51 +146,51 @@ class ReyestrFunktsiy:
 
         return self
 
-    def _poprovat_zaregistrirovat(self, module_path: str, short_name: str) -> None:
+    def _poprovat_zaregistrirovat(self, put_modulya: str, short_name: str) -> None:
         """Попытка импорта и регистрации отдельной функции."""
         # Шаг 1: Импорт __init__.py функции
-        importiruyemyy_modul = importlib.import_module(module_path)
+        importiruyemyy_modul = importlib.import_module(put_modulya)
 
         # Шаг 2: Проверка наличия и корректности META_FUNKTSII
         meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
         if meta is None:
-            raise ValueError(f"Нет META_FUNKTSII в {module_path}")
+            raise ValueError(f"Нет META_FUNKTSII в {put_modulya}")
         if not isinstance(meta, MetaFunktsii):
-            raise TypeError(f"META_FUNKTSII в {module_path} не является экземпляром MetaFunktsii")
+            raise TypeError(f"META_FUNKTSII в {put_modulya} не является экземпляром MetaFunktsii")
 
         # Шаг 3: Проверка активности функции
-        if not meta.enabled:
-            self._skipped[short_name] = "отключена (enabled=False)"
+        if not meta.vklyuchena:
+            self._skipped[short_name] = "отключена (vklyuchena=False)"
             logger.info("Функция '%s' отключена, пропуск.", short_name)
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
         if not meta.dostupna_li_autentifikatsiya():
-            self._skipped[short_name] = f"отсутствует переменная {meta.auth_env_var}"
+            self._skipped[short_name] = f"отсутствует переменная {meta.peremennaya_avt_env}"
             logger.warning(
                 "Функция '%s' требует %s (не задано), пропуск.",
                 short_name,
-                meta.auth_env_var,
+                meta.peremennaya_avt_env,
             )
             return
 
         # Шаг 5: Импорт server.py и получение объекта mcp
-        server_module = importlib.import_module(f"{module_path}.server")
+        server_module = importlib.import_module(f"{put_modulya}.server")
         server = getattr(server_module, "mcp", None)
 
         if server is None:
-            raise ValueError(f"Нет объекта `mcp` в {module_path}.server")
+            raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
         self._features[short_name] = ZaregistrirovannayaFunktsiya(
             meta=meta,
             server=server,
-            module_path=module_path,
+            put_modulya=put_modulya,
         )
         logger.info(
             "Зарегистрирована функция '%s' v%s",
-            meta.name,
-            meta.version,
+            meta.imya,
+            meta.versiya,
         )
 
     def smontirovat_vse(self, root_server: FastMCP) -> None:
@@ -204,7 +204,7 @@ class ReyestrFunktsiy:
         """
         for name, modul in sorted(self._features.items()):
             root_server.mount(modul.server, namespace=name)
-            logger.info("Смонтирована '%s' — %s", name, modul.meta.description)
+            logger.info("Смонтирована '%s' — %s", name, modul.meta.opisanie)
 
     def svodka(self) -> str:
         """Читаемая сводка зарегистрированных функций.
@@ -220,9 +220,11 @@ class ReyestrFunktsiy:
             lines.append("Активные:")
             for name, feat in sorted(self._features.items()):
                 auth_icon = (
-                    "🔑" if feat.meta.requires_auth else ("🔏" if feat.meta.auth_env_var else "🔓")
+                    "🔑"
+                    if feat.meta.trebuet_autentifikatsii
+                    else ("🔏" if feat.meta.peremennaya_avt_env else "🔓")
                 )
-                lines.append(f"  /{name:<20} {auth_icon} {feat.meta.description}")
+                lines.append(f"  /{name:<20} {auth_icon} {feat.meta.opisanie}")
 
         if self._skipped:
             lines.append("\nПропущенные:")

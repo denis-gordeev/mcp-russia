@@ -8,16 +8,16 @@ from mcp_russia import settings
 
 class TestSettings:
     def test_default_timeout(self) -> None:
-        assert settings.HTTP_TIMEOUT == 30.0
+        assert settings.TAIMAUT_HTTP == 30.0
 
     def test_default_max_retries(self) -> None:
-        assert settings.HTTP_MAX_RETRIES == 3
+        assert settings.MAKS_POVTOROV_HTTP == 3
 
     def test_default_backoff_base(self) -> None:
-        assert settings.HTTP_BACKOFF_BASE == 1.0
+        assert settings.BAZA_EKSPON_ZADERZH == 1.0
 
     def test_default_user_agent(self) -> None:
-        assert "mcp-russia" in settings.USER_AGENT
+        assert "mcp-russia" in settings.POLZOVATELSKIY_AGENT
 
     def test_env_override_timeout(self) -> None:
         """Настройки можно переопределить через переменные окружения (при импорте)."""

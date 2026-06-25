@@ -3,16 +3,16 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="publikatsii",
-    description=(
+    imya="publikatsii",
+    opisanie=(
         "Официальные публикации Российской Федерации: федеральные законы, "
         "указы Президента, постановления Правительства, нормативные акты, "
         "официальные публикации в Российская газете и на портале pravo.gov.ru"
     ),
-    version="0.2.0",
-    api_base="https://pravo.gov.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.2.0",
+    baza_api="https://pravo.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "законодательство",
         "нормативные-акты",
         "законы",

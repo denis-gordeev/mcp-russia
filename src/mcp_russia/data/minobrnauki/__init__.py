@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="minobrnauki",
-    description=(
+    imya="minobrnauki",
+    opisanie=(
         "Данные Минобрнауки России: вузы, научные исследования, "
         "образовательные программы, рейтинги, гранты, аспирантура"
     ),
-    version="0.2.0",
-    api_base="https://obrnadzor.gov.ru",
-    requires_auth=False,
-    tags=["минобрнауки", "образование", "наука", "вузы", "исследования"],
+    versiya="0.2.0",
+    baza_api="https://obrnadzor.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["минобрнауки", "образование", "наука", "вузы", "исследования"],
 )

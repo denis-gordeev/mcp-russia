@@ -3,17 +3,17 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosstat",
-    description=(
+    imya="rosstat",
+    opisanie=(
         "Данные Росстата: демография, инфляция (ИПЦ), промышленное производство, "
         "ВРП регионов, заработная плата, региональное сравнение, "
         "отраслевая структура ВРП по ОКВЭД, инвестиции по видам деятельности, "
         "универсальный запрос по коду ЕМИСС"
     ),
-    version="0.5.0",
-    api_base="https://rosstat.gov.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.5.0",
+    baza_api="https://rosstat.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "статистика",
         "демография",
         "инфляция",

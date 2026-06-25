@@ -3,16 +3,16 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosselkhoznadzor",
-    description=(
+    imya="rosselkhoznadzor",
+    opisanie=(
         "Данные Россельхознадзора: ветеринарный надзор, фитосанитарный контроль, "
         "земельный надзор, пестициды и агрохимикаты, карантин растений, "
         "регистрация кормов и удобрений"
     ),
-    version="0.1.0",
-    api_base="https://fsvps.gov.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.1.0",
+    baza_api="https://fsvps.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "ветеринарный-надзор",
         "фитосанитарный-контроль",
         "карантин-растений",

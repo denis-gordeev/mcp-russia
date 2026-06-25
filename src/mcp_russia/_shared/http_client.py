@@ -23,7 +23,12 @@ from typing import Any
 import httpx
 
 from mcp_russia.exceptions import OshibkaHttpClienta
-from mcp_russia.settings import HTTP_BACKOFF_BASE, HTTP_MAX_RETRIES, HTTP_TIMEOUT, USER_AGENT
+from mcp_russia.settings import (
+    BAZA_EKSPON_ZADERZH,
+    MAKS_POVTOROV_HTTP,
+    POLZOVATELSKIY_AGENT,
+    TAIMAUT_HTTP,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -40,14 +45,14 @@ def sozdat_klienta(
 
     Аргументы:
         base_url: Базовый URL для всех запросов.
-        timeout: Таймаут запроса в секундах. По умолчанию: settings.HTTP_TIMEOUT.
+        timeout: Таймаут запроса в секундах. По умолчанию: settings.TAIMAUT_HTTP.
         headers: Дополнительные заголовки для слияния с заголовками по умолчанию.
 
     Возвращает:
         Настроенный httpx.AsyncClient (использовать как async context manager).
     """
     default_headers = {
-        "User-Agent": USER_AGENT,
+        "User-Agent": POLZOVATELSKIY_AGENT,
         "Accept": "application/json",
     }
     if headers:
@@ -55,7 +60,7 @@ def sozdat_klienta(
 
     return httpx.AsyncClient(
         base_url=base_url,
-        timeout=httpx.Timeout(timeout or HTTP_TIMEOUT),
+        timeout=httpx.Timeout(timeout or TAIMAUT_HTTP),
         headers=default_headers,
         follow_redirects=True,
     )
@@ -67,7 +72,7 @@ async def http_poluchit(
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
     timeout: float | None = None,
-    max_retries: int | None = None,
+    maks_povtorov: int | None = None,
 ) -> Any:
     """Выполнение GET-запроса с повторными попытками и экспоненциальной задержкой.
 
@@ -79,7 +84,7 @@ async def http_poluchit(
         params: Параметры запроса.
         headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
         timeout: Таймаут запроса в секундах.
-        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
+        maks_povtorov: Максимальное число попыток. По умолчанию: settings.MAKS_POVTOROV_HTTP.
 
     Возвращает:
         Разобранный JSON-ответ.
@@ -87,7 +92,7 @@ async def http_poluchit(
     Вызывает:
         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
-    retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
+    retries = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
     last_error: Exception | None = None
 
     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
@@ -97,7 +102,7 @@ async def http_poluchit(
 
                 if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
-                        wait = HTTP_BACKOFF_BASE * (2**attempt)
+                        wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                         logger.warning(
                             "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
                             attempt + 1,
@@ -124,7 +129,7 @@ async def http_poluchit(
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
                 last_error = exc
                 if attempt < retries:
-                    wait = HTTP_BACKOFF_BASE * (2**attempt)
+                    wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                     logger.warning(
                         "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
                         url,
@@ -148,7 +153,7 @@ async def http_otpravit(
     params: dict[str, Any] | None = None,
     headers: dict[str, str] | None = None,
     timeout: float | None = None,
-    max_retries: int | None = None,
+    maks_povtorov: int | None = None,
 ) -> Any:
     """Выполнение POST-запроса с повторными попытками и экспоненциальной задержкой.
 
@@ -160,7 +165,7 @@ async def http_otpravit(
         params: Параметры запроса.
         headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
         timeout: Таймаут запроса в секундах.
-        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
+        maks_povtorov: Максимальное число попыток. По умолчанию: settings.MAKS_POVTOROV_HTTP.
 
     Возвращает:
         Разобранный JSON-ответ.
@@ -168,7 +173,7 @@ async def http_otpravit(
     Вызывает:
         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
-    retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
+    retries = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
     last_error: Exception | None = None
 
     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
@@ -178,7 +183,7 @@ async def http_otpravit(
 
                 if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
-                        wait = HTTP_BACKOFF_BASE * (2**attempt)
+                        wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                         logger.warning(
                             "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
                             attempt + 1,
@@ -205,7 +210,7 @@ async def http_otpravit(
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
                 last_error = exc
                 if attempt < retries:
-                    wait = HTTP_BACKOFF_BASE * (2**attempt)
+                    wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                     logger.warning(
                         "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
                         url,

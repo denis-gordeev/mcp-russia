@@ -65,7 +65,7 @@ class TestHttpPoluchit:
             return_value=httpx.Response(404, text="Not Found")
         )
         with pytest.raises(OshibkaHttpClienta, match="HTTP 404"):
-            await http_poluchit("https://api.example.com/missing", max_retries=2)
+            await http_poluchit("https://api.example.com/missing", maks_povtorov=2)
 
     @pytest.mark.asyncio
     @respx.mock
@@ -77,7 +77,7 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"recovered": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/flaky", max_retries=2)
+            result = await http_poluchit("https://api.example.com/flaky", maks_povtorov=2)
         assert result == {"recovered": True}
 
     @pytest.mark.asyncio
@@ -90,7 +90,7 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/limited", max_retries=2)
+            result = await http_poluchit("https://api.example.com/limited", maks_povtorov=2)
         assert result == {"ok": True}
 
     @pytest.mark.asyncio
@@ -104,7 +104,7 @@ class TestHttpPoluchit:
             patch("mcp_russia._shared.http_client.asyncio.sleep"),
             pytest.raises(OshibkaHttpClienta, match="не удался после"),
         ):
-            await http_poluchit("https://api.example.com/down", max_retries=1)
+            await http_poluchit("https://api.example.com/down", maks_povtorov=1)
 
     @pytest.mark.asyncio
     @respx.mock
@@ -116,15 +116,15 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/slow", max_retries=2)
+            result = await http_poluchit("https://api.example.com/slow", maks_povtorov=2)
         assert result == {"ok": True}
 
     @pytest.mark.asyncio
     @respx.mock
     async def test_zero_retries_no_retry(self) -> None:
-        """При max_retries=0 повторных запросов не происходит."""
+        """При maks_povtorov=0 повторных запросов не происходит."""
         respx.get("https://api.example.com/once").mock(
             return_value=httpx.Response(500, text="Error")
         )
         with pytest.raises(OshibkaHttpClienta, match="HTTP 500"):
-            await http_poluchit("https://api.example.com/once", max_retries=0)
+            await http_poluchit("https://api.example.com/once", maks_povtorov=0)

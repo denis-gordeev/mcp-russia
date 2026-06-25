@@ -4,13 +4,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rospotrebnadzor",
-    description=(
+    imya="rospotrebnadzor",
+    opisanie=(
         "Данные Роспотребнадзора: санитарно-эпидемиологический надзор, "
         "защита прав потребителей, проверки объектов, нарушения, показатели безопасности"
     ),
-    version="0.2.0",
-    api_base="https://proverki.rospotrebnadzor.ru",
-    requires_auth=False,
-    tags=["роспотребнадзор", "санитарный-надзор", "потребители", "проверки", "санпин"],
+    versiya="0.2.0",
+    baza_api="https://proverki.rospotrebnadzor.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["роспотребнадзор", "санитарный-надзор", "потребители", "проверки", "санпин"],
 )

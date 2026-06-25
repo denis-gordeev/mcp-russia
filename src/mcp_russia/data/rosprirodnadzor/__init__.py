@@ -4,17 +4,17 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosprirodnadzor",
-    description=(
+    imya="rosprirodnadzor",
+    opisanie=(
         "Данные Росприроднадзора: проверки природопользователей, "
         "лицензии на пользование недрами, реестр объектов негативного воздействия, "
         "экологические платежи и штрафы, данные о радиационной безопасности, "
         "государственный земельный надзор"
     ),
-    version="0.2.0",
-    api_base="https://rpn.gov.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.2.0",
+    baza_api="https://rpn.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "экология",
         "природные-ресурсы",
         "недропользование",

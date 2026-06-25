@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="cbrf",
-    description=(
+    imya="cbrf",
+    opisanie=(
         "Данные Центрального банка РФ: ключевая ставка, официальные курсы валют, "
         "инфляция, золотовалютые резервы, статистика"
     ),
-    version="0.1.0",
-    api_base="https://www.cbr-xml-daily.ru/daily_json.js",
-    requires_auth=False,
-    tags=["экономика", "ключевая-ставка", "курс-валют", "инфляция", "цб-рф"],
+    versiya="0.1.0",
+    baza_api="https://www.cbr-xml-daily.ru/daily_json.js",
+    trebuet_autentifikatsii=False,
+    tegi=["экономика", "ключевая-ставка", "курс-валют", "инфляция", "цб-рф"],
 )

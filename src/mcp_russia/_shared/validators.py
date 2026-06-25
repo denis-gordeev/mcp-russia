@@ -173,26 +173,26 @@ def formatirovat_snils(snils: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-def proverit_pochtovyy_indeks(postal_code: str) -> bool:
+def proverit_pochtovyy_indeks(pochtovyy_indeks: str) -> bool:
     """Валидация российского почтового индекса (6 цифр).
 
     Аргументы:
-        postal_code: Строка почтового индекса (с форматированием или без).
+        pochtovyy_indeks: Строка почтового индекса (с форматированием или без).
 
     Возвращает:
         True если формат корректен, иначе False.
     """
-    digits = _tolko_tsifry(postal_code)
+    digits = _tolko_tsifry(pochtovyy_indeks)
     if len(digits) != 6:
         return False
     return digits[0] in "123456"
 
 
-def formatirovat_pochtovyy_indeks(postal_code: str) -> str:
+def formatirovat_pochtovyy_indeks(pochtovyy_indeks: str) -> str:
     """Форматирование российского почтового индекса как XXXXXX.
 
     Аргументы:
-        postal_code: Цифры почтового индекса (с форматированием или без).
+        pochtovyy_indeks: Цифры почтового индекса (с форматированием или без).
 
     Возвращает:
         Отформатированная строка почтового индекса.
@@ -200,7 +200,7 @@ def formatirovat_pochtovyy_indeks(postal_code: str) -> str:
     Вызывает:
         ValueError: Если почтовый индекс не содержит ровно 6 цифр.
     """
-    digits = _tolko_tsifry(postal_code)
+    digits = _tolko_tsifry(pochtovyy_indeks)
     if len(digits) != 6:
         raise ValueError(
             f"Российский почтовый индекс должен содержать 6 цифр, получено {len(digits)}"

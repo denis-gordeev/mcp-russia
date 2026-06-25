@@ -8,14 +8,16 @@ from __future__ import annotations
 
 import logging
 
-from ..settings import ANTHROPIC_API_KEY
+from ..settings import KLYUCH_ANTHROPIC_API
 
 logger = logging.getLogger("mcp-russia.discovery")
 
 _kesh_kataloga: str = ""
 
 
-def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool: object) -> str:
+def _formatirovat_signaturu_instrumenta(
+    imya_modulya: str, imya_instrumenta: str, tool: object
+) -> str:
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
     Формирует вывод вида:
@@ -23,7 +25,7 @@ def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool:
 
     Аргументы:
         imya_modulya: Имя модуля (префикс инструмента).
-        tool_name: Имя инструмента.
+        imya_instrumenta: Имя инструмента.
         tool: Объект инструмента.
     """
     params = getattr(tool, "parameters", {})
@@ -39,7 +41,7 @@ def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool:
         param_parts.append(f"{pname}{opt}: {ptype}")
 
     signature = ", ".join(param_parts)
-    full_name = f"{imya_modulya}_{tool_name}"
+    full_name = f"{imya_modulya}_{imya_instrumenta}"
 
     desc = (getattr(tool, "description", "") or "").split("\n")[0]
 
@@ -67,21 +69,23 @@ def postroit_katalog(registry: object) -> str:
     for feat in features.values():
         meta = feat.meta
         auth_info = (
-            f"Требуется аутентификация ({meta.auth_env_var})"
-            if meta.requires_auth
+            f"Требуется аутентификация ({meta.peremennaya_avt_env})"
+            if meta.trebuet_autentifikatsii
             else (
-                f"Рекомендуется аутентификация ({meta.auth_env_var})"
-                if meta.auth_env_var
+                f"Рекомендуется аутентификация ({meta.peremennaya_avt_env})"
+                if meta.peremennaya_avt_env
                 else "Без аутентификации"
             )
         )
-        lines.append(f"\n## {meta.name}: {meta.description}")
+        lines.append(f"\n## {meta.imya}: {meta.opisanie}")
         lines.append(f"Авторизация: {auth_info}")
 
         server = feat.server
         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
-            for tool_name, tool in server._tool_manager._tools.items():
-                lines.append(_formatirovat_signaturu_instrumenta(meta.name, tool_name, tool))
+            for imya_instrumenta, tool in server._tool_manager._tools.items():
+                lines.append(
+                    _formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, tool)
+                )
 
     _kesh_kataloga = "\n".join(lines)
     return _kesh_kataloga
@@ -106,7 +110,7 @@ async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    api_key = ANTHROPIC_API_KEY
+    api_key = KLYUCH_ANTHROPIC_API
     if not api_key:
         return (
             "Ошибка: переменная ANTHROPIC_API_KEY не настроена. "

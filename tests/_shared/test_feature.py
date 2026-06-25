@@ -15,33 +15,33 @@ from mcp_russia._shared.feature import MetaFunktsii, ReyestrFunktsiy, Zaregistri
 
 class TestMetaFunktsii:
     def test_create_minimal(self) -> None:
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ API")
-        assert meta.name == "cbrf"
-        assert meta.description == "ЦБ РФ API"
-        assert meta.version == "0.1.0"
-        assert meta.enabled is True
-        assert meta.requires_auth is False
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ API")
+        assert meta.imya == "cbrf"
+        assert meta.opisanie == "ЦБ РФ API"
+        assert meta.versiya == "0.1.0"
+        assert meta.vklyuchena is True
+        assert meta.trebuet_autentifikatsii is False
 
     def test_create_with_auth(self) -> None:
         meta = MetaFunktsii(
-            name="zakupki",
-            description="ЕИС Закупки",
-            requires_auth=True,
-            auth_env_var="ZAKUPKI_API_KEY",
+            imya="zakupki",
+            opisanie="ЕИС Закупки",
+            trebuet_autentifikatsii=True,
+            peremennaya_avt_env="ZAKUPKI_API_KEY",
         )
-        assert meta.requires_auth is True
-        assert meta.auth_env_var == "ZAKUPKI_API_KEY"
+        assert meta.trebuet_autentifikatsii is True
+        assert meta.peremennaya_avt_env == "ZAKUPKI_API_KEY"
 
     def test_dostupna_li_autentifikatsiya_no_auth_required(self) -> None:
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_missing_env_var(self) -> None:
         meta = MetaFunktsii(
-            name="t",
-            description="T",
-            requires_auth=True,
-            auth_env_var="FAKE_KEY_NOT_SET",
+            imya="t",
+            opisanie="T",
+            trebuet_autentifikatsii=True,
+            peremennaya_avt_env="FAKE_KEY_NOT_SET",
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
@@ -49,24 +49,24 @@ class TestMetaFunktsii:
 
     def test_dostupna_li_autentifikatsiya_env_var_set(self) -> None:
         meta = MetaFunktsii(
-            name="t",
-            description="T",
-            requires_auth=True,
-            auth_env_var="TEST_MCP_KEY",
+            imya="t",
+            opisanie="T",
+            trebuet_autentifikatsii=True,
+            peremennaya_avt_env="TEST_MCP_KEY",
         )
         with patch.dict(os.environ, {"TEST_MCP_KEY": "secret"}):
             assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
-        meta = MetaFunktsii(name="t", description="T", requires_auth=True)
+        meta = MetaFunktsii(imya="t", opisanie="T", trebuet_autentifikatsii=True)
         assert meta.dostupna_li_autentifikatsiya() is False
 
     def test_dostupna_li_autentifikatsiya_optional_auth_no_env(self) -> None:
         meta = MetaFunktsii(
-            name="t",
-            description="T",
-            requires_auth=False,
-            auth_env_var="FAKE_KEY_NOT_SET",
+            imya="t",
+            opisanie="T",
+            trebuet_autentifikatsii=False,
+            peremennaya_avt_env="FAKE_KEY_NOT_SET",
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
@@ -74,26 +74,26 @@ class TestMetaFunktsii:
 
     def test_dostupna_li_autentifikatsiya_optional_auth_with_env(self) -> None:
         meta = MetaFunktsii(
-            name="t",
-            description="T",
-            requires_auth=False,
-            auth_env_var="TEST_OPT_KEY",
+            imya="t",
+            opisanie="T",
+            trebuet_autentifikatsii=False,
+            peremennaya_avt_env="TEST_OPT_KEY",
         )
         with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
             assert meta.dostupna_li_autentifikatsiya() is True
 
     def test_frozen(self) -> None:
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         with pytest.raises(AttributeError):
-            meta.name = "other"  # type: ignore[misc]
+            meta.imya = "other"  # type: ignore[misc]
 
     def test_tags_default_empty(self) -> None:
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ")
-        assert meta.tags == []
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
+        assert meta.tegi == []
 
     def test_tags_custom(self) -> None:
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ", tags=["валюта", "курсы"])
-        assert meta.tags == ["валюта", "курсы"]
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ", tegi=["валюта", "курсы"])
+        assert meta.tegi == ["валюта", "курсы"]
 
 
 # ---------------------------------------------------------------------------
@@ -145,7 +145,7 @@ class TestReyestrFunktsiy:
         """Регистрирует feature вручную и монтирует в root."""
         registry = ReyestrFunktsiy()
 
-        meta = MetaFunktsii(name="test_feat", description="Тестовая функция")
+        meta = MetaFunktsii(imya="test_feat", opisanie="Тестовая функция")
         sub_server = FastMCP("test-sub")
 
         @sub_server.tool
@@ -156,7 +156,7 @@ class TestReyestrFunktsiy:
         registry._features["test_feat"] = ZaregistrirovannayaFunktsiya(
             meta=meta,
             server=sub_server,
-            module_path="fake.module",
+            put_modulya="fake.module",
         )
 
         root = FastMCP("test-root")
@@ -167,10 +167,10 @@ class TestReyestrFunktsiy:
 
     def test_summary_with_features(self) -> None:
         registry = ReyestrFunktsiy()
-        meta = MetaFunktsii(name="cbrf", description="ЦБ РФ данные")
+        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
         sub = FastMCP("sub")
         registry._features["cbrf"] = ZaregistrirovannayaFunktsiya(
-            meta=meta, server=sub, module_path="m"
+            meta=meta, server=sub, put_modulya="m"
         )
         summary = registry.svodka()
         assert "1 функция(й) активно" in summary

@@ -1,6 +1,6 @@
 """Общий lifespan для mcp-russia — создаёт/закрывает httpx.AsyncClient.
 
-HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_client"].
+HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_klient"].
 
 Использование:
     from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
@@ -18,7 +18,7 @@ import httpx
 from fastmcp import FastMCP
 from fastmcp.server.lifespan import lifespan
 
-from mcp_russia.settings import HTTP_TIMEOUT, USER_AGENT
+from mcp_russia.settings import POLZOVATELSKIY_AGENT, TAIMAUT_HTTP
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +28,15 @@ async def http_zhiznennyy_tsikl(server: FastMCP[Any]) -> AsyncIterator[dict[str,
     """Создание общего httpx.AsyncClient при запуске, закрытие при завершении."""
     logger.info("Запуск общего HTTP-клиента")
     client = httpx.AsyncClient(
-        timeout=httpx.Timeout(HTTP_TIMEOUT),
+        timeout=httpx.Timeout(TAIMAUT_HTTP),
         headers={
-            "User-Agent": USER_AGENT,
+            "User-Agent": POLZOVATELSKIY_AGENT,
             "Accept": "application/json",
         },
         follow_redirects=True,
     )
     try:
-        yield {"http_client": client}
+        yield {"http_klient": client}
     finally:
         await client.aclose()
         logger.info("Общий HTTP-клиент закрыт")

@@ -3,14 +3,14 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="gosduma",
-    description=(
+    imya="gosduma",
+    opisanie=(
         "Данные Государственной Думы: депутаты, законопроекты, пленарные заседания, "
         "голосования, комитеты, фракции"
     ),
-    version="0.2.0",
-    api_base="https://api.duma.gov.ru",
-    requires_auth=False,
-    auth_env_var="MCP_RUSSIA_DUMA_API_TOKEN",
-    tags=["госдума", "депутаты", "законопроекты", "парламент", "голосования"],
+    versiya="0.2.0",
+    baza_api="https://api.duma.gov.ru",
+    trebuet_autentifikatsii=False,
+    peremennaya_avt_env="MCP_RUSSIA_DUMA_API_TOKEN",
+    tegi=["госдума", "депутаты", "законопроекты", "парламент", "голосования"],
 )

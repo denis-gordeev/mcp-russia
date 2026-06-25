@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="fssp",
-    description=(
+    imya="fssp",
+    opisanie=(
         "Данные ФССП России: исполнительные производства, взыскания, "
         "сведения о должниках, розыск, ограничения на выезд и управление транспортом"
     ),
-    version="0.2.0",
-    api_base="https://fssp.gov.ru",
-    requires_auth=False,
-    tags=["фссп", "приставы", "взыскания", "долги", "исполнительное-производство"],
+    versiya="0.2.0",
+    baza_api="https://fssp.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["фссп", "приставы", "взыскания", "долги", "исполнительное-производство"],
 )

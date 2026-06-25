@@ -97,8 +97,8 @@ async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
     await ctx.info(f"Запрос информации о федеральном округе {kod}...")
     data = await client.poluchit_federalny_okrug(kod)
 
-    if "error" in data:
-        return f"{data['error']}\n\nИспользуйте spisok_okrugov() для списка округов."
+    if "oshibka" in data:
+        return f"{data['oshibka']}\n\nИспользуйте spisok_okrugov() для списка округов."
 
     lines = [
         f"**{data['nazvanie']}** (код {data['kod']})",
@@ -259,7 +259,7 @@ async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None =
     rows = []
     for d in data:
         zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
-        real = f"{d.realnaya_zp_change}%" if d.realnaya_zp_change else "—"
+        real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
         rows.append((d.period, d.region or "—", zp, real))
     header = f"**Средняя заработная плата{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"

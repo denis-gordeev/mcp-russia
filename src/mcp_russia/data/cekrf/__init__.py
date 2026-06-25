@@ -3,15 +3,15 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="cekrf",
-    description=(
+    imya="cekrf",
+    opisanie=(
         "Данные ЦИК РФ: выборы, кандидаты, референдумы, "
         "результаты голосования, избирательные округа"
     ),
-    version="0.2.0",
-    api_base="https://vybory.izbirkom.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.2.0",
+    baza_api="https://vybory.izbirkom.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "выборы",
         "кандидаты",
         "референдум",

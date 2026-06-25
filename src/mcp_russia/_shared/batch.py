@@ -36,7 +36,7 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
         return _dispetcher
 
     for name, feat in registry.funktsii.items():
-        base = feat.module_path
+        base = feat.put_modulya
         _skanirovat_modul_instrumentov(base, name)
 
         # Подпакеты (напр., модуль данных с подфункциями)
@@ -54,10 +54,10 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
     return _dispetcher
 
 
-def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
+def _skanirovat_modul_instrumentov(put_modulya: str, namespace: str) -> None:
     """Импорт модуля инструментов и регистрация его асинхронных функций."""
     try:
-        mod = importlib.import_module(f"{module_path}.tools")
+        mod = importlib.import_module(f"{put_modulya}.tools")
     except ImportError:
         return
 
@@ -74,7 +74,7 @@ async def vypolnit_paket_vnutrenniy(
     """Параллельное выполнение нескольких вызовов инструментов.
 
     Аргументы:
-        queries: Список словарей {"tool": "имя", "args": {}}.
+        queries: Список словарей {"instrument": "имя", "argumenty": {}}.
         ctx: Контекст FastMCP для передачи в инструменты, которые его принимают.
 
     Возвращает:
@@ -88,12 +88,12 @@ async def vypolnit_paket_vnutrenniy(
 
     async def _vypolnit_odin(q: dict[str, Any]) -> tuple[str, str]:
         """Выполнение одного инструмента из пакета."""
-        tool_name = q.get("tool", "")
-        args = q.get("args", {})
-        fn = _dispetcher.get(tool_name)
+        imya_instrumenta = q.get("instrument", "")
+        args = q.get("argumenty", {})
+        fn = _dispetcher.get(imya_instrumenta)
 
         if fn is None:
-            return tool_name, f"Инструмент '{tool_name}' не найден."
+            return imya_instrumenta, f"Инструмент '{imya_instrumenta}' не найден."
 
         try:
             sig = inspect.signature(fn)
@@ -101,14 +101,14 @@ async def vypolnit_paket_vnutrenniy(
                 result = await fn(ctx=ctx, **args)
             else:
                 result = await fn(**args)
-            return tool_name, result
+            return imya_instrumenta, result
         except Exception as exc:
-            return tool_name, f"Ошибка при выполнении '{tool_name}': {exc}"
+            return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {exc}"
 
     results = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
 
     parts: list[str] = []
-    for tool_name, output in results:
-        parts.append(f"## {tool_name}\n\n{output}")
+    for imya_instrumenta, output in results:
+        parts.append(f"## {imya_instrumenta}\n\n{output}")
 
     return "\n\n---\n\n".join(parts)

@@ -37,10 +37,10 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
     await ctx.info(f"Поиск адреса по индексу {indeks}...")
     result = await client.konsultirovat_adres_po_pochtovomu(indeks)
 
-    if isinstance(result, dict) and "error" in result:
+    if isinstance(result, dict) and "oshibka" in result:
         return (
             f"**Почтовый индекс: {indeks}**\n\n"
-            f"{result['error']}\n\n"
+            f"{result['oshibka']}\n\n"
             f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
             f"https://dadata.ru/api/address/"
         )
@@ -107,10 +107,10 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
     await ctx.info(f"Поиск организации по ИНН {inn}...")
     result = await client.nayti_organizatsiyu_po_inn(inn)
 
-    if isinstance(result, dict) and "error" in result:
+    if isinstance(result, dict) and "oshibka" in result:
         return (
             f"**ИНН: {inn}**\n\n"
-            f"{result['error']}\n\n"
+            f"{result['oshibka']}\n\n"
             f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
             f"https://dadata.ru/api/party/"
         )
@@ -154,8 +154,8 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
     result = await client.nayti_organizatsiyu_po_ogrn(ogrn)
 
-    if isinstance(result, dict) and "error" in result:
-        return f"**ОГРН: {ogrn}**\n\n{result['error']}"
+    if isinstance(result, dict) and "oshibka" in result:
+        return f"**ОГРН: {ogrn}**\n\n{result['oshibka']}"
 
     lines = [
         f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
@@ -210,7 +210,7 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
 
     result = await client.nayti_bank_po_bik(bik)
 
-    if isinstance(result, dict) and "error" in result:
+    if isinstance(result, dict) and "oshibka" in result:
         found = None
         for bank in OSNOVNYE_BANKI:
             if bank["bik"] == bik:

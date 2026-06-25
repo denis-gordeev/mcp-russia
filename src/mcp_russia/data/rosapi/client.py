@@ -16,7 +16,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit
 from mcp_russia.exceptions import OshibkaAutentifikatsii
-from mcp_russia.settings import DADATA_API_KEY
+from mcp_russia.settings import KLYUCH_DADATA_API
 
 from .constants import PRAZDNIKI_RF
 from .schemas import AdresRF, BankRF, Organizatsiya
@@ -31,7 +31,7 @@ def _zagolovki_dadaty(token: str | None = None) -> dict[str, str]:
         "Content-Type": "application/json",
         "Accept": "application/json",
     }
-    key = token or DADATA_API_KEY
+    key = token or KLYUCH_DADATA_API
     if not key:
         raise OshibkaAutentifikatsii(
             "Для работы с Dadata API необходим ключ MCP_RUSSIA_DADATA_API_KEY. "
@@ -137,7 +137,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dic
     except Exception:
         return {
             "suggestions": [],
-            "error": (
+            "oshibka": (
                 "Не удалось подключиться к API Dadata.\n"
                 "Проверьте MCP_RUSSIA_DADATA_API_KEY или зарегистрируйтесь: "
                 "https://dadata.ru/api/"
@@ -157,7 +157,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> d
     except Exception:
         return {
             "suggestions": [],
-            "error": "Не удалось подключиться к API Dadata.",
+            "oshibka": "Не удалось подключиться к API Dadata.",
         }
 
 
@@ -229,7 +229,7 @@ async def konsultirovat_adres_po_pochtovomu(pochtovyy_indeks: str) -> AdresRF | 
 
     if not suggestions:
         return {
-            "error": (
+            "oshibka": (
                 f"Адрес по индексу {pochtovyy_indeks} не найден.\n"
                 "Для работы с адресами подключите API Dadata:\n"
                 "https://dadata.ru/api/address/"
@@ -288,12 +288,12 @@ async def nayti_organizatsiyu_po_inn(inn: str) -> Organizatsiya | dict[str, str]
         Данные организации или словарь с ошибкой.
     """
     result = await _nayti_organizatsiyu_po_inn(inn)
-    if "error" in result and not result.get("suggestions"):
-        return {"error": result["error"]}
+    if "oshibka" in result and not result.get("suggestions"):
+        return {"oshibka": result["oshibka"]}
 
     suggestions = result.get("suggestions", [])
     if not suggestions:
-        return {"error": f"Организация с ИНН {inn} не найдена"}
+        return {"oshibka": f"Организация с ИНН {inn} не найдена"}
 
     data = suggestions[0].get("data", {})
     parsed = _razobrat_dannye_organizatsii(data)
@@ -320,12 +320,12 @@ async def nayti_organizatsiyu_po_ogrn(ogrn: str) -> Organizatsiya | dict[str, st
         Данные организации или словарь с ошибкой.
     """
     result = await _nayti_organizatsiyu_po_ogrn(ogrn)
-    if "error" in result and not result.get("suggestions"):
-        return {"error": result["error"]}
+    if "oshibka" in result and not result.get("suggestions"):
+        return {"oshibka": result["oshibka"]}
 
     suggestions = result.get("suggestions", [])
     if not suggestions:
-        return {"error": f"Организация с ОГРН {ogrn} не найдена"}
+        return {"oshibka": f"Организация с ОГРН {ogrn} не найдена"}
 
     data = suggestions[0].get("data", {})
     parsed = _razobrat_dannye_organizatsii(data)
@@ -373,7 +373,7 @@ async def nayti_bank_po_bik(bik: str) -> BankRF | dict[str, str]:
     suggestions = result.get("suggestions", [])
 
     if not suggestions:
-        return {"error": f"Банк с БИК {bik} не найден"}
+        return {"oshibka": f"Банк с БИК {bik} не найден"}
 
     data = suggestions[0].get("data", {})
     parsed = _razobrat_dannye_banka(data, suggestions[0].get("value", ""))

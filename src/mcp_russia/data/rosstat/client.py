@@ -29,7 +29,7 @@ from .schemas import (
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
     PokazatelRosstata,
-    VRPData,
+    VRPDannye,
 )
 
 logger = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     """
     info_ob_okruge = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
     if not info_ob_okruge:
-        return {"error": f"Федеральный округ '{kod}' не найден"}
+        return {"oshibka": f"Федеральный округ '{kod}' не найден"}
 
     regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == kod]
     return {
@@ -185,7 +185,7 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         return []
 
 
-async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
+async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
     """Получение данных о валовом региональном продукте из ЕМИСС.
 
     Аргументы:
@@ -218,7 +218,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
                         if ri:
                             region_name = ri["nazvanie"]
                     results.append(
-                        VRPData(
+                        VRPDannye(
                             period=item.get("date", item.get("period", "")),
                             region=region_name,
                             vrp=item.get("value"),
@@ -269,7 +269,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarpl
                             period=item.get("date", item.get("period", "")),
                             region=region_name,
                             nominalnaya_zp=item.get("value"),
-                            realnaya_zp_change=item.get("realChange"),
+                            realnaya_zp_izmenenie=item.get("realChange"),
                         )
                     )
                 return results

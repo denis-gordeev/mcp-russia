@@ -24,10 +24,10 @@ from .constants import (
     WMO_KODY_POGODY,
 )
 from .schemas import (
-    EkologiyaData,
-    PogodaData,
+    EkologiyaDannye,
+    PogodaDannye,
     Preduprezhdenie,
-    PrognozData,
+    PrognozDannye,
     SputnikMonitoring,
 )
 
@@ -40,7 +40,7 @@ def _nayti_stantsiyu(code: str) -> dict[str, Any] | None:
     return None
 
 
-async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
+async def poluchit_pogodu(stanciya: str = "77") -> PogodaDannye | None:
     """Получение текущих данных о погоде через API Open-Meteo.
 
     Аргументы:
@@ -69,7 +69,7 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaData | None:
 async def poluchit_prognoz(
     stanciya: str = "77",
     dni: int = 3,
-) -> list[PrognozData]:
+) -> list[PrognozDannye]:
     """Получение прогноза погоды через API Open-Meteo.
 
     Аргументы:
@@ -100,7 +100,7 @@ async def poluchit_prognoz(
 async def poluchit_ekologiyu(
     gorod: str = "",
     tip: str = "",
-) -> list[EkologiyaData]:
+) -> list[EkologiyaDannye]:
     """Получение данных о качестве воздуха через API Open-Meteo Air Quality.
 
     Аргументы:
@@ -264,14 +264,14 @@ def poluchit_spisok_tipov_preduprezhdeniy() -> list[dict[str, str]]:
 # --- Разборщики ответов Open-Meteo ---
 
 
-def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> PogodaData:
-    """Разбор ответа прогноза Open-Meteo в PogodaData."""
+def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> PogodaDannye:
+    """Разбор ответа прогноза Open-Meteo в PogodaDannye."""
     current = data.get("current", {})
     wmo_code = current.get("weather_code", 0)
     wind_dir_deg = current.get("wind_direction_10m", 0)
     opisaniye = WMO_KODY_POGODY.get(wmo_code, "")
 
-    return PogodaData(
+    return PogodaDannye(
         stanciya=info["kod"],
         gorod=info["nazvanie"],
         region=info.get("region", ""),
@@ -288,8 +288,8 @@ def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> Po
     )
 
 
-def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozData]:
-    """Разбор ежедневного прогноза Open-Meteo в список PrognozData."""
+def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozDannye]:
+    """Разбор ежедневного прогноза Open-Meteo в список PrognozDannye."""
     daily = data.get("daily", {})
     dates = daily.get("time", [])
     t_max = daily.get("temperature_2m_max", [])
@@ -302,7 +302,7 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
     for i, date_str in enumerate(dates):
         wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
         results.append(
-            PrognozData(
+            PrognozDannye(
                 gorod=info["nazvanie"],
                 data=date_str,
                 temperatura_dnem=t_max[i] if i < len(t_max) else None,
@@ -317,8 +317,8 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
 
 def _razobrat_openmeteo_ekologiyu(
     data: dict[str, Any], info: dict[str, Any]
-) -> list[EkologiyaData]:
-    """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaData."""
+) -> list[EkologiyaDannye]:
+    """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaDannye."""
     current = data.get("current", {})
     time_str = current.get("time", "")
 
@@ -337,7 +337,7 @@ def _razobrat_openmeteo_ekologiyu(
         if value is not None:
             prevyshenie = value > norma
             results.append(
-                EkologiyaData(
+                EkologiyaDannye(
                     gorod=info["nazvanie"],
                     stanciya=info["kod"],
                     tip="vozdukh",

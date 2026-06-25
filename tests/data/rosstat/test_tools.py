@@ -9,7 +9,7 @@ from mcp_russia.data.rosstat.schemas import (
     IndikatorDannye,
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
-    VRPData,
+    VRPDannye,
 )
 
 
@@ -81,7 +81,7 @@ async def test_informatsiya_ob_okruge_not_found():
     with patch.object(
         rosstat_tools.client,
         "poluchit_federalny_okrug",
-        return_value={"error": "не найден"},
+        return_value={"oshibka": "не найден"},
     ):
         result = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
     assert "не найден" in result
@@ -171,7 +171,7 @@ async def test_vrp_dannye_fallback():
 
 async def test_vrp_dannye_with_data():
     mock_data = [
-        VRPData(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
+        VRPDannye(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
     ]
     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
         result = await rosstat_tools.vrp_dannye(region="77", god="2023")
@@ -196,7 +196,7 @@ async def test_zarplata_dannye_with_data():
             period="2024",
             region="г. Москва",
             nominalnaya_zp=125000.0,
-            realnaya_zp_change=-1.5,
+            realnaya_zp_izmenenie=-1.5,
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=mock_data):

@@ -12,7 +12,7 @@ import logging
 
 from pydantic import BaseModel
 
-from ..settings import ANTHROPIC_API_KEY
+from ..settings import KLYUCH_ANTHROPIC_API
 
 logger = logging.getLogger("mcp-russia.planner")
 
@@ -238,7 +238,7 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    api_key = ANTHROPIC_API_KEY
+    api_key = KLYUCH_ANTHROPIC_API
     if not api_key:
         return (
             "Ошибка: переменная ANTHROPIC_API_KEY не настроена. "

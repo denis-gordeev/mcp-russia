@@ -3,14 +3,14 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosaudit",
-    description=(
+    imya="rosaudit",
+    opisanie=(
         "Данные Счётной палаты РФ: результаты контрольных мероприятий, "
         "аудиторские заключения, отчёты об исполнении федерального бюджета, "
         "анализ эффективности расходования бюджетных средств"
     ),
-    version="0.2.0",
-    api_base="https://ach.gov.ru",
-    requires_auth=False,
-    tags=["счётная-палата", "аудит", "бюджет", "контроль", "росфинмониторинг"],
+    versiya="0.2.0",
+    baza_api="https://ach.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["счётная-палата", "аудит", "бюджет", "контроль", "росфинмониторинг"],
 )

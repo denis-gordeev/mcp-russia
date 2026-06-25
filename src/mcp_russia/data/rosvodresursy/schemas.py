@@ -18,7 +18,7 @@ class VodnyyObekt(BaseModel):
     opisaniye: str = ""
 
 
-class GidroData(BaseModel):
+class GidroDannye(BaseModel):
     """Гидрологические данные."""
 
     post: str = ""
@@ -31,7 +31,7 @@ class GidroData(BaseModel):
     preduprezhdenie: str = ""
 
 
-class VodokhranilishcheData(BaseModel):
+class VodokhranilishcheDannye(BaseModel):
     """Данные водохранилища."""
 
     kod: str

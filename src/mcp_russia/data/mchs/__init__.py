@@ -4,16 +4,16 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="mchs",
-    description=(
+    imya="mchs",
+    opisanie=(
         "Данные МЧС России: статистика пожаров, чрезвычайные ситуации, "
         "гражданская оборона, радиационный мониторинг, спасательные операции, "
         "гидрологическая обстановка, прогнозы чрезвычайных ситуаций"
     ),
-    version="0.1.0",
-    api_base="https://mchs.gov.ru",
-    requires_auth=False,
-    tags=[
+    versiya="0.1.0",
+    baza_api="https://mchs.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=[
         "чрезвычайные-ситуации",
         "пожары",
         "гражданская-оборона",

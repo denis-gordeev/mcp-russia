@@ -49,11 +49,11 @@ src/mcp_russia/data/{feature}/      # или agenty/{feature}/
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="primer-feature",
-    description="Короткое описание API",
-    version="0.1.0",
-    api_base="https://api.example.gov.ru",
-    requires_auth=False,
+    imya="primer-feature",
+    opisanie="Короткое описание API",
+    versiya="0.1.0",
+    baza_api="https://api.example.gov.ru",
+    trebuet_autentifikatsii=False,
 )
 ```
 

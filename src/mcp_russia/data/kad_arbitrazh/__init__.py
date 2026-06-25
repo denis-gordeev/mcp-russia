@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="kad_arbitrazh",
-    description=(
+    imya="kad_arbitrazh",
+    opisanie=(
         "Данные Картотеки арбитражных дел (КАД): судебные дела, решения, определения, "
         "постановления арбитражных судов РФ, судьи, участники дел"
     ),
-    version="0.2.0",
-    api_base="https://kad.arbitr.ru",
-    requires_auth=False,
-    tags=["арбитраж", "суд", "судебные-дела", "картотека", "кад"],
+    versiya="0.2.0",
+    baza_api="https://kad.arbitr.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["арбитраж", "суд", "судебные-дела", "картотека", "кад"],
 )

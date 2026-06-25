@@ -116,4 +116,4 @@ async def poluchit_dinamiku_kursa(kod: str) -> dict[str, Any]:
     try:
         return await http_poluchit(url)
     except Exception:
-        return {"error": f"Нет данных для валюты {kod}"}
+        return {"oshibka": f"Нет данных для валюты {kod}"}

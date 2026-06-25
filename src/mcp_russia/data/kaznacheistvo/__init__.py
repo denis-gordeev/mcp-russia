@@ -3,15 +3,15 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="kaznacheistvo",
-    description=(
+    imya="kaznacheistvo",
+    opisanie=(
         "Данные Федерального казначейства: исполнение федерального бюджета, "
         "казначейское сопровождение контрактов, реестр участников бюджетного процесса, "
         "сводный реестр государственных и муниципальных учреждений, "
         "данные о межбюджетных трансфертах"
     ),
-    version="0.2.0",
-    api_base="https://roskazna.gov.ru",
-    requires_auth=False,
-    tags=["казначейство", "бюджет", "исполнение", "контракты", "межбюджетные-трансферты"],
+    versiya="0.2.0",
+    baza_api="https://roskazna.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["казначейство", "бюджет", "исполнение", "контракты", "межбюджетные-трансферты"],
 )

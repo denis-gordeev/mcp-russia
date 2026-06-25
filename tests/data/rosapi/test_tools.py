@@ -42,7 +42,7 @@ async def test_konsul_adres_po_indeksu_error():
     with patch.object(
         rosapi_tools.client,
         "konsultirovat_adres_po_pochtovomu",
-        return_value={"error": "Адрес по индексу 000000 не найден"},
+        return_value={"oshibka": "Адрес по индексу 000000 не найден"},
     ):
         result = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
     assert "000000" in result
@@ -106,7 +106,7 @@ async def test_poisk_org_po_inn_error():
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_inn",
-        return_value={"error": "Не удалось подключиться к API Dadata"},
+        return_value={"oshibka": "Не удалось подключиться к API Dadata"},
     ):
         result = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
     assert "Dadata" in result or "API" in result
@@ -117,7 +117,7 @@ async def test_poisk_org_po_ogrn_error():
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_ogrn",
-        return_value={"error": "не найдена"},
+        return_value={"oshibka": "не найдена"},
     ):
         result = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
     assert "0000000000000" in result
@@ -154,7 +154,7 @@ async def test_konsul_bank_po_bik_not_found():
     with patch.object(
         rosapi_tools.client,
         "nayti_bank_po_bik",
-        return_value={"error": "Банк с БИК 000000000 не найден"},
+        return_value={"oshibka": "Банк с БИК 000000000 не найден"},
     ):
         result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
     assert "не найден" in result
@@ -185,13 +185,13 @@ async def test_nalogovye_stavki():
 
 async def test_zagolovki_dadaty_raises_auth_error_without_key():
     with (
-        patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", ""),
+        patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", ""),
         pytest.raises(OshibkaAutentifikatsii, match="MCP_RUSSIA_DADATA_API_KEY"),
     ):
         _zagolovki_dadaty()
 
 
 async def test_zagolovki_dadaty_with_key():
-    with patch("mcp_russia.data.rosapi.client.DADATA_API_KEY", "test-key"):
+    with patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", "test-key"):
         headers = _zagolovki_dadaty()
         assert headers["Authorization"] == "Token test-key"

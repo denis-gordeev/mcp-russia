@@ -21,7 +21,7 @@ from fastmcp.tools import ToolResult
 from ._shared.batch import postroit_dispetcherizatsiyu, vypolnit_paket_vnutrenniy
 from ._shared.feature import ReyestrFunktsiy
 from ._shared.lifespan import http_zhiznennyy_tsikl
-from .settings import TOOL_SEARCH
+from .settings import POISK_INSTRUMENTOV
 
 logging.basicConfig(
     level=logging.INFO,
@@ -157,14 +157,14 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
 
     Аргументы:
         zaprosy: Список запросов. Каждый элемент — объект с:
-                 - "tool": полное имя инструмента
+                 - "instrument": полное имя инструмента
                    (напр.: «gosduma_info_deputata»)
-                 - "args": объект с аргументами инструмента
+                 - "argumenty": объект с аргументами инструмента
                  Пример: [
-                   {"tool": "gosduma_info_deputata",
-                    "args": {"deputat_id": 99100142}},
-                   {"tool": "cbrf_kursy_valyut",
-                    "args": {}}
+                   {"instrument": "gosduma_info_deputata",
+                    "argumenty": {"deputat_id": 99100142}},
+                   {"instrument": "cbrf_kursy_valyut",
+                    "argumenty": {}}
                  ]
     """
     await ctx.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
@@ -181,7 +181,7 @@ _vsegda_vidimye = [
     "vypolnit_paket",
 ]
 
-if TOOL_SEARCH == "bm25":
+if POISK_INSTRUMENTOV == "bm25":
     from fastmcp.server.transforms.search import BM25SearchTransform
 
     mcp.add_transform(
@@ -192,7 +192,7 @@ if TOOL_SEARCH == "bm25":
     )
     logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
 
-elif TOOL_SEARCH == "code_mode":
+elif POISK_INSTRUMENTOV == "code_mode":
     try:
         from fastmcp.experimental.transforms.code_mode import (
             CodeMode,

@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosreestr",
-    description=(
+    imya="rosreestr",
+    opisanie=(
         "Данные Росреестра: кадастровая стоимость, объекты недвижимости, "
         "ЕГРН, земельные участки, здания, помещения, границы территорий"
     ),
-    version="0.2.0",
-    api_base="https://pkk.rosreestr.ru",
-    requires_auth=False,
-    tags=["росреестр", "кадастр", "недвижимость", "егрн", "земля"],
+    versiya="0.2.0",
+    baza_api="https://pkk.rosreestr.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["росреестр", "кадастр", "недвижимость", "егрн", "земля"],
 )

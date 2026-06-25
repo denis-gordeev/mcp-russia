@@ -2,7 +2,7 @@
 
 Использование::
 
-    limiter = OgranichitelChastoty(max_requests=80, period=60.0)
+    limiter = OgranichitelChastoty(maks_zaprosov=80, period=60.0)
 
     async with limiter:
         await do_request()
@@ -19,13 +19,13 @@ class OgranichitelChastoty:
     """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
 
     Аргументы:
-        max_requests: Максимальное число запросов в окне.
+        maks_zaprosov: Максимальное число запросов в окне.
         period: Длительность окна в секундах.
     """
 
-    def __init__(self, max_requests: int, period: float) -> None:
+    def __init__(self, maks_zaprosov: int, period: float) -> None:
         """Инициализация ограничителя с заданными параметрами окна."""
-        self._max_requests = max_requests
+        self._maks_zaprosov = maks_zaprosov
         self._period = period
         self._timestamps: deque[float] = deque()
         self._lock = asyncio.Lock()
@@ -42,7 +42,7 @@ class OgranichitelChastoty:
             async with self._lock:
                 now = time.monotonic()
                 self._ochistit(now)
-                if len(self._timestamps) < self._max_requests:
+                if len(self._timestamps) < self._maks_zaprosov:
                     self._timestamps.append(now)
                     return
                 # Расчёт времени ожидания до истечения самой старой записи

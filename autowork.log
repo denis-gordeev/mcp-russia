@@ -169759,3 +169759,1855 @@ Now let me commit and push.
 - **Другие паттерны**: `_fetch_*`, `_find_*`, `_normalise_*`, `_search_results`, `_safe_float`, `_hpa_to_mmhg` и др.
 
 Проверки: `ruff check` — passed, `ruff format` — formatted, `pytest` — 680 passed, 1 skipped.
+[0m
+> build · glm-5.1
+[0m
+[0m# [0mTodos
+[ ] Explore codebase structure and current state
+[ ] Read TODO.md for current task status
+[ ] Find remaining non-Russian artifacts in src/, tests/, docs/
+[ ] Fix identified issues - adapt to Russian realities
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead .
+[0m→ [0mRead TODO.md
+[0m→ [0mRead AUTOWORK_INSTRUCTIONS.md
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[ ] Find remaining non-Russian artifacts in src/, tests/, docs/
+[ ] Fix identified issues - adapt to Russian realities
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead src/mcp_russia
+[0m→ [0mRead src/mcp_russia/_shared
+[0m→ [0mRead src/mcp_russia/_shared/http_client.py
+[0m→ [0mRead src/mcp_russia/_shared/feature.py
+[0m→ [0mRead src/mcp_russia/settings.py
+[0m→ [0mRead src/mcp_russia/exceptions.py
+[0m• [0mFind English artifacts in src/[90m Explore Agent[0m
+[0m• [0mFind English artifacts in tests/[90m Explore Agent[0m
+[0m• [0mFind English artifacts in docs/[90m Explore Agent[0m
+[0m✓ [0mFind English artifacts in docs/[90m Explore Agent[0m
+[0m✓ [0mFind English artifacts in src/[90m Explore Agent[0m
+[0m✓ [0mFind English artifacts in tests/[90m Explore Agent[0m
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[ ] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[ ] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[ ] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[ ] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[ ] Russify infrastructure names: RequestLoggingMiddleware, _RETRYABLE_STATUS_CODES, _dispatch, _catalog_cache, _SYSTEM_PROMPT, _always_visible
+[ ] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[ ] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[ ] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[ ] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[ ] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[ ] Russify infrastructure names: RequestLoggingMiddleware, _RETRYABLE_STATUS_CODES, _dispatch, _catalog_cache, _SYSTEM_PROMPT, _always_visible
+[ ] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m✱ [0mGrep "from mcp_russia\._shared\.http_client import"[90m 26 matches[0m
+[0m✱ [0mGrep "create_client|http_get|http_post"[90m in src/mcp_russia/_shared · 9 matches[0m
+[0m→ [0mRead src/mcp_russia/_shared/cache.py
+[0m→ [0mRead src/mcp_russia/_shared/lifespan.py
+[0m→ [0mRead src/mcp_russia/server.py
+[0m→ [0mRead src/mcp_russia/_shared/batch.py
+[0m→ [0mRead src/mcp_russia/_shared/discovery.py
+[0m→ [0mRead src/mcp_russia/_shared/planner.py
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -3,16 +3,16 @@
+ Предоставляет фабрику httpx.AsyncClient и функцию запроса с
+ повторными попытками и экспоненциальной задержкой для transient-ошибок (5xx, 429, таймауты).
+ 
+ Использование:
+-    from mcp_russia._shared.http_client import create_client, http_get
++    from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit
+ 
+     # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
+-    async with create_client(base_url="https://api.example.com") as client:
++    async with sozdat_klienta(base_url="https://api.example.com") as client:
+         response = await client.get("/endpoint")
+ 
+     # Вариант 2: разовый запрос с автоматическими повторными попытками
+-    data = await http_get("https://api.example.com/endpoint")
++    data = await http_poluchit("https://api.example.com/endpoint")
+ """
+ 
+ from __future__ import annotations
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -27,9 +27,9 @@
+ 
+ logger = logging.getLogger(__name__)
+ 
+ # Коды состояния, инициирующие повторную попытку
+-_RETRYABLE_STATUS_CODES = frozenset({429, 500, 502, 503, 504})
++_KODY_STATUSOV_DLYA_POVTORA = frozenset({429, 500, 502, 503, 504})
+ 
+ 
+ def create_client(
+     base_url: str = "",
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -30,9 +30,9 @@
+ # Коды состояния, инициирующие повторную попытку
+ _KODY_STATUSOV_DLYA_POVTORA = frozenset({429, 500, 502, 503, 504})
+ 
+ 
+-def create_client(
++def sozdat_klienta(
+     base_url: str = "",
+     timeout: float | None = None,
+     headers: dict[str, str] | None = None,
+ ) -> httpx.AsyncClient:
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -60,9 +60,9 @@
+         follow_redirects=True,
+     )
+ 
+ 
+-async def http_get(
++async def http_poluchit(
+     url: str,
+     *,
+     params: dict[str, Any] | None = None,
+     headers: dict[str, str] | None = None,
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -94,9 +94,9 @@
+         for attempt in range(retries + 1):
+             try:
+                 response = await client.get(url, params=params)
+ 
+-                if response.status_code in _RETRYABLE_STATUS_CODES:
++                if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
+                     if attempt < retries:
+                         wait = HTTP_BACKOFF_BASE * (2**attempt)
+                         logger.warning(
+                             "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
+@@ -140,9 +140,9 @@
+         f"Запрос к {url} не удался после {retries + 1} попыток"
+     ) from last_error
+ 
+ 
+-async def http_post(
++async def http_otpravit(
+     url: str,
+     *,
+     json_body: Any | None = None,
+     params: dict[str, Any] | None = None,
+
+[0m
+[0m→ [0mRead src/mcp_russia/_shared/http_client.py
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -89,9 +89,9 @@
+ """
+ retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
+ last_error: Exception | None = None
+ 
+-async with create_client(timeout=timeout, headers=headers) as client:
++async with sozdat_klienta(timeout=timeout, headers=headers) as client:
+     for attempt in range(retries + 1):
+         try:
+             response = await client.get(url, params=params)
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -170,14 +170,14 @@
+ """
+ retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
+ last_error: Exception | None = None
+ 
+-async with create_client(timeout=timeout, headers=headers) as client:
++async with sozdat_klienta(timeout=timeout, headers=headers) as client:
+     for attempt in range(retries + 1):
+         try:
+             response = await client.post(url, json=json_body, params=params)
+ 
+-            if response.status_code in _RETRYABLE_STATUS_CODES:
++            if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
+                 if attempt < retries:
+                     wait = HTTP_BACKOFF_BASE * (2**attempt)
+                     logger.warning(
+                         "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data -name "client.py" -exec grep -l "from mcp_russia._shared.http_client import" {} \;
+src/mcp_russia/data/rosapi/client.py
+src/mcp_russia/data/minobrnauki/client.py
+src/mcp_russia/data/kaznacheistvo/client.py
+src/mcp_russia/data/minzdrav/client.py
+src/mcp_russia/data/zakupki/client.py
+src/mcp_russia/data/fns/client.py
+src/mcp_russia/data/rosreestr/client.py
+src/mcp_russia/data/rosaudit/client.py
+src/mcp_russia/data/rosstat/client.py
+src/mcp_russia/data/rospotrebnadzor/client.py
+src/mcp_russia/data/rosprirodnadzor/client.py
+src/mcp_russia/data/sovfed/client.py
+src/mcp_russia/data/publikatsii/client.py
+src/mcp_russia/data/roskomnadzor/client.py
+src/mcp_russia/data/gosduma/client.py
+src/mcp_russia/data/kad_arbitrazh/client.py
+src/mcp_russia/data/mchs/client.py
+src/mcp_russia/data/fssp/client.py
+src/mcp_russia/data/gibdd/client.py
+src/mcp_russia/data/cekrf/client.py
+src/mcp_russia/data/cbrf/client.py
+src/mcp_russia/data/rosgidromet/client.py
+src/mcp_russia/data/rosvodresursy/client.py
+src/mcp_russia/data/rosselkhoznadzor/client.py
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && sed -i '' 's/from mcp_russia\._shared\.http_client import http_get$/from mcp_russia._shared.http_client import http_poluchit/' $(grep -rl "from mcp_russia._shared.http_client import http_get$" src/mcp_russia/data/)
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && sed -i '' 's/from mcp_russia\._shared\.http_client import http_post$/from mcp_russia._shared.http_client import http_otpravit/' $(grep -rl "from mcp_russia._shared.http_client import http_post$" src/mcp_russia/data/)
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && sed -i '' 's/from mcp_russia\._shared\.http_client import http_get, http_post$/from mcp_russia._shared.http_client import http_poluchit, http_otpravit/' $(grep -rl "from mcp_russia._shared.http_client import http_get, http_post$" src/mcp_russia/data/)
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && sed -i '' 's/from mcp_russia\._shared\.http_client import create_client, http_get$/from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit/' $(grep -rl "from mcp_russia._shared.http_client import create_client, http_get$" src/mcp_russia/data/)
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && grep -rn "http_get\|http_post\|create_client" src/mcp_russia/data/ --include="*.py" | grep -v "http_poluchit\|http_otpravit\|sozdat_klienta" | head -20
+src/mcp_russia/data/rosapi/client.py:93:        return await http_post(
+src/mcp_russia/data/rosapi/client.py:106:        return await http_post(
+src/mcp_russia/data/rosapi/client.py:119:        return await http_post(
+src/mcp_russia/data/rosapi/client.py:132:        return await http_post(
+src/mcp_russia/data/rosapi/client.py:152:        return await http_post(
+src/mcp_russia/data/rosapi/client.py:168:        result = await http_post(
+src/mcp_russia/data/rosapi/client.py:182:        return await http_post(
+src/mcp_russia/data/minobrnauki/client.py:41:        data = await http_get(OBRNADZOR_ACCRED_URL, timeout=30.0)
+src/mcp_russia/data/minobrnauki/client.py:71:        data = await http_get(OBRNADZOR_ACCRED_URL, timeout=30.0)
+src/mcp_russia/data/minobrnauki/client.py:99:        data = await http_get(OBRNADZOR_LICENSE_URL, timeout=30.0)
+src/mcp_russia/data/minobrnauki/client.py:132:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:47:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:60:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:89:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:121:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:149:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/kaznacheistvo/client.py:168:        data = await http_get(url, timeout=15.0)
+src/mcp_russia/data/minzdrav/client.py:56:        data = await http_get(url, params=params, timeout=15.0)
+src/mcp_russia/data/minzdrav/client.py:75:        data = await http_get(url, timeout=15.0)
+src/mcp_russia/data/minzdrav/client.py:108:        data = await http_get(url, params=params, timeout=15.0)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data -name "client.py" -exec sed -i '' 's/await http_get(/await http_poluchit(/g' {} \; && find src/mcp_russia/data -name "client.py" -exec sed -i '' 's/await http_post(/await http_otpravit(/g' {} \; && find src/mcp_russia/data -name "client.py" -exec sed -i '' 's/create_client(/sozdat_klienta(/g' {} \;
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && grep -rn "http_get\|http_post\|create_client" src/mcp_russia/ --include="*.py" | grep -v "http_poluchit\|http_otpravit\|sozdat_klienta\|_shared/http_client.py\|\.pyc" | head -20
+src/mcp_russia/_shared/cache.py:93:            return await http_get(...)
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/cache.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/cache.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/cache.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/cache.py
+@@ -89,9 +89,9 @@
+ 
+ Пример:
+     @kesh_s_vremenem_zhizni(ttl=60)
+     async def poluchit_region() -> list[Region]:
+-        return await http_get(...)
++        return await http_poluchit(...)
+ """
+ cache = KeshSVremenemZhizni(ttl=ttl, maxsize=maxsize)
+ 
+ def decorator(func: F) -> F:
+
+[0m
+[0m→ [0mRead tests/_shared/test_http_client.py
+[0m
+[0m← [0mWrite tests/_shared/test_http_client.py
+Wrote file successfully.
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[ ] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[ ] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[ ] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[ ] Russify infrastructure names: RequestLoggingMiddleware, _RETRYABLE_STATUS_CODES, _dispatch, _catalog_cache, _SYSTEM_PROMPT, _always_visible
+[ ] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m← [0mEdit src/mcp_russia/exceptions.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
+@@ -19,8 +19,4 @@
+ 
+ OshibkaFunktsii.__module__ = __name__
+ OshibkaHttpClienta.__module__ = __name__
+ OshibkaAutentifikatsii.__module__ = __name__
+-
+-FeatureError = OshibkaFunktsii
+-HttpClientError = OshibkaHttpClienta
+-AuthError = OshibkaAutentifikatsii
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -73,11 +73,8 @@
+             return False
+         return bool(os.environ.get(self.auth_env_var))
+ 
+ 
+-FeatureMeta = MetaFunktsii
+-
+-
+ @dataclass
+ class ZaregistrirovannayaFunktsiya:
+     """Обнаруженная, провалидированная и зарегистрированная функция."""
+ 
+@@ -85,11 +82,8 @@
+     server: FastMCP
+     module_path: str
+ 
+ 
+-RegisteredFeature = ZaregistrirovannayaFunktsiya
+-
+-
+ class ReyestrFunktsiy:
+     """Автоматический реестр: обнаружение, валидация и монтирование функций.
+ 
+     Использует pkgutil.iter_modules() для сканирования подпакетов mcp_russia,
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -233,7 +233,4 @@
+ 
+     def poluchit_funktsiyu(self, name: str) -> ZaregistrirovannayaFunktsiya | None:
+         """Получение зарегистрированной функции по имени."""
+         return self._features.get(name)
+-
+-
+-FeatureRegistry = ReyestrFunktsiy
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data src/mcp_russia/agenty -name "__init__.py" -exec grep -l "FeatureMeta" {} \;
+src/mcp_russia/data/rosapi/__init__.py
+src/mcp_russia/data/minobrnauki/__init__.py
+src/mcp_russia/data/kaznacheistvo/__init__.py
+src/mcp_russia/data/minzdrav/__init__.py
+src/mcp_russia/data/zakupki/__init__.py
+src/mcp_russia/data/fns/__init__.py
+src/mcp_russia/data/rosreestr/__init__.py
+src/mcp_russia/data/rosaudit/__init__.py
+src/mcp_russia/data/rosstat/__init__.py
+src/mcp_russia/data/rospotrebnadzor/__init__.py
+src/mcp_russia/data/rosprirodnadzor/__init__.py
+src/mcp_russia/data/sovfed/__init__.py
+src/mcp_russia/data/publikatsii/__init__.py
+src/mcp_russia/data/roskomnadzor/__init__.py
+src/mcp_russia/data/gosduma/__init__.py
+src/mcp_russia/data/kad_arbitrazh/__init__.py
+src/mcp_russia/data/mchs/__init__.py
+src/mcp_russia/data/fssp/__init__.py
+src/mcp_russia/data/gibdd/__init__.py
+src/mcp_russia/data/cekrf/__init__.py
+src/mcp_russia/data/cbrf/__init__.py
+src/mcp_russia/data/rosgidromet/__init__.py
+src/mcp_russia/data/rosvodresursy/__init__.py
+src/mcp_russia/data/rosselkhoznadzor/__init__.py
+src/mcp_russia/agenty/redator/__init__.py
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data src/mcp_russia/agenty -name "__init__.py" -exec sed -i '' 's/from mcp_russia\._shared\.feature import MetaFunktsii as FeatureMeta$/from mcp_russia._shared.feature import MetaFunktsii/' {} \;
+(no output)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data src/mcp_russia/agenty -name "__init__.py" -exec sed -i '' 's/^FEATURE_META = /META_FUNKTSII = /' {} \;
+(no output)
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -40,17 +40,17 @@
+ @dataclass(frozen=True)
+ class MetaFunktsii:
+     """Декларативные метаданные функции.
+ 
+-    Каждая функция должна экспортировать экземпляр FEATURE_META в своём __init__.py.
++    Каждая функция должна экспортировать экземпляр META_FUNKTSII в своём __init__.py.
+     Реестр использует эти метаданные для обнаружения, валидации, документации
+     и решений во время выполнения (авторизация, флаги функций).
+ 
+     Пример:
+         # src/mcp_russia/rosstat/__init__.py
+         from mcp_russia._shared.feature import MetaFunktsii
+ 
+-        FEATURE_META = MetaFunktsii(
++        META_FUNKTSII = MetaFunktsii(
+             name="rosstat",
+             description="Росстат: демография, ВРП, социальные показатели",
+             api_base="https://rosstat.gov.ru/api",
+         )
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -92,9 +92,9 @@
+ 
+ Конвенция (все условия обязательны для автообнаружения):
+     1. Подпакет mcp_russia/ (директория с __init__.py)
+     2. Имя НЕ начинается с '_'
+-    3. __init__.py экспортирует FEATURE_META: MetaFunktsii
++    3. __init__.py экспортирует META_FUNKTSII: MetaFunktsii
+     4. server.py экспортирует mcp: FastMCP
+     5. Если requires_auth=True, auth_env_var должен быть задан в окружении
+ 
+ Для отключения функции: установите enabled=False в FEATURE_META.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -151,13 +151,13 @@
+ # Шаг 1: Импорт __init__.py функции
+ importiruyemyy_modul = importlib.import_module(module_path)
+ 
+ # Шаг 2: Проверка наличия и корректности FEATURE_META
+-meta = getattr(importiruyemyy_modul, "FEATURE_META", None)
++meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
+ if meta is None:
+-    raise ValueError(f"Нет FEATURE_META в {module_path}")
++    raise ValueError(f"Нет META_FUNKTSII в {module_path}")
+ if not isinstance(meta, MetaFunktsii):
+-    raise TypeError(f"FEATURE_META в {module_path} не является экземпляром MetaFunktsii")
++    raise TypeError(f"META_FUNKTSII в {module_path} не является экземпляром MetaFunktsii")
+ 
+ # Шаг 3: Проверка активности функции
+ if not meta.enabled:
+     self._skipped[short_name] = "отключена (enabled=False)"
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && grep -rn "FeatureMeta\|FEATURE_META\|RegisteredFeature\|FeatureRegistry\|FeatureError\|HttpClientError\|AuthError" src/ tests/ --include="*.py" | grep -v ".pyc\|__pycache__"
+src/mcp_russia/_shared/feature.py:4:Любой подпакет mcp_russia, экспортирующий FEATURE_META и содержащий
+src/mcp_russia/_shared/feature.py:90:    импортирует те, что следуют конвенции (FEATURE_META + server.mcp),
+src/mcp_russia/_shared/feature.py:100:    Для отключения функции: установите enabled=False в FEATURE_META.
+src/mcp_russia/_shared/feature.py:154:        # Шаг 2: Проверка наличия и корректности FEATURE_META
+src/mcp_russia/data/rosapi/__init__.py:13:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/minobrnauki/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/kaznacheistvo/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/minzdrav/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/zakupki/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/fns/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosreestr/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosaudit/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosstat/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rospotrebnadzor/__init__.py:6:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosprirodnadzor/__init__.py:6:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/sovfed/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/publikatsii/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/roskomnadzor/__init__.py:6:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/gosduma/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/kad_arbitrazh/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/mchs/__init__.py:6:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/fssp/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/gibdd/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/cekrf/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/cbrf/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosgidromet/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosvodresursy/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/data/rosselkhoznadzor/__init__.py:5:META_FUNKTSII = FeatureMeta(
+src/mcp_russia/agenty/redator/__init__.py:10:META_FUNKTSII = FeatureMeta(
+tests/_shared/test_feature.py:182:        registry._skipped["broken"] = "отсутствует FEATURE_META"
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -1,8 +1,8 @@
+ """Метаданные функций и автоматический реестр mcp-russia.
+ 
+ Модуль реализует автоматическое обнаружение функций на основе конвенции.
+-Любой подпакет mcp_russia, экспортирующий FEATURE_META и содержащий
++Любой подпакет mcp_russia, экспортирующий META_FUNKTSII и содержащий
+ server.py с объектом `mcp`, будет автоматически обнаружен,
+ провалидирован и смонтирован на корневой сервер.
+ 
+ Подход вдохновлён: Flask blueprints, Django app registry,
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -86,9 +86,9 @@
+ class ReyestrFunktsiy:
+     """Автоматический реестр: обнаружение, валидация и монтирование функций.
+ 
+     Использует pkgutil.iter_modules() для сканирования подпакетов mcp_russia,
+-    импортирует те, что следуют конвенции (FEATURE_META + server.mcp),
++    импортирует те, что следуют конвенции (META_FUNKTSII + server.mcp),
+     и монтирует их на корневой FastMCP-сервер.
+ 
+     Конвенция (все условия обязательны для автообнаружения):
+         1. Подпакет mcp_russia/ (директория с __init__.py)
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -96,9 +96,9 @@
+     3. __init__.py экспортирует META_FUNKTSII: MetaFunktsii
+     4. server.py экспортирует mcp: FastMCP
+     5. Если requires_auth=True, auth_env_var должен быть задан в окружении
+ 
+-Для отключения функции: установите enabled=False в FEATURE_META.
++Для отключения функции: установите enabled=False в META_FUNKTSII.
+ """
+ 
+ def __init__(self) -> None:
+     """Инициализация пустого реестра функций."""
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -150,9 +150,9 @@
+ """Попытка импорта и регистрации отдельной функции."""
+ # Шаг 1: Импорт __init__.py функции
+ importiruyemyy_modul = importlib.import_module(module_path)
+ 
+-# Шаг 2: Проверка наличия и корректности FEATURE_META
++# Шаг 2: Проверка наличия и корректности META_FUNKTSII
+ meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
+ if meta is None:
+     raise ValueError(f"Нет META_FUNKTSII в {module_path}")
+ if not isinstance(meta, MetaFunktsii):
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && find src/mcp_russia/data src/mcp_russia/agenty -name "__init__.py" -exec sed -i '' 's/FeatureMeta(/MetaFunktsii(/g' {} \;
+(no output)
+[0m
+[0m→ [0mRead tests/_shared/test_feature.py[90m [offset=1, limit=20][0m
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && sed -i '' 's/отсутствует FEATURE_META/отсутствует META_FUNKTSII/' tests/_shared/test_feature.py
+(no output)
+[0m
+[0m← [0mEdit src/mcp_russia/server.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+@@ -32,9 +32,9 @@
+ 
+ # ---------------------------------------------------------------------------
+ # Промежуточный слой — логирование запросов
+ # ---------------------------------------------------------------------------
+-class RequestLoggingMiddleware(Middleware):
++class PosrednikLogirovaniyaZaprosov(Middleware):
+     """Логирует все вызовы инструментов, чтения ресурсов и запросы промптов."""
+ 
+     async def pri_vyzove_instrumenta(
+         self,
+
+[0m
+[0m← [0mEdit src/mcp_russia/server.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+@@ -78,9 +78,9 @@
+ # Создание корневого сервера
+ mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
+ 
+ # Добавление промежуточного слоя
+-mcp.add_middleware(RequestLoggingMiddleware())
++mcp.add_middleware(PosrednikLogirovaniyaZaprosov())
+ 
+ # Автоматическое обнаружение и монтирование всех функций
+ registry = ReyestrFunktsiy()
+ registry.obnaruzhit("mcp_russia.data")
+
+[0m
+[0m← [0mEdit src/mcp_russia/server.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+@@ -173,9 +173,9 @@
+ 
+ # ---------------------------------------------------------------------------
+ # Трансформация поиска инструментов — настраивается через MCP_RUSSIA_TOOL_SEARCH
+ # ---------------------------------------------------------------------------
+-_always_visible = [
++_vsegda_vidimye = [
+     "spisok_funktsiy",
+     "rekomendovat_instrumenty",
+     "splanirovat_zapros",
+     "vypolnit_paket",
+
+[0m
+[0m← [0mEdit src/mcp_russia/server.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+@@ -186,9 +186,9 @@
+ 
+     mcp.add_transform(
+         BM25SearchTransform(
+             max_results=10,
+-            always_visible=_always_visible,
++            always_visible=_vsegda_vidimye,
+         )
+     )
+     logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
+ 
+@@ -217,9 +217,9 @@
+ 
+         mcp.add_transform(
+             BM25SearchTransform(
+                 max_results=10,
+-                always_visible=_always_visible,
++                always_visible=_vsegda_vidimye,
+             )
+         )
+ 
+ else:
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -21,9 +21,9 @@
+     from mcp_russia._shared.feature import ReyestrFunktsiy
+ 
+ logger = logging.getLogger(__name__)
+ 
+-_dispatch: dict[str, Any] = {}
++_dispetcher: dict[str, Any] = {}
+ 
+ 
+ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
+     """Построение отображения полных имён инструментов → асинхронные функции.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -30,11 +30,11 @@
+ 
+ Сканирует модули tools.py всех зарегистрированных функций, включая
+ вложенные подпакеты (напр., zakupki/sub-module).
+ """
+-global _dispatch
+-if _dispatch:
+-    return _dispatch
++global _dispetcher
++if _dispetcher:
++    return _dispetcher
+ 
+ for name, feat in registry.funktsii.items():
+     base = feat.module_path
+     _skanirovat_modul_instrumentov(base, name)
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -49,10 +49,10 @@
+                         _skanirovat_modul_instrumentov(sub_path, f"{name}_{sub_name}")
+         except Exception:
+             pass
+ 
+-    logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispatch))
+-    return _dispatch
++    logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispetcher))
++    return _dispetcher
+ 
+ 
+ def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
+     """Импорт модуля инструментов и регистрация его асинхронных функций."""
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -63,9 +63,9 @@
+ 
+     for fn_name, fn in inspect.getmembers(mod, inspect.iscoroutinefunction):
+         if not fn_name.startswith("_"):
+             key = f"{namespace}_{fn_name}"
+-            _dispatch[key] = fn
++            _dispetcher[key] = fn
+ 
+ 
+ async def vypolnit_paket_vnutrenniy(
+     queries: list[dict[str, Any]],
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -89,9 +89,9 @@
+ async def _vypolnit_odin(q: dict[str, Any]) -> tuple[str, str]:
+     """Выполнение одного инструмента из пакета."""
+     tool_name = q.get("tool", "")
+     args = q.get("args", {})
+-    fn = _dispatch.get(tool_name)
++    fn = _dispetcher.get(tool_name)
+ 
+     if fn is None:
+         return tool_name, f"Инструмент '{tool_name}' не найден."
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -11,9 +11,9 @@
+ from ..settings import ANTHROPIC_API_KEY
+ 
+ logger = logging.getLogger("mcp-russia.discovery")
+ 
+-_catalog_cache: str = ""
++_kesh_kataloga: str = ""
+ 
+ 
+ def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool: object) -> str:
+     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -57,11 +57,11 @@
+ 
+ Возвращает:
+     Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
+ """
+-global _catalog_cache
+-if _catalog_cache:
+-    return _catalog_cache
++global _kesh_kataloga
++if _kesh_kataloga:
++    return _kesh_kataloga
+ 
+ lines: list[str] = []
+ features = getattr(registry, "funktsii", {})
+ for feat in features.values():
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -82,10 +82,10 @@
+         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
+             for tool_name, tool in server._tool_manager._tools.items():
+                 lines.append(_formatirovat_signaturu_instrumenta(meta.name, tool_name, tool))
+ 
+-    _catalog_cache = "\n".join(lines)
+-    return _catalog_cache
++    _kesh_kataloga = "\n".join(lines)
++    return _kesh_kataloga
+ 
+ 
+ async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
+     """Вызов API Anthropic для рекомендации инструментов по запросу пользователя.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/planner.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
+@@ -89,9 +89,9 @@
+ 
+         return "\n".join(lines)
+ 
+ 
+-_SYSTEM_PROMPT = """\
++_SISTEMNYY_PROMPT = """\
+ Ты строишь планы запросов для mcp-russia. Каталог ниже может содержать
+ исторические названия модулей и инструментов, которые пока сохранены ради
+ совместимости. Твоя задача: по вопросу пользователя и каталогу инструментов
+ собрать структурированный план выполнения.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/planner.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/planner.py
+@@ -246,9 +246,9 @@
+         "В качестве альтернативы используйте инструмент 'search_tools'."
+     )
+ 
+ client = anthropic.AsyncAnthropic(api_key=api_key)
+-system_prompt = _SYSTEM_PROMPT.format(catalog=catalog)
++system_prompt = _SISTEMNYY_PROMPT.format(catalog=catalog)
+ 
+ try:
+     response = await client.messages.create(
+         model="claude-haiku-4-5-20251001",
+
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[x] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[x] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[x] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[x] Russify infrastructure names: RequestLoggingMiddleware→PosrednikLogirovaniyaZaprosov, _dispatch→_dispetcher, _catalog_cache→_kesh_kataloga, _SYSTEM_PROMPT→_SISTEMNYY_PROMPT, _always_visible→_vsegda_vidimye, _RETRYABLE_STATUS_CODES→_KODY_STATUSOV_DLYA_POVTORA
+[ ] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead cliff.toml
+[0m→ [0mRead CONTRIBUTING.md
+[0m→ [0mRead pyproject.toml
+[0m
+[0m← [0mEdit cliff.toml
+Index: /Users/denis/programming/autowork/mcp-russia/cliff.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/cliff.toml
++++ /Users/denis/programming/autowork/mcp-russia/cliff.toml
+@@ -2,9 +2,9 @@
+ # https://git-cliff.org/docs/configuration
+ 
+ [changelog]
+ header = """
+-# Changelog
++# Журнал изменений
+ 
+ Все заметные изменения mcp-russia документированы в этом файле.\n
+ """
+ 
+
+[0m
+[0m← [0mEdit cliff.toml
+Index: /Users/denis/programming/autowork/mcp-russia/cliff.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/cliff.toml
++++ /Users/denis/programming/autowork/mcp-russia/cliff.toml
+@@ -11,9 +11,9 @@
+ body = """
+ {% if version -%}
+     ## [{{ version | trim_start_matches(pat="v") }}] - {{ timestamp | date(format="%Y-%m-%d") }}
+ {% else -%}
+-    ## [Unreleased]
++    ## [Не выпущено]
+ {% endif -%}
+ 
+ {% for group, commits in commits | group_by(attribute="group") %}
+     ### {{ group | striptags | trim | upper_first }}
+
+[0m
+[0m← [0mEdit cliff.toml
+Index: /Users/denis/programming/autowork/mcp-russia/cliff.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/cliff.toml
++++ /Users/denis/programming/autowork/mcp-russia/cliff.toml
+@@ -35,19 +35,19 @@
+ conventional_commits = true
+ filter_unconventional = true
+ split_commits = false
+ commit_parsers = [
+-    { message = "^feat", group = "Features" },
+-    { message = "^fix", group = "Bug Fixes" },
+-    { message = "^doc", group = "Documentation" },
+-    { message = "^perf", group = "Performance" },
+-    { message = "^refactor", group = "Refactoring" },
+-    { message = "^style", group = "Styling" },
+-    { message = "^test", group = "Testing" },
++    { message = "^feat", group = "Новые функции" },
++    { message = "^fix", group = "Исправления" },
++    { message = "^doc", group = "Документация" },
++    { message = "^perf", group = "Производительность" },
++    { message = "^refactor", group = "Рефакторинг" },
++    { message = "^style", group = "Стиль кода" },
++    { message = "^test", group = "Тестирование" },
+     { message = "^chore\\(release\\)", skip = true },
+-    { message = "^chore", group = "Miscellaneous" },
++    { message = "^chore", group = "Прочее" },
+     { message = "^ci", group = "CI/CD" },
+-    { message = "^build", group = "Build" },
++    { message = "^build", group = "Сборка" },
+ ]
+ filter_commits = false
+ topo_order = false
+ sort_commits = "oldest"
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -34,9 +34,9 @@
+ 1. Создайте каталог `src/mcp_russia/data/{feature}/` (API) или `src/mcp_russia/agenty/{feature}/` (агенты) с обязательными файлами:
+ 
+ ```
+ src/mcp_russia/data/{feature}/      # или agenty/{feature}/
+-├── __init__.py     # FEATURE_META (обязательно для auto-discovery)
++├── __init__.py     # META_FUNKTSII (обязательно для автообнаружения)
+ ├── server.py       # mcp: FastMCP (обязательно)
+ ├── tools.py        # Функции MCP tools
+ ├── client.py       # Асинхронный HTTP-клиент
+ ├── schemas.py      # Pydantic-модели
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -36,9 +36,9 @@
+ ```
+ src/mcp_russia/data/{feature}/      # или agenty/{feature}/
+ ├── __init__.py     # META_FUNKTSII (обязательно для автообнаружения)
+ ├── server.py       # mcp: FastMCP (обязательно)
+-├── tools.py        # Функции MCP tools
++├── tools.py        # Функции MCP-инструментов
+ ├── client.py       # Асинхронный HTTP-клиент
+ ├── schemas.py      # Pydantic-модели
+ └── constants.py    # URL, enum, коды
+ ```
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -42,14 +42,14 @@
+ ├── schemas.py      # Pydantic-модели
+ └── constants.py    # URL, enum, коды
+ ```
+ 
+-2. В `__init__.py` определите `FEATURE_META`:
++2. В `__init__.py` определите `META_FUNKTSII`:
+ 
+ ```python
+-from mcp_russia._shared.feature import FeatureMeta
++from mcp_russia._shared.feature import MetaFunktsii
+ 
+-FEATURE_META = FeatureMeta(
++META_FUNKTSII = MetaFunktsii(
+     name="primer-feature",
+     description="Короткое описание API",
+     version="0.1.0",
+     api_base="https://api.example.gov.ru",
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -107,9 +107,9 @@
+ ### Инварианты
+ 
+ 1. Корневой `server.py` не правится без крайней необходимости — auto-registry делает остальное
+ 2. `tools.py` не делает HTTP-запросы — делегирует в `client.py`
+-3. `client.py` не форматирует ответы для LLM — возвращает Pydantic models
++3. `client.py` не форматирует ответы для LLM — возвращает модели Pydantic
+ 4. `schemas.py` без бизнес-логики — только модели
+ 5. `server.py` модуля только регистрирует — без предметной логики
+ 6. `constants.py` не импортирует другие модули проекта
+ 7. У каждой tool есть docstring — LLM использует ее при выборе вызова
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -111,9 +111,9 @@
+ 3. `client.py` не форматирует ответы для LLM — возвращает модели Pydantic
+ 4. `schemas.py` без бизнес-логики — только модели
+ 5. `server.py` модуля только регистрирует — без предметной логики
+ 6. `constants.py` не импортирует другие модули проекта
+-7. У каждой tool есть docstring — LLM использует ее при выборе вызова
++7. У каждого инструмента есть docstring — LLM использует её при выборе вызова
+ 8. Везде async — `async def` в tools и clients
+ 9. Полные type hints во всех функциях
+ 
+ ## Технологии
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -130,9 +130,9 @@
+ ## Тесты
+ 
+ ```bash
+ make test                 # Все тесты
+-make test-feature F=cbrf  # Тесты одной feature
++make test-feature F=cbrf  # Тесты одного модуля
+ make lint                 # ruff check + format check
+ make types                # mypy strict
+ make ci                   # lint + types + test
+ ```
+
+[0m
+[0m← [0mEdit CONTRIBUTING.md
+Index: /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
++++ /Users/denis/programming/autowork/mcp-russia/CONTRIBUTING.md
+@@ -217,9 +217,9 @@
+ | Ситуация | Bump | Пример |
+ |----------|------|---------|
+ | Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
+ | Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): handle timeout` |
+-| Breaking change (переименование tools, изменение API) | **major** | refactor, ломающий клиентов |
++| Критическое изменение (переименование инструментов, изменение API) | **major** | refactor, ломающий клиентов |
+ | Только docs, тесты, внутренний refactor | **нет** | Релиз не обязателен |
+ 
+ ### Как сделать релиз
+ 
+
+[0m
+[0m← [0mEdit pyproject.toml
+Index: /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/pyproject.toml
++++ /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+@@ -80,9 +80,9 @@
+ [tool.ruff.lint]
+ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ 
+ [tool.ruff.lint.per-file-ignores]
+-# Russian text naturally contains Cyrillic characters that RUF001/RUF002 flags
++# Русский текст содержит кириллические символы, которые RUF001/RUF002 помечает
+ "src/mcp_russia/data/rosapi/*" = ["RUF001", "RUF002"]
+ "src/mcp_russia/data/cbrf/*" = ["RUF001", "RUF002"]
+ "src/mcp_russia/data/rosstat/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+ "src/mcp_russia/data/gosduma/*" = ["RUF001", "RUF002"]
+
+[0m
+[0m← [0mEdit pyproject.toml
+Index: /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/pyproject.toml
++++ /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+@@ -90,9 +90,9 @@
+ "src/mcp_russia/agenty/redator/*" = ["RUF001", "RUF002"]
+ "src/mcp_russia/_shared/*" = ["RUF001", "RUF002", "RUF003"]
+ "tests/agenty/redator/*" = ["RUF001", "RUF002"]
+ "tests/_shared/*" = ["RUF001", "RUF002", "RUF003"]
+-# Russian modules with Cyrillic text
++# Российские модули с кириллическим текстом
+ "src/mcp_russia/data/zakupki/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+ "src/mcp_russia/data/minzdrav/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+ "src/mcp_russia/data/kad_arbitrazh/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+ "src/mcp_russia/data/rosaudit/*" = ["RUF001", "RUF002", "RUF003", "E501"]
+
+[0m
+[0m← [0mEdit pyproject.toml
+Index: /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/pyproject.toml
++++ /Users/denis/programming/autowork/mcp-russia/pyproject.toml
+@@ -149,9 +149,9 @@
+ [tool.pytest.ini_options]
+ testpaths = ["tests"]
+ asyncio_mode = "auto"
+ 
+-# --- Release ---
++# --- Релиз ---
+ 
+ [tool.semantic_release]
+ version_toml = ["pyproject.toml:project.version"]
+ commit_parser = "conventional"
+
+[0m
+[0m→ [0mRead CHANGELOG.md[90m [limit=5][0m
+[0m
+[0m← [0mEdit CHANGELOG.md
+Index: /Users/denis/programming/autowork/mcp-russia/CHANGELOG.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/CHANGELOG.md
++++ /Users/denis/programming/autowork/mcp-russia/CHANGELOG.md
+@@ -1,5 +1,5 @@
+-# Changelog
++# Журнал изменений
+ 
+ Все заметные изменения mcp-russia документируются в этом файле.
+ 
+ > **Примечание:** записи до версии 0.5.0 относятся к периоду, когда проект ещё содержал бразильские legacy-модули. Все эти модули удалены из кодовой базы (см. TODO.md). Записи с пометкой `(legacy)` описывают модули, которые больше не существуют.
+
+[0m
+[0m→ [0mRead README.md[90m [limit=40, offset=30][0m
+[0m
+[0m← [0mEdit README.md
+Index: /Users/denis/programming/autowork/mcp-russia/README.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/README.md
++++ /Users/denis/programming/autowork/mcp-russia/README.md
+@@ -29,9 +29,9 @@
+ - Базовый класс исключений: `McpRussiaError` (устаревший `McpBrasilError` удалён).
+ - 24 российских модуля данных, подключённых к реальным API-интеграциям.
+ - Все 27 legacy-модулей с бразильскими данными удалены из кодовой базы.
+ - Устранены deprecated-алиасы: `format_brl`, `format_number_br`, `parse_brl_number` удалены.
+-- Устранены Brazilian validators: `validate_cpf`, `validate_cnpj`, `validate_cep` удалены.
++- Устранены бразильские валидаторы: `validate_cpf`, `validate_cnpj`, `validate_cep` удалены.
+ - Российские модули: ЦБ РФ (cbr-xml-daily.ru), Росгидромет (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru).
+ - Универсальный инструмент Росстата `indikator_dannye` для запроса данных по произвольному коду ЕМИСС.
+ - Инструменты отраслевой структуры ВРП (`otraslevaya_struktura_vrp`) и инвестиций по видам деятельности (`investitsii_po_vidam`).
+ 
+
+[0m
+[0m• [0mFix docs English artifacts[90m General Agent[0m
+[0m✓ [0mFix docs English artifacts[90m General Agent[0m
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[x] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[x] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[x] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[x] Russify infrastructure names: RequestLoggingMiddleware→PosrednikLogirovaniyaZaprosov, _dispatch→_dispetcher, _catalog_cache→_kesh_kataloga, _SYSTEM_PROMPT→_SISTEMNYY_PROMPT, _always_visible→_vsegda_vidimye, _RETRYABLE_STATUS_CODES→_KODY_STATUSOV_DLYA_POVTORA
+[x] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[ ] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && python -m ruff check src/ 2>&1 | tail -20
+/bin/sh: python: command not found
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && which python3 && python3 -m ruff check src/ 2>&1 | tail -30
+/opt/homebrew/bin/python3
+/opt/homebrew/opt/python@3.14/bin/python3.14: No module named ruff
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/ruff check src/ 2>&1 | tail -30
+|
+help: Organize imports
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/mcp_russia/data/kad_arbitrazh/client.py:11:1
+   |
+ 9 |   """
+10 |
+11 | / from __future__ import annotations
+12 | |
+13 | | import contextlib
+14 | | from typing import Any
+15 | |
+16 | | from mcp_russia._shared.http_client import http_poluchit, http_otpravit
+17 | |
+18 | | from .constants import (
+19 | |     INSTANTSII_SUDOV,
+20 | |     KATEGORII_DEL,
+21 | |     KATEGORII_KAD,
+22 | |     STATUSY_DEL,
+23 | |     SUDY_PRYAMYE,
+24 | |     TIPLY_AKTOV,
+25 | | )
+26 | | from .schemas import StoronaDela, SudebnoeDelo, SudebnoeZasedanie, SudebnyyAkt, Sudy
+   | |____________________________________________________________________________________^
+   |
+help: Organize imports
+
+Found 4 errors.
+[*] 4 fixable with the `--fix` option.
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/ruff check src/ 2>&1 | head -30
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/mcp_russia/data/cekrf/client.py:15:1
+   |
+13 |   """
+14 |
+15 | / from __future__ import annotations
+16 | |
+17 | | import logging
+18 | | import re
+19 | | from html.parser import HTMLParser
+20 | | from typing import Any
+21 | |
+22 | | from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit
+23 | |
+24 | | from .constants import (
+25 | |     CIK_API_BASE,
+26 | |     DOLZHNOSTI_FEDERAL,
+27 | |     GODY_VYBOROV,
+28 | |     IZBIRATELNYY_KOD_REGIONA,
+29 | |     IZVESTNYE_VYBORY,
+30 | |     PARTII_RF,
+31 | |     SUBYEKTY_RF,
+32 | |     TIPOVY_VYBORY,
+33 | |     VYBORY_API,
+34 | |     VYBORY_API_BASE,
+35 | | )
+36 | | from .schemas import (
+37 | |     Dolzhnost,
+38 | |     Kandidat,
+39 | |     KandidatKratko,
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/ruff check --fix src/ 2>&1
+Found 4 errors (4 fixed, 0 remaining).
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/ruff format src/ 2>&1 | tail -5
+216 files left unchanged
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/ -x -q 2>&1 | tail -30
+E
+==================================== ERRORS ====================================
+________ ERROR at setup of TestBuildDispatch.test_builds_from_registry _________
+
+    @pytest.fixture(autouse=True)
+    def _reset_dispatch() -> None:
+        """Очищает таблицу диспетчеризации перед каждым тестом."""
+>       batch._dispatch.clear()
+        ^^^^^^^^^^^^^^^
+E       AttributeError: module 'mcp_russia._shared.batch' has no attribute '_dispatch'. Did you mean: '_dispetcher'?
+
+tests/_shared/test_batch.py:21: AttributeError
+=========================== short test summary info ============================
+ERROR tests/_shared/test_batch.py::TestBuildDispatch::test_builds_from_registry
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 error in 7.34s
+[0m
+[0m→ [0mRead tests/_shared/test_batch.py
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -17,9 +17,9 @@
+ 
+ @pytest.fixture(autouse=True)
+ def _reset_dispatch() -> None:
+     """Очищает таблицу диспетчеризации перед каждым тестом."""
+-    batch._dispatch.clear()
++    batch._dispetcher.clear()
+ 
+ 
+ class TestBuildDispatch:
+     def test_builds_from_registry(self) -> None:
+
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -69,9 +69,9 @@
+ 
+ async def _spec(ctx: object, param: str) -> str: ...
+ 
+ mock_fn = AsyncMock(spec=_spec, return_value="rezultat ok")
+-batch._dispatch["test_tool"] = mock_fn
++batch._dispetcher["test_tool"] = mock_fn
+ 
+ ctx = _mock_ctx()
+ result = await batch.vypolnit_paket_vnutrenniy(
+     [{"tool": "test_tool", "args": {"param": "value"}}], ctx
+
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -85,9 +85,9 @@
+ 
+ async def no_ctx_tool(name: str) -> str:
+     return f"hello {name}"
+ 
+-batch._dispatch["greet"] = no_ctx_tool
++batch._dispetcher["greet"] = no_ctx_tool
+ 
+ ctx = _mock_ctx()
+ result = await batch.vypolnit_paket_vnutrenniy(
+     [{"tool": "greet", "args": {"name": "world"}}], ctx
+
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -103,9 +103,9 @@
+     nonlocal call_count
+     call_count += 1
+     return f"result-{n}"
+ 
+-batch._dispatch["counter"] = counting_tool
++batch._dispetcher["counter"] = counting_tool
+ 
+ ctx = _mock_ctx()
+ result = await batch.vypolnit_paket_vnutrenniy(
+     [
+
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -127,9 +127,9 @@
+ async def failing_tool() -> str:
+     msg = "API timeout"
+     raise TimeoutError(msg)
+ 
+-batch._dispatch["fail"] = failing_tool
++batch._dispetcher["fail"] = failing_tool
+ 
+ ctx = _mock_ctx()
+ result = await batch.vypolnit_paket_vnutrenniy([{"tool": "fail", "args": {}}], ctx)
+ assert "Ошибка" in result
+
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -145,10 +145,10 @@
+ async def bad_tool() -> str:
+     msg = "oops"
+     raise ValueError(msg)
+ 
+-batch._dispatch["ok"] = ok_tool
+-batch._dispatch["bad"] = bad_tool
++batch._dispetcher["ok"] = ok_tool
++batch._dispetcher["bad"] = bad_tool
+ 
+ ctx = _mock_ctx()
+ result = await batch.vypolnit_paket_vnutrenniy(
+     [
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/ -x -q 2>&1 | tail -20
+(no output)
+
+<bash_metadata>
+bash tool terminated command after exceeding timeout 180000 ms. If this command is expected to take longer and is not waiting for interactive input, retry with a larger timeout value in milliseconds.
+</bash_metadata>
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/_shared/ -x -q 2>&1 | tail -20
+........................................................................ [ 54%]
+...................................s.........................            [100%]
+132 passed, 1 skipped in 3.94s
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/test_discovery.py tests/test_root_server.py tests/test_public_namespace.py -x -q 2>&1 | tail -10
+>       assert result == "cached"
+E       AssertionError: assert '' == 'cached'
+E         
+E         - cached
+
+tests/test_discovery.py:95: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_discovery.py::TestBuildCatalog::test_postroit_katalog_caches_result
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 5 passed in 3.38s
+[0m
+[0m→ [0mRead tests/test_discovery.py[90m [limit=30, offset=80][0m
+[0m
+[0m← [0mEdit tests/test_discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/test_discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/test_discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/test_discovery.py
+@@ -89,9 +89,9 @@
+ mock_registry = MagicMock()
+ mock_registry.funktsii = {}
+ postroit_katalog(mock_registry)
+ 
+-disc._catalog_cache = "cached"
++disc._kesh_kataloga = "cached"
+ result = postroit_katalog(mock_registry)
+ assert result == "cached"
+ 
+ 
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/test_discovery.py tests/test_root_server.py tests/test_public_namespace.py -x -q 2>&1 | tail -10
+.......................................                                  [100%]
+39 passed in 4.88s
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/data/ -x -q 2>&1 | tail -10
+........................................................................ [ 15%]
+........................................................................ [ 30%]
+........................................................................ [ 45%]
+........................................................................ [ 60%]
+........................................................................ [ 75%]
+........................................................................ [ 91%]
+..........................................                               [100%]
+474 passed in 201.82s (0:03:21)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/agenty/ -x -q 2>&1 | tail -10
+...................................                                      [100%]
+35 passed in 2.90s
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m mypy src/ --no-error-summary 2>&1 | tail -20
+src/mcp_russia/data/rosapi/tools.py:166: error: Item "dict[str, str]" of "Organizatsiya | dict[str, str]" has no attribute "kpp"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:167: error: Item "dict[str, str]" of "Organizatsiya | dict[str, str]" has no attribute "kpp"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:168: error: Item "dict[str, str]" of "Organizatsiya | dict[str, str]" has no attribute "adres"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:169: error: Item "dict[str, str]" of "Organizatsiya | dict[str, str]" has no attribute "adres"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:232: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "nazvanie"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:233: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "bik"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:235: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "nazvanie_kratkoe"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:236: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "nazvanie_kratkoe"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:237: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "gorod"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:238: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "gorod"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:239: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "svift"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:240: error: Item "dict[str, str]" of "BankRF | dict[str, str]" has no attribute "svift"  [union-attr]
+src/mcp_russia/data/rosapi/tools.py:258: error: Item "None" of "Context | None" has no attribute "info"  [union-attr]
+src/mcp_russia/data/gibdd/tools.py:129: error: Missing type parameters for generic type "tuple"  [type-arg]
+src/mcp_russia/data/gibdd/tools.py:139: error: Returning Any from function declared to return "tuple[Any, ...]"  [no-any-return]
+src/mcp_russia/data/fns/tools.py:23: error: Missing type parameters for generic type "dict"  [type-arg]
+src/mcp_russia/data/fns/tools.py:32: error: Missing type parameters for generic type "dict"  [type-arg]
+src/mcp_russia/data/fns/tools.py:41: error: Missing type parameters for generic type "dict"  [type-arg]
+src/mcp_russia/data/fns/tools.py:50: error: Missing type parameters for generic type "dict"  [type-arg]
+src/mcp_russia/data/fns/tools.py:59: error: Missing type parameters for generic type "dict"  [type-arg]
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && .venv/bin/python -m pytest tests/_shared/ tests/test_discovery.py tests/test_root_server.py tests/test_public_namespace.py tests/data/ tests/agenty/ -q 2>&1 | tail -5
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 95%]
+.................................                                        [100%]
+680 passed, 1 skipped in 172.04s (0:02:52)
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[x] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[x] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[x] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[x] Russify infrastructure names: RequestLoggingMiddleware→PosrednikLogirovaniyaZaprosov, _dispatch→_dispetcher, _catalog_cache→_kesh_kataloga, _SYSTEM_PROMPT→_SISTEMNYY_PROMPT, _always_visible→_vsegda_vidimye, _RETRYABLE_STATUS_CODES→_KODY_STATUSOV_DLYA_POVTORA
+[x] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[x] Run checks/tests
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead TODO.md[90m [limit=65][0m
+[0m
+[0m← [0mEdit TODO.md
+Index: /Users/denis/programming/autowork/mcp-russia/TODO.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/TODO.md
++++ /Users/denis/programming/autowork/mcp-russia/TODO.md
+@@ -1,8 +1,65 @@
+ # TODO
+ 
+ Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
+ 
++## Статус раунда 2026-06-24 (пятьдесят первый проход — русификация HTTP-клиента, зачистка алиасов, переименование констант)
++
++### Выполнено
++
++- **Русификация HTTP-клиента** (3 функции + 24 импорта):
++  - `create_client` → `sozdat_klienta` (http_client.py)
++  - `http_get` → `http_poluchit` (http_client.py)
++  - `http_post` → `http_otpravit` (http_client.py)
++  - Обновлены импорты и вызовы в 24 client.py, cache.py (docstring), test_http_client.py
++- **Удаление мёртвых алиасов** (5 алиасов, 0 внешних использований):
++  - `FeatureError = OshibkaFunktsii` удалён (exceptions.py)
++  - `HttpClientError = OshibkaHttpClienta` удалён (exceptions.py)
++  - `AuthError = OshibkaAutentifikatsii` удалён (exceptions.py)
++  - `FeatureMeta = MetaFunktsii` удалён (feature.py)
++  - `RegisteredFeature = ZaregistrirovannayaFunktsiya` удалён (feature.py)
++  - `FeatureRegistry = ReyestrFunktsiy` удалён (feature.py)
++- **Зачистка импортов FeatureMeta** (25 __init__.py):
++  - `from mcp_russia._shared.feature import MetaFunktsii as FeatureMeta` → `from mcp_russia._shared.feature import MetaFunktsii`
++  - `FeatureMeta(` → `MetaFunktsii(` во всех 25 __init__.py
++- **Переименование FEATURE_META → META_FUNKTSII** (25 __init__.py + feature.py):
++  - Константа `FEATURE_META` → `META_FUNKTSII` во всех 25 __init__.py модулей
++  - Обновлены ссылки в feature.py: getattr, сообщения об ошибках, docstring
++  - Обновлена ссылка в tests/_shared/test_feature.py
++- **Русификация инфраструктурных имён** (6 замен):
++  - `RequestLoggingMiddleware` → `PosrednikLogirovaniyaZaprosov` (server.py)
++  - `_RETRYABLE_STATUS_CODES` → `_KODY_STATUSOV_DLYA_POVTORA` (http_client.py)
++  - `_dispatch` → `_dispetcher` (batch.py + test_batch.py)
++  - `_catalog_cache` → `_kesh_kataloga` (discovery.py + test_discovery.py)
++  - `_SYSTEM_PROMPT` → `_SISTEMNYY_PROMPT` (planner.py)
++  - `_always_visible` → `_vsegda_vidimye` (server.py)
++- **Русификация документации** (~20 замен в 8 файлах):
++  - cliff.toml: `# Changelog` → `# Журнал изменений`, `## [Unreleased]` → `## [Не выпущено]`, 8 group names (Features→Новые функции, Bug Fixes→Исправления, Documentation→Документация, Performance→Производительность, Refactoring→Рефакторинг, Styling→Стиль кода, Testing→Тестирование, Miscellaneous→Прочее, Build→Сборка)
++  - CONTRIBUTING.md: `FEATURE_META` → `META_FUNKTSII`, `FeatureMeta` → `MetaFunktsii`, `MCP tools` → `MCP-инструментов`, `Pydantic models` → `модели Pydantic`, `tool` → `инструмент`, `feature` → `модуль`, `auto-discovery` → `автообнаружения`, `Breaking change` → `Критическое изменение`
++  - pyproject.toml: 3 английских комментария → русские
++  - CHANGELOG.md: `# Changelog` → `# Журнал изменений`
++  - README.md: `Brazilian validators` → `бразильские валидаторы`
++  - docs/guide/development.md: `test suite` → `набор тестов`, `quality gate` → `контроль качества`
++  - docs/guide/adding-features.md: `auto-discovery` → `автообнаружение`, `root server` → `корневой сервер`
++  - docs/concepts/architecture.md: `root server` → `корневой сервер`, `tool-call` → `вызовов инструментов`
++  - docs/reference/smart-tools.md: `tool calls` → `вызовов инструментов`, `round-trips` → `обменов`, `tool name` → `имя инструмента`, `Tool` → `Инструмент`
++  - docs/examples/ofitsialnyy-redaktor.md: `resource` → `ресурс`
++- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
++
++### Ключевые архитектурные решения
++
++- **HTTP-клиент полностью русифицирован**: `create_client` → `sozdat_klienta`, `http_get` → `http_poluchit`, `http_post` → `http_otpravit` — основные HTTP-функции теперь имеют русские имена; обновлены все 24 клиента данных
++- **Все мёртвые алиасы удалены**: `FeatureError`, `HttpClientError`, `AuthError`, `FeatureMeta`, `RegisteredFeature`, `FeatureRegistry` — 0 внешних использований, чистое удаление без алиасов
++- **FEATURE_META → META_FUNKTSII**: константа переименована, алиас `FeatureMeta` убран — все 25 __init__.py теперь используют `MetaFunktsii` напрямую
++- **cliff.toml русифицирован**: при следующей генерации CHANGELOG.md группы секций будут на русском
++
++### Следующие действия
++
++- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
++- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
++- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
++- **Русификация оставшихся английских артефактов**: `McpRussiaError` (базовый класс исключений), поля dataclass MetaFunktsii (`name`, `description`, `version`, `api_base`, `requires_auth`, `auth_env_var`, `enabled`, `tags`), английские имена тестовых классов/функций (~47 классов, ~176 функций), `"error"` ключи словарей (5 модулей), параметры функций (`postal_code`, `max_requests`, `tool_name`, `tool`)
++
+ ## Статус раунда 2026-06-24 (пятидесятый проход — полная русификация имён функций, методов, классов инфраструктуры)
+ 
+ ### Выполнено
+ 
+
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[x] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[x] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[x] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[x] Russify infrastructure names: RequestLoggingMiddleware→PosrednikLogirovaniyaZaprosov, _dispatch→_dispetcher, _catalog_cache→_kesh_kataloga, _SYSTEM_PROMPT→_SISTEMNYY_PROMPT, _always_visible→_vsegda_vidimye, _RETRYABLE_STATUS_CODES→_KODY_STATUSOV_DLYA_POVTORA
+[x] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[x] Run checks/tests
+[x] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git status
+Текущая ветка: main
+Эта ветка соответствует «origin/main».
+
+Изменения, которые не в индексе для коммита:
+  (используйте «git add <файл>...», чтобы добавить файл в индекс)
+  (используйте «git restore <файл>...», чтобы отменить изменения в рабочем каталоге)
+	изменено:      CHANGELOG.md
+	изменено:      CONTRIBUTING.md
+	изменено:      README.md
+	изменено:      TODO.md
+	изменено:      autowork.log
+	изменено:      cliff.toml
+	изменено:      docs/concepts/architecture.md
+	изменено:      docs/examples/ofitsialnyy-redaktor.md
+	изменено:      docs/guide/adding-features.md
+	изменено:      docs/guide/development.md
+	изменено:      docs/reference/smart-tools.md
+	изменено:      pyproject.toml
+	изменено:      src/mcp_russia/_shared/batch.py
+	изменено:      src/mcp_russia/_shared/cache.py
+	изменено:      src/mcp_russia/_shared/discovery.py
+	изменено:      src/mcp_russia/_shared/feature.py
+	изменено:      src/mcp_russia/_shared/http_client.py
+	изменено:      src/mcp_russia/_shared/planner.py
+	изменено:      src/mcp_russia/agenty/redator/__init__.py
+	изменено:      src/mcp_russia/data/cbrf/__init__.py
+	изменено:      src/mcp_russia/data/cbrf/client.py
+	изменено:      src/mcp_russia/data/cekrf/__init__.py
+	изменено:      src/mcp_russia/data/cekrf/client.py
+	изменено:      src/mcp_russia/data/fns/__init__.py
+	изменено:      src/mcp_russia/data/fns/client.py
+	изменено:      src/mcp_russia/data/fssp/__init__.py
+	изменено:      src/mcp_russia/data/fssp/client.py
+	изменено:      src/mcp_russia/data/gibdd/__init__.py
+	изменено:      src/mcp_russia/data/gibdd/client.py
+	изменено:      src/mcp_russia/data/gosduma/__init__.py
+	изменено:      src/mcp_russia/data/gosduma/client.py
+	изменено:      src/mcp_russia/data/kad_arbitrazh/__init__.py
+	изменено:      src/mcp_russia/data/kad_arbitrazh/client.py
+	изменено:      src/mcp_russia/data/kaznacheistvo/__init__.py
+	изменено:      src/mcp_russia/data/kaznacheistvo/client.py
+	изменено:      src/mcp_russia/data/mchs/__init__.py
+	изменено:      src/mcp_russia/data/mchs/client.py
+	изменено:      src/mcp_russia/data/minobrnauki/__init__.py
+	изменено:      src/mcp_russia/data/minobrnauki/client.py
+	изменено:      src/mcp_russia/data/minzdrav/__init__.py
+	изменено:      src/mcp_russia/data/minzdrav/client.py
+	изменено:      src/mcp_russia/data/publikatsii/__init__.py
+	изменено:      src/mcp_russia/data/publikatsii/client.py
+	изменено:      src/mcp_russia/data/rosapi/__init__.py
+	изменено:      src/mcp_russia/data/rosapi/client.py
+	изменено:      src/mcp_russia/data/rosaudit/__init__.py
+	изменено:      src/mcp_russia/data/rosaudit/client.py
+	изменено:      src/mcp_russia/data/rosgidromet/__init__.py
+	изменено:      src/mcp_russia/data/rosgidromet/client.py
+	изменено:      src/mcp_russia/data/roskomnadzor/__init__.py
+	изменено:      src/mcp_russia/data/roskomnadzor/client.py
+	изменено:      src/mcp_russia/data/rospotrebnadzor/__init__.py
+	изменено:      src/mcp_russia/data/rospotrebnadzor/client.py
+	изменено:      src/mcp_russia/data/rosprirodnadzor/__init__.py
+	изменено:      src/mcp_russia/data/rosprirodnadzor/client.py
+	изменено:      src/mcp_russia/data/rosreestr/__init__.py
+	изменено:      src/mcp_russia/data/rosreestr/client.py
+	изменено:      src/mcp_russia/data/rosselkhoznadzor/__init__.py
+	изменено:      src/mcp_russia/data/rosselkhoznadzor/client.py
+	изменено:      src/mcp_russia/data/rosstat/__init__.py
+	изменено:      src/mcp_russia/data/rosstat/client.py
+	изменено:      src/mcp_russia/data/rosvodresursy/__init__.py
+	изменено:      src/mcp_russia/data/rosvodresursy/client.py
+	изменено:      src/mcp_russia/data/sovfed/__init__.py
+	изменено:      src/mcp_russia/data/sovfed/client.py
+	изменено:      src/mcp_russia/data/zakupki/__init__.py
+	изменено:      src/mcp_russia/data/zakupki/client.py
+	изменено:      src/mcp_russia/exceptions.py
+	изменено:      src/mcp_russia/server.py
+	изменено:      tests/_shared/test_batch.py
+	изменено:      tests/_shared/test_feature.py
+	изменено:      tests/_shared/test_http_client.py
+	изменено:      tests/test_discovery.py
+
+индекс пуст (используйте «git add» и/или «git commit -a»)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git log --oneline -5
+2689037 Русификация ~198 имён функций/методов во всех модулях: _parse_*→_razobrat_*, get_*_list→poluchit_spisok_*, _shared/ инфраструктура, FeatureMeta→MetaFunktsii (с алиасами)
+e6486df Русификация имён классов (исключения, Pydantic-схемы, TTLCache, RateLimiter), функций (_shared, _extract_list), переменных, строковых значений, Makefile-заголовков и скриптов
+b71f32d Устранение термина «feature» из промптов/документации, русификация Makefile-комментариев, внутренних переменных
+6ac09be Русификация полей Pydantic-схем (~67 замен), ключей constants.py (~1915 замен), параметров функций (~60+ замен) — полная координация schemas/constants/client/tools/tests
+b49df03 Русификация документации: feature→модуль, tools→инструменты, Prompt:→Промпт:, английские заголовки (~140 замен в 16 файлах)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git diff --stat
+CHANGELOG.md                                     |   2 +-
+ CONTRIBUTING.md                                  |  18 +-
+ README.md                                        |   2 +-
+ TODO.md                                          |  57 +++
+ autowork.log                                     | 439 +++++++++++++++++++++++
+ cliff.toml                                       |  22 +-
+ docs/concepts/architecture.md                    |   6 +-
+ docs/examples/ofitsialnyy-redaktor.md            |   2 +-
+ docs/guide/adding-features.md                    |   6 +-
+ docs/guide/development.md                        |   4 +-
+ docs/reference/smart-tools.md                    |   6 +-
+ pyproject.toml                                   |   6 +-
+ src/mcp_russia/_shared/batch.py                  |  16 +-
+ src/mcp_russia/_shared/cache.py                  |   2 +-
+ src/mcp_russia/_shared/discovery.py              |  12 +-
+ src/mcp_russia/_shared/feature.py                |  29 +-
+ src/mcp_russia/_shared/http_client.py            |  22 +-
+ src/mcp_russia/_shared/planner.py                |   4 +-
+ src/mcp_russia/agenty/redator/__init__.py        |   4 +-
+ src/mcp_russia/data/cbrf/__init__.py             |   4 +-
+ src/mcp_russia/data/cbrf/client.py               |   6 +-
+ src/mcp_russia/data/cekrf/__init__.py            |   4 +-
+ src/mcp_russia/data/cekrf/client.py              |  10 +-
+ src/mcp_russia/data/fns/__init__.py              |   4 +-
+ src/mcp_russia/data/fns/client.py                |   6 +-
+ src/mcp_russia/data/fssp/__init__.py             |   4 +-
+ src/mcp_russia/data/fssp/client.py               |   8 +-
+ src/mcp_russia/data/gibdd/__init__.py            |   4 +-
+ src/mcp_russia/data/gibdd/client.py              |  14 +-
+ src/mcp_russia/data/gosduma/__init__.py          |   4 +-
+ src/mcp_russia/data/gosduma/client.py            |  10 +-
+ src/mcp_russia/data/kad_arbitrazh/__init__.py    |   4 +-
+ src/mcp_russia/data/kad_arbitrazh/client.py      |  14 +-
+ src/mcp_russia/data/kaznacheistvo/__init__.py    |   4 +-
+ src/mcp_russia/data/kaznacheistvo/client.py      |  14 +-
+ src/mcp_russia/data/mchs/__init__.py             |   4 +-
+ src/mcp_russia/data/mchs/client.py               |  16 +-
+ src/mcp_russia/data/minobrnauki/__init__.py      |   4 +-
+ src/mcp_russia/data/minobrnauki/client.py        |  10 +-
+ src/mcp_russia/data/minzdrav/__init__.py         |   4 +-
+ src/mcp_russia/data/minzdrav/client.py           |  12 +-
+ src/mcp_russia/data/publikatsii/__init__.py      |   4 +-
+ src/mcp_russia/data/publikatsii/client.py        |  12 +-
+ src/mcp_russia/data/rosapi/__init__.py           |   4 +-
+ src/mcp_russia/data/rosapi/client.py             |  16 +-
+ src/mcp_russia/data/rosaudit/__init__.py         |   4 +-
+ src/mcp_russia/data/rosaudit/client.py           |  12 +-
+ src/mcp_russia/data/rosgidromet/__init__.py      |   4 +-
+ src/mcp_russia/data/rosgidromet/client.py        |  10 +-
+ src/mcp_russia/data/roskomnadzor/__init__.py     |   4 +-
+ src/mcp_russia/data/roskomnadzor/client.py       |  12 +-
+ src/mcp_russia/data/rospotrebnadzor/__init__.py  |   4 +-
+ src/mcp_russia/data/rospotrebnadzor/client.py    |  10 +-
+ src/mcp_russia/data/rosprirodnadzor/__init__.py  |   4 +-
+ src/mcp_russia/data/rosprirodnadzor/client.py    |  18 +-
+ src/mcp_russia/data/rosreestr/__init__.py        |   4 +-
+ src/mcp_russia/data/rosreestr/client.py          |  10 +-
+ src/mcp_russia/data/rosselkhoznadzor/__init__.py |   4 +-
+ src/mcp_russia/data/rosselkhoznadzor/client.py   |  14 +-
+ src/mcp_russia/data/rosstat/__init__.py          |   4 +-
+ src/mcp_russia/data/rosstat/client.py            |  22 +-
+ src/mcp_russia/data/rosvodresursy/__init__.py    |   4 +-
+ src/mcp_russia/data/rosvodresursy/client.py      |  12 +-
+ src/mcp_russia/data/sovfed/__init__.py           |   4 +-
+ src/mcp_russia/data/sovfed/client.py             |  16 +-
+ src/mcp_russia/data/zakupki/__init__.py          |   4 +-
+ src/mcp_russia/data/zakupki/client.py            |  10 +-
+ src/mcp_russia/exceptions.py                     |   4 -
+ src/mcp_russia/server.py                         |  10 +-
+ tests/_shared/test_batch.py                      |  14 +-
+ tests/_shared/test_feature.py                    |   2 +-
+ tests/_shared/test_http_client.py                |  34 +-
+ tests/test_discovery.py                          |   2 +-
+ 73 files changed, 799 insertions(+), 316 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git add -A && git commit -m "refactor: русификация HTTP-клиента (create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit), зачистка мёртвых алиасов (FeatureError, HttpClientError, AuthError, FeatureMeta, RegisteredFeature, FeatureRegistry), FEATURE_META→META_FUNKTSII, инфраструктурные константы и документация"
+[main 356bfb1] refactor: русификация HTTP-клиента (create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit), зачистка мёртвых алиасов (FeatureError, HttpClientError, AuthError, FeatureMeta, RegisteredFeature, FeatureRegistry), FEATURE_META→META_FUNKTSII, инфраструктурные константы и документация
+ 73 files changed, 799 insertions(+), 316 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git push origin main 2>&1
+To github.com:denis-gordeev/mcp-russia.git
+   2689037..356bfb1  main -> main
+[0m
+[0m# [0mTodos
+[x] Explore codebase structure and current state
+[x] Read TODO.md for current task status
+[x] Find remaining non-Russian artifacts in src/, tests/, docs/
+[x] Russify http_client.py: create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit + 24 import sites
+[x] Remove dead aliases: FeatureError, HttpClientError, AuthError, RegisteredFeature, FeatureRegistry
+[x] Clean up FeatureMeta alias: update 25 __init__.py to use MetaFunktsii directly
+[x] Rename FEATURE_META → META_FUNKTSII in all 25 __init__.py + feature.py
+[x] Russify infrastructure names: RequestLoggingMiddleware→PosrednikLogirovaniyaZaprosov, _dispatch→_dispetcher, _catalog_cache→_kesh_kataloga, _SYSTEM_PROMPT→_SISTEMNYY_PROMPT, _always_visible→_vsegda_vidimye, _RETRYABLE_STATUS_CODES→_KODY_STATUSOV_DLYA_POVTORA
+[x] Fix docs artifacts: cliff.toml, CONTRIBUTING.md, pyproject.toml, docs files
+[x] Run checks/tests
+[x] Update TODO.md with completed items and next actions
+[x] Commit and push if ready
+[0m
+Now I have a comprehensive picture. Let me plan the round's work based on the findings.
+Let me first get all the import sites for the HTTP client functions, then start making changes.
+Now let me also read the remaining _shared files and the test file for http_client before starting changes.
+Now I'll start implementing the changes. Let me begin with the HTTP client russification and infrastructure renames.
+Now update the `http_poluchit` function to use `sozdat_klienta` and `_KODY_STATUSOV_DLYA_POVTORA`:
+I see there are still references to `create_client` and `_RETRYABLE_STATUS_CODES` inside the function bodies. Let me fix those:
+Now update all 24 client import sites. Let me use a bash command for the mass replacement:
+Now check for any remaining `http_get`, `http_post`, `create_client` references in usage (not just imports):
+There are many usages in the client files. Let me do a bulk replacement:
+That's just a docstring example. Let me update it:
+Now update the test file:
+Now remove dead aliases and clean up FeatureMeta:
+Now remove `RegisteredFeature` and `FeatureRegistry` aliases from feature.py, and update the import style:
+Now update all 25 `__init__.py` files to use `MetaFunktsii` directly (remove `as FeatureMeta`) and rename `FEATURE_META` → `META_FUNKTSII`:
+Now update `feature.py` to reference `META_FUNKTSII` instead of `FEATURE_META`:
+Now check for any remaining references to `FeatureMeta`, `FEATURE_META`, `RegisteredFeature`, `FeatureRegistry` in the codebase:
+I need to:
+1. Fix `feature.py` docstring references to `FEATURE_META`
+2. Fix all `__init__.py` that use `FeatureMeta(` instead of `MetaFunktsii(`
+3. Fix the test reference
+Now replace `FeatureMeta(` with `MetaFunktsii(` in all `__init__.py` files:
+Fix the test reference:
+Now let me handle the infrastructure renames in server.py, batch.py, discovery.py, planner.py:
+Now rename `_dispatch` → `_dispetcher` in batch.py:
+Now rename `_catalog_cache` → `_kesh_kataloga` in discovery.py:
+Now rename `_SYSTEM_PROMPT` → `_SISTEMNYY_PROMPT` in planner.py:
+Now fix the docs artifacts. Let me read the files that need updating:
+Now fix CONTRIBUTING.md:
+Now fix pyproject.toml comments:
+Now fix the CHANGELOG.md header:
+Now fix the docs files. Let me handle the most impactful ones:
+Now let me fix the docs files that still have English artifacts:
+Import ordering issues due to the new import names. Let me fix them:
+Need to fix test references too:
+Now run tests again:
+All tests pass. Let me also run mypy:
+These are pre-existing mypy errors not related to our changes. Our changes are clean. Let me verify the full test suite one more time:
+All 680 tests pass, 1 skipped. Now update TODO.md:
+Now I need to update the TODO.md with the new round's status. Let me add the new round entry at the top:
+Now let me commit and push:
+Раунд 51 завершён. Результаты:
+
+**73 файла изменено**, commit `356bfb1` отправлен в `main`.
+
+Ключевые изменения:
+- **HTTP-клиент русифицирован**: `create_client` → `sozdat_klienta`, `http_get` → `http_poluchit`, `http_post` → `http_otpravit` + обновлены 24 клиентских модуля
+- **6 мёртвых алиасов удалены**: `FeatureError`, `HttpClientError`, `AuthError`, `FeatureMeta`, `RegisteredFeature`, `FeatureRegistry`
+- **`FEATURE_META` → `META_FUNKTSII`** во всех 25 `__init__.py` + `feature.py`; импорты упрощены до `MetaFunktsii` напрямую
+- **6 инфраструктурных констант/классов**: `RequestLoggingMiddleware` → `PosrednikLogirovaniyaZaprosov`, `_dispatch` → `_dispetcher`, `_catalog_cache` → `_kesh_kataloga`, `_SYSTEM_PROMPT` → `_SISTEMNYY_PROMPT`, `_always_visible` → `_vsegda_vidimye`, `_RETRYABLE_STATUS_CODES` → `_KODY_STATUSOV_DLYA_POVTORA`
+- **Документация**: cliff.toml (группы секций на русском), CONTRIBUTING.md, pyproject.toml, CHANGELOG.md, README.md, 5 docs/ файлов
+- **Проверки**: `ruff check` — passed, `pytest` — 680 passed, 1 skipped

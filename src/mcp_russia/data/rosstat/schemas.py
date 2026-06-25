@@ -27,7 +27,7 @@ class DannyeRegiona(BaseModel):
     srednyaya_zp: float | None = None
 
 
-class InflaciyaData(BaseModel):
+class InflaciyaDannye(BaseModel):
     """Данные об инфляции (ИПЦ)."""
 
     period: str
@@ -36,7 +36,7 @@ class InflaciyaData(BaseModel):
     ipcz_god: float | None = None
 
 
-class DemografiyaData(BaseModel):
+class DemografiyaDannye(BaseModel):
     """Демографические данные."""
 
     period: str
@@ -46,7 +46,7 @@ class DemografiyaData(BaseModel):
     estestvenny_prirost: float | None = None
 
 
-class VRPData(BaseModel):
+class VRPDannye(BaseModel):
     """Данные о валовом региональном продукте."""
 
     period: str
@@ -61,7 +61,7 @@ class DannyeZarplaty(BaseModel):
     period: str
     region: str = ""
     nominalnaya_zp: float | None = None
-    realnaya_zp_change: float | None = None
+    realnaya_zp_izmenenie: float | None = None
 
 
 class IndikatorDannye(BaseModel):

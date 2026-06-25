@@ -2,6 +2,76 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-25 (пятьдесят второй проход — русификация полей MetaFunktsii, констант settings, ключей словарей, параметров функций)
+
+### Выполнено
+
+- **Русификация полей dataclass MetaFunktsii** (8 полей, ~199 замен в 28 файлах):
+  - `name` → `imya` (определение + 25 __init__.py + discovery.py + feature.py)
+  - `description` → `opisanie` (определение + 25 __init__.py + discovery.py + feature.py)
+  - `version` → `versiya` (определение + 25 __init__.py + feature.py)
+  - `api_base` → `baza_api` (определение + 25 __init__.py)
+  - `requires_auth` → `trebuet_autentifikatsii` (определение + 5 __init__.py + discovery.py + feature.py)
+  - `auth_env_var` → `peremennaya_avt_env` (определение + 3 __init__.py + discovery.py + feature.py)
+  - `enabled` → `vklyuchena` (определение + feature.py)
+  - `tags` → `tegi` (определение + 25 __init__.py)
+  - Обновлены docstring примеры в feature.py и CONTRIBUTING.md
+- **Русификация констант settings.py** (9 констант + 34 замен в 11 файлах):
+  - `HTTP_TIMEOUT` → `TAIMAUT_HTTP`
+  - `HTTP_MAX_RETRIES` → `MAKS_POVTOROV_HTTP`
+  - `HTTP_BACKOFF_BASE` → `BAZA_EKSPON_ZADERZH`
+  - `USER_AGENT` → `POLZOVATELSKIY_AGENT`
+  - `TOOL_SEARCH` → `POISK_INSTRUMENTOV`
+  - `DADATA_API_KEY` → `KLYUCH_DADATA_API`
+  - `DUMA_API_TOKEN` → `TOKEN_GOSDUMY_API`
+  - `ZAKUPKI_API_TOKEN` → `TOKEN_ZAKUPKI_API`
+  - `ANTHROPIC_API_KEY` → `KLYUCH_ANTHROPIC_API`
+  - Обновлены все импорты и использования в http_client.py, lifespan.py, discovery.py, planner.py, server.py, client.py (rosapi, gosduma, zakupki), тестах
+- **`"error"` → `"oshibka"` ключи словарей** (22 замены в 5 модулях):
+  - cbrf/client.py: `{"error": ...}` → `{"oshibka": ...}`
+  - rosstat/client.py: `{"error": ...}` → `{"oshibka": ...}`
+  - rosapi/client.py: 8 замен (`"error"` ключи и проверки `"error" in result`)
+  - rosstat/tools.py: `"error" in data` → `"oshibka" in data`
+  - rosapi/tools.py: 4 проверки `"error" in result` → `"oshibka" in result`
+  - Обновлены тесты: rosapi/test_tools.py (4), rosstat/test_tools.py (1)
+- **Русификация параметров функций** (~30 замен):
+  - `postal_code` → `pochtovyy_indeks` (validators.py — 2 функции)
+  - `max_requests` → `maks_zaprosov` (rate_limiter.py — __init__ + атрибут + docstring + пример)
+  - `max_retries` → `maks_povtorov` (http_client.py — 2 функции)
+  - `tool_name` → `imya_instrumenta` (discovery.py + batch.py)
+  - `module_path` → `put_modulya` (feature.py + batch.py)
+  - Обновлены тесты: test_rate_limiter.py (6), test_http_client.py (5), test_batch.py (7)
+- **Переименование классов `*Data` → `*Dannye`** (8 классов):
+  - `InflaciyaData` → `InflaciyaDannye` (rosstat/schemas.py)
+  - `DemografiyaData` → `DemografiyaDannye` (rosstat/schemas.py)
+  - `VRPData` → `VRPDannye` (rosstat/schemas.py)
+  - `PogodaData` → `PogodaDannye` (rosgidromet/schemas.py)
+  - `PrognozData` → `PrognozDannye` (rosgidromet/schemas.py)
+  - `EkologiyaData` → `EkologiyaDannye` (rosgidromet/schemas.py)
+  - `GidroData` → `GidroDannye` (rosvodresursy/schemas.py)
+  - `VodokhranilishcheData` → `VodokhranilishcheDannye` (rosvodresursy/schemas.py)
+  - Обновлены ссылки в client.py, tools.py и тестах
+- **`realnaya_zp_change` → `realnaya_zp_izmenenie`** (3 замены: schemas.py, client.py, tools.py)
+- **`McpRussiaError` → `OshibkaMcpRussia`** (exceptions.py — базовый класс)
+- **`"http_client"` → `"http_klient"`** контекстный ключ (lifespan.py + 2 теста)
+- **`"tool"`/`"args"` → `"instrument"`/`"argumenty"`** в протоколе пакетного выполнения (batch.py + server.py docstring + test_batch.py)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **Поля MetaFunktsii полностью русифицированы**: все 8 полей dataclass (`imya`, `opisanie`, `versiya`, `baza_api`, `trebuet_autentifikatsii`, `peremennaya_avt_env`, `vklyuchena`, `tegi`) теперь на русском; обновлены все 25 __init__.py, discovery.py, feature.py
+- **Константы settings.py русифицированы**: 9 модульных констант переименованы; имена переменных окружения (MCP_RUSSIA_*) не затронуты
+- **Ключи словарей `"error"` → `"oshibka"`**: унифицированы во всех 5 модулях, где возвращались словари с ошибками
+- **Протокол пакетного выполнения обновлён**: ключи JSON `{"tool": ..., "args": ...}` → `{"instrument": ..., "argumenty": ...}`; это user-facing API контракт
+- **Базовое исключение переименовано**: `McpRussiaError` → `OshibkaMcpRussia` — больше ни один класс исключений не содержит английских слов
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских артефактов**: английские имена тестовых классов/функций (~56 классов, ~130+ полностью английских функций), поля `region`/`status`/`period` в Pydantic-схемах (34+29+9 вхождений), ключи внешних API (`"suggestions"`, `"value"` и т.д.)
+
 ## Статус раунда 2026-06-24 (пятьдесят первый проход — русификация HTTP-клиента, зачистка алиасов, переименование констант)
 
 ### Выполнено

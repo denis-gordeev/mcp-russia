@@ -5,7 +5,7 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class PogodaData(BaseModel):
+class PogodaDannye(BaseModel):
     """Данные о погоде."""
 
     stanciya: str = ""
@@ -23,7 +23,7 @@ class PogodaData(BaseModel):
     data_vremya: str = ""
 
 
-class PrognozData(BaseModel):
+class PrognozDannye(BaseModel):
     """Прогноз погоды."""
 
     gorod: str = ""
@@ -35,7 +35,7 @@ class PrognozData(BaseModel):
     opisaniye: str = ""
 
 
-class EkologiyaData(BaseModel):
+class EkologiyaDannye(BaseModel):
     """Данные об экологической обстановке."""
 
     gorod: str = ""

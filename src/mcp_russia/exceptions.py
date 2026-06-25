@@ -1,19 +1,19 @@
 """Исключения проекта mcp-russia."""
 
 
-class McpRussiaError(Exception):
+class OshibkaMcpRussia(Exception):
     """Базовое исключение для всех ошибок mcp-russia."""
 
 
-class OshibkaFunktsii(McpRussiaError):
+class OshibkaFunktsii(OshibkaMcpRussia):
     """Ошибка, связанная с функцией (обнаружение, валидация и т.д.)."""  # noqa: RUF002
 
 
-class OshibkaHttpClienta(McpRussiaError):
+class OshibkaHttpClienta(OshibkaMcpRussia):
     """Ошибка HTTP-соединения с внешним API."""  # noqa: RUF002
 
 
-class OshibkaAutentifikatsii(McpRussiaError):
+class OshibkaAutentifikatsii(OshibkaMcpRussia):
     """Отсутствует или недействительна учётная запись для доступа к защищённому API."""
 
 

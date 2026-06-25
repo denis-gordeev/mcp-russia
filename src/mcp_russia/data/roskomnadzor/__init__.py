@@ -4,13 +4,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="roskomnadzor",
-    description=(
+    imya="roskomnadzor",
+    opisanie=(
         "Данные Роскомнадзора: реестры запрещённых сайтов, операторы "
         "персональных данных, лицензии связи, СМИ, нарушения в сфере ИТ"
     ),
-    version="0.2.0",
-    api_base="https://rkn.gov.ru",
-    requires_auth=False,
-    tags=["роскомнадзор", "связь", "сми", "персональные-данные", "реестр"],
+    versiya="0.2.0",
+    baza_api="https://rkn.gov.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["роскомнадзор", "связь", "сми", "персональные-данные", "реестр"],
 )

@@ -28,7 +28,7 @@ class TestRekomendovatInstrumenty:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", ""),
+            patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", ""),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
@@ -49,7 +49,7 @@ class TestRekomendovatInstrumenty:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "rosstat_poluchit_indikator" in result
@@ -64,7 +64,7 @@ class TestRekomendovatInstrumenty:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.discovery.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "Ошибка" in result
@@ -291,7 +291,7 @@ class TestSplanirovatZapros:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", ""),
+            patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", ""),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
             assert "ANTHROPIC_API_KEY" in result
@@ -312,7 +312,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы депутата X", "catalog")
             assert "## План запроса" in result
@@ -337,7 +337,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog")
             assert "Не удалось построить структурированный план." in result
@@ -352,7 +352,7 @@ class TestSplanirovatZapros:
 
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
-            patch("mcp_russia._shared.planner.ANTHROPIC_API_KEY", "test-key"),
+            patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog")
             assert "Ошибка" in result

@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="gibdd",
-    description=(
+    imya="gibdd",
+    opisanie=(
         "Данные ГИБДД/МВД России: штрафы, проверка транспортных средств, "
         "водительских удостоверений, статистика ДТП, регистрационные действия"
     ),
-    version="0.2.0",
-    api_base="https://гибдд.рф",
-    requires_auth=False,
-    tags=["гибдд", "мвд", "штрафы", "транспорт", "дтп", "водители"],
+    versiya="0.2.0",
+    baza_api="https://гибдд.рф",
+    trebuet_autentifikatsii=False,
+    tegi=["гибдд", "мвд", "штрафы", "транспорт", "дтп", "водители"],
 )

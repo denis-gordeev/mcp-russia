@@ -51,7 +51,7 @@ class TestExecuteBatch:
     @pytest.mark.asyncio
     async def test_exceeds_limit(self) -> None:
         ctx = _mock_ctx()
-        queries = [{"tool": "x", "args": {}} for _ in range(11)]
+        queries = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
         result = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
         assert "Максимум 10" in result
 
@@ -59,7 +59,7 @@ class TestExecuteBatch:
     async def test_unknown_tool(self) -> None:
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
-            [{"tool": "nonexistent_tool", "args": {}}], ctx
+            [{"instrument": "nonexistent_tool", "argumenty": {}}], ctx
         )
         assert "не найден" in result
 
@@ -74,7 +74,7 @@ class TestExecuteBatch:
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
-            [{"tool": "test_tool", "args": {"param": "value"}}], ctx
+            [{"instrument": "test_tool", "argumenty": {"param": "value"}}], ctx
         )
         assert "rezultat ok" in result
         mock_fn.assert_called_once()
@@ -90,7 +90,7 @@ class TestExecuteBatch:
 
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
-            [{"tool": "greet", "args": {"name": "world"}}], ctx
+            [{"instrument": "greet", "argumenty": {"name": "world"}}], ctx
         )
         assert "hello world" in result
 
@@ -109,9 +109,9 @@ class TestExecuteBatch:
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"tool": "counter", "args": {"n": 1}},
-                {"tool": "counter", "args": {"n": 2}},
-                {"tool": "counter", "args": {"n": 3}},
+                {"instrument": "counter", "argumenty": {"n": 1}},
+                {"instrument": "counter", "argumenty": {"n": 2}},
+                {"instrument": "counter", "argumenty": {"n": 3}},
             ],
             ctx,
         )
@@ -131,7 +131,9 @@ class TestExecuteBatch:
         batch._dispetcher["fail"] = failing_tool
 
         ctx = _mock_ctx()
-        result = await batch.vypolnit_paket_vnutrenniy([{"tool": "fail", "args": {}}], ctx)
+        result = await batch.vypolnit_paket_vnutrenniy(
+            [{"instrument": "fail", "argumenty": {}}], ctx
+        )
         assert "Ошибка" in result
         assert "timeout" in result.lower()
 
@@ -152,8 +154,8 @@ class TestExecuteBatch:
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"tool": "ok", "args": {}},
-                {"tool": "bad", "args": {}},
+                {"instrument": "ok", "argumenty": {}},
+                {"instrument": "bad", "argumenty": {}},
             ],
             ctx,
         )

@@ -8,13 +8,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="deloproizvodstvo",
-    description=(
+    imya="deloproizvodstvo",
+    opisanie=(
         "Deloproizvodstvo v mcp-russia: "
         "Ofitsialnaya perepiska RF: pismo, rasporyazhenie, prikaz, akt, spravka "
         "na osnove GOST R 7.0.97-2016 i pravil deloproizvodstva RF"
     ),
-    version="0.1.0",
-    requires_auth=False,
-    tags=["dokumenty", "deloproizvodstvo", "ofitsialnaya-perepiska"],
+    versiya="0.1.0",
+    trebuet_autentifikatsii=False,
+    tegi=["dokumenty", "deloproizvodstvo", "ofitsialnaya-perepiska"],
 )

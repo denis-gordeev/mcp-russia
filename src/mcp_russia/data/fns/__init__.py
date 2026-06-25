@@ -3,13 +3,13 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="fns",
-    description=(
+    imya="fns",
+    opisanie=(
         "Данные ФНС России: налоговые начисления, проверки, ЕГРЮЛ/ЕГРИП, "
         "сведения об организациях и ИП, налоговые ставки и режимы"
     ),
-    version="0.2.0",
-    api_base="https://egrul.nalog.ru",
-    requires_auth=False,
-    tags=["фнс", "налоги", "егрюл", "проверки", "бизнес"],
+    versiya="0.2.0",
+    baza_api="https://egrul.nalog.ru",
+    trebuet_autentifikatsii=False,
+    tegi=["фнс", "налоги", "егрюл", "проверки", "бизнес"],
 )

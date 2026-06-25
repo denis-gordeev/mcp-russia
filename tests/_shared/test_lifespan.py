@@ -22,9 +22,9 @@ class TestHttpLifespan:
         context = await gen.__anext__()
 
         assert context is not None
-        assert "http_client" in context
+        assert "http_klient" in context
 
-        client = context["http_client"]
+        client = context["http_klient"]
         assert not client.is_closed
 
         # Очистка
@@ -44,7 +44,7 @@ class TestHttpLifespan:
         context = await gen.__anext__()
 
         assert context is not None
-        client = context["http_client"]
+        client = context["http_klient"]
         assert "User-Agent" in client.headers
         assert client.headers["Accept"] == "application/json"
 

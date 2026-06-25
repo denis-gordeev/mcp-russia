@@ -11,16 +11,16 @@
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    name="rosapi",
-    description=(
+    imya="rosapi",
+    opisanie=(
         "Справочные данные для России: адреса (ФИАС), организации (ИНН/ОГРН), "
         "банки, праздники, почтовые индексы"
     ),
-    version="0.2.0",
-    api_base="https://dadata.ru/api",
-    requires_auth=True,
-    auth_env_var="MCP_RUSSIA_DADATA_API_KEY",
-    tags=[
+    versiya="0.2.0",
+    baza_api="https://dadata.ru/api",
+    trebuet_autentifikatsii=True,
+    peremennaya_avt_env="MCP_RUSSIA_DADATA_API_KEY",
+    tegi=[
         "адрес",
         "фиаc",
         "инн",
