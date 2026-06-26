@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 async def poisk_proverok(
     inn_tseli: str = "",
     nazvanie_tseli: str = "",
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск проверок в реестре proverki.rospotrebnadzor.ru.
 
@@ -40,8 +40,8 @@ async def poisk_proverok(
             params["targetInn"] = inn_tseli
         if nazvanie_tseli:
             params["targetName"] = nazvanie_tseli
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
@@ -77,7 +77,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
 
 async def plan_proverok(
     god: int = 0,
-    region: str = "",
+    subiekt: str = "",
     organ: str = "rospotrebnadzor",
 ) -> list[dict[str, Any]]:
     """Получить план проверок Роспотребнадзора.
@@ -95,8 +95,8 @@ async def plan_proverok(
         params: dict[str, Any] = {"organ": organ}
         if god:
             params["year"] = god
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             items = data.get("data", data.get("items", []))
@@ -153,7 +153,7 @@ def _razobrat_proverku(item: dict[str, Any]) -> dict[str, Any]:
         "inn": item.get("targetInn", ""),
         "data_nachala": item.get("startDate", "") or item.get("dateStart", ""),
         "data_okonchaniya": item.get("endDate", "") or item.get("dateEnd", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "vyavleno_narusheniy": item.get("violationsCount", 0),
         "rezultat": item.get("result", ""),
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",

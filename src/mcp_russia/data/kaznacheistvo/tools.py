@@ -64,10 +64,10 @@ async def ispolnenie_byudzheta(
         lines.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
     if data.get("raskhody"):
         lines.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
-    if data.get("deficit") is not None:
-        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['deficit'], 2)} млрд руб.")
-    if data.get("status"):
-        lines.append(f"- Статус: {data['status']}")
+    if data.get("defitsit") is not None:
+        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
+    if data.get("sostoyanie"):
+        lines.append(f"- Статус: {data['sostoyanie']}")
     lines.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
     return "\n".join(lines)
 
@@ -165,22 +165,22 @@ async def poisk_uchrezhdeniy(
 async def mezhbyudzhetnye_transferty(
     ctx: Context,
     god: int = 0,
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Получить данные о межбюджетных трансфертах.
 
     Аргументы:
         god: Год (необязательно).
-        region: Код региона (необязательно).
+        subiekt: Код региона (необязательно).
 
     Возвращает:
         Данные о межбюджетных трансфертах.
     """
     await ctx.info("Запрос данных о межбюджетных трансфертах...")
-    transferty = await client.poluchit_mezhbyudzhetnye(god=god, region=region)
+    transferty = await client.poluchit_mezhbyudzhetnye(god=god, subiekt=subiekt)
     if not transferty:
         god_text = f" за {god} год" if god else ""
-        region_text = f", регион: {region}" if region else ""
+        region_text = f", регион: {subiekt}" if subiekt else ""
         return (
             f"Межбюджетные трансферты{god_text}{region_text} не найдены.\n\n"
             f"Данные доступны на: budget.gov.ru"

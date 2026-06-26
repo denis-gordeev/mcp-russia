@@ -58,14 +58,14 @@ async def test_ekologiya_regiona_empty():
 async def test_preduprezhdeniya_empty():
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_preduprezhdeniya", return_value=[]):
-        result = await rosgidromet_tools.preduprezhdeniya(region="Тест", ctx=ctx)
+        result = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", ctx=ctx)
     assert "отсутствуют" in result
 
 
 async def test_sputnik_monitoring_empty():
     ctx = _mock_ctx()
     with patch.object(rosgidromet_tools.client, "poluchit_sputnik_dannye", return_value=[]):
-        result = await rosgidromet_tools.sputnik_monitoring(region="Тест", ctx=ctx)
+        result = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", ctx=ctx)
     assert "недоступны" in result
 
 

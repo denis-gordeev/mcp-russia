@@ -52,7 +52,7 @@ async def test_info_proverki_found():
         "inn": "7710563663",
         "data_nachala": "2024-01-01",
         "data_okonchaniya": "2024-01-15",
-        "status": "Завершена",
+        "sostoyanie": "Завершена",
         "vyavleno_narusheniy": 2,
         "rezultat": "Нарушения выявлены",
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
@@ -78,7 +78,7 @@ async def test_poisk_proverok_found():
             "tip_proverki": "Плановая",
             "obekt": "ООО Тест",
             "data_nachala": "2024-01-01",
-            "status": "Завершена",
+            "sostoyanie": "Завершена",
             "vyavleno_narusheniy": 0,
         }
     ]

@@ -52,14 +52,14 @@ async def spisok_tipov_opasnosti(ctx: Context) -> str:
 
 async def statistika_pojarov(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
     vid_pozhara: str = "",
 ) -> str:
     """Статистика пожаров с данными из МЧС России.
 
     Аргументы:
-        region: Субъект РФ или федеральный округ (необязательно).
+        subiekt: Субъект РФ или федеральный округ (необязательно).
         god: Год (необязательно).
         vid_pozhara: Вид пожара (необязательно).
 
@@ -68,7 +68,7 @@ async def statistika_pojarov(
     """
     await ctx.info("Запрос статистики пожаров...")
     pojarov_data = await client.statistika_pojarov(
-        region=region,
+        subiekt=subiekt,
         god=god,
         vid_pozhara=vid_pozhara,
     )
@@ -106,7 +106,7 @@ async def statistika_pojarov(
         (
             p.get("nomer", ""),
             p.get("data", ""),
-            p.get("region", "")[:30],
+            p.get("subiekt", "")[:30],
             p.get("vid_pozhara", ""),
             str(p.get("pogibshikh", "")),
             str(p.get("postradavshikh", "")),
@@ -122,14 +122,14 @@ async def statistika_pojarov(
 
 async def poisk_chs(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     vid_chs: str = "",
     klass_chs: str = "",
 ) -> str:
     """Поиск чрезвычайных ситуаций.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
         vid_chs: Вид ЧС (необязательно).
         klass_chs: Класс ЧС (необязательно).
 
@@ -138,14 +138,14 @@ async def poisk_chs(
     """
     await ctx.info("Поиск чрезвычайных ситуаций...")
     chs_data = await client.poisk_chs(
-        region=region,
+        subiekt=subiekt,
         vid_chs=vid_chs,
         klass_chs=klass_chs,
     )
     if not chs_data:
         filters = []
-        if region:
-            filters.append(f"регион: {region}")
+        if subiekt:
+            filters.append(f"регион: {subiekt}")
         if vid_chs:
             filters.append(f"вид: {vid_chs}")
         if klass_chs:
@@ -161,7 +161,7 @@ async def poisk_chs(
             c.get("vid_chs", ""),
             c.get("klass_chs", ""),
             c.get("data_vozniknoveniya", ""),
-            c.get("region", "")[:30],
+            c.get("subiekt", "")[:30],
             str(c.get("pogibshikh", "")),
             str(c.get("postradavshikh", "")),
         )
@@ -176,18 +176,18 @@ async def poisk_chs(
 
 async def radiatsionnyy_monitoring(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Данные радиационного мониторинга МЧС России.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
 
     Возвращает:
         Данные радиационного мониторинга.
     """
     await ctx.info("Запрос данных радиационного мониторинга...")
-    monitoring_data = await client.radiatsionnyy_monitoring(region=region)
+    monitoring_data = await client.radiatsionnyy_monitoring(subiekt=subiekt)
     if not monitoring_data:
         return (
             "Данные радиационного мониторинга не найдены.\n\n"
@@ -196,7 +196,7 @@ async def radiatsionnyy_monitoring(
     rows = [
         (
             m.get("stantsiya", ""),
-            m.get("region", "")[:30],
+            m.get("subiekt", "")[:30],
             str(m.get("uroven_radiatsii", "")),
             m.get("edinitsa", ""),
             str(m.get("norma", "")),
@@ -213,18 +213,18 @@ async def radiatsionnyy_monitoring(
 
 async def gidrologicheskaya_obstanovka(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Данные гидрологической обстановки МЧС России.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
 
     Возвращает:
         Данные гидрологической обстановки.
     """
     await ctx.info("Запрос данных гидрологической обстановки...")
-    gidro_data = await client.gidrologicheskaya_obstanovka(region=region)
+    gidro_data = await client.gidrologicheskaya_obstanovka(subiekt=subiekt)
     if not gidro_data:
         return (
             "Данные гидрологической обстановки не найдены.\n\n"
@@ -250,13 +250,13 @@ async def gidrologicheskaya_obstanovka(
 
 async def preduprezhdeniya_chs(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     tip_opasnosti: str = "",
 ) -> str:
     """Предупреждения о чрезвычайных ситуациях.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
         tip_opasnosti: Тип опасности (необязательно).
 
     Возвращает:
@@ -264,7 +264,7 @@ async def preduprezhdeniya_chs(
     """
     await ctx.info("Запрос предупреждений о ЧС...")
     preduprezhdeniya = await client.preduprezhdeniya_chs(
-        region=region,
+        subiekt=subiekt,
         tip_opasnosti=tip_opasnosti,
     )
     if not preduprezhdeniya:
@@ -276,7 +276,7 @@ async def preduprezhdeniya_chs(
         (
             p.get("nomer", ""),
             p.get("tip_opasnosti", ""),
-            p.get("region", "")[:30],
+            p.get("subiekt", "")[:30],
             p.get("opisanie", "")[:60],
             p.get("data_nachala", ""),
             p.get("data_okonchaniya", ""),

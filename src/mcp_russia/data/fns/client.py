@@ -163,7 +163,7 @@ def _razobrat_egrul_organizatsiyu(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
         polnoe_nazvanie=entry.get("n", ""),
         yuridicheskiy_adres=entry.get("a", ""),
         data_registracii=entry.get("r", "") or entry.get("g", ""),
-        status=_razobrat_status(entry.get("s", "")),
+        sostoyanie=_razobrat_status(entry.get("s", "")),
         vid_deyatelnosti=entry.get("k", ""),
         ustroyennyy_kapital="",
         rukovoditel="",
@@ -177,7 +177,7 @@ def _razobrat_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
         ogrnip=entry.get("ogrn", "") or entry.get("o", ""),
         fio=entry.get("n", "") or entry.get("c", ""),
         data_registracii=entry.get("r", "") or entry.get("g", ""),
-        status=_razobrat_status(entry.get("s", "")),
+        sostoyanie=_razobrat_status(entry.get("s", "")),
         vid_deyatelnosti=entry.get("k", ""),
     )
 

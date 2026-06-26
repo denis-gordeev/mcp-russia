@@ -14,7 +14,7 @@ class OrganizaciyaEGRUL(BaseModel):
     polnoe_nazvanie: str = ""
     yuridicheskiy_adres: str = ""
     data_registracii: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     vid_deyatelnosti: str = ""
     ustroyennyy_kapital: str = ""
     rukovoditel: str = ""
@@ -27,7 +27,7 @@ class IPEGRIP(BaseModel):
     ogrnip: str = ""
     fio: str = ""
     data_registracii: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     vid_deyatelnosti: str = ""
 
 
@@ -39,7 +39,7 @@ class NalogovayaProverka(BaseModel):
     period_proverki: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     vyavleno_narusheniy: int = 0
     summa_dochnachisleniy: float | None = None
 

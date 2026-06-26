@@ -13,7 +13,7 @@ class LicenziyaSvyazi(BaseModel):
     organizaciya: str = ""
     data_vydachi: str = ""
     data_okonchaniya: str = ""
-    status: str = ""  # "действует", "приостановлена", "аннулирована"
+    sostoyanie: str = ""  # "действует", "приостановлена", "аннулирована"
     territoriya: str = ""
 
 
@@ -37,7 +37,7 @@ class OperatorPD(BaseModel):
     tip_operatora: str = ""
     data_vneseniya_v_reestr: str = ""
     cel_obrabotki: str = ""
-    status: str = ""
+    sostoyanie: str = ""
 
 
 class NarushenieRKN(BaseModel):
@@ -60,5 +60,5 @@ class ZapisReestra(BaseModel):
     zapisi_id: str
     osnovanie: str = ""
     data_vneseniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     opisanie: str = ""

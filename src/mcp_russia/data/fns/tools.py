@@ -96,8 +96,8 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
         lines.append(f"- Юридический адрес: {data.yuridicheskiy_adres}")
     if data.data_registracii:
         lines.append(f"- Дата регистрации: {data.data_registracii}")
-    if data.status:
-        lines.append(f"- Статус: {data.status}")
+    if data.sostoyanie:
+        lines.append(f"- Статус: {data.sostoyanie}")
     if data.vid_deyatelnosti:
         lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
     if data.rukovoditel:
@@ -132,8 +132,8 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
         lines.append(f"- ОГРНИП: {data.ogrnip}")
     if data.data_registracii:
         lines.append(f"- Дата регистрации: {data.data_registracii}")
-    if data.status:
-        lines.append(f"- Статус: {data.status}")
+    if data.sostoyanie:
+        lines.append(f"- Статус: {data.sostoyanie}")
     if data.vid_deyatelnosti:
         lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
     lines.append("- Источник: ФНС / ЕГРИП (egrul.nalog.ru)")
@@ -163,7 +163,7 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
             f"Планы проверок: pb.nalog.ru"
         )
 
-    rows = [(p.tip_proverki, p.period_proverki, p.status) for p in data]
+    rows = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in data]
     header = f"**Налоговые проверки** — ИНН {inn}\n\n"
     return header + tablitsa_v_markdown(["Тип", "Период", "Статус"], rows)
 

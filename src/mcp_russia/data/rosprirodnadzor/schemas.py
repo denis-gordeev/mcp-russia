@@ -11,7 +11,7 @@ class ProverkaEkologicheskaya(BaseModel):
     vid_nadzora: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     vyavleno_narusheniy: int = 0
 
 
@@ -19,7 +19,7 @@ class ObektNegativnogoVozdeystviya(BaseModel):
     nomer: str
     nazvanie: str = ""
     kategoriya: str = ""
-    region: str = ""
+    subiekt: str = ""
     vid_deyatelnosti: str = ""
 
 

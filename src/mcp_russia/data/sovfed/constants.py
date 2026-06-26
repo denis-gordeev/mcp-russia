@@ -83,7 +83,7 @@ SENATORY_SPRAVOCHNIK = [
         "familiya": "Матвиенко",
         "imya": "Валентина",
         "otchestvo": "Ивановна",
-        "region": "г. Санкт-Петербург",
+        "subiekt": "г. Санкт-Петербург",
         "dolzhnost": "Председатель Совета Федерации",
         "komitet": "",
     },

@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 
 async def statistika_pojarov(
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
     vid_pozhara: str = "",
 ) -> list[dict[str, Any]]:
@@ -47,8 +47,8 @@ async def statistika_pojarov(
     try:
         url = f"{FIRES_STAT_BASE}/statistics"
         params: dict[str, Any] = {"limit": 50}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         if vid_pozhara:
@@ -63,8 +63,8 @@ async def statistika_pojarov(
     try:
         url = f"{MCHS_API_BASE}/fires/statistics"
         params = {"limit": 50}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -78,7 +78,7 @@ async def statistika_pojarov(
 
 
 async def poisk_chs(
-    region: str = "",
+    subiekt: str = "",
     vid_chs: str = "",
     klass_chs: str = "",
     ogranichenie: int = 20,
@@ -97,8 +97,8 @@ async def poisk_chs(
     try:
         url = f"{MCHS_API_BASE}/emergencies"
         params: dict[str, Any] = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if vid_chs:
             params["type"] = vid_chs
         if klass_chs:
@@ -113,8 +113,8 @@ async def poisk_chs(
     try:
         url = f"{MCHS_OPENDATA_BASE}/emergencies"
         params = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if vid_chs:
             params["type"] = vid_chs
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -128,7 +128,7 @@ async def poisk_chs(
 
 
 async def radiatsionnyy_monitoring(
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Получить данные радиационного мониторинга.
 
@@ -141,8 +141,8 @@ async def radiatsionnyy_monitoring(
     try:
         url = f"{MCHS_API_BASE}/radiation"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
@@ -154,7 +154,7 @@ async def radiatsionnyy_monitoring(
 
 
 async def gidrologicheskaya_obstanovka(
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Получить данные гидрологической обстановки.
 
@@ -167,8 +167,8 @@ async def gidrologicheskaya_obstanovka(
     try:
         url = f"{MCHS_API_BASE}/hydrology"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
@@ -180,7 +180,7 @@ async def gidrologicheskaya_obstanovka(
 
 
 async def preduprezhdeniya_chs(
-    region: str = "",
+    subiekt: str = "",
     tip_opasnosti: str = "",
 ) -> list[dict[str, Any]]:
     """Получить предупреждения о чрезвычайных ситуациях.
@@ -195,8 +195,8 @@ async def preduprezhdeniya_chs(
     try:
         url = f"{MCHS_API_BASE}/warnings"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if tip_opasnosti:
             params["dangerType"] = tip_opasnosti
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -256,7 +256,7 @@ def _razobrat_pozhar(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "data": data.get("date", "") or data.get("data", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "vid_pozhara": data.get("fireType", "") or data.get("vid_pozhara", ""),
         "pogibshikh": data.get("deaths", 0) or data.get("pogibshikh", 0),
         "postradavshikh": data.get("injured", 0) or data.get("postradavshikh", 0),
@@ -272,7 +272,7 @@ def _razobrat_chs(data: dict[str, Any]) -> dict[str, Any]:
         "vid_chs": data.get("type", "") or data.get("vid_chs", ""),
         "klass_chs": data.get("class", "") or data.get("klass_chs", ""),
         "data_vozniknoveniya": data.get("date", "") or data.get("data_vozniknoveniya", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
         "status": data.get("status", ""),
         "pogibshikh": data.get("deaths", 0) or data.get("pogibshikh", 0),
@@ -285,7 +285,7 @@ def _razobrat_radiatsiyu(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных радиационного мониторинга."""
     return {
         "stantsiya": data.get("station", "") or data.get("stantsiya", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "uroven_radiatsii": data.get("level", 0.0) or data.get("uroven_radiatsii", 0.0),
         "edinitsa": data.get("unit", "мкЗв/ч"),
         "data_izmereniya": data.get("date", "") or data.get("data_izmereniya", ""),
@@ -312,7 +312,7 @@ def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": data.get("id", "") or data.get("nomer", ""),
         "tip_opasnosti": data.get("dangerType", "") or data.get("tip_opasnosti", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
         "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
         "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),

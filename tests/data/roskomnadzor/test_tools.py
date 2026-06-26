@@ -65,7 +65,7 @@ async def test_info_licenzii_found():
             "tip_licenzii": "Интернет-доступ",
             "data_vydachi": "2023-01-01",
             "data_okonchaniya": "2028-01-01",
-            "status": "Действует",
+            "sostoyanie": "Действует",
             "territoriya": "Российская Федерация",
             "istochnik": "Реестр лицензий (rkn.gov.ru)",
         }
@@ -98,7 +98,7 @@ async def test_info_operatora_pd_found():
             "inn": "7710563663",
             "kategoriya": "Коммерческие организации",
             "tsel_obrabotki": "Кадровый учёт",
-            "status": "Зарегистрирован",
+            "sostoyanie": "Зарегистрирован",
         }
     ]
     with patch.object(rkn_tools.client, "poisk_operatora_pd", return_value=mock_data):
@@ -111,7 +111,7 @@ async def test_proverka_blokirovki_not_blocked():
     with patch.object(
         rkn_tools.client,
         "proverka_blokirovki",
-        return_value={"domain": "example.com", "blokirovka": False, "istochnik": "ЕАИС"},
+        return_value={"domen": "example.com", "blokirovka": False, "istochnik": "ЕАИС"},
     ):
         result = await rkn_tools.proverka_blokirovki(ctx, domen="example.com")
     assert "НЕ найден" in result
@@ -123,7 +123,7 @@ async def test_proverka_blokirovki_blocked():
         rkn_tools.client,
         "proverka_blokirovki",
         return_value={
-            "domain": "blocked-site.ru",
+            "domen": "blocked-site.ru",
             "blokirovka": True,
             "osnovanie": "Экстремистские материалы",
             "data_vklyucheniya": "2024-01-01",

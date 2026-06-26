@@ -53,7 +53,7 @@ async def test_info_organizacii_found():
         polnoe_nazvanie="Публичное акционерное общество Сбербанк России",
         yuridicheskiy_adres="г. Москва, ул. Вавилова, д. 19",
         data_registracii="2002-08-22",
-        status="Действующая",
+        sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=mock_org):
         result = await fns_tools.info_organizacii("7707083893", ctx=ctx)
@@ -76,7 +76,7 @@ async def test_info_ip_found():
         ogrnip="304500116000157",
         fio="Иванов Иван Иванович",
         data_registracii="2004-04-27",
-        status="Действующая",
+        sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_ip", return_value=mock_ip):
         result = await fns_tools.info_ip("500100732259", ctx=ctx)

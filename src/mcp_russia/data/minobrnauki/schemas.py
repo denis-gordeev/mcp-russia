@@ -11,7 +11,7 @@ class VUZ(BaseModel):
     nazvanie: str = ""
     tip: str = ""
     gorod: str = ""
-    region: str = ""
+    subiekt: str = ""
     federalny_okrug: str = ""
     status_akkreditatsii: str = ""
     kolichestvo_studentov: int | None = None
@@ -45,7 +45,7 @@ class NauchnoeIssledovanie(BaseModel):
     god_nachala: int | None = None
     god_okonchaniya: int | None = None
     otrasl_nauki: str = ""
-    status: str = ""
+    sostoyanie: str = ""
 
 
 class Aspirant(BaseModel):
@@ -57,7 +57,7 @@ class Aspirant(BaseModel):
     god_postupleniya: int | None = None
     forma_obucheniya: str = ""
     nauchny_rukovoditel: str = ""
-    status: str = ""
+    sostoyanie: str = ""
 
 
 class ReytingVUZa(BaseModel):

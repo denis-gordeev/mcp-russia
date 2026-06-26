@@ -137,7 +137,7 @@ def _razobrat_veshchestvennoe(text: str) -> float:
 async def _zaprosit_html_vyborov(
     tvd: str,
     vrn: str,
-    region: int = 0,
+    subiekt: int = 0,
     podregion: int = 0,
     tip_golosovaniya: int = 242,
     vibid: str | None = None,
@@ -150,7 +150,7 @@ async def _zaprosit_html_vyborov(
         "vrn": vrn,
         "prver": 0,
         "pronetvd": "null",
-        "region": region,
+        "region": subiekt,
         "sub_region": podregion,
         "type": tip_golosovaniya,
         "vibid": vibid or vrn,
@@ -322,8 +322,8 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
                     fio=fio,
                     partia=partia,
                     dolzhnost=dolzhnost,
-                    region=region,
-                    status=status,
+                    subiekt=region,
+                    sostoyanie=status,
                 )
             )
 
@@ -380,7 +380,7 @@ async def gody_vyborov() -> list[int]:
 async def spisok_vyborov(
     god: int | None = None,
     tip: int | None = None,
-    region: int | None = None,
+    subiekt: int | None = None,
 ) -> list[dict[str, Any]]:
     """Получить список выборов из ГАС «Выборы».
 
@@ -403,16 +403,16 @@ async def spisok_vyborov(
             continue
         if tip is not None and v["tip"] != tip:
             continue
-        if region is not None and v.get("region", 0) != region:
+        if subiekt is not None and v.get("subiekt", 0) != subiekt:
             continue
-        results.append({**v, "key": key})
+        results.append({**v, "klyuch": key})
 
     if not results and god is not None:
         url = f"{VYBORY_API}/izbirkom"
         params: dict[str, Any] = {
             "action": "show",
             "root": 1,
-            "region": region or 0,
+            "region": subiekt or 0,
             "type": 0,
         }
         try:
@@ -436,7 +436,7 @@ async def spisok_vyborov(
                                 "tvd": "",
                                 "vrn": "",
                                 "data": str(god),
-                                "region": region or 0,
+                                "subiekt": subiekt or 0,
                             }
                         )
         except Exception as exc:
@@ -448,7 +448,7 @@ async def spisok_vyborov(
 async def poisk_kandidata(
     fio: str,
     god: int | None = None,
-    region: str | None = None,
+    subiekt: str | None = None,
 ) -> list[KandidatKratko]:
     """Поиск кандидата по ФИО в ГАС «Выборы».
 
@@ -461,7 +461,7 @@ async def poisk_kandidata(
         Список найденных кандидатов.
     """
     search_url = f"{VYBORY_API}/izbirkom"
-    region_num = IZBIRATELNYY_KOD_REGIONA.get(region, 0) if region else 0
+    region_num = IZBIRATELNYY_KOD_REGIONA.get(subiekt, 0) if subiekt else 0
 
     vybory_info = None
     if god is not None:
@@ -505,7 +505,7 @@ async def poisk_kandidata(
 
     cik_data = await _zaprosit_json_tsik(
         "/api/elections/candidates",
-        {"fio": fio, "year": god, "region": region},
+        {"fio": fio, "year": god, "region": subiekt},
     )
     if isinstance(cik_data, list):
         results = []
@@ -518,7 +518,7 @@ async def poisk_kandidata(
                     fio=str(item.get("fio", item.get("name", ""))),
                     partia=str(item.get("party", item.get("partia", ""))),
                     dolzhnost=str(item.get("position", item.get("dolzhnost", ""))),
-                    region=str(item.get("region", "")),
+                    subiekt=str(item.get("region", "")),
                     status=str(item.get("status", "")),
                 )
             )
@@ -552,8 +552,7 @@ async def kandidat_podrobno(
             mesto_rozhdeniya=str(cik_data.get("birthPlace", cik_data.get("mesto_rozhdeniya", ""))),
             partia=str(cik_data.get("party", cik_data.get("partia", ""))),
             dolzhnost=str(cik_data.get("position", cik_data.get("dolzhnost", ""))),
-            region=str(cik_data.get("region", "")),
-            status=str(cik_data.get("status", "")),
+            subiekt=str(cik_data.get("region", "")),
             obrazovanie=str(cik_data.get("education", cik_data.get("obrazovanie", ""))),
             mesto_raboty=str(cik_data.get("workPlace", cik_data.get("mesto_raboty", ""))),
             dolzhnost_rabota=str(
@@ -576,7 +575,7 @@ async def kandidat_podrobno(
         html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
-            region=0,
+            subiekt=0,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
@@ -588,8 +587,8 @@ async def kandidat_podrobno(
                         fio=k.fio,
                         partia=k.partia,
                         dolzhnost=k.dolzhnost,
-                        region=k.region,
-                        status=k.status,
+                        subiekt=k.subiekt,
+                        sostoyanie=k.sostoyanie,
                     )
 
     return None
@@ -598,7 +597,7 @@ async def kandidat_podrobno(
 async def rezultaty_vyborov(
     god: int,
     tip: int | None = None,
-    region: str | None = None,
+    subiekt: str | None = None,
 ) -> list[ResultatKandidata]:
     """Получить результаты выборов из ГАС «Выборы».
 
@@ -614,13 +613,13 @@ async def rezultaty_vyborov(
 
     if vybory_info:
         region_num = 0
-        if region and region in IZBIRATELNYY_KOD_REGIONA:
-            region_num = IZBIRATELNYY_KOD_REGIONA[region]
+        if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
+            region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
         html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
-            region=region_num,
+            subiekt=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
@@ -630,7 +629,7 @@ async def rezultaty_vyborov(
 
     cik_data = await _zaprosit_json_tsik(
         "/api/elections/results",
-        {"year": god, "type": tip, "region": region},
+        {"year": god, "type": tip, "region": subiekt},
     )
     if isinstance(cik_data, dict):
         items = cik_data.get("results", cik_data.get("candidates", []))
@@ -657,7 +656,7 @@ async def rezultaty_vyborov(
 async def yavka_i_itogi(
     god: int,
     tip: int | None = None,
-    region: str | None = None,
+    subiekt: str | None = None,
 ) -> dict[str, Any]:
     """Получить данные о явке и итогах выборов из ГАС «Выборы».
 
@@ -673,13 +672,13 @@ async def yavka_i_itogi(
 
     if vybory_info:
         region_num = 0
-        if region and region in IZBIRATELNYY_KOD_REGIONA:
-            region_num = IZBIRATELNYY_KOD_REGIONA[region]
+        if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
+            region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
         html = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
-            region=region_num,
+            subiekt=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
@@ -688,8 +687,8 @@ async def yavka_i_itogi(
                 return {
                     "god": god,
                     "tip": tip,
-                    "region": region,
-                    "name": str(vybory_info["nazvanie"]),
+                    "subiekt": subiekt,
+                    "nazvanie": str(vybory_info["nazvanie"]),
                     "data": str(vybory_info["data"]),
                     **turnout,
                     "istochnik": f"ГАС «Выборы» ({VYBORY_API_BASE})",
@@ -697,14 +696,14 @@ async def yavka_i_itogi(
 
     cik_data = await _zaprosit_json_tsik(
         "/api/elections/turnout",
-        {"year": god, "type": tip, "region": region},
+        {"year": god, "type": tip, "region": subiekt},
     )
     if isinstance(cik_data, dict):
         return {
             "god": god,
             "tip": tip,
-            "region": region,
-            "name": cik_data.get("name", ""),
+            "subiekt": subiekt,
+            "nazvanie": cik_data.get("name", ""),
             "data": cik_data.get("date", ""),
             "yavka_procent": cik_data.get("turnout", cik_data.get("yavka_procent", 0.0)),
             "vseh_izbirateley": cik_data.get("totalVoters", cik_data.get("vseh_izbirateley", 0)),
@@ -717,8 +716,8 @@ async def yavka_i_itogi(
     return {
         "god": god,
         "tip": tip,
-        "region": region,
-        "name": "",
+        "subiekt": subiekt,
+        "nazvanie": "",
         "data": "",
         "yavka_procent": 0.0,
         "vseh_izbirateley": 0,

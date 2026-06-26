@@ -105,7 +105,7 @@ async def info_proizvodstva(ctx: Context, nomer: str) -> str:
         f"- Судебный пристав: {result.get('pristav', '')}",
         f"- Дата окончания: {result.get('ip_end', '') or 'в производстве'}",
         f"- Основание: {result.get('osnovanie', '')}",
-        f"- Регион: {result.get('region', '')}",
+        f"- Регион: {result.get('subiekt_rf', '')}",
     ]
     return "\n".join(lines) + _ATTRIBUTION
 
@@ -114,19 +114,19 @@ async def poisk_dolzhnika(
     ctx: Context,
     fio: str,
     data_rozhdeniya: str = "",
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Поиск исполнительных производств по должнику.
 
     Аргументы:
         fio: ФИО должника или название организации.
         data_rozhdeniya: Дата рождения (необязательно, напр.: «01.01.1990»).
-        region: Код региона (необязательно, напр.: «77» — Москва).
+        subiekt: Код региона (необязательно, напр.: «77» — Москва).
 
     Возвращает:
         Список исполнительных производств с суммами и статусами.
     """
-    results = await client.poisk_proizvodstv(fio, data_rozhdeniya, region)
+    results = await client.poisk_proizvodstv(fio, data_rozhdeniya, subiekt)
     if not results:
         return f"Исполнительные производства по «{fio}» не найдены." + _ATTRIBUTION
 
@@ -134,7 +134,7 @@ async def poisk_dolzhnika(
         (
             r.get("nomer", ""),
             r.get("dolzhnik", ""),
-            r.get("subject", ""),
+            r.get("subiekt", ""),
             r.get("summa", ""),
             r.get("otdel_pristavov", ""),
             r.get("ip_end", "") or "в производстве",
@@ -172,7 +172,7 @@ async def ogranicheniya_dolzhnika(
         (
             r.get("nomer", ""),
             r.get("dolzhnik", ""),
-            r.get("subject", ""),
+            r.get("subiekt", ""),
             r.get("ip_end", "") or "действует",
         )
         for r in results
@@ -203,7 +203,7 @@ async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
         (
             r.get("nomer", ""),
             r.get("dolzhnik", ""),
-            r.get("subject", ""),
+            r.get("subiekt", ""),
             r.get("otdel_pristavov", ""),
         )
         for r in results

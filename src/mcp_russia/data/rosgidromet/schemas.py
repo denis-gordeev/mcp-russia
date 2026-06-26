@@ -10,7 +10,7 @@ class PogodaDannye(BaseModel):
 
     stanciya: str = ""
     gorod: str = ""
-    region: str = ""
+    subiekt: str = ""
     temperatura: float | None = None
     oshchushchaetsya_kak: float | None = None
     vlazhnost: float | None = None
@@ -53,7 +53,7 @@ class Preduprezhdenie(BaseModel):
     """Предупреждение об опасном явлении."""
 
     tip: str = ""
-    region: str = ""
+    subiekt: str = ""
     gorod: str = ""
     opisanie: str = ""
     data_nachala: str = ""
@@ -66,7 +66,7 @@ class SputnikMonitoring(BaseModel):
 
     sputnik: str = ""
     data_syomki: str = ""
-    region: str = ""
+    subiekt: str = ""
     tip_dannykh: str = ""  # lesa, voda, požary, snezhnyy pokrov
     razreshenie: str = ""
     izobrazhenie_ssylka: str = ""

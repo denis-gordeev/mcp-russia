@@ -65,7 +65,7 @@ def _razobrat_dannye_organizatsii(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nazvanie_polnoe": name_full,
         "nazvanie_kratkoe": name_short,
-        "status": status,
+        "sostoyanie": status,
         "adres": address,
         "rukovoditel": director,
         "data_registratsii": reg_date,
@@ -96,7 +96,7 @@ async def _predlozhit_adres(zapros: str, token: str | None = None) -> dict[str, 
             headers=_zagolovki_dadaty(token),
         )
     except Exception:
-        return {"suggestions": []}
+        return {"predlozheniya": []}
 
 
 async def _nayti_po_fias(identifikator_fias: str, token: str | None = None) -> dict[str, Any]:
@@ -109,7 +109,7 @@ async def _nayti_po_fias(identifikator_fias: str, token: str | None = None) -> d
             headers=_zagolovki_dadaty(token),
         )
     except Exception:
-        return {"suggestions": []}
+        return {"predlozheniya": []}
 
 
 async def _pochtovyy_po_indeksu(indeks: str, token: str | None = None) -> dict[str, Any]:
@@ -122,7 +122,7 @@ async def _pochtovyy_po_indeksu(indeks: str, token: str | None = None) -> dict[s
             headers=_zagolovki_dadaty(token),
         )
     except Exception:
-        return {"suggestions": []}
+        return {"predlozheniya": []}
 
 
 async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dict[str, Any]:
@@ -136,7 +136,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dic
         )
     except Exception:
         return {
-            "suggestions": [],
+            "predlozheniya": [],
             "oshibka": (
                 "Не удалось подключиться к API Dadata.\n"
                 "Проверьте MCP_RUSSIA_DADATA_API_KEY или зарегистрируйтесь: "
@@ -156,7 +156,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> d
         )
     except Exception:
         return {
-            "suggestions": [],
+            "predlozheniya": [],
             "oshibka": "Не удалось подключиться к API Dadata.",
         }
 
@@ -185,7 +185,7 @@ async def _nayti_bank_po_bik(bik: str, token: str | None = None) -> dict[str, An
             headers=_zagolovki_dadaty(token),
         )
     except Exception:
-        return {"suggestions": []}
+        return {"predlozheniya": []}
 
 
 def poluchit_prazdniki(god: int) -> list[dict[str, str]]:
@@ -240,7 +240,7 @@ async def konsultirovat_adres_po_pochtovomu(pochtovyy_indeks: str) -> AdresRF | 
     data = s.get("data", {})
     return AdresRF(
         pochtovyy_indeks=data.get("postal_code", pochtovyy_indeks),
-        region=data.get("region_with_type", ""),
+        subiekt=data.get("region_with_type", ""),
         gorod=data.get("city_with_type") or data.get("settlement_with_type", ""),
         ulitsa=data.get("street_with_type"),
         dom=data.get("house"),
@@ -268,7 +268,7 @@ async def poisk_adresa(zapros: str) -> list[dict[str, str]]:
             {
                 "value": s.get("value", ""),
                 "pochtovyy_indeks": data.get("postal_code", ""),
-                "region": data.get("region_with_type", ""),
+                "subiekt": data.get("region_with_type", ""),
                 "gorod": city,
                 "ulitsa": data.get("street_with_type", ""),
                 "dom": data.get("house", ""),
@@ -303,7 +303,7 @@ async def nayti_organizatsiyu_po_inn(inn: str) -> Organizatsiya | dict[str, str]
         ogrn=data.get("ogrn"),
         nazvanie_polnoe=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
-        status=parsed["status"],
+        sostoyanie=parsed["sostoyanie"],
         adres=parsed["adres"],
         rukovoditel=parsed["rukovoditel"],
         data_registratsii=parsed["data_registratsii"],
@@ -335,7 +335,7 @@ async def nayti_organizatsiyu_po_ogrn(ogrn: str) -> Organizatsiya | dict[str, st
         ogrn=data.get("ogrn", ogrn),
         nazvanie_polnoe=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
-        status=parsed["status"],
+        sostoyanie=parsed["sostoyanie"],
         adres=parsed["adres"],
     )
 
@@ -353,7 +353,7 @@ async def spisok_bankov_publichnyy() -> list[BankRF]:
                 nazvanie=parsed["nazvanie_polnoe"],
                 nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
                 gorod=parsed["gorod"],
-                region=None,
+                subiekt=None,
                 svift=data.get("swift"),
             )
         )
@@ -382,6 +382,6 @@ async def nayti_bank_po_bik(bik: str) -> BankRF | dict[str, str]:
         nazvanie=parsed["nazvanie_polnoe"],
         nazvanie_kratkoe=parsed["nazvanie_kratkoe"],
         gorod=parsed["gorod"],
-        region=None,
+        subiekt=None,
         svift=data.get("swift"),
     )

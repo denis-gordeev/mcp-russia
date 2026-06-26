@@ -52,14 +52,14 @@ async def spisok_tipov_produktsii(ctx: Context) -> str:
 
 async def poisk_proverok(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     vid_nadzora: str = "",
     tip_proverki: str = "",
 ) -> str:
     """Поиск проверок Россельхознадзора.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
         vid_nadzora: Вид надзора (необязательно).
         tip_proverki: Тип проверки (необязательно).
 
@@ -68,7 +68,7 @@ async def poisk_proverok(
     """
     await ctx.info("Поиск проверок Россельхознадзора...")
     proverki = await client.poisk_proverok(
-        region=region,
+        subiekt=subiekt,
         vid_nadzora=vid_nadzora,
         tip_proverki=tip_proverki,
     )
@@ -102,7 +102,7 @@ async def poisk_proverok(
             p.get("nomer", ""),
             p.get("vid_nadzora", ""),
             p.get("data_provedeniya", ""),
-            p.get("region", "")[:30],
+            p.get("subiekt", "")[:30],
             p.get("status", ""),
             str(p.get("narusheniya", "")),
         )
@@ -117,20 +117,20 @@ async def poisk_proverok(
 
 async def poisk_karantinnykh_obektov(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
 ) -> str:
     """Поиск карантинных объектов.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
         tip: Тип объекта (необязательно).
 
     Возвращает:
         Список карантинных объектов.
     """
     await ctx.info("Поиск карантинных объектов...")
-    obekty = await client.poisk_karantinnykh_obektov(region=region, tip=tip)
+    obekty = await client.poisk_karantinnykh_obektov(subiekt=subiekt, tip=tip)
     if not obekty:
         return (
             "Карантинные объекты не найдены.\n\n"
@@ -140,7 +140,7 @@ async def poisk_karantinnykh_obektov(
         (
             o.get("nazvanie", ""),
             o.get("tip", ""),
-            o.get("region", "")[:30],
+            o.get("subiekt", "")[:30],
             o.get("status_karantina", ""),
             o.get("data_vvedeniya", ""),
         )
@@ -183,7 +183,7 @@ async def poisk_registratsiy_produktsii(
             r.get("naimenovanie", "")[:40],
             r.get("proizvoditel", "")[:25],
             r.get("tip_produktsii", ""),
-            r.get("status", ""),
+            r.get("sostoyanie", ""),
         )
         for r in registratsii
     ]
@@ -196,13 +196,13 @@ async def poisk_registratsiy_produktsii(
 
 async def veterinarsnye_sertifikaty(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     tip_produktsii: str = "",
 ) -> str:
     """Поиск ветеринарных сертификатов.
 
     Аргументы:
-        region: Регион отправки (необязательно).
+        subiekt: Регион отправки (необязательно).
         tip_produktsii: Тип продукции (необязательно).
 
     Возвращает:
@@ -210,7 +210,7 @@ async def veterinarsnye_sertifikaty(
     """
     await ctx.info("Поиск ветеринарных сертификатов...")
     sertifikaty = await client.veterinarsnye_sertifikaty(
-        region=region,
+        subiekt=subiekt,
         tip_produktsii=tip_produktsii,
     )
     if not sertifikaty:
@@ -224,7 +224,7 @@ async def veterinarsnye_sertifikaty(
             s.get("tip_produktsii", ""),
             s.get("region_otpravki", "")[:30],
             s.get("data_oformleniya", ""),
-            s.get("status", ""),
+            s.get("sostoyanie", ""),
         )
         for s in sertifikaty
     ]
@@ -237,18 +237,18 @@ async def veterinarsnye_sertifikaty(
 
 async def preduprezhdeniya_karantina(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Предупреждения о карантинных ограничениях.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
 
     Возвращает:
         Список предупреждений.
     """
     await ctx.info("Запрос предупреждений о карантине...")
-    preduprezhdeniya = await client.preduprezhdeniya_karantina(region=region)
+    preduprezhdeniya = await client.preduprezhdeniya_karantina(subiekt=subiekt)
     if not preduprezhdeniya:
         return (
             "Действующие карантинные ограничения не найдены.\n\n"
@@ -258,7 +258,7 @@ async def preduprezhdeniya_karantina(
         (
             p.get("nomer", ""),
             p.get("tip_karantina", ""),
-            p.get("region", "")[:30],
+            p.get("subiekt", "")[:30],
             p.get("opisanie", "")[:60],
             p.get("data_nachala", ""),
             p.get("data_okonchaniya", ""),

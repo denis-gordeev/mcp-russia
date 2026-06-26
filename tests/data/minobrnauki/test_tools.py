@@ -61,7 +61,7 @@ async def test_info_vuza_by_name():
         "inn": "7710563663",
         "tip": "университет",
         "gorod": "Москва",
-        "region": "г. Москва",
+        "subiekt": "г. Москва",
         "status_akkreditatsii": "Действует",
         "data_akkreditatsii": "2020-01-01",
         "srok_deystviya": "2026-01-01",

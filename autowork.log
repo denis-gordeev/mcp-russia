@@ -171611,3 +171611,1922 @@ Now let me commit and push:
 - **6 инфраструктурных констант/классов**: `RequestLoggingMiddleware` → `PosrednikLogirovaniyaZaprosov`, `_dispatch` → `_dispetcher`, `_catalog_cache` → `_kesh_kataloga`, `_SYSTEM_PROMPT` → `_SISTEMNYY_PROMPT`, `_always_visible` → `_vsegda_vidimye`, `_RETRYABLE_STATUS_CODES` → `_KODY_STATUSOV_DLYA_POVTORA`
 - **Документация**: cliff.toml (группы секций на русском), CONTRIBUTING.md, pyproject.toml, CHANGELOG.md, README.md, 5 docs/ файлов
 - **Проверки**: `ruff check` — passed, `pytest` — 680 passed, 1 skipped
+[0m
+> build · glm-5.1
+[0m
+[0m# [0mTodos
+[ ] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[ ] Explore codebase structure (src/, tests/, docs/)
+[ ] Identify remaining non-Russian artifacts in codebase
+[ ] Migrate all content to Russian/Russian-language realities
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead .
+[0m→ [0mRead TODO.md
+[0m→ [0mRead README.md
+[0m→ [0mRead AUTOWORK_INSTRUCTIONS.md
+[0m→ [0mRead TODO.md[90m [offset=410][0m
+[0m→ [0mRead src/mcp_russia
+[0m→ [0mRead src/mcp_russia/exceptions.py
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[ ] Explore codebase structure (src/, tests/, docs/)
+[ ] Identify remaining non-Russian artifacts in codebase
+[ ] Migrate all content to Russian/Russian-language realities
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m• [0mFind remaining English artifacts[90m Explore Agent[0m
+[0m✓ [0mFind remaining English artifacts[90m Explore Agent[0m
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[ ] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[ ] Phase 1: postal_code → pochtovyy_indeks parameter
+[ ] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[ ] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[ ] Phase 1: *Data → *Dannye class suffix (8 classes)
+[ ] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[ ] Phase 1: "http_client" → "http_klient" context key
+[ ] Phase 1: Settings constants English → Russian
+[ ] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[ ] Phase 2: McpRussiaError → OshibkaMcpRussia
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead src/mcp_russia/data/cbrf/client.py
+[0m→ [0mRead src/mcp_russia/data/rosstat/client.py
+[0m→ [0mRead src/mcp_russia/data/rosapi/client.py
+[0m→ [0mRead src/mcp_russia/data/rosstat/tools.py
+[0m→ [0mRead src/mcp_russia/data/rosapi/tools.py
+[0m→ [0mRead src/mcp_russia/_shared/validators.py
+[0m→ [0mRead src/mcp_russia/_shared/rate_limiter.py
+[0m→ [0mRead src/mcp_russia/_shared/http_client.py
+[0m→ [0mRead src/mcp_russia/_shared/discovery.py
+[0m→ [0mRead src/mcp_russia/_shared/batch.py
+[0m→ [0mRead src/mcp_russia/_shared/feature.py
+[0m→ [0mRead src/mcp_russia/_shared/lifespan.py
+[0m→ [0mRead src/mcp_russia/settings.py
+[0m→ [0mRead src/mcp_russia/_shared/planner.py
+[0m→ [0mRead src/mcp_russia/server.py
+[0m→ [0mRead src/mcp_russia/data/rosstat/schemas.py
+[0m→ [0mRead src/mcp_russia/data/rosgidromet/schemas.py
+[0m→ [0mRead src/mcp_russia/data/rosvodresursy/schemas.py
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[ ] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[ ] Phase 1: postal_code → pochtovyy_indeks parameter
+[ ] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[ ] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[ ] Phase 1: *Data → *Dannye class suffix (8 classes)
+[ ] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[ ] Phase 1: "http_client" → "http_klient" context key
+[ ] Phase 1: Settings constants English → Russian
+[ ] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[ ] Phase 2: McpRussiaError → OshibkaMcpRussia
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m← [0mEdit src/mcp_russia/data/cbrf/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/cbrf/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/cbrf/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/cbrf/client.py
+@@ -115,5 +115,5 @@
+ url = f"https://www.cbr-xml-daily.ru/dynamics/{kod}/dynamic_json.js"
+ try:
+     return await http_poluchit(url)
+ except Exception:
+-    return {"error": f"Нет данных для валюты {kod}"}
++    return {"oshibka": f"Нет данных для валюты {kod}"}
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+@@ -102,9 +102,9 @@
+     Данные федерального округа.
+ """
+ info_ob_okruge = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
+ if not info_ob_okruge:
+-    return {"error": f"Федеральный округ '{kod}' не найден"}
++    return {"oshibka": f"Федеральный округ '{kod}' не найден"}
+ 
+ regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == kod]
+ return {
+     "kod": kod,
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
+@@ -96,10 +96,10 @@
+ """
+ await ctx.info(f"Запрос информации о федеральном округе {kod}...")
+ data = await client.poluchit_federalny_okrug(kod)
+ 
+-if "error" in data:
+-    return f"{data['error']}\n\nИспользуйте spisok_okrugov() для списка округов."
++if "oshibka" in data:
++    return f"{data['oshibka']}\n\nИспользуйте spisok_okrugov() для списка округов."
+ 
+ lines = [
+     f"**{data['nazvanie']}** (код {data['kod']})",
+     f"- Субъектов в округе: {data.get('kolichestvo_subiektov', 0)}",
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -136,9 +136,9 @@
+     )
+ except Exception:
+     return {
+         "suggestions": [],
+-        "error": (
++        "oshibka": (
+             "Не удалось подключиться к API Dadata.\n"
+             "Проверьте MCP_RUSSIA_DADATA_API_KEY или зарегистрируйтесь: "
+             "https://dadata.ru/api/"
+         ),
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -156,9 +156,9 @@
+         )
+     except Exception:
+         return {
+             "suggestions": [],
+-            "error": "Не удалось подключиться к API Dadata.",
++            "oshibka": "Не удалось подключиться к API Dadata.",
+         }
+ 
+ 
+ async def _spisok_bankov(token: str | None = None) -> list[dict[str, Any]]:
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -228,9 +228,9 @@
+ suggestions = result.get("suggestions", [])
+ 
+ if not suggestions:
+     return {
+-        "error": (
++        "oshibka": (
+             f"Адрес по индексу {pochtovyy_indeks} не найден.\n"
+             "Для работы с адресами подключите API Dadata:\n"
+             "https://dadata.ru/api/address/"
+         ),
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -287,14 +287,14 @@
+ Возвращает:
+     Данные организации или словарь с ошибкой.
+ """
+ result = await _nayti_organizatsiyu_po_inn(inn)
+-if "error" in result and not result.get("suggestions"):
+-    return {"error": result["error"]}
++if "oshibka" in result and not result.get("suggestions"):
++    return {"oshibka": result["oshibka"]}
+ 
+ suggestions = result.get("suggestions", [])
+ if not suggestions:
+-    return {"error": f"Организация с ИНН {inn} не найдена"}
++    return {"oshibka": f"Организация с ИНН {inn} не найдена"}
+ 
+ data = suggestions[0].get("data", {})
+ parsed = _razobrat_dannye_organizatsii(data)
+ return Organizatsiya(
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -319,14 +319,14 @@
+ Возвращает:
+     Данные организации или словарь с ошибкой.
+ """
+ result = await _nayti_organizatsiyu_po_ogrn(ogrn)
+-if "error" in result and not result.get("suggestions"):
+-    return {"error": result["error"]}
++if "oshibka" in result and not result.get("suggestions"):
++    return {"oshibka": result["oshibka"]}
+ 
+ suggestions = result.get("suggestions", [])
+ if not suggestions:
+-    return {"error": f"Организация с ОГРН {ogrn} не найдена"}
++    return {"oshibka": f"Организация с ОГРН {ogrn} не найдена"}
+ 
+ data = suggestions[0].get("data", {})
+ parsed = _razobrat_dannye_organizatsii(data)
+ return Organizatsiya(
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/client.py
+@@ -372,9 +372,9 @@
+ result = await _nayti_bank_po_bik(bik)
+ suggestions = result.get("suggestions", [])
+ 
+ if not suggestions:
+-    return {"error": f"Банк с БИК {bik} не найден"}
++    return {"oshibka": f"Банк с БИК {bik} не найден"}
+ 
+ data = suggestions[0].get("data", {})
+ parsed = _razobrat_dannye_banka(data, suggestions[0].get("value", ""))
+ return BankRF(
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+@@ -36,12 +36,12 @@
+ """
+ await ctx.info(f"Поиск адреса по индексу {indeks}...")
+ result = await client.konsultirovat_adres_po_pochtovomu(indeks)
+ 
+-if isinstance(result, dict) and "error" in result:
++if isinstance(result, dict) and "oshibka" in result:
+     return (
+         f"**Почтовый индекс: {indeks}**\n\n"
+-        f"{result['error']}\n\n"
++        f"{result['oshibka']}\n\n"
+         f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
+         f"https://dadata.ru/api/address/"
+     )
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+@@ -106,12 +106,12 @@
+ """
+ await ctx.info(f"Поиск организации по ИНН {inn}...")
+ result = await client.nayti_organizatsiyu_po_inn(inn)
+ 
+-if isinstance(result, dict) and "error" in result:
++if isinstance(result, dict) and "oshibka" in result:
+     return (
+         f"**ИНН: {inn}**\n\n"
+-        f"{result['error']}\n\n"
++        f"{result['oshibka']}\n\n"
+         f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
+         f"https://dadata.ru/api/party/"
+     )
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+@@ -153,10 +153,10 @@
+ """
+ await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
+ result = await client.nayti_organizatsiyu_po_ogrn(ogrn)
+ 
+-if isinstance(result, dict) and "error" in result:
+-    return f"**ОГРН: {ogrn}**\n\n{result['error']}"
++if isinstance(result, dict) and "oshibka" in result:
++    return f"**ОГРН: {ogrn}**\n\n{result['oshibka']}"
+ 
+ lines = [
+     f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
+     f"- ОГРН: {result.ogrn or ogrn}",
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosapi/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosapi/tools.py
+@@ -209,9 +209,9 @@
+ await ctx.info(f"Поиск банка по БИК {bik}...")
+ 
+ result = await client.nayti_bank_po_bik(bik)
+ 
+-if isinstance(result, dict) and "error" in result:
++if isinstance(result, dict) and "oshibka" in result:
+     found = None
+     for bank in OSNOVNYE_BANKI:
+         if bank["bik"] == bik:
+             found = bank
+
+[0m
+[0m→ [0mRead tests/data/rosapi/test_tools.py
+[0m→ [0mRead tests/data/rosstat/test_tools.py
+[0m
+[0m← [0mEdit tests/data/rosapi/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+@@ -41,9 +41,9 @@
+ ctx = _mock_ctx()
+ with patch.object(
+     rosapi_tools.client,
+     "konsultirovat_adres_po_pochtovomu",
+-    return_value={"error": "Адрес по индексу 000000 не найден"},
++    return_value={"oshibka": "Адрес по индексу 000000 не найден"},
+ ):
+     result = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
+ assert "000000" in result
+ assert "Dadata" in result or "API" in result
+
+[0m
+[0m← [0mEdit tests/data/rosapi/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+@@ -105,9 +105,9 @@
+ ctx = _mock_ctx()
+ with patch.object(
+     rosapi_tools.client,
+     "nayti_organizatsiyu_po_inn",
+-    return_value={"error": "Не удалось подключиться к API Dadata"},
++    return_value={"oshibka": "Не удалось подключиться к API Dadata"},
+ ):
+     result = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
+ assert "Dadata" in result or "API" in result
+ 
+
+[0m
+[0m← [0mEdit tests/data/rosapi/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+@@ -116,9 +116,9 @@
+ ctx = _mock_ctx()
+ with patch.object(
+     rosapi_tools.client,
+     "nayti_organizatsiyu_po_ogrn",
+-    return_value={"error": "не найдена"},
++    return_value={"oshibka": "не найдена"},
+ ):
+     result = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
+ assert "0000000000000" in result
+ 
+
+[0m
+[0m← [0mEdit tests/data/rosapi/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosapi/test_tools.py
+@@ -153,9 +153,9 @@
+ ctx = _mock_ctx()
+ with patch.object(
+     rosapi_tools.client,
+     "nayti_bank_po_bik",
+-    return_value={"error": "Банк с БИК 000000000 не найден"},
++    return_value={"oshibka": "Банк с БИК 000000000 не найден"},
+ ):
+     result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
+ assert "не найден" in result
+ 
+
+[0m
+[0m← [0mEdit tests/data/rosstat/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+@@ -80,9 +80,9 @@
+ ctx = _mock_ctx()
+ with patch.object(
+     rosstat_tools.client,
+     "poluchit_federalny_okrug",
+-    return_value={"error": "не найден"},
++    return_value={"oshibka": "не найден"},
+ ):
+     result = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
+ assert "не найден" in result
+ 
+
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[x] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[ ] Phase 1: postal_code → pochtovyy_indeks parameter + validators.py + tests
+[ ] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[ ] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[ ] Phase 1: *Data → *Dannye class suffix (8 classes)
+[ ] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[ ] Phase 1: "http_client" → "http_klient" context key
+[ ] Phase 1: Settings constants English → Russian
+[ ] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[ ] Phase 2: McpRussiaError → OshibkaMcpRussia
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/validators.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
+@@ -172,18 +172,18 @@
+ # Почтовый индекс России
+ # ---------------------------------------------------------------------------
+ 
+ 
+-def proverit_pochtovyy_indeks(postal_code: str) -> bool:
++def proverit_pochtovyy_indeks(pochtovyy_indeks: str) -> bool:
+     """Валидация российского почтового индекса (6 цифр).
+ 
+     Аргументы:
+-        postal_code: Строка почтового индекса (с форматированием или без).
++        pochtovyy_indeks: Строка почтового индекса (с форматированием или без).
+ 
+     Возвращает:
+         True если формат корректен, иначе False.
+     """
+-    digits = _tolko_tsifry(postal_code)
++    digits = _tolko_tsifry(pochtovyy_indeks)
+     if len(digits) != 6:
+         return False
+     return digits[0] in "123456"
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/validators.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/validators.py
+@@ -187,21 +187,21 @@
+         return False
+     return digits[0] in "123456"
+ 
+ 
+-def formatirovat_pochtovyy_indeks(postal_code: str) -> str:
++def formatirovat_pochtovyy_indeks(pochtovyy_indeks: str) -> str:
+     """Форматирование российского почтового индекса как XXXXXX.
+ 
+     Аргументы:
+-        postal_code: Цифры почтового индекса (с форматированием или без).
++        pochtovyy_indeks: Цифры почтового индекса (с форматированием или без).
+ 
+     Возвращает:
+         Отформатированная строка почтового индекса.
+ 
+     Вызывает:
+         ValueError: Если почтовый индекс не содержит ровно 6 цифр.
+     """
+-    digits = _tolko_tsifry(postal_code)
++    digits = _tolko_tsifry(pochtovyy_indeks)
+     if len(digits) != 6:
+         raise ValueError(
+             f"Российский почтовый индекс должен содержать 6 цифр, получено {len(digits)}"
+         )
+
+[0m
+[0m→ [0mRead tests/_shared/test_validators.py[90m [offset=90][0m
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+@@ -1,9 +1,9 @@
+ """Асинхронный ограничитель частоты запросов со скользящим окном.
+ 
+ Использование::
+ 
+-    limiter = OgranichitelChastoty(max_requests=80, period=60.0)
++    limiter = OgranichitelChastoty(maks_zaprosov=80, period=60.0)
+ 
+     async with limiter:
+         await do_request()
+ """
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+@@ -18,15 +18,15 @@
+ class OgranichitelChastoty:
+     """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
+ 
+     Аргументы:
+-        max_requests: Максимальное число запросов в окне.
++        maks_zaprosov: Максимальное число запросов в окне.
+         period: Длительность окна в секундах.
+     """
+ 
+-    def __init__(self, max_requests: int, period: float) -> None:
++    def __init__(self, maks_zaprosov: int, period: float) -> None:
+         """Инициализация ограничителя с заданными параметрами окна."""
+-        self._max_requests = max_requests
++        self._maks_zaprosov = maks_zaprosov
+         self._period = period
+         self._timestamps: deque[float] = deque()
+         self._lock = asyncio.Lock()
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/rate_limiter.py
+@@ -41,9 +41,9 @@
+ while True:
+     async with self._lock:
+         now = time.monotonic()
+         self._ochistit(now)
+-        if len(self._timestamps) < self._max_requests:
++        if len(self._timestamps) < self._maks_zaprosov:
+             self._timestamps.append(now)
+             return
+         # Расчёт времени ожидания до истечения самой старой записи
+         wait = self._timestamps[0] + self._period - now
+
+[0m
+[0m→ [0mRead tests/_shared/test_rate_limiter.py
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -12,9 +12,9 @@
+ 
+ class TestOgranichitelChastoty:
+     @pytest.mark.asyncio
+     async def test_allows_within_limit(self) -> None:
+-        limiter = OgranichitelChastoty(max_requests=5, period=60.0)
++        limiter = OgranichitelChastoty(maks_zaprosov=5, period=60.0)
+         for _ in range(5):
+             async with limiter:
+                 pass
+         # Все 5 должны пройти без блокировки
+
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -20,9 +20,9 @@
+     # Все 5 должны пройти без блокировки
+ 
+ @pytest.mark.asyncio
+ async def test_blocks_when_exhausted(self) -> None:
+-    limiter = OgranichitelChastoty(max_requests=2, period=60.0)
++    limiter = OgranichitelChastoty(maks_zaprosov=2, period=60.0)
+     async with limiter:
+         pass
+     async with limiter:
+         pass
+
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -32,9 +32,9 @@
+         await asyncio.wait_for(limiter.zakhvatit(), timeout=0.05)
+ 
+ @pytest.mark.asyncio
+ async def test_allows_after_window_expires(self) -> None:
+-    limiter = OgranichitelChastoty(max_requests=1, period=0.05)
++    limiter = OgranichitelChastoty(maks_zaprosov=1, period=0.05)
+     async with limiter:
+         pass
+     # Ждём истечения окна
+     await asyncio.sleep(0.06)
+
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -43,9 +43,9 @@
+         pass
+ 
+ @pytest.mark.asyncio
+ async def test_context_manager_protocol(self) -> None:
+-    limiter = OgranichitelChastoty(max_requests=10, period=60.0)
++    limiter = OgranichitelChastoty(maks_zaprosov=10, period=60.0)
+     async with limiter as ctx:
+         assert ctx is limiter
+ 
+ @pytest.mark.asyncio
+
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -49,9 +49,9 @@
+         assert ctx is limiter
+ 
+ @pytest.mark.asyncio
+ async def test_purge_removes_old_timestamps(self) -> None:
+-    limiter = OgranichitelChastoty(max_requests=2, period=0.05)
++    limiter = OgranichitelChastoty(maks_zaprosov=2, period=0.05)
+     now = time.monotonic()
+     # Имитируем старые метки времени
+     limiter._timestamps.append(now - 1.0)
+     limiter._timestamps.append(now - 1.0)
+
+[0m
+[0m← [0mEdit tests/_shared/test_rate_limiter.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_rate_limiter.py
+@@ -61,9 +61,9 @@
+     assert len(limiter._timestamps) == 1
+ 
+ @pytest.mark.asyncio
+ async def test_concurrent_access(self) -> None:
+-    limiter = OgranichitelChastoty(max_requests=3, period=60.0)
++    limiter = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
+     results: list[int] = []
+ 
+     async def worker(i: int) -> None:
+         async with limiter:
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -66,9 +66,9 @@
+     *,
+     params: dict[str, Any] | None = None,
+     headers: dict[str, str] | None = None,
+     timeout: float | None = None,
+-    max_retries: int | None = None,
++    maks_povtorov: int | None = None,
+ ) -> Any:
+     """Выполнение GET-запроса с повторными попытками и экспоненциальной задержкой.
+ 
+     Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
+@@ -78,17 +78,17 @@
+         url: Полный URL для запроса.
+         params: Параметры запроса.
+         headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
+         timeout: Таймаут запроса в секундах.
+-        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
++        maks_povtorov: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
+ 
+     Возвращает:
+         Разобранный JSON-ответ.
+ 
+     Вызывает:
+         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
+     """
+-    retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
++    retries = maks_povtorov if maks_povtorov is not None else HTTP_MAX_RETRIES
+     last_error: Exception | None = None
+ 
+     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
+         for attempt in range(retries + 1):
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/http_client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/http_client.py
+@@ -147,9 +147,9 @@
+     json_body: Any | None = None,
+     params: dict[str, Any] | None = None,
+     headers: dict[str, str] | None = None,
+     timeout: float | None = None,
+-    max_retries: int | None = None,
++    maks_povtorov: int | None = None,
+ ) -> Any:
+     """Выполнение POST-запроса с повторными попытками и экспоненциальной задержкой.
+ 
+     Повторяет при: HTTP 429/5xx, таймаутах и ошибках соединения.
+@@ -159,17 +159,17 @@
+         json_body: JSON-тело для отправки.
+         params: Параметры запроса.
+         headers: Дополнительные заголовки (сливаются с заголовками по умолчанию).
+         timeout: Таймаут запроса в секундах.
+-        max_retries: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
++        maks_povtorov: Максимальное число попыток. По умолчанию: settings.HTTP_MAX_RETRIES.
+ 
+     Возвращает:
+         Разобранный JSON-ответ.
+ 
+     Вызывает:
+         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
+     """
+-    retries = max_retries if max_retries is not None else HTTP_MAX_RETRIES
++    retries = maks_povtorov if maks_povtorov is not None else HTTP_MAX_RETRIES
+     last_error: Exception | None = None
+ 
+     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
+         for attempt in range(retries + 1):
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/lifespan.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
+@@ -1,7 +1,7 @@
+ """Общий lifespan для mcp-russia — создаёт/закрывает httpx.AsyncClient.
+ 
+-HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_client"].
++HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_klient"].
+ 
+ Использование:
+     from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/lifespan.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/lifespan.py
+@@ -35,8 +35,8 @@
+     },
+     follow_redirects=True,
+ )
+ try:
+-    yield {"http_client": client}
++    yield {"http_klient": client}
+ finally:
+     await client.aclose()
+     logger.info("Общий HTTP-клиент закрыт")
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -14,17 +14,17 @@
+ 
+ _kesh_kataloga: str = ""
+ 
+ 
+-def _formatirovat_signaturu_instrumenta(imya_modulya: str, tool_name: str, tool: object) -> str:
++def _formatirovat_signaturu_instrumenta(imya_modulya: str, imya_instrumenta: str, tool: object) -> str:
+     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
+ 
+     Формирует вывод вида:
+         - gosduma_poluchit_deputatov(familiya?: str) — Список депутатов Госдумы.
+ 
+     Аргументы:
+         imya_modulya: Имя модуля (префикс инструмента).
+-        tool_name: Имя инструмента.
++        imya_instrumenta: Имя инструмента.
+         tool: Объект инструмента.
+     """
+     params = getattr(tool, "parameters", {})
+     properties: dict[str, dict[str, object]] = params.get("properties", {})
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -38,9 +38,9 @@
+     opt = "" if pname in required else "?"
+     param_parts.append(f"{pname}{opt}: {ptype}")
+ 
+ signature = ", ".join(param_parts)
+-full_name = f"{imya_modulya}_{tool_name}"
++full_name = f"{imya_modulya}_{imya_instrumenta}"
+ 
+ desc = (getattr(tool, "description", "") or "").split("\n")[0]
+ 
+ return f"- `{full_name}({signature})` — {desc}"
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/discovery.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/discovery.py
+@@ -79,10 +79,10 @@
+     lines.append(f"Авторизация: {auth_info}")
+ 
+     server = feat.server
+     if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
+-        for tool_name, tool in server._tool_manager._tools.items():
+-            lines.append(_formatirovat_signaturu_instrumenta(meta.name, tool_name, tool))
++        for imya_instrumenta, tool in server._tool_manager._tools.items():
++            lines.append(_formatirovat_signaturu_instrumenta(meta.name, imya_instrumenta, tool))
+ 
+ _kesh_kataloga = "\n".join(lines)
+ return _kesh_kataloga
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -35,9 +35,9 @@
+ if _dispetcher:
+     return _dispetcher
+ 
+ for name, feat in registry.funktsii.items():
+-    base = feat.module_path
++    base = feat.put_modulya
+     _skanirovat_modul_instrumentov(base, name)
+ 
+     # Подпакеты (напр., модуль данных с подфункциями)
+     try:
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -53,12 +53,12 @@
+     logger.info("Диспетчеризация пакета: зарегистрировано %d инструментов", len(_dispetcher))
+     return _dispetcher
+ 
+ 
+-def _skanirovat_modul_instrumentov(module_path: str, namespace: str) -> None:
++def _skanirovat_modul_instrumentov(put_modulya: str, namespace: str) -> None:
+     """Импорт модуля инструментов и регистрация его асинхронных функций."""
+     try:
+-        mod = importlib.import_module(f"{module_path}.tools")
++        mod = importlib.import_module(f"{put_modulya}.tools")
+     except ImportError:
+         return
+ 
+     for fn_name, fn in inspect.getmembers(mod, inspect.iscoroutinefunction):
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -73,9 +73,9 @@
+ ) -> str:
+     """Параллельное выполнение нескольких вызовов инструментов.
+ 
+     Аргументы:
+-        queries: Список словарей {"tool": "имя", "args": {}}.
++        queries: Список словарей {"instrument": "имя", "argumenty": {}}.
+         ctx: Контекст FastMCP для передачи в инструменты, которые его принимают.
+ 
+     Возвращает:
+         Отформатированный markdown со всеми результатами.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/batch.py
+@@ -87,28 +87,28 @@
+     return "Максимум 10 запросов на пакет. Уменьшите список."
+ 
+ async def _vypolnit_odin(q: dict[str, Any]) -> tuple[str, str]:
+     """Выполнение одного инструмента из пакета."""
+-    tool_name = q.get("tool", "")
+-    args = q.get("args", {})
+-    fn = _dispetcher.get(tool_name)
++    imya_instrumenta = q.get("instrument", "")
++    args = q.get("argumenty", {})
++    fn = _dispetcher.get(imya_instrumenta)
+ 
+     if fn is None:
+-        return tool_name, f"Инструмент '{tool_name}' не найден."
++        return imya_instrumenta, f"Инструмент '{imya_instrumenta}' не найден."
+ 
+     try:
+         sig = inspect.signature(fn)
+         if "ctx" in sig.parameters:
+             result = await fn(ctx=ctx, **args)
+         else:
+             result = await fn(**args)
+-        return tool_name, result
++        return imya_instrumenta, result
+     except Exception as exc:
+-        return tool_name, f"Ошибка при выполнении '{tool_name}': {exc}"
++        return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {exc}"
+ 
+ results = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
+ 
+ parts: list[str] = []
+-for tool_name, output in results:
+-    parts.append(f"## {tool_name}\n\n{output}")
++for imya_instrumenta, output in results:
++    parts.append(f"## {imya_instrumenta}\n\n{output}")
+ 
+ return "\n\n---\n\n".join(parts)
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -79,9 +79,9 @@
+     """Обнаруженная, провалидированная и зарегистрированная функция."""
+ 
+     meta: MetaFunktsii
+     server: FastMCP
+-    module_path: str
++    put_modulya: str
+ 
+ 
+ class ReyestrFunktsiy:
+     """Автоматический реестр: обнаружение, валидация и монтирование функций.
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -145,19 +145,19 @@
+             logger.warning("Функция '%s' пропущена: %s", short_name, reason)
+ 
+     return self
+ 
+-def _poprovat_zaregistrirovat(self, module_path: str, short_name: str) -> None:
++def _poprovat_zaregistrirovat(self, put_modulya: str, short_name: str) -> None:
+     """Попытка импорта и регистрации отдельной функции."""
+     # Шаг 1: Импорт __init__.py функции
+-    importiruyemyy_modul = importlib.import_module(module_path)
++    importiruyemyy_modul = importlib.import_module(put_modulya)
+ 
+     # Шаг 2: Проверка наличия и корректности META_FUNKTSII
+     meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
+     if meta is None:
+-        raise ValueError(f"Нет META_FUNKTSII в {module_path}")
++        raise ValueError(f"Нет META_FUNKTSII в {put_modulya}")
+     if not isinstance(meta, MetaFunktsii):
+-        raise TypeError(f"META_FUNKTSII в {module_path} не является экземпляром MetaFunktsii")
++        raise TypeError(f"META_FUNKTSII в {put_modulya} не является экземпляром MetaFunktsii")
+ 
+     # Шаг 3: Проверка активности функции
+     if not meta.enabled:
+         self._skipped[short_name] = "отключена (enabled=False)"
+
+[0m
+[0m← [0mEdit src/mcp_russia/_shared/feature.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/_shared/feature.py
+@@ -174,19 +174,19 @@
+     )
+     return
+ 
+ # Шаг 5: Импорт server.py и получение объекта mcp
+-server_module = importlib.import_module(f"{module_path}.server")
++server_module = importlib.import_module(f"{put_modulya}.server")
+ server = getattr(server_module, "mcp", None)
+ 
+ if server is None:
+-    raise ValueError(f"Нет объекта `mcp` в {module_path}.server")
++    raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
+ 
+ # Шаг 6: Регистрация
+ self._features[short_name] = ZaregistrirovannayaFunktsiya(
+     meta=meta,
+     server=server,
+-    module_path=module_path,
++    put_modulya=put_modulya,
+ )
+ logger.info(
+     "Зарегистрирована функция '%s' v%s",
+     meta.name,
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+@@ -26,9 +26,9 @@
+     vrp: float | None = None
+     srednyaya_zp: float | None = None
+ 
+ 
+-class InflaciyaData(BaseModel):
++class InflaciyaDannye(BaseModel):
+     """Данные об инфляции (ИПЦ)."""
+ 
+     period: str
+     ipcz_mesyac: float | None = None
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+@@ -35,9 +35,9 @@
+     ipcz_nakoplenny: float | None = None
+     ipcz_god: float | None = None
+ 
+ 
+-class DemografiyaData(BaseModel):
++class DemografiyaDannye(BaseModel):
+     """Демографические данные."""
+ 
+     period: str
+     naselenie: int | None = None
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+@@ -45,9 +45,9 @@
+     smertnost: float | None = None
+     estestvenny_prirost: float | None = None
+ 
+ 
+-class VRPData(BaseModel):
++class VRPDannye(BaseModel):
+     """Данные о валовом региональном продукте."""
+ 
+     period: str
+     region: str = ""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/schemas.py
+@@ -60,9 +60,9 @@
+ 
+     period: str
+     region: str = ""
+     nominalnaya_zp: float | None = None
+-    realnaya_zp_change: float | None = None
++    realnaya_zp_izmenenie: float | None = None
+ 
+ 
+ class IndikatorDannye(BaseModel):
+     """Универсальные данные показателя ЕМИСС."""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+@@ -24,13 +24,15 @@
+ )
+ from .schemas import (
+     DannyeRegiona,
+     DannyeZarplaty,
++    DemografiyaDannye,
+     IndikatorDannye,
++    InflaciyaDannye,
+     InvestitsiiPoVidam,
+     OtraslevayaStrukturaVRP,
+     PokazatelRosstata,
+-    VRPData,
++    VRPDannye,
+ )
+ 
+ logger = logging.getLogger(__name__)
+ 
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+@@ -186,9 +186,9 @@
+         logger.exception("Ошибка при получении демографических данных")
+         return []
+ 
+ 
+-async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPData]:
++async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
+     """Получение данных о валовом региональном продукте из ЕМИСС.
+ 
+     Аргументы:
+         region: Код региона (необязательно).
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+@@ -219,9 +219,9 @@
+     ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
+     if ri:
+         region_name = ri["nazvanie"]
+ results.append(
+-    VRPData(
++    VRPDannye(
+         period=item.get("date", item.get("period", "")),
+         region=region_name,
+         vrp=item.get("value"),
+         vrp_na_dushu=item.get("perCapita"),
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/client.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/client.py
+@@ -270,9 +270,9 @@
+                 DannyeZarplaty(
+                     period=item.get("date", item.get("period", "")),
+                     region=region_name,
+                     nominalnaya_zp=item.get("value"),
+-                    realnaya_zp_change=item.get("realChange"),
++                    realnaya_zp_izmenenie=item.get("realChange"),
+                 )
+             )
+         return results
+ return []
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosstat/tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosstat/tools.py
+@@ -258,9 +258,9 @@
+     )
+ rows = []
+ for d in data:
+     zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
+-    real = f"{d.realnaya_zp_change}%" if d.realnaya_zp_change else "—"
++    real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
+     rows.append((d.period, d.region or "—", zp, real))
+ header = f"**Средняя заработная плата{filter_text}**\n\n"
+ header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+ return header + tablitsa_v_markdown(
+
+[0m
+[0m← [0mEdit tests/data/rosstat/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+@@ -8,9 +8,9 @@
+     DannyeZarplaty,
+     IndikatorDannye,
+     InvestitsiiPoVidam,
+     OtraslevayaStrukturaVRP,
+-    VRPData,
++    VRPDannye,
+ )
+ 
+ 
+ def _mock_ctx():
+
+[0m
+[0m← [0mEdit tests/data/rosstat/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+@@ -170,9 +170,9 @@
+ 
+ 
+ async def test_vrp_dannye_with_data():
+     mock_data = [
+-        VRPData(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
++        VRPDannye(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
+     ]
+     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
+         result = await rosstat_tools.vrp_dannye(region="77", god="2023")
+     assert "2023" in result
+
+[0m
+[0m← [0mEdit tests/data/rosstat/test_tools.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/data/rosstat/test_tools.py
+@@ -195,9 +195,9 @@
+     DannyeZarplaty(
+         period="2024",
+         region="г. Москва",
+         nominalnaya_zp=125000.0,
+-        realnaya_zp_change=-1.5,
++        realnaya_zp_izmenenie=-1.5,
+     ),
+ ]
+ with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=mock_data):
+     result = await rosstat_tools.zarplata_dannye(region="77", god="2024")
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosgidromet/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+@@ -4,9 +4,9 @@
+ 
+ from pydantic import BaseModel
+ 
+ 
+-class PogodaData(BaseModel):
++class PogodaDannye(BaseModel):
+     """Данные о погоде."""
+ 
+     stanciya: str = ""
+     gorod: str = ""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosgidromet/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+@@ -22,9 +22,9 @@
+     opisaniye: str = ""
+     data_vremya: str = ""
+ 
+ 
+-class PrognozData(BaseModel):
++class PrognozDannye(BaseModel):
+     """Прогноз погоды."""
+ 
+     gorod: str = ""
+     data: str = ""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosgidromet/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosgidromet/schemas.py
+@@ -34,9 +34,9 @@
+     veter_skorost: float | None = None
+     opisaniye: str = ""
+ 
+ 
+-class EkologiyaData(BaseModel):
++class EkologiyaDannye(BaseModel):
+     """Данные об экологической обстановке."""
+ 
+     gorod: str = ""
+     stanciya: str = ""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosvodresursy/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
+@@ -17,9 +17,9 @@
+     region: str = ""
+     opisaniye: str = ""
+ 
+ 
+-class GidroData(BaseModel):
++class GidroDannye(BaseModel):
+     """Гидрологические данные."""
+ 
+     post: str = ""
+     vodnyy_obekt: str = ""
+
+[0m
+[0m← [0mEdit src/mcp_russia/data/rosvodresursy/schemas.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/data/rosvodresursy/schemas.py
+@@ -30,9 +30,9 @@
+     ledovaya_obstanovka: str = ""
+     preduprezhdenie: str = ""
+ 
+ 
+-class VodokhranilishcheData(BaseModel):
++class VodokhranilishcheDannye(BaseModel):
+     """Данные водохранилища."""
+ 
+     kod: str
+     nazvanie: str
+
+[0m
+[0m• [0mUpdate *Data class references[90m General Agent[0m
+[0m✓ [0mUpdate *Data class references[90m General Agent[0m
+[0m
+[0m← [0mEdit src/mcp_russia/settings.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/settings.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/settings.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/settings.py
+@@ -12,26 +12,26 @@
+ 
+ load_dotenv()
+ 
+ # --- HTTP-клиент ---
+-HTTP_TIMEOUT: float = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
+-HTTP_MAX_RETRIES: int = int(os.environ.get("MCP_RUSSIA_HTTP_MAX_RETRIES", "3"))
+-HTTP_BACKOFF_BASE: float = float(os.environ.get("MCP_RUSSIA_HTTP_BACKOFF_BASE", "1.0"))
+-USER_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/0.5.0")
++TAIMAUT_HTTP: float = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
++MAKS_POVTOROV_HTTP: int = int(os.environ.get("MCP_RUSSIA_HTTP_MAX_RETRIES", "3"))
++BAZA_EKSPON_ZADERZH: float = float(os.environ.get("MCP_RUSSIA_HTTP_BACKOFF_BASE", "1.0"))
++POLZOVATELSKIY_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/0.5.0")
+ 
+ # --- Поиск инструментов ---
+ # "bm25" (по умолчанию): BM25-поиск — заменяет list_tools на search_tools + call_tool
+ # "code_mode": Экспериментальный CodeMode — search + get_tags + execute
+ # "none": Без трансформации — все 154+ инструментов доступны сразу
+-TOOL_SEARCH: str = os.environ.get("MCP_RUSSIA_TOOL_SEARCH", "bm25")
++POISK_INSTRUMENTOV: str = os.environ.get("MCP_RUSSIA_TOOL_SEARCH", "bm25")
+ 
+ # --- Dadata API (РосАПИ) ---
+-DADATA_API_KEY: str = os.environ.get("MCP_RUSSIA_DADATA_API_KEY", "")
++KLYUCH_DADATA_API: str = os.environ.get("MCP_RUSSIA_DADATA_API_KEY", "")
+ 
+ # --- Госдума API ---
+-DUMA_API_TOKEN: str = os.environ.get("MCP_RUSSIA_DUMA_API_TOKEN", "")
++TOKEN_GOSDUMY_API: str = os.environ.get("MCP_RUSSIA_DUMA_API_TOKEN", "")
+ 
+ # --- ЕИС Закупки API ---
+-ZAKUPKI_API_TOKEN: str = os.environ.get("MCP_RUSSIA_ZAKUPKI_API_TOKEN", "")
++TOKEN_ZAKUPKI_API: str = os.environ.get("MCP_RUSSIA_ZAKUPKI_API_TOKEN", "")
+ 
+ # --- ИИ-рекомендации (rekomendovat_instrumenty) ---
+-ANTHROPIC_API_KEY: str = os.environ.get("ANTHROPIC_API_KEY", "")
++KLYUCH_ANTHROPIC_API: str = os.environ.get("ANTHROPIC_API_KEY", "")
+
+[0m
+[0m• [0mUpdate settings imports everywhere[90m General Agent[0m
+[0m✓ [0mUpdate settings imports everywhere[90m General Agent[0m
+[0m
+[0m← [0mEdit src/mcp_russia/server.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/server.py
+@@ -156,16 +156,16 @@
+ имён, напр.: «gosduma_poisk_deputata») и его аргументы.
+ 
+ Аргументы:
+     zaprosy: Список запросов. Каждый элемент — объект с:
+-             - "tool": полное имя инструмента
++             - "instrument": полное имя инструмента
+                (напр.: «gosduma_info_deputata»)
+-             - "args": объект с аргументами инструмента
++             - "argumenty": объект с аргументами инструмента
+              Пример: [
+-               {"tool": "gosduma_info_deputata",
+-                "args": {"deputat_id": 99100142}},
+-               {"tool": "cbrf_kursy_valyut",
+-                "args": {}}
++               {"instrument": "gosduma_info_deputata",
++                "argumenty": {"deputat_id": 99100142}},
++               {"instrument": "cbrf_kursy_valyut",
++                "argumenty": {}}
+              ]
+ """
+ await ctx.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
+ return await vypolnit_paket_vnutrenniy(zaprosy, ctx)
+
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[x] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[x] Phase 1: postal_code → pochtovyy_indeks parameter + validators.py + tests
+[x] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[x] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[x] Phase 1: *Data → *Dannye class suffix (8 classes)
+[x] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[x] Phase 1: "http_client" → "http_klient" context key
+[x] Phase 1: Settings constants English → Russian
+[ ] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[ ] Phase 2: McpRussiaError → OshibkaMcpRussia
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m• [0mRename MetaFunktsii fields to Russian[90m General Agent[0m
+[0m✓ [0mRename MetaFunktsii fields to Russian[90m General Agent[0m
+[0m
+[0m← [0mEdit src/mcp_russia/exceptions.py
+Index: /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
++++ /Users/denis/programming/autowork/mcp-russia/src/mcp_russia/exceptions.py
+@@ -1,20 +1,20 @@
+ """Исключения проекта mcp-russia."""
+ 
+ 
+-class McpRussiaError(Exception):
++class OshibkaMcpRussia(Exception):
+     """Базовое исключение для всех ошибок mcp-russia."""
+ 
+ 
+-class OshibkaFunktsii(McpRussiaError):
++class OshibkaFunktsii(OshibkaMcpRussia):
+     """Ошибка, связанная с функцией (обнаружение, валидация и т.д.)."""  # noqa: RUF002
+ 
+ 
+-class OshibkaHttpClienta(McpRussiaError):
++class OshibkaHttpClienta(OshibkaMcpRussia):
+     """Ошибка HTTP-соединения с внешним API."""  # noqa: RUF002
+ 
+ 
+-class OshibkaAutentifikatsii(McpRussiaError):
++class OshibkaAutentifikatsii(OshibkaMcpRussia):
+     """Отсутствует или недействительна учётная запись для доступа к защищённому API."""
+ 
+ 
+ OshibkaFunktsii.__module__ = __name__
+
+[0m
+[0m✱ [0mGrep "McpRussiaError"[90m in . · 0 matches[0m
+[0m✱ [0mGlob "src/mcp_russia/data/*/__init__.py"[90m 24 matches[0m
+[0m✱ [0mGlob "src/mcp_russia/agenty/*/__init__.py"[90m 1 match[0m
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[x] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[x] Phase 1: postal_code → pochtovyy_indeks parameter + validators.py + tests
+[x] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[x] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[x] Phase 1: *Data → *Dannye class suffix (8 classes)
+[x] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[x] Phase 1: "http_client" → "http_klient" context key
+[x] Phase 1: Settings constants English → Russian
+[x] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[x] Phase 2: McpRussiaError → OshibkaMcpRussia
+[ ] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff check src/ tests/ 2>&1 | head -60
+E501 Line too long (103 > 99)
+  --> src/mcp_russia/_shared/discovery.py:18:100
+   |
+18 | def _formatirovat_signaturu_instrumenta(imya_modulya: str, imya_instrumenta: str, tool: object) -> str:
+   |                                                                                                    ^^^^
+19 |     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
+   |
+
+E501 Line too long (100 > 99)
+  --> src/mcp_russia/_shared/discovery.py:84:100
+   |
+82 |         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
+83 |             for imya_instrumenta, tool in server._tool_manager._tools.items():
+84 |                 lines.append(_formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, tool))
+   |                                                                                                    ^
+85 |
+86 |     _kesh_kataloga = "\n".join(lines)
+   |
+
+E501 Line too long (116 > 99)
+   --> src/mcp_russia/_shared/feature.py:223:98
+    |
+221 |             for name, feat in sorted(self._features.items()):
+222 |                 auth_icon = (
+223 |                     "🔑" if feat.meta.trebuet_autentifikatsii else ("🔏" if feat.meta.peremennaya_avt_env else "🔓")
+    |                                                                                                    ^^^^^^^^^^^^^^^^^
+224 |                 )
+225 |                 lines.append(f"  /{name:<20} {auth_icon} {feat.meta.opisanie}")
+    |
+
+I001 [*] Import block is un-sorted or un-formatted
+  --> src/mcp_russia/_shared/http_client.py:17:1
+   |
+15 |   """
+16 |
+17 | / from __future__ import annotations
+18 | |
+19 | | import asyncio
+20 | | import logging
+21 | | from typing import Any
+22 | |
+23 | | import httpx
+24 | |
+25 | | from mcp_russia.exceptions import OshibkaHttpClienta
+26 | | from mcp_russia.settings import BAZA_EKSPON_ZADERZH, MAKS_POVTOROV_HTTP, TAIMAUT_HTTP, POLZOVATELSKIY_AGENT
+   | |___________________________________________________________________________________________________________^
+27 |
+28 |   logger = logging.getLogger(__name__)
+   |
+help: Organize imports
+
+E501 Line too long (107 > 99)
+  --> src/mcp_russia/_shared/http_client.py:26:100
+   |
+25 | from mcp_russia.exceptions import OshibkaHttpClienta
+26 | from mcp_russia.settings import BAZA_EKSPON_ZADERZH, MAKS_POVTOROV_HTTP, TAIMAUT_HTTP, POLZOVATELSKIY_AGENT
+   |                                                                                                    ^^^^^^^^
+27 |
+28 | logger = logging.getLogger(__name__)
+   |
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff format --check src/ tests/ 2>&1 | head -40
+Would reformat: src/mcp_russia/_shared/discovery.py
+Would reformat: src/mcp_russia/_shared/feature.py
+Would reformat: src/mcp_russia/_shared/http_client.py
+3 files would be reformatted, 303 files already formatted
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff format src/ tests/ 2>&1
+3 files reformatted, 303 files left unchanged
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff check --fix src/ tests/ 2>&1
+Found 4 errors (4 fixed, 0 remaining).
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff check src/ tests/ 2>&1
+All checks passed!
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run pytest --tb=short -q 2>&1 | tail -30
+E   TypeError: http_poluchit() got an unexpected keyword argument 'max_retries'
+_________________ TestHttpPoluchit.test_zero_retries_no_retry __________________
+tests/_shared/test_http_client.py:130: in test_zero_retries_no_retry
+    await http_poluchit("https://api.example.com/once", max_retries=0)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: http_poluchit() got an unexpected keyword argument 'max_retries'
+___________ TestHttpLifespan.test_lifespan_creates_and_closes_client ___________
+tests/_shared/test_lifespan.py:25: in test_lifespan_creates_and_closes_client
+    assert "http_client" in context
+E   AssertionError: assert 'http_client' in {'http_klient': <httpx.AsyncClient object at 0x10bcd1c70>}
+__________ TestHttpLifespan.test_lifespan_client_has_correct_headers ___________
+tests/_shared/test_lifespan.py:47: in test_lifespan_client_has_correct_headers
+    client = context["http_client"]
+             ^^^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'http_client'
+=========================== short test summary info ============================
+FAILED tests/_shared/test_batch.py::TestExecuteBatch::test_calls_tool_with_ctx
+FAILED tests/_shared/test_batch.py::TestExecuteBatch::test_calls_tool_without_ctx
+FAILED tests/_shared/test_batch.py::TestExecuteBatch::test_parallel_execution
+FAILED tests/_shared/test_batch.py::TestExecuteBatch::test_handles_tool_error
+FAILED tests/_shared/test_batch.py::TestExecuteBatch::test_mixed_success_and_failure
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_404_raises_immediately
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_500_retries_then_succeeds
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_429_retries
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_all_retries_exhausted
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_timeout_retries
+FAILED tests/_shared/test_http_client.py::TestHttpPoluchit::test_zero_retries_no_retry
+FAILED tests/_shared/test_lifespan.py::TestHttpLifespan::test_lifespan_creates_and_closes_client
+FAILED tests/_shared/test_lifespan.py::TestHttpLifespan::test_lifespan_client_has_correct_headers
+13 failed, 667 passed, 1 skipped in 79.50s (0:01:19)
+[0m
+[0m• [0mFix failing tests after renames[90m General Agent[0m
+[0m✓ [0mFix failing tests after renames[90m General Agent[0m
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff check src/ tests/ 2>&1
+E501 Line too long (102 > 99)
+   --> tests/_shared/test_batch.py:134:100
+    |
+133 |         ctx = _mock_ctx()
+134 |         result = await batch.vypolnit_paket_vnutrenniy([{"instrument": "fail", "argumenty": {}}], ctx)
+    |                                                                                                    ^^^
+135 |         assert "Ошибка" in result
+136 |         assert "timeout" in result.lower()
+    |
+
+Found 1 error.
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run pytest --tb=short -q 2>&1 | tail -5
+........................................................................ [ 74%]
+........................................................................ [ 84%]
+........................................................................ [ 95%]
+.................................                                        [100%]
+680 passed, 1 skipped in 62.54s (0:01:02)
+[0m
+[0m→ [0mRead tests/_shared/test_batch.py[90m [offset=130, limit=10][0m
+[0m
+[0m← [0mEdit tests/_shared/test_batch.py
+Index: /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
++++ /Users/denis/programming/autowork/mcp-russia/tests/_shared/test_batch.py
+@@ -130,9 +130,11 @@
+ 
+     batch._dispetcher["fail"] = failing_tool
+ 
+     ctx = _mock_ctx()
+-    result = await batch.vypolnit_paket_vnutrenniy([{"instrument": "fail", "argumenty": {}}], ctx)
++    result = await batch.vypolnit_paket_vnutrenniy(
++        [{"instrument": "fail", "argumenty": {}}], ctx
++    )
+     assert "Ошибка" in result
+     assert "timeout" in result.lower()
+ 
+ @pytest.mark.asyncio
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && uv run ruff check src/ tests/ 2>&1 && uv run ruff format --check src/ tests/ 2>&1
+All checks passed!
+306 files already formatted
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[x] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[x] Phase 1: postal_code → pochtovyy_indeks parameter + validators.py + tests
+[x] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[x] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[x] Phase 1: *Data → *Dannye class suffix (8 classes)
+[x] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[x] Phase 1: "http_client" → "http_klient" context key
+[x] Phase 1: Settings constants English → Russian
+[x] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[x] Phase 2: McpRussiaError → OshibkaMcpRussia
+[x] Run checks/tests after changes
+[ ] Update TODO.md with completed items and next actions
+[ ] Commit and push if ready
+[0m
+[0m→ [0mRead TODO.md[90m [limit=10][0m
+[0m
+[0m← [0mEdit TODO.md
+Index: /Users/denis/programming/autowork/mcp-russia/TODO.md
+===================================================================
+--- /Users/denis/programming/autowork/mcp-russia/TODO.md
++++ /Users/denis/programming/autowork/mcp-russia/TODO.md
+@@ -1,8 +1,78 @@
+ # TODO
+ 
+ Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
+ 
++## Статус раунда 2026-06-25 (пятьдесят второй проход — русификация полей MetaFunktsii, констант settings, ключей словарей, параметров функций)
++
++### Выполнено
++
++- **Русификация полей dataclass MetaFunktsii** (8 полей, ~199 замен в 28 файлах):
++  - `name` → `imya` (определение + 25 __init__.py + discovery.py + feature.py)
++  - `description` → `opisanie` (определение + 25 __init__.py + discovery.py + feature.py)
++  - `version` → `versiya` (определение + 25 __init__.py + feature.py)
++  - `api_base` → `baza_api` (определение + 25 __init__.py)
++  - `requires_auth` → `trebuet_autentifikatsii` (определение + 5 __init__.py + discovery.py + feature.py)
++  - `auth_env_var` → `peremennaya_avt_env` (определение + 3 __init__.py + discovery.py + feature.py)
++  - `enabled` → `vklyuchena` (определение + feature.py)
++  - `tags` → `tegi` (определение + 25 __init__.py)
++  - Обновлены docstring примеры в feature.py и CONTRIBUTING.md
++- **Русификация констант settings.py** (9 констант + 34 замен в 11 файлах):
++  - `HTTP_TIMEOUT` → `TAIMAUT_HTTP`
++  - `HTTP_MAX_RETRIES` → `MAKS_POVTOROV_HTTP`
++  - `HTTP_BACKOFF_BASE` → `BAZA_EKSPON_ZADERZH`
++  - `USER_AGENT` → `POLZOVATELSKIY_AGENT`
++  - `TOOL_SEARCH` → `POISK_INSTRUMENTOV`
++  - `DADATA_API_KEY` → `KLYUCH_DADATA_API`
++  - `DUMA_API_TOKEN` → `TOKEN_GOSDUMY_API`
++  - `ZAKUPKI_API_TOKEN` → `TOKEN_ZAKUPKI_API`
++  - `ANTHROPIC_API_KEY` → `KLYUCH_ANTHROPIC_API`
++  - Обновлены все импорты и использования в http_client.py, lifespan.py, discovery.py, planner.py, server.py, client.py (rosapi, gosduma, zakupki), тестах
++- **`"error"` → `"oshibka"` ключи словарей** (22 замены в 5 модулях):
++  - cbrf/client.py: `{"error": ...}` → `{"oshibka": ...}`
++  - rosstat/client.py: `{"error": ...}` → `{"oshibka": ...}`
++  - rosapi/client.py: 8 замен (`"error"` ключи и проверки `"error" in result`)
++  - rosstat/tools.py: `"error" in data` → `"oshibka" in data`
++  - rosapi/tools.py: 4 проверки `"error" in result` → `"oshibka" in result`
++  - Обновлены тесты: rosapi/test_tools.py (4), rosstat/test_tools.py (1)
++- **Русификация параметров функций** (~30 замен):
++  - `postal_code` → `pochtovyy_indeks` (validators.py — 2 функции)
++  - `max_requests` → `maks_zaprosov` (rate_limiter.py — __init__ + атрибут + docstring + пример)
++  - `max_retries` → `maks_povtorov` (http_client.py — 2 функции)
++  - `tool_name` → `imya_instrumenta` (discovery.py + batch.py)
++  - `module_path` → `put_modulya` (feature.py + batch.py)
++  - Обновлены тесты: test_rate_limiter.py (6), test_http_client.py (5), test_batch.py (7)
++- **Переименование классов `*Data` → `*Dannye`** (8 классов):
++  - `InflaciyaData` → `InflaciyaDannye` (rosstat/schemas.py)
++  - `DemografiyaData` → `DemografiyaDannye` (rosstat/schemas.py)
++  - `VRPData` → `VRPDannye` (rosstat/schemas.py)
++  - `PogodaData` → `PogodaDannye` (rosgidromet/schemas.py)
++  - `PrognozData` → `PrognozDannye` (rosgidromet/schemas.py)
++  - `EkologiyaData` → `EkologiyaDannye` (rosgidromet/schemas.py)
++  - `GidroData` → `GidroDannye` (rosvodresursy/schemas.py)
++  - `VodokhranilishcheData` → `VodokhranilishcheDannye` (rosvodresursy/schemas.py)
++  - Обновлены ссылки в client.py, tools.py и тестах
++- **`realnaya_zp_change` → `realnaya_zp_izmenenie`** (3 замены: schemas.py, client.py, tools.py)
++- **`McpRussiaError` → `OshibkaMcpRussia`** (exceptions.py — базовый класс)
++- **`"http_client"` → `"http_klient"`** контекстный ключ (lifespan.py + 2 теста)
++- **`"tool"`/`"args"` → `"instrument"`/`"argumenty"`** в протоколе пакетного выполнения (batch.py + server.py docstring + test_batch.py)
++- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
++
++### Ключевые архитектурные решения
++
++- **Поля MetaFunktsii полностью русифицированы**: все 8 полей dataclass (`imya`, `opisanie`, `versiya`, `baza_api`, `trebuet_autentifikatsii`, `peremennaya_avt_env`, `vklyuchena`, `tegi`) теперь на русском; обновлены все 25 __init__.py, discovery.py, feature.py
++- **Константы settings.py русифицированы**: 9 модульных констант переименованы; имена переменных окружения (MCP_RUSSIA_*) не затронуты
++- **Ключи словарей `"error"` → `"oshibka"`**: унифицированы во всех 5 модулях, где возвращались словари с ошибками
++- **Протокол пакетного выполнения обновлён**: ключи JSON `{"tool": ..., "args": ...}` → `{"instrument": ..., "argumenty": ...}`; это user-facing API контракт
++- **Базовое исключение переименовано**: `McpRussiaError` → `OshibkaMcpRussia` — больше ни один класс исключений не содержит английских слов
++
++### Следующие действия
++
++- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
++- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
++- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
++- **Русификация оставшихся английских артефактов**: английские имена тестовых классов/функций (~56 классов, ~130+ полностью английских функций), поля `region`/`status`/`period` в Pydantic-схемах (34+29+9 вхождений), ключи внешних API (`"suggestions"`, `"value"` и т.д.)
++
+ ## Статус раунда 2026-06-24 (пятьдесят первый проход — русификация HTTP-клиента, зачистка алиасов, переименование констант)
+ 
+ ### Выполнено
+ 
+
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git status --short 2>&1 | head -40
+M CONTRIBUTING.md
+ M TODO.md
+ M autowork.log
+ M src/mcp_russia/_shared/batch.py
+ M src/mcp_russia/_shared/discovery.py
+ M src/mcp_russia/_shared/feature.py
+ M src/mcp_russia/_shared/http_client.py
+ M src/mcp_russia/_shared/lifespan.py
+ M src/mcp_russia/_shared/planner.py
+ M src/mcp_russia/_shared/rate_limiter.py
+ M src/mcp_russia/_shared/validators.py
+ M src/mcp_russia/agenty/redator/__init__.py
+ M src/mcp_russia/data/cbrf/__init__.py
+ M src/mcp_russia/data/cbrf/client.py
+ M src/mcp_russia/data/cekrf/__init__.py
+ M src/mcp_russia/data/fns/__init__.py
+ M src/mcp_russia/data/fssp/__init__.py
+ M src/mcp_russia/data/gibdd/__init__.py
+ M src/mcp_russia/data/gosduma/__init__.py
+ M src/mcp_russia/data/gosduma/client.py
+ M src/mcp_russia/data/kad_arbitrazh/__init__.py
+ M src/mcp_russia/data/kaznacheistvo/__init__.py
+ M src/mcp_russia/data/mchs/__init__.py
+ M src/mcp_russia/data/minobrnauki/__init__.py
+ M src/mcp_russia/data/minzdrav/__init__.py
+ M src/mcp_russia/data/publikatsii/__init__.py
+ M src/mcp_russia/data/rosapi/__init__.py
+ M src/mcp_russia/data/rosapi/client.py
+ M src/mcp_russia/data/rosapi/tools.py
+ M src/mcp_russia/data/rosaudit/__init__.py
+ M src/mcp_russia/data/rosgidromet/__init__.py
+ M src/mcp_russia/data/rosgidromet/client.py
+ M src/mcp_russia/data/rosgidromet/schemas.py
+ M src/mcp_russia/data/roskomnadzor/__init__.py
+ M src/mcp_russia/data/rospotrebnadzor/__init__.py
+ M src/mcp_russia/data/rosprirodnadzor/__init__.py
+ M src/mcp_russia/data/rosreestr/__init__.py
+ M src/mcp_russia/data/rosselkhoznadzor/__init__.py
+ M src/mcp_russia/data/rosstat/__init__.py
+ M src/mcp_russia/data/rosstat/client.py
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git log -3 --oneline 2>&1
+356bfb1 refactor: русификация HTTP-клиента (create_client→sozdat_klienta, http_get→http_poluchit, http_post→http_otpravit), зачистка мёртвых алиасов (FeatureError, HttpClientError, AuthError, FeatureMeta, RegisteredFeature, FeatureRegistry), FEATURE_META→META_FUNKTSII, инфраструктурные константы и документация
+2689037 Русификация ~198 имён функций/методов во всех модулях: _parse_*→_razobrat_*, get_*_list→poluchit_spisok_*, _shared/ инфраструктура, FeatureMeta→MetaFunktsii (с алиасами)
+e6486df Русификация имён классов (исключения, Pydantic-схемы, TTLCache, RateLimiter), функций (_shared, _extract_list), переменных, строковых значений, Makefile-заголовков и скриптов
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git diff --stat 2>&1 | tail -10
+tests/_shared/test_batch.py                      |   22 +-
+ tests/_shared/test_feature.py                    |   80 +-
+ tests/_shared/test_http_client.py                |   14 +-
+ tests/_shared/test_lifespan.py                   |    6 +-
+ tests/_shared/test_rate_limiter.py               |   12 +-
+ tests/_shared/test_settings.py                   |    8 +-
+ tests/data/rosapi/test_tools.py                  |   12 +-
+ tests/data/rosstat/test_tools.py                 |    8 +-
+ tests/test_discovery.py                          |   14 +-
+ 59 files changed, 2342 insertions(+), 407 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git add -A && git commit -m "refactor: русификация полей MetaFunktsii (8→imya/opisanie/versiya/baza_api/trebuet_autentifikatsii/peremennaya_avt_env/vklyuchena/tegi), констант settings (9→TAIMAUT_HTTP/MAKS_POVTOROV_HTTP/BAZA_EKSPON_ZADERZH/POISK_INSTRUMENTOV/...), ключей error→oshibka, параметров (postal_code→pochtovyy_indeks, max_requests→maks_zaprosov, max_retries→maks_povtorov, tool_name→imya_instrumenta, module_path→put_modulya), классов *Data→*Dannye, McpRussiaError→OshibkaMcpRussia" 2>&1
+[main eade8d3] refactor: русификация полей MetaFunktsii (8→imya/opisanie/versiya/baza_api/trebuet_autentifikatsii/peremennaya_avt_env/vklyuchena/tegi), констант settings (9→TAIMAUT_HTTP/MAKS_POVTOROV_HTTP/BAZA_EKSPON_ZADERZH/POISK_INSTRUMENTOV/...), ключей error→oshibka, параметров (postal_code→pochtovyy_indeks, max_requests→maks_zaprosov, max_retries→maks_povtorov, tool_name→imya_instrumenta, module_path→put_modulya), классов *Data→*Dannye, McpRussiaError→OshibkaMcpRussia
+ 59 files changed, 2342 insertions(+), 407 deletions(-)
+[0m
+[0m$ [0mcd /Users/denis/programming/autowork/mcp-russia && git push 2>&1
+To github.com:denis-gordeev/mcp-russia.git
+   356bfb1..eade8d3  main -> main
+[0m
+[0m# [0mTodos
+[x] Read AUTOWORK_INSTRUCTIONS.md, TODO.md, README.md
+[x] Explore codebase structure (src/, tests/, docs/)
+[x] Identify remaining non-Russian artifacts in codebase
+[x] Phase 1: "error" → "oshibka" dict keys (5 modules)
+[x] Phase 1: postal_code → pochtovyy_indeks parameter + validators.py + tests
+[x] Phase 1: max_requests → maks_zaprosov, max_retries → maks_povtorov
+[x] Phase 1: tool_name → imya_instrumenta, module_path → put_modulya
+[x] Phase 1: *Data → *Dannye class suffix (8 classes)
+[x] Phase 1: realnaya_zp_change → realnaya_zp_izmenenie
+[x] Phase 1: "http_client" → "http_klient" context key
+[x] Phase 1: Settings constants English → Russian
+[x] Phase 2: MetaFunktsii dataclass fields English → Russian (200+ usages)
+[x] Phase 2: McpRussiaError → OshibkaMcpRussia
+[x] Run checks/tests after changes
+[x] Update TODO.md with completed items and next actions
+[x] Commit and push if ready
+[0m
+Let me start by reading all the files I need to edit for Phase 1.
+Now let me read the remaining files needed:
+Now I have a comprehensive understanding. Let me start making changes systematically.
+Starting with `"error"` → `"oshibka"` dict keys. This requires coordinated changes across 5 modules (cbrf/client.py, rosstat/client.py, rosstat/tools.py, rosapi/client.py, rosapi/tools.py) and their tests.
+Now the rosapi/client.py - this has many `"error"` occurrences:
+Now update rosapi/tools.py to check for `"oshibka"` instead of `"error"`:
+Now update the tests. Let me find the test files:
+Now let me proceed with the other changes in parallel using a general-purpose agent for the bigger tasks:
+Now update the test file for validators:
+The tests don't use keyword args for `postal_code`, they use positional, so they don't need updating. Good. Now let's do the rate_limiter and http_client parameters:
+Now update the test file for rate_limiter:
+Now http_client.py - `max_retries` → `maks_povtorov`:
+Now let me do the `tool_name` → `imya_instrumenta` and `module_path` → `put_modulya` changes, plus `*Data` → `*Dannye`, `realnaya_zp_change` → `realnaya_zp_izmenenie`, and `"http_client"` → `"http_klient"`. I'll use agents for the larger, more systematic changes:
+Now `tool_name` → `imya_instrumenta` in discovery.py and batch.py:
+Now batch.py - `tool_name` → `imya_instrumenta` and `module_path` → `put_modulya`:
+Now update `module_path` → `put_modulya` in feature.py:
+Now update the `*Data` → `*Dannye` class names in schemas. This requires coordinated changes across schemas, client, tools, and tests:
+Now update the rosstat/client.py to use the new class names and field:
+Now update rosstat/tools.py for `realnaya_zp_change` → `realnaya_zp_izmenenie`:
+Update the rosstat test file:
+Now update the rosgidromet schemas:
+Now update the rosvodresursy schemas:
+Now I need to update the client.py and tools.py files for rosgidromet and rosvodresursy to use the new class names. Let me use an agent for this:
+Now let me handle the Settings constants and the server.py batch protocol key changes. Then I'll handle MetaFunktsii fields.
+Now I need to update all files that import from settings.py. Let me use an agent for this since it affects many files:
+Now let me also update the server.py batch protocol docstring that references "tool" and "args" keys:
+Now let me tackle the biggest remaining item: MetaFunktsii dataclass fields. This requires changing 8 fields across 25+ files.
+Now let me handle `McpRussiaError` → `OshibkaMcpRussia`:
+Now check for any references to `McpRussiaError` elsewhere:
+Good, no other references. Now let's also check for `minobrnauki` which should be in the __init__.py list - the agent mentioned 24 files but I saw 25 modules. Let me verify:
+25 __init__.py files total (24 data + 1 agenty). Now let me run the checks:
+Now run the tests:
+Need to fix the test files. Let me fix the remaining test issues:
+All 680 tests pass! Just one E501 to fix:
+All checks pass. Now let me update TODO.md:
+Now let me update TODO.md with the new round status:
+Now commit and push:
+Round 52 complete. Summary of changes:
+
+**59 files changed, 2342 insertions, 407 deletions**
+
+### Completed this round:
+
+| Category | Replacements |
+|---|---|
+| MetaFunktsii fields (8 fields) | ~199 in 28 files |
+| Settings constants (9 constants) | 34 in 11 files |
+| `"error"` → `"oshibka"` dict keys | 22 in 5 modules |
+| Function parameters (5 renames) | ~30 |
+| `*Data` → `*Dannye` class suffix | 8 classes |
+| `realnaya_zp_change` → `realnaya_zp_izmenenie` | 3 |
+| `McpRussiaError` → `OshibkaMcpRussia` | 4 |
+| `"http_client"` → `"http_klient"` context key | 2 |
+| `"tool"/"args"` → `"instrument"/"argumenty"` batch protocol | ~15 |
+
+### Remaining for future rounds:
+- English test class/function names (~56 classes, ~130+ functions)
+- `region`/`status`/`period` fields in Pydantic schemas (34/29/9 occurrences)
+- External API response keys (`"suggestions"`, `"value"` etc.)
+- New data modules (МВД, Рособрнадзор, Ростехнадзор)

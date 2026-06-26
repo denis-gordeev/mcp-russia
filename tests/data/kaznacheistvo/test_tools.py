@@ -40,7 +40,7 @@ async def test_ispolnenie_byudzheta_found():
         "tip": "Федеральный бюджет",
         "dohody": 28000.5,
         "raskhody": 31000.2,
-        "deficit": -2999.7,
+        "defitsit": -2999.7,
     }
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=mock_data

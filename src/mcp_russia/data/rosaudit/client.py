@@ -190,7 +190,7 @@ def _razobrat_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
         "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
         "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
         "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "obiem_sredstv": data.get("amount") or data.get("obiem_sredstv"),
         "valyuta": "руб.",
         "istochnik": "Счётная палата РФ (ach.gov.ru)",

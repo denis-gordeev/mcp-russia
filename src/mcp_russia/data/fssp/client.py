@@ -53,27 +53,27 @@ def _normlizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
         "nomer": item.get("number", item.get("номер", "")),
         "dolzhnik": item.get("name", item.get("должник", item.get("nameRaw", ""))),
         "data_vozbuzhdeniya": item.get("date", item.get("дата_возбуждения", "")),
-        "subject": item.get("subject", item.get("предмет", "")),
+        "subiekt": item.get("subject", item.get("предмет", "")),
         "summa": item.get("sum", item.get("сумма", "")),
         "otdel_pristavov": item.get("department", item.get("отдел", "")),
         "pristav": item.get("bailiff", item.get("пристав", "")),
         "ip_end": item.get("ip_end", item.get("окончание", "")),
         "osnovanie": item.get("basis", item.get("основание", "")),
-        "region": item.get("region", item.get("регион", "")),
+        "subiekt_rf": item.get("region", item.get("регион", "")),
     }
 
 
 async def poisk_proizvodstv(
     fio: str,
     data_rozhdeniya: str = "",
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск исполнительных производств по ФИО должника.
 
     Аргументы:
         fio: ФИО должника.
         data_rozhdeniya: Дата рождения должника.
-        region: Код региона.
+        subiekt: Код региона.
 
     Возвращает:
         Список исполнительных производств.
@@ -82,8 +82,8 @@ async def poisk_proizvodstv(
     body: dict[str, Any] = {"is": fio_parts}
     if data_rozhdeniya:
         body["is"]["date"] = data_rozhdeniya
-    if region:
-        body["is"]["region"] = region
+    if subiekt:
+        body["is"]["region"] = subiekt
     try:
         data = await http_otpravit(FSSP_SEARCH_API, json_body=body)
         return _razobrat_proizvodstva(data)
@@ -99,8 +99,8 @@ async def poisk_proizvodstv(
                 params["is[patronymic]"] = fio_parts["patronymic"]
             if data_rozhdeniya:
                 params["is[date]"] = data_rozhdeniya
-            if region:
-                params["is[region]"] = region
+            if subiekt:
+                params["is[region]"] = subiekt
             data = await http_poluchit(FSSP_IP_BASE, params=params)
             return _razobrat_proizvodstva(data)
         except Exception:

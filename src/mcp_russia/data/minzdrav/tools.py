@@ -16,23 +16,23 @@ from . import client
 
 async def poisk_med_organizatsiy(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
     gorod: str = "",
 ) -> str:
     """Поиск медицинских организаций в ФРМО.
 
     Аргументы:
-        region: Субъект РФ (необязательно).
+        subiekt: Субъект РФ (необязательно).
         tip: Тип организации — больница, поликлиника и т.д. (необязательно).
         gorod: Город (необязательно).
 
     Возвращает:
         Список медицинских организаций.
     """
-    await ctx.info(f"Поиск медицинских организаций: {region or 'все'}...")
+    await ctx.info(f"Поиск медицинских организаций: {subiekt or 'все'}...")
     orgs = await client.poisk_med_organizatsiy(
-        region=region,
+        subiekt=subiekt,
         tip=tip,
         gorod=gorod,
     )
@@ -47,7 +47,7 @@ async def poisk_med_organizatsiy(
         (
             o.get("nazvanie", ""),
             o.get("tip", ""),
-            o.get("region", ""),
+            o.get("subiekt", ""),
             o.get("gorod", ""),
         )
         for o in orgs
@@ -83,7 +83,7 @@ async def info_med_organizatsii(
         f"**{mo.get('nazvanie', '')}**",
         f"- Тип: {mo.get('tip', '')}",
         f"- Адрес: {mo.get('adres', '')}",
-        f"- Регион: {mo.get('region', '')}",
+        f"- Регион: {mo.get('subiekt', '')}",
         f"- Город: {mo.get('gorod', '')}",
         f"- Телефон: {mo.get('telefon', '')}",
         f"- Лицензия: {mo.get('litsenzia', '')}",
@@ -133,24 +133,24 @@ async def poisk_litsenziy(
 
 async def pokazateli_zdorovya(
     ctx: Context,
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
 ) -> str:
     """Получить показатели здоровья населения из открытых данных Минздрава.
 
     Аргументы:
-        region: Субъект РФ (пусто = вся Россия).
+        subiekt: Субъект РФ (пусто = вся Россия).
         god: Год данных.
 
     Возвращает:
         Показатели здоровья населения.
     """
-    await ctx.info(f"Запрос показателей здоровья: {region or 'РФ'}, {god or 'последние'}...")
-    data = await client.pokazateli_zdorovya(region=region, god=god)
+    await ctx.info(f"Запрос показателей здоровья: {subiekt or 'РФ'}, {god or 'последние'}...")
+    data = await client.pokazateli_zdorovya(subiekt=subiekt, god=god)
     if not data:
         return (
             f"**Показатели здоровья населения**\n\n"
-            f"Регион: {region or 'Вся Россия'}\n\n"
+            f"Регион: {subiekt or 'Вся Россия'}\n\n"
             f"Данные доступны через открытые источники Минздрава:\n"
             f"https://data.minzdrav.gov.ru"
         )
@@ -160,7 +160,7 @@ async def pokazateli_zdorovya(
             str(p.get("znachenie", "")),
             p.get("ed_izm", ""),
             str(p.get("god", "")),
-            p.get("region", ""),
+            p.get("subiekt", ""),
         )
         for p in data
     ]
@@ -173,27 +173,27 @@ async def pokazateli_zdorovya(
 async def statistika_zabolevaniy(
     ctx: Context,
     kod_mkb: str = "",
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
 ) -> str:
     """Получить статистику заболеваний по МКБ-10.
 
     Аргументы:
         kod_mkb: Код МКБ-10 (например, 'I00-I99' для болезней кровообращения).
-        region: Субъект РФ.
+        subiekt: Субъект РФ.
         god: Год данных.
 
     Возвращает:
         Статистика заболеваний.
     """
     await ctx.info(f"Запрос статистики заболеваний: {kod_mkb or 'все'}, {god or 'последние'}...")
-    data = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, region=region, god=god)
+    data = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, subiekt=subiekt, god=god)
     if not data:
         header = "**Статистика заболеваний**\n\n"
         if kod_mkb:
             header += f"Код МКБ-10: {kod_mkb}\n"
-        if region:
-            header += f"Регион: {region}\n"
+        if subiekt:
+            header += f"Регион: {subiekt}\n"
         header += (
             "\nДанные о заболеваемости доступны через:\n"
             "- Открытые данные Минздрава: https://data.minzdrav.gov.ru\n"

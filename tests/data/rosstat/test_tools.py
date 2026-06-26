@@ -110,7 +110,7 @@ async def test_inflyaciya_with_data():
 
 
 async def test_demografiya_fallback():
-    result = await rosstat_tools.demografiya(region="")
+    result = await rosstat_tools.demografiya(subiekt="")
     assert "Демограф" in result
     assert "Росси" in result
 
@@ -120,12 +120,12 @@ async def test_demografiya_with_data():
         {"period": "2025-01", "naselenie": 146000000, "rozhdaemost": 9.0, "smertnost": 12.5},
     ]
     with patch.object(rosstat_tools.client, "poluchit_demografiyu", return_value=mock_data):
-        result = await rosstat_tools.demografiya(region="")
+        result = await rosstat_tools.demografiya(subiekt="")
     assert "146" in result or "2025-01" in result
 
 
 async def test_demografiya_with_region():
-    result = await rosstat_tools.demografiya(region="77")
+    result = await rosstat_tools.demografiya(subiekt="77")
     assert "77" in result
 
 
@@ -165,16 +165,16 @@ async def test_constants_regionalnye_pokazateli():
 
 
 async def test_vrp_dannye_fallback():
-    result = await rosstat_tools.vrp_dannye(region="77")
+    result = await rosstat_tools.vrp_dannye(subiekt="77")
     assert "ВРП" in result or "Валовой" in result
 
 
 async def test_vrp_dannye_with_data():
     mock_data = [
-        VRPDannye(period="2023", region="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
+        VRPDannye(period="2023", subiekt="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
     ]
     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
-        result = await rosstat_tools.vrp_dannye(region="77", god="2023")
+        result = await rosstat_tools.vrp_dannye(subiekt="77", god="2023")
     assert "2023" in result
     assert "Москва" in result
 
@@ -186,7 +186,7 @@ async def test_vrp_dannye_empty():
 
 
 async def test_zarplata_dannye_fallback():
-    result = await rosstat_tools.zarplata_dannye(region="77")
+    result = await rosstat_tools.zarplata_dannye(subiekt="77")
     assert "заработ" in result.lower()
 
 
@@ -194,13 +194,13 @@ async def test_zarplata_dannye_with_data():
     mock_data = [
         DannyeZarplaty(
             period="2024",
-            region="г. Москва",
+            subiekt="г. Москва",
             nominalnaya_zp=125000.0,
             realnaya_zp_izmenenie=-1.5,
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=mock_data):
-        result = await rosstat_tools.zarplata_dannye(region="77", god="2024")
+        result = await rosstat_tools.zarplata_dannye(subiekt="77", god="2024")
     assert "2024" in result
     assert "Москва" in result
 
@@ -220,8 +220,8 @@ async def test_sravnenie_regionov_invalid_pokazatel():
 async def test_sravnenie_regionov_with_data():
     ctx = _mock_ctx()
     mock_data = [
-        {"region": "г. Москва", "kod": "77", "znachenie": 25400.5, "period": "2023"},
-        {"region": "Тюменская область", "kod": "72", "znachenie": 8900.3, "period": "2023"},
+        {"subiekt": "г. Москва", "kod": "77", "znachenie": 25400.5, "period": "2023"},
+        {"subiekt": "Тюменская область", "kod": "72", "znachenie": 8900.3, "period": "2023"},
     ]
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=mock_data):
         result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
@@ -250,7 +250,7 @@ async def test_indikator_dannye_with_data():
             period="2025-01",
             znachenie=105.2,
             edinitsa="%",
-            region="",
+            subiekt="",
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
@@ -267,11 +267,11 @@ async def test_indikator_dannye_with_region():
             period="2024",
             znachenie=85000.0,
             edinitsa="руб.",
-            region="г. Москва",
+            subiekt="г. Москва",
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="zarplata", region="77", god="2024")
+        result = await rosstat_tools.indikator_dannye(kod="zarplata", subiekt="77", god="2024")
     assert "Москва" in result
 
 
@@ -289,7 +289,7 @@ async def test_indikator_dannye_emiss_code_direct():
             period="2024",
             znachenie=42.0,
             edinitsa="шт.",
-            region="",
+            subiekt="",
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
@@ -306,14 +306,14 @@ async def test_constants_subiekty_no_duplicates():
 
 
 async def test_otraslevaya_struktura_vrp_fallback():
-    result = await rosstat_tools.otraslevaya_struktura_vrp(region="77")
+    result = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77")
     assert "ОКВЭД" in result or "отраслев" in result.lower()
 
 
 async def test_otraslevaya_struktura_vrp_with_data():
     mock_data = [
         OtraslevayaStrukturaVRP(
-            region="г. Москва",
+            subiekt="г. Москва",
             period="2023",
             otrasl="Обрабатывающие производства",
             kod_okved="C",
@@ -324,7 +324,7 @@ async def test_otraslevaya_struktura_vrp_with_data():
     with patch.object(
         rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=mock_data
     ):
-        result = await rosstat_tools.otraslevaya_struktura_vrp(region="77", god="2023")
+        result = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77", god="2023")
     assert "C" in result
     assert "Обрабатыва" in result
 
@@ -336,14 +336,14 @@ async def test_otraslevaya_struktura_vrp_empty():
 
 
 async def test_investitsii_po_vidam_fallback():
-    result = await rosstat_tools.investitsii_po_vidam(region="77")
+    result = await rosstat_tools.investitsii_po_vidam(subiekt="77")
     assert "инвестиц" in result.lower() or "ОКВЭД" in result
 
 
 async def test_investitsii_po_vidam_with_data():
     mock_data = [
         InvestitsiiPoVidam(
-            region="г. Москва",
+            subiekt="г. Москва",
             period="2023",
             vid_deyatelnosti="Обрабатывающие производства",
             kod_okved="C",
@@ -354,7 +354,7 @@ async def test_investitsii_po_vidam_with_data():
     with patch.object(
         rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=mock_data
     ):
-        result = await rosstat_tools.investitsii_po_vidam(region="77", god="2023")
+        result = await rosstat_tools.investitsii_po_vidam(subiekt="77", god="2023")
     assert "C" in result
     assert "Обрабатыва" in result
 

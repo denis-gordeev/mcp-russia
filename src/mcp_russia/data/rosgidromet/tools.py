@@ -25,7 +25,7 @@ async def spisok_stanciy(ctx: Context) -> str:
     await ctx.info("Запрос списка станций мониторинга...")
     stancii = client.poluchit_spisok_stantsiy()
 
-    rows = [(s["kod"], s["nazvanie"], s["region"]) for s in stancii]
+    rows = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
     header = "**Станции мониторинга Росгидромета**\n\n"
     return header + tablitsa_v_markdown(["Код", "Город", "Округ"], rows)
 
@@ -69,7 +69,7 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
             f"Используйте spisok_stanciy() для списка станций."
         )
 
-    lines = [f"**Погода: {data.gorod}** ({data.region})"]
+    lines = [f"**Погода: {data.gorod}** ({data.subiekt})"]
     if data.temperatura:
         lines.append(f"- Температура: {formatirovat_chislo_ru(data.temperatura, 1)}°C")
     if data.oshchushchaetsya_kak:
@@ -177,20 +177,20 @@ async def ekologiya_regiona(
     return "\n".join(lines)
 
 
-async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
+async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str:
     """Получить активные предупреждения об опасных явлении.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
 
     Возвращает:
         Активные предупреждения.
     """
-    await ctx.info(f"Запрос предупреждений для региона {region}...")
-    data = await client.poluchit_preduprezhdeniya(region)
+    await ctx.info(f"Запрос предупреждений для региона {subiekt}...")
+    data = await client.poluchit_preduprezhdeniya(subiekt)
 
     if not data:
-        region_text = f" для региона '{region}'" if region else ""
+        region_text = f" для региона '{subiekt}'" if subiekt else ""
         return (
             f"Активные предупреждения{region_text} отсутствуют.\n\n"
             f"Метеорологические данные: open-meteo.com / meteorf.ru"
@@ -198,7 +198,7 @@ async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
 
     lines = [f"**Активные предупреждения** — {len(data)}\n"]
     for p in data:
-        lines.append(f"⚠️ **{p.tip}** — {p.region}, {p.gorod}")
+        lines.append(f"⚠️ **{p.tip}** — {p.subiekt}, {p.gorod}")
         lines.append(f"   {p.opisanie}")
         if p.data_nachala:
             lines.append(f"   С: {p.data_nachala}")
@@ -212,26 +212,26 @@ async def preduprezhdeniya(region: str = "", ctx: Context | None = None) -> str:
 
 
 async def sputnik_monitoring(
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
     ctx: Context | None = None,
 ) -> str:
     """Получить данные спутникового мониторинга.
 
     Аргументы:
-        region: Регион (необязательно).
+        subiekt: Регион (необязательно).
         tip: Тип данных (lesa, voda, pozhary, snezhnyy_pokrov).
 
     Возвращает:
         Данные спутникового мониторинга.
     """
-    await ctx.info(f"Запрос спутниковых данных: регион={region}, тип={tip}")
-    data = await client.poluchit_sputnik_dannye(region, tip)
+    await ctx.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
+    data = await client.poluchit_sputnik_dannye(subiekt, tip)
 
     if not data:
         filters = []
-        if region:
-            filters.append(f"регион: {region}")
+        if subiekt:
+            filters.append(f"регион: {subiekt}")
         if tip:
             filters.append(f"тип: {tip}")
         filter_text = f" ({', '.join(filters)})" if filters else ""
@@ -242,7 +242,7 @@ async def sputnik_monitoring(
 
     lines = [f"**Спутниковый мониторинг** — снимков: {len(data)}\n"]
     for s in data[:5]:
-        lines.append(f"- {s.region} ({s.data_syomki}): {s.tip_dannykh}")
+        lines.append(f"- {s.subiekt} ({s.data_syomki}): {s.tip_dannykh}")
         lines.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
         if s.izobrazhenie_ssylka:
             lines.append(f"  Изображение: {s.izobrazhenie_ssylka}")

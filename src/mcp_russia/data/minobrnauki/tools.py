@@ -112,7 +112,7 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
         f"- ИНН: {data.get('inn', '')}",
         f"- Тип: {data.get('tip', '')}",
         f"- Город: {data.get('gorod', '')}",
-        f"- Регион: {data.get('region', '')}",
+        f"- Регион: {data.get('subiekt', '')}",
         f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
         f"- Дата аккредитации: {data.get('data_akkreditatsii', '')}",
         f"- Срок действия: {data.get('srok_deystviya', '')}",
@@ -178,7 +178,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
                 g.get("nazvanie", ""),
                 g.get("rukovoditel", ""),
                 summ,
-                g.get("status", ""),
+                g.get("sostoyanie", ""),
             )
         )
     return tablitsa_v_markdown(

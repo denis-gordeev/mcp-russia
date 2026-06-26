@@ -11,7 +11,7 @@ class MedOrganizatsia(BaseModel):
     identifikator: str
     nazvanie: str
     tip: str = ""
-    region: str = ""
+    subiekt: str = ""
     gorod: str = ""
     adres: str = ""
     telefon: str = ""
@@ -41,7 +41,7 @@ class PokazatelZdorovya(BaseModel):
     znachenie: float = 0.0
     ed_izm: str = ""
     god: int = 0
-    region: str = ""
+    subiekt: str = ""
     istochnik: str = ""
 
 
@@ -54,4 +54,4 @@ class ZabolevanieStat(BaseModel):
     chelovek_vylechilos: int = 0
     letalnykh_sluchaev: int = 0
     god: int = 0
-    region: str = ""
+    subiekt: str = ""

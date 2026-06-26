@@ -25,13 +25,13 @@ async def test_poisk_med_organizatsiy_found():
         {
             "nazvanie": "Городская больница №1",
             "tip": "Больница",
-            "region": "Москва",
+            "subiekt": "Москва",
             "gorod": "Москва",
         },
     ]
     with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
         result = await minzdrav_tools.poisk_med_organizatsiy(
-            region="Москва", tip="больница", ctx=ctx
+            subiekt="Москва", tip="больница", ctx=ctx
         )
     assert "Городская больница" in result
 
@@ -49,7 +49,7 @@ async def test_info_med_organizatsii_found():
         "nazvanie": "Городская больница №1",
         "tip": "Больница",
         "adres": "г. Москва, ул. Примерная, д.1",
-        "region": "Москва",
+        "subiekt": "Москва",
         "city": "Москва",
         "telefon": "+7 (495) 123-45-67",
         "litsenzia": "Л041-01137-77/00368123",
@@ -76,7 +76,7 @@ async def test_poisk_litsenziy_found():
             "nomer": "Л041-01137",
             "organizaciya": "Городская больница №1",
             "vid_deyatelnosti": "Медицинская деятельность",
-            "status": "Действует",
+            "sostoyanie": "Действует",
             "data_okonchaniya": "2030-01-01",
         },
     ]
@@ -100,7 +100,7 @@ async def test_pokazateli_zdorovya_found():
             "znachenie": 73.5,
             "ed_izm": "лет",
             "god": 2024,
-            "region": "РФ",
+            "subiekt": "РФ",
         },
     ]
     with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=mock_data):

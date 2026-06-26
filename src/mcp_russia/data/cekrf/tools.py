@@ -102,26 +102,26 @@ async def spisok_vyborov(
     ctx: Context,
     god: int | None = None,
     tip: int | None = None,
-    region: int | None = None,
+    subiekt: int | None = None,
 ) -> str:
     """Получить список выборов из ГАС «Выборы».
 
     Аргументы:
         god: Год выборов (необязательно).
         tip: Код типа выборов (необязательно).
-        region: Номер региона (необязательно).
+        subiekt: Номер региона (необязательно).
 
     Возвращает:
         Таблица с выборами.
     """
     await ctx.info("Запрос списка выборов...")
-    vybory = await client.spisok_vyborov(god=god, tip=tip, region=region)
+    vybory = await client.spisok_vyborov(god=god, tip=tip, subiekt=subiekt)
 
     if not vybory:
         return "Выборы не найдены. Уточните параметры запроса."
 
     rows = [
-        (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("key", ""))
+        (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("klyuch", ""))
         for v in vybory
     ]
     header = f"**Найдено выборов: {len(vybory)}**\n\n"
@@ -144,7 +144,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     if not kandidaty:
         return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ATTRIBUTION}"
 
-    rows = [(k.identifikator, k.fio, k.partia, k.dolzhnost, k.status) for k in kandidaty]
+    rows = [(k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty]
     header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
     return header + tablitsa_v_markdown(
         ["ID", "ФИО", "Партия", "Должность", "Статус"],
@@ -179,8 +179,8 @@ async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = No
         f"- ID: {kandidat.identifikator}",
         f"- Партия: {kandidat.partia or 'Самовыдвижение'}",
         f"- Должность: {kandidat.dolzhnost}",
-        f"- Регион: {kandidat.region or 'Не указан'}",
-        f"- Статус: {kandidat.status}",
+        f"- Регион: {kandidat.subiekt or 'Не указан'}",
+        f"- Статус: {kandidat.sostoyanie}",
     ]
 
     if kandidat.data_rozhdeniya:
@@ -202,20 +202,20 @@ async def rezultaty_vyborov(
     ctx: Context,
     god: int,
     tip: int | None = None,
-    region: str | None = None,
+    subiekt: str | None = None,
 ) -> str:
     """Получить результаты выборов.
 
     Аргументы:
         god: Год выборов.
         tip: Код типа выборов (необязательно).
-        region: Код субъекта РФ (необязательно).
+        subiekt: Код субъекта РФ (необязательно).
 
     Возвращает:
         Таблица с результатами кандидатов.
     """
     await ctx.info(f"Запрос результатов выборов {god}...")
-    rezultaty = await client.rezultaty_vyborov(god, tip=tip, region=region)
+    rezultaty = await client.rezultaty_vyborov(god, tip=tip, subiekt=subiekt)
 
     if not rezultaty:
         return f"Результаты выборов {god} года недоступны.\n\nИсточник: {_ATTRIBUTION}"
@@ -241,26 +241,26 @@ async def yavka_i_itogi(
     ctx: Context,
     god: int,
     tip: int | None = None,
-    region: str | None = None,
+    subiekt: str | None = None,
 ) -> str:
     """Получить данные о явке и итогах выборов.
 
     Аргументы:
         god: Год выборов.
         tip: Код типа выборов (необязательно).
-        region: Код субъекта РФ (необязательно).
+        subiekt: Код субъекта РФ (необязательно).
 
     Возвращает:
         Сводка по явке и итогам.
     """
     await ctx.info(f"Запрос явки и итогов выборов {god}...")
-    itogi = await client.yavka_i_itogi(god, tip=tip, region=region)
+    itogi = await client.yavka_i_itogi(god, tip=tip, subiekt=subiekt)
 
     lines = [
         f"**Итоги выборов {god} года**",
     ]
-    if itogi.get("name"):
-        lines.append(f"- Выборы: {itogi['name']}")
+    if itogi.get("nazvanie"):
+        lines.append(f"- Выборы: {itogi['nazvanie']}")
     if itogi.get("data"):
         lines.append(f"- Дата: {itogi['data']}")
 

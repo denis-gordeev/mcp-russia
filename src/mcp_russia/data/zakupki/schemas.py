@@ -13,7 +13,7 @@ class Zakupka(BaseModel):
     nazvanie: str
     zakon: str = ""
     sposob: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     nachalnaya_tsena: float = 0.0
     valyuta: str = "RUB"
     data_publikatsii: str = ""
@@ -33,7 +33,7 @@ class Kontrakt(BaseModel):
     tsena: float = 0.0
     valyuta: str = "RUB"
     data_podpisaniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     srok_ispolneniya: str = ""
 
 
@@ -44,7 +44,7 @@ class Zakazchik(BaseModel):
     nazvanie: str
     inn: str = ""
     kpp: str = ""
-    region: str = ""
+    subiekt: str = ""
     adres: str = ""
     zakupki_kolichestvo: int = 0
     obshchie_raskhody: float = 0.0
@@ -56,7 +56,7 @@ class Postavshchik(BaseModel):
     identifikator: str
     nazvanie: str
     inn: str = ""
-    region: str = ""
+    subiekt: str = ""
     kontraktov_vyigrano: int = 0
     kontraktov_ispolneno: int = 0
     obshchiy_dokhod: float = 0.0

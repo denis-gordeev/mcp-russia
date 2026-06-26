@@ -161,19 +161,19 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
     )
 
 
-async def demografiya(region: str = "", ctx: Context | None = None) -> str:
+async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
     """Получить демографические данные по России или региону.
 
     Аргументы:
-        region: Код региона (необязательно).
+        subiekt: Код региона (необязательно).
 
     Возвращает:
         Демографические данные.
     """
     if ctx:
         await ctx.info("Запрос демографических данных...")
-    data = await client.poluchit_demografiyu(region)
-    filter_text = f" по региону {region}" if region else " по России"
+    data = await client.poluchit_demografiyu(subiekt=subiekt)
+    filter_text = f" по региону {subiekt}" if subiekt else " по России"
     if not data:
         return (
             f"**Демографические данные{filter_text}**\n\n"
@@ -197,11 +197,11 @@ async def demografiya(region: str = "", ctx: Context | None = None) -> str:
     )
 
 
-async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
+async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = None) -> str:
     """Получить данные о валовом региональном продукте (ВРП).
 
     Аргументы:
-        region: Код региона (необязательно). Без указания — данные по всем регионам.
+        subiekt: Код региона (необязательно). Без указания — данные по всем регионам.
         god: Год для запроса (например, '2023').
 
     Возвращает:
@@ -209,8 +209,8 @@ async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None
     """
     if ctx:
         await ctx.info("Запрос данных о ВРП...")
-    data = await client.poluchit_vrp(region=region, god=god)
-    filter_text = f" по региону {region}" if region else ""
+    data = await client.poluchit_vrp(subiekt=subiekt, god=god)
+    filter_text = f" по региону {subiekt}" if subiekt else ""
     if not data:
         return (
             f"**Валовой региональный продукт{filter_text}**\n\n"
@@ -224,7 +224,7 @@ async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None
     for d in data:
         vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp else "—"
         vrp_pc = formatirovat_chislo_ru(d.vrp_na_dushu, 2) if d.vrp_na_dushu else "—"
-        rows.append((d.period, d.region or "—", vrp_val, vrp_pc))
+        rows.append((d.period, d.subiekt or "—", vrp_val, vrp_pc))
     header = f"**Валовой региональный продукт{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
@@ -233,11 +233,11 @@ async def vrp_dannye(region: str = "", god: str = "", ctx: Context | None = None
     )
 
 
-async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None = None) -> str:
+async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None = None) -> str:
     """Получить данные о средней заработной плате.
 
     Аргументы:
-        region: Код региона (необязательно). Без указания — данные по России.
+        subiekt: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2024').
 
     Возвращает:
@@ -245,8 +245,8 @@ async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None =
     """
     if ctx:
         await ctx.info("Запрос данных о заработной плате...")
-    data = await client.poluchit_zarplatu(region=region, god=god)
-    filter_text = f" по региону {region}" if region else " по России"
+    data = await client.poluchit_zarplatu(subiekt=subiekt, god=god)
+    filter_text = f" по региону {subiekt}" if subiekt else " по России"
     if not data:
         return (
             f"**Средняя заработная плата{filter_text}**\n\n"
@@ -260,7 +260,7 @@ async def zarplata_dannye(region: str = "", god: str = "", ctx: Context | None =
     for d in data:
         zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
         real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
-        rows.append((d.period, d.region or "—", zp, real))
+        rows.append((d.period, d.subiekt or "—", zp, real))
     header = f"**Средняя заработная плата{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
@@ -297,7 +297,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     rows = []
     for i, d in enumerate(sorted_data, 1):
         val = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
-        rows.append((i, d.get("region", "—"), d.get("kod", "—"), val, d.get("period", "—")))
+        rows.append((i, d.get("subiekt", "—"), d.get("kod", "—"), val, d.get("period", "—")))
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
         pokazatel,
@@ -312,7 +312,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
 
 async def indikator_dannye(
     kod: str,
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
     ctx: Context | None = None,
 ) -> str:
@@ -323,7 +323,7 @@ async def indikator_dannye(
 
     Аргументы:
         kod: Код ЕМИСС (например, '31088') или мнемонический код (например, 'ipcz', 'vrp').
-        region: Код региона (необязательно).
+        subiekt: Код региона (необязательно).
         god: Год для запроса (например, '2024').
 
     Возвращает:
@@ -341,10 +341,10 @@ async def indikator_dannye(
             (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
             f"Показатель ЕМИСС {emiss_code}",
         )
-    data = await client.poluchit_indikator_dannye(kod=kod, region=region, god=god)
+    data = await client.poluchit_indikator_dannye(kod=kod, subiekt=subiekt, god=god)
     filter_parts = []
-    if region:
-        filter_parts.append(f"регион {region}")
+    if subiekt:
+        filter_parts.append(f"регион {subiekt}")
     if god:
         filter_parts.append(f"год {god}")
     filter_text = f" ({', '.join(filter_parts)})" if filter_parts else ""
@@ -358,7 +358,7 @@ async def indikator_dannye(
     rows = []
     for d in data:
         val = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
-        rows.append((d.period, d.region or "—", val, d.edinitsa or "—"))
+        rows.append((d.period, d.subiekt or "—", val, d.edinitsa or "—"))
     title = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
     header = f"**{title}**{filter_text}\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
@@ -369,14 +369,14 @@ async def indikator_dannye(
 
 
 async def otraslevaya_struktura_vrp(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
     ctx: Context | None = None,
 ) -> str:
     """Получить отраслевую структуру ВРП по видам экономической деятельности (ОКВЭД).
 
     Аргументы:
-        region: Код региона (необязательно). Без указания — данные по России.
+        subiekt: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2023').
 
     Возвращает:
@@ -384,8 +384,8 @@ async def otraslevaya_struktura_vrp(
     """
     if ctx:
         await ctx.info("Запрос отраслевой структуры ВРП...")
-    data = await client.poluchit_otraslevuyu_strukturu_vrp(region=region, god=god)
-    filter_text = f" по региону {region}" if region else " по России"
+    data = await client.poluchit_otraslevuyu_strukturu_vrp(subiekt=subiekt, god=god)
+    filter_text = f" по региону {subiekt}" if subiekt else " по России"
     if not data:
         return (
             f"**Отраслевая структура ВРП{filter_text}**\n\n"
@@ -409,14 +409,14 @@ async def otraslevaya_struktura_vrp(
 
 
 async def investitsii_po_vidam(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
     ctx: Context | None = None,
 ) -> str:
     """Получить инвестиции в основной капитал по видам экономической деятельности.
 
     Аргументы:
-        region: Код региона (необязательно). Без указания — данные по России.
+        subiekt: Код региона (необязательно). Без указания — данные по России.
         god: Год для запроса (например, '2023').
 
     Возвращает:
@@ -424,8 +424,8 @@ async def investitsii_po_vidam(
     """
     if ctx:
         await ctx.info("Запрос инвестиций по видам деятельности...")
-    data = await client.poluchit_investitsii_po_vidam(region=region, god=god)
-    filter_text = f" по региону {region}" if region else " по России"
+    data = await client.poluchit_investitsii_po_vidam(subiekt=subiekt, god=god)
+    filter_text = f" по региону {subiekt}" if subiekt else " по России"
     if not data:
         return (
             f"**Инвестиции по видам деятельности{filter_text}**\n\n"

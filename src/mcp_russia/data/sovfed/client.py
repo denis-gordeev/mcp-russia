@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 
 async def poisk_senatorov(
-    region: str = "",
+    subiekt: str = "",
     komitet: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск сенаторов Совета Федерации.
@@ -40,8 +40,8 @@ async def poisk_senatorov(
     try:
         url = f"{SOVFED_API_BASE}/senators"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if komitet:
             params["committee"] = komitet
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -61,11 +61,11 @@ async def poisk_senatorov(
     except Exception:
         logger.debug("data.gov.ru API недоступен")
 
-    if region or komitet:
+    if subiekt or komitet:
         return [
             s
             for s in SENATORY_SPRAVOCHNIK
-            if (not region or region.lower() in s.get("region", "").lower())
+            if (not subiekt or subiekt.lower() in s.get("subiekt", "").lower())
             and (not komitet or komitet.lower() in s.get("komitet", "").lower())
         ]
 
@@ -202,7 +202,7 @@ def _parse_senator(data: dict[str, Any]) -> dict[str, Any]:
         "familiya": data.get("lastName", "") or data.get("familiya", ""),
         "imya": data.get("firstName", "") or data.get("imya", ""),
         "otchestvo": data.get("middleName", "") or data.get("otchestvo", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "dolzhnost": data.get("position", "") or data.get("dolzhnost", ""),
         "komitet": data.get("committee", "") or data.get("komitet", ""),
         "frakciya": data.get("faction", "") or data.get("frakciya", ""),
@@ -227,7 +227,7 @@ def _parse_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "data": data.get("date", "") or data.get("data", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "povestka": data.get("agenda", "") or data.get("povestka", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }
@@ -238,7 +238,7 @@ def _parse_zakonoproekt(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "data_rassmotreniya": data.get("reviewDate", "") or data.get("data_rassmotreniya", ""),
         "iniciator": data.get("initiator", "") or data.get("iniciator", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",

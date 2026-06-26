@@ -99,11 +99,11 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
             return _razobrat_blokirovku(data, domen)
-        return {"domain": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
+        return {"domen": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
     except Exception:
         logger.exception("Ошибка при проверке блокировки %s", domen)
         return {
-            "domain": domen,
+            "domen": domen,
             "blokirovka": False,
             "osnovanie": "Не удалось проверить",
             "istochnik": "ЕАИС (eais.rkn.gov.ru)",
@@ -177,7 +177,7 @@ def _razobrat_operatora_pd(item: dict[str, Any]) -> dict[str, Any]:
         "inn": item.get("inn", ""),
         "kategoriya": item.get("category", ""),
         "tsel_obrabotki": item.get("processingPurpose", "") or item.get("tsel", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "data_registracii": item.get("registrationDate", ""),
         "adres": item.get("address", ""),
         "istochnik": "Реестр ПД (rkn.gov.ru/pdn)",
@@ -190,7 +190,7 @@ def _razobrat_ori(item: dict[str, Any]) -> dict[str, Any]:
         "naimenovanie": item.get("name", "") or item.get("naimenovanie", ""),
         "inn": item.get("inn", ""),
         "tip": item.get("type", "") or item.get("tip_ori", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "data_vklyucheniya": item.get("inclusionDate", ""),
         "osnovanie": item.get("ground", ""),
         "istochnik": "Реестр ОРИ (rkn.gov.ru/registry-ori)",
@@ -200,7 +200,7 @@ def _razobrat_ori(item: dict[str, Any]) -> dict[str, Any]:
 def _razobrat_blokirovku(item: dict[str, Any], domain: str) -> dict[str, Any]:
     """Парсинг результата проверки блокировки."""
     return {
-        "domain": domain,
+        "domen": domain,
         "blokirovka": bool(item.get("blocked", item.get("isBlocked", False))),
         "osnovanie": item.get("reason", "") or item.get("ground", ""),
         "data_vklyucheniya": item.get("inclusionDate", ""),
@@ -217,7 +217,7 @@ def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
         "tip_licenzii": item.get("type", "") or item.get("tip", ""),
         "data_vydachi": item.get("issueDate", ""),
         "data_okonchaniya": item.get("expiryDate", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "territoriya": item.get("territory", ""),
         "istochnik": "Реестр лицензий (rkn.gov.ru)",
     }
@@ -232,6 +232,6 @@ def _razobrat_smi(item: dict[str, Any]) -> dict[str, Any]:
         "uchreditel": item.get("founder", ""),
         "yazyk": item.get("language", ""),
         "adres": item.get("address", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "istochnik": "Реестр СМИ (rkn.gov.ru)",
     }

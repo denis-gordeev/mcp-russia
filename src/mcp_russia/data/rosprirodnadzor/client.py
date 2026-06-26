@@ -249,7 +249,7 @@ def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
         "vid_nadzora": data.get("supervisionType", "") or data.get("vid_nadzora", ""),
         "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
         "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "vyavleno_narusheniy": data.get("violationsCount", 0)
         or data.get("vyavleno_narusheniy", 0),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",
@@ -262,7 +262,7 @@ def _razobrat_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
         "kategoriya": data.get("category", "") or data.get("kategoriya", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "vid_deyatelnosti": data.get("activityType", "") or data.get("vid_deyatelnosti", ""),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",
     }

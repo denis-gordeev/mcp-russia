@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 
 async def poisk_proverok(
-    region: str = "",
+    subiekt: str = "",
     vid_nadzora: str = "",
     tip_proverki: str = "",
     ogranichenie: int = 20,
@@ -48,8 +48,8 @@ async def poisk_proverok(
     try:
         url = f"{FSVPS_API_BASE}/inspections"
         params: dict[str, Any] = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if vid_nadzora:
             params["supervisionType"] = vid_nadzora
         if tip_proverki:
@@ -64,8 +64,8 @@ async def poisk_proverok(
     try:
         url = f"{FSVPS_OPENDATA_BASE}/inspections"
         params = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
@@ -77,7 +77,7 @@ async def poisk_proverok(
 
 
 async def poisk_karantinnykh_obektov(
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск карантинных объектов.
@@ -92,8 +92,8 @@ async def poisk_karantinnykh_obektov(
     try:
         url = f"{FSVPS_API_BASE}/quarantine"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if tip:
             params["type"] = tip
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -139,7 +139,7 @@ async def poisk_registratsiy_produktsii(
 
 
 async def veterinarsnye_sertifikaty(
-    region: str = "",
+    subiekt: str = "",
     tip_produktsii: str = "",
     ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
@@ -156,8 +156,8 @@ async def veterinarsnye_sertifikaty(
     try:
         url = f"{FSVPS_API_BASE}/certificates"
         params: dict[str, Any] = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if tip_produktsii:
             params["productType"] = tip_produktsii
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -171,7 +171,7 @@ async def veterinarsnye_sertifikaty(
 
 
 async def preduprezhdeniya_karantina(
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Получить предупреждения о карантинных ограничениях.
 
@@ -184,8 +184,8 @@ async def preduprezhdeniya_karantina(
     try:
         url = f"{FSVPS_API_BASE}/warnings"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
@@ -250,7 +250,7 @@ def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
         "vid_nadzora": data.get("supervisionType", "") or data.get("vid_nadzora", ""),
         "tip_proverki": data.get("inspectionType", "") or data.get("tip_proverki", ""),
         "data_provedeniya": data.get("date", "") or data.get("data_provedeniya", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "status": data.get("status", ""),
         "narusheniya": data.get("violations", 0) or data.get("narusheniya", 0),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
@@ -262,7 +262,7 @@ def _razobrat_karantin(data: dict[str, Any]) -> dict[str, Any]:
     return {
         "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
         "tip": data.get("type", "") or data.get("tip", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "status_karantina": data.get("quarantineStatus", "") or data.get("status_karantina", ""),
         "data_vvedeniya": data.get("startDate", "") or data.get("data_vvedeniya", ""),
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
@@ -279,7 +279,7 @@ def _razobrat_registratsiyu(data: dict[str, Any]) -> dict[str, Any]:
         "tip_produktsii": data.get("productType", "") or data.get("tip_produktsii", ""),
         "data_registratsii": data.get("registrationDate", "") or data.get("data_registratsii", ""),
         "srok_deystviya": data.get("validUntil", "") or data.get("srok_deystviya", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
@@ -293,7 +293,7 @@ def _razobrat_sertifikat(data: dict[str, Any]) -> dict[str, Any]:
         "poluchatel": data.get("receiver", "") or data.get("poluchatel", ""),
         "data_oformleniya": data.get("date", "") or data.get("data_oformleniya", ""),
         "region_otpravki": data.get("senderRegion", "") or data.get("region_otpravki", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
@@ -302,7 +302,7 @@ def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных предупреждения о карантине."""
     return {
         "nomer": data.get("id", "") or data.get("nomer", ""),
-        "region": data.get("region", "") or data.get("subject", ""),
+        "subiekt": data.get("region", "") or data.get("subject", ""),
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
         "tip_karantina": data.get("quarantineType", "") or data.get("tip_karantina", ""),
         "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),

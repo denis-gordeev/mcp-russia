@@ -97,7 +97,7 @@ async def test_poisk_zakupok_with_data():
             nazvanie="Поставка компьютеров",
             zakon="44-ФЗ",
             sposob="Электронный аукцион",
-            status="Подача заявок",
+            sostoyanie="Подача заявок",
             nachalnaya_tsena=1500000.0,
             data_publikatsii="2025-01-15",
             nazvanie_organizatora="Минобразования",
@@ -114,7 +114,7 @@ async def test_poisk_zakupok_with_filters():
     ctx = _mock_ctx()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
         result = await zakupki_tools.poisk_zakupok(
-            zapros="компьютеры", zakon="44-ФЗ", region="Москва", ctx=ctx
+            zapros="компьютеры", zakon="44-ФЗ", subiekt="Москва", ctx=ctx
         )
     assert "компьютеры" in result
     assert "44-ФЗ" in result
@@ -136,7 +136,7 @@ async def test_info_zakupki_found():
         nazvanie="Поставка компьютеров",
         zakon="44-ФЗ",
         sposob="Электронный аукцион",
-        status="Подача заявок",
+        sostoyanie="Подача заявок",
         nachalnaya_tsena=1500000.0,
         data_publikatsii="2025-01-15",
         srok_podachi="2025-02-01",
@@ -168,7 +168,7 @@ async def test_poisk_kontraktov_with_data():
             podryadchik_inn="7700000001",
             tsena=500000.0,
             data_podpisaniya="2025-02-01",
-            status="Исполнение",
+            sostoyanie="Исполнение",
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=kontrakty):

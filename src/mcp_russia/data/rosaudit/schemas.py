@@ -14,7 +14,7 @@ class KontrolnoeMeropriyatie(BaseModel):
     napravlenie: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     obiem_sredstv: float | None = None
     valyuta: str = "руб."
 

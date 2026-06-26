@@ -10,8 +10,8 @@ class ProverkaRskhn(BaseModel):
     vid_nadzora: str = ""
     tip_proverki: str = ""
     data_provedeniya: str = ""
-    region: str = ""
-    status: str = ""
+    subiekt: str = ""
+    sostoyanie: str = ""
     narusheniya: int = 0
     istochnik: str = ""
 
@@ -19,7 +19,7 @@ class ProverkaRskhn(BaseModel):
 class KarantinnyyObyekt(BaseModel):
     nazvanie: str
     tip: str = ""
-    region: str = ""
+    subiekt: str = ""
     status_karantina: str = ""
     data_vvedeniya: str = ""
     opisanie: str = ""
@@ -32,7 +32,7 @@ class RegistratsiyaProduktsii(BaseModel):
     tip_produktsii: str = ""
     data_registratsii: str = ""
     srok_deystviya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
 
 
 class VeterinarnyySertifikat(BaseModel):
@@ -42,4 +42,4 @@ class VeterinarnyySertifikat(BaseModel):
     poluchatel: str = ""
     data_oformleniya: str = ""
     region_otpravki: str = ""
-    status: str = ""
+    sostoyanie: str = ""

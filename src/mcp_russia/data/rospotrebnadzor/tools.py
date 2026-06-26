@@ -76,7 +76,7 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
         f"- ИНН: {data.get('inn', '')}",
         f"- Дата начала: {data.get('data_nachala', '')}",
         f"- Дата окончания: {data.get('data_okonchaniya', '')}",
-        f"- Статус: {data.get('status', '')}",
+        f"- Статус: {data.get('sostoyanie', '')}",
         f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
         f"- Результат: {data.get('rezultat', '')}",
         f"- Источник: {data.get('istochnik', 'proverki.rospotrebnadzor.ru')}",
@@ -88,14 +88,14 @@ async def poisk_proverok(
     ctx: Context,
     inn: str = "",
     nazvanie: str = "",
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """Поиск проверок в реестре Роспотребнадзора.
 
     Аргументы:
         inn: ИНН проверяемого лица (необязательно).
         nazvanie: Название проверяемого лица (необязательно).
-        region: Код региона (необязательно).
+        subiekt: Код региона (необязательно).
 
     Возвращает:
         Список проверок с типом, датами и статусом.
@@ -104,7 +104,7 @@ async def poisk_proverok(
     proverki = await client.poisk_proverok(
         inn_tseli=inn,
         nazvanie_tseli=nazvanie,
-        region=region,
+        subiekt=subiekt,
     )
     if not proverki:
         return "Проверки не найдены."
@@ -114,7 +114,7 @@ async def poisk_proverok(
             p.get("tip_proverki", ""),
             p.get("obekt", ""),
             p.get("data_nachala", ""),
-            p.get("status", ""),
+            p.get("sostoyanie", ""),
             str(p.get("vyavleno_narusheniy", 0)),
         )
         for p in proverki
@@ -128,19 +128,19 @@ async def poisk_proverok(
 async def plan_proverok(
     ctx: Context,
     god: int = 0,
-    region: str = "",
+    subiekt: str = "",
 ) -> str:
     """План проверок Роспотребнадзора.
 
     Аргументы:
         god: Год плана проверок.
-        region: Код региона (необязательно).
+        subiekt: Код региона (необязательно).
 
     Возвращает:
         Список запланированных проверок.
     """
     await ctx.info("Запрос плана проверок Роспотребнадзора...")
-    proverki = await client.plan_proverok(god=god, region=region)
+    proverki = await client.plan_proverok(god=god, subiekt=subiekt)
     if not proverki:
         return (
             "План проверок не получен.\n\n"

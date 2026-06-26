@@ -202,8 +202,8 @@ def _razobrat_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
         "tip": data.get("budgetType", "") or data.get("tip", ""),
         "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
         "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
-        "deficit": data.get("deficit"),
-        "status": data.get("status", ""),
+        "defitsit": data.get("deficit"),
+        "sostoyanie": data.get("status", ""),
         "istochnik": "Портал бюджетных данных (budget.gov.ru)",
     }
 
@@ -253,6 +253,6 @@ def _razobrat_byudzhetnuyu_smetu(data: dict[str, Any]) -> dict[str, Any]:
         "god": str(data.get("year", "")) or data.get("god", ""),
         "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
         "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
-        "deficit": data.get("deficit"),
+        "defitsit": data.get("deficit"),
         "istochnik": "Федеральное казначейство (roskazna.gov.ru)",
     }

@@ -94,7 +94,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
 
     if history:
         lines.append(f"\n**История регистраций** ({len(history)} записей)")
-        rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in history]
+        rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in history]
         lines.append(tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows))
     else:
         lines.append("\nИстория регистраций: данные не найдены.")
@@ -108,7 +108,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
 
     if wanted:
         lines.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
-        rows = [(w["data_rozyska"], w["region"], w["initiator"], w["model_ts"]) for w in wanted]
+        rows = [(w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"]) for w in wanted]
         lines.append(tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], rows))
     else:
         lines.append("\nРозыск: не числится.")
@@ -116,7 +116,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
     if restrict:
         lines.append(f"\n**⚠ Ограничения** ({len(restrict)} записей)")
         rows = [
-            (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["region"], r["initiator"])
+            (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["subiekt"], r["initsiator"])
             for r in restrict
         ]
         lines.append(tablitsa_v_markdown(["Дата", "Тип ограничения", "Регион", "Инициатор"], rows))
@@ -158,7 +158,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
         f"- Категория: {vu.kategoriya}",
         f"- Дата выдачи: {vu.data_vydachi}",
         f"- Срок действия: {vu.srok_deystviya}",
-        f"- Статус: {vu.status or 'действительно'}",
+        f"- Статус: {vu.sostoyanie or 'действительно'}",
         f"- Место рождения: {vu.mesto_rozhdeniya}",
         f"- Ограничения: {vu.ograniceniya or 'нет'}",
         f"- Особые отметки: {vu.osoboie_otmetki or 'нет'}",
@@ -204,22 +204,22 @@ async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
     ) + _ATTRIBUTION
 
 
-async def statistika_dtp(ctx: Context, region: str, god: int = 2024) -> str:
+async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
     """Статистика ДТП по региону.
 
     Аргументы:
-        region: Название субъекта РФ.
+        subiekt: Название субъекта РФ.
         god: Год статистики.
 
     Возвращает:
         Статистика ДТП: количество, погибшие, раненые, пешеходы, дети.
     """
-    data = await client.statistika_dtp_region(region, god)
+    data = await client.statistika_dtp_region(subiekt, god)
     if not data:
-        return f"Статистика ДТП по региону «{region}» за {god} год не найдена." + _ATTRIBUTION
+        return f"Статистика ДТП по региону «{subiekt}» за {god} год не найдена." + _ATTRIBUTION
 
     lines = [
-        f"**Статистика ДТП** — {data.region}, {data.god} г.",
+        f"**Статистика ДТП** — {data.subiekt}, {data.god} г.",
         f"- Всего ДТП: {formatirovat_chislo_ru(data.kolichestvo_dtp, 0)}",
         f"- Погибшие: {formatirovat_chislo_ru(data.pogibshie, 0)}",
         f"- Раненые: {formatirovat_chislo_ru(data.ranennye, 0)}",
@@ -243,5 +243,5 @@ async def istoriya_registraciy(ctx: Context, vin: str) -> str:
     if not records:
         return f"История регистраций по VIN {vin} не найдена." + _ATTRIBUTION
 
-    rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.region) for r in records]
+    rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in records]
     return tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows) + _ATTRIBUTION

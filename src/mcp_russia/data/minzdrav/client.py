@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 async def poisk_med_organizatsiy(
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
     gorod: str = "",
     ogranichenie: int = 20,
@@ -47,11 +47,10 @@ async def poisk_med_organizatsiy(
     try:
         url = f"{FRMO_API_BASE}/organizations"
         params: dict[str, Any] = {"limit": ogranichenie}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if tip:
             params["type"] = tip
-        if gorod:
             params["city"] = gorod
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
@@ -114,7 +113,7 @@ async def poisk_litsenziy(
 
 
 async def pokazateli_zdorovya(
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
     kod_pokazatelya: str = "",
 ) -> list[dict[str, Any]]:
@@ -131,8 +130,8 @@ async def pokazateli_zdorovya(
     try:
         url = f"{MINZDRAV_OPEN_DATA}/indicators"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         if kod_pokazatelya:
@@ -147,7 +146,7 @@ async def pokazateli_zdorovya(
 
 async def statistika_zabolevaniy(
     kod_mkb: str = "",
-    region: str = "",
+    subiekt: str = "",
     god: int = 0,
 ) -> list[dict[str, Any]]:
     """Получить статистику заболеваний из открытых данных Минздрава.
@@ -165,8 +164,8 @@ async def statistika_zabolevaniy(
         params: dict[str, Any] = {}
         if kod_mkb:
             params["mkb"] = kod_mkb
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -220,7 +219,7 @@ def _razobrat_med_organizatsiyu(item: dict[str, Any]) -> dict[str, Any]:
         "identifikator": item.get("id", "") or item.get("ogrn", ""),
         "nazvanie": item.get("name", "") or item.get("fullName", ""),
         "tip": item.get("type", "") or item.get("tip", ""),
-        "region": item.get("region", "") or item.get("subject", ""),
+        "subiekt": item.get("region", "") or item.get("subject", ""),
         "gorod": item.get("city", "") or item.get("settlement", ""),
         "adres": item.get("address", "") or item.get("adres", ""),
         "telefon": item.get("phone", "") or item.get("telefon", ""),
@@ -254,7 +253,7 @@ def _razobrat_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
         "znachenie": item.get("value") or item.get("znachenie", 0),
         "ed_izm": item.get("unit", "") or item.get("ed_izm", ""),
         "god": item.get("year") or item.get("god", 0),
-        "region": item.get("region", ""),
+        "subiekt": item.get("region", ""),
         "istochnik": item.get("source", "Открытые данные Минздрава"),
     }
 
@@ -268,5 +267,5 @@ def _razobrat_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
         "chelovek_vylechilos": item.get("recovered") or item.get("chelovek_vylechilos", 0),
         "letalnykh_sluchaev": item.get("deaths") or item.get("letalnykh_sluchaev", 0),
         "god": item.get("year") or item.get("god", 0),
-        "region": item.get("region", ""),
+        "subiekt": item.get("region", ""),
     }

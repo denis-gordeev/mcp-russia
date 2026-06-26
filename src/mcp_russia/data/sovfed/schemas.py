@@ -10,7 +10,7 @@ class SenatorRezyume(BaseModel):
     familiya: str
     imya: str
     otchestvo: str = ""
-    region: str = ""
+    subiekt: str = ""
     dolzhnost: str = ""
     komitet: str = ""
     frakciya: str = ""
@@ -27,13 +27,13 @@ class KomitetInfo(BaseModel):
 class ZasedanieInfo(BaseModel):
     nomer: str
     data: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     povestka: str = ""
 
 
 class ZakonoproektSovfeda(BaseModel):
     nomer: str
     nazvanie: str
-    status: str = ""
+    sostoyanie: str = ""
     data_rassmotreniya: str = ""
     iniciator: str = ""

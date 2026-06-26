@@ -25,7 +25,7 @@ class Zakonoproekt(BaseModel):
     identifikator: str
     nomer: str
     nazvanie: str
-    status: str = ""
+    sostoyanie: str = ""
     data_vneseniya: str = ""
     avtor: str = ""
     chteniya: int = 0

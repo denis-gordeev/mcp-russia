@@ -73,7 +73,7 @@ async def poisk_proverok(
             p.get("nomer", ""),
             p.get("organizaciya", "")[:50],
             p.get("vid_nadzora", ""),
-            p.get("status", ""),
+            p.get("sostoyanie", ""),
             str(p.get("vyavleno_narusheniy", "")),
         )
         for p in proverki
@@ -109,8 +109,8 @@ async def info_proverki(nomer: str, ctx: Context) -> str:
         lines.append(f"- Дата начала: {data['data_nachala']}")
     if data.get("data_okonchaniya"):
         lines.append(f"- Дата окончания: {data['data_okonchaniya']}")
-    if data.get("status"):
-        lines.append(f"- Статус: {data['status']}")
+    if data.get("sostoyanie"):
+        lines.append(f"- Статус: {data['sostoyanie']}")
     if data.get("vyavleno_narusheniy"):
         lines.append(f"- Выявлено нарушений: {data['vyavleno_narusheniy']}")
     lines.append(f"- Источник: {data.get('istochnik', 'rpn.gov.ru')}")
@@ -152,7 +152,7 @@ async def poisk_obektov_negativnogo(
             o.get("nomer", ""),
             o.get("nazvanie", "")[:50],
             o.get("kategoriya", ""),
-            o.get("region", ""),
+            o.get("subiekt", ""),
         )
         for o in obekty
     ]

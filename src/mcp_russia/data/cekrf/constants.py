@@ -13,7 +13,7 @@ IZVESTNYE_VYBORY = {
         "tvd": "100100067795849",
         "vrn": "100100067795849",
         "data": "2024-03-15",
-        "region": 0,
+        "subiekt": 0,
         "tip": 242,
     },
     "prezident_2018": {
@@ -23,7 +23,7 @@ IZVESTNYE_VYBORY = {
         "tvd": "100100031960364",
         "vrn": "100100031960364",
         "data": "2018-03-18",
-        "region": 0,
+        "subiekt": 0,
         "tip": 242,
     },
     "gosduma_2021": {
@@ -33,7 +33,7 @@ IZVESTNYE_VYBORY = {
         "tvd": "100100020463182",
         "vrn": "100100020463182",
         "data": "2021-09-17",
-        "region": 0,
+        "subiekt": 0,
         "tip": 224,
     },
     "gosduma_2016": {
@@ -43,7 +43,7 @@ IZVESTNYE_VYBORY = {
         "tvd": "100100041111011",
         "vrn": "100100041111011",
         "data": "2016-09-18",
-        "region": 0,
+        "subiekt": 0,
         "tip": 224,
     },
 }

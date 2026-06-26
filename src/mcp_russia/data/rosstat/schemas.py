@@ -50,7 +50,7 @@ class VRPDannye(BaseModel):
     """Данные о валовом региональном продукте."""
 
     period: str
-    region: str = ""
+    subiekt: str = ""
     vrp: float | None = None
     vrp_na_dushu: float | None = None
 
@@ -59,7 +59,7 @@ class DannyeZarplaty(BaseModel):
     """Данные о заработной плате."""
 
     period: str
-    region: str = ""
+    subiekt: str = ""
     nominalnaya_zp: float | None = None
     realnaya_zp_izmenenie: float | None = None
 
@@ -72,13 +72,13 @@ class IndikatorDannye(BaseModel):
     period: str = ""
     znachenie: float | None = None
     edinitsa: str = ""
-    region: str = ""
+    subiekt: str = ""
 
 
 class OtraslevayaStrukturaVRP(BaseModel):
     """Отраслевая структура ВРП по ОКВЭД."""
 
-    region: str = ""
+    subiekt: str = ""
     period: str = ""
     otrasl: str = ""
     kod_okved: str = ""
@@ -89,7 +89,7 @@ class OtraslevayaStrukturaVRP(BaseModel):
 class InvestitsiiPoVidam(BaseModel):
     """Инвестиции в основной капитал по видам деятельности."""
 
-    region: str = ""
+    subiekt: str = ""
     period: str = ""
     vid_deyatelnosti: str = ""
     kod_okved: str = ""

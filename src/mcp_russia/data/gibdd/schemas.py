@@ -32,7 +32,7 @@ class VoditelskoeUdostoverenie(BaseModel):
     mesto_rozhdeniya: str = ""
     ograniceniya: str = ""
     osoboie_otmetki: str = ""
-    status: str = ""
+    sostoyanie: str = ""
 
 
 class ShtrafGIBDD(BaseModel):
@@ -52,7 +52,7 @@ class ShtrafGIBDD(BaseModel):
 class StatistikaDTP(BaseModel):
     """Статистика ДТП по региону."""
 
-    region: str = ""
+    subiekt: str = ""
     god: int = 0
     kolichestvo_dtp: int = 0
     pogibshie: int = 0
@@ -69,4 +69,4 @@ class RegistracionnoeDeystvie(BaseModel):
     gos_nomer: str = ""
     tip_deystviya: str = ""
     data_deystviya: str = ""
-    region: str = ""
+    subiekt: str = ""

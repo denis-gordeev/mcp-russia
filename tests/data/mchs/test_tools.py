@@ -50,7 +50,7 @@ async def test_statistika_pojarov_with_data():
         {
             "nomer": "П-2026-001",
             "data": "2026-01-15",
-            "region": "Московская область",
+            "subiekt": "Московская область",
             "vid_pozhara": "Пожар в жилом секторе",
             "pogibshikh": 2,
             "postradavshikh": 5,
@@ -76,9 +76,9 @@ async def test_poisk_chs_found():
             "vid_chs": "Техногенная",
             "klass_chs": "Региональная",
             "data_vozniknoveniya": "2026-03-10",
-            "region": "Свердловская область",
+            "subiekt": "Свердловская область",
             "opisanie": "Взрыв на химическом предприятии",
-            "status": "Ликвидация последствий",
+            "sostoyanie": "Ликвидация последствий",
             "pogibshikh": 0,
             "postradavshikh": 3,
         },
@@ -100,7 +100,7 @@ async def test_radiatsionnyy_monitoring_with_data():
     mock_data = [
         {
             "stantsiya": "Москва-1",
-            "region": "Москва",
+            "subiekt": "Москва",
             "uroven_radiatsii": 0.12,
             "edinitsa": "мкЗв/ч",
             "data_izmereniya": "2026-06-01",
@@ -149,7 +149,7 @@ async def test_preduprezhdeniya_chs_with_data():
         {
             "nomer": "ПРД-2026-001",
             "tip_opasnosti": "Гидрологическая опасность",
-            "region": "Хабаровский край",
+            "subiekt": "Хабаровский край",
             "opisanie": "Повышение уровня воды в реке Амур",
             "data_nachala": "2026-06-10",
             "data_okonchaniya": "2026-06-20",

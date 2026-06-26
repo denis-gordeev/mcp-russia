@@ -173,7 +173,7 @@ def _razobrat_zakonoproekty(data: Any) -> list[Zakonoproekt]:
                 identifikator=str(item.get("id", "")),
                 nomer=item.get("number", ""),
                 nazvanie=item.get("name", item.get("title", "")),
-                status=item.get("statusName", item.get("status", "")),
+                sostoyanie=item.get("statusName", item.get("status", "")),
                 data_vneseniya=item.get("dateIntroduction", item.get("introductionDate", "")),
                 avtor=item.get("subjectName", item.get("author", "")),
                 chteniya=item.get("readingsCount", item.get("readings", 0)),

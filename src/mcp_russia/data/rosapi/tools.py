@@ -49,8 +49,8 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
         f"**Почтовый индекс:** {result.pochtovyy_indeks}",
         f"**Полный адрес:** {result.polnyy_adres or 'Н/Д'}",
     ]
-    if result.region:
-        lines.append(f"**Регион:** {result.region}")
+    if result.subiekt:
+        lines.append(f"**Регион:** {result.subiekt}")
     if result.gorod:
         lines.append(f"**Город:** {result.gorod}")
     if result.ulitsa:
@@ -85,7 +85,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
         rows.append(
             (
                 str(i),
-                addr.get("value", ""),
+                addr.get("znachenie", ""),
                 addr.get("pochtovyy_indeks", ""),
             )
         )
@@ -123,14 +123,14 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         lines.append(f"- КПП: {result.kpp}")
     if result.ogrn:
         lines.append(f"- ОГРН: {result.ogrn}")
-    if result.status:
+    if result.sostoyanie:
         karta_statusov = {
             "ACTIVE": "Действующая",
             "LIQUIDATING": "Ликвидируется",
             "LIQUIDATED": "Ликвидирована",
             "BANKRUPT": "Банкрот",
         }
-        lines.append(f"- Статус: {karta_statusov.get(result.status, result.status)}")
+        lines.append(f"- Статус: {karta_statusov.get(result.sostoyanie, result.sostoyanie)}")
     if result.adres:
         lines.append(f"- Адрес: {result.adres}")
     if result.rukovoditel:

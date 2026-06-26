@@ -29,7 +29,7 @@ async def poisk_vodnykh_obektov(
     zapros: str = "",
     tip: str = "",
     basseyn: str = "",
-    region: str = "",
+    subiekt: str = "",
     ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск водных объектов в Государственном водном реестре.
@@ -53,8 +53,8 @@ async def poisk_vodnykh_obektov(
             params["type"] = tip
         if basseyn:
             params["basin"] = basseyn
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         params["limit"] = ogranichenie
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
@@ -86,7 +86,7 @@ async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
 
 async def poluchit_gidro_dannye(
     identifikator_posta: str = "",
-    region: str = "",
+    subiekt: str = "",
     tip_dannykh: str = "uroven",
 ) -> list[dict[str, Any]]:
     """Получить гидрологические данные с мониторинговых постов ГМВО.
@@ -104,8 +104,8 @@ async def poluchit_gidro_dannye(
         params: dict[str, Any] = {"type": tip_dannykh}
         if identifikator_posta:
             params["post"] = identifikator_posta
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_gidro_zapis(p) for p in items if isinstance(p, dict)]
@@ -135,7 +135,7 @@ async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
 
 
 async def poluchit_vodopolzovanie(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[dict[str, Any]]:
     """Получить данные о водопользовании из открытых данных.
@@ -150,8 +150,8 @@ async def poluchit_vodopolzovanie(
     try:
         url = f"{VODNYY_REESTR_BASE}/api/water-use"
         params: dict[str, Any] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
@@ -180,7 +180,7 @@ def poluchit_spisok_tipov_gidro() -> list[dict[str, str]]:
 def poluchit_spisok_vodokhranilishch() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
-        {"kod": v["kod"], "nazvanie": v["nazvanie"], "region": v["region"]}
+        {"kod": v["kod"], "nazvanie": v["nazvanie"], "subiekt": v["subiekt"]}
         for v in KRUPNYE_VODOKHRANILISHCHA
     ]
 
@@ -211,7 +211,7 @@ def _razobrat_vodnyy_obekt(item: dict[str, Any]) -> dict[str, Any]:
         "basseyn": item.get("basin", "") or item.get("basseyn", ""),
         "dlinna_km": item.get("length") or item.get("dlinna_km"),
         "ploshchad_km2": item.get("area") or item.get("ploshchad_km2"),
-        "region": item.get("region", ""),
+        "subiekt": item.get("region", ""),
         "opisaniye": item.get("description", "") or item.get("opisaniye", ""),
         "istochnik": "Государственный водный реестр (text.water.ru)",
     }
@@ -238,7 +238,7 @@ def _razobrat_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
     return {
         "kod": item.get("code", "") or item.get("id", ""),
         "nazvanie": item.get("name", "") or item.get("title", ""),
-        "region": item.get("region", ""),
+        "subiekt": item.get("region", ""),
         "obiem_km3": item.get("volume") or item.get("obiem_km3"),
         "ploshchad_km2": item.get("area") or item.get("ploshchad_km2"),
         "uroven_m": item.get("level") or item.get("uroven_m"),
@@ -251,7 +251,7 @@ def _razobrat_vodokhranilishche(item: dict[str, Any]) -> dict[str, Any]:
 def _razobrat_vodopolzovanie_zapis(item: dict[str, Any]) -> dict[str, Any]:
     """Разбор записи о водопользовании."""
     return {
-        "region": item.get("region", ""),
+        "subiekt": item.get("region", ""),
         "god": str(item.get("year", item.get("god", ""))),
         "zabrano_vody_km3": item.get("withdrawn") or item.get("zabrano_vody_km3"),
         "ispolzovano_vody_km3": item.get("used") or item.get("ispolzovano_vody_km3"),

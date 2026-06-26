@@ -26,8 +26,8 @@ def _auth_note() -> str:
 async def poisk_zakupok(
     zapros: str = "",
     zakon: str = "",
-    region: str = "",
-    status: str = "",
+    subiekt: str = "",
+    sostoyanie: str = "",
     ctx: Context | None = None,
 ) -> str:
     """Поиск закупок в Единой информационной системе.
@@ -35,8 +35,8 @@ async def poisk_zakupok(
     Аргументы:
         zapros: Поисковый запрос (предмет закупки).
         zakon: Тип закона ("44-ФЗ" или "223-ФЗ").
-        region: Регион заказчика.
-        status: Статус закупки.
+        subiekt: Регион заказчика.
+        sostoyanie: Статус закупки.
 
     Возвращает:
         Результаты поиска закупок.
@@ -47,8 +47,8 @@ async def poisk_zakupok(
     zakupki = await client.poisk_zakupok(
         zapros=zapros,
         zakon=zakon,
-        region=region,
-        status=status,
+        subiekt=subiekt,
+        sostoyanie=sostoyanie,
     )
 
     if not zakupki:
@@ -58,10 +58,10 @@ async def poisk_zakupok(
             filters.append(f"Запрос: {zapros}")
         if zakon:
             filters.append(f"Закон: {zakon}")
-        if region:
-            filters.append(f"Регион: {region}")
-        if status:
-            filters.append(f"Статус: {status}")
+        if subiekt:
+            filters.append(f"Регион: {subiekt}")
+        if sostoyanie:
+            filters.append(f"Статус: {sostoyanie}")
         if filters:
             header += "Фильтры: " + ", ".join(filters) + "\n\n"
 
@@ -73,13 +73,13 @@ async def poisk_zakupok(
             "Для поиска используйте параметры:\n"
             "- `zapros` — предмет закупки\n"
             "- `zakon` — 44-ФЗ или 223-ФЗ\n"
-            "- `region` — субъект РФ\n"
-            "- `status` — статус закупки"
+            "- `subiekt` — субъект РФ\n"
+            "- `sostoyanie` — статус закупки"
         )
         return header
 
     rows = [
-        (z.nomer, z.nazvanie[:60], z.zakon, z.status, formatirovat_rubli(z.nachalnaya_tsena))
+        (z.nomer, z.nazvanie[:60], z.zakon, z.sostoyanie, formatirovat_rubli(z.nachalnaya_tsena))
         for z in zakupki[:30]
     ]
     header = "**Результаты поиска в ЕИС закупок**\n\n"
@@ -120,8 +120,8 @@ async def info_zakupki(
         lines.append(f"- Закон: {zakupka.zakon}")
     if zakupka.sposob:
         lines.append(f"- Способ: {zakupka.sposob}")
-    if zakupka.status:
-        lines.append(f"- Статус: {zakupka.status}")
+    if zakupka.sostoyanie:
+        lines.append(f"- Статус: {zakupka.sostoyanie}")
     if zakupka.nachalnaya_tsena:
         lines.append(f"- Начальная цена: {formatirovat_rubli(zakupka.nachalnaya_tsena)}")
     if zakupka.data_publikatsii:
@@ -171,7 +171,7 @@ async def poisk_kontraktov(
             k.nomer,
             k.nazvanie_podryadchika[:40],
             formatirovat_rubli(k.tsena),
-            k.status,
+            k.sostoyanie,
             k.data_podpisaniya,
         )
         for k in kontrakty[:30]
@@ -208,8 +208,8 @@ async def info_zakazchika(
     ]
     if zakazchik.kpp:
         lines.append(f"- КПП: {zakazchik.kpp}")
-    if zakazchik.region:
-        lines.append(f"- Регион: {zakazchik.region}")
+    if zakazchik.subiekt:
+        lines.append(f"- Регион: {zakazchik.subiekt}")
     if zakazchik.adres:
         lines.append(f"- Адрес: {zakazchik.adres}")
     if zakazchik.zakupki_kolichestvo:
@@ -246,8 +246,8 @@ async def info_postavshchika(
         f"**Поставщик: {postavshchik.nazvanie}**",
         f"- ИНН: {postavshchik.inn}",
     ]
-    if postavshchik.region:
-        lines.append(f"- Регион: {postavshchik.region}")
+    if postavshchik.subiekt:
+        lines.append(f"- Регион: {postavshchik.subiekt}")
     lines.append(f"- Статус: {status}")
     if postavshchik.kontraktov_vyigrano:
         lines.append(f"- Выиграно контрактов: {postavshchik.kontraktov_vyigrano}")

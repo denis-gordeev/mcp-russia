@@ -11,7 +11,7 @@ class OrganNadzora(BaseModel):
     kod: str
     nazvanie: str
     federalnyy_okrug: str = ""
-    region: str = ""
+    subiekt: str = ""
     telefon: str = ""
     elektronnaya_pochta: str = ""
 
@@ -24,7 +24,7 @@ class Proverka(BaseModel):
     organizaciya: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     vyavleno_narusheniy: int = 0
     rezulstat: str = ""
 
@@ -49,7 +49,7 @@ class PokazatelBezopasnosti(BaseModel):
     znachenie: float | None = None
     edinitsa_izmereniya: str = ""
     predelno_dopustimoe: float | None = None
-    status: str = ""  # "norma", "prevyshenie", "ponizhenie"
+    sostoyanie: str = ""  # "norma", "prevyshenie", "ponizhenie"
 
 
 class ZhalobaPotrebitelya(BaseModel):

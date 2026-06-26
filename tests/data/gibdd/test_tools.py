@@ -77,7 +77,7 @@ async def test_shtrafy_po_vu():
 async def test_statistika_dtp_not_found():
     ctx = _mock_ctx()
     with patch.object(gibdd_tools.client, "statistika_dtp_region", return_value=None):
-        result = await gibdd_tools.statistika_dtp(ctx=ctx, region="Москва", god=2024)
+        result = await gibdd_tools.statistika_dtp(ctx=ctx, subiekt="Москва", god=2024)
     assert "не найдена" in result
 
 

@@ -79,7 +79,7 @@ def test_razobrat_zakonoproekty():
     result = gosduma_client._razobrat_zakonoproekty(data)
     assert len(result) == 1
     assert result[0].nomer == "12345-8"
-    assert result[0].status == "Рассматривается"
+    assert result[0].sostoyanie == "Рассматривается"
 
 
 def test_razobrat_golosovaniya():
@@ -207,7 +207,7 @@ async def test_spisok_sozyvov():
 
 async def test_zakonoproekty_empty():
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=[]):
-        result = await gosduma_tools.zakonoproekty(status="принят")
+        result = await gosduma_tools.zakonoproekty(sostoyanie="принят")
     assert "Законопроект" in result or "СОЗД" in result
 
 
@@ -217,14 +217,14 @@ async def test_zakonoproekty_with_data():
             identifikator="1",
             nomer="12345-8",
             nazvanie="О внесении изменений",
-            status="Рассматривается",
+            sostoyanie="Рассматривается",
             data_vneseniya="2025-01-15",
             avtor="Депутаты ГД",
             chteniya=1,
         )
     ]
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=bills):
-        result = await gosduma_tools.zakonoproekty(status="рассматривается")
+        result = await gosduma_tools.zakonoproekty(sostoyanie="рассматривается")
     assert "12345-8" in result
     assert "Рассматривается" in result
 

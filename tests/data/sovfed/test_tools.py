@@ -27,7 +27,7 @@ async def test_spisok_senatorov_found():
             "familiya": "Матвиенко",
             "imya": "Валентина",
             "otchestvo": "Ивановна",
-            "region": "г. Санкт-Петербург",
+            "subiekt": "г. Санкт-Петербург",
             "dolzhnost": "Председатель Совета Федерации",
             "komitet": "",
         },
@@ -51,7 +51,7 @@ async def test_info_senatora_found():
         "familiya": "Матвиенко",
         "imya": "Валентина",
         "otchestvo": "Ивановна",
-        "region": "г. Санкт-Петербург",
+        "subiekt": "г. Санкт-Петербург",
         "dolzhnost": "Председатель Совета Федерации",
         "komitet": "",
         "data_naznacheniya": "2011",
@@ -86,7 +86,7 @@ async def test_poisk_zakonoproektov_found():
         {
             "nomer": "СФ-001",
             "nazvanie": "О федеральном бюджете",
-            "status": "Принят",
+            "sostoyanie": "Принят",
             "data_rassmotreniya": "2026-01-15",
         },
     ]
@@ -108,7 +108,7 @@ async def test_spisok_zasedaniy_found():
         {
             "nomer": "1",
             "data": "2026-01-15",
-            "status": "Состоялось",
+            "sostoyanie": "Состоялось",
             "povestka": "О бюджете",
         },
     ]

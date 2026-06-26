@@ -47,7 +47,7 @@ async def test_poisk_kontrolnyh_meropriyatiy_found():
             "nomer": "КМ-2026-001",
             "nazvanie": "Проверка исполнения бюджета",
             "tip": "Проверка",
-            "status": "Завершено",
+            "sostoyanie": "Завершено",
             "obiem_sredstv": 1500000000,
         },
     ]
@@ -76,7 +76,7 @@ async def test_info_kontrolnogo_meropriyatiya_found():
         "napravlenie": "Контроль исполнения федерального бюджета",
         "data_nachala": "2026-01-15",
         "data_okonchaniya": "2026-03-20",
-        "status": "Завершено",
+        "sostoyanie": "Завершено",
         "obiem_sredstv": 1500000000,
     }
     with patch.object(

@@ -24,7 +24,7 @@ async def test_konsul_adres_po_indeksu_success():
         "konsultirovat_adres_po_pochtovomu",
         return_value=AdresRF(
             pochtovyy_indeks="101000",
-            region="г Москва",
+            subiekt="г Москва",
             gorod="Москва",
             ulitsa="Красная площадь",
             dom="1",
@@ -63,9 +63,9 @@ async def test_poisk_adresa_success():
         "poisk_adresa",
         return_value=[
             {
-                "value": "г Москва, Красная площадь",
+                "znachenie": "г Москва, Красная площадь",
                 "pochtovyy_indeks": "101000",
-                "region": "г Москва",
+                "subiekt": "г Москва",
                 "gorod": "Москва",
                 "ulitsa": "Красная площадь",
                 "dom": "",
@@ -89,7 +89,7 @@ async def test_poisk_org_po_inn_success():
             ogrn="1027700132195",
             nazvanie_polnoe="Публичное акционерное общество «Сбербанк России»",
             nazvanie_kratkoe="ПАО Сбербанк",
-            status="ACTIVE",
+            sostoyanie="ACTIVE",
             adres="г Москва, ул Вавилова, д 19",
             rukovoditel="Греф Герман Оскарович",
             data_registratsii="2002-08-23",

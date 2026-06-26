@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class Pozhar(BaseModel):
     nomer: str
     data: str = ""
-    region: str = ""
+    subiekt: str = ""
     vid_pozhara: str = ""
     pogibshikh: int = 0
     postradavshikh: int = 0
@@ -20,16 +20,16 @@ class ChrezvychaynayaSituatsiya(BaseModel):
     vid_chs: str = ""
     klass_chs: str = ""
     data_vozniknoveniya: str = ""
-    region: str = ""
+    subiekt: str = ""
     opisanie: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     pogibshikh: int = 0
     postradavshikh: int = 0
 
 
 class RadiatsionnyyMonitoring(BaseModel):
     stantsiya: str
-    region: str = ""
+    subiekt: str = ""
     uroven_radiatsii: float = 0.0
     edinitsa: str = "мкЗв/ч"
     data_izmereniya: str = ""

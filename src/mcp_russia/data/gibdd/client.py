@@ -113,7 +113,7 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
         return None
 
 
-async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
+async def statistika_dtp_region(subiekt: str, god: int) -> StatistikaDTP | None:
     """Получение статистики ДТП с stat.gibdd.ru.
 
     Аргументы:
@@ -124,12 +124,12 @@ async def statistika_dtp_region(region: str, god: int) -> StatistikaDTP | None:
         Статистика ДТП или None.
     """
     url = f"{GIBDD_STAT_BASE}/map/dtp"
-    params = {"region": region, "year": str(god)}
+    params = {"region": subiekt, "year": str(god)}
     try:
         data = await http_poluchit(url, params=params)
-        return _razobrat_statistiku(data, region, god)
+        return _razobrat_statistiku(data, subiekt, god)
     except Exception:
-        logger.exception("Ошибка при получении статистики ДТП для %s, %d", region, god)
+        logger.exception("Ошибка при получении статистики ДТП для %s, %d", subiekt, god)
         return None
 
 
@@ -165,7 +165,7 @@ def _razobrat_istoriyu(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
                 gos_nomer=item.get("regNumber", ""),
                 tip_deystviya=item.get("regAction", ""),
                 data_deystviya=item.get("regDate", ""),
-                region=item.get("regRegion", ""),
+                subiekt=item.get("regRegion", ""),
             )
         )
     return records
@@ -185,7 +185,7 @@ def _razobrat_dtp(data: Any) -> list[dict[str, Any]]:
             {
                 "data_dtp": item.get("accidentDate", ""),
                 "tip_dtp": item.get("accidentType", ""),
-                "region_dtp": item.get("regionName", ""),
+                "subiekt_dtp": item.get("regionName", ""),
                 "model_ts": item.get("vehicleModel", ""),
                 "god_vypuska": item.get("vehicleYear", ""),
                 "status_ts": item.get("damageState", ""),
@@ -207,8 +207,8 @@ def _razobrat_rozysk(data: Any) -> list[dict[str, Any]]:
         records.append(
             {
                 "data_rozyska": item.get("wantedDate", ""),
-                "region": item.get("wantedRegion", ""),
-                "initiator": item.get("wantedInitiator", ""),
+                "subiekt": item.get("wantedRegion", ""),
+                "initsiator": item.get("wantedInitiator", ""),
                 "model_ts": item.get("vehicleModel", ""),
                 "god_vypuska": item.get("vehicleYear", ""),
                 "nomer_dela": item.get("wantedNumpkio", ""),
@@ -230,10 +230,10 @@ def _razobrat_ogranichenie(data: Any) -> list[dict[str, Any]]:
         records.append(
             {
                 "data_ogranicheniya": item.get("dateadd", ""),
-                "region": item.get("regname", ""),
+                "subiekt": item.get("regname", ""),
                 "tip_ogranicheniya": item.get("restrictType", ""),
                 "osnovanie": item.get("restrictBasis", ""),
-                "initiator": item.get("restrictInitiator", ""),
+                "initsiator": item.get("restrictInitiator", ""),
                 "nomer_dela": item.get("restrictNumber", ""),
             }
         )
@@ -268,11 +268,11 @@ def _razobrat_voditelya(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | 
         mesto_rozhdeniya=driver.get("birthPlace", ""),
         ograniceniya=driver.get("restriction", ""),
         osoboie_otmetki=driver.get("specialNote", ""),
-        status=driver.get("status", ""),
+        sostoyanie=driver.get("status", ""),
     )
 
 
-def _razobrat_statistiku(data: Any, region: str, god: int) -> StatistikaDTP | None:
+def _razobrat_statistiku(data: Any, subiekt: str, god: int) -> StatistikaDTP | None:
     """Разбор ответа статистики ДТП."""
     if not isinstance(data, dict):
         return None
@@ -282,7 +282,7 @@ def _razobrat_statistiku(data: Any, region: str, god: int) -> StatistikaDTP | No
         return None
 
     return StatistikaDTP(
-        region=region,
+        subiekt=subiekt,
         god=god,
         kolichestvo_dtp=int(stats.get("dtpCount", 0) or 0),
         pogibshie=int(stats.get("deadCount", 0) or 0),

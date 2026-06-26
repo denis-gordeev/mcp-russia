@@ -44,14 +44,14 @@ async def spisok_subiektov_audita(ctx: Context) -> str:
 async def poisk_kontrolnyh_meropriyatiy(
     ctx: Context,
     napravlenie: str = "",
-    status: str = "",
+    sostoyanie: str = "",
     god: int = 0,
 ) -> str:
     """Поиск контрольных мероприятий Счётной палаты.
 
     Аргументы:
         napravlenie: Код направления контроля (необязательно).
-        status: Статус мероприятия (необязательно).
+        sostoyanie: Статус мероприятия (необязательно).
         god: Год (необязательно).
 
     Возвращает:
@@ -60,7 +60,7 @@ async def poisk_kontrolnyh_meropriyatiy(
     await ctx.info("Поиск контрольных мероприятий...")
     meropriyatiya = await client.poisk_kontrolnyh_meropriyatiy(
         napravlenie=napravlenie,
-        status=status,
+        sostoyanie=sostoyanie,
         god=god,
     )
     if not meropriyatiya:
@@ -73,7 +73,7 @@ async def poisk_kontrolnyh_meropriyatiy(
             m.get("nomer", ""),
             m.get("nazvanie", "")[:50],
             m.get("tip", ""),
-            m.get("status", ""),
+            m.get("sostoyanie", ""),
             str(m.get("obiem_sredstv", "")),
         )
         for m in meropriyatiya
@@ -109,8 +109,8 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
         lines.append(f"- Дата начала: {data['data_nachala']}")
     if data.get("data_okonchaniya"):
         lines.append(f"- Дата окончания: {data['data_okonchaniya']}")
-    if data.get("status"):
-        lines.append(f"- Статус: {data['status']}")
+    if data.get("sostoyanie"):
+        lines.append(f"- Статус: {data['sostoyanie']}")
     if data.get("obiem_sredstv"):
         lines.append(f"- Объём средств: {formatirovat_chislo_ru(data['obiem_sredstv'], 2)} руб.")
     lines.append(f"- Источник: {data.get('istochnik', 'ach.gov.ru')}")

@@ -138,25 +138,25 @@ async def spisok_sozyvov(ctx: Context) -> str:
 
 
 async def zakonoproekty(
-    status: str = "",
+    sostoyanie: str = "",
     ogranichenie: int = 20,
     ctx: Context | None = None,
 ) -> str:
     """Получить список законопроектов Государственной Думы.
 
     Аргументы:
-        status: Фильтр по статусу (например, 'принят', 'рассматривается').
+        sostoyanie: Фильтр по статусу (например, 'принят', 'рассматривается').
         ogranichenie: Максимальное количество результатов (до 50).
 
     Возвращает:
         Список законопроектов.
     """
     if ctx:
-        await ctx.info(f"Запрос законопроектов (статус: {status or 'все'})...")
-    bills = await client.poluchit_zakonoproekty(status=status, ogranichenie=ogranichenie)
+        await ctx.info(f"Запрос законопроектов (статус: {sostoyanie or 'все'})...")
+    bills = await client.poluchit_zakonoproekty(sostoyanie=sostoyanie, ogranichenie=ogranichenie)
 
     if not bills:
-        status_label = status or "все"
+        status_label = sostoyanie or "все"
         return (
             f"**Законопроекты Государственной Думы**\n\n"
             f"Не удалось получить данные через API СОЗД.\n\n"
@@ -167,7 +167,7 @@ async def zakonoproekty(
             f"используйте API СОЗД."
         )
 
-    rows = [(b.nomer, b.nazvanie[:80], b.status, b.data_vneseniya) for b in bills]
+    rows = [(b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in bills]
     header = "**Законопроекты Государственной Думы**\n\n"
     header += f"Найдено: {len(bills)} законопроектов\n\n"
     return (

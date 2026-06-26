@@ -2,6 +2,82 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-26 (пятьдесят третий проход — русификация полей Pydantic-схем region/status, ключей словарей, параметров инструментов MCP)
+
+### Выполнено
+
+- **Русификация полей Pydantic-схем `region` → `subiekt`** (~33 поля в 15 модулях):
+  - rosstat: VRPDannye, DannyeZarplaty, IndikatorDannye, OtraslevayaStrukturaVRP, InvestitsiiPoVidam
+  - rosgidromet: PogodaDannye, Preduprezhdenie, SputnikMonitoring
+  - rosvodresursy: VodnyyObekt, VodokhranilishcheDannye, Vodopolzovanie
+  - rosapi: AdresRF, BankRF, InformatsiyaPochtovogoIndeksa
+  - cekrf: KandidatKratko, Kandidat, ItogiVYborov
+  - zakupki: Zakazchik, Postavshchik
+  - kad_arbitrazh: StoronaDela
+  - rospotrebnadzor: OrganNadzora
+  - rosprirodnadzor: ObektNegativnogoVozdeystviya
+  - minzdrav: MedOrganizatsia, PokazatelZdorovya, ZabolevanieStat
+  - rosselkhoznadzor: ProverkaRskhn, KarantinnyyObyekt
+  - mchs: Pozhar, ChrezvychaynayaSituatsiya, RadiatsionnyyMonitoring
+  - gibdd: StatistikaDTP, RegistracionnoeDeystvie
+  - sovfed: SenatorRezyume
+  - minobrnauki: VUZ
+  - Обновлены все ссылки: client.py (keyword args + output dict keys + function params), tools.py (attribute access + dict reads + function params + docstrings), constants.py, тесты
+- **Русификация полей Pydantic-схем `status` → `sostoyanie`** (~29 полей в 17 модулях):
+  - rosapi: Organizatsiya
+  - cekrf: KandidatKratko, Kandidat
+  - zakupki: Zakupka, Kontrakt
+  - kad_arbitrazh: SudebnoeDelo, SudebnoeZasedanie
+  - gosduma: Zakonoproekt
+  - fns: OrganizatsiyaFNS, IndividualnyyPredprinimatel, LizenziaFNS
+  - roskomnadzor: ReestrZapisey, ZapisReestra, DomenReestra
+  - rospotrebnadzor: Proverka, PlanovayaProverka
+  - rosprirodnadzor: ObektNegativnogoVozdeystviya
+  - rosselkhoznadzor: ProverkaRskhn, KarantinnyyObyekt, SertifikatRskhn
+  - mchs: ChrezvychaynayaSituatsiya
+  - gibdd: VoditelskoeUdostovereie
+  - sovfed: ZakonoproektSF, RezolyutsiyaSF
+  - fssp: IspolnitelnoeProizvodstvo
+  - rosaudit: KontrolnoeMeropriyatie
+  - publikatsii: PravovoyAkt
+  - minobrnauki: AkkreditaciyaVUZa, LizenziyaObrazovatelnaya
+  - Составные поля (`status_akkreditatsii`, `status_oplaty`, `status_karantina`, `status_rassmotreniya`, `status_ucheta`, `status_licenzii`) НЕ затронуты
+  - Обновлены все ссылки: client.py (keyword args + output dict keys), tools.py (attribute access + dict reads + function params + docstrings), тесты
+- **Русификация ключей выходных словарей** (~78 замен в 14 модулях):
+  - `"region"` → `"subiekt"` (~28 замен: rosgidromet/constants.py, rosvodresursy/constants.py, cekrf/constants.py, sovfed/constants.py + client.py в 10 модулях)
+  - `"status"` → `"sostoyanie"` (~19 замен: client.py в 10 модулях)
+  - `"suggestions"` → `"predlozheniya"` (6 замен: rosapi/client.py)
+  - `"name"` → `"nazvanie"` (3 замены: cekrf/client.py)
+  - `"value"` → `"znachenie"` (1 замена: rosapi/client.py)
+  - `"key"` → `"klyuch"` (1 замена: cekrf/client.py)
+  - `"subject"` → `"subiekt_rf"` (1 замена: fssp/client.py — отличается от `subiekt` чтобы избежать дублирования с «предмет»)
+  - `"initiator"` → `"initsiator"` (2 замены: gibdd/client.py)
+  - `"domain"` → `"domen"` (3 замены: roskomnadzor/client.py)
+  - `"deficit"` → `"defitsit"` (2 замены: kaznacheistvo/client.py)
+  - Обновлены все .get() чтения в соответствующих tools.py и тестах
+- **Русификация параметров MCP-инструментов** (tools.py function params — user-facing):
+  - `region` → `subiekt` в 13 модулях: rosstat, cekrf, rosvodresursy, rospotrebnadzor, minzdrav, rosselkhoznadzor, mchs, rosgidromet, gibdd, fssp, kaznacheistvo + zakupki
+  - `status` → `sostoyanie` в 3 модулях: gosduma, sovfed, rosaudit + zakupki
+  - Обновлены docstrings, client call sites, и все тесты
+- **Поле `period` оставлено без изменений**: «период» — русское слово, транслитерация которого совпадает с английским написанием; семантически корректно
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 file reformatted, `pytest` (680 passed, 1 skipped — интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **Поля Pydantic `region` → `subiekt`**: выбрано `subiekt` (субъект) как наиболее русскоязычный термин; в контексте государственных данных РФ «регион» почти всегда означает «субъект РФ»; консистентно с существующими `subiekty`, `poluchit_spisok_subiektov`
+- **Поля Pydantic `status` → `sostoyanie`**: выбрано `sostoyanie` (состояние) как исконно русское слово вместо заимствованного «статус»; составные поля (`status_oplaty` и т.д.) оставлены без изменений
+- **Ключ FSSP `"region"` → `"subiekt_rf"`**: в данных ФССП «subject» (предмет исполнения) и «region» (регион) — разные сущности; для избежания дублирования ключа `"subiekt"` регион назван `"subiekt_rf"` (субъект РФ)
+- **MCP-инструменты с новыми параметрами**: параметры `subiekt`/`sostoyanie` видны пользователям MCP-сервера — это user-facing API-контракт
+- **Внешние API-ключи не затронуты**: ключи запросов к API (`params["region"]`, `.get("status")` из ответов) оставлены как были, т.к. они определяются внешними API
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация английских имён тестовых классов/функций**: ~26 полностью английских классов, ~150 полностью английских функций в tests/
+- **Русификация оставшихся английских строковых ключей**: `"data"` в выходных словарях (11 вхождений — «дата»/«data» совпадает в транслитерации, как и `period`)
+
 ## Статус раунда 2026-06-25 (пятьдесят второй проход — русификация полей MetaFunktsii, констант settings, ключей словарей, параметров функций)
 
 ### Выполнено
@@ -70,7 +146,7 @@
 - **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
 - **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
 - **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
-- **Русификация оставшихся английских артефактов**: английские имена тестовых классов/функций (~56 классов, ~130+ полностью английских функций), поля `region`/`status`/`period` в Pydantic-схемах (34+29+9 вхождений), ключи внешних API (`"suggestions"`, `"value"` и т.д.)
+- **Русификация оставшихся английских артефактов**: английские имена тестовых классов/функций (~56 классов, ~130+ полностью английских функций), ~~поля `region`/`status`/`period` в Pydantic-схемах (34+29+9 вхождений)~~ ✅, ~~ключи внешних API (`"suggestions"`, `"value"` и т.д.)~~ ✅
 
 ## Статус раунда 2026-06-24 (пятьдесят первый проход — русификация HTTP-клиента, зачистка алиасов, переименование констант)
 

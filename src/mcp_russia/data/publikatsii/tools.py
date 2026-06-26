@@ -104,7 +104,7 @@ async def info_normativnogo_akta(
         f"- Номер: {data.nomer}",
         f"- Тип: {data.tip}",
         f"- Дата принятия: {data.data_prinyatiya}",
-        f"- Статус: {data.status}",
+        f"- Статус: {data.sostoyanie}",
         f"- Отрасль: {data.otrysl}",
     ]
     if data.kratkoe_opisanie:
@@ -178,7 +178,7 @@ async def poisk_aktov(
     lines = [f"**Результаты поиска: '{tekst}'** — найдено: {len(results)}\n"]
     for i, a in enumerate(results[:10], 1):
         lines.append(f"{i}. **{a.nazvanie}** ({a.tip})")
-        lines.append(f"   № {a.nomer}, статус: {a.status}")
+        lines.append(f"   № {a.nomer}, статус: {a.sostoyanie}")
         if a.kratkoe_opisanie:
             lines.append(f"   {a.kratkoe_opisanie}")
         lines.append("")

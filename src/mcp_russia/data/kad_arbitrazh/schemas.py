@@ -10,7 +10,7 @@ class SudebnoeDelo(BaseModel):
 
     nomer: str
     kategoriya: str = ""
-    status: str = ""
+    sostoyanie: str = ""
     sudya: str = ""
     nazvanie_suda: str = ""
     data_vozbuzhdeniya: str = ""
@@ -44,7 +44,7 @@ class SudebnoeZasedanie(BaseModel):
     vremya: str = ""
     sudya: str = ""
     zala: str = ""
-    status: str = ""  # назначено, отложено, состоялось
+    sostoyanie: str = ""  # назначено, отложено, состоялось
     rezultaty: str = ""
 
 
@@ -64,5 +64,5 @@ class StoronaDela(BaseModel):
     nazvanie: str
     inn: str = ""
     tip: str = ""  # "истец" или "ответчик"
-    region: str = ""
+    subiekt: str = ""
     predstavitelem: str = ""

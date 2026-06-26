@@ -9,7 +9,7 @@ class AdresRF(BaseModel):
     """Адрес, возвращаемый при запросе по почтовому индексу или ФИАС."""
 
     pochtovyy_indeks: str = Field(description="Почтовый индекс (6 цифр)")
-    region: str = Field(description="Субъект РФ (область, край, республика)")
+    subiekt: str = Field(description="Субъект РФ (область, край, республика)")
     gorod: str = Field(description="Город/населённый пункт")
     ulitsa: str | None = None
     dom: str | None = None
@@ -24,8 +24,8 @@ class Organizatsiya(BaseModel):
     ogrn: str | None = Field(default=None, description="ОГРН (13 или 15 цифр)")
     nazvanie_polnoe: str | None = None
     nazvanie_kratkoe: str | None = None
-    status: str | None = Field(
-        default=None, description="Статус: DEYSTVUYUSHCHAYA, LIKVIDIROVANA и т.д."
+    sostoyanie: str | None = Field(
+        default=None, description="Состояние: DEYSTVUYUSHCHAYA, LIKVIDIROVANA и т.д."
     )
     adres: str | None = None
     rukovoditel: str | None = None
@@ -39,7 +39,7 @@ class BankRF(BaseModel):
     nazvanie: str
     nazvanie_kratkoe: str | None = None
     gorod: str | None = None
-    region: str | None = None
+    subiekt: str | None = None
     telefon: str | None = None
     svift: str | None = None
 
@@ -56,7 +56,7 @@ class InformatsiyaPochtovogoIndeksa(BaseModel):
     """Информация о почтовом индексе."""
 
     kod: str = Field(description="Почтовый индекс (6 цифр)")
-    region: str
+    subiekt: str
     gorod: str
     rayon: str | None = None
     adresa: list[str] = Field(description="Список обслуживаемых адресов")

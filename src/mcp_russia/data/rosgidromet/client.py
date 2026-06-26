@@ -137,7 +137,7 @@ async def poluchit_ekologiyu(
     return results
 
 
-async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
+async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
     """Получение активных предупреждений о погоде.
 
     Open-Meteo не предоставляет данные о предупреждениях. Эта функция
@@ -150,12 +150,12 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
         Список активных предупреждений.
     """
     stations = STANCII_MONITORINGA
-    if region:
+    if subiekt:
         stations = [
             s
             for s in stations
-            if region.lower() in s.get("region", "").lower()
-            or region.lower() in s.get("nazvanie", "").lower()
+            if subiekt.lower() in s.get("subiekt", "").lower()
+            or subiekt.lower() in s.get("nazvanie", "").lower()
         ]
     if not stations:
         stations = STANCII_MONITORINGA
@@ -179,7 +179,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                 warnings.append(
                     Preduprezhdenie(
                         tip="moroz",
-                        region=station.get("region", ""),
+                        subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
                         opisanie=f"Сильный мороз: {temp}°C",
                         uroven_opasnosti="vysokiy",
@@ -189,7 +189,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                 warnings.append(
                     Preduprezhdenie(
                         tip="zhara",
-                        region=station.get("region", ""),
+                        subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
                         opisanie=f"Сильная жара: {temp}°C",
                         uroven_opasnosti="sredniy",
@@ -200,7 +200,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
                 warnings.append(
                     Preduprezhdenie(
                         tip="shtorm",
-                        region=station.get("region", ""),
+                        subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
                         opisanie=f"Сильный ветер: {wind:.1f} м/с",
                         uroven_opasnosti="vysokiy" if wind >= 30 else "sredniy",
@@ -210,8 +210,8 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
             if wmo in (95, 96, 99):
                 warnings.append(
                     Preduprezhdenie(
-                        tip="urogan",
-                        region=station.get("region", ""),
+                        tip="uroagan",
+                        subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
                         opisanie=f"Гроза ({WMO_KODY_POGODY.get(wmo, '')})",
                         uroven_opasnosti="sredniy" if wmo == 95 else "vysokiy",
@@ -224,7 +224,7 @@ async def poluchit_preduprezhdeniya(region: str = "") -> list[Preduprezhdenie]:
 
 
 async def poluchit_sputnik_dannye(
-    region: str = "",
+    subiekt: str = "",
     tip: str = "",
 ) -> list[SputnikMonitoring]:
     """Заглушка данных спутникового мониторинга.
@@ -274,7 +274,7 @@ def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> Po
     return PogodaDannye(
         stanciya=info["kod"],
         gorod=info["nazvanie"],
-        region=info.get("region", ""),
+        subiekt=info.get("subiekt", ""),
         temperatura=current.get("temperature_2m"),
         oshchushchaetsya_kak=current.get("apparent_temperature"),
         vlazhnost=current.get("relative_humidity_2m"),

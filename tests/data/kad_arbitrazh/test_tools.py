@@ -160,7 +160,7 @@ async def test_poisk_del_with_results():
         SudebnoeDelo(
             nomer="А40-12345/2024",
             kategoriya="Банкротство",
-            status="На рассмотрении",
+            sostoyanie="На рассмотрении",
             sudya="Иванов И.И.",
             nazvanie_suda="АС г. Москвы",
             summa_iska=1000000,
@@ -194,7 +194,7 @@ async def test_info_dela_found():
     mock_delo = SudebnoeDelo(
         nomer="А40-12345/2024",
         kategoriya="Банкротство",
-        status="На рассмотрении",
+        sostoyanie="На рассмотрении",
         sudya="Иванов И.И.",
         sud_name="АС г. Москвы",
         data_vozbuzhdeniya="2024-01-15",

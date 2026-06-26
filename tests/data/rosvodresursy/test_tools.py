@@ -43,7 +43,7 @@ async def test_poisk_vodnykh_obektov_empty():
 async def test_poisk_vodnykh_obektov_found():
     ctx = _mock_ctx()
     mock_data = [
-        {"nazvanie": "Река Волга", "tip": "Река", "basseyn": "Волжский", "region": ""},
+        {"nazvanie": "Река Волга", "tip": "Река", "basseyn": "Волжский", "subiekt": ""},
     ]
     with patch.object(rosvodresursy_tools.client, "poisk_vodnykh_obektov", return_value=mock_data):
         result = await rosvodresursy_tools.poisk_vodnykh_obektov(ctx, zapros="Волга")
@@ -64,7 +64,7 @@ async def test_info_vodnogo_obekta_found():
         "tip": "Река",
         "basseyn": "Волжский бассейновый округ",
         "dlinna_km": 3530,
-        "region": "Тверская область",
+        "subiekt": "Тверская область",
     }
     with patch.object(rosvodresursy_tools.client, "info_vodnogo_obekta", return_value=mock_data):
         result = await rosvodresursy_tools.info_vodnogo_obekta("volga", ctx)
@@ -117,14 +117,14 @@ async def test_info_vodokhranilishcha_static_fallback():
 async def test_vodopolzovanie_regionov_empty():
     ctx = _mock_ctx()
     with patch.object(rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=[]):
-        result = await rosvodresursy_tools.vodopolzovanie_regionov(ctx, region="Тест")
+        result = await rosvodresursy_tools.vodopolzovanie_regionov(ctx, subiekt="Тест")
     assert "недоступны" in result
 
 
 async def test_vodopolzovanie_regionov_with_data():
     ctx = _mock_ctx()
     mock_data = [
-        {"region": "Москва", "god": "2024", "zabrano_vody_km3": 1.2, "ispolzovano_vody_km3": 0.9},
+        {"subiekt": "Москва", "god": "2024", "zabrano_vody_km3": 1.2, "ispolzovano_vody_km3": 0.9},
     ]
     with patch.object(
         rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=mock_data

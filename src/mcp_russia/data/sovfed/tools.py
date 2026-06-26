@@ -25,7 +25,7 @@ async def spisok_senatorov(ctx: Context) -> str:
             s.get("nomer", ""),
             s.get("familiya", ""),
             s.get("imya", ""),
-            s.get("region", ""),
+            s.get("subiekt", ""),
             s.get("komitet", "")[:40],
         )
         for s in senatory
@@ -56,7 +56,7 @@ async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
     fio = f"{data.get('familiya', '')} {data.get('imya', '')} {data.get('otchestvo', '')}".strip()
     lines = [
         f"**{fio}** (№ {data.get('nomer', identifikator_senatora)})",
-        f"- Регион: {data.get('region', '')}",
+        f"- Регион: {data.get('subiekt', '')}",
         f"- Должность: {data.get('dolzhnost', '')}",
     ]
     if data.get("komitet"):
@@ -113,13 +113,13 @@ async def spisok_komissiy(ctx: Context) -> str:
 
 async def poisk_zakonoproektov(
     ctx: Context,
-    status: str = "",
+    sostoyanie: str = "",
     god: int = 0,
 ) -> str:
     """Поиск законопроектов, рассмотренных Советом Федерации.
 
     Аргументы:
-        status: Статус законопроекта (необязательно).
+        sostoyanie: Статус законопроекта (необязательно).
         god: Год (необязательно).
 
     Возвращает:
@@ -127,13 +127,13 @@ async def poisk_zakonoproektov(
     """
     await ctx.info("Поиск законопроектов...")
     zakonoproekty = await client.poisk_zakonoproektov(
-        status=status,
+        sostoyanie=sostoyanie,
         god=god,
     )
     if not zakonoproekty:
         filters = []
-        if status:
-            filters.append(f"статус: {status}")
+        if sostoyanie:
+            filters.append(f"статус: {sostoyanie}")
         if god:
             filters.append(f"год: {god}")
         filter_text = f" ({', '.join(filters)})" if filters else ""
@@ -145,7 +145,7 @@ async def poisk_zakonoproektov(
         (
             z.get("nomer", ""),
             z.get("nazvanie", "")[:50],
-            z.get("status", ""),
+            z.get("sostoyanie", ""),
             z.get("data_rassmotreniya", ""),
         )
         for z in zakonoproekty
@@ -175,7 +175,7 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
         (
             z.get("nomer", ""),
             z.get("data", ""),
-            z.get("status", ""),
+            z.get("sostoyanie", ""),
             z.get("povestka", "")[:50],
         )
         for z in zasedaniya

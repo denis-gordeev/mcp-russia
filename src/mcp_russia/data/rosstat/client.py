@@ -149,7 +149,7 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
         return []
 
 
-async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
+async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
     """Получение демографических данных из ЕМИСС.
 
     Аргументы:
@@ -162,8 +162,8 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         emiss_code = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
             items = data.get("data", [])
@@ -185,7 +185,7 @@ async def poluchit_demografiyu(region: str = "") -> list[dict[str, Any]]:
         return []
 
 
-async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
+async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
     """Получение данных о валовом региональном продукте из ЕМИСС.
 
     Аргументы:
@@ -199,8 +199,8 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
@@ -212,7 +212,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
                     if not isinstance(item, dict):
                         continue
                     region_name = ""
-                    reg_code = item.get("region", region)
+                    reg_code = item.get("region", subiekt)
                     if reg_code:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
@@ -220,7 +220,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
                     results.append(
                         VRPDannye(
                             period=item.get("date", item.get("period", "")),
-                            region=region_name,
+                            subiekt=region_name,
                             vrp=item.get("value"),
                             vrp_na_dushu=item.get("perCapita"),
                         )
@@ -232,7 +232,7 @@ async def poluchit_vrp(region: str = "", god: str = "") -> list[VRPDannye]:
         return []
 
 
-async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarplaty]:
+async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarplaty]:
     """Получение данных о заработной плате из ЕМИСС.
 
     Аргументы:
@@ -246,8 +246,8 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarpl
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
@@ -259,7 +259,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarpl
                     if not isinstance(item, dict):
                         continue
                     region_name = ""
-                    reg_code = item.get("region", region)
+                    reg_code = item.get("region", subiekt)
                     if reg_code:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
@@ -267,7 +267,7 @@ async def poluchit_zarplatu(region: str = "", god: str = "") -> list[DannyeZarpl
                     results.append(
                         DannyeZarplaty(
                             period=item.get("date", item.get("period", "")),
-                            region=region_name,
+                            subiekt=region_name,
                             nominalnaya_zp=item.get("value"),
                             realnaya_zp_izmenenie=item.get("realChange"),
                         )
@@ -309,7 +309,7 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                             region_name = ri["nazvanie"]
                     results.append(
                         {
-                            "region": region_name,
+                            "subiekt": region_name,
                             "kod": region_code,
                             "znachenie": item.get("value"),
                             "period": item.get("date", item.get("period", "")),
@@ -324,7 +324,7 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
 
 async def poluchit_indikator_dannye(
     kod: str,
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[IndikatorDannye]:
     """Получение данных произвольного показателя по коду ЕМИСС или мнемоническому коду.
@@ -345,8 +345,8 @@ async def poluchit_indikator_dannye(
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
@@ -360,7 +360,7 @@ async def poluchit_indikator_dannye(
             if not isinstance(item, dict):
                 continue
             region_name = ""
-            reg_code = item.get("region", region)
+            reg_code = item.get("region", subiekt)
             if reg_code:
                 ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                 if ri:
@@ -372,7 +372,7 @@ async def poluchit_indikator_dannye(
                     period=item.get("date", item.get("period", "")),
                     znachenie=item.get("value"),
                     edinitsa=item.get("unit", ""),
-                    region=region_name,
+                    subiekt=region_name,
                 )
             )
         return results
@@ -420,7 +420,7 @@ def poluchit_spisok_federalnykh_okrugov() -> list[dict[str, str]]:
 
 
 async def poluchit_otraslevuyu_strukturu_vrp(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
     """Получение отраслевой структуры ВРП по разделам ОКВЭД.
@@ -436,19 +436,19 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
-            return _fallback_otraslevaya_struktura(region, god)
+            return _fallback_otraslevaya_struktura(subiekt, god)
         items = data.get("data", [])
         if not isinstance(items, list) or not items:
-            return _fallback_otraslevaya_struktura(region, god)
+            return _fallback_otraslevaya_struktura(subiekt, god)
         region_name = ""
-        if region:
-            ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
+        if subiekt:
+            ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
                 region_name = ri["nazvanie"]
         results = []
@@ -462,7 +462,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             )
             results.append(
                 OtraslevayaStrukturaVRP(
-                    region=region_name or item.get("regionName", ""),
+                    subiekt=region_name or item.get("regionName", ""),
                     period=item.get("date", item.get("period", god or "")),
                     otrasl=otrasl,
                     kod_okved=okved,
@@ -473,11 +473,11 @@ async def poluchit_otraslevuyu_strukturu_vrp(
         return results
     except Exception:
         logger.exception("Ошибка при получении отраслевой структуры ВРП")
-        return _fallback_otraslevaya_struktura(region, god)
+        return _fallback_otraslevaya_struktura(subiekt, god)
 
 
 def _fallback_otraslevaya_struktura(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
     """Возврат справочных данных об отраслевой структуре как резервный вариант.
@@ -485,13 +485,13 @@ def _fallback_otraslevaya_struktura(
     Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
     region_name = ""
-    if region:
-        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
+    if subiekt:
+        ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
         if ri:
             region_name = ri["nazvanie"]
     return [
         OtraslevayaStrukturaVRP(
-            region=region_name,
+            subiekt=region_name,
             period=god or "2022",
             otrasl=o["nazvanie"],
             kod_okved=o["kod"],
@@ -503,7 +503,7 @@ def _fallback_otraslevaya_struktura(
 
 
 async def poluchit_investitsii_po_vidam(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:
     """Получение данных об инвестициях по видам экономической деятельности.
@@ -519,19 +519,19 @@ async def poluchit_investitsii_po_vidam(
     try:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         params: dict[str, str] = {"groupByActivity": "true"}
-        if region:
-            params["region"] = region
+        if subiekt:
+            params["region"] = subiekt
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
-            return _fallback_investitsii_po_vidam(region, god)
+            return _fallback_investitsii_po_vidam(subiekt, god)
         items = data.get("data", [])
         if not isinstance(items, list) or not items:
-            return _fallback_investitsii_po_vidam(region, god)
+            return _fallback_investitsii_po_vidam(subiekt, god)
         region_name = ""
-        if region:
-            ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
+        if subiekt:
+            ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
                 region_name = ri["nazvanie"]
         results = []
@@ -545,7 +545,7 @@ async def poluchit_investitsii_po_vidam(
             )
             results.append(
                 InvestitsiiPoVidam(
-                    region=region_name or item.get("regionName", ""),
+                    subiekt=region_name or item.get("regionName", ""),
                     period=item.get("date", item.get("period", god or "")),
                     vid_deyatelnosti=vid,
                     kod_okved=okved,
@@ -556,11 +556,11 @@ async def poluchit_investitsii_po_vidam(
         return results
     except Exception:
         logger.exception("Ошибка при получении инвестиций по видам деятельности")
-        return _fallback_investitsii_po_vidam(region, god)
+        return _fallback_investitsii_po_vidam(subiekt, god)
 
 
 def _fallback_investitsii_po_vidam(
-    region: str = "",
+    subiekt: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:
     """Возврат справочных данных об инвестиционной деятельности как резервный вариант.
@@ -568,13 +568,13 @@ def _fallback_investitsii_po_vidam(
     Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
     region_name = ""
-    if region:
-        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region), None)
+    if subiekt:
+        ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
         if ri:
             region_name = ri["nazvanie"]
     return [
         InvestitsiiPoVidam(
-            region=region_name,
+            subiekt=region_name,
             period=god or "2022",
             vid_deyatelnosti=v["nazvanie"],
             kod_okved=v["kod"],

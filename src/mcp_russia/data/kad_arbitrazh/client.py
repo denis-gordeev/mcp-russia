@@ -88,7 +88,7 @@ def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
             SudebnoeDelo(
                 nomer=number,
                 kategoriya=category,
-                status=case_info.get("Status", item.get("status", "")),
+                sostoyanie=case_info.get("Status", item.get("status", "")),
                 sudya=case_info.get("Judge", item.get("judge", "")),
                 nazvanie_suda=sud_name,
                 data_vozbuzhdeniya=case_info.get(
@@ -145,7 +145,7 @@ def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
     return SudebnoeDelo(
         nomer=number,
         kategoriya=category,
-        status=case_info.get("Status", data.get("status", "")),
+        sostoyanie=case_info.get("Status", data.get("status", "")),
         sudya=case_info.get("Judge", data.get("judge", "")),
         nazvanie_suda=sud_name,
         data_vozbuzhdeniya=case_info.get("RegistrationDate", data.get("registrationDate", "")),
@@ -376,7 +376,7 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
                     vremya=item.get("Time", ""),
                     sudya=item.get("Judge", ""),
                     zala=item.get("Hall", ""),
-                    status=item.get("Status", ""),
+                    sostoyanie=item.get("Status", ""),
                     rezultaty=item.get("Result", ""),
                 )
             )

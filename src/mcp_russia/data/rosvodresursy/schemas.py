@@ -14,7 +14,7 @@ class VodnyyObekt(BaseModel):
     basseyn: str = ""
     dlinna_km: float | None = None
     ploshchad_km2: float | None = None
-    region: str = ""
+    subiekt: str = ""
     opisaniye: str = ""
 
 
@@ -36,7 +36,7 @@ class VodokhranilishcheDannye(BaseModel):
 
     kod: str
     nazvanie: str
-    region: str = ""
+    subiekt: str = ""
     obiem_km3: float | None = None
     ploshchad_km2: float | None = None
     uroven_m: float | None = None
@@ -47,7 +47,7 @@ class VodokhranilishcheDannye(BaseModel):
 class Vodopolzovanie(BaseModel):
     """Данные о водопользовании."""
 
-    region: str = ""
+    subiekt: str = ""
     god: str = ""
     zabrano_vody_km3: float | None = None
     ispolzovano_vody_km3: float | None = None

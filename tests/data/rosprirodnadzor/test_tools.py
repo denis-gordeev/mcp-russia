@@ -46,7 +46,7 @@ async def test_poisk_proverok_found():
             "vid_nadzora": "Государственный экологический надзор",
             "data_nachala": "2026-02-01",
             "data_okonchaniya": "2026-03-01",
-            "status": "Завершено",
+            "sostoyanie": "Завершено",
             "vyavleno_narusheniy": 3,
         },
     ]
@@ -70,7 +70,7 @@ async def test_info_proverki_found():
         "vid_nadzora": "Государственный экологический надзор",
         "data_nachala": "2026-02-01",
         "data_okonchaniya": "2026-03-01",
-        "status": "Завершено",
+        "sostoyanie": "Завершено",
         "vyavleno_narusheniy": 3,
     }
     with patch.object(rpn_tools.client, "info_proverki", return_value=mock_data):
@@ -92,7 +92,7 @@ async def test_poisk_obektov_negativnogo_found():
             "nomer": "ОНВ-001",
             "nazvanie": "Завод «Химпром»",
             "kategoriya": "I — значительное",
-            "region": "Волгоградская область",
+            "subiekt": "Волгоградская область",
             "vid_deyatelnosti": "Химическое производство",
         },
     ]

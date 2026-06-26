@@ -86,8 +86,8 @@ class TestTools:
                 "nomer": "123",
                 "vid_nadzora": "Ветеринарный",
                 "data_provedeniya": "2024-01-15",
-                "region": "Московская область",
-                "status": "Завершена",
+                "subiekt": "Московская область",
+                "sostoyanie": "Завершена",
                 "narusheniya": 3,
             }
         ]
@@ -110,7 +110,7 @@ class TestTools:
             {
                 "nazvanie": "Калифорнийская щитовка",
                 "tip": "Вредитель",
-                "region": "Краснодарский край",
+                "subiekt": "Краснодарский край",
                 "status_karantina": "Действует",
                 "data_vvedeniya": "2023-06-01",
             }

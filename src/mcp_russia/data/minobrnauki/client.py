@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 async def poisk_akreditovannyh_vuzov(
     nazvanie: str = "",
     inn: str = "",
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск аккредитованных образовательных учреждений через Рособрнадзор.
 
@@ -49,7 +49,7 @@ async def poisk_akreditovannyh_vuzov(
                 continue
             if inn and inn != item.get("inn", ""):
                 continue
-            if region and region.lower() not in item.get("subjectRF", "").lower():
+            if subiekt and subiekt.lower() not in item.get("subjectRF", "").lower():
                 continue
             results.append(_razobrat_akkreditatsiyu(item))
         return results
@@ -180,14 +180,14 @@ def _granty_rezervnye(organizatsiya: str = "") -> list[dict[str, Any]]:
             "nazvanie": "Программа РНФ",
             "rukovoditel": "",
             "summa_finansirovaniya": 0,
-            "status": "Для подачи заявки: https://rscf.ru",
+            "sostoyanie": "Для подачи заявки: https://rscf.ru",
         },
         {
             "tip_granta": "Гранты РФФИ",
             "nazvanie": "Программа РФФИ",
             "rukovoditel": "",
             "summa_finansirovaniya": 0,
-            "status": "Для подачи заявки: https://www.rfbr.ru",
+            "sostoyanie": "Для подачи заявки: https://www.rfbr.ru",
         },
     ]
 
@@ -199,7 +199,7 @@ def _razobrat_akkreditatsiyu(item: dict[str, Any]) -> dict[str, Any]:
         "nazvanie": item.get("fullName", "") or item.get("shortName", ""),
         "tip": item.get("type", ""),
         "gorod": item.get("city", ""),
-        "region": item.get("subjectRF", ""),
+        "subiekt": item.get("subjectRF", ""),
         "status_akkreditatsii": item.get("accreditationStatus", ""),
         "data_akkreditatsii": item.get("accreditationDate", ""),
         "srok_deystviya": item.get("validUntil", ""),
@@ -217,7 +217,7 @@ def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
         "nazvanie": item.get("fullName", "") or item.get("shortName", ""),
         "tip": item.get("type", ""),
         "gorod": item.get("city", ""),
-        "region": item.get("subjectRF", ""),
+        "subiekt": item.get("subjectRF", ""),
         "status_licenzii": item.get("licenseStatus", ""),
         "data_licenzii": item.get("licenseDate", ""),
         "nomer_licenzii": item.get("licenseNumber", ""),

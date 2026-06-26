@@ -34,7 +34,7 @@ def _poluchit_api_token() -> str:
 async def poisk_zakupok(
     zapros: str = "",
     zakon: str = "",
-    region: str = "",
+    subiekt: str = "",
     status: str = "",
     ogranichenie: int = 20,
 ) -> list[Zakupka]:
@@ -61,8 +61,8 @@ async def poisk_zakupok(
             params["fz44"] = "on"
         elif "223" in zakon:
             params["fz223"] = "on"
-    if region:
-        params["regions"] = region
+    if subiekt:
+        params["regions"] = subiekt
     if status:
         params["statuses"] = status
 
@@ -98,7 +98,7 @@ def _razobrat_poisk_zakupok(data: Any) -> list[Zakupka]:
                 nazvanie=item.get("name", item.get("title", item.get("objectInfo", ""))),
                 zakon=_opredelit_zakon(item),
                 sposob=item.get("purchaseMethod", item.get("method", "")),
-                status=item.get("status", item.get("commonStatus", "")),
+                sostoyanie=item.get("status", item.get("commonStatus", "")),
                 nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
                     item.get("price", item.get("maxPrice", 0))
                 ),
@@ -218,7 +218,7 @@ def _razobrat_kontrakty(data: Any) -> list[Kontrakt]:
                 tsena=_bezopasnoe_veshchestvennoe(item.get("price", item.get("contractPrice", 0))),
                 valyuta=item.get("currency", "RUB"),
                 data_podpisaniya=item.get("signDate", item.get("contractDate", "")),
-                status=item.get("status", item.get("contractStatus", "")),
+                sostoyanie=item.get("status", item.get("contractStatus", "")),
                 srok_ispolneniya=item.get("executionDate", item.get("endDate", "")),
             )
         )
@@ -246,9 +246,8 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
                 nazvanie=org.nazvanie,
                 inn=org.inn,
                 kpp="",
-                region="",
+                subiekt="",
                 adres=org.yuridicheskiy_adres,
-                zakupki_kolichestvo=0,
                 obshchie_raskhody=0.0,
             )
     except Exception:
@@ -277,7 +276,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
                     identifikator=org.inn,
                     nazvanie=org.nazvanie,
                     inn=org.inn,
-                    region="",
+                    subiekt="",
                     kontraktov_vyigrano=0,
                     kontraktov_ispolneno=0,
                     obshchiy_dokhod=0.0,
@@ -290,7 +289,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
                     identifikator=ip.inn,
                     nazvanie=ip.fio,
                     inn=ip.inn,
-                    region="",
+                    subiekt="",
                     kontraktov_vyigrano=0,
                     kontraktov_ispolneno=0,
                     obshchiy_dokhod=0.0,

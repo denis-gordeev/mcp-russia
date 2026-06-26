@@ -98,7 +98,7 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
         f"- Тип лицензии: {data.get('tip_licenzii', '')}",
         f"- Дата выдачи: {data.get('data_vydachi', '')}",
         f"- Дата окончания: {data.get('data_okonchaniya', '')}",
-        f"- Статус: {data.get('status', '')}",
+        f"- Статус: {data.get('sostoyanie', '')}",
         f"- Территория: {data.get('territoriya', '')}",
         f"- Источник: {data.get('istochnik', 'Роскомнадзор')}",
     ]
@@ -161,7 +161,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
             o.get("inn", ""),
             o.get("kategoriya", ""),
             o.get("tsel_obrabotki", ""),
-            o.get("status", ""),
+            o.get("sostoyanie", ""),
         )
         for o in operatory
     ]
@@ -240,7 +240,7 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
             o.get("naimenovanie", ""),
             o.get("inn", ""),
             o.get("tip", ""),
-            o.get("status", ""),
+            o.get("sostoyanie", ""),
             o.get("data_vklyucheniya", ""),
         )
         for o in ori

@@ -218,7 +218,7 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
                     "adres": attrs.get("address", {}).get("note", "")
                     if isinstance(attrs.get("address"), dict)
                     else "",
-                    "status": attrs.get("state", {}).get("name", "")
+                    "sostoyanie": attrs.get("state", {}).get("name", "")
                     if isinstance(attrs.get("state"), dict)
                     else "",
                 }

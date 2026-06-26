@@ -14,7 +14,7 @@ class IspolnitelnoeProizvodstvo(BaseModel):
     vzyskatel: str = ""
     summa_vzyskaniya: float | None = None
     ostatok_dolga: float | None = None
-    status: str = ""
+    sostoyanie: str = ""
     data_vozbuzhdeniya: str = ""
     osnovanie: str = ""
     otdel_pristavov: str = ""
