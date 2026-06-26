@@ -6,9 +6,9 @@ from fastmcp import Client
 from mcp_russia.agenty.redator.server import mcp
 
 
-class TestToolsRegistered:
+class TestInstrumentyZaregistrirovany:
     @pytest.mark.asyncio
-    async def test_all_5_tools_registered(self) -> None:
+    async def test_vse_5_instrumentov_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
             tool_list = await c.list_tools()
             names = {t.name for t in tool_list}
@@ -22,16 +22,16 @@ class TestToolsRegistered:
             assert expected.issubset(names), f"Missing: {expected - names}"
 
     @pytest.mark.asyncio
-    async def test_tools_have_docstrings(self) -> None:
+    async def test_instrumenty_imeyut_docstringi(self) -> None:
         async with Client(mcp) as c:
             tool_list = await c.list_tools()
             for tool in tool_list:
                 assert tool.description, f"Tool {tool.name} has no description"
 
 
-class TestResourcesRegistered:
+class TestResursyZaregistrirovany:
     @pytest.mark.asyncio
-    async def test_all_resources_registered(self) -> None:
+    async def test_vse_resursy_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
             resources = await c.list_resources()
             uris = {str(r.uri) for r in resources}
@@ -50,9 +50,9 @@ class TestResourcesRegistered:
             assert expected.issubset(uris), f"Missing: {expected - uris}"
 
 
-class TestPromptsRegistered:
+class TestPromptyZaregistrirovany:
     @pytest.mark.asyncio
-    async def test_all_prompts_registered(self) -> None:
+    async def test_vse_prompty_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
             names = {p.name for p in prompts}
@@ -68,7 +68,7 @@ class TestPromptsRegistered:
             assert expected.issubset(names), f"Missing: {expected - names}"
 
 
-class TestToolExecution:
+class TestVypolnenieInstrumentov:
     @pytest.mark.asyncio
     async def test_formatirovat_data_e2e(self) -> None:
         async with Client(mcp) as c:
@@ -104,37 +104,37 @@ class TestToolExecution:
             assert "письмо" in result.data
 
 
-class TestResourceExecution:
+class TestVypolnenieResursov:
     @pytest.mark.asyncio
-    async def test_read_template_pismo(self) -> None:
+    async def test_chtenie_shablona_pismo(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("template://pismo")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
             assert "ПИСЬМО" in text or "ОФИЦИАЛЬНОЕ ПИСЬМО" in text
 
     @pytest.mark.asyncio
-    async def test_read_template_prikaz(self) -> None:
+    async def test_chtenie_shablona_prikaz(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("template://prikaz")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
             assert "ПРИКАЗ" in text
 
     @pytest.mark.asyncio
-    async def test_read_normas_manual(self) -> None:
+    async def test_chtenie_normas_manual(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("normas://manual")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
             assert "ГОСТ" in text or "единообразие" in text.lower()
 
     @pytest.mark.asyncio
-    async def test_read_normas_obrashcheniya(self) -> None:
+    async def test_chtenie_normas_obrashcheniya(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("normas://obrashcheniya")
             text = content[0].text if hasattr(content[0], "text") else str(content[0])
             assert "Президент" in text or "Уважаемый" in text
 
 
-class TestPromptExecution:
+class TestVypolneniePromtov:
     @pytest.mark.asyncio
     async def test_prompt_pismo(self) -> None:
         async with Client(mcp) as c:

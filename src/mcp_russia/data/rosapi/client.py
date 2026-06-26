@@ -266,13 +266,13 @@ async def poisk_adresa(zapros: str) -> list[dict[str, str]]:
         city = data.get("city_with_type") or data.get("settlement_with_type", "")
         results.append(
             {
-                "value": s.get("value", ""),
+                "znachenie": s.get("value", ""),
                 "pochtovyy_indeks": data.get("postal_code", ""),
                 "subiekt": data.get("region_with_type", ""),
                 "gorod": city,
                 "ulitsa": data.get("street_with_type", ""),
                 "dom": data.get("house", ""),
-                "fias_id": data.get("fias_id", ""),
+                "identifikator_fias": data.get("fias_id", ""),
             }
         )
     return results

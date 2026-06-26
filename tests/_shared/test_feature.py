@@ -14,7 +14,7 @@ from mcp_russia._shared.feature import MetaFunktsii, ReyestrFunktsiy, Zaregistri
 
 
 class TestMetaFunktsii:
-    def test_create_minimal(self) -> None:
+    def test_sozdat_minimalnyy(self) -> None:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ API")
         assert meta.imya == "cbrf"
         assert meta.opisanie == "ЦБ РФ API"
@@ -22,7 +22,7 @@ class TestMetaFunktsii:
         assert meta.vklyuchena is True
         assert meta.trebuet_autentifikatsii is False
 
-    def test_create_with_auth(self) -> None:
+    def test_sozdat_s_autentifikatsiey(self) -> None:
         meta = MetaFunktsii(
             imya="zakupki",
             opisanie="ЕИС Закупки",
@@ -82,16 +82,16 @@ class TestMetaFunktsii:
         with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
             assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_frozen(self) -> None:
+    def test_zamorozhennyy(self) -> None:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         with pytest.raises(AttributeError):
             meta.imya = "other"  # type: ignore[misc]
 
-    def test_tags_default_empty(self) -> None:
+    def test_tegi_po_umolchaniyu_pustye(self) -> None:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         assert meta.tegi == []
 
-    def test_tags_custom(self) -> None:
+    def test_tegi_polzovatelskie(self) -> None:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ", tegi=["валюта", "курсы"])
         assert meta.tegi == ["валюта", "курсы"]
 
@@ -102,46 +102,46 @@ class TestMetaFunktsii:
 
 
 class TestReyestrFunktsiy:
-    def test_empty_registry(self) -> None:
+    def test_pustoy_reestr(self) -> None:
         registry = ReyestrFunktsiy()
         assert registry.funktsii == {}
         assert registry.propushcheno == {}
 
-    def test_discover_returns_self_for_chaining(self) -> None:
+    def test_obnaruzhenie_vozvrashchaet_self_dlya_tsepochki(self) -> None:
         """obnaruzhit() возвращает self для цепочки вызовов."""
         registry = ReyestrFunktsiy()
         result = registry.obnaruzhit("mcp_russia.data")
         assert result is registry
 
-    def test_discover_finds_cbrf(self) -> None:
+    def test_obnaruzhenie_nakhodit_cbrf(self) -> None:
         """Discovery находит feature cbrf в пакете data."""
         registry = ReyestrFunktsiy()
         registry.obnaruzhit("mcp_russia.data")
         assert "cbrf" in registry.funktsii
 
-    def test_discover_finds_redator(self) -> None:
+    def test_obnaruzhenie_nakhodit_redator(self) -> None:
         """Discovery находит feature redator в пакете agenty."""
         registry = ReyestrFunktsiy()
         registry.obnaruzhit("mcp_russia.agenty")
         assert "redator" in registry.funktsii
 
-    def test_summary_empty(self) -> None:
+    def test_svodka_pustoy(self) -> None:
         registry = ReyestrFunktsiy()
         summary = registry.svodka()
         assert "0 функция(й) активно" in summary
         assert "0 пропущено" in summary
 
-    def test_get_feature_not_found(self) -> None:
+    def test_poluchit_funktsiyu_ne_naydena(self) -> None:
         registry = ReyestrFunktsiy()
         assert registry.poluchit_funktsiyu("nonexistent") is None
 
-    def test_mount_all_empty(self) -> None:
+    def test_smontirovat_vse_pustoy(self) -> None:
         """Mount с пустым registry не вызывает исключение."""
         registry = ReyestrFunktsiy()
         root = FastMCP("test-root")
         registry.smontirovat_vse(root)  # не должен вызывать исключение
 
-    def test_register_and_mount_manual(self) -> None:
+    def test_zaregistrirovat_i_smontirovat_vruchnuyu(self) -> None:
         """Регистрирует feature вручную и монтирует в root."""
         registry = ReyestrFunktsiy()
 
@@ -165,7 +165,7 @@ class TestReyestrFunktsiy:
         assert registry.poluchit_funktsiyu("test_feat") is not None
         assert "test_feat" in registry.svodka()
 
-    def test_summary_with_features(self) -> None:
+    def test_svodka_s_funktsiyami(self) -> None:
         registry = ReyestrFunktsiy()
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
         sub = FastMCP("sub")
@@ -177,21 +177,21 @@ class TestReyestrFunktsiy:
         assert "cbrf" in summary
         assert "ЦБ РФ данные" in summary
 
-    def test_summary_with_skipped(self) -> None:
+    def test_svodka_s_propushchennymi(self) -> None:
         registry = ReyestrFunktsiy()
         registry._skipped["broken"] = "отсутствует META_FUNKTSII"
         summary = registry.svodka()
         assert "1 пропущено" in summary
         assert "broken" in summary
 
-    def test_skipped_returns_copy(self) -> None:
+    def test_propushcheno_vozvrashchaet_kopiyu(self) -> None:
         registry = ReyestrFunktsiy()
         registry._skipped["x"] = "reason"
         skipped = registry.propushcheno
         skipped["y"] = "other"
         assert "y" not in registry._skipped
 
-    def test_features_returns_copy(self) -> None:
+    def test_funktsii_vozvrashchaet_kopiyu(self) -> None:
         registry = ReyestrFunktsiy()
         features = registry.funktsii
         features["fake"] = None  # type: ignore[assignment]
@@ -203,9 +203,9 @@ class TestReyestrFunktsiy:
 # ---------------------------------------------------------------------------
 
 
-class TestRegistryIntegration:
+class TestIntegratsiyaReestra:
     @pytest.mark.asyncio
-    async def test_mounted_tool_callable(self) -> None:
+    async def test_smontirovannyy_instrument_vyzyvaemyy(self) -> None:
         """Инструмент, подключённый через registry, вызывается через Client."""
         sub = FastMCP("sub")
 
@@ -222,7 +222,7 @@ class TestRegistryIntegration:
             assert result.data == "echo: hello"
 
     @pytest.mark.asyncio
-    async def test_root_server_starts_empty(self) -> None:
+    async def test_kornevoy_server_zapuskaetsya_pustym(self) -> None:
         """Root-сервер без подключённых features работает."""
         from mcp_russia.server import mcp
 

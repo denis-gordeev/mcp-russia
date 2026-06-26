@@ -83,14 +83,14 @@ async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
 async def poisk_litsenziy(
     inn: str = "",
     vid: str = "",
-    status: str = "",
+    sostoyanie: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск лицензий Росздравнадзора.
 
     Аргументы:
         inn: ИНН организации.
         vid: Вид лицензируемой деятельности.
-        status: Статус лицензии.
+        sostoyanie: Статус лицензии.
 
     Возвращает:
         Список лицензий.
@@ -102,8 +102,8 @@ async def poisk_litsenziy(
             params["inn"] = inn
         if vid:
             params["type"] = vid
-        if status:
-            params["status"] = status
+        if sostoyanie:
+            params["status"] = sostoyanie
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
@@ -239,7 +239,7 @@ def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
         "vid_deyatelnosti": item.get("activityType", "") or item.get("vid", ""),
         "data_vydachi": item.get("issueDate", "") or item.get("data_vydachi", ""),
         "data_okonchaniya": item.get("endDate", "") or item.get("data_okonchaniya", ""),
-        "status": item.get("status", ""),
+        "sostoyanie": item.get("status", ""),
         "adres": item.get("address", "") or item.get("adres", ""),
         "istochnik": "Росздравнадзор (roszdravnadzor.gov.ru)",
     }

@@ -18,7 +18,7 @@ from mcp_russia.data.rosselkhoznadzor.constants import (
 from mcp_russia.data.rosselkhoznadzor.server import mcp as rosselkhoznadzor_server
 
 
-class TestConstants:
+class TestKonstanty:
     def test_vidy_nadzora(self) -> None:
         assert len(VIDY_NADZORA) == 6
         codes = [v["kod"] for v in VIDY_NADZORA]
@@ -45,7 +45,7 @@ class TestConstants:
         assert "po_vidam" in STATISTIKA_RSKHN_2023
 
 
-class TestTools:
+class TestInstrumenty:
     @pytest.mark.asyncio
     async def test_spisok_vidov_nadzora(self) -> None:
         ctx = AsyncMock()
@@ -141,9 +141,9 @@ class TestTools:
         assert "не найдены" in result
 
 
-class TestIntegration:
+class TestIntegratsiya:
     @pytest.mark.asyncio
-    async def test_server_has_tools(self) -> None:
+    async def test_server_imeet_instrumenty(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
             tool_names = [t.name for t in await c.list_tools()]
         assert "spisok_vidov_nadzora" in tool_names
@@ -151,13 +151,13 @@ class TestIntegration:
         assert "poisk_karantinnykh_obektov" in tool_names
 
     @pytest.mark.asyncio
-    async def test_server_has_resources(self) -> None:
+    async def test_server_imeet_resursy(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
             resources = await c.list_resources()
         assert len(resources) >= 3
 
     @pytest.mark.asyncio
-    async def test_server_has_prompts(self) -> None:
+    async def test_server_imeet_prompty(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
             prompts = await c.list_prompts()
         assert len(prompts) >= 2

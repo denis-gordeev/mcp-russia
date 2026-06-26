@@ -11,29 +11,29 @@ from mcp_russia.exceptions import OshibkaHttpClienta
 
 
 class TestSozdatKlienta:
-    def test_returns_async_client(self) -> None:
+    def test_vozvrashchaet_asinkhronnyy_klient(self) -> None:
         client = sozdat_klienta()
         assert isinstance(client, httpx.AsyncClient)
 
-    def test_sets_default_headers(self) -> None:
+    def test_ustanavlivaet_zagolovki_po_umolchaniyu(self) -> None:
         client = sozdat_klienta()
         assert "mcp-russia" in client.headers["user-agent"]
         assert client.headers["accept"] == "application/json"
 
-    def test_custom_base_url(self) -> None:
+    def test_polzovatelskiy_bazovyy_url(self) -> None:
         client = sozdat_klienta(base_url="https://www.cbr.ru")
         assert str(client.base_url) == "https://www.cbr.ru"
 
-    def test_custom_timeout(self) -> None:
+    def test_polzovatelskiy_taimaut(self) -> None:
         client = sozdat_klienta(timeout=5.0)
         assert client.timeout.connect == 5.0
 
-    def test_custom_headers_merged(self) -> None:
+    def test_polzovatelskie_zagolovki_obedineny(self) -> None:
         client = sozdat_klienta(headers={"X-Api-Key": "secret"})
         assert client.headers["x-api-key"] == "secret"
         assert "mcp-russia" in client.headers["user-agent"]
 
-    def test_follow_redirects_enabled(self) -> None:
+    def test_perenapravleniya_vklucheny(self) -> None:
         client = sozdat_klienta()
         assert client.follow_redirects is True
 
@@ -41,7 +41,7 @@ class TestSozdatKlienta:
 class TestHttpPoluchit:
     @pytest.mark.asyncio
     @respx.mock
-    async def test_success_returns_json(self) -> None:
+    async def test_uspekh_vozvrashchaet_json(self) -> None:
         respx.get("https://api.example.com/data").mock(
             return_value=httpx.Response(200, json={"ok": True})
         )
@@ -50,7 +50,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_with_params(self) -> None:
+    async def test_s_parametrami(self) -> None:
         respx.get("https://api.example.com/search").mock(
             return_value=httpx.Response(200, json=[1, 2, 3])
         )
@@ -59,7 +59,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_404_raises_immediately(self) -> None:
+    async def test_404_vyzyvaet_nemedlenno(self) -> None:
         """Ошибки 4xx (кроме 429) не должны повторяться."""
         respx.get("https://api.example.com/missing").mock(
             return_value=httpx.Response(404, text="Not Found")
@@ -69,7 +69,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_500_retries_then_succeeds(self) -> None:
+    async def test_500_povtoryaet_zatem_uspekh(self) -> None:
         """Ошибка сервера при первой попытке, успех при второй."""
         route = respx.get("https://api.example.com/flaky")
         route.side_effect = [
@@ -82,7 +82,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_429_retries(self) -> None:
+    async def test_429_povtoryaet(self) -> None:
         """Запросы с ограничением скорости должны повторяться."""
         route = respx.get("https://api.example.com/limited")
         route.side_effect = [
@@ -95,7 +95,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_all_retries_exhausted(self) -> None:
+    async def test_vse_povtory_ischerpany(self) -> None:
         """После исчерпания всех попыток возбуждает OshibkaHttpClienta."""
         respx.get("https://api.example.com/down").mock(
             return_value=httpx.Response(503, text="Service Unavailable")
@@ -108,7 +108,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_timeout_retries(self) -> None:
+    async def test_taimaut_povtoryaet(self) -> None:
         """Ошибки таймаута должны повторяться."""
         route = respx.get("https://api.example.com/slow")
         route.side_effect = [
@@ -121,7 +121,7 @@ class TestHttpPoluchit:
 
     @pytest.mark.asyncio
     @respx.mock
-    async def test_zero_retries_no_retry(self) -> None:
+    async def test_nol_povtorov_bez_povtora(self) -> None:
         """При maks_povtorov=0 повторных запросов не происходит."""
         respx.get("https://api.example.com/once").mock(
             return_value=httpx.Response(500, text="Error")

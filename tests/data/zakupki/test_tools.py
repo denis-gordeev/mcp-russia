@@ -71,7 +71,7 @@ def test_determine_zakon():
     assert zakupki_client._opredelit_zakon({"fz": ""}) == ""
 
 
-def test_safe_float():
+def test_bezopasnoe_veshchestvennoe():
     assert zakupki_client._bezopasnoe_veshchestvennoe(None) == 0.0
     assert zakupki_client._bezopasnoe_veshchestvennoe("abc") == 0.0
     assert zakupki_client._bezopasnoe_veshchestvennoe(100) == 100.0
@@ -212,11 +212,11 @@ async def test_plany_zakupok_empty():
     assert "Планы-графики" in result
 
 
-async def test_auth_note_without_token():
+async def test_zametka_ob_aut_bez_tokena():
     with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value=""):
         assert "MCP_RUSSIA_ZAKUPKI_API_TOKEN" in zakupki_tools._auth_note()
 
 
-async def test_auth_note_with_token():
+async def test_zametka_ob_aut_s_tokenom():
     with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value="secret"):
         assert zakupki_tools._auth_note() == ""

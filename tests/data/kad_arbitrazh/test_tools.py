@@ -15,7 +15,7 @@ def _mock_ctx():
 
 
 class TestParserRezultatyPoiska:
-    def test_parse_list(self) -> None:
+    def test_razbor_spiska(self) -> None:
         data = [
             {
                 "CaseNumber": "А40-12345/2024",
@@ -34,7 +34,7 @@ class TestParserRezultatyPoiska:
         assert results[0].summa_iska == 1000000.0
         assert "ООО Альфа" in results[0].istorcy
 
-    def test_parse_dict_with_instances(self) -> None:
+    def test_razbor_slovarya_s_ekzemplyarami(self) -> None:
         data = {
             "Instances": [
                 {
@@ -53,7 +53,7 @@ class TestParserRezultatyPoiska:
         assert len(results) == 1
         assert results[0].nomer == "А77-5678/2023"
 
-    def test_parse_empty(self) -> None:
+    def test_razbor_pustogo(self) -> None:
         assert kad_client._parse_rezultaty_poiska(None) == []
         assert kad_client._parse_rezultaty_poiska([]) == []
 
@@ -72,7 +72,7 @@ class TestParserRezultatyPoiska:
 
 
 class TestParserKartochkaDela:
-    def test_parse_full(self) -> None:
+    def test_razbor_polnyy(self) -> None:
         data = {
             "CaseInfo": {
                 "CaseNumber": "А40-11111/2025",
@@ -93,13 +93,13 @@ class TestParserKartochkaDela:
         assert result.kategoriya == "Банкротство"
         assert result.summa_iska == 5000000.0
 
-    def test_parse_none(self) -> None:
+    def test_razbor_none(self) -> None:
         assert kad_client._parse_kartochka_dela(None) is None
         assert kad_client._parse_kartochka_dela({}) is None
 
 
 class TestParserAkty:
-    def test_parse_documents(self) -> None:
+    def test_razbor_dokumentov(self) -> None:
         data = {
             "Documents": [
                 {
@@ -120,12 +120,12 @@ class TestParserAkty:
         assert results[0].tip_akta == "Решение"
         assert results[0].delo_nomer == "А40-12345/2024"
 
-    def test_parse_empty(self) -> None:
+    def test_razbor_pustogo(self) -> None:
         assert kad_client._parse_akty(None, "А40-1/2024") == []
 
 
 class TestParserStorony:
-    def test_parse_sides(self) -> None:
+    def test_razbor_storon(self) -> None:
         data = {
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
             "Defendants": ["ООО Бета", "Минфин РФ"],
@@ -137,7 +137,7 @@ class TestParserStorony:
         assert len(istorcy) == 2
         assert len(otvetchiki) == 2
 
-    def test_parse_string_sides(self) -> None:
+    def test_razbor_strokovykh_storon(self) -> None:
         data = {
             "Plaintiffs": "ООО Альфа, ООО Гамма",
             "Defendants": "ООО Бета",

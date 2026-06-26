@@ -274,7 +274,7 @@ def _razobrat_chs(data: dict[str, Any]) -> dict[str, Any]:
         "data_vozniknoveniya": data.get("date", "") or data.get("data_vozniknoveniya", ""),
         "subiekt": data.get("region", "") or data.get("subject", ""),
         "opisanie": data.get("description", "") or data.get("opisanie", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "pogibshikh": data.get("deaths", 0) or data.get("pogibshikh", 0),
         "postradavshikh": data.get("injured", 0) or data.get("postradavshikh", 0),
         "istochnik": "МЧС России (mchs.gov.ru)",

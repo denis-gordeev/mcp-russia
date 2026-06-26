@@ -8,10 +8,10 @@ from mcp_russia.server import mcp as legacy_mcp
 from mcp_russia.server import registry as legacy_registry
 
 
-def test_public_namespace_reexports_root_server() -> None:
+def test_publichnoe_prostranstvo_imen_pereeksportiruet_kornevoy_server() -> None:
     assert mcp is legacy_mcp
     assert registry is legacy_registry
 
 
-def test_public_namespace_exposes_version() -> None:
+def test_publichnoe_prostranstvo_imen_otkryvaet_versiyu() -> None:
     assert __version__

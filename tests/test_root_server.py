@@ -10,30 +10,30 @@ from fastmcp import Client
 from mcp_russia.server import mcp
 
 
-class TestRootServerTools:
+class TestInstrumentyKornevogoServera:
     @pytest.mark.asyncio
-    async def test_spisok_funktsiy_registered(self) -> None:
+    async def test_spisok_funktsiy_zaregistrirovan(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "spisok_funktsiy" in names
 
     @pytest.mark.asyncio
-    async def test_rekomendovat_instrumenty_registered(self) -> None:
+    async def test_rekomendovat_instrumenty_zaregistrirovan(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "rekomendovat_instrumenty" in names
 
     @pytest.mark.asyncio
-    async def test_splanirovat_zapros_registered(self) -> None:
+    async def test_splanirovat_zapros_zaregistrirovan(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "splanirovat_zapros" in names
 
     @pytest.mark.asyncio
-    async def test_cbrf_tools_namespaced(self) -> None:
+    async def test_instrumenty_cbrf_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
@@ -41,14 +41,14 @@ class TestRootServerTools:
             assert "cbrf_uznat_kurs_valyuty" in names
 
     @pytest.mark.asyncio
-    async def test_rosgidromet_tools_namespaced(self) -> None:
+    async def test_instrumenty_rosgidromet_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "rosgidromet_pogoda_seychas" in names
 
     @pytest.mark.asyncio
-    async def test_sovfed_tools_namespaced(self) -> None:
+    async def test_instrumenty_sovfed_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
@@ -56,21 +56,21 @@ class TestRootServerTools:
             assert "sovfed_spisok_komitetov" in names
 
     @pytest.mark.asyncio
-    async def test_kaznacheistvo_tools_namespaced(self) -> None:
+    async def test_instrumenty_kaznacheistvo_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "kaznacheistvo_spisok_vidov_byudzhetov" in names
 
     @pytest.mark.asyncio
-    async def test_rosprirodnadzor_tools_namespaced(self) -> None:
+    async def test_instrumenty_rosprirodnadzor_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "rosprirodnadzor_spisok_vidov_nadzora" in names
 
     @pytest.mark.asyncio
-    async def test_spisok_funktsiy_returns_summary(self) -> None:
+    async def test_spisok_funktsiy_vozvrashchaet_svodku(self) -> None:
         async with Client(mcp) as c:
             result = await c.call_tool("spisok_funktsiy", {})
             assert "cbrf" in result.data
@@ -78,32 +78,32 @@ class TestRootServerTools:
             assert "sovfed" in result.data
 
 
-class TestRootServerResources:
+class TestResursyKornevogoServera:
     @pytest.mark.asyncio
-    async def test_cbrf_resources_namespaced(self) -> None:
+    async def test_resursy_cbrf_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             resources = await c.list_resources()
             uris = {str(r.uri) for r in resources}
             assert any("cbrf" in u for u in uris)
 
     @pytest.mark.asyncio
-    async def test_sovfed_resources_namespaced(self) -> None:
+    async def test_resursy_sovfed_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             resources = await c.list_resources()
             uris = {str(r.uri) for r in resources}
             assert any("sovfed" in u or "istochniki" in u for u in uris)
 
 
-class TestRootServerPrompts:
+class TestPromptyKornevogoServera:
     @pytest.mark.asyncio
-    async def test_cbrf_prompts_namespaced(self) -> None:
+    async def test_prompty_cbrf_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
             names = {p.name for p in prompts}
             assert any("cbrf" in n for n in names)
 
     @pytest.mark.asyncio
-    async def test_sovfed_prompts_namespaced(self) -> None:
+    async def test_prompty_sovfed_s_prostranstvom_imen(self) -> None:
         async with Client(mcp) as c:
             prompts = await c.list_prompts()
             names = {p.name for p in prompts}
@@ -112,14 +112,14 @@ class TestRootServerPrompts:
 
 class TestVypolnitPaket:
     @pytest.mark.asyncio
-    async def test_registered(self) -> None:
+    async def test_zaregistrirovan(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             names = {t.name for t in tools}
             assert "vypolnit_paket" in names
 
     @pytest.mark.asyncio
-    async def test_has_docstring(self) -> None:
+    async def test_imeet_docstring(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             tool = next(t for t in tools if t.name == "vypolnit_paket")
@@ -127,16 +127,16 @@ class TestVypolnitPaket:
             assert "параллельно" in tool.description.lower()
 
 
-class TestRootServerToolTags:
+class TestTegiInstrumentovKornevogoServera:
     @pytest.mark.asyncio
-    async def test_tools_have_tags(self) -> None:
+    async def test_instrumenty_imeyut_tegi(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             cbrf_tool = next((t for t in tools if t.name == "cbrf_tekushchie_kursy"), None)
             assert cbrf_tool is not None
 
     @pytest.mark.asyncio
-    async def test_meta_tools_have_discovery_tag(self) -> None:
+    async def test_metainstrumenty_imeyut_teg_obnaruzheniya(self) -> None:
         async with Client(mcp) as c:
             tools = await c.list_tools()
             spisok = next((t for t in tools if t.name == "spisok_funktsiy"), None)

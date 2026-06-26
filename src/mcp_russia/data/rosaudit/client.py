@@ -220,7 +220,7 @@ def _razobrat_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
         "period": data.get("period", "") or data.get("year", ""),
         "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
         "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
-        "deficit": data.get("deficit"),
+        "defitsit": data.get("deficit"),
         "istochnik": "Портал бюджетных данных (budget.gov.ru)",
     }
 

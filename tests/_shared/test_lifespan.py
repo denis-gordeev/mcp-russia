@@ -7,11 +7,11 @@ import pytest
 from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
 
 
-class TestHttpLifespan:
+class TestHttpZhiznennyyTsikl:
     """Проверяет, что http_zhiznennyy_tsikl создаёт и закрывает httpx.AsyncClient."""
 
     @pytest.mark.asyncio
-    async def test_lifespan_creates_and_closes_client(self) -> None:
+    async def test_zhiznennyy_tsikl_sozdaet_i_zakryvaet_klienta(self) -> None:
         """Lifespan должен вернуть http_client и закрыть его при выходе."""
         from fastmcp import FastMCP
 
@@ -34,7 +34,7 @@ class TestHttpLifespan:
         assert client.is_closed
 
     @pytest.mark.asyncio
-    async def test_lifespan_client_has_correct_headers(self) -> None:
+    async def test_klient_imeet_pravilnye_zagolovki(self) -> None:
         """HTTP-клиент должен иметь заголовки User-Agent и Accept."""
         from fastmcp import FastMCP
 

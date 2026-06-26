@@ -2,6 +2,74 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-26 (пятьдесят четвёртый проход — русификация оставшихся ключей словарей, имён тестовых классов и функций)
+
+### Выполнено
+
+- **Русификация оставшихся английских ключей выходных словарей** (~12 замен в 7 модулях):
+  - rosaudit/client.py: `"deficit"` → `"defitsit"`
+  - rosaudit/schemas.py: `deficit` → `defitsit` (поле Pydantic)
+  - rosaudit/tools.py: `data.get("deficit")` → `data.get("defitsit")` + `data["defitsit"]`
+  - kaznacheistvo/schemas.py: `deficit` → `defitsit` (поле Pydantic, клиент уже использовал `"defitsit"`)
+  - rosapi/client.py: `"value"` → `"znachenie"`, `"fias_id"` → `"identifikator_fias"` (poisk_adresa)
+  - fssp/client.py: `"ip_end"` → `"okonchanie_ip"` + переменная `ip_end` → `okonchanie_ip`
+  - fssp/tools.py: 2 чтения `r.get("ip_end")` → `r.get("okonchanie_ip")`
+  - mchs/client.py: `"status"` → `"sostoyanie"` (синхронизация с полем Pydantic-схемы)
+  - rosselkhoznadzor/client.py: `"status"` → `"sostoyanie"` (было несовместимо с другими ключами `"sostoyanie"` в том же модуле)
+  - rosselkhoznadzor/tools.py: `p.get("status")` → `p.get("sostoyanie")`
+  - minzdrav/client.py: `"status"` → `"sostoyanie"` + параметр `status` → `sostoyanie`
+  - minzdrav/tools.py: `lit.get("status")` → `lit.get("sostoyanie")` + добавлен параметр `sostoyanie` в MCP-инструмент
+  - Обновлены тесты: rosaudit/test_tools.py (`"deficit"` → `"defitsit"`), rosapi/test_tools.py (`"fias_id"` → `"identifikator_fias"`)
+- **Русификация имён тестовых классов** (~28 классов в 12 файлах):
+  - tests/_shared/test_batch.py: `TestBuildDispatch` → `TestPostroenieDispetcherizatsii`, `TestExecuteBatch` → `TestVypolneniePaketa`
+  - tests/_shared/test_lifespan.py: `TestHttpLifespan` → `TestHttpZhiznennyyTsikl`
+  - tests/_shared/test_settings.py: `TestSettings` → `TestNastroyki`
+  - tests/_shared/test_formatting.py: `TestMarkdownTable` → `TestTablitsaVMarkdown`, `TestFormatRub` → `TestFormatirovatRubli`, `TestFormatNumberRu` → `TestFormatirovatChisloRu`, `TestFormatPercent` → `TestFormatirovatProtsent`, `TestTruncateList` → `TestUsechSpisok`, `TestParseRubNumber` → `TestRazobratRublevoeChislo`
+  - tests/_shared/test_cache.py: `TestTtlCacheDecorator` → `TestDekoratorKeshaSVremenemZhizni`
+  - tests/_shared/test_validators.py: `TestValidatePostalCodeRU` → `TestProveritPochtovyyIndeks`, `TestFormatPostalCodeRU` → `TestFormatirovatPochtovyyIndeks`
+  - tests/_shared/test_feature.py: `TestRegistryIntegration` → `TestIntegratsiyaReestra`
+  - tests/test_discovery.py: `TestBuildCatalog` → `TestPostroenieKataloga`, `TestBM25SearchTransform` → `TestTransformatsiyaBM25`, `TestToolSearchConfig` → `TestKonfiguratsiyaPoiskaInstrumentov`, `TestTagPropagation` → `TestRasprostranenieTegov`
+  - tests/test_root_server.py: `TestRootServerTools` → `TestInstrumentyKornevogoServera`, `TestRootServerResources` → `TestResursyKornevogoServera`, `TestRootServerPrompts` → `TestPromptyKornevogoServera`, `TestRootServerToolTags` → `TestTegiInstrumentovKornevogoServera`
+  - tests/agenty/redator/test_integration.py: `TestToolsRegistered` → `TestInstrumentyZaregistrirovany`, `TestResourcesRegistered` → `TestResursyZaregistrirovany`, `TestPromptsRegistered` → `TestPromptyZaregistrirovany`, `TestToolExecution` → `TestVypolnenieInstrumentov`, `TestResourceExecution` → `TestVypolnenieResursov`, `TestPromptExecution` → `TestVypolneniePromtov`
+  - tests/data/rosselkhoznadzor/test_tools.py: `TestConstants` → `TestKonstanty`, `TestTools` → `TestInstrumenty`, `TestIntegration` → `TestIntegratsiya`
+- **Русификация имён тестовых функций** (~139 функций в 24 файлах):
+  - tests/_shared/test_batch.py: 11 функций (test_builds_from_registry → test_stroitsya_iz_reestra и т.д.)
+  - tests/_shared/test_lifespan.py: 2 функции
+  - tests/_shared/test_settings.py: 5 функций
+  - tests/_shared/test_formatting.py: 28 функций
+  - tests/_shared/test_cache.py: 12 функций
+  - tests/_shared/test_validators.py: 14 функций
+  - tests/_shared/test_feature.py: 18 функций
+  - tests/_shared/test_http_client.py: 14 функций
+  - tests/_shared/test_rate_limiter.py: 6 функций
+  - tests/test_public_namespace.py: 2 функции
+  - tests/test_discovery.py: 20 функций
+  - tests/test_root_server.py: 9 функций
+  - tests/agenty/redator/test_tools.py: 14 функций
+  - tests/agenty/redator/test_integration.py: 6 функций
+  - tests/data/*/test_integration.py: ~66 функций (test_has_tools → test_instrumenty_zaregistrirovany и т.д. в 22 модулях)
+  - tests/data/kad_arbitrazh/test_tools.py: 8 функций (test_parse_* → test_razbor_*)
+  - tests/data/zakupki/test_tools.py: 3 функции
+  - tests/data/gosduma/test_tools.py: 2 функции
+  - tests/data/rosselkhoznadzor/test_tools.py: 3 функции
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` — все unit-тесты пройдены
+
+### Ключевые архитектурные решения
+
+- **`"deficit"` → `"defitsit"`**: английское написание «дефицит» заменено на русскую транслитерацию; в kaznacheistvo/client.py ключ уже был `"defitsit"`, но поле Pydantic оставалось `deficit` — теперь консистентно
+- **`"value"` → `"znachenie"` в poisk_adresa**: ключ адресного значения русифицирован для единообразия; tools.py уже использовал `addr.get("znachenie")` — исправлена рассинхронизация
+- **`"fias_id"` → `"identifikator_fias"`**: следует конвенции проекта (identifikator вместо id)
+- **`"ip_end"` → `"okonchanie_ip"`**: смешанный английско-русский ключ заменён на полностью русский
+- **`"status"` → `"sostoyanie"` в 3 модулях**: устранена несогласованность — mchs и rosselkhoznadzor имели поле Pydantic `sostoyanie`, но ключ словаря `"status"`; minzdrav добавлен параметр MCP-инструмента `sostoyanie`
+- **Все полностью английские имена тестов русифицированы**: ~28 классов и ~139 функций переименованы; имена, уже содержащие русскую транслитерацию (TestKeshSVremenemZhizni, TestOgranichitelChastoty и т.д.), оставлены без изменений
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских строковых ключей**: `"data"` в выходных словарях (11 вхождений — «дата»/«data» совпадает в транслитерации, как и `period`)
+
 ## Статус раунда 2026-06-26 (пятьдесят третий проход — русификация полей Pydantic-схем region/status, ключей словарей, параметров инструментов MCP)
 
 ### Выполнено

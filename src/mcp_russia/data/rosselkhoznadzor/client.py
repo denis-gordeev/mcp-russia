@@ -251,7 +251,7 @@ def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
         "tip_proverki": data.get("inspectionType", "") or data.get("tip_proverki", ""),
         "data_provedeniya": data.get("date", "") or data.get("data_provedeniya", ""),
         "subiekt": data.get("region", "") or data.get("subject", ""),
-        "status": data.get("status", ""),
+        "sostoyanie": data.get("status", ""),
         "narusheniya": data.get("violations", 0) or data.get("narusheniya", 0),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }

@@ -18,13 +18,13 @@ from mcp_russia._shared.planner import PlanZaprosa, splanirovat_zapros_impl
 
 class TestRekomendovatInstrumenty:
     @pytest.mark.asyncio
-    async def test_missing_anthropic_package(self) -> None:
+    async def test_otsutstvuyushchiy_paket_antropic(self) -> None:
         with patch.dict("sys.modules", {"anthropic": None}):
             result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
             assert "anthropic" in result.lower() or "search_tools" in result
 
     @pytest.mark.asyncio
-    async def test_missing_api_key(self) -> None:
+    async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
@@ -34,7 +34,7 @@ class TestRekomendovatInstrumenty:
             assert "ANTHROPIC_API_KEY" in result
 
     @pytest.mark.asyncio
-    async def test_successful_recommendation(self) -> None:
+    async def test_uspeshnaya_rekomendatsiya(self) -> None:
         mock_block = MagicMock()
         mock_block.text = "Рекомендую: rosstat_poluchit_indikator"
 
@@ -55,7 +55,7 @@ class TestRekomendovatInstrumenty:
             assert "rosstat_poluchit_indikator" in result
 
     @pytest.mark.asyncio
-    async def test_api_error_handling(self) -> None:
+    async def test_obrabotka_oshibki_api(self) -> None:
         mock_client = AsyncMock()
         mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
@@ -71,19 +71,19 @@ class TestRekomendovatInstrumenty:
             assert "search_tools" in result
 
 
-class TestBuildCatalog:
+class TestPostroenieKataloga:
     def setup_method(self) -> None:
         import mcp_russia._shared.discovery as disc
 
         disc._catalog_cache = ""
 
-    def test_postroit_katalog_with_empty_registry(self) -> None:
+    def test_postroit_katalog_s_pustym_reestrom(self) -> None:
         mock_registry = MagicMock()
         mock_registry.funktsii = {}
         result = postroit_katalog(mock_registry)
         assert result == ""
 
-    def test_postroit_katalog_caches_result(self) -> None:
+    def test_postroit_katalog_keshiruet_rezultat(self) -> None:
         import mcp_russia._shared.discovery as disc
 
         mock_registry = MagicMock()
@@ -95,9 +95,9 @@ class TestBuildCatalog:
         assert result == "cached"
 
 
-class TestBM25SearchTransform:
+class TestTransformatsiyaBM25:
     @pytest.mark.asyncio
-    async def test_bm25_replaces_tool_listing(self) -> None:
+    async def test_bm25_zamenyaet_spisok_instrumentov(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
@@ -123,7 +123,7 @@ class TestBM25SearchTransform:
             assert "zaprosit_dannye" not in names
 
     @pytest.mark.asyncio
-    async def test_bm25_search_finds_tools(self) -> None:
+    async def test_bm25_poisk_nakhodit_instrumenty(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
@@ -146,7 +146,7 @@ class TestBM25SearchTransform:
             assert "spisok_regionov" in text
 
     @pytest.mark.asyncio
-    async def test_bm25_always_visible_pinned(self) -> None:
+    async def test_bm25_vsegda_vidimye_zakrepleny(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
@@ -175,7 +175,7 @@ class TestBM25SearchTransform:
             assert "hidden_tool" not in names
 
     @pytest.mark.asyncio
-    async def test_bm25_call_tool_executes(self) -> None:
+    async def test_bm25_vyzov_instrumenta_vypolnyaetsya(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
@@ -196,9 +196,9 @@ class TestBM25SearchTransform:
             assert "7" in text
 
 
-class TestToolSearchConfig:
+class TestKonfiguratsiyaPoiskaInstrumentov:
     @pytest.mark.asyncio
-    async def test_none_mode_shows_all_tools(self) -> None:
+    async def test_rezhim_none_pokazyvaet_vse_instrumenty(self) -> None:
         from mcp_russia.server import mcp as root_mcp
 
         async with Client(root_mcp) as c:
@@ -209,9 +209,9 @@ class TestToolSearchConfig:
             assert "cbrf_tekushchie_kursy" in names
 
 
-class TestTagPropagation:
+class TestRasprostranenieTegov:
     @pytest.mark.asyncio
-    async def test_tags_preserved_after_mount(self) -> None:
+    async def test_tegi_sokhranyayutsya_posle_montirovaniya(self) -> None:
         child = FastMCP("child")
 
         @child.tool(tags={"search", "regions"})
@@ -228,7 +228,7 @@ class TestTagPropagation:
             assert rosstat_tool is not None
 
     @pytest.mark.asyncio
-    async def test_search_finds_by_description(self) -> None:
+    async def test_poisk_nakhodit_po_opisaniyu(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
         server = FastMCP("test")
@@ -281,13 +281,13 @@ _VALID_PLAN_JSON = json.dumps(
 
 class TestSplanirovatZapros:
     @pytest.mark.asyncio
-    async def test_missing_anthropic_package(self) -> None:
+    async def test_otsutstvuyushchiy_paket_antropic(self) -> None:
         with patch.dict("sys.modules", {"anthropic": None}):
             result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
             assert "anthropic" in result.lower() or "search_tools" in result
 
     @pytest.mark.asyncio
-    async def test_missing_api_key(self) -> None:
+    async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
         mock_anthropic = MagicMock()
         with (
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
@@ -297,7 +297,7 @@ class TestSplanirovatZapros:
             assert "ANTHROPIC_API_KEY" in result
 
     @pytest.mark.asyncio
-    async def test_successful_plan(self) -> None:
+    async def test_uspeshnyy_plan(self) -> None:
         mock_block = MagicMock()
         mock_block.text = _VALID_PLAN_JSON
 
@@ -322,7 +322,7 @@ class TestSplanirovatZapros:
             assert "Зависит от:** Этап 1" in result
 
     @pytest.mark.asyncio
-    async def test_invalid_json_fallback(self) -> None:
+    async def test_rezervnyy_variant_pri_nekorrektnom_json(self) -> None:
         mock_block = MagicMock()
         mock_block.text = "Не удалось построить структурированный план."
 
@@ -343,7 +343,7 @@ class TestSplanirovatZapros:
             assert "Не удалось построить структурированный план." in result
 
     @pytest.mark.asyncio
-    async def test_api_error_handling(self) -> None:
+    async def test_obrabotka_oshibki_api(self) -> None:
         mock_client = AsyncMock()
         mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
@@ -359,8 +359,8 @@ class TestSplanirovatZapros:
             assert "search_tools" in result
 
 
-class TestPlanZaprosaMarkdown:
-    def test_to_markdown_renders_steps(self) -> None:
+class TestPlanZaprosaVMarkdown:
+    def test_v_markdown_otobrazhaet_etapy(self) -> None:
         plan = PlanZaprosa.model_validate(json.loads(_VALID_PLAN_JSON))
         md = plan.v_markdown()
         assert "## План запроса" in md
@@ -371,7 +371,7 @@ class TestPlanZaprosaMarkdown:
         assert "Зависит от:** (нет)" in md
         assert "Зависит от:** Этап 1" in md
 
-    def test_to_markdown_with_primechaniya(self) -> None:
+    def test_v_markdown_s_primechaniyami(self) -> None:
         plan = PlanZaprosa(
             zapros="тест",
             slozhnost="prostoy",

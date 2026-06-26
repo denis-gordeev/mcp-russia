@@ -12,7 +12,7 @@ class ByudzhetnayaSmeta(BaseModel):
     god: str = ""
     dohody: float | None = None
     raskhody: float | None = None
-    deficit: float | None = None
+    defitsit: float | None = None
 
 
 class UchastnikBP(BaseModel):

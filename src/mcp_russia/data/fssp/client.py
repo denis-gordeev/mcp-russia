@@ -57,7 +57,7 @@ def _normlizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
         "summa": item.get("sum", item.get("сумма", "")),
         "otdel_pristavov": item.get("department", item.get("отдел", "")),
         "pristav": item.get("bailiff", item.get("пристав", "")),
-        "ip_end": item.get("ip_end", item.get("окончание", "")),
+        "okonchanie_ip": item.get("ip_end", item.get("окончание", "")),
         "osnovanie": item.get("basis", item.get("основание", "")),
         "subiekt_rf": item.get("region", item.get("регион", "")),
     }
@@ -146,10 +146,10 @@ async def ogranicheniya_dolzhnika(
     restrictions = []
     for p in proizvodstva:
         subject = p.get("subject", "").lower()
-        ip_end = p.get("ip_end", "")
+        okonchanie_ip = p.get("okonchanie_ip", "")
         if (
             any(kw in subject for kw in ("ограничен", "запрет", "арест", "выезд", "управлен"))
-            or ip_end
+            or okonchanie_ip
         ):
             restrictions.append(p)
     return restrictions

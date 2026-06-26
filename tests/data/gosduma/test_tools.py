@@ -253,11 +253,11 @@ async def test_golosovaniya_with_data():
     assert "300" in result
 
 
-async def test_auth_note_without_token():
+async def test_zametka_ob_aut_bez_tokena():
     with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value=""):
         assert "MCP_RUSSIA_DUMA_API_TOKEN" in gosduma_tools._auth_note()
 
 
-async def test_auth_note_with_token():
+async def test_zametka_ob_aut_s_tokenom():
     with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value="secret"):
         assert gosduma_tools._auth_note() == ""

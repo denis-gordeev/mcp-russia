@@ -103,7 +103,7 @@ async def poisk_proverok(
             p.get("vid_nadzora", ""),
             p.get("data_provedeniya", ""),
             p.get("subiekt", "")[:30],
-            p.get("status", ""),
+            p.get("sostoyanie", ""),
             str(p.get("narusheniya", "")),
         )
         for p in proverki

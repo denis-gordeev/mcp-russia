@@ -137,7 +137,7 @@ async def poisk_dolzhnika(
             r.get("subiekt", ""),
             r.get("summa", ""),
             r.get("otdel_pristavov", ""),
-            r.get("ip_end", "") or "в производстве",
+            r.get("okonchanie_ip", "") or "в производстве",
         )
         for r in results
     ]
@@ -173,7 +173,7 @@ async def ogranicheniya_dolzhnika(
             r.get("nomer", ""),
             r.get("dolzhnik", ""),
             r.get("subiekt", ""),
-            r.get("ip_end", "") or "действует",
+            r.get("okonchanie_ip", "") or "действует",
         )
         for r in results
     ]

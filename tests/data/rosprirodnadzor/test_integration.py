@@ -11,7 +11,7 @@ def client():
     return Client(mcp)
 
 
-async def test_has_tools(client):
+async def test_instrumenty_zaregistrirovany(client):
     async with client:
         tools = await client.list_tools()
     tool_names = {t.name for t in tools}
@@ -28,7 +28,7 @@ async def test_has_tools(client):
     assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
 
 
-async def test_has_resources(client):
+async def test_resursy_zaregistrirovany(client):
     async with client:
         resources = await client.list_resources()
     uris = {str(r.uri) for r in resources}

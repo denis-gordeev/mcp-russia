@@ -21,19 +21,19 @@ def _reset_dispatch() -> None:
     batch._dispetcher.clear()
 
 
-class TestBuildDispatch:
-    def test_builds_from_registry(self) -> None:
+class TestPostroenieDispetcherizatsii:
+    def test_stroitsya_iz_reestra(self) -> None:
         """Должен обнаруживать инструменты из модулей features."""
         result = batch.postroit_dispetcherizatsiyu(_real_registry())
         assert any(k.startswith("cbrf_") for k in result)
 
-    def test_finds_nested_features(self) -> None:
+    def test_nakhodit_vlozhennye_moduli(self) -> None:
         """Должен обнаруживать инструменты в подпакетах."""
         result = batch.postroit_dispetcherizatsiyu(_real_registry())
         assert any(k.startswith("sovfed_") for k in result)
         assert any(k.startswith("kaznacheistvo_") for k in result)
 
-    def test_caches_result(self) -> None:
+    def test_keshiruet_rezultat(self) -> None:
         """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
         reg = _real_registry()
         first = batch.postroit_dispetcherizatsiyu(reg)
@@ -41,22 +41,22 @@ class TestBuildDispatch:
         assert first is second
 
 
-class TestExecuteBatch:
+class TestVypolneniePaketa:
     @pytest.mark.asyncio
-    async def test_empty_list(self) -> None:
+    async def test_pustoy_spisok(self) -> None:
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy([], ctx)
         assert "Нет запросов" in result
 
     @pytest.mark.asyncio
-    async def test_exceeds_limit(self) -> None:
+    async def test_prevyshaet_limit(self) -> None:
         ctx = _mock_ctx()
         queries = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
         result = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
         assert "Максимум 10" in result
 
     @pytest.mark.asyncio
-    async def test_unknown_tool(self) -> None:
+    async def test_neizvestnyy_instrument(self) -> None:
         ctx = _mock_ctx()
         result = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "nonexistent_tool", "argumenty": {}}], ctx
@@ -64,7 +64,7 @@ class TestExecuteBatch:
         assert "не найден" in result
 
     @pytest.mark.asyncio
-    async def test_calls_tool_with_ctx(self) -> None:
+    async def test_vyzyvaet_instrument_s_kontekstom(self) -> None:
         """Должен передавать ctx инструментам, которые его принимают."""
 
         async def _spec(ctx: object, param: str) -> str: ...
@@ -80,7 +80,7 @@ class TestExecuteBatch:
         mock_fn.assert_called_once()
 
     @pytest.mark.asyncio
-    async def test_calls_tool_without_ctx(self) -> None:
+    async def test_vyzyvaet_instrument_bez_konteksta(self) -> None:
         """Должен работать с инструментами, не принимающими ctx."""
 
         async def no_ctx_tool(name: str) -> str:
@@ -95,7 +95,7 @@ class TestExecuteBatch:
         assert "hello world" in result
 
     @pytest.mark.asyncio
-    async def test_parallel_execution(self) -> None:
+    async def test_parallelnoe_vypolnenie(self) -> None:
         """Должен выполнять несколько запросов параллельно."""
         call_count = 0
 
@@ -121,7 +121,7 @@ class TestExecuteBatch:
         assert "result-3" in result
 
     @pytest.mark.asyncio
-    async def test_handles_tool_error(self) -> None:
+    async def test_obrabatyvaet_oshibku_instrumenta(self) -> None:
         """Должен перехватывать исключения и включать ошибку в результаты."""
 
         async def failing_tool() -> str:
@@ -138,7 +138,7 @@ class TestExecuteBatch:
         assert "timeout" in result.lower()
 
     @pytest.mark.asyncio
-    async def test_mixed_success_and_failure(self) -> None:
+    async def test_smeshannye_uspekh_i_oshibka(self) -> None:
         """Должен возвращать частичные результаты при ошибках части инструментов."""
 
         async def ok_tool() -> str:

@@ -98,18 +98,20 @@ async def poisk_litsenziy(
     ctx: Context,
     inn: str = "",
     vid: str = "",
+    sostoyanie: str = "",
 ) -> str:
     """Поиск лицензий Росздравнадзора на медицинскую деятельность.
 
     Аргументы:
         inn: ИНН организации (необязательно).
         vid: Вид лицензируемой деятельности (необязательно).
+        sostoyanie: Статус лицензии (необязательно).
 
     Возвращает:
         Список лицензий.
     """
     await ctx.info("Поиск лицензий Росздравнадзора...")
-    litsenzii = await client.poisk_litsenziy(inn=inn, vid=vid)
+    litsenzii = await client.poisk_litsenziy(inn=inn, vid=vid, sostoyanie=sostoyanie)
     if not litsenzii:
         return (
             "Лицензии не найдены.\n\n"
@@ -120,7 +122,7 @@ async def poisk_litsenziy(
             lit.get("nomer", ""),
             lit.get("organizaciya", ""),
             lit.get("vid_deyatelnosti", ""),
-            lit.get("status", ""),
+            lit.get("sostoyanie", ""),
             lit.get("data_okonchaniya", ""),
         )
         for lit in litsenzii

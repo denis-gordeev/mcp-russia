@@ -128,7 +128,7 @@ async def test_ispolnenie_byudzheta_found():
         "period": "2025",
         "dohody": 28000.5,
         "raskhody": 31000.2,
-        "deficit": -2999.7,
+        "defitsit": -2999.7,
     }
     with patch.object(
         rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=mock_data

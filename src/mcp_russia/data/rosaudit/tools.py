@@ -177,8 +177,8 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
         lines.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
     if data.get("raskhody"):
         lines.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
-    if data.get("deficit") is not None:
-        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['deficit'], 2)} млрд руб.")
+    if data.get("defitsit") is not None:
+        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
     lines.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
     return "\n".join(lines)
 

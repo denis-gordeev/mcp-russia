@@ -12,7 +12,7 @@ from mcp_russia._shared.rate_limiter import OgranichitelChastoty
 
 class TestOgranichitelChastoty:
     @pytest.mark.asyncio
-    async def test_allows_within_limit(self) -> None:
+    async def test_propuskaet_v_predelakh_limita(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=5, period=60.0)
         for _ in range(5):
             async with limiter:
@@ -20,7 +20,7 @@ class TestOgranichitelChastoty:
         # Все 5 должны пройти без блокировки
 
     @pytest.mark.asyncio
-    async def test_blocks_when_exhausted(self) -> None:
+    async def test_blokiruet_pri_ischerpanii(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=2, period=60.0)
         async with limiter:
             pass
@@ -32,7 +32,7 @@ class TestOgranichitelChastoty:
             await asyncio.wait_for(limiter.zakhvatit(), timeout=0.05)
 
     @pytest.mark.asyncio
-    async def test_allows_after_window_expires(self) -> None:
+    async def test_propuskaet_posle_istecheniya_okna(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=1, period=0.05)
         async with limiter:
             pass
@@ -43,13 +43,13 @@ class TestOgranichitelChastoty:
             pass
 
     @pytest.mark.asyncio
-    async def test_context_manager_protocol(self) -> None:
+    async def test_protokol_menedzhera_konteksta(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=10, period=60.0)
         async with limiter as ctx:
             assert ctx is limiter
 
     @pytest.mark.asyncio
-    async def test_purge_removes_old_timestamps(self) -> None:
+    async def test_ochistka_udalyaet_starye_metki(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=2, period=0.05)
         now = time.monotonic()
         # Имитируем старые метки времени
@@ -61,7 +61,7 @@ class TestOgranichitelChastoty:
         assert len(limiter._timestamps) == 1
 
     @pytest.mark.asyncio
-    async def test_concurrent_access(self) -> None:
+    async def test_parallelnyy_dostup(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
         results: list[int] = []
 

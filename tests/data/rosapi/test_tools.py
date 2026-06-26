@@ -69,7 +69,7 @@ async def test_poisk_adresa_success():
                 "gorod": "Москва",
                 "ulitsa": "Красная площадь",
                 "dom": "",
-                "fias_id": "abc123",
+                "identifikator_fias": "abc123",
             }
         ],
     ):

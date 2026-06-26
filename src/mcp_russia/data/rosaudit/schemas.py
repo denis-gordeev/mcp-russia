@@ -50,5 +50,5 @@ class ByudzhetIspolnenie(BaseModel):
     period: str
     dohody: float | None = None
     raskhody: float | None = None
-    deficit: float | None = None
+    defitsit: float | None = None
     istochnik: str = "Счётная палата РФ"

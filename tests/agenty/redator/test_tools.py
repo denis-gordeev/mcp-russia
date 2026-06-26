@@ -17,12 +17,12 @@ class TestFormatirovatDataExtenso:
         assert result.endswith("г.")
 
     @pytest.mark.asyncio
-    async def test_custom_city(self) -> None:
+    async def test_polzovatelskiy_gorod(self) -> None:
         result = await tools.formatirovat_data_extenso(gorod="Санкт-Петербург")
         assert "г. Санкт-Петербург" in result
 
     @pytest.mark.asyncio
-    async def test_contains_month(self) -> None:
+    async def test_soderzhit_mesyats(self) -> None:
         result = await tools.formatirovat_data_extenso()
         from mcp_russia.agenty.redator.constants import МЕСЯЦЫ
 
@@ -47,20 +47,20 @@ class TestGenerirovatNumeraciyu:
         assert result == "ПРИКАЗ № 123/2026"
 
     @pytest.mark.asyncio
-    async def test_default_year(self) -> None:
+    async def test_god_po_umolchaniyu(self) -> None:
         result = await tools.generirovat_numeraciyu("распоряжение", 1)
         now = datetime.now()
         assert str(now.year) in result
 
     @pytest.mark.asyncio
-    async def test_unknown_type(self) -> None:
+    async def test_neizvestnyy_tip(self) -> None:
         result = await tools.generirovat_numeraciyu("rezolyutsiya", 5, 2026)
         assert result == "REZOLYUTSIYA № 5/2026"
 
 
 class TestKonsulitirovatObrashchenie:
     @pytest.mark.asyncio
-    async def test_exact_match(self) -> None:
+    async def test_tochnoe_sovpadenie(self) -> None:
         result = await tools.konsulitirovat_obrashchenie("Губернатор")
         assert "Уважаемый господин Губернатор" in result
         assert "Губернатор" in result
@@ -77,19 +77,19 @@ class TestKonsulitirovatObrashchenie:
         assert "Уважаемый господин Министр" in result
 
     @pytest.mark.asyncio
-    async def test_partial_match(self) -> None:
+    async def test_chastichnoe_sovpadenie(self) -> None:
         result = await tools.konsulitirovat_obrashchenie("Губернатор области")
         assert "похоже на" in result
 
     @pytest.mark.asyncio
-    async def test_default(self) -> None:
+    async def test_po_umolchaniyu(self) -> None:
         result = await tools.konsulitirovat_obrashchenie("Аналитик")
         assert "Уважаемый господин/госпожа" in result
 
 
 class TestValidirovatDokument:
     @pytest.mark.asyncio
-    async def test_valid_document(self) -> None:
+    async def test_korrektnyy_dokument(self) -> None:
         tekst = (
             "ПИСЬМО № 1/2026\n\n"
             "г. Москва, 15 марта 2026 г.\n\n"
@@ -102,13 +102,13 @@ class TestValidirovatDokument:
         assert "проблем" in result.lower() or "Обнаружено" not in result
 
     @pytest.mark.asyncio
-    async def test_missing_date(self) -> None:
+    async def test_otsutstvuet_data(self) -> None:
         tekst = "Уважаемый господин Директор,\n\nСообщаю.\n\nС уважением,"
         result = await tools.validirovat_dokument(tekst, "письмо")
         assert "дата" in result.lower()
 
     @pytest.mark.asyncio
-    async def test_missing_signature(self) -> None:
+    async def test_otsutstvuet_podpis(self) -> None:
         tekst = "ПИСЬМО № 1/2026\n\nг. Москва, 15 марта 2026 г.\n\nТекст."
         result = await tools.validirovat_dokument(tekst, "письмо")
         assert "подпис" in result.lower()
@@ -120,7 +120,7 @@ class TestValidirovatDokument:
         assert "проблем" in result.lower() or "Обнаружено" not in result
 
     @pytest.mark.asyncio
-    async def test_informal_expressions(self) -> None:
+    async def test_neformalnye_vyrazheniya(self) -> None:
         tekst = (
             "г. Москва, 15 марта 2026 г.\n\nС наилучшими пожеланиями,\n\nИванов И.И. __________"
         )
@@ -140,7 +140,7 @@ class TestValidirovatDokument:
 
 class TestSpisokTipovDokumentov:
     @pytest.mark.asyncio
-    async def test_lists_all_types(self) -> None:
+    async def test_spisok_vsekh_tipov(self) -> None:
         result = await tools.spisok_tipov_dokumentov()
         assert "письмо" in result
         assert "приказ" in result
@@ -151,7 +151,7 @@ class TestSpisokTipovDokumentov:
         assert "докладная_записка" in result
 
     @pytest.mark.asyncio
-    async def test_contains_count(self) -> None:
+    async def test_soderzhit_kolichestvo(self) -> None:
         result = await tools.spisok_tipov_dokumentov()
         # Должен упомянуть 7 типов документов
         assert "типов" in result.lower() or "тип" in result.lower()
