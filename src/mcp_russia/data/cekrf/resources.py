@@ -52,14 +52,14 @@ def info_api() -> str:
     """Информация об API ЦИК РФ."""
     return json.dumps(
         {
-            "name": "ЦИК РФ / ГАС «Выборы»",
-            "base_url": CIK_API_BASE,
+            "nazvanie": "ЦИК РФ / ГАС «Выборы»",
+            "bazovyy_url": CIK_API_BASE,
             "vybory_url": VYBORY_API_BASE,
-            "auth_required": False,
+            "trebuet_avtentifikatsii": False,
             "format": "HTML / REST (частично документирован)",
-            "coverage": "Федеральные и региональные выборы РФ",
-            "known_elections": len(IZVESTNYE_VYBORY),
-            "note": (
+            "pokrytie": "Федеральные и региональные выборы РФ",
+            "izvestnye_vybory_kolichestvo": len(IZVESTNYE_VYBORY),
+            "primechanie": (
                 "Данные извлекаются парсингом ГАС «Выборы» "
                 "(vybory.izbirkom.ru) и публичных данных cikrf.ru. "
                 "Для известных федеральных выборов используются "

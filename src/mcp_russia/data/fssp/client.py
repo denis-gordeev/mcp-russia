@@ -43,11 +43,11 @@ def _razobrat_proizvodstva(data: Any) -> list[dict[str, Any]]:
     for item in result:
         if not isinstance(item, dict):
             continue
-        records.append(_normlizovat_proizvodstvo(item))
+        records.append(_normalizovat_proizvodstvo(item))
     return records
 
 
-def _normlizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
+def _normalizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
     """Нормализация записи исполнительного производства."""
     return {
         "nomer": item.get("number", item.get("номер", "")),

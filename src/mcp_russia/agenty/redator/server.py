@@ -15,16 +15,16 @@ from .prompts import (
     redaktor_spravka,
 )
 from .resources import (
-    get_manual_deloproizvodstvo,
-    get_obrashcheniya,
-    get_template_akt,
-    get_template_dokladnaya_zapiska,
-    get_template_pismo,
-    get_template_prikaz,
-    get_template_protokol,
-    get_template_rasporyazhenie,
-    get_template_spravka,
-    get_zaklyuchitelnye_formuly,
+    poluchit_manual_deloproizvodstvo,
+    poluchit_obrashcheniya,
+    poluchit_shablon_akt,
+    poluchit_shablon_dokladnaya_zapiska,
+    poluchit_shablon_pismo,
+    poluchit_shablon_prikaz,
+    poluchit_shablon_protokol,
+    poluchit_shablon_rasporyazhenie,
+    poluchit_shablon_spravka,
+    poluchit_zaklyuchitelnye_formuly,
 )
 from .tools import (
     formatirovat_data_extenso,
@@ -53,13 +53,13 @@ mcp.prompt(redaktor_protokol)
 mcp.prompt(redaktor_dokladnaya_zapiska)
 
 # Ресурсы
-mcp.resource("template://pismo")(get_template_pismo)
-mcp.resource("template://prikaz")(get_template_prikaz)
-mcp.resource("template://rasporyazhenie")(get_template_rasporyazhenie)
-mcp.resource("template://akt")(get_template_akt)
-mcp.resource("template://spravka")(get_template_spravka)
-mcp.resource("template://protokol")(get_template_protokol)
-mcp.resource("template://dokladnaya_zapiska")(get_template_dokladnaya_zapiska)
-mcp.resource("normas://manual")(get_manual_deloproizvodstvo)
-mcp.resource("normas://obrashcheniya")(get_obrashcheniya)
-mcp.resource("normas://zaklyuchitelnye")(get_zaklyuchitelnye_formuly)
+mcp.resource("template://pismo")(poluchit_shablon_pismo)
+mcp.resource("template://prikaz")(poluchit_shablon_prikaz)
+mcp.resource("template://rasporyazhenie")(poluchit_shablon_rasporyazhenie)
+mcp.resource("template://akt")(poluchit_shablon_akt)
+mcp.resource("template://spravka")(poluchit_shablon_spravka)
+mcp.resource("template://protokol")(poluchit_shablon_protokol)
+mcp.resource("template://dokladnaya_zapiska")(poluchit_shablon_dokladnaya_zapiska)
+mcp.resource("normas://manual")(poluchit_manual_deloproizvodstvo)
+mcp.resource("normas://obrashcheniya")(poluchit_obrashcheniya)
+mcp.resource("normas://zaklyuchitelnye")(poluchit_zaklyuchitelnye_formuly)

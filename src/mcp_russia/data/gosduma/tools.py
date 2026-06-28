@@ -16,7 +16,7 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 from . import client
 
 
-def _auth_note() -> str:
+def _zametka_ob_avtorizatsii() -> str:
     """Заметка о необходимости настройки API-токена при его отсутствии."""
     if not client._poluchit_api_token():
         return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_DUMA_API_TOKEN*"
@@ -56,7 +56,11 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     if len(deputats) > 50:
         header += " (показано первых 50)"
     header += "\n\n"
-    return header + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], rows) + _auth_note()
+    return (
+        header
+        + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], rows)
+        + _zametka_ob_avtorizatsii()
+    )
 
 
 async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
@@ -173,7 +177,7 @@ async def zakonoproekty(
     return (
         header
         + tablitsa_v_markdown(["Номер", "Название", "Статус", "Дата внесения"], rows)
-        + _auth_note()
+        + _zametka_ob_avtorizatsii()
     )
 
 
@@ -211,4 +215,8 @@ async def golosovaniya(
     ]
     header = "**Голосования Государственной Думы**\n\n"
     header += f"Найдено: {len(votes)} голосований\n\n"
-    return header + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], rows) + _auth_note()
+    return (
+        header
+        + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], rows)
+        + _zametka_ob_avtorizatsii()
+    )

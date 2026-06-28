@@ -41,38 +41,38 @@ class KeshSVremenemZhizni:
         """Количество записей в кэше (включая просроченные)."""
         return len(self._store)
 
-    def get(self, key: str) -> Any | None:
+    def poluchit(self, klyuch: str) -> Any | None:
         """Получение значения, если оно существует и не истекло."""
-        entry = self._store.get(key)
+        entry = self._store.get(klyuch)
         if entry is None:
             return None
-        expires_at, value = entry
+        expires_at, znachenie = entry
         if time.monotonic() > expires_at:
-            del self._store[key]
+            del self._store[klyuch]
             return None
-        return value
+        return znachenie
 
-    def set(self, key: str, value: Any) -> None:
+    def ustanovit(self, klyuch: str, znachenie: Any) -> None:
         """Сохранение значения с TTL-истечением."""
         if len(self._store) >= self._maxsize:
             self._ischislit()
-        self._store[key] = (time.monotonic() + self._ttl, value)
+        self._store[klyuch] = (time.monotonic() + self._ttl, znachenie)
 
-    def clear(self) -> None:
+    def ochistit(self) -> None:
         """Удаление всех записей."""
         self._store.clear()
 
     def _ischislit(self) -> None:
         """Удаление просроченных записей; если кэш полон — удаление самой старой."""
         now = time.monotonic()
-        expired = [k for k, (exp, _) in self._store.items() if now > exp]
-        for k in expired:
+        istekshie = [k for k, (exp, _) in self._store.items() if now > exp]
+        for k in istekshie:
             del self._store[k]
 
         # Всё ещё полон? Удаляем запись с ближайшим истечением
         if len(self._store) >= self._maxsize:
-            oldest_key = min(self._store, key=lambda k: self._store[k][0])
-            del self._store[oldest_key]
+            samyy_staryy_klyuch = min(self._store, key=lambda k: self._store[k][0])
+            del self._store[samyy_staryy_klyuch]
 
 
 def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
@@ -94,22 +94,22 @@ def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[
     """
     cache = KeshSVremenemZhizni(ttl=ttl, maxsize=maxsize)
 
-    def decorator(func: F) -> F:
+    def dekorator(func: F) -> F:
         """Обёртка функции с привязкой к кэшу."""
 
         @functools.wraps(func)
-        async def wrapper(*args: Any, **kwargs: Any) -> Any:
+        async def obertka(*args: Any, **kwargs: Any) -> Any:
             """Асинхронное выполнение с проверкой кэша перед вызовом."""
-            key = f"{func.__qualname__}:{args!r}:{kwargs!r}"
-            cached = cache.get(key)
-            if cached is not None:
-                return cached
-            result = await func(*args, **kwargs)
-            cache.set(key, result)
-            return result
+            klyuch = f"{func.__qualname__}:{args!r}:{kwargs!r}"
+            zakeshirovano = cache.poluchit(klyuch)
+            if zakeshirovano is not None:
+                return zakeshirovano
+            rezultat = await func(*args, **kwargs)
+            cache.ustanovit(klyuch, rezultat)
+            return rezultat
 
         # Доступ к кэшу для тестирования/очистки
-        wrapper.cache = cache  # type: ignore[attr-defined]
-        return wrapper  # type: ignore[return-value]
+        obertka.cache = cache  # type: ignore[attr-defined]
+        return obertka  # type: ignore[return-value]
 
-    return decorator
+    return dekorator

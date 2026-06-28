@@ -11,9 +11,9 @@ TEMPLATES_DIR = Path(__file__).parent / "templates"
 NORMAS_DIR = Path(__file__).parent / "normas"
 
 
-def _load_file(directory: Path, filename: str) -> str:
+def _zagruzit_fayl(direktoriya: Path, imya_fayla: str) -> str:
     """Загружает файл шаблона или нормы."""
-    filepath = directory / filename
+    filepath = direktoriya / imya_fayla
     if not filepath.exists():
         raise FileNotFoundError(f"Файл не найден: {filepath}")
     return filepath.read_text(encoding="utf-8")
@@ -22,54 +22,54 @@ def _load_file(directory: Path, filename: str) -> str:
 # === Шаблоны документов ===
 
 
-def get_template_pismo() -> str:
+def poluchit_shablon_pismo() -> str:
     """Шаблон официального письма."""
-    return _load_file(TEMPLATES_DIR, "pismo.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "pismo.md")
 
 
-def get_template_prikaz() -> str:
+def poluchit_shablon_prikaz() -> str:
     """Шаблон приказа."""
-    return _load_file(TEMPLATES_DIR, "prikaz.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "prikaz.md")
 
 
-def get_template_rasporyazhenie() -> str:
+def poluchit_shablon_rasporyazhenie() -> str:
     """Шаблон распоряжения."""
-    return _load_file(TEMPLATES_DIR, "rasporyazhenie.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "rasporyazhenie.md")
 
 
-def get_template_akt() -> str:
+def poluchit_shablon_akt() -> str:
     """Шаблон акта."""
-    return _load_file(TEMPLATES_DIR, "akt.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "akt.md")
 
 
-def get_template_spravka() -> str:
+def poluchit_shablon_spravka() -> str:
     """Шаблон справки."""
-    return _load_file(TEMPLATES_DIR, "spravka.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "spravka.md")
 
 
-def get_template_protokol() -> str:
+def poluchit_shablon_protokol() -> str:
     """Шаблон протокола."""
-    return _load_file(TEMPLATES_DIR, "protokol.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "protokol.md")
 
 
-def get_template_dokladnaya_zapiska() -> str:
+def poluchit_shablon_dokladnaya_zapiska() -> str:
     """Шаблон докладной записки."""
-    return _load_file(TEMPLATES_DIR, "dokladnaya_zapiska.md")
+    return _zagruzit_fayl(TEMPLATES_DIR, "dokladnaya_zapiska.md")
 
 
 # === Нормы делопроизводства ===
 
 
-def get_manual_deloproizvodstvo() -> str:
+def poluchit_manual_deloproizvodstvo() -> str:
     """Сводка правил оформления документов (ГОСТ Р 7.0.97-2016)."""
-    return _load_file(NORMAS_DIR, "manual_deloproizvodstvo.md")
+    return _zagruzit_fayl(NORMAS_DIR, "manual_deloproizvodstvo.md")
 
 
-def get_obrashcheniya() -> str:
+def poluchit_obrashcheniya() -> str:
     """Формы обращения к должностным лицам."""
-    return _load_file(NORMAS_DIR, "obrashcheniya.md")
+    return _zagruzit_fayl(NORMAS_DIR, "obrashcheniya.md")
 
 
-def get_zaklyuchitelnye_formuly() -> str:
+def poluchit_zaklyuchitelnye_formuly() -> str:
     """Заключительные формулы в официальных документах."""
-    return _load_file(NORMAS_DIR, "zaklyuchitelnye_formuly.md")
+    return _zagruzit_fayl(NORMAS_DIR, "zaklyuchitelnye_formuly.md")

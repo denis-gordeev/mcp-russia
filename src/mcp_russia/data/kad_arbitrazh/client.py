@@ -40,7 +40,7 @@ def _opredelit_kategoriyu(number: str) -> str:
     return ""
 
 
-def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
+def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
     """Разбор результатов поиска дел из API КАД."""
     if isinstance(data, dict):
         items = data.get("Instances", data.get("Result", []))
@@ -105,7 +105,7 @@ def _parse_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
     return results
 
 
-def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
+def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
     """Разбор карточки судебного дела из API КАД."""
     if not isinstance(data, dict):
         return None
@@ -156,7 +156,7 @@ def _parse_kartochka_dela(data: Any) -> SudebnoeDelo | None:
     )
 
 
-def _parse_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
+def _razobrat_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
     """Разбор судебных актов из ответа API КАД."""
     if isinstance(data, dict):
         items = data.get("Documents", data.get("Result", []))
@@ -186,7 +186,7 @@ def _parse_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
     return results
 
 
-def _parse_storony(data: Any, delo_number: str) -> list[StoronaDela]:
+def _razobrat_storony(data: Any, delo_number: str) -> list[StoronaDela]:
     """Разбор сторон судебного дела из ответа API КАД."""
     if not isinstance(data, dict):
         return []
@@ -268,7 +268,7 @@ async def poisk_del(
             json_body=body,
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_rezultaty_poiska(data)
+        return _razobrat_rezultaty_poiska(data)
     except Exception:
         return []
 
@@ -287,7 +287,7 @@ async def info_dela(nomer: str) -> SudebnoeDelo | None:
             f"https://kad.arbitr.ru/Kad/Case/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_kartochka_dela(data)
+        return _razobrat_kartochka_dela(data)
     except Exception:
         return None
 
@@ -306,7 +306,7 @@ async def akty_po_delu(nomer: str) -> list[SudebnyyAkt]:
             f"https://kad.arbitr.ru/Kad/Documents/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_akty(data, nomer)
+        return _razobrat_akty(data, nomer)
     except Exception:
         return []
 
@@ -412,7 +412,7 @@ async def storony_dela(nomer: str) -> list[StoronaDela]:
             f"https://kad.arbitr.ru/Kad/Sides/{nomer}",
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _parse_storony(data, nomer)
+        return _razobrat_storony(data, nomer)
     except Exception:
         return []
 

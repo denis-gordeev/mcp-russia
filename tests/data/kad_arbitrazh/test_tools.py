@@ -27,7 +27,7 @@ class TestParserRezultatyPoiska:
                 "ClaimSum": 1000000,
             }
         ]
-        results = kad_client._parse_rezultaty_poiska(data)
+        results = kad_client._razobrat_rezultaty_poiska(data)
         assert len(results) == 1
         assert results[0].nomer == "А40-12345/2024"
         assert results[0].nazvanie_suda == "АС г. Москвы"
@@ -49,13 +49,13 @@ class TestParserRezultatyPoiska:
                 }
             ]
         }
-        results = kad_client._parse_rezultaty_poiska(data)
+        results = kad_client._razobrat_rezultaty_poiska(data)
         assert len(results) == 1
         assert results[0].nomer == "А77-5678/2023"
 
     def test_razbor_pustogo(self) -> None:
-        assert kad_client._parse_rezultaty_poiska(None) == []
-        assert kad_client._parse_rezultaty_poiska([]) == []
+        assert kad_client._razobrat_rezultaty_poiska(None) == []
+        assert kad_client._razobrat_rezultaty_poiska([]) == []
 
     def test_opredelit_sud(self) -> None:
         assert kad_client._opredelit_sud_po_nomeru("А40-12345/2024") == "АС г. Москвы"
@@ -87,15 +87,15 @@ class TestParserKartochkaDela:
                 "ClaimSum": 5000000,
             }
         }
-        result = kad_client._parse_kartochka_dela(data)
+        result = kad_client._razobrat_kartochka_dela(data)
         assert result is not None
         assert result.nomer == "А40-11111/2025"
         assert result.kategoriya == "Банкротство"
         assert result.summa_iska == 5000000.0
 
     def test_razbor_none(self) -> None:
-        assert kad_client._parse_kartochka_dela(None) is None
-        assert kad_client._parse_kartochka_dela({}) is None
+        assert kad_client._razobrat_kartochka_dela(None) is None
+        assert kad_client._razobrat_kartochka_dela({}) is None
 
 
 class TestParserAkty:
@@ -115,13 +115,13 @@ class TestParserAkty:
                 }
             ]
         }
-        results = kad_client._parse_akty(data, "А40-12345/2024")
+        results = kad_client._razobrat_akty(data, "А40-12345/2024")
         assert len(results) == 1
         assert results[0].tip_akta == "Решение"
         assert results[0].delo_nomer == "А40-12345/2024"
 
     def test_razbor_pustogo(self) -> None:
-        assert kad_client._parse_akty(None, "А40-1/2024") == []
+        assert kad_client._razobrat_akty(None, "А40-1/2024") == []
 
 
 class TestParserStorony:
@@ -130,7 +130,7 @@ class TestParserStorony:
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
             "Defendants": ["ООО Бета", "Минфин РФ"],
         }
-        results = kad_client._parse_storony(data, "А40-12345/2024")
+        results = kad_client._razobrat_storony(data, "А40-12345/2024")
         assert len(results) == 4
         istorcy = [s for s in results if s.tip == "истец"]
         otvetchiki = [s for s in results if s.tip == "ответчик"]
@@ -142,7 +142,7 @@ class TestParserStorony:
             "Plaintiffs": "ООО Альфа, ООО Гамма",
             "Defendants": "ООО Бета",
         }
-        results = kad_client._parse_storony(data, "А40-12345/2024")
+        results = kad_client._razobrat_storony(data, "А40-12345/2024")
         assert len(results) == 3
 
 

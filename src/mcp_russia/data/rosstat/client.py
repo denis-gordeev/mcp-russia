@@ -442,10 +442,10 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
-            return _fallback_otraslevaya_struktura(subiekt, god)
+            return _rezerv_otraslevaya_struktura(subiekt, god)
         items = data.get("data", [])
         if not isinstance(items, list) or not items:
-            return _fallback_otraslevaya_struktura(subiekt, god)
+            return _rezerv_otraslevaya_struktura(subiekt, god)
         region_name = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
@@ -473,10 +473,10 @@ async def poluchit_otraslevuyu_strukturu_vrp(
         return results
     except Exception:
         logger.exception("Ошибка при получении отраслевой структуры ВРП")
-        return _fallback_otraslevaya_struktura(subiekt, god)
+        return _rezerv_otraslevaya_struktura(subiekt, god)
 
 
-def _fallback_otraslevaya_struktura(
+def _rezerv_otraslevaya_struktura(
     subiekt: str = "",
     god: str = "",
 ) -> list[OtraslevayaStrukturaVRP]:
@@ -525,10 +525,10 @@ async def poluchit_investitsii_po_vidam(
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
-            return _fallback_investitsii_po_vidam(subiekt, god)
+            return _rezerv_investitsii_po_vidam(subiekt, god)
         items = data.get("data", [])
         if not isinstance(items, list) or not items:
-            return _fallback_investitsii_po_vidam(subiekt, god)
+            return _rezerv_investitsii_po_vidam(subiekt, god)
         region_name = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
@@ -556,10 +556,10 @@ async def poluchit_investitsii_po_vidam(
         return results
     except Exception:
         logger.exception("Ошибка при получении инвестиций по видам деятельности")
-        return _fallback_investitsii_po_vidam(subiekt, god)
+        return _rezerv_investitsii_po_vidam(subiekt, god)
 
 
-def _fallback_investitsii_po_vidam(
+def _rezerv_investitsii_po_vidam(
     subiekt: str = "",
     god: str = "",
 ) -> list[InvestitsiiPoVidam]:

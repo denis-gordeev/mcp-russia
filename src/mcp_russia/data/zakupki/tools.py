@@ -16,7 +16,7 @@ from mcp_russia._shared.formatting import formatirovat_rubli, tablitsa_v_markdow
 from . import client
 
 
-def _auth_note() -> str:
+def _zametka_ob_avtorizatsii() -> str:
     """Заметка о необходимости настройки API-токена при его отсутствии."""
     if not client._poluchit_api_token():
         return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_ZAKUPKI_API_TOKEN*"
@@ -87,7 +87,7 @@ async def poisk_zakupok(
     return (
         header
         + tablitsa_v_markdown(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
-        + _auth_note()
+        + _zametka_ob_avtorizatsii()
     )
 
 
@@ -180,7 +180,7 @@ async def poisk_kontraktov(
     return (
         header
         + tablitsa_v_markdown(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
-        + _auth_note()
+        + _zametka_ob_avtorizatsii()
     )
 
 
@@ -326,5 +326,7 @@ async def plany_zakupok(
     header = f"**Планы-графики закупок на {god} год**\n\n"
     header += f"Найдено: {len(plany)}\n\n"
     return (
-        header + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows) + _auth_note()
+        header
+        + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows)
+        + _zametka_ob_avtorizatsii()
     )

@@ -115,38 +115,38 @@ class ReyestrFunktsiy:
         """Пропущенные функции с причинами."""
         return dict(self._skipped)
 
-    def obnaruzhit(self, package_name: str = "mcp_russia") -> ReyestrFunktsiy:
+    def obnaruzhit(self, imya_paketa: str = "mcp_russia") -> ReyestrFunktsiy:
         """Обнаружение всех функций в пакете.
 
-        Сканирует подпакеты `package_name` и регистрирует те, что
+        Сканирует подпакеты `imya_paketa` и регистрирует те, что
         следуют конвенции. Функции с ошибками валидации логируются
         как предупреждения и пропускаются — они не ломают сервер.
 
         Аргументы:
-            package_name: Базовый пакет для сканирования. По умолчанию: «mcp_russia».
+            imya_paketa: Базовый пакет для сканирования. По умолчанию: «mcp_russia».
 
         Возвращает:
             self для цепочки вызовов: registry.obnaruzhit().smontirovat_vse(mcp)
         """
-        package = importlib.import_module(package_name)
+        paket = importlib.import_module(imya_paketa)
 
-        for _finder, name, ispkg in pkgutil.iter_modules(package.__path__, package.__name__ + "."):
-            short_name = name.rsplit(".", 1)[-1]
+        for _finder, imya, ispkg in pkgutil.iter_modules(paket.__path__, paket.__name__ + "."):
+            korotkoe_imya = imya.rsplit(".", 1)[-1]
 
             # Пропуск не-пакетов и приватных модулей
-            if not ispkg or short_name.startswith("_"):
+            if not ispkg or korotkoe_imya.startswith("_"):
                 continue
 
             try:
-                self._poprovat_zaregistrirovat(name, short_name)
+                self._poprovat_zaregistrirovat(imya, korotkoe_imya)
             except Exception as exc:
-                reason = str(exc)
-                self._skipped[short_name] = reason
-                logger.warning("Функция '%s' пропущена: %s", short_name, reason)
+                prichina = str(exc)
+                self._skipped[korotkoe_imya] = prichina
+                logger.warning("Функция '%s' пропущена: %s", korotkoe_imya, prichina)
 
         return self
 
-    def _poprovat_zaregistrirovat(self, put_modulya: str, short_name: str) -> None:
+    def _poprovat_zaregistrirovat(self, put_modulya: str, korotkoe_imya: str) -> None:
         """Попытка импорта и регистрации отдельной функции."""
         # Шаг 1: Импорт __init__.py функции
         importiruyemyy_modul = importlib.import_module(put_modulya)
@@ -160,29 +160,29 @@ class ReyestrFunktsiy:
 
         # Шаг 3: Проверка активности функции
         if not meta.vklyuchena:
-            self._skipped[short_name] = "отключена (vklyuchena=False)"
-            logger.info("Функция '%s' отключена, пропуск.", short_name)
+            self._skipped[korotkoe_imya] = "отключена (vklyuchena=False)"
+            logger.info("Функция '%s' отключена, пропуск.", korotkoe_imya)
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
         if not meta.dostupna_li_autentifikatsiya():
-            self._skipped[short_name] = f"отсутствует переменная {meta.peremennaya_avt_env}"
+            self._skipped[korotkoe_imya] = f"отсутствует переменная {meta.peremennaya_avt_env}"
             logger.warning(
                 "Функция '%s' требует %s (не задано), пропуск.",
-                short_name,
+                korotkoe_imya,
                 meta.peremennaya_avt_env,
             )
             return
 
         # Шаг 5: Импорт server.py и получение объекта mcp
-        server_module = importlib.import_module(f"{put_modulya}.server")
-        server = getattr(server_module, "mcp", None)
+        modul_servera = importlib.import_module(f"{put_modulya}.server")
+        server = getattr(modul_servera, "mcp", None)
 
         if server is None:
             raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
-        self._features[short_name] = ZaregistrirovannayaFunktsiya(
+        self._features[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
             meta=meta,
             server=server,
             put_modulya=put_modulya,
@@ -193,18 +193,18 @@ class ReyestrFunktsiy:
             meta.versiya,
         )
 
-    def smontirovat_vse(self, root_server: FastMCP) -> None:
+    def smontirovat_vse(self, kornevoy_server: FastMCP) -> None:
         """Монтирование всех обнаруженных функций на корневой сервер.
 
         Каждая функция получает пространство имён по названию
         (напр. инструменты становятся rosstat_poluchit_*).
 
         Аргументы:
-            root_server: Корневой FastMCP-сервер для монтирования функций.
+            kornevoy_server: Корневой FastMCP-сервер для монтирования функций.
         """
-        for name, modul in sorted(self._features.items()):
-            root_server.mount(modul.server, namespace=name)
-            logger.info("Смонтирована '%s' — %s", name, modul.meta.opisanie)
+        for imya, modul in sorted(self._features.items()):
+            kornevoy_server.mount(modul.server, namespace=imya)
+            logger.info("Смонтирована '%s' — %s", imya, modul.meta.opisanie)
 
     def svodka(self) -> str:
         """Читаемая сводка зарегистрированных функций.
@@ -218,21 +218,21 @@ class ReyestrFunktsiy:
 
         if self._features:
             lines.append("Активные:")
-            for name, feat in sorted(self._features.items()):
-                auth_icon = (
+            for imya, funktsiya in sorted(self._features.items()):
+                ikona_avt = (
                     "🔑"
-                    if feat.meta.trebuet_autentifikatsii
-                    else ("🔏" if feat.meta.peremennaya_avt_env else "🔓")
+                    if funktsiya.meta.trebuet_autentifikatsii
+                    else ("🔏" if funktsiya.meta.peremennaya_avt_env else "🔓")
                 )
-                lines.append(f"  /{name:<20} {auth_icon} {feat.meta.opisanie}")
+                lines.append(f"  /{imya:<20} {ikona_avt} {funktsiya.meta.opisanie}")
 
         if self._skipped:
             lines.append("\nПропущенные:")
-            for name, reason in sorted(self._skipped.items()):
-                lines.append(f"  {name:<20} ⏭️  {reason}")
+            for imya, prichina in sorted(self._skipped.items()):
+                lines.append(f"  {imya:<20} ⏭️  {prichina}")
 
         return "\n".join(lines)
 
-    def poluchit_funktsiyu(self, name: str) -> ZaregistrirovannayaFunktsiya | None:
+    def poluchit_funktsiyu(self, imya: str) -> ZaregistrirovannayaFunktsiya | None:
         """Получение зарегистрированной функции по имени."""
-        return self._features.get(name)
+        return self._features.get(imya)

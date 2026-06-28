@@ -25,7 +25,7 @@
 
 **Ресурсы:** `data://valyuty` (все валюты), `data://osnovnye` (основные), `data://spravochnik` (справочник)
 
-**Промпты:** `analise_valyut`, `obzor_ekonomiki`
+**Промпты:** `analiz_valyut`, `obzor_ekonomiki`
 
 **Авторизация:** не требуется
 

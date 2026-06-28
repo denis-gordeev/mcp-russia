@@ -255,9 +255,9 @@ async def test_golosovaniya_with_data():
 
 async def test_zametka_ob_aut_bez_tokena():
     with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value=""):
-        assert "MCP_RUSSIA_DUMA_API_TOKEN" in gosduma_tools._auth_note()
+        assert "MCP_RUSSIA_DUMA_API_TOKEN" in gosduma_tools._zametka_ob_avtorizatsii()
 
 
 async def test_zametka_ob_aut_s_tokenom():
     with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value="secret"):
-        assert gosduma_tools._auth_note() == ""
+        assert gosduma_tools._zametka_ob_avtorizatsii() == ""

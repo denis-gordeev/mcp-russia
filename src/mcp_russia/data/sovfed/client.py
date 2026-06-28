@@ -47,7 +47,7 @@ async def poisk_senatorov(
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_senator(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_senator(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
 
@@ -57,7 +57,7 @@ async def poisk_senatorov(
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_senator(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_senator(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("data.gov.ru API недоступен")
 
@@ -85,7 +85,7 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
         url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
         data = await http_poluchit(url, timeout=15.0)
         if isinstance(data, dict):
-            return _parse_senator(data)
+            return _razobrat_senator(data)
     except Exception:
         logger.debug("sovfed.ru API недоступен для сенатора %s", identifikator_senatora)
 
@@ -102,7 +102,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
         data = await http_poluchit(url, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_komitet(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комитетов")
 
@@ -116,7 +116,7 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
         data = await http_poluchit(url, timeout=15.0)
         items = _izvlech_spisok(data)
         if items:
-            return [_parse_komitet(p) for p in items if isinstance(p, dict)]
+            return [_razobrat_komitet(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комиссий")
 
@@ -145,7 +145,7 @@ async def poisk_zakonoproektov(
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_zakonoproekt(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_zakonoproekt(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
         return []
@@ -167,7 +167,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
         items = _izvlech_spisok(data)
-        return [_parse_zasedanie(p) for p in items if isinstance(p, dict)]
+        return [_razobrat_zasedanie(p) for p in items if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
         return []
@@ -195,7 +195,7 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _parse_senator(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_senator(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных сенатора."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -211,7 +211,7 @@ def _parse_senator(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_komitet(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_komitet(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных комитета/комиссии."""
     return {
         "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
@@ -222,7 +222,7 @@ def _parse_komitet(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных заседания."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
@@ -233,7 +233,7 @@ def _parse_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _parse_zakonoproekt(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zakonoproekt(data: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных законопроекта."""
     return {
         "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),

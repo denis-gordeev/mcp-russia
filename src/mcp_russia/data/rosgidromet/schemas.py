@@ -40,7 +40,7 @@ class EkologiyaDannye(BaseModel):
 
     gorod: str = ""
     stanciya: str = ""
-    tip: str = ""  # vozdukh, voda, pochva, radiaciya, shum
+    tip: str = ""  # воздух, вода, почва, радиация, шум
     pokazatel: str = ""
     znachenie: float | None = None
     norma_max: float | None = None
@@ -58,7 +58,7 @@ class Preduprezhdenie(BaseModel):
     opisanie: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
-    uroven_opasnosti: str = ""  # nizkiy, sredniy, vysokiy, ekstremalniy
+    uroven_opasnosti: str = ""  # низкий, средний, высокий, экстремальный
 
 
 class SputnikMonitoring(BaseModel):
@@ -67,6 +67,6 @@ class SputnikMonitoring(BaseModel):
     sputnik: str = ""
     data_syomki: str = ""
     subiekt: str = ""
-    tip_dannykh: str = ""  # lesa, voda, požary, snezhnyy pokrov
+    tip_dannykh: str = ""  # леса, вода, пожары, снежный покров
     razreshenie: str = ""
     izobrazhenie_ssylka: str = ""

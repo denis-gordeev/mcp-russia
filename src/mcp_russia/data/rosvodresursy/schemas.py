@@ -10,7 +10,7 @@ class VodnyyObekt(BaseModel):
 
     kod: str
     nazvanie: str
-    tip: str = ""  # reka, ozero, vodokhranilishche, и т.д.
+    tip: str = ""  # река, озеро, водохранилище и т.д.
     basseyn: str = ""
     dlinna_km: float | None = None
     ploshchad_km2: float | None = None
@@ -40,7 +40,7 @@ class VodokhranilishcheDannye(BaseModel):
     obiem_km3: float | None = None
     ploshchad_km2: float | None = None
     uroven_m: float | None = None
-    priznak_napolneniya: str = ""  # normalnoe, nizkoe, vysokoe
+    priznak_napolneniya: str = ""  # нормальное, низкое, высокое
     data_izmereniya: str = ""
 
 

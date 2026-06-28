@@ -2,6 +2,61 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-06-28 (пятьдесят пятый проход — русификация имён функций, методов кэша, параметров, ключей ресурсов, исправление опечаток)
+
+### Выполнено
+
+- **Русификация `_parse_*` → `_razobrat_*`** (8 функций в 2 модулях):
+  - sovfed/client.py: `_parse_senator` → `_razobrat_senator`, `_parse_komitet` → `_razobrat_komitet`, `_parse_zasedanie` → `_razobrat_zasedanie`, `_parse_zakonoproekt` → `_razobrat_zakonoproekt`
+  - kad_arbitrazh/client.py: `_parse_rezultaty_poiska` → `_razobrat_rezultaty_poiska`, `_parse_kartochka_dela` → `_razobrat_kartochka_dela`, `_parse_akty` → `_razobrat_akty`, `_parse_storony` → `_razobrat_storony`
+  - Обновлены тесты: tests/data/kad_arbitrazh/test_tools.py (12 замен)
+- **Русификация `get_*` → `poluchit_*` в agenty/redator/resources.py** (11 функций):
+  - `_load_file` → `_zagruzit_fayl` (параметры: `directory` → `direktoriya`, `filename` → `imya_fayla`)
+  - `get_template_pismo` → `poluchit_shablon_pismo`, `get_template_prikaz` → `poluchit_shablon_prikaz`, `get_template_rasporyazhenie` → `poluchit_shablon_rasporyazhenie`, `get_template_akt` → `poluchit_shablon_akt`, `get_template_spravka` → `poluchit_shablon_spravka`, `get_template_protokol` → `poluchit_shablon_protokol`, `get_template_dokladnaya_zapiska` → `poluchit_shablon_dokladnaya_zapiska`
+  - `get_manual_deloproizvodstvo` → `poluchit_manual_deloproizvodstvo`, `get_obrashcheniya` → `poluchit_obrashcheniya`, `get_zaklyuchitelnye_formuly` → `poluchit_zaklyuchitelnye_formuly`
+  - Обновлены импорты в agenty/redator/server.py
+- **Русификация ключей в cekrf/resources.py** (6 замен):
+  - `"name"` → `"nazvanie"`, `"base_url"` → `"bazovyy_url"`, `"auth_required"` → `"trebuet_avtentifikatsii"`, `"coverage"` → `"pokrytie"`, `"known_elections"` → `"izvestnye_vybory_kolichestvo"`, `"note"` → `"primechanie"`
+  - `"format"` оставлен без изменений (совпадает в русском и английском)
+- **Русификация `_auth_note` → `_zametka_ob_avtorizatsii`** (2 модуля + тесты):
+  - gosduma/tools.py, zakupki/tools.py
+  - Обновлены тесты: tests/data/gosduma/test_tools.py, tests/data/zakupki/test_tools.py
+- **Русификация `_fallback_*` → `_rezerv_*`** (2 функции в rosstat/client.py):
+  - `_fallback_otraslevaya_struktura` → `_rezerv_otraslevaya_struktura`
+  - `_fallback_investitsii_po_vidam` → `_rezerv_investitsii_po_vidam`
+- **Русификация методов кэша** (_shared/cache.py):
+  - `get` → `poluchit`, `set` → `ustanovit`, `clear` → `ochistit`
+  - `decorator` → `dekorator`, `wrapper` → `obertka`
+  - Внутренние переменные: `key` → `klyuch`, `value` → `znachenie`, `cached` → `zakeshirovano`, `result` → `rezultat`, `expired` → `istekshie`, `oldest_key` → `samyy_staryy_klyuch`
+  - Обновлены тесты: tests/_shared/test_cache.py (10 замен)
+- **Русификация параметров функций** в _shared/feature.py:
+  - `package_name` → `imya_paketa`, `short_name` → `korotkoe_imya`, `root_server` → `kornevoy_server`
+  - Локальные переменные: `package` → `paket`, `reason` → `prichina`, `auth_icon` → `ikona_avt`, `server_module` → `modul_servera`
+- **Исправление опечаток** (2 функции):
+  - fssp/client.py: `_normlizovat_proizvodstvo` → `_normalizovat_proizvodstvo` (пропущена «а»)
+  - cbrf/prompts.py: `analise_valyut` → `analiz_valyut` (английское написание вместо русского)
+  - Обновлены: cbrf/server.py, tests/data/cbrf/test_integration.py, docs/reference/features.md
+- **Перевод транслитерированных комментариев на кириллицу** (7 замен в 3 файлах):
+  - rosvodresursy/schemas.py: `# reka, ozero, vodokhranilishche` → `# река, озеро, водохранилище`, `# normalnoe, nizkoe, vysokoe` → `# нормальное, низкое, высокое`
+  - rosgidromet/schemas.py: `# vozdukh, voda, pochva, radiaciya, shum` → `# воздух, вода, почва, радиация, шум`, `# nizkiy, sredniy, vysokiy, ekstremalniy` → `# низкий, средний, высокий, экстремальный`, `# lesa, voda, požary, snezhnyy pokrov` → `# леса, вода, пожары, снежный покров`
+  - publikatsii/schemas.py: `# fz, ukaz, postanovlenie_pr` → `# фз, указ, постановление пр.`, `# pravo.gov.ru, rg.ru` → `# pravo.gov.ru, rg.ru`, `# deystvuyushchiy, utratil_silu` → `# действующий, утратил силу`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 2 файла переформатированы, `pytest` — 382 passed, 1 skipped
+
+### Ключевые архитектурные решения
+
+- **`_parse_*` → `_razobrat_*` унифицирован во всех модулях**: последние 8 функций с английским префиксом `_parse_` переименованы; теперь во всех 22 модулях используется `_razobrat_*`
+- **Методы кэша `get`/`set`/`clear` → `poluchit`/`ustanovit`/`ochistit`**: публичный API кэша полностью русифицирован; внутренние переменные `decorator`/`wrapper` → `dekorator`/`obertka`
+- **`analise_valyut` → `analiz_valyut`**: исправлена опечатка — английское слово «analysis» заменено на русскую транслитерацию «анализ»
+- **Ключ `"data"` в выходных словарях оставлен без изменений**: «дата»/«data» совпадает в транслитерации — семантически корректно
+- **Комментарии Pydantic-схем переведены на кириллицу**: транслитерированные комментарии (типы водных объектов, уровни опасности и т.д.) заменены на русский текст
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация английских переменных в телах функций**: `results`, `items`, `rows`, `filters`, `lines`, `parts` и т.д. в client.py/tools.py
+
 ## Статус раунда 2026-06-26 (пятьдесят четвёртый проход — русификация оставшихся ключей словарей, имён тестовых классов и функций)
 
 ### Выполнено

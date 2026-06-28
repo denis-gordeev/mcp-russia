@@ -10,46 +10,46 @@ from mcp_russia._shared.cache import KeshSVremenemZhizni, kesh_s_vremenem_zhizni
 class TestKeshSVremenemZhizni:
     def test_ustanovka_i_poluchenie(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60)
-        cache.set("key", "value")
-        assert cache.get("key") == "value"
+        cache.ustanovit("key", "value")
+        assert cache.poluchit("key") == "value"
 
     def test_poluchenie_otsutstvuyushchego_klyucha(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60)
-        assert cache.get("missing") is None
+        assert cache.poluchit("missing") is None
 
     def test_istekshaya_zapis_vozvrashchaet_none(self) -> None:
         cache = KeshSVremenemZhizni(ttl=0.01)
-        cache.set("key", "value")
+        cache.ustanovit("key", "value")
         time.sleep(0.02)
-        assert cache.get("key") is None
+        assert cache.poluchit("key") is None
 
     def test_ochistka(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60)
-        cache.set("a", 1)
-        cache.set("b", 2)
-        cache.clear()
+        cache.ustanovit("a", 1)
+        cache.ustanovit("b", 2)
+        cache.ochistit()
         assert cache.razmer == 0
 
     def test_vytyesnenie_pri_maks_razmere(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60, maxsize=2)
-        cache.set("a", 1)
-        cache.set("b", 2)
-        cache.set("c", 3)  # должен вытеснить самый старый
+        cache.ustanovit("a", 1)
+        cache.ustanovit("b", 2)
+        cache.ustanovit("c", 3)  # должен вытеснить самый старый
         assert cache.razmer <= 2
 
     def test_vytyesnyaet_istekshie_pervymi(self) -> None:
         cache = KeshSVremenemZhizni(ttl=0.01, maxsize=2)
-        cache.set("a", 1)
+        cache.ustanovit("a", 1)
         time.sleep(0.02)  # «a» истекает
-        cache.set("b", 2)
-        cache.set("c", 3)  # вытесняет истекший «a», а не «b»
-        assert cache.get("b") == 2
-        assert cache.get("c") == 3
+        cache.ustanovit("b", 2)
+        cache.ustanovit("c", 3)  # вытесняет истекший «a», а не «b»
+        assert cache.poluchit("b") == 2
+        assert cache.poluchit("c") == 3
 
     def test_svoystvo_razmer(self) -> None:
         cache = KeshSVremenemZhizni(ttl=60)
         assert cache.razmer == 0
-        cache.set("x", 1)
+        cache.ustanovit("x", 1)
         assert cache.razmer == 1
 
 
@@ -119,7 +119,7 @@ class TestDekoratorKeshaSVremenemZhizni:
             return "data"
 
         await fetch()
-        fetch.cache.clear()
+        fetch.cache.ochistit()
         await fetch()
         assert call_count == 2
 

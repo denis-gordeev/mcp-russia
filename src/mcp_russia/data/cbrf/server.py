@@ -5,7 +5,7 @@
 
 from fastmcp import FastMCP
 
-from .prompts import analise_valyut, obzor_ekonomiki
+from .prompts import analiz_valyut, obzor_ekonomiki
 from .resources import dostupnye_valyuty, osnovnye_valyuty, spravochnik_kursov
 from .tools import (
     konvertirovat_valyutu,
@@ -29,5 +29,5 @@ mcp.resource("data://valyuty", mime_type="text/plain")(dostupnye_valyuty)
 mcp.resource("data://osnovnye", mime_type="text/plain")(osnovnye_valyuty)
 mcp.resource("data://spravochnik", mime_type="text/plain")(spravochnik_kursov)
 
-mcp.prompt(analise_valyut)
+mcp.prompt(analiz_valyut)
 mcp.prompt(obzor_ekonomiki)
