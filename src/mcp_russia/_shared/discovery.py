@@ -64,7 +64,7 @@ def postroit_katalog(registry: object) -> str:
     if _kesh_kataloga:
         return _kesh_kataloga
 
-    lines: list[str] = []
+    stroki: list[str] = []
     features = getattr(registry, "funktsii", {})
     for feat in features.values():
         meta = feat.meta
@@ -77,17 +77,17 @@ def postroit_katalog(registry: object) -> str:
                 else "Без аутентификации"
             )
         )
-        lines.append(f"\n## {meta.imya}: {meta.opisanie}")
-        lines.append(f"Авторизация: {auth_info}")
+        stroki.append(f"\n## {meta.imya}: {meta.opisanie}")
+        stroki.append(f"Авторизация: {auth_info}")
 
         server = feat.server
         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
             for imya_instrumenta, tool in server._tool_manager._tools.items():
-                lines.append(
+                stroki.append(
                     _formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, tool)
                 )
 
-    _kesh_kataloga = "\n".join(lines)
+    _kesh_kataloga = "\n".join(stroki)
     return _kesh_kataloga
 
 
@@ -133,13 +133,13 @@ async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
     )
 
     try:
-        response = await client.messages.create(
+        otvet = await client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
             system=system_prompt,
             messages=[{"role": "user", "content": query}],
         )
-        block = response.content[0]
+        block = otvet.content[0]
         return str(getattr(block, "text", ""))
     except Exception as e:
         logger.error("Ошибка вызова API Anthropic: %s", e)

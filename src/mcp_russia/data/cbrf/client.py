@@ -17,8 +17,8 @@ from .schemas import ZnachenieValyuty
 
 def _razobrat_valyutu(kod: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
     """Разбор данных о валютах из JSON API ЦБ РФ."""
-    entry = data.get(kod, {})
-    if not entry:
+    zapis = data.get(kod, {})
+    if not zapis:
         return ZnachenieValyuty(
             kod=kod,
             nazvanie=kod,
@@ -26,15 +26,15 @@ def _razobrat_valyutu(kod: str, data: dict[str, Any], date_str: str = "") -> Zna
             znachenie=0.0,
         )
 
-    nominal = entry.get("Nominal", 1)
-    value = entry.get("Value", 0.0)
-    previous = entry.get("PreviousValue")
+    nominal = zapis.get("Nominal", 1)
+    value = zapis.get("Value", 0.0)
+    previous = zapis.get("PreviousValue")
 
     znachenie_za_edinitsu = value / nominal if nominal else value
 
     return ZnachenieValyuty(
         kod=kod,
-        nazvanie=entry.get("Name", kod),
+        nazvanie=zapis.get("Name", kod),
         nominal=nominal,
         znachenie=znachenie_za_edinitsu,
         predydushchee_znachenie=previous / nominal if previous and nominal else previous,
@@ -65,9 +65,9 @@ async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyut
     Возвращает:
         Данные о валюте или None если не найдена.
     """
-    result = await poluchit_vse_valyuty(data)
-    valute_data = result.get("Valute", {})
-    date_str = result.get("Date", "")
+    rezultat = await poluchit_vse_valyuty(data)
+    valute_data = rezultat.get("Valute", {})
+    date_str = rezultat.get("Date", "")
 
     if kod in valute_data:
         return _razobrat_valyutu(kod, valute_data, date_str)
@@ -83,9 +83,9 @@ async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
     Возвращает:
         Список данных о валютах.
     """
-    result = await poluchit_vse_valyuty()
-    valute_data = result.get("Valute", {})
-    date_str = result.get("Date", "")
+    rezultat = await poluchit_vse_valyuty()
+    valute_data = rezultat.get("Valute", {})
+    date_str = rezultat.get("Date", "")
 
     return [_razobrat_valyutu(c, valute_data, date_str) for c in kody if c in valute_data]
 

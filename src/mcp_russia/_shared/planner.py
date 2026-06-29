@@ -59,7 +59,7 @@ class PlanZaprosa(BaseModel):
 
     def v_markdown(self) -> str:
         """Рендеринг плана в удобочитаемый Markdown."""
-        lines: list[str] = [
+        stroki: list[str] = [
             "## План запроса",
             f"**Запрос:** {self.zapros}",
             f"**Сложность:** {self.slozhnost}",
@@ -68,26 +68,26 @@ class PlanZaprosa(BaseModel):
         ]
 
         for etap in self.etapy:
-            lines.append(f"### Этап {etap.etap}: {etap.opisanie}")
-            lines.append(f"- **Инструмент:** `{etap.tool}`")
+            stroki.append(f"### Этап {etap.etap}: {etap.opisanie}")
+            stroki.append(f"- **Инструмент:** `{etap.tool}`")
 
             if etap.parametry:
                 params = ", ".join(f'{k}="{v}"' for k, v in etap.parametry.items())
-                lines.append(f"- **Параметры:** {params}")
+                stroki.append(f"- **Параметры:** {params}")
 
             if etap.zavisit_ot:
                 deps = ", ".join(f"Этап {d}" for d in etap.zavisit_ot)
-                lines.append(f"- **Зависит от:** {deps}")
+                stroki.append(f"- **Зависит от:** {deps}")
             else:
-                lines.append("- **Зависит от:** (нет)")
+                stroki.append("- **Зависит от:** (нет)")
 
-            lines.append(f"- **Обоснование:** {etap.obosnovanie}")
-            lines.append("")
+            stroki.append(f"- **Обоснование:** {etap.obosnovanie}")
+            stroki.append("")
 
         if self.primechaniya:
-            lines.append(f"**Примечания:** {self.primechaniya}")
+            stroki.append(f"**Примечания:** {self.primechaniya}")
 
-        return "\n".join(lines)
+        return "\n".join(stroki)
 
 
 _SISTEMNYY_PROMPT = """\
@@ -250,13 +250,13 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
     system_prompt = _SISTEMNYY_PROMPT.format(catalog=catalog)
 
     try:
-        response = await client.messages.create(
+        otvet = await client.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=2048,
             system=system_prompt,
             messages=[{"role": "user", "content": query}],
         )
-        block = response.content[0]
+        block = otvet.content[0]
         raw_text = str(getattr(block, "text", ""))
 
         try:

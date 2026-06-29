@@ -52,18 +52,18 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
 def _razobrat_deputatov(data: Any) -> list[Deputat]:
     """Разбор данных депутатов из ответа API."""
     if isinstance(data, dict):
-        items = data.get("deputies", data.get("items", []))
+        elementy = data.get("deputies", data.get("items", []))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for d in items:
+    rezultaty = []
+    for d in elementy:
         if not isinstance(d, dict):
             continue
         frakciya_raw = d.get("factionName", d.get("faction", ""))
-        results.append(
+        rezultaty.append(
             Deputat(
                 identifikator=d.get("id", 0),
                 фамилия=d.get("surname", d.get("lastName", "")),
@@ -76,7 +76,7 @@ def _razobrat_deputatov(data: Any) -> list[Deputat]:
                 foto_ssylka=d.get("photoUrl", d.get("photo", "")),
             )
         )
-    return results
+    return rezultaty
 
 
 async def poluchit_deputata(identifikator: int) -> Deputat | None:
@@ -158,28 +158,30 @@ async def poluchit_zakonoproekty(
 def _razobrat_zakonoproekty(data: Any) -> list[Zakonoproekt]:
     """Разбор данных законопроектов из ответа API."""
     if isinstance(data, dict):
-        items = data.get("bills", data.get("items", []))
+        elementy = data.get("bills", data.get("items", []))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        results.append(
+        rezultaty.append(
             Zakonoproekt(
-                identifikator=str(item.get("id", "")),
-                nomer=item.get("number", ""),
-                nazvanie=item.get("name", item.get("title", "")),
-                sostoyanie=item.get("statusName", item.get("status", "")),
-                data_vneseniya=item.get("dateIntroduction", item.get("introductionDate", "")),
-                avtor=item.get("subjectName", item.get("author", "")),
-                chteniya=item.get("readingsCount", item.get("readings", 0)),
+                identifikator=str(element.get("id", "")),
+                nomer=element.get("number", ""),
+                nazvanie=element.get("name", element.get("title", "")),
+                sostoyanie=element.get("statusName", element.get("status", "")),
+                data_vneseniya=element.get(
+                    "dateIntroduction", element.get("introductionDate", "")
+                ),
+                avtor=element.get("subjectName", element.get("author", "")),
+                chteniya=element.get("readingsCount", element.get("readings", 0)),
             )
         )
-    return results
+    return rezultaty
 
 
 async def poluchit_golosovaniya(
@@ -215,28 +217,28 @@ async def poluchit_golosovaniya(
 def _razobrat_golosovaniya(data: Any) -> list[Golosovanie]:
     """Разбор результатов голосований из ответа API."""
     if isinstance(data, dict):
-        items = data.get("votes", data.get("items", []))
+        elementy = data.get("votes", data.get("items", []))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        results.append(
+        rezultaty.append(
             Golosovanie(
-                zakonoproekt_identifikator=str(item.get("billId", item.get("id", ""))),
-                nazvanie=item.get("subject", item.get("title", "")),
-                data=item.get("date", item.get("voteDate", "")),
-                za=item.get("totalFor", item.get("for", 0)),
-                protiv=item.get("totalAgainst", item.get("against", 0)),
-                vozhderzhalsya=item.get("totalAbstain", item.get("abstain", 0)),
-                ne_golosoval=item.get("totalNotVoting", item.get("notVoting", 0)),
+                zakonoproekt_identifikator=str(element.get("billId", element.get("id", ""))),
+                nazvanie=element.get("subject", element.get("title", "")),
+                data=element.get("date", element.get("voteDate", "")),
+                za=element.get("totalFor", element.get("for", 0)),
+                protiv=element.get("totalAgainst", element.get("against", 0)),
+                vozhderzhalsya=element.get("totalAbstain", element.get("abstain", 0)),
+                ne_golosoval=element.get("totalNotVoting", element.get("notVoting", 0)),
             )
         )
-    return results
+    return rezultaty
 
 
 async def poluchit_frakcii() -> list[Frakciya]:

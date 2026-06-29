@@ -54,9 +54,9 @@ async def statistika_pojarov(
         if vid_pozhara:
             params["fireType"] = vid_pozhara
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fires.ru API недоступен")
 
@@ -68,9 +68,9 @@ async def statistika_pojarov(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_pozhar(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен")
 
@@ -104,9 +104,9 @@ async def poisk_chs(
         if klass_chs:
             params["class"] = klass_chs
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для ЧС")
 
@@ -118,9 +118,9 @@ async def poisk_chs(
         if vid_chs:
             params["type"] = vid_chs
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_chs(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("data.mchs.gov.ru недоступен")
 
@@ -144,9 +144,9 @@ async def radiatsionnyy_monitoring(
         if subiekt:
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_radiatsiyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_radiatsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для радиационного мониторинга")
 
@@ -170,9 +170,9 @@ async def gidrologicheskaya_obstanovka(
         if subiekt:
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_gidrologiyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_gidrologiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для гидрологии")
 
@@ -200,9 +200,9 @@ async def preduprezhdeniya_chs(
         if tip_opasnosti:
             params["dangerType"] = tip_opasnosti
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для предупреждений")
 

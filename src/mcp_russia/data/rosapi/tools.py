@@ -35,31 +35,31 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
         Адресная информация или сообщение об ошибке.
     """
     await ctx.info(f"Поиск адреса по индексу {indeks}...")
-    result = await client.konsultirovat_adres_po_pochtovomu(indeks)
+    rezultat = await client.konsultirovat_adres_po_pochtovomu(indeks)
 
-    if isinstance(result, dict) and "oshibka" in result:
+    if isinstance(rezultat, dict) and "oshibka" in rezultat:
         return (
             f"**Почтовый индекс: {indeks}**\n\n"
-            f"{result['oshibka']}\n\n"
+            f"{rezultat['oshibka']}\n\n"
             f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
             f"https://dadata.ru/api/address/"
         )
 
-    lines = [
-        f"**Почтовый индекс:** {result.pochtovyy_indeks}",
-        f"**Полный адрес:** {result.polnyy_adres or 'Н/Д'}",
+    stroki = [
+        f"**Почтовый индекс:** {rezultat.pochtovyy_indeks}",
+        f"**Полный адрес:** {rezultat.polnyy_adres or 'Н/Д'}",
     ]
-    if result.subiekt:
-        lines.append(f"**Регион:** {result.subiekt}")
-    if result.gorod:
-        lines.append(f"**Город:** {result.gorod}")
-    if result.ulitsa:
-        lines.append(f"**Улица:** {result.ulitsa}")
-    if result.dom:
-        lines.append(f"**Дом:** {result.dom}")
+    if rezultat.subiekt:
+        stroki.append(f"**Регион:** {rezultat.subiekt}")
+    if rezultat.gorod:
+        stroki.append(f"**Город:** {rezultat.gorod}")
+    if rezultat.ulitsa:
+        stroki.append(f"**Улица:** {rezultat.ulitsa}")
+    if rezultat.dom:
+        stroki.append(f"**Дом:** {rezultat.dom}")
 
-    lines.append("\nИсточник: ФИАС / Dadata")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: ФИАС / Dadata")
+    return "\n".join(stroki)
 
 
 async def poisk_adresa(zapros: str, ctx: Context) -> str:
@@ -72,17 +72,17 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
         Список найденных адресов.
     """
     await ctx.info(f"Поиск адреса: {zapros}...")
-    results = await client.poisk_adresa(zapros)
+    rezultaty = await client.poisk_adresa(zapros)
 
-    if not results:
+    if not rezultaty:
         return (
             f"Адреса по запросу '{zapros}' не найдены.\n\n"
             "Используйте более точный запрос или проверьте MCP_RUSSIA_DADATA_API_KEY."
         )
 
-    rows = []
-    for i, addr in enumerate(results[:10], 1):
-        rows.append(
+    stroki_tablitsy = []
+    for i, addr in enumerate(rezultaty[:10], 1):
+        stroki_tablitsy.append(
             (
                 str(i),
                 addr.get("znachenie", ""),
@@ -92,7 +92,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
 
     header = f"**Результаты поиска: {zapros}**\n\n"
     header += "Источник: ФИАС / Dadata\n\n"
-    return header + tablitsa_v_markdown(["#", "Адрес", "Индекс"], rows)
+    return header + tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
 
 
 async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
@@ -105,41 +105,41 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ИНН {inn}...")
-    result = await client.nayti_organizatsiyu_po_inn(inn)
+    rezultat = await client.nayti_organizatsiyu_po_inn(inn)
 
-    if isinstance(result, dict) and "oshibka" in result:
+    if isinstance(rezultat, dict) and "oshibka" in rezultat:
         return (
             f"**ИНН: {inn}**\n\n"
-            f"{result['oshibka']}\n\n"
+            f"{rezultat['oshibka']}\n\n"
             f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
             f"https://dadata.ru/api/party/"
         )
 
-    lines = [
-        f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
-        f"- ИНН: {result.inn}",
+    stroki = [
+        f"**{rezultat.nazvanie_kratkoe or rezultat.nazvanie_polnoe or 'Организация'}**",
+        f"- ИНН: {rezultat.inn}",
     ]
-    if result.kpp:
-        lines.append(f"- КПП: {result.kpp}")
-    if result.ogrn:
-        lines.append(f"- ОГРН: {result.ogrn}")
-    if result.sostoyanie:
+    if rezultat.kpp:
+        stroki.append(f"- КПП: {rezultat.kpp}")
+    if rezultat.ogrn:
+        stroki.append(f"- ОГРН: {rezultat.ogrn}")
+    if rezultat.sostoyanie:
         karta_statusov = {
             "ACTIVE": "Действующая",
             "LIQUIDATING": "Ликвидируется",
             "LIQUIDATED": "Ликвидирована",
             "BANKRUPT": "Банкрот",
         }
-        lines.append(f"- Статус: {karta_statusov.get(result.sostoyanie, result.sostoyanie)}")
-    if result.adres:
-        lines.append(f"- Адрес: {result.adres}")
-    if result.rukovoditel:
-        lines.append(f"- Руководитель: {result.rukovoditel}")
-    if result.data_registratsii:
-        lines.append(f"- Дата регистрации: {result.data_registratsii}")
+        stroki.append(f"- Статус: {karta_statusov.get(rezultat.sostoyanie, rezultat.sostoyanie)}")
+    if rezultat.adres:
+        stroki.append(f"- Адрес: {rezultat.adres}")
+    if rezultat.rukovoditel:
+        stroki.append(f"- Руководитель: {rezultat.rukovoditel}")
+    if rezultat.data_registratsii:
+        stroki.append(f"- Дата регистрации: {rezultat.data_registratsii}")
 
-    lines.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
-    return "\n".join(lines)
+    stroki.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
+    return "\n".join(stroki)
 
 
 async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
@@ -152,24 +152,24 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
         Данные организации.
     """
     await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
-    result = await client.nayti_organizatsiyu_po_ogrn(ogrn)
+    rezultat = await client.nayti_organizatsiyu_po_ogrn(ogrn)
 
-    if isinstance(result, dict) and "oshibka" in result:
-        return f"**ОГРН: {ogrn}**\n\n{result['oshibka']}"
+    if isinstance(rezultat, dict) and "oshibka" in rezultat:
+        return f"**ОГРН: {ogrn}**\n\n{rezultat['oshibka']}"
 
-    lines = [
-        f"**{result.nazvanie_kratkoe or result.nazvanie_polnoe or 'Организация'}**",
-        f"- ОГРН: {result.ogrn or ogrn}",
+    stroki = [
+        f"**{rezultat.nazvanie_kratkoe or rezultat.nazvanie_polnoe or 'Организация'}**",
+        f"- ОГРН: {rezultat.ogrn or ogrn}",
     ]
-    if result.inn:
-        lines.append(f"- ИНН: {result.inn}")
-    if result.kpp:
-        lines.append(f"- КПП: {result.kpp}")
-    if result.adres:
-        lines.append(f"- Адрес: {result.adres}")
+    if rezultat.inn:
+        stroki.append(f"- ИНН: {rezultat.inn}")
+    if rezultat.kpp:
+        stroki.append(f"- КПП: {rezultat.kpp}")
+    if rezultat.adres:
+        stroki.append(f"- Адрес: {rezultat.adres}")
 
-    lines.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
-    return "\n".join(lines)
+    stroki.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
+    return "\n".join(stroki)
 
 
 async def spisok_bankov(ctx: Context) -> str:
@@ -180,9 +180,9 @@ async def spisok_bankov(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника банков...")
 
-    rows = []
+    stroki_tablitsy = []
     for bank in OSNOVNYE_BANKI:
-        rows.append(
+        stroki_tablitsy.append(
             (
                 bank["bik"],
                 bank["nazvanie"],
@@ -194,7 +194,7 @@ async def spisok_bankov(ctx: Context) -> str:
         "Для полного справочника всех банков ЦБ РФ "
         "используйте konsul_bank_po_bik или подключите API Dadata.\n\n"
     )
-    return header + tablitsa_v_markdown(["БИК", "Название"], rows)
+    return header + tablitsa_v_markdown(["БИК", "Название"], stroki_tablitsy)
 
 
 async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
@@ -208,9 +208,9 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     """
     await ctx.info(f"Поиск банка по БИК {bik}...")
 
-    result = await client.nayti_bank_po_bik(bik)
+    rezultat = await client.nayti_bank_po_bik(bik)
 
-    if isinstance(result, dict) and "oshibka" in result:
+    if isinstance(rezultat, dict) and "oshibka" in rezultat:
         found = None
         for bank in OSNOVNYE_BANKI:
             if bank["bik"] == bik:
@@ -228,19 +228,19 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
             f"https://dadata.ru/api/bank/"
         )
 
-    lines = [
-        f"**{result.nazvanie}**",
-        f"- БИК: {result.bik}",
+    stroki = [
+        f"**{rezultat.nazvanie}**",
+        f"- БИК: {rezultat.bik}",
     ]
-    if result.nazvanie_kratkoe:
-        lines.append(f"- Краткое название: {result.nazvanie_kratkoe}")
-    if result.gorod:
-        lines.append(f"- Город: {result.gorod}")
-    if result.svift:
-        lines.append(f"- SWIFT: {result.svift}")
+    if rezultat.nazvanie_kratkoe:
+        stroki.append(f"- Краткое название: {rezultat.nazvanie_kratkoe}")
+    if rezultat.gorod:
+        stroki.append(f"- Город: {rezultat.gorod}")
+    if rezultat.svift:
+        stroki.append(f"- SWIFT: {rezultat.svift}")
 
-    lines.append("- Источник: ЦБ РФ через Dadata")
-    return "\n".join(lines)
+    stroki.append("- Источник: ЦБ РФ через Dadata")
+    return "\n".join(stroki)
 
 
 async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> str:
@@ -258,13 +258,13 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
     await ctx.info(f"Запрос праздников на {god} год...")
     holidays = client.poluchit_prazdniki(god)
 
-    rows = []
+    stroki_tablitsy = []
     for h in holidays:
         date_str = h["data"][5:]
-        rows.append((date_str, h["nazvanie"], h["tip"]))
+        stroki_tablitsy.append((date_str, h["nazvanie"], h["tip"]))
 
     header = f"**Национальные праздники РФ ({god})**\n\n"
-    return header + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], rows)
+    return header + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)
 
 
 async def nalogovye_stavki(ctx: Context) -> str:
@@ -284,11 +284,11 @@ async def nalogovye_stavki(ctx: Context) -> str:
         "ESN": "6% (от дохода)",
     }
 
-    rows = []
+    stroki_tablitsy = []
     for code, name in NALOGOVYE_STAVKI.items():
         stavka = stavki_info.get(code, "Уточняйте в ФНС")
-        rows.append((code, name, stavka))
+        stroki_tablitsy.append((code, name, stavka))
 
     header = "**Основные налоговые ставки РФ**\n\n"
     header += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
-    return header + tablitsa_v_markdown(["Код", "Налог", "Ставка"], rows)
+    return header + tablitsa_v_markdown(["Код", "Налог", "Ставка"], stroki_tablitsy)

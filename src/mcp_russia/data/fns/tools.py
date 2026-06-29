@@ -86,26 +86,26 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
             f"Проверьте корректность ИНН на egrul.nalog.ru"
         )
 
-    lines = [f"**{data.nazvanie}**\n"]
-    lines.append(f"- ИНН: {data.inn}")
+    stroki = [f"**{data.nazvanie}**\n"]
+    stroki.append(f"- ИНН: {data.inn}")
     if data.ogrn:
-        lines.append(f"- ОГРН: {data.ogrn}")
+        stroki.append(f"- ОГРН: {data.ogrn}")
     if data.polnoe_nazvanie and data.polnoe_nazvanie != data.nazvanie:
-        lines.append(f"- Полное название: {data.polnoe_nazvanie}")
+        stroki.append(f"- Полное название: {data.polnoe_nazvanie}")
     if data.yuridicheskiy_adres:
-        lines.append(f"- Юридический адрес: {data.yuridicheskiy_adres}")
+        stroki.append(f"- Юридический адрес: {data.yuridicheskiy_adres}")
     if data.data_registracii:
-        lines.append(f"- Дата регистрации: {data.data_registracii}")
+        stroki.append(f"- Дата регистрации: {data.data_registracii}")
     if data.sostoyanie:
-        lines.append(f"- Статус: {data.sostoyanie}")
+        stroki.append(f"- Статус: {data.sostoyanie}")
     if data.vid_deyatelnosti:
-        lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
+        stroki.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
     if data.rukovoditel:
-        lines.append(f"- Руководитель: {data.rukovoditel}")
+        stroki.append(f"- Руководитель: {data.rukovoditel}")
     if data.ustroyennyy_kapital:
-        lines.append(f"- Уставный капитал: {data.ustroyennyy_kapital}")
-    lines.append("- Источник: ФНС / ЕГРЮЛ (egrul.nalog.ru)")
-    return "\n".join(lines)
+        stroki.append(f"- Уставный капитал: {data.ustroyennyy_kapital}")
+    stroki.append("- Источник: ФНС / ЕГРЮЛ (egrul.nalog.ru)")
+    return "\n".join(stroki)
 
 
 async def info_ip(inn: str, ctx: Context | None = None) -> str:
@@ -126,18 +126,18 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
     if not data:
         return f"ИП с ИНН '{inn}' не найден.\n\nПроверьте корректность ИНН на egrul.nalog.ru"
 
-    lines = [f"**{data.fio}** (ИП)\n"]
-    lines.append(f"- ИНН: {data.inn}")
+    stroki = [f"**{data.fio}** (ИП)\n"]
+    stroki.append(f"- ИНН: {data.inn}")
     if data.ogrnip:
-        lines.append(f"- ОГРНИП: {data.ogrnip}")
+        stroki.append(f"- ОГРНИП: {data.ogrnip}")
     if data.data_registracii:
-        lines.append(f"- Дата регистрации: {data.data_registracii}")
+        stroki.append(f"- Дата регистрации: {data.data_registracii}")
     if data.sostoyanie:
-        lines.append(f"- Статус: {data.sostoyanie}")
+        stroki.append(f"- Статус: {data.sostoyanie}")
     if data.vid_deyatelnosti:
-        lines.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
-    lines.append("- Источник: ФНС / ЕГРИП (egrul.nalog.ru)")
-    return "\n".join(lines)
+        stroki.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
+    stroki.append("- Источник: ФНС / ЕГРИП (egrul.nalog.ru)")
+    return "\n".join(stroki)
 
 
 async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
@@ -163,9 +163,9 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
             f"Планы проверок: pb.nalog.ru"
         )
 
-    rows = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in data]
+    stroki_tablitsy = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in data]
     header = f"**Налоговые проверки** — ИНН {inn}\n\n"
-    return header + tablitsa_v_markdown(["Тип", "Период", "Статус"], rows)
+    return header + tablitsa_v_markdown(["Тип", "Период", "Статус"], stroki_tablitsy)
 
 
 async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None = None) -> str:
@@ -192,9 +192,9 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
             f"Начисления доступны через Личный кабинет налогоплательщика: lkfl2.nalog.ru"
         )
 
-    rows = [
+    stroki_tablitsy = [
         (n.vid_naloga, n.period, formatirovat_chislo_ru(n.summa, 2) if n.summa else "—")
         for n in data
     ]
     header = f"**Налоговые начисления** — ИНН {inn}\n\n"
-    return header + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], rows)
+    return header + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], stroki_tablitsy)

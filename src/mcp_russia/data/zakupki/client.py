@@ -81,45 +81,47 @@ async def poisk_zakupok(
 def _razobrat_poisk_zakupok(data: Any) -> list[Zakupka]:
     """Разбор результатов поиска в список Zakupka."""
     if isinstance(data, dict):
-        items = data.get("results", data.get("items", data.get("list", [])))
+        elementy = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        results.append(
+        rezultaty.append(
             Zakupka(
-                identifikator=str(item.get("id", item.get("regNumber", ""))),
-                nomer=item.get("regNumber", item.get("number", "")),
-                nazvanie=item.get("name", item.get("title", item.get("objectInfo", ""))),
-                zakon=_opredelit_zakon(item),
-                sposob=item.get("purchaseMethod", item.get("method", "")),
-                sostoyanie=item.get("status", item.get("commonStatus", "")),
+                identifikator=str(element.get("id", element.get("regNumber", ""))),
+                nomer=element.get("regNumber", element.get("number", "")),
+                nazvanie=element.get("name", element.get("title", element.get("objectInfo", ""))),
+                zakon=_opredelit_zakon(element),
+                sposob=element.get("purchaseMethod", element.get("method", "")),
+                sostoyanie=element.get("status", element.get("commonStatus", "")),
                 nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
-                    item.get("price", item.get("maxPrice", 0))
+                    element.get("price", element.get("maxPrice", 0))
                 ),
-                valyuta=item.get("currency", "RUB"),
-                data_publikatsii=item.get("publishDate", item.get("docPublishDate", "")),
-                srok_podachi=item.get("endDate", item.get("bidEndDate", "")),
-                nazvanie_organizatora=item.get("customerName", item.get("organizerName", "")),
-                organizator_inn=item.get("customerInn", item.get("organizerInn", "")),
+                valyuta=element.get("currency", "RUB"),
+                data_publikatsii=element.get("publishDate", element.get("docPublishDate", "")),
+                srok_podachi=element.get("endDate", element.get("bidEndDate", "")),
+                nazvanie_organizatora=element.get(
+                    "customerName", element.get("organizerName", "")
+                ),
+                organizator_inn=element.get("customerInn", element.get("organizerInn", "")),
             )
         )
-    return results
+    return rezultaty
 
 
-def _opredelit_zakon(item: dict[str, Any]) -> str:
+def _opredelit_zakon(element: dict[str, Any]) -> str:
     """Определение применяемого закона (44-ФЗ или 223-ФЗ)."""
-    fz = item.get("fz", item.get("law", ""))
+    fz = element.get("fz", element.get("law", ""))
     if isinstance(fz, (int, float)):
         fz = str(int(fz))
-    if "44" in fz or "44" in str(item.get("purchaseCode", "")):
+    if "44" in fz or "44" in str(element.get("purchaseCode", "")):
         return "44-ФЗ"
-    if "223" in fz or "223" in str(item.get("purchaseCode", "")):
+    if "223" in fz or "223" in str(element.get("purchaseCode", "")):
         return "223-ФЗ"
     return ""
 
@@ -152,8 +154,8 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     try:
         data = await http_poluchit(url, params=params)
         if isinstance(data, dict):
-            items = _razobrat_poisk_zakupok([data])
-            return items[0] if items else None
+            elementy = _razobrat_poisk_zakupok([data])
+            return elementy[0] if elementy else None
     except Exception:
         pass
     return None
@@ -198,31 +200,35 @@ async def poisk_kontraktov(
 def _razobrat_kontrakty(data: Any) -> list[Kontrakt]:
     """Разбор результатов поиска контрактов."""
     if isinstance(data, dict):
-        items = data.get("results", data.get("items", data.get("list", [])))
+        elementy = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        results.append(
+        rezultaty.append(
             Kontrakt(
-                identifikator=str(item.get("id", "")),
-                nomer=item.get("regNum", item.get("contractNumber", "")),
-                zakupka_nomer=item.get("purchaseNumber", ""),
-                nazvanie_podryadchika=item.get("supplierName", item.get("contractorName", "")),
-                podryadchik_inn=item.get("supplierInn", item.get("contractorInn", "")),
-                tsena=_bezopasnoe_veshchestvennoe(item.get("price", item.get("contractPrice", 0))),
-                valyuta=item.get("currency", "RUB"),
-                data_podpisaniya=item.get("signDate", item.get("contractDate", "")),
-                sostoyanie=item.get("status", item.get("contractStatus", "")),
-                srok_ispolneniya=item.get("executionDate", item.get("endDate", "")),
+                identifikator=str(element.get("id", "")),
+                nomer=element.get("regNum", element.get("contractNumber", "")),
+                zakupka_nomer=element.get("purchaseNumber", ""),
+                nazvanie_podryadchika=element.get(
+                    "supplierName", element.get("contractorName", "")
+                ),
+                podryadchik_inn=element.get("supplierInn", element.get("contractorInn", "")),
+                tsena=_bezopasnoe_veshchestvennoe(
+                    element.get("price", element.get("contractPrice", 0))
+                ),
+                valyuta=element.get("currency", "RUB"),
+                data_podpisaniya=element.get("signDate", element.get("contractDate", "")),
+                sostoyanie=element.get("status", element.get("contractStatus", "")),
+                srok_ispolneniya=element.get("executionDate", element.get("endDate", "")),
             )
         )
-    return results
+    return rezultaty
 
 
 async def info_zakazchika(inn: str) -> Zakazchik | None:
@@ -332,29 +338,29 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
 def _razobrat_plany(data: Any) -> list[PlanZakupki]:
     """Разбор планов закупок."""
     if isinstance(data, dict):
-        items = data.get("results", data.get("items", data.get("list", [])))
+        elementy = data.get("results", data.get("items", data.get("list", [])))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        results.append(
+        rezultaty.append(
             PlanZakupki(
-                identifikator=str(item.get("id", "")),
-                god=item.get("year", 0),
-                nazvanie_organizatora=item.get("customerName", ""),
-                organizator_inn=item.get("customerInn", ""),
-                kolichestvo_pozitsiy=item.get("positionsCount", 0),
-                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(item.get("totalSum", 0)),
-                data_sozdaniya=item.get("createDate", ""),
-                data_obnovleniya=item.get("updateDate", ""),
+                identifikator=str(element.get("id", "")),
+                god=element.get("year", 0),
+                nazvanie_organizatora=element.get("customerName", ""),
+                organizator_inn=element.get("customerInn", ""),
+                kolichestvo_pozitsiy=element.get("positionsCount", 0),
+                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(element.get("totalSum", 0)),
+                data_sozdaniya=element.get("createDate", ""),
+                data_obnovleniya=element.get("updateDate", ""),
             )
         )
-    return results
+    return rezultaty
 
 
 def poluchit_tipy_dannykh() -> list[dict[str, str]]:

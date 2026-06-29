@@ -24,8 +24,8 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
     Возвращает:
         Список типов вузов (университет, академия, институт и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_VUZOV]
-    return tablitsa_v_markdown(["Код", "Тип вуза"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_VUZOV]
+    return tablitsa_v_markdown(["Код", "Тип вуза"], stroki_tablitsy)
 
 
 async def spisok_form_obucheniya(ctx: Context) -> str:
@@ -34,8 +34,8 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
     Возвращает:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
-    rows = [(f["kod"], f["nazvanie"]) for f in FORMY_OBUCHENIYA]
-    return tablitsa_v_markdown(["Код", "Форма обучения"], rows)
+    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in FORMY_OBUCHENIYA]
+    return tablitsa_v_markdown(["Код", "Форма обучения"], stroki_tablitsy)
 
 
 async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
@@ -44,8 +44,8 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
     Возвращает:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
-    rows = [(u["kod"], u["nazvanie"]) for u in UROVNI_OBRAZOVANIYA]
-    return tablitsa_v_markdown(["Код", "Уровень образования"], rows)
+    stroki_tablitsy = [(u["kod"], u["nazvanie"]) for u in UROVNI_OBRAZOVANIYA]
+    return tablitsa_v_markdown(["Код", "Уровень образования"], stroki_tablitsy)
 
 
 async def spisok_otrasley_nauki(ctx: Context) -> str:
@@ -54,8 +54,8 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
     Возвращает:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
-    rows = [(o["kod"], o["nazvanie"]) for o in OTRASLI_NAUKI]
-    return tablitsa_v_markdown(["Код", "Отрасль науки"], rows)
+    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in OTRASLI_NAUKI]
+    return tablitsa_v_markdown(["Код", "Отрасль науки"], stroki_tablitsy)
 
 
 async def spisok_tipov_grantov(ctx: Context) -> str:
@@ -64,8 +64,8 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
     Возвращает:
         Список грантовых фондов и программ.
     """
-    rows = [(g["kod"], g["nazvanie"]) for g in TIPY_GRANTOV]
-    return tablitsa_v_markdown(["Код", "Тип гранта"], rows)
+    stroki_tablitsy = [(g["kod"], g["nazvanie"]) for g in TIPY_GRANTOV]
+    return tablitsa_v_markdown(["Код", "Тип гранта"], stroki_tablitsy)
 
 
 async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
@@ -74,8 +74,8 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
     Возвращает:
         Список статусов (действует, приостановлена, отменена).
     """
-    rows = [(s["kod"], s["nazvanie"]) for s in STATUSY_AKKREDITATSII]
-    return tablitsa_v_markdown(["Код", "Статус аккредитации"], rows)
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in STATUSY_AKKREDITATSII]
+    return tablitsa_v_markdown(["Код", "Статус аккредитации"], stroki_tablitsy)
 
 
 async def spisok_federalnyh_okrugov(ctx: Context) -> str:
@@ -84,8 +84,8 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
     Возвращает:
         Список федеральных округов.
     """
-    rows = [(f["kod"], f["nazvanie"]) for f in FEDERALNYE_OKRUGA]
-    return tablitsa_v_markdown(["Код", "Федеральный округ"], rows)
+    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in FEDERALNYE_OKRUGA]
+    return tablitsa_v_markdown(["Код", "Федеральный округ"], stroki_tablitsy)
 
 
 async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
@@ -102,12 +102,12 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     if inn:
         data = await client.info_akkreditacii(inn)
     else:
-        results = await client.poisk_akreditovannyh_vuzov(nazvanie=nazvanie)
-        data = results[0] if results else None
+        rezultaty = await client.poisk_akreditovannyh_vuzov(nazvanie=nazvanie)
+        data = rezultaty[0] if rezultaty else None
 
     if not data:
         return f"Информация о вузе «{nazvanie or inn}» не найдена в реестре Рособрнадзора."
-    lines = [
+    stroki = [
         f"**{data.get('nazvanie', nazvanie or inn)}**",
         f"- ИНН: {data.get('inn', '')}",
         f"- Тип: {data.get('tip', '')}",
@@ -121,7 +121,7 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
         f"- Сайт: {data.get('sayt', '')}",
         f"- Источник: {data.get('istochnik', 'Рособрнадзор')}",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
@@ -135,12 +135,12 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
         Список программ с кодами направлений.
     """
     await ctx.info(f"Запрос программ вуза «{vuz}»...")
-    results = await client.poisk_akreditovannyh_vuzov(nazvanie=vuz)
-    if not results:
+    rezultaty = await client.poisk_akreditovannyh_vuzov(nazvanie=vuz)
+    if not rezultaty:
         return f"Вуз «{vuz}» не найден в реестре Рособрнадзора."
 
-    data = results[0]
-    lines = [
+    data = rezultaty[0]
+    stroki = [
         f"**{data.get('nazvanie', vuz)}**",
         f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
         f"- № свидетельства: {data.get('nomer_svidetelstva', '')}",
@@ -149,7 +149,7 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
         f"- {data.get('sayt', 'сайте вуза')}",
         "- Рособрнадзор: https://obrnadzor.gov.ru/ru/registry_accreditation",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
@@ -165,14 +165,14 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     granty = await client.poluchit_granty(organizatsiya)
     if not granty:
         return "Гранты не найдены."
-    rows = []
+    stroki_tablitsy = []
     for g in granty:
         summ = (
             formatirovat_chislo_ru(g.get("summa_finansirovaniya", 0), 0)
             if g.get("summa_finansirovaniya")
             else "—"
         )
-        rows.append(
+        stroki_tablitsy.append(
             (
                 g.get("tip_granta", ""),
                 g.get("nazvanie", ""),
@@ -183,7 +183,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
         )
     return tablitsa_v_markdown(
         ["Тип гранта", "Название", "Руководитель", "Сумма (₽)", "Статус"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -206,9 +206,9 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
             f"- https://vuz.minobrnauki.gov.ru\n"
             f"- https://obrnadzor.gov.ru"
         )
-    rows = []
+    stroki_tablitsy = []
     for r in reyting:
-        rows.append(
+        stroki_tablitsy.append(
             (
                 str(r.get("mesto_v_reytinge", "")),
                 r.get("nazvanie", ""),
@@ -218,7 +218,7 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
         )
     return tablitsa_v_markdown(
         ["Место", "Вуз", "Балл", "Тип рейтинга"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -253,12 +253,12 @@ async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str
         Список лицензий с номерами и статусами.
     """
     await ctx.info("Запрос лицензий из реестра Рособрнадзора...")
-    results = await client.poisk_licenziy(nazvanie=nazvanie, inn=inn)
-    if not results:
+    rezultaty = await client.poisk_licenziy(nazvanie=nazvanie, inn=inn)
+    if not rezultaty:
         return "Лицензии не найдены."
-    rows = []
-    for r in results:
-        rows.append(
+    stroki_tablitsy = []
+    for r in rezultaty:
+        stroki_tablitsy.append(
             (
                 r.get("nomer_licenzii", ""),
                 r.get("nazvanie", ""),
@@ -268,5 +268,5 @@ async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str
         )
     return tablitsa_v_markdown(
         ["№ лицензии", "Организация", "Статус", "Срок действия"],
-        rows,
+        stroki_tablitsy,
     )

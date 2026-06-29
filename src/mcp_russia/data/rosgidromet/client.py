@@ -116,7 +116,7 @@ async def poluchit_ekologiyu(
     if not stations:
         stations = STANCII_MONITORINGA[:5]
 
-    results = []
+    rezultaty = []
     for station in stations[:5]:
         params = {
             "latitude": station["shirota"],
@@ -126,15 +126,15 @@ async def poluchit_ekologiyu(
         }
         try:
             data = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, params=params)
-            parsed = _razobrat_openmeteo_ekologiyu(data, station)
-            results.extend(parsed)
+            razobrannye = _razobrat_openmeteo_ekologiyu(data, station)
+            rezultaty.extend(razobrannye)
         except Exception:
             continue
 
     if tip:
-        results = [r for r in results if r.tip == tip]
+        rezultaty = [r for r in rezultaty if r.tip == tip]
 
-    return results
+    return rezultaty
 
 
 async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
@@ -298,10 +298,10 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
     wind_max = daily.get("wind_speed_10m_max", [])
     wmo_codes = daily.get("weather_code", [])
 
-    results = []
+    rezultaty = []
     for i, date_str in enumerate(dates):
         wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
-        results.append(
+        rezultaty.append(
             PrognozDannye(
                 gorod=info["nazvanie"],
                 data=date_str,
@@ -312,7 +312,7 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
                 opisaniye=WMO_KODY_POGODY.get(wmo_code, ""),
             )
         )
-    return results
+    return rezultaty
 
 
 def _razobrat_openmeteo_ekologiyu(
@@ -331,12 +331,12 @@ def _razobrat_openmeteo_ekologiyu(
         ("ozone", "O₃", 120.0),
     ]
 
-    results = []
+    rezultaty = []
     for key, name, norma in indicators:
         value = current.get(key)
         if value is not None:
             prevyshenie = value > norma
-            results.append(
+            rezultaty.append(
                 EkologiyaDannye(
                     gorod=info["nazvanie"],
                     stanciya=info["kod"],
@@ -349,7 +349,7 @@ def _razobrat_openmeteo_ekologiyu(
                     data_izmereniya=time_str,
                 )
             )
-    return results
+    return rezultaty
 
 
 def _gpa_v_mmrtst(hpa: float | None) -> float | None:

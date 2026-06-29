@@ -98,17 +98,17 @@ async def vypolnit_paket_vnutrenniy(
         try:
             sig = inspect.signature(fn)
             if "ctx" in sig.parameters:
-                result = await fn(ctx=ctx, **args)
+                rezultat = await fn(ctx=ctx, **args)
             else:
-                result = await fn(**args)
-            return imya_instrumenta, result
+                rezultat = await fn(**args)
+            return imya_instrumenta, rezultat
         except Exception as exc:
             return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {exc}"
 
-    results = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
+    rezultaty = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
 
-    parts: list[str] = []
-    for imya_instrumenta, output in results:
-        parts.append(f"## {imya_instrumenta}\n\n{output}")
+    chasti: list[str] = []
+    for imya_instrumenta, vyvod in rezultaty:
+        chasti.append(f"## {imya_instrumenta}\n\n{vyvod}")
 
-    return "\n\n---\n\n".join(parts)
+    return "\n\n---\n\n".join(chasti)

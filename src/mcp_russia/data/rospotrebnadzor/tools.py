@@ -22,8 +22,8 @@ async def spisok_napravleniy(ctx: Context) -> str:
     Возвращает:
         Список направлений с кодами и названиями.
     """
-    rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
-    return tablitsa_v_markdown(["Код", "Направление"], rows)
+    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
 async def spisok_tipov_proverok(ctx: Context) -> str:
@@ -32,8 +32,8 @@ async def spisok_tipov_proverok(ctx: Context) -> str:
     Возвращает:
         Список типов проверок (плановая, внеплановая и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_PROVEROK]
-    return tablitsa_v_markdown(["Код", "Тип проверки"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_PROVEROK]
+    return tablitsa_v_markdown(["Код", "Тип проверки"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_obiektov(ctx: Context) -> str:
@@ -42,8 +42,8 @@ async def spisok_kategoriy_obiektov(ctx: Context) -> str:
     Возвращает:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
-    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_OBIEKTOV]
-    return tablitsa_v_markdown(["Код", "Категория объекта"], rows)
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KATEGORII_OBIEKTOV]
+    return tablitsa_v_markdown(["Код", "Категория объекта"], stroki_tablitsy)
 
 
 async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
@@ -52,8 +52,8 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
     Возвращает:
         Список управлений по федеральным округам.
     """
-    rows = [(r["kod"], r["nazvanie"]) for r in REGIONALNYE_UPRAVLENIYA]
-    return tablitsa_v_markdown(["Код", "Управление"], rows)
+    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in REGIONALNYE_UPRAVLENIYA]
+    return tablitsa_v_markdown(["Код", "Управление"], stroki_tablitsy)
 
 
 async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
@@ -69,7 +69,7 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
     data = await client.info_proverki(nomer_proverki)
     if not data:
         return f"Проверка № {nomer_proverki} не найдена."
-    lines = [
+    stroki = [
         f"**Проверка** № {data.get('nomer', nomer_proverki)}",
         f"- Тип проверки: {data.get('tip_proverki', '')}",
         f"- Организация: {data.get('obekt', '')}",
@@ -81,7 +81,7 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
         f"- Результат: {data.get('rezultat', '')}",
         f"- Источник: {data.get('istochnik', 'proverki.rospotrebnadzor.ru')}",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def poisk_proverok(
@@ -108,7 +108,7 @@ async def poisk_proverok(
     )
     if not proverki:
         return "Проверки не найдены."
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nomer", ""),
             p.get("tip_proverki", ""),
@@ -121,7 +121,7 @@ async def poisk_proverok(
     ]
     return tablitsa_v_markdown(
         ["№", "Тип", "Организация", "Дата начала", "Статус", "Нарушений"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -147,7 +147,7 @@ async def plan_proverok(
             "Актуальный план проверок доступен на:\n"
             "https://proverki.rospotrebnadzor.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nomer", ""),
             p.get("obekt", ""),
@@ -159,7 +159,7 @@ async def plan_proverok(
     ]
     return tablitsa_v_markdown(
         ["№", "Организация", "Тип проверки", "Начало", "Окончание"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -169,8 +169,8 @@ async def spisok_sanpinov(ctx: Context) -> str:
     Возвращает:
         Справочник основных СанПиН с кодами и названиями.
     """
-    rows = [(s["kod"], s["nazvanie"]) for s in SANPIN_OSNOVNYE]
-    return tablitsa_v_markdown(["Код", "СанПиН"], rows)
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in SANPIN_OSNOVNYE]
+    return tablitsa_v_markdown(["Код", "СанПиН"], stroki_tablitsy)
 
 
 async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
@@ -187,7 +187,7 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
     zhaloby = await client.poisk_zhalob(organizaciya=organizaciya, inn=inn)
     if not zhaloby:
         return "Жалобы не найдены."
-    rows = [
+    stroki_tablitsy = [
         (
             z.get("tema", ""),
             z.get("organizaciya", ""),
@@ -199,7 +199,7 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
     ]
     return tablitsa_v_markdown(
         ["Тема", "Организация", "Дата подачи", "Статус", "Результат"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -221,7 +221,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     narusheniya = [p for p in proverki if p.get("vyavleno_narusheniy", 0) > 0]
     if not narusheniya:
         return "Нарушения не найдены."
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nomer", ""),
             p.get("obekt", ""),
@@ -233,7 +233,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     ]
     return tablitsa_v_markdown(
         ["№ проверки", "Организация", "Нарушений", "Дата", "Результат"],
-        rows,
+        stroki_tablitsy,
     )
 
 

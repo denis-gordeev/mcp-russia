@@ -10,7 +10,7 @@ from collections.abc import Sequence
 from typing import Any
 
 
-def tablitsa_v_markdown(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
+def tablitsa_v_markdown(headers: Sequence[str], stroki_tablitsy: Sequence[Sequence[Any]]) -> str:
     """Рендеринг табличных данных в Markdown.
 
     Аргументы:
@@ -20,12 +20,12 @@ def tablitsa_v_markdown(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -
     Возвращает:
         Строка таблицы в формате Markdown.
     """
-    if not rows:
+    if not stroki_tablitsy:
         return "Результаты не найдены."
 
     header_line = "| " + " | ".join(str(h) for h in headers) + " |"
     separator = "| " + " | ".join("---" for _ in headers) + " |"
-    body_lines = ["| " + " | ".join(str(v) for v in row) + " |" for row in rows]
+    body_lines = ["| " + " | ".join(str(v) for v in row) + " |" for row in stroki_tablitsy]
 
     return "\n".join([header_line, separator, *body_lines])
 
@@ -60,8 +60,8 @@ def formatirovat_chislo_ru(value: float, decimals: int = 2) -> str:
     Возвращает:
         Отформатированная строка вида «1 234,56».
     """
-    formatted = f"{value:,.{decimals}f}"
-    return formatted.replace(",", " ").replace(".", ",")
+    otformatirovannoe = f"{value:,.{decimals}f}"
+    return otformatirovannoe.replace(",", " ").replace(".", ",")
 
 
 def formatirovat_protsent(value: float, decimals: int = 2) -> str:
@@ -96,19 +96,19 @@ def razobrat_rublevoe_chislo(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     if isinstance(value, str):
-        cleaned = value.replace(" ", "")
-        if "," in cleaned and "." in cleaned:
-            cleaned = cleaned.replace(".", "").replace(",", ".")
-        elif "," in cleaned:
-            cleaned = cleaned.replace(",", ".")
+        ochishchennoe = value.replace(" ", "")
+        if "," in ochishchennoe and "." in ochishchennoe:
+            ochishchennoe = ochishchennoe.replace(".", "").replace(",", ".")
+        elif "," in ochishchennoe:
+            ochishchennoe = ochishchennoe.replace(",", ".")
         try:
-            return float(cleaned)
+            return float(ochishchennoe)
         except ValueError:
             return None
     return None
 
 
-def usech_spisok(items: Sequence[str], max_items: int = 50) -> str:
+def usech_spisok(elementy: Sequence[str], max_items: int = 50) -> str:
     """Объединение элементов через перевод строки с усечением длинных списков.
 
     Аргументы:
@@ -118,9 +118,9 @@ def usech_spisok(items: Sequence[str], max_items: int = 50) -> str:
     Возвращает:
         Объединённая строка с уведомлением об усечении при необходимости.
     """
-    if len(items) <= max_items:
-        return "\n".join(items)
+    if len(elementy) <= max_items:
+        return "\n".join(elementy)
 
-    shown = items[:max_items]
-    remaining = len(items) - max_items
+    shown = elementy[:max_items]
+    remaining = len(elementy) - max_items
     return "\n".join(shown) + f"\n\n... и ещё {remaining} результатов."

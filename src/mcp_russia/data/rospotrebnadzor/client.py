@@ -44,9 +44,9 @@ async def poisk_proverok(
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
         if isinstance(data, list):
             return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
         return []
@@ -99,9 +99,9 @@ async def plan_proverok(
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
         if isinstance(data, list):
             return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
         return []
@@ -132,9 +132,9 @@ async def poisk_zhalob(
             params["inn"] = inn
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_zhalobu(z) for z in items if isinstance(z, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_zhalobu(z) for z in elementy if isinstance(z, dict)]
         if isinstance(data, list):
             return [_razobrat_zhalobu(z) for z in data if isinstance(z, dict)]
         return []
@@ -143,31 +143,31 @@ async def poisk_zhalob(
         return []
 
 
-def _razobrat_proverku(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о проверке из реестра."""
     return {
-        "nomer": item.get("id", "") or item.get("number", ""),
-        "tip_proverki": item.get("type", "") or item.get("kind", ""),
-        "organ": item.get("controlOrgan", "") or item.get("organ", ""),
-        "obekt": item.get("targetName", "") or item.get("target", ""),
-        "inn": item.get("targetInn", ""),
-        "data_nachala": item.get("startDate", "") or item.get("dateStart", ""),
-        "data_okonchaniya": item.get("endDate", "") or item.get("dateEnd", ""),
-        "sostoyanie": item.get("status", ""),
-        "vyavleno_narusheniy": item.get("violationsCount", 0),
-        "rezultat": item.get("result", ""),
+        "nomer": element.get("id", "") or element.get("number", ""),
+        "tip_proverki": element.get("type", "") or element.get("kind", ""),
+        "organ": element.get("controlOrgan", "") or element.get("organ", ""),
+        "obekt": element.get("targetName", "") or element.get("target", ""),
+        "inn": element.get("targetInn", ""),
+        "data_nachala": element.get("startDate", "") or element.get("dateStart", ""),
+        "data_okonchaniya": element.get("endDate", "") or element.get("dateEnd", ""),
+        "sostoyanie": element.get("status", ""),
+        "vyavleno_narusheniy": element.get("violationsCount", 0),
+        "rezultat": element.get("result", ""),
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
     }
 
 
-def _razobrat_zhalobu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zhalobu(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о жалобе потребителя."""
     return {
-        "tema": item.get("subject", "") or item.get("topic", ""),
-        "data_podachi": item.get("date", "") or item.get("created", ""),
-        "status_rassmotreniya": item.get("status", ""),
-        "rezultat": item.get("result", ""),
-        "organizaciya": item.get("organizationName", ""),
-        "inn": item.get("inn", ""),
+        "tema": element.get("subject", "") or element.get("topic", ""),
+        "data_podachi": element.get("date", "") or element.get("created", ""),
+        "status_rassmotreniya": element.get("status", ""),
+        "rezultat": element.get("result", ""),
+        "organizaciya": element.get("organizationName", ""),
+        "inn": element.get("inn", ""),
         "istochnik": "ЗПП (zpp.rospotrebnadzor.ru)",
     }

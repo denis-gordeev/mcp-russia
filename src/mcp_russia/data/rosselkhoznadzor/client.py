@@ -55,9 +55,9 @@ async def poisk_proverok(
         if tip_proverki:
             params["inspectionType"] = tip_proverki
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для проверок")
 
@@ -67,9 +67,9 @@ async def poisk_proverok(
         if subiekt:
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("data.fsvps.gov.ru недоступен")
 
@@ -97,9 +97,9 @@ async def poisk_karantinnykh_obektov(
         if tip:
             params["type"] = tip
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_karantin(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_karantin(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для карантинных объектов")
 
@@ -129,9 +129,9 @@ async def poisk_registratsiy_produktsii(
         if proizvoditel:
             params["manufacturer"] = proizvoditel
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_registratsiyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_registratsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для регистрации продукции")
 
@@ -161,9 +161,9 @@ async def veterinarsnye_sertifikaty(
         if tip_produktsii:
             params["productType"] = tip_produktsii
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_sertifikat(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_sertifikat(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для ветеринарных сертификатов")
 
@@ -187,9 +187,9 @@ async def preduprezhdeniya_karantina(
         if subiekt:
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_preduprezhdenie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для предупреждений")
 

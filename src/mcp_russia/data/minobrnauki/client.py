@@ -41,18 +41,18 @@ async def poisk_akreditovannyh_vuzov(
         data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
         if not isinstance(data, list):
             return []
-        results = []
-        for item in data:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in data:
+            if not isinstance(element, dict):
                 continue
-            if nazvanie and nazvanie.lower() not in item.get("fullName", "").lower():
+            if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
                 continue
-            if inn and inn != item.get("inn", ""):
+            if inn and inn != element.get("inn", ""):
                 continue
-            if subiekt and subiekt.lower() not in item.get("subjectRF", "").lower():
+            if subiekt and subiekt.lower() not in element.get("subjectRF", "").lower():
                 continue
-            results.append(_razobrat_akkreditatsiyu(item))
-        return results
+            rezultaty.append(_razobrat_akkreditatsiyu(element))
+        return rezultaty
     except Exception:
         logger.exception("Ошибка при поиске аккредитованных вузов")
         return []
@@ -71,11 +71,11 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
         if not isinstance(data, list):
             return None
-        for item in data:
-            if not isinstance(item, dict):
+        for element in data:
+            if not isinstance(element, dict):
                 continue
-            if item.get("inn") == inn:
-                return _razobrat_akkreditatsiyu(item)
+            if element.get("inn") == inn:
+                return _razobrat_akkreditatsiyu(element)
         return None
     except Exception:
         logger.exception("Ошибка при получении информации об аккредитации")
@@ -99,16 +99,16 @@ async def poisk_licenziy(
         data = await http_poluchit(OBRNADZOR_LICENSE_URL, timeout=30.0)
         if not isinstance(data, list):
             return []
-        results = []
-        for item in data:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in data:
+            if not isinstance(element, dict):
                 continue
-            if nazvanie and nazvanie.lower() not in item.get("fullName", "").lower():
+            if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
                 continue
-            if inn and inn != item.get("inn", ""):
+            if inn and inn != element.get("inn", ""):
                 continue
-            results.append(_razobrat_litsenziyu(item))
-        return results
+            rezultaty.append(_razobrat_litsenziyu(element))
+        return rezultaty
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
         return []
@@ -192,35 +192,35 @@ def _granty_rezervnye(organizatsiya: str = "") -> list[dict[str, Any]]:
     ]
 
 
-def _razobrat_akkreditatsiyu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_akkreditatsiyu(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи аккредитации из открытых данных Рособрнадзора."""
     return {
-        "inn": item.get("inn", ""),
-        "nazvanie": item.get("fullName", "") or item.get("shortName", ""),
-        "tip": item.get("type", ""),
-        "gorod": item.get("city", ""),
-        "subiekt": item.get("subjectRF", ""),
-        "status_akkreditatsii": item.get("accreditationStatus", ""),
-        "data_akkreditatsii": item.get("accreditationDate", ""),
-        "srok_deystviya": item.get("validUntil", ""),
-        "nomer_svidetelstva": item.get("certificateNumber", ""),
-        "adres": item.get("address", ""),
-        "sayt": item.get("website", ""),
+        "inn": element.get("inn", ""),
+        "nazvanie": element.get("fullName", "") or element.get("shortName", ""),
+        "tip": element.get("type", ""),
+        "gorod": element.get("city", ""),
+        "subiekt": element.get("subjectRF", ""),
+        "status_akkreditatsii": element.get("accreditationStatus", ""),
+        "data_akkreditatsii": element.get("accreditationDate", ""),
+        "srok_deystviya": element.get("validUntil", ""),
+        "nomer_svidetelstva": element.get("certificateNumber", ""),
+        "adres": element.get("address", ""),
+        "sayt": element.get("website", ""),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }
 
 
-def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии из открытых данных Рособрнадзора."""
     return {
-        "inn": item.get("inn", ""),
-        "nazvanie": item.get("fullName", "") or item.get("shortName", ""),
-        "tip": item.get("type", ""),
-        "gorod": item.get("city", ""),
-        "subiekt": item.get("subjectRF", ""),
-        "status_licenzii": item.get("licenseStatus", ""),
-        "data_licenzii": item.get("licenseDate", ""),
-        "nomer_licenzii": item.get("licenseNumber", ""),
-        "srok_deystviya": item.get("validUntil", ""),
+        "inn": element.get("inn", ""),
+        "nazvanie": element.get("fullName", "") or element.get("shortName", ""),
+        "tip": element.get("type", ""),
+        "gorod": element.get("city", ""),
+        "subiekt": element.get("subjectRF", ""),
+        "status_licenzii": element.get("licenseStatus", ""),
+        "data_licenzii": element.get("licenseDate", ""),
+        "nomer_licenzii": element.get("licenseNumber", ""),
+        "srok_deystviya": element.get("validUntil", ""),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }

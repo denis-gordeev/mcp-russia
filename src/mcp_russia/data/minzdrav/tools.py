@@ -43,7 +43,7 @@ async def poisk_med_organizatsiy(
             "- ФРМО: https://frrr.rosminzdrav.ru\n"
             "- Росздравнадзор: https://roszdravnadzor.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             o.get("nazvanie", ""),
             o.get("tip", ""),
@@ -54,7 +54,7 @@ async def poisk_med_organizatsiy(
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Город"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -79,7 +79,7 @@ async def info_med_organizatsii(
             f"Используйте poisk_med_organizatsiy() для поиска."
         )
 
-    lines = [
+    stroki = [
         f"**{mo.get('nazvanie', '')}**",
         f"- Тип: {mo.get('tip', '')}",
         f"- Адрес: {mo.get('adres', '')}",
@@ -91,7 +91,7 @@ async def info_med_organizatsii(
         f"- Врачей: {mo.get('vrachey', 0)}",
         f"- Источник: {mo.get('istochnik', 'ФРМО')}",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def poisk_litsenziy(
@@ -117,7 +117,7 @@ async def poisk_litsenziy(
             "Лицензии не найдены.\n\n"
             "Реестр лицензий Росздравнадзора: https://roszdravnadzor.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             lit.get("nomer", ""),
             lit.get("organizaciya", ""),
@@ -129,7 +129,7 @@ async def poisk_litsenziy(
     ]
     return tablitsa_v_markdown(
         ["№ лицензии", "Организация", "Вид деятельности", "Статус", "Действует до"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -156,7 +156,7 @@ async def pokazateli_zdorovya(
             f"Данные доступны через открытые источники Минздрава:\n"
             f"https://data.minzdrav.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nazvanie", ""),
             str(p.get("znachenie", "")),
@@ -168,7 +168,7 @@ async def pokazateli_zdorovya(
     ]
     return tablitsa_v_markdown(
         ["Показатель", "Значение", "Ед. изм.", "Год", "Регион"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -201,7 +201,7 @@ async def statistika_zabolevaniy(
             "- Открытые данные Минздрава: https://data.minzdrav.gov.ru\n"
         )
         return header
-    rows = [
+    stroki_tablitsy = [
         (
             z.get("kod_mkb", ""),
             z.get("nazvanie", ""),
@@ -213,7 +213,7 @@ async def statistika_zabolevaniy(
     ]
     return tablitsa_v_markdown(
         ["МКБ-10", "Заболевание", "Заболевших", "Летальных", "Год"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -225,9 +225,9 @@ async def spravochnik_mo(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника типов медицинских организаций...")
     tipy = client.poluchit_tipy_mo()
-    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы медицинских организаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип организации"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип организации"], stroki_tablitsy)
 
 
 async def spravochnik_spetsialnostey(ctx: Context) -> str:
@@ -238,9 +238,9 @@ async def spravochnik_spetsialnostey(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.poluchit_spetsialnosti()
-    rows = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
     header = "**Врачебные специальности**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Специальность"], rows)
+    return header + tablitsa_v_markdown(["Код", "Специальность"], stroki_tablitsy)
 
 
 async def spravochnik_mkb10(ctx: Context) -> str:
@@ -251,6 +251,6 @@ async def spravochnik_mkb10(ctx: Context) -> str:
     """
     await ctx.info("Запрос справочника МКБ-10...")
     mkb_classes = client.poluchit_klassy_mkb10()
-    rows = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
+    stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
     header = "**Классы МКБ-10**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Класс заболеваний"], rows)
+    return header + tablitsa_v_markdown(["Код", "Класс заболеваний"], stroki_tablitsy)

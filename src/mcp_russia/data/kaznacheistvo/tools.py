@@ -18,18 +18,18 @@ async def spisok_vidov_byudzhetov(ctx: Context) -> str:
     """Получить список видов бюджетов бюджетной системы РФ."""
     await ctx.info("Запрос списка видов бюджетов...")
     vidy = client.poluchit_spisok_vidov_byudzhetov()
-    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды бюджетов бюджетной системы РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид бюджета"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид бюджета"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
     """Получить список категорий расходов бюджета."""
     await ctx.info("Запрос списка категорий расходов...")
     kategorii = client.poluchit_spisok_kategoriy_raskhodov()
-    rows = [(k["kod"], k["nazvanie"]) for k in kategorii]
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
     header = "**Категории расходов бюджета**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Категория"], rows)
+    return header + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
 async def ispolnenie_byudzheta(
@@ -57,19 +57,19 @@ async def ispolnenie_byudzheta(
             f"- Федеральное казначейство: roskazna.gov.ru\n"
             f"- Портал бюджетных данных: budget.gov.ru"
         )
-    lines = [f"**Исполнение бюджета за {data.get('period', '')}**"]
+    stroki = [f"**Исполнение бюджета за {data.get('period', '')}**"]
     if data.get("tip"):
-        lines.append(f"- Тип бюджета: {data['tip']}")
+        stroki.append(f"- Тип бюджета: {data['tip']}")
     if data.get("dohody"):
-        lines.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
+        stroki.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
     if data.get("raskhody"):
-        lines.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
+        stroki.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
     if data.get("defitsit") is not None:
-        lines.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
+        stroki.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
     if data.get("sostoyanie"):
-        lines.append(f"- Статус: {data['sostoyanie']}")
-    lines.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
-    return "\n".join(lines)
+        stroki.append(f"- Статус: {data['sostoyanie']}")
+    stroki.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
+    return "\n".join(stroki)
 
 
 async def poisk_uchastnikov_bp(
@@ -89,17 +89,17 @@ async def poisk_uchastnikov_bp(
     await ctx.info("Поиск участников бюджетного процесса...")
     uchastniki = await client.poisk_uchastnikov_bp(inn=inn, nazvanie=nazvanie)
     if not uchastniki:
-        filters = []
+        filtry = []
         if inn:
-            filters.append(f"ИНН: {inn}")
+            filtry.append(f"ИНН: {inn}")
         if nazvanie:
-            filters.append(f"название: {nazvanie}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"название: {nazvanie}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Участники бюджетного процесса{filter_text} не найдены.\n\n"
             f"Реестр участников доступен на: roskazna.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             u.get("inn", ""),
             u.get("nazvanie", "")[:50],
@@ -111,7 +111,7 @@ async def poisk_uchastnikov_bp(
     header = f"**Участники бюджетного процесса** — найдено: {len(uchastniki)}\n\n"
     return header + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Бюджет"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -134,19 +134,19 @@ async def poisk_uchrezhdeniy(
     await ctx.info("Поиск учреждений...")
     uchrezhdeniya = await client.poisk_uchrezhdeniy(inn=inn, nazvanie=nazvanie, tip=tip)
     if not uchrezhdeniya:
-        filters = []
+        filtry = []
         if inn:
-            filters.append(f"ИНН: {inn}")
+            filtry.append(f"ИНН: {inn}")
         if nazvanie:
-            filters.append(f"название: {nazvanie}")
+            filtry.append(f"название: {nazvanie}")
         if tip:
-            filters.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"тип: {tip}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Учреждения{filter_text} не найдены.\n\n"
             f"Сводный реестр учреждений доступен на: roskazna.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             u.get("inn", ""),
             u.get("nazvanie", "")[:50],
@@ -158,7 +158,7 @@ async def poisk_uchrezhdeniy(
     header = f"**Учреждения** — найдено: {len(uchrezhdeniya)}\n\n"
     return header + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Основной вид деятельности"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -185,7 +185,7 @@ async def mezhbyudzhetnye_transferty(
             f"Межбюджетные трансферты{god_text}{region_text} не найдены.\n\n"
             f"Данные доступны на: budget.gov.ru"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             t.get("vid", ""),
             t.get("otpravitel", "")[:30],
@@ -198,5 +198,5 @@ async def mezhbyudzhetnye_transferty(
     header = f"**Межбюджетные трансферты** — найдено: {len(transferty)}\n\n"
     return header + tablitsa_v_markdown(
         ["Вид", "Отправитель", "Получатель", "Сумма (руб.)", "Год"],
-        rows,
+        stroki_tablitsy,
     )

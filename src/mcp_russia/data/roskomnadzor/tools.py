@@ -23,8 +23,8 @@ async def spisok_napravleniy(ctx: Context) -> str:
     Возвращает:
         Список направлений с кодами и названиями.
     """
-    rows = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
-    return tablitsa_v_markdown(["Код", "Направление"], rows)
+    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
 async def spisok_tipov_licenziy(ctx: Context) -> str:
@@ -33,8 +33,8 @@ async def spisok_tipov_licenziy(ctx: Context) -> str:
     Возвращает:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_LICENZIY_SVYAZI]
-    return tablitsa_v_markdown(["Код", "Тип лицензии"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_LICENZIY_SVYAZI]
+    return tablitsa_v_markdown(["Код", "Тип лицензии"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
@@ -43,8 +43,8 @@ async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
     Возвращает:
         Список категорий нарушений (утечка ПД, запрещённый контент и т.д.).
     """
-    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_NARUSHENIY]
-    return tablitsa_v_markdown(["Код", "Категория нарушения"], rows)
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KATEGORII_NARUSHENIY]
+    return tablitsa_v_markdown(["Код", "Категория нарушения"], stroki_tablitsy)
 
 
 async def spisok_reestrov(ctx: Context) -> str:
@@ -53,8 +53,8 @@ async def spisok_reestrov(ctx: Context) -> str:
     Возвращает:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
-    rows = [(r["kod"], r["nazvanie"]) for r in REGISTRY_RKN]
-    return tablitsa_v_markdown(["Код", "Реестр"], rows)
+    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in REGISTRY_RKN]
+    return tablitsa_v_markdown(["Код", "Реестр"], stroki_tablitsy)
 
 
 async def spisok_tipov_smi(ctx: Context) -> str:
@@ -63,8 +63,8 @@ async def spisok_tipov_smi(ctx: Context) -> str:
     Возвращает:
         Справочник типов СМИ (печатные, сетевые, ТВ, радио и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TIPY_SMI]
-    return tablitsa_v_markdown(["Код", "Тип СМИ"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_SMI]
+    return tablitsa_v_markdown(["Код", "Тип СМИ"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
@@ -73,8 +73,8 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
     Возвращает:
         Справочник категорий операторов ПД.
     """
-    rows = [(k["kod"], k["nazvanie"]) for k in KATEGORII_PD_OPERATOROV]
-    return tablitsa_v_markdown(["Код", "Категория оператора"], rows)
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KATEGORII_PD_OPERATOROV]
+    return tablitsa_v_markdown(["Код", "Категория оператора"], stroki_tablitsy)
 
 
 async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -> str:
@@ -92,7 +92,7 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
     if not licenzii:
         return "Лицензия не найдена.\n\nРеестр лицензий связи: https://rkn.gov.ru/licenses"
     data = licenzii[0]
-    lines = [
+    stroki = [
         f"**Лицензия связи** № {data.get('nomer', nomer_licenzii)}",
         f"- Организация: {data.get('organizaciya', '')}",
         f"- Тип лицензии: {data.get('tip_licenzii', '')}",
@@ -102,7 +102,7 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
         f"- Территория: {data.get('territoriya', '')}",
         f"- Источник: {data.get('istochnik', 'Роскомнадзор')}",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
@@ -122,7 +122,7 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
     )
     if not smi:
         return "СМИ не найдены."
-    rows = [
+    stroki_tablitsy = [
         (
             s.get("registracionnyy_nomer", ""),
             s.get("nazvanie", ""),
@@ -134,7 +134,7 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
     ]
     return tablitsa_v_markdown(
         ["Рег. номер", "Название", "Тип", "Учредитель", "Язык"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -155,7 +155,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
             "Операторы персональных данных не найдены.\n\n"
             "Реестр операторов ПД: https://rkn.gov.ru/pdn"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             o.get("naimenovanie", ""),
             o.get("inn", ""),
@@ -167,7 +167,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
     ]
     return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Категория", "Цель обработки", "Статус"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -203,7 +203,7 @@ async def proverka_blokirovki(ctx: Context, domen: str) -> str:
     await ctx.info(f"Проверка блокировки {domen}...")
     data = await client.proverka_blokirovki(domen)
     if data.get("blokirovka"):
-        lines = [
+        stroki = [
             f"**Домен {domen} — ЗАБЛОКИРОВАН**",
             f"- Основание: {data.get('osnovanie', '')}",
             f"- Дата включения: {data.get('data_vklyucheniya', '')}",
@@ -211,11 +211,11 @@ async def proverka_blokirovki(ctx: Context, domen: str) -> str:
             f"- Источник: {data.get('istochnik', 'ЕАИС')}",
         ]
     else:
-        lines = [
+        stroki = [
             f"**Домен {domen} — НЕ найден** в реестре запрещённых сайтов",
             f"- Источник: {data.get('istochnik', 'ЕАИС (eais.rkn.gov.ru)')}",
         ]
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
@@ -235,7 +235,7 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
             "Организаторы распространения информации не найдены.\n\n"
             "Реестр ОРИ: https://rkn.gov.ru/registry-ori"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             o.get("naimenovanie", ""),
             o.get("inn", ""),
@@ -247,7 +247,7 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     ]
     return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Тип ОРИ", "Статус", "Дата включения"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -264,9 +264,9 @@ async def zapisi_reestra(ctx: Context, kod_reestra: str, identifikator_zapisi: s
     reestr = next((r for r in REGISTRY_RKN if r["kod"] == kod_reestra), None)
     if not reestr:
         return f"Реестр «{kod_reestra}» не найден. Используйте spisok_reestrov()."
-    lines = [
+    stroki = [
         f"**{reestr['nazvanie']}**",
         f"- Код: {reestr['kod']}",
         f"- URL: {reestr['ssylka']}",
     ]
-    return "\n".join(lines)
+    return "\n".join(stroki)

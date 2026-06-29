@@ -43,26 +43,26 @@ def _opredelit_kategoriyu(number: str) -> str:
 def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
     """Разбор результатов поиска дел из API КАД."""
     if isinstance(data, dict):
-        items = data.get("Instances", data.get("Result", []))
+        elementy = data.get("Instances", data.get("Result", []))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        case_info = item.get("CaseInfo", item)
-        number = case_info.get("CaseNumber", item.get("caseNumber", ""))
+        case_info = element.get("CaseInfo", element)
+        number = case_info.get("CaseNumber", element.get("caseNumber", ""))
         category = _opredelit_kategoriyu(number) or case_info.get(
-            "Category", item.get("category", "")
+            "Category", element.get("category", "")
         )
-        sud_name = case_info.get("Court", item.get("courtName", ""))
+        sud_name = case_info.get("Court", element.get("courtName", ""))
         if not sud_name:
             sud_name = _opredelit_sud_po_nomeru(number)
 
-        istorcy_raw = case_info.get("Plaintiffs", item.get("plaintiffs", ""))
+        istorcy_raw = case_info.get("Plaintiffs", element.get("plaintiffs", ""))
         if isinstance(istorcy_raw, str):
             istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
         elif isinstance(istorcy_raw, list):
@@ -70,7 +70,7 @@ def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
         else:
             istorcy = []
 
-        otvetchiki_raw = case_info.get("Defendants", item.get("defendants", ""))
+        otvetchiki_raw = case_info.get("Defendants", element.get("defendants", ""))
         if isinstance(otvetchiki_raw, str):
             otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
         elif isinstance(otvetchiki_raw, list):
@@ -79,30 +79,30 @@ def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
             otvetchiki = []
 
         summa = 0.0
-        summa_raw = case_info.get("ClaimSum", item.get("claimSum"))
+        summa_raw = case_info.get("ClaimSum", element.get("claimSum"))
         if summa_raw:
             with contextlib.suppress(ValueError, TypeError):
                 summa = float(summa_raw)
 
-        results.append(
+        rezultaty.append(
             SudebnoeDelo(
                 nomer=number,
                 kategoriya=category,
-                sostoyanie=case_info.get("Status", item.get("status", "")),
-                sudya=case_info.get("Judge", item.get("judge", "")),
+                sostoyanie=case_info.get("Status", element.get("status", "")),
+                sudya=case_info.get("Judge", element.get("judge", "")),
                 nazvanie_suda=sud_name,
                 data_vozbuzhdeniya=case_info.get(
-                    "RegistrationDate", item.get("registrationDate", "")
+                    "RegistrationDate", element.get("registrationDate", "")
                 ),
                 data_poslednego_akta=case_info.get(
-                    "LastDocumentDate", item.get("lastDocumentDate", "")
+                    "LastDocumentDate", element.get("lastDocumentDate", "")
                 ),
                 istorcy=istorcy,
                 otvetchiki=otvetchiki,
                 summa_iska=summa,
             )
         )
-    return results
+    return rezultaty
 
 
 def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
@@ -159,18 +159,18 @@ def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
 def _razobrat_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
     """Разбор судебных актов из ответа API КАД."""
     if isinstance(data, dict):
-        items = data.get("Documents", data.get("Result", []))
+        elementy = data.get("Documents", data.get("Result", []))
     elif isinstance(data, list):
-        items = data
+        elementy = data
     else:
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
-        doc = item.get("Document", item)
-        results.append(
+        doc = element.get("Document", element)
+        rezultaty.append(
             SudebnyyAkt(
                 identifikator=str(doc.get("Id", doc.get("id", ""))),
                 delo_nomer=delo_number,
@@ -183,7 +183,7 @@ def _razobrat_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
                 pdf_ssylka=doc.get("PdfUrl", doc.get("pdfUrl", "")),
             )
         )
-    return results
+    return rezultaty
 
 
 def _razobrat_storony(data: Any, delo_number: str) -> list[StoronaDela]:
@@ -191,7 +191,7 @@ def _razobrat_storony(data: Any, delo_number: str) -> list[StoronaDela]:
     if not isinstance(data, dict):
         return []
 
-    results = []
+    rezultaty = []
     for side_type, tip_label in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
         raw = data.get(side_type, [])
         if isinstance(raw, str):
@@ -203,17 +203,17 @@ def _razobrat_storony(data: Any, delo_number: str) -> list[StoronaDela]:
         for name in names:
             inn = ""
             if "ИНН" in name:
-                parts = name.split("ИНН")
-                name = parts[0].strip().rstrip(",").strip()
-                inn = parts[1].strip().lstrip(":").strip().split()[0] if len(parts) > 1 else ""
-            results.append(
+                chasti = name.split("ИНН")
+                name = chasti[0].strip().rstrip(",").strip()
+                inn = chasti[1].strip().lstrip(":").strip().split()[0] if len(chasti) > 1 else ""
+            rezultaty.append(
                 StoronaDela(
                     nazvanie=name,
                     inn=inn,
                     tip=tip_label,
                 )
             )
-    return results
+    return rezultaty
 
 
 async def poisk_del(
@@ -249,7 +249,7 @@ async def poisk_del(
     if inn:
         sides.append({"Name": inn, "Type": -1, "ExactMatch": True})
 
-    body: dict[str, Any] = {
+    telo: dict[str, Any] = {
         "Page": 1,
         "Count": min(ogranichenie, 25),
         "Courts": [],
@@ -265,7 +265,7 @@ async def poisk_del(
     try:
         data = await http_otpravit(
             "https://kad.arbitr.ru/Kad/Search",
-            json_body=body,
+            json_body=telo,
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         return _razobrat_rezultaty_poiska(data)
@@ -358,29 +358,29 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
             headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         if isinstance(data, dict):
-            items = data.get("Sessions", data.get("Result", []))
+            elementy = data.get("Sessions", data.get("Result", []))
         elif isinstance(data, list):
-            items = data
+            elementy = data
         else:
             return []
 
-        results = []
-        for item in items:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in elementy:
+            if not isinstance(element, dict):
                 continue
-            results.append(
+            rezultaty.append(
                 SudebnoeZasedanie(
-                    identifikator=str(item.get("Id", "")),
+                    identifikator=str(element.get("Id", "")),
                     delo_nomer=nomer,
-                    data_zasedaniya=item.get("Date", ""),
-                    vremya=item.get("Time", ""),
-                    sudya=item.get("Judge", ""),
-                    zala=item.get("Hall", ""),
-                    sostoyanie=item.get("Status", ""),
-                    rezultaty=item.get("Result", ""),
+                    data_zasedaniya=element.get("Date", ""),
+                    vremya=element.get("Time", ""),
+                    sudya=element.get("Judge", ""),
+                    zala=element.get("Hall", ""),
+                    sostoyanie=element.get("Status", ""),
+                    rezultaty=element.get("Result", ""),
                 )
             )
-        return results
+        return rezultaty
     except Exception:
         return []
 

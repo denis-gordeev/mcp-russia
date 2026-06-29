@@ -143,10 +143,10 @@ def _izvlech_rezultat(data: Any, klyuch: str) -> dict[str, Any]:
     request_result = data.get("RequestResult", {})
     if not isinstance(request_result, dict):
         return {}
-    result = request_result.get("result", {})
-    if not isinstance(result, dict):
+    rezultat = request_result.get("result", {})
+    if not isinstance(rezultat, dict):
         return {}
-    return result.get(klyuch, {})
+    return rezultat.get(klyuch, {})
 
 
 def _razobrat_istoriyu(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
@@ -155,20 +155,20 @@ def _razobrat_istoriyu(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
     if not isinstance(history, dict):
         return []
 
-    records = []
-    for item in history.get("records", []) or []:
-        if not isinstance(item, dict):
+    zapisi = []
+    for element in history.get("records", []) or []:
+        if not isinstance(element, dict):
             continue
-        records.append(
+        zapisi.append(
             RegistracionnoeDeystvie(
                 vin=vin,
-                gos_nomer=item.get("regNumber", ""),
-                tip_deystviya=item.get("regAction", ""),
-                data_deystviya=item.get("regDate", ""),
-                subiekt=item.get("regRegion", ""),
+                gos_nomer=element.get("regNumber", ""),
+                tip_deystviya=element.get("regAction", ""),
+                data_deystviya=element.get("regDate", ""),
+                subiekt=element.get("regRegion", ""),
             )
         )
-    return records
+    return zapisi
 
 
 def _razobrat_dtp(data: Any) -> list[dict[str, Any]]:
@@ -177,21 +177,21 @@ def _razobrat_dtp(data: Any) -> list[dict[str, Any]]:
     if not isinstance(dtp, dict):
         return []
 
-    records = []
-    for item in dtp.get("records", []) or []:
-        if not isinstance(item, dict):
+    zapisi = []
+    for element in dtp.get("records", []) or []:
+        if not isinstance(element, dict):
             continue
-        records.append(
+        zapisi.append(
             {
-                "data_dtp": item.get("accidentDate", ""),
-                "tip_dtp": item.get("accidentType", ""),
-                "subiekt_dtp": item.get("regionName", ""),
-                "model_ts": item.get("vehicleModel", ""),
-                "god_vypuska": item.get("vehicleYear", ""),
-                "status_ts": item.get("damageState", ""),
+                "data_dtp": element.get("accidentDate", ""),
+                "tip_dtp": element.get("accidentType", ""),
+                "subiekt_dtp": element.get("regionName", ""),
+                "model_ts": element.get("vehicleModel", ""),
+                "god_vypuska": element.get("vehicleYear", ""),
+                "status_ts": element.get("damageState", ""),
             }
         )
-    return records
+    return zapisi
 
 
 def _razobrat_rozysk(data: Any) -> list[dict[str, Any]]:
@@ -200,21 +200,21 @@ def _razobrat_rozysk(data: Any) -> list[dict[str, Any]]:
     if not isinstance(wanted, dict):
         return []
 
-    records = []
-    for item in wanted.get("records", []) or []:
-        if not isinstance(item, dict):
+    zapisi = []
+    for element in wanted.get("records", []) or []:
+        if not isinstance(element, dict):
             continue
-        records.append(
+        zapisi.append(
             {
-                "data_rozyska": item.get("wantedDate", ""),
-                "subiekt": item.get("wantedRegion", ""),
-                "initsiator": item.get("wantedInitiator", ""),
-                "model_ts": item.get("vehicleModel", ""),
-                "god_vypuska": item.get("vehicleYear", ""),
-                "nomer_dela": item.get("wantedNumpkio", ""),
+                "data_rozyska": element.get("wantedDate", ""),
+                "subiekt": element.get("wantedRegion", ""),
+                "initsiator": element.get("wantedInitiator", ""),
+                "model_ts": element.get("vehicleModel", ""),
+                "god_vypuska": element.get("vehicleYear", ""),
+                "nomer_dela": element.get("wantedNumpkio", ""),
             }
         )
-    return records
+    return zapisi
 
 
 def _razobrat_ogranichenie(data: Any) -> list[dict[str, Any]]:
@@ -223,21 +223,21 @@ def _razobrat_ogranichenie(data: Any) -> list[dict[str, Any]]:
     if not isinstance(restrict, dict):
         return []
 
-    records = []
-    for item in restrict.get("records", []) or []:
-        if not isinstance(item, dict):
+    zapisi = []
+    for element in restrict.get("records", []) or []:
+        if not isinstance(element, dict):
             continue
-        records.append(
+        zapisi.append(
             {
-                "data_ogranicheniya": item.get("dateadd", ""),
-                "subiekt": item.get("regname", ""),
-                "tip_ogranicheniya": item.get("restrictType", ""),
-                "osnovanie": item.get("restrictBasis", ""),
-                "initsiator": item.get("restrictInitiator", ""),
-                "nomer_dela": item.get("restrictNumber", ""),
+                "data_ogranicheniya": element.get("dateadd", ""),
+                "subiekt": element.get("regname", ""),
+                "tip_ogranicheniya": element.get("restrictType", ""),
+                "osnovanie": element.get("restrictBasis", ""),
+                "initsiator": element.get("restrictInitiator", ""),
+                "nomer_dela": element.get("restrictNumber", ""),
             }
         )
-    return records
+    return zapisi
 
 
 def _razobrat_voditelya(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:

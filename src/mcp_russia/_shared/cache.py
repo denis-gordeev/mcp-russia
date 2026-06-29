@@ -43,10 +43,10 @@ class KeshSVremenemZhizni:
 
     def poluchit(self, klyuch: str) -> Any | None:
         """Получение значения, если оно существует и не истекло."""
-        entry = self._store.get(klyuch)
-        if entry is None:
+        zapis = self._store.get(klyuch)
+        if zapis is None:
             return None
-        expires_at, znachenie = entry
+        expires_at, znachenie = zapis
         if time.monotonic() > expires_at:
             del self._store[klyuch]
             return None

@@ -55,7 +55,7 @@ class _VyboryTableParser(HTMLParser):
         self._in_td = False
         self._in_th = False
         self._current_row: list[str] = []
-        self.rows: list[list[str]] = []
+        self.stroki_tablitsy: list[list[str]] = []
         self._in_title = False
         self.title_text = ""
         self._in_stats = False
@@ -98,7 +98,7 @@ class _VyboryTableParser(HTMLParser):
             self._current_row.append(cell)
         elif tag_lower == "tr":
             if self._current_row:
-                self.rows.append(self._current_row)
+                self.stroki_tablitsy.append(self._current_row)
             self._current_row = []
         elif tag_lower in ("h1", "h2", "h3") and self._in_title:
             self._in_title = False
@@ -121,8 +121,8 @@ class _VyboryTableParser(HTMLParser):
 
 def _razobrat_chislo(text: str) -> int:
     """Извлечь целое число из текста (убрать пробелы, %, и т.д.)."""
-    cleaned = re.sub(r"[^\d]", "", text.split(",")[0].split(".")[0])
-    return int(cleaned) if cleaned else 0
+    ochishchennoe = re.sub(r"[^\d]", "", text.split(",")[0].split(".")[0])
+    return int(ochishchennoe) if ochishchennoe else 0
 
 
 def _razobrat_veshchestvennoe(text: str) -> float:
@@ -162,9 +162,9 @@ async def _zaprosit_html_vyborov(
             headers={"Accept": "text/html,application/xhtml+xml"},
             timeout=30.0,
         ) as c:
-            resp = await c.get(url, params=params)
-            resp.raise_for_status()
-            return resp.text
+            otvet = await c.get(url, params=params)
+            otvet.raise_for_status()
+            return otvet.text
     except Exception as exc:
         logger.warning("Не удалось получить страницу ГАС «Выборы» %s: %s", url, exc)
         return None
@@ -197,8 +197,8 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
         logger.warning("Ошибка парсинга HTML: %s", exc)
         return []
 
-    results: list[ResultatKandidata] = []
-    for row in parser.rows:
+    rezultaty: list[ResultatKandidata] = []
+    for row in parser.stroki_tablitsy:
         if len(row) < 4:
             continue
         fio = ""
@@ -234,7 +234,7 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
                         break
 
         if fio:
-            results.append(
+            rezultaty.append(
                 ResultatKandidata(
                     kandidat_id="",
                     fio=fio,
@@ -245,12 +245,12 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
                 )
             )
 
-    return results
+    return rezultaty
 
 
 def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
     """Извлечь данные о явке из HTML ГАС «Выборы»."""
-    result: dict[str, Any] = {
+    rezultat: dict[str, Any] = {
         "yavka_procent": 0.0,
         "vseh_izbirateley": 0,
         "progalosovalo": 0,
@@ -260,25 +260,25 @@ def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
 
     yavka_match = re.search(r"явк[аи][^<>]*?([\d]+[.,][\d]+)\s*%", html, re.IGNORECASE)
     if yavka_match:
-        result["yavka_procent"] = float(yavka_match.group(1).replace(",", "."))
+        rezultat["yavka_procent"] = float(yavka_match.group(1).replace(",", "."))
 
     vse_match = re.search(r"число избирателей[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if vse_match:
-        result["vseh_izbirateley"] = _razobrat_chislo(vse_match.group(1))
+        rezultat["vseh_izbirateley"] = _razobrat_chislo(vse_match.group(1))
 
     progol_match = re.search(r"проголосовало[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if progol_match:
-        result["progalosovalo"] = _razobrat_chislo(progol_match.group(1))
+        rezultat["progalosovalo"] = _razobrat_chislo(progol_match.group(1))
 
     deystv_match = re.search(r"действительн[а-яё]+[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if deystv_match:
-        result["deystvitelnykh_byulleteney"] = _razobrat_chislo(deystv_match.group(1))
+        rezultat["deystvitelnykh_byulleteney"] = _razobrat_chislo(deystv_match.group(1))
 
     nedeystv_match = re.search(r"недействительн[а-яё]+[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if nedeystv_match:
-        result["nedeystvitelnykh_byulleteney"] = _razobrat_chislo(nedeystv_match.group(1))
+        rezultat["nedeystvitelnykh_byulleteney"] = _razobrat_chislo(nedeystv_match.group(1))
 
-    return result
+    return rezultat
 
 
 def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
@@ -291,7 +291,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         return []
 
     kandidaty: list[KandidatKratko] = []
-    for row in parser.rows:
+    for row in parser.stroki_tablitsy:
         if len(row) < 3:
             continue
         fio = ""
@@ -332,14 +332,14 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
 
 async def tipy_vyborov() -> list[TipVyborov]:
     """Получить список типов выборов."""
-    results: list[TipVyborov] = []
+    rezultaty: list[TipVyborov] = []
     for v in TIPOVY_VYBORY.values():
         code: Any = v["kod"]
         name: Any = v["nazvanie"]
-        results.append(
+        rezultaty.append(
             TipVyborov(kod=code if isinstance(code, int) else int(str(code)), nazvanie=str(name))
         )
-    return results
+    return rezultaty
 
 
 async def subyekty_rf() -> list[SubyektRF]:
@@ -349,17 +349,17 @@ async def subyekty_rf() -> list[SubyektRF]:
 
 async def dolzhnosti_federal() -> list[Dolzhnost]:
     """Получить список федеральных избирательных должностей."""
-    results: list[Dolzhnost] = []
+    rezultaty: list[Dolzhnost] = []
     for d in DOLZHNOSTI_FEDERAL:
         code: Any = d["kod"]
-        results.append(
+        rezultaty.append(
             Dolzhnost(
                 kod=code if isinstance(code, int) else int(str(code)),
                 nazvanie=str(d["nazvanie"]),
                 uroven=str(d["uroven"]),
             )
         )
-    return results
+    return rezultaty
 
 
 async def partii_rf() -> list[PartiaInfo]:
@@ -397,7 +397,7 @@ async def spisok_vyborov(
         if vybory:
             return [vybory]
 
-    results = []
+    rezultaty = []
     for key, v in IZVESTNYE_VYBORY.items():
         if god is not None and v["god"] != god:
             continue
@@ -405,9 +405,9 @@ async def spisok_vyborov(
             continue
         if subiekt is not None and v.get("subiekt", 0) != subiekt:
             continue
-        results.append({**v, "klyuch": key})
+        rezultaty.append({**v, "klyuch": key})
 
-    if not results and god is not None:
+    if not rezultaty and god is not None:
         url = f"{VYBORY_API}/izbirkom"
         params: dict[str, Any] = {
             "action": "show",
@@ -421,14 +421,14 @@ async def spisok_vyborov(
                 headers={"Accept": "text/html,application/xhtml+xml"},
                 timeout=20.0,
             ) as c:
-                resp = await c.get(url, params=params)
-                resp.raise_for_status()
-                html = resp.text
+                otvet = await c.get(url, params=params)
+                otvet.raise_for_status()
+                html = otvet.text
                 year_pattern = re.compile(rf"\b{god}\b")
                 if year_pattern.search(html):
                     title_match = re.search(r"<h[12][^>]*>([^<]+)</h[12]>", html, re.IGNORECASE)
                     if title_match:
-                        results.append(
+                        rezultaty.append(
                             {
                                 "nazvanie": title_match.group(1).strip(),
                                 "tip": tip or 0,
@@ -442,7 +442,7 @@ async def spisok_vyborov(
         except Exception as exc:
             logger.debug("Не удалось получить список выборов: %s", exc)
 
-    return results
+    return rezultaty
 
 
 async def poisk_kandidata(
@@ -488,16 +488,16 @@ async def poisk_kandidata(
             headers={"Accept": "text/html,application/xhtml+xml"},
             timeout=20.0,
         ) as c:
-            resp = await c.get(search_url, params=params)
-            resp.raise_for_status()
-            html = resp.text
+            otvet = await c.get(search_url, params=params)
+            otvet.raise_for_status()
+            html = otvet.text
             all_kandidaty = _razobrat_kandidatov_iz_html(html)
 
             fio_lower = fio.lower()
-            filtered = [k for k in all_kandidaty if fio_lower in k.fio.lower()]
+            otfiltrovannye = [k for k in all_kandidaty if fio_lower in k.fio.lower()]
 
-            if filtered:
-                return filtered
+            if otfiltrovannye:
+                return otfiltrovannye
             return all_kandidaty[:20]
 
     except Exception as exc:
@@ -508,21 +508,21 @@ async def poisk_kandidata(
         {"fio": fio, "year": god, "region": subiekt},
     )
     if isinstance(cik_data, list):
-        results = []
-        for item in cik_data:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in cik_data:
+            if not isinstance(element, dict):
                 continue
-            results.append(
+            rezultaty.append(
                 KandidatKratko(
-                    identifikator=str(item.get("id", "")),
-                    fio=str(item.get("fio", item.get("name", ""))),
-                    partia=str(item.get("party", item.get("partia", ""))),
-                    dolzhnost=str(item.get("position", item.get("dolzhnost", ""))),
-                    subiekt=str(item.get("region", "")),
-                    status=str(item.get("status", "")),
+                    identifikator=str(element.get("id", "")),
+                    fio=str(element.get("fio", element.get("name", ""))),
+                    partia=str(element.get("party", element.get("partia", ""))),
+                    dolzhnost=str(element.get("position", element.get("dolzhnost", ""))),
+                    subiekt=str(element.get("region", "")),
+                    status=str(element.get("status", "")),
                 )
             )
-        return results
+        return rezultaty
 
     return []
 
@@ -623,32 +623,32 @@ async def rezultaty_vyborov(
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html:
-            results = _razobrat_rezultaty_iz_html(html)
-            if results:
-                return results
+            rezultaty = _razobrat_rezultaty_iz_html(html)
+            if rezultaty:
+                return rezultaty
 
     cik_data = await _zaprosit_json_tsik(
         "/api/elections/results",
         {"year": god, "type": tip, "region": subiekt},
     )
     if isinstance(cik_data, dict):
-        items = cik_data.get("results", cik_data.get("candidates", []))
-        if isinstance(items, list):
-            results = []
-            for item in items:
-                if not isinstance(item, dict):
+        elementy = cik_data.get("results", cik_data.get("candidates", []))
+        if isinstance(elementy, list):
+            rezultaty = []
+            for element in elementy:
+                if not isinstance(element, dict):
                     continue
-                results.append(
+                rezultaty.append(
                     ResultatKandidata(
-                        kandidat_id=str(item.get("id", "")),
-                        fio=str(item.get("fio", item.get("name", ""))),
-                        partia=str(item.get("party", item.get("partia", ""))),
-                        golosov=int(str(item.get("votes", item.get("golosov", 0)))),
-                        procent=float(str(item.get("percent", item.get("procent", 0.0)))),
-                        izbrann=bool(item.get("elected", item.get("izbrann", False))),
+                        kandidat_id=str(element.get("id", "")),
+                        fio=str(element.get("fio", element.get("name", ""))),
+                        partia=str(element.get("party", element.get("partia", ""))),
+                        golosov=int(str(element.get("votes", element.get("golosov", 0)))),
+                        procent=float(str(element.get("percent", element.get("procent", 0.0)))),
+                        izbrann=bool(element.get("elected", element.get("izbrann", False))),
                     )
                 )
-            return results
+            return rezultaty
 
     return []
 

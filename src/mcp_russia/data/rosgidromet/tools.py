@@ -25,9 +25,9 @@ async def spisok_stanciy(ctx: Context) -> str:
     await ctx.info("Запрос списка станций мониторинга...")
     stancii = client.poluchit_spisok_stantsiy()
 
-    rows = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
+    stroki_tablitsy = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
     header = "**Станции мониторинга Росгидромета**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Город", "Округ"], rows)
+    return header + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
 
 
 async def spisok_tipov_dannykh(ctx: Context) -> str:
@@ -40,15 +40,15 @@ async def spisok_tipov_dannykh(ctx: Context) -> str:
     meteo = client.poluchit_spisok_tipov_meteo()
     eko = client.poluchit_spisok_tipov_eko()
 
-    lines = ["**Типы метеорологических данных**\n"]
-    rows = [(m["kod"], m["nazvanie"]) for m in meteo]
-    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
+    stroki = ["**Типы метеорологических данных**\n"]
+    stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in meteo]
+    stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
-    lines.append("\n**Типы экологических данных**\n")
-    rows = [(e["kod"], e["nazvanie"]) for e in eko]
-    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
+    stroki.append("\n**Типы экологических данных**\n")
+    stroki_tablitsy = [(e["kod"], e["nazvanie"]) for e in eko]
+    stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> str:
@@ -69,27 +69,27 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
             f"Используйте spisok_stanciy() для списка станций."
         )
 
-    lines = [f"**Погода: {data.gorod}** ({data.subiekt})"]
+    stroki = [f"**Погода: {data.gorod}** ({data.subiekt})"]
     if data.temperatura:
-        lines.append(f"- Температура: {formatirovat_chislo_ru(data.temperatura, 1)}°C")
+        stroki.append(f"- Температура: {formatirovat_chislo_ru(data.temperatura, 1)}°C")
     if data.oshchushchaetsya_kak:
-        lines.append(f"- Ощущается как: {formatirovat_chislo_ru(data.oshchushchaetsya_kak, 1)}°C")
+        stroki.append(f"- Ощущается как: {formatirovat_chislo_ru(data.oshchushchaetsya_kak, 1)}°C")
     if data.vlazhnost:
-        lines.append(f"- Влажность: {formatirovat_chislo_ru(data.vlazhnost, 0)}%")
+        stroki.append(f"- Влажность: {formatirovat_chislo_ru(data.vlazhnost, 0)}%")
     if data.davlenie:
-        lines.append(f"- Давление: {formatirovat_chislo_ru(data.davlenie, 0)} мм рт.ст.")
+        stroki.append(f"- Давление: {formatirovat_chislo_ru(data.davlenie, 0)} мм рт.ст.")
     if data.veter_skorost:
-        lines.append(
+        stroki.append(
             f"- Ветер: {formatirovat_chislo_ru(data.veter_skorost, 1)} м/с {data.veter_napravlenie}"
         )
     if data.osadki is not None:
-        lines.append(f"- Осадки: {formatirovat_chislo_ru(data.osadki, 1)} мм")
+        stroki.append(f"- Осадки: {formatirovat_chislo_ru(data.osadki, 1)} мм")
     if data.opisaniye:
-        lines.append(f"- Описание: {data.opisaniye}")
+        stroki.append(f"- Описание: {data.opisaniye}")
     if data.data_vremya:
-        lines.append(f"- Данные на: {data.data_vremya}")
-    lines.append("- Источник: Open-Meteo / Росгидромет")
-    return "\n".join(lines)
+        stroki.append(f"- Данные на: {data.data_vremya}")
+    stroki.append("- Источник: Open-Meteo / Росгидромет")
+    return "\n".join(stroki)
 
 
 async def prognoz_pogody(
@@ -115,21 +115,21 @@ async def prognoz_pogody(
             f"Используйте spisok_stanciy() для списка станций."
         )
 
-    lines = [f"**Прогноз погоды** — {len(prognoz)} дней\n"]
+    stroki = [f"**Прогноз погоды** — {len(prognoz)} дней\n"]
     for p in prognoz:
-        lines.append(f"**{p.data}**")
+        stroki.append(f"**{p.data}**")
         if p.temperatura_dnem is not None:
-            lines.append(f"- Днём: {formatirovat_chislo_ru(p.temperatura_dnem, 1)}°C")
+            stroki.append(f"- Днём: {formatirovat_chislo_ru(p.temperatura_dnem, 1)}°C")
         if p.temperatura_nochyu is not None:
-            lines.append(f"- Ночью: {formatirovat_chislo_ru(p.temperatura_nochyu, 1)}°C")
+            stroki.append(f"- Ночью: {formatirovat_chislo_ru(p.temperatura_nochyu, 1)}°C")
         if p.osadki_veroyatnost is not None:
-            lines.append(f"- Осадки: {formatirovat_chislo_ru(p.osadki_veroyatnost, 0)}%")
+            stroki.append(f"- Осадки: {formatirovat_chislo_ru(p.osadki_veroyatnost, 0)}%")
         if p.opisaniye:
-            lines.append(f"- {p.opisaniye}")
-        lines.append("")
+            stroki.append(f"- {p.opisaniye}")
+        stroki.append("")
 
-    lines.append("- Источник: Open-Meteo / Росгидромет")
-    return "\n".join(lines)
+    stroki.append("- Источник: Open-Meteo / Росгидромет")
+    return "\n".join(stroki)
 
 
 async def ekologiya_regiona(
@@ -150,31 +150,31 @@ async def ekologiya_regiona(
     data = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
 
     if not data:
-        filters = []
+        filtry = []
         if gorod:
-            filters.append(f"город: {gorod}")
+            filtry.append(f"город: {gorod}")
         if tip:
-            filters.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"тип: {tip}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Экологические данные{filter_text} недоступны.\n\n"
             f"Данные доступны на сайте Росприроднадзора: rpn.gov.ru"
         )
 
-    lines = [f"**Экологическая обстановка** — измерений: {len(data)}\n"]
+    stroki = [f"**Экологическая обстановка** — измерений: {len(data)}\n"]
     for d in data[:10]:
         line = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
         if d.znachenie is not None:
             line += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
         if d.prevyshenie:
             line += " ⚠️ ПРЕВЫШЕНИЕ нормы"
-        lines.append(line)
+        stroki.append(line)
 
     if len(data) > 10:
-        lines.append(f"\n... и ещё {len(data) - 10} измерений")
+        stroki.append(f"\n... и ещё {len(data) - 10} измерений")
 
-    lines.append("- Источник: Open-Meteo Air Quality")
-    return "\n".join(lines)
+    stroki.append("- Источник: Open-Meteo Air Quality")
+    return "\n".join(stroki)
 
 
 async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str:
@@ -196,19 +196,19 @@ async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str
             f"Метеорологические данные: open-meteo.com / meteorf.ru"
         )
 
-    lines = [f"**Активные предупреждения** — {len(data)}\n"]
+    stroki = [f"**Активные предупреждения** — {len(data)}\n"]
     for p in data:
-        lines.append(f"⚠️ **{p.tip}** — {p.subiekt}, {p.gorod}")
-        lines.append(f"   {p.opisanie}")
+        stroki.append(f"⚠️ **{p.tip}** — {p.subiekt}, {p.gorod}")
+        stroki.append(f"   {p.opisanie}")
         if p.data_nachala:
-            lines.append(f"   С: {p.data_nachala}")
+            stroki.append(f"   С: {p.data_nachala}")
         if p.data_okonchaniya:
-            lines.append(f"   По: {p.data_okonchaniya}")
-        lines.append(f"   Уровень опасности: {p.uroven_opasnosti}")
-        lines.append("")
+            stroki.append(f"   По: {p.data_okonchaniya}")
+        stroki.append(f"   Уровень опасности: {p.uroven_opasnosti}")
+        stroki.append("")
 
-    lines.append("- Источник: Open-Meteo / Росгидромет")
-    return "\n".join(lines)
+    stroki.append("- Источник: Open-Meteo / Росгидромет")
+    return "\n".join(stroki)
 
 
 async def sputnik_monitoring(
@@ -229,27 +229,27 @@ async def sputnik_monitoring(
     data = await client.poluchit_sputnik_dannye(subiekt, tip)
 
     if not data:
-        filters = []
+        filtry = []
         if subiekt:
-            filters.append(f"регион: {subiekt}")
+            filtry.append(f"регион: {subiekt}")
         if tip:
-            filters.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"тип: {tip}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Данные спутникового мониторинга{filter_text} недоступны.\n\n"
             f"Спутниковые данные: niikp-atm.ru"
         )
 
-    lines = [f"**Спутниковый мониторинг** — снимков: {len(data)}\n"]
+    stroki = [f"**Спутниковый мониторинг** — снимков: {len(data)}\n"]
     for s in data[:5]:
-        lines.append(f"- {s.subiekt} ({s.data_syomki}): {s.tip_dannykh}")
-        lines.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
+        stroki.append(f"- {s.subiekt} ({s.data_syomki}): {s.tip_dannykh}")
+        stroki.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
         if s.izobrazhenie_ssylka:
-            lines.append(f"  Изображение: {s.izobrazhenie_ssylka}")
-        lines.append("")
+            stroki.append(f"  Изображение: {s.izobrazhenie_ssylka}")
+        stroki.append("")
 
     if len(data) > 5:
-        lines.append(f"\n... и ещё {len(data) - 5} снимков")
+        stroki.append(f"\n... и ещё {len(data) - 5} снимков")
 
-    lines.append("- Источник: Росгидромет / НИИ КП")
-    return "\n".join(lines)
+    stroki.append("- Источник: Росгидромет / НИИ КП")
+    return "\n".join(stroki)

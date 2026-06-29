@@ -34,8 +34,8 @@ def proverit_inn(inn: str) -> bool:
 
     if len(digits) == 10:
         weights = [2, 4, 10, 3, 5, 9, 4, 6, 8]
-        total = sum(int(digits[i]) * weights[i] for i in range(9))
-        remainder = total % 11
+        itogo = sum(int(digits[i]) * weights[i] for i in range(9))
+        remainder = itogo % 11
         check = remainder % 10
         return int(digits[9]) == check
 
@@ -134,16 +134,16 @@ def proverit_snils(snils: str) -> bool:
     if len(digits) != 11:
         return False
 
-    total = 0
+    itogo = 0
     for i in range(9):
-        total += int(digits[i]) * (9 - i)
+        itogo += int(digits[i]) * (9 - i)
 
-    if total < 100:
-        check = total
-    elif total in (100, 101):
+    if itogo < 100:
+        check = itogo
+    elif itogo in (100, 101):
         check = 0
     else:
-        remainder = total % 101
+        remainder = itogo % 101
         check = 0 if remainder == 100 else remainder
 
     check_str = f"{check:02d}"

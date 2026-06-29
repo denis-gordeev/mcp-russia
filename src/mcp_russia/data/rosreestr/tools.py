@@ -103,29 +103,29 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
         "mnogokvartirnyy_dom": "Многоквартирный дом",
     }.get(obekt.tip_obekta, obekt.tip_obekta)
 
-    lines = [
+    stroki = [
         f"**Кадастровый номер:** {obekt.kadastrovyy_nomer}",
         f"**Тип:** {tip_name}",
     ]
     if obekt.adreshnye_svedeniya:
-        lines.append(f"**Адрес:** {obekt.adreshnye_svedeniya}")
+        stroki.append(f"**Адрес:** {obekt.adreshnye_svedeniya}")
     if obekt.ploshchad:
-        lines.append(f"**Площадь:** {obekt.ploshchad} кв.м")
+        stroki.append(f"**Площадь:** {obekt.ploshchad} кв.м")
     if obekt.kadastrovaya_stoimost:
         try:
             stoimost_val = float(obekt.kadastrovaya_stoimost)
-            lines.append(f"**Кадастровая стоимость:** {formatirovat_rubli(stoimost_val)}")
+            stroki.append(f"**Кадастровая стоимость:** {formatirovat_rubli(stoimost_val)}")
         except (ValueError, TypeError):
-            lines.append(f"**Кадастровая стоимость:** {obekt.kadastrovaya_stoimost}")
+            stroki.append(f"**Кадастровая стоимость:** {obekt.kadastrovaya_stoimost}")
     if obekt.data_opredeleniya_stoimosti:
-        lines.append(f"**Дата определения стоимости:** {obekt.data_opredeleniya_stoimosti}")
+        stroki.append(f"**Дата определения стоимости:** {obekt.data_opredeleniya_stoimosti}")
     if obekt.status_ucheta:
-        lines.append(f"**Статус учёта:** {obekt.status_ucheta}")
+        stroki.append(f"**Статус учёта:** {obekt.status_ucheta}")
     if obekt.kategoriya_zemel:
-        lines.append(f"**Категория земель:** {obekt.kategoriya_zemel}")
+        stroki.append(f"**Категория земель:** {obekt.kategoriya_zemel}")
 
-    lines.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
+    return "\n".join(stroki)
 
 
 async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
@@ -138,31 +138,31 @@ async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
         Кадастровая стоимость, дата определения, основание.
     """
     await ctx.info(f"Запрос кадастровой стоимости {kadastrovyy_nomer}...")
-    result = await client.poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer)
+    rezultat = await client.poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer)
 
-    if result is None:
+    if rezultat is None:
         return (
             f"**Кадастровый номер:** {kadastrovyy_nomer}\n\n"
             "Кадастровая стоимость не найдена.\n"
             "Проверьте кадастровый номер на https://pkk.rosreestr.ru"
         )
 
-    lines = [f"**Кадастровый номер:** {result.kadastrovyy_nomer}"]
+    stroki = [f"**Кадастровый номер:** {rezultat.kadastrovyy_nomer}"]
 
-    if result.stoimost is not None:
-        lines.append(f"**Кадастровая стоимость:** {formatirovat_rubli(result.stoimost)}")
+    if rezultat.stoimost is not None:
+        stroki.append(f"**Кадастровая стоимость:** {formatirovat_rubli(rezultat.stoimost)}")
     else:
-        lines.append("**Кадастровая стоимость:** Не определена")
+        stroki.append("**Кадастровая стоимость:** Не определена")
 
-    if result.data_opredeleniya:
-        lines.append(f"**Дата определения:** {result.data_opredeleniya}")
-    if result.data_vneseniya_v_egrn:
-        lines.append(f"**Дата внесения в ЕГРН:** {result.data_vneseniya_v_egrn}")
-    if result.osnovanie:
-        lines.append(f"**Основание:** {result.osnovanie}")
+    if rezultat.data_opredeleniya:
+        stroki.append(f"**Дата определения:** {rezultat.data_opredeleniya}")
+    if rezultat.data_vneseniya_v_egrn:
+        stroki.append(f"**Дата внесения в ЕГРН:** {rezultat.data_vneseniya_v_egrn}")
+    if rezultat.osnovanie:
+        stroki.append(f"**Основание:** {rezultat.osnovanie}")
 
-    lines.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: Росреестр / pkk.rosreestr.ru")
+    return "\n".join(stroki)
 
 
 async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
@@ -185,9 +185,9 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
             "https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services"
         )
 
-    rows = []
+    stroki_tablitsy = []
     for r in rights:
-        rows.append(
+        stroki_tablitsy.append(
             (
                 r.get("tip_prava", ""),
                 r.get("sobstvennik", "Не указан"),
@@ -200,5 +200,5 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
     header += "Источник: Росреестр / pkk.rosreestr.ru\n\n"
     return header + tablitsa_v_markdown(
         ["Тип права", "Правообладатель", "Дата регистрации", "Номер регистрации"],
-        rows,
+        stroki_tablitsy,
     )

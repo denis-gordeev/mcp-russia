@@ -54,9 +54,9 @@ async def poisk_proverok(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
 
@@ -68,9 +68,9 @@ async def poisk_proverok(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_proverku(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен")
 
@@ -119,9 +119,9 @@ async def poisk_obektov_negativnogo(
         if kategoriya:
             params["category"] = kategoriya
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("ONV реестр недоступен")
 
@@ -133,9 +133,9 @@ async def poisk_obektov_negativnogo(
         if kategoriya:
             params["category"] = kategoriya
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_obekt_negativnogo(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для ОНВ")
 
@@ -165,9 +165,9 @@ async def poisk_litsenziy_nedra(
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
@@ -179,8 +179,8 @@ async def poisk_litsenziy_nedra(
         if vid_litsenzii:
             params["licenseType"] = vid_litsenzii
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
         return []
@@ -207,8 +207,8 @@ async def poluchit_ekologicheskie_platezhi(
         if tip_platezha:
             params["paymentType"] = tip_platezha
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_ekologicheskiy_platezh(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_ekologicheskiy_platezh(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")
         return []

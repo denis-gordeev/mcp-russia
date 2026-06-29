@@ -211,27 +211,27 @@ class ReyestrFunktsiy:
 
         Полезно для логирования при запуске и генерации документации.
         """
-        lines = [
+        stroki = [
             f"mcp-russia — {len(self._features)} функция(й) активно, "
             f"{len(self._skipped)} пропущено\n"
         ]
 
         if self._features:
-            lines.append("Активные:")
+            stroki.append("Активные:")
             for imya, funktsiya in sorted(self._features.items()):
                 ikona_avt = (
                     "🔑"
                     if funktsiya.meta.trebuet_autentifikatsii
                     else ("🔏" if funktsiya.meta.peremennaya_avt_env else "🔓")
                 )
-                lines.append(f"  /{imya:<20} {ikona_avt} {funktsiya.meta.opisanie}")
+                stroki.append(f"  /{imya:<20} {ikona_avt} {funktsiya.meta.opisanie}")
 
         if self._skipped:
-            lines.append("\nПропущенные:")
+            stroki.append("\nПропущенные:")
             for imya, prichina in sorted(self._skipped.items()):
-                lines.append(f"  {imya:<20} ⏭️  {prichina}")
+                stroki.append(f"  {imya:<20} ⏭️  {prichina}")
 
-        return "\n".join(lines)
+        return "\n".join(stroki)
 
     def poluchit_funktsiyu(self, imya: str) -> ZaregistrirovannayaFunktsiya | None:
         """Получение зарегистрированной функции по имени."""

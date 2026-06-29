@@ -25,8 +25,8 @@ async def spisok_tipov_ts(ctx: Context) -> str:
     Возвращает:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TipyTransportnykhSredstv]
-    return tablitsa_v_markdown(["Код", "Тип ТС"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TipyTransportnykhSredstv]
+    return tablitsa_v_markdown(["Код", "Тип ТС"], stroki_tablitsy)
 
 
 async def spisok_kategoriyy_vu(ctx: Context) -> str:
@@ -35,8 +35,8 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
     Возвращает:
         Список категорий ВУ (A, B, C, D, M и т.д.).
     """
-    rows = [(k["kod"], k["nazvanie"]) for k in KategoriiVoditelskihUdostovereniy]
-    return tablitsa_v_markdown(["Категория", "Описание"], rows)
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KategoriiVoditelskihUdostovereniy]
+    return tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
 
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
@@ -45,8 +45,8 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
     Возвращает:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
     """
-    rows = [(n["kod"], n["nazvanie"]) for n in VidyNarusheniy]
-    return tablitsa_v_markdown(["Код", "Вид нарушения"], rows)
+    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in VidyNarusheniy]
+    return tablitsa_v_markdown(["Код", "Вид нарушения"], stroki_tablitsy)
 
 
 async def spisok_statusov_shtrafov(ctx: Context) -> str:
@@ -55,8 +55,8 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
     Возвращает:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
-    rows = [(s["kod"], s["nazvanie"]) for s in StatusyShtrafov]
-    return tablitsa_v_markdown(["Код", "Статус штрафа"], rows)
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in StatusyShtrafov]
+    return tablitsa_v_markdown(["Код", "Статус штрафа"], stroki_tablitsy)
 
 
 async def spisok_tipov_dtp(ctx: Context) -> str:
@@ -65,8 +65,8 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
     Возвращает:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
     """
-    rows = [(t["kod"], t["nazvanie"]) for t in TipyDTP]
-    return tablitsa_v_markdown(["Код", "Тип ДТП"], rows)
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TipyDTP]
+    return tablitsa_v_markdown(["Код", "Тип ДТП"], stroki_tablitsy)
 
 
 async def spisok_regionov_registratsii(ctx: Context) -> str:
@@ -75,8 +75,8 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
     Возвращает:
         Список регионов с кодами.
     """
-    rows = [(r["kod"], r["nazvanie"]) for r in RegionyRegistratsii]
-    return tablitsa_v_markdown(["Код региона", "Регион"], rows)
+    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in RegionyRegistratsii]
+    return tablitsa_v_markdown(["Код региона", "Регион"], stroki_tablitsy)
 
 
 async def info_ts(ctx: Context, vin: str) -> str:
@@ -90,53 +90,69 @@ async def info_ts(ctx: Context, vin: str) -> str:
     """
     history, dtp, wanted, restrict = await _polnaya_proverka_ts(vin)
 
-    lines = [f"**Транспортное средство** (VIN: {vin})"]
+    stroki = [f"**Транспортное средство** (VIN: {vin})"]
 
     if history:
-        lines.append(f"\n**История регистраций** ({len(history)} записей)")
-        rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in history]
-        lines.append(tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows))
+        stroki.append(f"\n**История регистраций** ({len(history)} записей)")
+        stroki_tablitsy = [
+            (r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in history
+        ]
+        stroki.append(
+            tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
+        )
     else:
-        lines.append("\nИстория регистраций: данные не найдены.")
+        stroki.append("\nИстория регистраций: данные не найдены.")
 
     if dtp:
-        lines.append(f"\n**ДТП** ({len(dtp)} записей)")
-        rows = [(d["data_dtp"], d["tip_dtp"], d["region_dtp"], d["model_ts"]) for d in dtp]
-        lines.append(tablitsa_v_markdown(["Дата ДТП", "Тип", "Регион", "Модель ТС"], rows))
+        stroki.append(f"\n**ДТП** ({len(dtp)} записей)")
+        stroki_tablitsy = [
+            (d["data_dtp"], d["tip_dtp"], d["region_dtp"], d["model_ts"]) for d in dtp
+        ]
+        stroki.append(
+            tablitsa_v_markdown(["Дата ДТП", "Тип", "Регион", "Модель ТС"], stroki_tablitsy)
+        )
     else:
-        lines.append("\nДТП: данные не найдены.")
+        stroki.append("\nДТП: данные не найдены.")
 
     if wanted:
-        lines.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
-        rows = [(w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"]) for w in wanted]
-        lines.append(tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], rows))
+        stroki.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
+        stroki_tablitsy = [
+            (w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"]) for w in wanted
+        ]
+        stroki.append(
+            tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], stroki_tablitsy)
+        )
     else:
-        lines.append("\nРозыск: не числится.")
+        stroki.append("\nРозыск: не числится.")
 
     if restrict:
-        lines.append(f"\n**⚠ Ограничения** ({len(restrict)} записей)")
-        rows = [
+        stroki.append(f"\n**⚠ Ограничения** ({len(restrict)} записей)")
+        stroki_tablitsy = [
             (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["subiekt"], r["initsiator"])
             for r in restrict
         ]
-        lines.append(tablitsa_v_markdown(["Дата", "Тип ограничения", "Регион", "Инициатор"], rows))
+        stroki.append(
+            tablitsa_v_markdown(
+                ["Дата", "Тип ограничения", "Регион", "Инициатор"], stroki_tablitsy
+            )
+        )
     else:
-        lines.append("\nОграничения: не найдены.")
+        stroki.append("\nОграничения: не найдены.")
 
-    return "\n".join(lines) + _ATTRIBUTION
+    return "\n".join(stroki) + _ATTRIBUTION
 
 
 async def _polnaya_proverka_ts(vin: str) -> tuple:
     """Выполнение всех проверок транспортного средства параллельно."""
     import asyncio
 
-    results = await asyncio.gather(
+    rezultaty = await asyncio.gather(
         client.proverka_istorii_ts(vin),
         client.proverka_dtp_ts(vin),
         client.proverka_rozysk_ts(vin),
         client.proverka_ogranicheniy_ts(vin),
     )
-    return results
+    return rezultaty
 
 
 async def info_vu(ctx: Context, nomer_vu: str) -> str:
@@ -152,7 +168,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
     if not vu:
         return f"Информация по ВУ {nomer_vu} не найдена." + _ATTRIBUTION
 
-    lines = [
+    stroki = [
         f"**Водительское удостоверение** (№ {nomer_vu})",
         f"- ФИО: {vu.fio}",
         f"- Категория: {vu.kategoriya}",
@@ -163,7 +179,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
         f"- Ограничения: {vu.ograniceniya or 'нет'}",
         f"- Особые отметки: {vu.osoboie_otmetki or 'нет'}",
     ]
-    return "\n".join(lines) + _ATTRIBUTION
+    return "\n".join(stroki) + _ATTRIBUTION
 
 
 async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
@@ -218,7 +234,7 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
     if not data:
         return f"Статистика ДТП по региону «{subiekt}» за {god} год не найдена." + _ATTRIBUTION
 
-    lines = [
+    stroki = [
         f"**Статистика ДТП** — {data.subiekt}, {data.god} г.",
         f"- Всего ДТП: {formatirovat_chislo_ru(data.kolichestvo_dtp, 0)}",
         f"- Погибшие: {formatirovat_chislo_ru(data.pogibshie, 0)}",
@@ -227,7 +243,7 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
         f"- ДТП с участием детей: {formatirovat_chislo_ru(data.dtp_s_detmi, 0)}",
         f"- ДТП по вине нетрезвых: {formatirovat_chislo_ru(data.alco_gibdd, 0)}",
     ]
-    return "\n".join(lines) + _ATTRIBUTION
+    return "\n".join(stroki) + _ATTRIBUTION
 
 
 async def istoriya_registraciy(ctx: Context, vin: str) -> str:
@@ -239,9 +255,12 @@ async def istoriya_registraciy(ctx: Context, vin: str) -> str:
     Возвращает:
         Список регистрационных действий (постановка/снятие с учёта, смена собственника).
     """
-    records = await client.proverka_istorii_ts(vin)
-    if not records:
+    zapisi = await client.proverka_istorii_ts(vin)
+    if not zapisi:
         return f"История регистраций по VIN {vin} не найдена." + _ATTRIBUTION
 
-    rows = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in records]
-    return tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], rows) + _ATTRIBUTION
+    stroki_tablitsy = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in zapisi]
+    return (
+        tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
+        + _ATTRIBUTION
+    )

@@ -41,9 +41,9 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
             params["name"] = nazvanie
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_operatora_pd(o) for o in items if isinstance(o, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_operatora_pd(o) for o in elementy if isinstance(o, dict)]
         if isinstance(data, list):
             return [_razobrat_operatora_pd(o) for o in data if isinstance(o, dict)]
         return []
@@ -71,9 +71,9 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
             params["inn"] = inn
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_ori(o) for o in items if isinstance(o, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_ori(o) for o in elementy if isinstance(o, dict)]
         if isinstance(data, list):
             return [_razobrat_ori(o) for o in data if isinstance(o, dict)]
         return []
@@ -129,11 +129,15 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
             params["inn"] = inn
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_litsenziyu(item) for item in items if isinstance(item, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [
+                    _razobrat_litsenziyu(element)
+                    for element in elementy
+                    if isinstance(element, dict)
+                ]
         if isinstance(data, list):
-            return [_razobrat_litsenziyu(item) for item in data if isinstance(item, dict)]
+            return [_razobrat_litsenziyu(element) for element in data if isinstance(element, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -159,9 +163,9 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
             params["name"] = nazvanie
         data = await http_poluchit(url, params=params, timeout=15.0)
         if isinstance(data, dict):
-            items = data.get("data", data.get("items", []))
-            if isinstance(items, list):
-                return [_razobrat_smi(s) for s in items if isinstance(s, dict)]
+            elementy = data.get("data", data.get("items", []))
+            if isinstance(elementy, list):
+                return [_razobrat_smi(s) for s in elementy if isinstance(s, dict)]
         if isinstance(data, list):
             return [_razobrat_smi(s) for s in data if isinstance(s, dict)]
         return []
@@ -170,68 +174,68 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
         return []
 
 
-def _razobrat_operatora_pd(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_operatora_pd(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи оператора ПД."""
     return {
-        "naimenovanie": item.get("name", "") or item.get("naimenovanie", ""),
-        "inn": item.get("inn", ""),
-        "kategoriya": item.get("category", ""),
-        "tsel_obrabotki": item.get("processingPurpose", "") or item.get("tsel", ""),
-        "sostoyanie": item.get("status", ""),
-        "data_registracii": item.get("registrationDate", ""),
-        "adres": item.get("address", ""),
+        "naimenovanie": element.get("name", "") or element.get("naimenovanie", ""),
+        "inn": element.get("inn", ""),
+        "kategoriya": element.get("category", ""),
+        "tsel_obrabotki": element.get("processingPurpose", "") or element.get("tsel", ""),
+        "sostoyanie": element.get("status", ""),
+        "data_registracii": element.get("registrationDate", ""),
+        "adres": element.get("address", ""),
         "istochnik": "Реестр ПД (rkn.gov.ru/pdn)",
     }
 
 
-def _razobrat_ori(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ori(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи ОРИ."""
     return {
-        "naimenovanie": item.get("name", "") or item.get("naimenovanie", ""),
-        "inn": item.get("inn", ""),
-        "tip": item.get("type", "") or item.get("tip_ori", ""),
-        "sostoyanie": item.get("status", ""),
-        "data_vklyucheniya": item.get("inclusionDate", ""),
-        "osnovanie": item.get("ground", ""),
+        "naimenovanie": element.get("name", "") or element.get("naimenovanie", ""),
+        "inn": element.get("inn", ""),
+        "tip": element.get("type", "") or element.get("tip_ori", ""),
+        "sostoyanie": element.get("status", ""),
+        "data_vklyucheniya": element.get("inclusionDate", ""),
+        "osnovanie": element.get("ground", ""),
         "istochnik": "Реестр ОРИ (rkn.gov.ru/registry-ori)",
     }
 
 
-def _razobrat_blokirovku(item: dict[str, Any], domain: str) -> dict[str, Any]:
+def _razobrat_blokirovku(element: dict[str, Any], domain: str) -> dict[str, Any]:
     """Парсинг результата проверки блокировки."""
     return {
         "domen": domain,
-        "blokirovka": bool(item.get("blocked", item.get("isBlocked", False))),
-        "osnovanie": item.get("reason", "") or item.get("ground", ""),
-        "data_vklyucheniya": item.get("inclusionDate", ""),
-        "organy": item.get("decisionOrgans", ""),
+        "blokirovka": bool(element.get("blocked", element.get("isBlocked", False))),
+        "osnovanie": element.get("reason", "") or element.get("ground", ""),
+        "data_vklyucheniya": element.get("inclusionDate", ""),
+        "organy": element.get("decisionOrgans", ""),
         "istochnik": "ЕАИС (eais.rkn.gov.ru)",
     }
 
 
-def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии связи."""
     return {
-        "nomer": item.get("number", "") or item.get("nomer", ""),
-        "organizaciya": item.get("licensee", "") or item.get("organizaciya", ""),
-        "tip_licenzii": item.get("type", "") or item.get("tip", ""),
-        "data_vydachi": item.get("issueDate", ""),
-        "data_okonchaniya": item.get("expiryDate", ""),
-        "sostoyanie": item.get("status", ""),
-        "territoriya": item.get("territory", ""),
+        "nomer": element.get("number", "") or element.get("nomer", ""),
+        "organizaciya": element.get("licensee", "") or element.get("organizaciya", ""),
+        "tip_licenzii": element.get("type", "") or element.get("tip", ""),
+        "data_vydachi": element.get("issueDate", ""),
+        "data_okonchaniya": element.get("expiryDate", ""),
+        "sostoyanie": element.get("status", ""),
+        "territoriya": element.get("territory", ""),
         "istochnik": "Реестр лицензий (rkn.gov.ru)",
     }
 
 
-def _razobrat_smi(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_smi(element: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи СМИ."""
     return {
-        "registracionnyy_nomer": item.get("regNumber", "") or item.get("nomer", ""),
-        "nazvanie": item.get("name", "") or item.get("nazvanie", ""),
-        "tip_smi": item.get("type", "") or item.get("tip", ""),
-        "uchreditel": item.get("founder", ""),
-        "yazyk": item.get("language", ""),
-        "adres": item.get("address", ""),
-        "sostoyanie": item.get("status", ""),
+        "registracionnyy_nomer": element.get("regNumber", "") or element.get("nomer", ""),
+        "nazvanie": element.get("name", "") or element.get("nazvanie", ""),
+        "tip_smi": element.get("type", "") or element.get("tip", ""),
+        "uchreditel": element.get("founder", ""),
+        "yazyk": element.get("language", ""),
+        "adres": element.get("address", ""),
+        "sostoyanie": element.get("status", ""),
         "istochnik": "Реестр СМИ (rkn.gov.ru)",
     }

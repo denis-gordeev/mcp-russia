@@ -2,7 +2,51 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-28 (пятьдесят пятый проход — русификация имён функций, методов кэша, параметров, ключей ресурсов, исправление опечаток)
+## Статус раунда 2026-06-29 (пятьдесят шестой проход — русификация английских переменных в телах функций client.py/tools.py/_shared)
+
+### Выполнено
+
+- **Массовая русификация локальных переменных** (~2 000 замен в 56 файлах):
+  - `rows` → `stroki_tablitsy` (~330 замен в 22 tools.py + formatting.py): строки таблиц для `tablitsa_v_markdown()`
+  - `lines` → `stroki` (~340 замен в 22 tools.py + _shared/): строки текстового вывода для `"\n".join()`
+  - `item` → `element` (~650 замен в 15 client.py): переменная цикла `for item in ...` и параметр `_normalizovat_proizvodstvo(item)`
+  - `items` → `elementy` (~250 замен в 18 client.py + _shared/): локальные списки `items = data.get(...)`
+  - `result` → `rezultat` (~150 замен в 10 client.py/tools.py + _shared/batch.py): локальный результат вызова
+  - `results` → `rezultaty` (~130 замен в 16 client.py/tools.py + _shared/batch.py): список результатов
+  - `response` → `otvet` (~30 замен в _shared/http_client.py, _shared/discovery.py, _shared/planner.py): HTTP-ответ
+  - `entry` → `zapis` (~40 замен в cbrf/client.py, cekrf/client.py, fns/client.py, _shared/cache.py): запись из справочника
+  - `entries` → `zapisi` (~6 замен в fns/client.py): список записей
+  - `records` → `zapisi` (~40 замен в fssp/gibdd/client.py, gibdd/tools.py): записи из API
+  - `body` → `telo` (~20 замен в rosapi/fssp/kad_arbitrazh/client.py): тело HTTP-запроса
+  - `parsed` → `razobrannye` (~25 замен в rosapi/rosgidromet/rosreestr/client.py): разобранные данные
+  - `filters` → `filtry` (~90 замен в 8 tools.py): список фильтров
+  - `cleaned` → `ochishchennoe` (~12 замен в cekrf/client.py, _shared/formatting.py): очищенная строка
+  - `filtered` → `otfiltrovannye` (~3 замены в cekrf/client.py): отфильтрованные данные
+  - `formatted` → `otformatirovannoe` (~3 замены в rosreestr/client.py, _shared/formatting.py): отформатированный результат
+  - `total` → `itogo` (~8 замен в _shared/validators.py): контрольная сумма
+  - `parts` → `chasti` (~14 замен в fssp/kad_arbitrazh/client.py, _shared/batch.py): части строки
+  - `output` → `vyvod` (~2 замены в _shared/batch.py): вывод пакета
+  - `resp` → `otvet` (~9 замен в cekrf/client.py): HTTP-ответ
+- **Исправлены коллизии имён**: `rows` и `lines` → разные имена (`stroki_tablitsy` vs `stroki`) чтобы избежать конфликта в функциях, где оба используются
+- **Сохранены API-ключи строк**: `"result"`, `"records"`, `"items"` и др. внутри `.get()` не переименованы (использован tokenize-подход, заменяются только NAME-токены)
+- **Сохранены встроенные методы**: `.items()` не переименовано (пропуск после `.`-оператора); `exc.response` не переименовано (атрибут внешнего класса)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 8 файлов переформатированы, `pytest` (547 passed, 1 skipped — unit-тесты; интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`rows` → `stroki_tablitsy`**: выбрано `stroki_tablitsy` (строки таблицы) вместо `stroki`, чтобы избежать конфликта с `lines` → `stroki` (строки текста); в функциях, где оба используются, имена различаются
+- **`item` → `element`**: переименованы все вхождения `item` как NAME-токена, включая параметры функций (`_normalizovat_proizvodstvo(item)`) и переменные циклов (`for item in ...`)
+- **tokenize-подход**: использован модуль `tokenize` для точного разделения кода и строковых литералов; это гарантирует, что API-ключи в `.get("result")` и `.get("records")` остаются без изменений
+- **`data` НЕ переименована**: переменная `data` встречается как в значении «данные» (→ `dannye`), так и «дата» (→ остаётся `data`, как в `poluchit_vse_valyuty(data=)` — параметр даты); автоматическое переименование невозможно без семантического анализа
+- **`response` → `otvet`**: переименована только локальная переменная `response = await client.get(...)`, но не атрибут `exc.response` исключения `httpx.HTTPStatusError`
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация переменной `data`**: требует ручного анализа контекста (data=«дата» vs data=«данные») — ~80 вхождений в client.py
+- **Русификация оставшихся английских переменных**: `restrictions`, `wanted` (fssp), `subject` (fssp) и другие контекстно-зависимые переменные
 
 ### Выполнено
 

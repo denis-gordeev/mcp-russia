@@ -87,8 +87,8 @@ async def poisk_uchastnikov_bp(
         if nazvanie:
             params["name"] = nazvanie
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_uchastnik_bp(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_uchastnik_bp(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -119,8 +119,8 @@ async def poisk_uchrezhdeniy(
         if tip:
             params["type"] = tip
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_uchrezhdenie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_uchrezhdenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -147,8 +147,8 @@ async def poluchit_mezhbyudzhetnye(
         if region:
             params["region"] = region
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("budget.gov.ru API недоступен для межбюджетных трансфертов")
         return []

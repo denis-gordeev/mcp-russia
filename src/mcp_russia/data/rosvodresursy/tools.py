@@ -23,9 +23,9 @@ async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка бассейновых округов...")
     okruga = client.poluchit_spisok_basseynovykh_okrugov()
-    rows = [(o["kod"], o["nazvanie"]) for o in okruga]
+    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
     header = "**Бассейновые округа Российской Федерации**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Бассейновый округ"], rows)
+    return header + tablitsa_v_markdown(["Код", "Бассейновый округ"], stroki_tablitsy)
 
 
 async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
@@ -38,15 +38,15 @@ async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
     tipy = client.poluchit_spisok_tipov_vodnykh_obektov()
     gidro = client.poluchit_spisok_tipov_gidro()
 
-    lines = ["**Типы водных объектов**\n"]
-    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
-    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
+    stroki = ["**Типы водных объектов**\n"]
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
-    lines.append("\n**Типы гидрологических данных**\n")
-    rows = [(g["kod"], g["nazvanie"]) for g in gidro]
-    lines.append(tablitsa_v_markdown(["Код", "Тип"], rows))
+    stroki.append("\n**Типы гидрологических данных**\n")
+    stroki_tablitsy = [(g["kod"], g["nazvanie"]) for g in gidro]
+    stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def spisok_vodokhranilishch(ctx: Context) -> str:
@@ -58,14 +58,14 @@ async def spisok_vodokhranilishch(ctx: Context) -> str:
     await ctx.info("Запрос списка водохранилищ...")
     vodokhr = client.poluchit_vodokhranilishche_podrobno()
 
-    rows = [
+    stroki_tablitsy = [
         (v["nazvanie"], v["subiekt"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
         for v in vodokhr
     ]
     header = "**Крупные водохранилища РФ**\n\n"
     return header + tablitsa_v_markdown(
         ["Водохранилище", "Регион", "Объём (км³)", "Площадь (км²)"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -96,7 +96,7 @@ async def poisk_vodnykh_obektov(
     )
     if not obekty:
         return "Водные объекты не найдены. Попробуйте изменить параметры поиска."
-    rows = [
+    stroki_tablitsy = [
         (
             o.get("nazvanie", ""),
             o.get("tip", ""),
@@ -107,7 +107,7 @@ async def poisk_vodnykh_obektov(
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Бассейн", "Регион"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -129,21 +129,21 @@ async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
             f"Проверьте код в Государственном водном реестре: text.water.ru"
         )
 
-    lines = [
+    stroki = [
         f"**{data.get('nazvanie', '')}**",
         f"- Тип: {data.get('tip', '')}",
         f"- Бассейн: {data.get('basseyn', '')}",
     ]
     if data.get("dlinna_km"):
-        lines.append(f"- Длина: {formatirovat_chislo_ru(data['dlinna_km'], 1)} км")
+        stroki.append(f"- Длина: {formatirovat_chislo_ru(data['dlinna_km'], 1)} км")
     if data.get("ploshchad_km2"):
-        lines.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
+        stroki.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
     if data.get("subiekt"):
-        lines.append(f"- Регион: {data['subiekt']}")
+        stroki.append(f"- Регион: {data['subiekt']}")
     if data.get("opisaniye"):
-        lines.append(f"- Описание: {data['opisaniye']}")
-    lines.append(f"- Источник: {data.get('istochnik', 'Государственный водный реестр')}")
-    return "\n".join(lines)
+        stroki.append(f"- Описание: {data['opisaniye']}")
+    stroki.append(f"- Источник: {data.get('istochnik', 'Государственный водный реестр')}")
+    return "\n".join(stroki)
 
 
 async def gidro_monitoring(
@@ -177,7 +177,7 @@ async def gidro_monitoring(
             "- Росводресурсы: https://rosvodresursy.ru"
         )
 
-    rows = [
+    stroki_tablitsy = [
         (
             z.get("post", ""),
             z.get("vodnyy_obekt", ""),
@@ -190,7 +190,7 @@ async def gidro_monitoring(
     header = f"**Данные гидрологического мониторинга** ({tip_dannykh})\n\n"
     return header + tablitsa_v_markdown(
         ["Пост", "Водный объект", "Дата", "Уровень (м)", "Расход (м³/с)"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -210,37 +210,37 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
         vodokhr_list = client.poluchit_vodokhranilishche_podrobno()
         static = next((v for v in vodokhr_list if v["kod"] == kod), None)
         if static:
-            lines = [f"**{static['nazvanie']}** ({static['subiekt']})"]
+            stroki = [f"**{static['nazvanie']}** ({static['subiekt']})"]
             if static.get("obiem_km3"):
-                lines.append(f"- Объём: {formatirovat_chislo_ru(static['obiem_km3'], 2)} км³")
+                stroki.append(f"- Объём: {formatirovat_chislo_ru(static['obiem_km3'], 2)} км³")
             if static.get("ploshchad_km2"):
-                lines.append(
+                stroki.append(
                     f"- Площадь: {formatirovat_chislo_ru(static['ploshchad_km2'], 1)} км²"
                 )
-            lines.append("- Источник: Справочник Росводресурсов")
-            return "\n".join(lines)
+            stroki.append("- Источник: Справочник Росводресурсов")
+            return "\n".join(stroki)
         return (
             f"Водохранилище с кодом '{kod}' не найдено.\n\n"
             f"Используйте spisok_vodokhranilishch() для списка водохранилищ."
         )
 
-    lines = [
+    stroki = [
         f"**{data.get('nazvanie', '')}** ({data.get('subiekt', '')})",
     ]
     if data.get("obiem_km3"):
-        lines.append(f"- Объём: {formatirovat_chislo_ru(data['obiem_km3'], 2)} км³")
+        stroki.append(f"- Объём: {formatirovat_chislo_ru(data['obiem_km3'], 2)} км³")
     if data.get("ploshchad_km2"):
-        lines.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
+        stroki.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
     if data.get("uroven_m") is not None:
-        lines.append(f"- Уровень: {formatirovat_chislo_ru(data['uroven_m'], 2)} м")
+        stroki.append(f"- Уровень: {formatirovat_chislo_ru(data['uroven_m'], 2)} м")
     nap = data.get("priznak_napolneniya", "")
     if nap:
         nap_name = PRIZNAKI_NAPOLNENIYA.get(nap, nap)
-        lines.append(f"- Наполнение: {nap_name}")
+        stroki.append(f"- Наполнение: {nap_name}")
     if data.get("data_izmereniya"):
-        lines.append(f"- Дата измерения: {data['data_izmereniya']}")
-    lines.append(f"- Источник: {data.get('istochnik', 'ГМВО')}")
-    return "\n".join(lines)
+        stroki.append(f"- Дата измерения: {data['data_izmereniya']}")
+    stroki.append(f"- Источник: {data.get('istochnik', 'ГМВО')}")
+    return "\n".join(stroki)
 
 
 async def vodopolzovanie_regionov(
@@ -261,18 +261,18 @@ async def vodopolzovanie_regionov(
     data = await client.poluchit_vodopolzovanie(subiekt=subiekt, god=god)
 
     if not data:
-        filters = []
+        filtry = []
         if subiekt:
-            filters.append(f"регион: {subiekt}")
+            filtry.append(f"регион: {subiekt}")
         if god:
-            filters.append(f"год: {god}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"год: {god}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Данные о водопользовании{filter_text} недоступны.\n\n"
             f"Данные доступны на сайте Росводресурсов: rosvodresursy.ru"
         )
 
-    rows = [
+    stroki_tablitsy = [
         (
             v.get("subiekt", ""),
             v.get("god", ""),
@@ -285,5 +285,5 @@ async def vodopolzovanie_regionov(
     header = f"**Водопользование** — записей: {len(data)}\n\n"
     return header + tablitsa_v_markdown(
         ["Регион", "Год", "Забрано (км³)", "Использовано (км³)", "Сброс стоков (км³)"],
-        rows,
+        stroki_tablitsy,
     )

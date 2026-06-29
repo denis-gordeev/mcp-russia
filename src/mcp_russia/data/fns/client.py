@@ -35,16 +35,16 @@ async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
         Данные организации или None.
     """
     try:
-        result = await _poisk_egrul(inn)
-        if not result:
+        rezultat = await _poisk_egrul(inn)
+        if not rezultat:
             return None
 
-        entries = result.get("rows", []) if isinstance(result, dict) else []
-        if not entries:
+        zapisi = rezultat.get("rows", []) if isinstance(rezultat, dict) else []
+        if not zapisi:
             return None
 
-        entry = entries[0]
-        return _razobrat_egrul_organizatsiyu(entry)
+        zapis = zapisi[0]
+        return _razobrat_egrul_organizatsiyu(zapis)
     except Exception:
         return None
 
@@ -59,16 +59,16 @@ async def poluchit_ip(inn: str) -> IPEGRIP | None:
         Данные ИП или None.
     """
     try:
-        result = await _poisk_egrul(inn)
-        if not result:
+        rezultat = await _poisk_egrul(inn)
+        if not rezultat:
             return None
 
-        entries = result.get("rows", []) if isinstance(result, dict) else []
-        if not entries:
+        zapisi = rezultat.get("rows", []) if isinstance(rezultat, dict) else []
+        if not zapisi:
             return None
 
-        entry = entries[0]
-        return _razobrat_egrul_ip(entry)
+        zapis = zapisi[0]
+        return _razobrat_egrul_ip(zapis)
     except Exception:
         return None
 
@@ -150,35 +150,35 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
 
     await asyncio.sleep(0.5)
 
-    result = await http_poluchit(f"{result_url}{token}")
-    return result
+    rezultat = await http_poluchit(f"{result_url}{token}")
+    return rezultat
 
 
-def _razobrat_egrul_organizatsiyu(entry: dict[str, Any]) -> OrganizaciyaEGRUL:
+def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizaciyaEGRUL:
     """Разбор записи ЕГРЮЛ в схему OrganizaciyaEGRUL."""
     return OrganizaciyaEGRUL(
-        inn=entry.get("inn", "") or entry.get("t", ""),
-        ogrn=entry.get("ogrn", "") or entry.get("o", ""),
-        nazvanie=entry.get("n", "") or entry.get("c", ""),
-        polnoe_nazvanie=entry.get("n", ""),
-        yuridicheskiy_adres=entry.get("a", ""),
-        data_registracii=entry.get("r", "") or entry.get("g", ""),
-        sostoyanie=_razobrat_status(entry.get("s", "")),
-        vid_deyatelnosti=entry.get("k", ""),
+        inn=zapis.get("inn", "") or zapis.get("t", ""),
+        ogrn=zapis.get("ogrn", "") or zapis.get("o", ""),
+        nazvanie=zapis.get("n", "") or zapis.get("c", ""),
+        polnoe_nazvanie=zapis.get("n", ""),
+        yuridicheskiy_adres=zapis.get("a", ""),
+        data_registracii=zapis.get("r", "") or zapis.get("g", ""),
+        sostoyanie=_razobrat_status(zapis.get("s", "")),
+        vid_deyatelnosti=zapis.get("k", ""),
         ustroyennyy_kapital="",
         rukovoditel="",
     )
 
 
-def _razobrat_egrul_ip(entry: dict[str, Any]) -> IPEGRIP:
+def _razobrat_egrul_ip(zapis: dict[str, Any]) -> IPEGRIP:
     """Разбор записи ЕГРИП в схему IPEGRIP."""
     return IPEGRIP(
-        inn=entry.get("inn", "") or entry.get("t", ""),
-        ogrnip=entry.get("ogrn", "") or entry.get("o", ""),
-        fio=entry.get("n", "") or entry.get("c", ""),
-        data_registracii=entry.get("r", "") or entry.get("g", ""),
-        sostoyanie=_razobrat_status(entry.get("s", "")),
-        vid_deyatelnosti=entry.get("k", ""),
+        inn=zapis.get("inn", "") or zapis.get("t", ""),
+        ogrnip=zapis.get("ogrn", "") or zapis.get("o", ""),
+        fio=zapis.get("n", "") or zapis.get("c", ""),
+        data_registracii=zapis.get("r", "") or zapis.get("g", ""),
+        sostoyanie=_razobrat_status(zapis.get("s", "")),
+        vid_deyatelnosti=zapis.get("k", ""),
     )
 
 

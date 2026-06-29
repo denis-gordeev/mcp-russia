@@ -31,9 +31,9 @@ async def tipy_vyborov(ctx: Context) -> str:
     await ctx.info("Запрос типов выборов ЦИК РФ...")
     tipy = await client.tipy_vyborov()
 
-    rows = [(str(t.kod), t.nazvanie) for t in tipy]
+    stroki_tablitsy = [(str(t.kod), t.nazvanie) for t in tipy]
     header = "**Типы выборов в РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип выборов"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
 
 
 async def subyekty_rf(ctx: Context) -> str:
@@ -47,9 +47,9 @@ async def subyekty_rf(ctx: Context) -> str:
     await ctx.info("Запрос справочника субъектов РФ...")
     subyekty = await client.subyekty_rf()
 
-    rows = [(s.kod, s.nazvanie) for s in subyekty]
-    header = f"**Субъекты Российской Федерации** — {len(rows)} субъектов\n\n"
-    return header + tablitsa_v_markdown(["Код", "Субъект РФ"], rows)
+    stroki_tablitsy = [(s.kod, s.nazvanie) for s in subyekty]
+    header = f"**Субъекты Российской Федерации** — {len(stroki_tablitsy)} субъектов\n\n"
+    return header + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 
 
 async def dolzhnosti_federal(ctx: Context) -> str:
@@ -64,9 +64,9 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     await ctx.info("Запрос федеральных избирательных должностей...")
     dolzhnosti = await client.dolzhnosti_federal()
 
-    rows = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
+    stroki_tablitsy = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
     header = "**Федеральные избирательные должности**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Должность", "Уровень"], rows)
+    return header + tablitsa_v_markdown(["Код", "Должность", "Уровень"], stroki_tablitsy)
 
 
 async def partii_rf(ctx: Context) -> str:
@@ -78,9 +78,9 @@ async def partii_rf(ctx: Context) -> str:
     await ctx.info("Запрос справочника партий РФ...")
     partii = await client.partii_rf()
 
-    rows = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
-    header = f"**Политические партии РФ** — {len(rows)} партий\n\n"
-    return header + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], rows)
+    stroki_tablitsy = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
+    header = f"**Политические партии РФ** — {len(stroki_tablitsy)} партий\n\n"
+    return header + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], stroki_tablitsy)
 
 
 async def gody_vyborov(ctx: Context) -> str:
@@ -92,10 +92,10 @@ async def gody_vyborov(ctx: Context) -> str:
     await ctx.info("Запрос годов выборов...")
     gody = await client.gody_vyborov()
 
-    lines = ["**Годы федеральных выборов в РФ**\n"]
+    stroki = ["**Годы федеральных выборов в РФ**\n"]
     for god in gody:
-        lines.append(f"- {god}")
-    return "\n".join(lines)
+        stroki.append(f"- {god}")
+    return "\n".join(stroki)
 
 
 async def spisok_vyborov(
@@ -120,12 +120,12 @@ async def spisok_vyborov(
     if not vybory:
         return "Выборы не найдены. Уточните параметры запроса."
 
-    rows = [
+    stroki_tablitsy = [
         (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("klyuch", ""))
         for v in vybory
     ]
     header = f"**Найдено выборов: {len(vybory)}**\n\n"
-    return header + tablitsa_v_markdown(["Наименование", "Год", "Дата", "Ключ"], rows)
+    return header + tablitsa_v_markdown(["Наименование", "Год", "Дата", "Ключ"], stroki_tablitsy)
 
 
 async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str:
@@ -144,11 +144,13 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     if not kandidaty:
         return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ATTRIBUTION}"
 
-    rows = [(k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty]
+    stroki_tablitsy = [
+        (k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty
+    ]
     header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
     return header + tablitsa_v_markdown(
         ["ID", "ФИО", "Партия", "Должность", "Статус"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -174,7 +176,7 @@ async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = No
             "Используйте poisk_kandidata() для поиска по ФИО."
         )
 
-    lines = [
+    stroki = [
         f"**{kandidat.fio}**",
         f"- ID: {kandidat.identifikator}",
         f"- Партия: {kandidat.partia or 'Самовыдвижение'}",
@@ -184,18 +186,18 @@ async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = No
     ]
 
     if kandidat.data_rozhdeniya:
-        lines.append(f"- Дата рождения: {kandidat.data_rozhdeniya}")
+        stroki.append(f"- Дата рождения: {kandidat.data_rozhdeniya}")
     if kandidat.obrazovanie:
-        lines.append(f"- Образование: {kandidat.obrazovanie}")
+        stroki.append(f"- Образование: {kandidat.obrazovanie}")
     if kandidat.mesto_raboty:
-        lines.append(f"- Место работы: {kandidat.mesto_raboty}")
+        stroki.append(f"- Место работы: {kandidat.mesto_raboty}")
     if kandidat.dolzhnost_rabota:
-        lines.append(f"- Должность: {kandidat.dolzhnost_rabota}")
+        stroki.append(f"- Должность: {kandidat.dolzhnost_rabota}")
     if kandidat.dokhod:
-        lines.append(f"- Доход: {kandidat.dokhod}")
+        stroki.append(f"- Доход: {kandidat.dokhod}")
 
-    lines.append(f"- Источник: {_ATTRIBUTION}")
-    return "\n".join(lines)
+    stroki.append(f"- Источник: {_ATTRIBUTION}")
+    return "\n".join(stroki)
 
 
 async def rezultaty_vyborov(
@@ -220,7 +222,7 @@ async def rezultaty_vyborov(
     if not rezultaty:
         return f"Результаты выборов {god} года недоступны.\n\nИсточник: {_ATTRIBUTION}"
 
-    rows = [
+    stroki_tablitsy = [
         (
             r.fio,
             r.partia,
@@ -233,7 +235,7 @@ async def rezultaty_vyborov(
     header = f"**Результаты выборов {god} года**\n\n"
     return header + tablitsa_v_markdown(
         ["Кандидат", "Партия", "Голоса", "%", "Избран"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -256,15 +258,15 @@ async def yavka_i_itogi(
     await ctx.info(f"Запрос явки и итогов выборов {god}...")
     itogi = await client.yavka_i_itogi(god, tip=tip, subiekt=subiekt)
 
-    lines = [
+    stroki = [
         f"**Итоги выборов {god} года**",
     ]
     if itogi.get("nazvanie"):
-        lines.append(f"- Выборы: {itogi['nazvanie']}")
+        stroki.append(f"- Выборы: {itogi['nazvanie']}")
     if itogi.get("data"):
-        lines.append(f"- Дата: {itogi['data']}")
+        stroki.append(f"- Дата: {itogi['data']}")
 
-    lines.extend(
+    stroki.extend(
         [
             f"- Всего избирателей: {formatirovat_chislo_ru(itogi.get('vseh_izbirateley', 0), 0)}",
             f"- Проголосовало: {formatirovat_chislo_ru(itogi.get('progalosovalo', 0), 0)}",
@@ -274,4 +276,4 @@ async def yavka_i_itogi(
             f"- Источник: {_ATTRIBUTION}",
         ]
     )
-    return "\n".join(lines)
+    return "\n".join(stroki)

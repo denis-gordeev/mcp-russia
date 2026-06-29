@@ -53,8 +53,8 @@ async def poisk_med_organizatsiy(
             params["type"] = tip
             params["city"] = gorod
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_med_organizatsiyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_med_organizatsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
         return []
@@ -105,8 +105,8 @@ async def poisk_litsenziy(
         if sostoyanie:
             params["status"] = sostoyanie
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_litsenziyu(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
         return []
@@ -137,8 +137,8 @@ async def pokazateli_zdorovya(
         if kod_pokazatelya:
             params["code"] = kod_pokazatelya
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_pokazatel(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_pokazatel(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
         return []
@@ -169,8 +169,8 @@ async def statistika_zabolevaniy(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_zabolevanie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_zabolevanie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
         return []
@@ -213,59 +213,59 @@ def _izvlech_spisok(data: Any) -> list[Any]:
     return []
 
 
-def _razobrat_med_organizatsiyu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_med_organizatsiyu(element: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных медицинской организации."""
     return {
-        "identifikator": item.get("id", "") or item.get("ogrn", ""),
-        "nazvanie": item.get("name", "") or item.get("fullName", ""),
-        "tip": item.get("type", "") or item.get("tip", ""),
-        "subiekt": item.get("region", "") or item.get("subject", ""),
-        "gorod": item.get("city", "") or item.get("settlement", ""),
-        "adres": item.get("address", "") or item.get("adres", ""),
-        "telefon": item.get("phone", "") or item.get("telefon", ""),
-        "litsenzia": item.get("license", "") or item.get("litsenzia", ""),
-        "krovatey": item.get("beds", 0) or item.get("krovatey", 0),
-        "vrachey": item.get("doctors", 0) or item.get("vrachey", 0),
+        "identifikator": element.get("id", "") or element.get("ogrn", ""),
+        "nazvanie": element.get("name", "") or element.get("fullName", ""),
+        "tip": element.get("type", "") or element.get("tip", ""),
+        "subiekt": element.get("region", "") or element.get("subject", ""),
+        "gorod": element.get("city", "") or element.get("settlement", ""),
+        "adres": element.get("address", "") or element.get("adres", ""),
+        "telefon": element.get("phone", "") or element.get("telefon", ""),
+        "litsenzia": element.get("license", "") or element.get("litsenzia", ""),
+        "krovatey": element.get("beds", 0) or element.get("krovatey", 0),
+        "vrachey": element.get("doctors", 0) or element.get("vrachey", 0),
         "istochnik": "ФРМО (frrr.rosminzdrav.ru)",
     }
 
 
-def _razobrat_litsenziyu(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(element: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии."""
     return {
-        "nomer": item.get("number", "") or item.get("nomer", ""),
-        "organizaciya": item.get("organizationName", "") or item.get("name", ""),
-        "inn": item.get("inn", ""),
-        "vid_deyatelnosti": item.get("activityType", "") or item.get("vid", ""),
-        "data_vydachi": item.get("issueDate", "") or item.get("data_vydachi", ""),
-        "data_okonchaniya": item.get("endDate", "") or item.get("data_okonchaniya", ""),
-        "sostoyanie": item.get("status", ""),
-        "adres": item.get("address", "") or item.get("adres", ""),
+        "nomer": element.get("number", "") or element.get("nomer", ""),
+        "organizaciya": element.get("organizationName", "") or element.get("name", ""),
+        "inn": element.get("inn", ""),
+        "vid_deyatelnosti": element.get("activityType", "") or element.get("vid", ""),
+        "data_vydachi": element.get("issueDate", "") or element.get("data_vydachi", ""),
+        "data_okonchaniya": element.get("endDate", "") or element.get("data_okonchaniya", ""),
+        "sostoyanie": element.get("status", ""),
+        "adres": element.get("address", "") or element.get("adres", ""),
         "istochnik": "Росздравнадзор (roszdravnadzor.gov.ru)",
     }
 
 
-def _razobrat_pokazatel(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_pokazatel(element: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных показателя здоровья."""
     return {
-        "kod": item.get("code", "") or item.get("kod", ""),
-        "nazvanie": item.get("name", ""),
-        "znachenie": item.get("value") or item.get("znachenie", 0),
-        "ed_izm": item.get("unit", "") or item.get("ed_izm", ""),
-        "god": item.get("year") or item.get("god", 0),
-        "subiekt": item.get("region", ""),
-        "istochnik": item.get("source", "Открытые данные Минздрава"),
+        "kod": element.get("code", "") or element.get("kod", ""),
+        "nazvanie": element.get("name", ""),
+        "znachenie": element.get("value") or element.get("znachenie", 0),
+        "ed_izm": element.get("unit", "") or element.get("ed_izm", ""),
+        "god": element.get("year") or element.get("god", 0),
+        "subiekt": element.get("region", ""),
+        "istochnik": element.get("source", "Открытые данные Минздрава"),
     }
 
 
-def _razobrat_zabolevanie(item: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zabolevanie(element: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о заболевании."""
     return {
-        "kod_mkb": item.get("mkbCode", "") or item.get("mkb_code", ""),
-        "nazvanie": item.get("name", "") or item.get("diseaseName", ""),
-        "chelovek_zabolelo": item.get("cases") or item.get("chelovek_zabolelo", 0),
-        "chelovek_vylechilos": item.get("recovered") or item.get("chelovek_vylechilos", 0),
-        "letalnykh_sluchaev": item.get("deaths") or item.get("letalnykh_sluchaev", 0),
-        "god": item.get("year") or item.get("god", 0),
-        "subiekt": item.get("region", ""),
+        "kod_mkb": element.get("mkbCode", "") or element.get("mkb_code", ""),
+        "nazvanie": element.get("name", "") or element.get("diseaseName", ""),
+        "chelovek_zabolelo": element.get("cases") or element.get("chelovek_zabolelo", 0),
+        "chelovek_vylechilos": element.get("recovered") or element.get("chelovek_vylechilos", 0),
+        "letalnykh_sluchaev": element.get("deaths") or element.get("letalnykh_sluchaev", 0),
+        "god": element.get("year") or element.get("god", 0),
+        "subiekt": element.get("region", ""),
     }

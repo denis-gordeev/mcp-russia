@@ -32,9 +32,9 @@ async def spisok_regionov(ctx: Context) -> str:
     await ctx.info("Запрос списка субъектов РФ...")
     regiony = client.poluchit_spisok_subiektov()
 
-    rows = [(r["kod"], r["nazvanie"], r.get("okrug", "")) for r in regiony]
+    stroki_tablitsy = [(r["kod"], r["nazvanie"], r.get("okrug", "")) for r in regiony]
     header = f"**Субъекты Российской Федерации** — {len(regiony)} субъектов\n\n"
-    return header + tablitsa_v_markdown(["Код", "Регион", "ФО"], rows)
+    return header + tablitsa_v_markdown(["Код", "Регион", "ФО"], stroki_tablitsy)
 
 
 async def spisok_okrugov(ctx: Context) -> str:
@@ -46,9 +46,9 @@ async def spisok_okrugov(ctx: Context) -> str:
     await ctx.info("Запрос списка федеральных округов...")
     okruga = client.poluchit_spisok_federalnykh_okrugov()
 
-    rows = [(o["kod"], o["nazvanie"]) for o in okruga]
+    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
     header = "**Федеральные округа Российской Федерации**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Округ"], rows)
+    return header + tablitsa_v_markdown(["Код", "Округ"], stroki_tablitsy)
 
 
 async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
@@ -69,20 +69,20 @@ async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
             f"Используйте spisok_regionov() для списка субъектов."
         )
 
-    lines = [
+    stroki = [
         f"**{data.nazvanie}** (код {data.kod})",
     ]
     if data.federalny_okrug:
-        lines.append(f"- Федеральный округ: {data.federalny_okrug}")
+        stroki.append(f"- Федеральный округ: {data.federalny_okrug}")
     if data.naselenie:
-        lines.append(f"- Население: {formatirovat_chislo_ru(data.naselenie, 0)} чел.")
+        stroki.append(f"- Население: {formatirovat_chislo_ru(data.naselenie, 0)} чел.")
     if data.vrp:
-        lines.append(f"- ВРП: {formatirovat_chislo_ru(data.vrp, 2)} млрд ₽")
+        stroki.append(f"- ВРП: {formatirovat_chislo_ru(data.vrp, 2)} млрд ₽")
     if data.srednyaya_zp:
-        lines.append(f"- Средняя зарплата: {formatirovat_chislo_ru(data.srednyaya_zp, 2)} ₽")
+        stroki.append(f"- Средняя зарплата: {formatirovat_chislo_ru(data.srednyaya_zp, 2)} ₽")
 
-    lines.append("- Источник: Росстат / ЕМИСС (fedstat.ru)")
-    return "\n".join(lines)
+    stroki.append("- Источник: Росстат / ЕМИСС (fedstat.ru)")
+    return "\n".join(stroki)
 
 
 async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
@@ -100,17 +100,17 @@ async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
     if "oshibka" in data:
         return f"{data['oshibka']}\n\nИспользуйте spisok_okrugov() для списка округов."
 
-    lines = [
+    stroki = [
         f"**{data['nazvanie']}** (код {data['kod']})",
         f"- Субъектов в округе: {data.get('kolichestvo_subiektov', 0)}",
     ]
     subiekty = data.get("subiekty", [])
     if subiekty:
-        lines.append(f"- Субъекты: {', '.join(subiekty[:5])}")
+        stroki.append(f"- Субъекты: {', '.join(subiekty[:5])}")
         if len(subiekty) > 5:
-            lines.append(f"  и ещё {len(subiekty) - 5} субъектов")
+            stroki.append(f"  и ещё {len(subiekty) - 5} субъектов")
 
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def pokazateli_rosstata(ctx: Context) -> str:
@@ -121,9 +121,9 @@ async def pokazateli_rosstata(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка показателей Росстата...")
 
-    rows = [(p["kod"], p["nazvanie"]) for p in KLYUCHEVYE_INDIKATORY]
+    stroki_tablitsy = [(p["kod"], p["nazvanie"]) for p in KLYUCHEVYE_INDIKATORY]
     header = "**Основные показатели Росстата**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Показатель"], rows)
+    return header + tablitsa_v_markdown(["Код", "Показатель"], stroki_tablitsy)
 
 
 async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
@@ -147,17 +147,17 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
             f"Для запроса данных за {god or 'текущий период'} "
             f"используйте показатель 'ipcz' через API ЕМИСС."
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         ipcz_m = f"{d.get('ipcz_mesyac', '')}%" if d.get("ipcz_mesyac") else "—"
         ipcz_n = f"{d.get('ipcz_nakoplenny', '')}%" if d.get("ipcz_nakoplenny") else "—"
         ipcz_g = f"{d.get('ipcz_god', '')}%" if d.get("ipcz_god") else "—"
-        rows.append((d.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
+        stroki_tablitsy.append((d.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
     header = "**Инфляция в России (ИПЦ)**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["Период", "К мес.", "Накопл.", "К г/г"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -183,17 +183,17 @@ async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
             f"- Росстат: https://rosstat.gov.ru/statistics/population\n\n"
             f"Для получения конкретных данных используйте API ЕМИСС."
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         nas = formatirovat_chislo_ru(d["naselenie"], 0) if d.get("naselenie") else "—"
         rozh = f"{d.get('rozhdaemost', '')}‰" if d.get("rozhdaemost") else "—"
         sm = f"{d.get('smertnost', '')}‰" if d.get("smertnost") else "—"
-        rows.append((d.get("period", ""), nas, rozh, sm))
+        stroki_tablitsy.append((d.get("period", ""), nas, rozh, sm))
     header = f"**Демографические данные{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["Период", "Население", "Рожд.", "Смерт."],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -220,16 +220,16 @@ async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = Non
             f"Для получения конкретных данных используйте инструмент "
             f"с указанием кода региона и/или года."
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp else "—"
         vrp_pc = formatirovat_chislo_ru(d.vrp_na_dushu, 2) if d.vrp_na_dushu else "—"
-        rows.append((d.period, d.subiekt or "—", vrp_val, vrp_pc))
+        stroki_tablitsy.append((d.period, d.subiekt or "—", vrp_val, vrp_pc))
     header = f"**Валовой региональный продукт{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["Период", "Регион", "ВРП (млрд ₽)", "ВРП на душу (тыс. ₽)"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -256,16 +256,16 @@ async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None 
             f"Для получения конкретных данных используйте инструмент "
             f"с указанием кода региона и/или года."
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
         real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
-        rows.append((d.period, d.subiekt or "—", zp, real))
+        stroki_tablitsy.append((d.period, d.subiekt or "—", zp, real))
     header = f"**Средняя заработная плата{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["Период", "Регион", "Номин. (₽)", "Реальн. изм."],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -294,10 +294,12 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}"
         )
     sorted_data = sorted(data, key=lambda x: x.get("znachenie") or 0, reverse=True)
-    rows = []
+    stroki_tablitsy = []
     for i, d in enumerate(sorted_data, 1):
         val = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
-        rows.append((i, d.get("subiekt", "—"), d.get("kod", "—"), val, d.get("period", "—")))
+        stroki_tablitsy.append(
+            (i, d.get("subiekt", "—"), d.get("kod", "—"), val, d.get("period", "—"))
+        )
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
         pokazatel,
@@ -306,7 +308,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Регион", "Код", "Значение", "Период"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -355,16 +357,16 @@ async def indikator_dannye(
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}\n\n"
             f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         val = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
-        rows.append((d.period, d.subiekt or "—", val, d.edinitsa or "—"))
+        stroki_tablitsy.append((d.period, d.subiekt or "—", val, d.edinitsa or "—"))
     title = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
     header = f"**{title}**{filter_text}\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["Период", "Регион", "Значение", "Ед. изм."],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -395,16 +397,16 @@ async def otraslevaya_struktura_vrp(
             f"Разделы ОКВЭД: "
             + ", ".join(f"{o['kod']} — {o['nazvanie']}" for o in OTRASLEVAYA_STRUKTURA_VRP)
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         dolya = f"{d.dolya_vvp:.1f}%" if d.dolya_vvp is not None else "—"
         vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp is not None else "—"
-        rows.append((d.kod_okved, d.otrasl, vrp_val, dolya))
+        stroki_tablitsy.append((d.kod_okved, d.otrasl, vrp_val, dolya))
     header = f"**Отраслевая структура ВРП{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["ОКВЭД", "Отрасль", "ВРП (млрд ₽)", "Доля (%)"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -435,14 +437,14 @@ async def investitsii_po_vidam(
             f"Виды деятельности: "
             + ", ".join(f"{v['kod']} — {v['nazvanie']}" for v in VIDY_DEYATELNOSTI_INVESTITSII)
         )
-    rows = []
+    stroki_tablitsy = []
     for d in data:
         inv_val = formatirovat_chislo_ru(d.investitsii, 2) if d.investitsii is not None else "—"
         dolya = f"{d.dolya:.1f}%" if d.dolya is not None else "—"
-        rows.append((d.kod_okved, d.vid_deyatelnosti, inv_val, dolya))
+        stroki_tablitsy.append((d.kod_okved, d.vid_deyatelnosti, inv_val, dolya))
     header = f"**Инвестиции по видам деятельности{filter_text}**\n\n"
     header += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return header + tablitsa_v_markdown(
         ["ОКВЭД", "Вид деятельности", "Инвестиции (млрд ₽)", "Доля (%)"],
-        rows,
+        stroki_tablitsy,
     )

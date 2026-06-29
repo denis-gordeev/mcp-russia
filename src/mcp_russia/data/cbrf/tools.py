@@ -32,7 +32,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
     if not valyuty:
         return "Не удалось получить курсы валют ЦБ РФ."
 
-    rows = []
+    stroki_tablitsy = []
     for m in valyuty:
         change = ""
         if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
@@ -46,7 +46,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
         else:
             change = "—"
 
-        rows.append(
+        stroki_tablitsy.append(
             (
                 m.kod,
                 m.nazvanie,
@@ -59,7 +59,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
     header = "**Официальные курсы валют ЦБ РФ**\n\n"
     return header + tablitsa_v_markdown(
         ["Код", "Валюта", "Номинал", "Курс (₽)", "Изменение"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -84,7 +84,7 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
             f"Попробуйте один из основных: USD, EUR, CNY, GBP, JPY, CHF"
         )
 
-    lines = [
+    stroki = [
         f"**{valyuta.nazvanie}** ({valyuta.kod})",
         f"- Номинал: {valyuta.nominal}",
         f"- Курс: {formatirovat_chislo_ru(valyuta.znachenie, 4)} ₽",
@@ -96,16 +96,16 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
         prev = valyuta.predydushchee_znachenie
         pct = (diff / prev) * 100 if prev else 0
         prev_str = formatirovat_chislo_ru(valyuta.predydushchee_znachenie, 4)
-        lines.append(f"- Предыдущий: {prev_str} ₽")
+        stroki.append(f"- Предыдущий: {prev_str} ₽")
         pct_str = f"{znak}{formatirovat_chislo_ru(pct, 2)}%"
         diff_str = f"{znak}{formatirovat_chislo_ru(diff, 4)}"
-        lines.append(f"- Изменение: {diff_str} ({pct_str})")
+        stroki.append(f"- Изменение: {diff_str} ({pct_str})")
 
     if valyuta.data:
-        lines.append(f"- Дата: {valyuta.data}")
+        stroki.append(f"- Дата: {valyuta.data}")
 
-    lines.append("- Источник: Центральный банк Российской Федерации")
-    return "\n".join(lines)
+    stroki.append("- Источник: Центральный банк Российской Федерации")
+    return "\n".join(stroki)
 
 
 async def spisok_valyut(ctx: Context) -> str:
@@ -115,21 +115,23 @@ async def spisok_valyut(ctx: Context) -> str:
         Список всех доступных валют с кодами и названиями.
     """
     await ctx.info("Запрос списка валют ЦБ РФ...")
-    result = await client.poluchit_vse_valyuty()
-    valute_data = result.get("Valute", {})
+    rezultat = await client.poluchit_vse_valyuty()
+    valute_data = rezultat.get("Valute", {})
 
-    rows = []
-    for code, entry in sorted(valute_data.items()):
-        name = entry.get("Name", code)
-        nominal = entry.get("Nominal", 1)
-        value = entry.get("Value", 0)
+    stroki_tablitsy = []
+    for code, zapis in sorted(valute_data.items()):
+        name = zapis.get("Name", code)
+        nominal = zapis.get("Nominal", 1)
+        value = zapis.get("Value", 0)
         znachenie_za_edinitsu = value / nominal if nominal else value
-        rows.append((code, name, str(nominal), formatirovat_chislo_ru(znachenie_za_edinitsu, 4)))
+        stroki_tablitsy.append(
+            (code, name, str(nominal), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
+        )
 
-    header = f"**Справочник валют ЦБ РФ** — {len(rows)} валют\n\n"
+    header = f"**Справочник валют ЦБ РФ** — {len(stroki_tablitsy)} валют\n\n"
     return header + tablitsa_v_markdown(
         ["Код", "Валюта", "Номинал", "Курс (₽)"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -155,7 +157,7 @@ async def konvertirovat_valyutu(
 
     rubles = dannye.znachenie * kolichestvo
 
-    lines = [
+    stroki = [
         "**Конвертация валюты**",
         f"- Сумма: {formatirovat_chislo_ru(kolichestvo, 2)} {dannye.kod} ({dannye.nazvanie})",
         f"- Курс ЦБ РФ: {formatirovat_chislo_ru(dannye.znachenie, 4)} ₽ за 1 {dannye.kod}",
@@ -164,9 +166,9 @@ async def konvertirovat_valyutu(
     ]
 
     if dannye.data:
-        lines.append(f"- Дата курса: {dannye.data}")
+        stroki.append(f"- Дата курса: {dannye.data}")
 
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = None) -> str:
@@ -192,7 +194,7 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
     if not valyuty:
         return "Не удалось получить данные для указанных валют."
 
-    rows = []
+    stroki_tablitsy = []
     for m in sorted(valyuty, key=lambda x: x.kod):
         change = "—"
         if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
@@ -200,12 +202,12 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
             pct = (diff / m.predydushchee_znachenie) * 100
             znak = "+" if pct >= 0 else ""
             change = f"{znak}{formatirovat_chislo_ru(pct, 2)}%"
-        rows.append((m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), change))
+        stroki_tablitsy.append((m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), change))
 
     header = "**Сравнение курсов валют ЦБ РФ**\n\n"
     return header + tablitsa_v_markdown(
         ["Код", "Валюта", "Курс (₽)", "Изменение"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -221,13 +223,13 @@ async def kursy_po_stranam(ctx: Context) -> str:
     if not valyuty:
         return "Не удалось получить данные."
 
-    rows = []
+    stroki_tablitsy = []
     for m in sorted(valyuty, key=lambda x: x.kod):
         strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == m.kod), m.kod)
-        rows.append((strana, m.kod, formatirovat_chislo_ru(m.znachenie, 4)))
+        stroki_tablitsy.append((strana, m.kod, formatirovat_chislo_ru(m.znachenie, 4)))
 
     header = "**Курсы валют основных стран-партнёров России**\n\n"
     return header + tablitsa_v_markdown(
         ["Страна", "Код", "Курс (₽)"],
-        rows,
+        stroki_tablitsy,
     )

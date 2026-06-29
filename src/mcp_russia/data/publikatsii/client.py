@@ -199,78 +199,78 @@ def _razobrat_zakon_proekt(data: Any) -> ZakonProekt | None:
 
 def _razobrat_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
     """Разбор поискового ответа открытых данных pravo.gov.ru в список OficialnayaPublikatsiya."""
-    items = data
+    elementy = data
     if isinstance(data, dict):
-        items = data.get("items", data.get("results", data.get("documents", [])))
-    if not isinstance(items, list):
+        elementy = data.get("items", data.get("results", data.get("documents", [])))
+    if not isinstance(elementy, list):
         return []
-    results = []
-    for item in items:
-        tip_code = str(item.get("type", item.get("tip_dokumenta", "")))
+    rezultaty = []
+    for element in elementy:
+        tip_code = str(element.get("type", element.get("tip_dokumenta", "")))
         tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
-        results.append(
+        rezultaty.append(
             OficialnayaPublikatsiya(
-                nazvanie=item.get("title", item.get("nazvanie", "")),
+                nazvanie=element.get("title", element.get("nazvanie", "")),
                 tip_dokumenta=tip_name,
-                data_publikatsii=item.get("publishDate", item.get("data_publikatsii", "")),
-                nomer_vypuska=item.get("issueNumber", item.get("nomer_vypuska", "")),
-                istochnik=item.get("source", item.get("istochnik", "pravo.gov.ru")),
-                rubrika=item.get("rubric", item.get("rubrika", "")),
-                annotaciya=item.get("annotation", item.get("annotaciya", "")),
-                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
+                data_publikatsii=element.get("publishDate", element.get("data_publikatsii", "")),
+                nomer_vypuska=element.get("issueNumber", element.get("nomer_vypuska", "")),
+                istochnik=element.get("source", element.get("istochnik", "pravo.gov.ru")),
+                rubrika=element.get("rubric", element.get("rubrika", "")),
+                annotaciya=element.get("annotation", element.get("annotaciya", "")),
+                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
             )
         )
-    return results
+    return rezultaty
 
 
 def _razobrat_izmeneniya(data: Any) -> list[IzmenenieAkta]:
     """Разбор ответа поправок открытых данных pravo.gov.ru в список IzmenenieAkta."""
-    items = data
+    elementy = data
     if isinstance(data, dict):
-        items = data.get("items", data.get("results", data.get("amendments", [])))
-    if not isinstance(items, list):
+        elementy = data.get("items", data.get("results", data.get("amendments", [])))
+    if not isinstance(elementy, list):
         return []
-    results = []
-    for item in items:
-        results.append(
+    rezultaty = []
+    for element in elementy:
+        rezultaty.append(
             IzmenenieAkta(
-                akt_nomer=item.get("actNumber", item.get("akt_nomer", "")),
-                akt_nazvanie=item.get("actTitle", item.get("akt_nazvanie", "")),
-                izmenenie_nomer=item.get("amendmentNumber", item.get("izmenenie_nomer", "")),
-                izmenenie_data=item.get("amendmentDate", item.get("izmenenie_data", "")),
-                izmenenie_opisanie=item.get(
-                    "amendmentDescription", item.get("izmenenie_opisanie", "")
+                akt_nomer=element.get("actNumber", element.get("akt_nomer", "")),
+                akt_nazvanie=element.get("actTitle", element.get("akt_nazvanie", "")),
+                izmenenie_nomer=element.get("amendmentNumber", element.get("izmenenie_nomer", "")),
+                izmenenie_data=element.get("amendmentDate", element.get("izmenenie_data", "")),
+                izmenenie_opisanie=element.get(
+                    "amendmentDescription", element.get("izmenenie_opisanie", "")
                 ),
-                data_vstupleniya_v_silu=item.get(
-                    "effectiveDate", item.get("data_vstupleniya_v_silu", "")
+                data_vstupleniya_v_silu=element.get(
+                    "effectiveDate", element.get("data_vstupleniya_v_silu", "")
                 ),
-                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
+                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
             )
         )
-    return results
+    return rezultaty
 
 
 def _rezultaty_poiska(data: Any) -> list[NormativnyyAkt]:
     """Разбор результатов поиска открытых данных pravo.gov.ru в список NormativnyyAkt."""
-    items = data
+    elementy = data
     if isinstance(data, dict):
-        items = data.get("items", data.get("results", data.get("documents", [])))
-    if not isinstance(items, list):
+        elementy = data.get("items", data.get("results", data.get("documents", [])))
+    if not isinstance(elementy, list):
         return []
-    results = []
-    for item in items:
-        tip_code = str(item.get("type", item.get("tip", "")))
+    rezultaty = []
+    for element in elementy:
+        tip_code = str(element.get("type", element.get("tip", "")))
         tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
-        results.append(
+        rezultaty.append(
             NormativnyyAkt(
-                nomer=item.get("number", item.get("nomer", "")),
-                nazvanie=item.get("title", item.get("nazvanie", "")),
+                nomer=element.get("number", element.get("nomer", "")),
+                nazvanie=element.get("title", element.get("nazvanie", "")),
                 tip=tip_name,
-                data_prinyatiya=item.get("date", item.get("data_prinyatiya", "")),
-                sostoyanie=item.get("status", ""),
-                otrysl=item.get("branch", item.get("otrysl", "")),
-                kratkoe_opisanie=item.get("description", item.get("kratkoe_opisanie", "")),
-                tekst_ssylka=item.get("url", item.get("tekst_ssylka", "")),
+                data_prinyatiya=element.get("date", element.get("data_prinyatiya", "")),
+                sostoyanie=element.get("status", ""),
+                otrysl=element.get("branch", element.get("otrysl", "")),
+                kratkoe_opisanie=element.get("description", element.get("kratkoe_opisanie", "")),
+                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
             )
         )
-    return results
+    return rezultaty

@@ -102,8 +102,8 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_poluchit(url, headers={"Accept": "application/json"})
-        feature = result.get("feature", result)
+        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        feature = rezultat.get("feature", rezultat)
         attrs = feature.get("attrs", feature)
         return _razobrat_obekt(kadastrovyy_nomer, attrs)
     except Exception:
@@ -121,8 +121,8 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_poluchit(url, headers={"Accept": "application/json"})
-        feature = result.get("feature", result)
+        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        feature = rezultat.get("feature", rezultat)
         attrs = feature.get("attrs", feature)
 
         stoimost = None
@@ -167,15 +167,15 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
     """
     try:
         url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        result = await http_poluchit(url, headers={"Accept": "application/json"})
-        feature = result.get("feature", result)
+        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        feature = rezultat.get("feature", rezultat)
         rights = feature.get("rights", [])
         if not rights:
             return []
 
-        parsed = []
+        razobrannye = []
         for r in rights:
-            parsed.append(
+            razobrannye.append(
                 {
                     "tip_prava": r.get("type", "") or r.get("name", ""),
                     "sobstvennik": r.get("owner", ""),
@@ -183,7 +183,7 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
                     "nomer_registratsii": r.get("reg_number", ""),
                 }
             )
-        return parsed
+        return razobrannye
     except Exception:
         return []
 
@@ -199,12 +199,12 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
     """
     try:
         url = f"{PKK_SEARCH_URL}"
-        result = await http_poluchit(
+        rezultat = await http_poluchit(
             url,
             params={"sqo": zapros},
             headers={"Accept": "application/json"},
         )
-        features = result.get("features", [])
+        features = rezultat.get("features", [])
         if not features:
             return []
 

@@ -20,7 +20,7 @@ async def spisok_senatorov(ctx: Context) -> str:
     senatory = await client.poisk_senatorov()
     if not senatory:
         return "Сенаторы не найдены.\n\nАктуальные данные доступны на: https://sovfed.ru/senators"
-    rows = [
+    stroki_tablitsy = [
         (
             s.get("nomer", ""),
             s.get("familiya", ""),
@@ -33,7 +33,7 @@ async def spisok_senatorov(ctx: Context) -> str:
     header = f"**Сенаторы Совета Федерации РФ** — найдено: {len(senatory)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Фамилия", "Имя", "Регион", "Комитет"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -54,19 +54,19 @@ async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
             f"Проверьте идентификатор на сайте Совета Федерации: sovfed.ru/senators"
         )
     fio = f"{data.get('familiya', '')} {data.get('imya', '')} {data.get('otchestvo', '')}".strip()
-    lines = [
+    stroki = [
         f"**{fio}** (№ {data.get('nomer', identifikator_senatora)})",
         f"- Регион: {data.get('subiekt', '')}",
         f"- Должность: {data.get('dolzhnost', '')}",
     ]
     if data.get("komitet"):
-        lines.append(f"- Комитет: {data['komitet']}")
+        stroki.append(f"- Комитет: {data['komitet']}")
     if data.get("frakciya"):
-        lines.append(f"- Фракция: {data['frakciya']}")
+        stroki.append(f"- Фракция: {data['frakciya']}")
     if data.get("data_naznacheniya"):
-        lines.append(f"- Дата назначения: {data['data_naznacheniya']}")
-    lines.append(f"- Источник: {data.get('istochnik', 'sovfed.ru')}")
-    return "\n".join(lines)
+        stroki.append(f"- Дата назначения: {data['data_naznacheniya']}")
+    stroki.append(f"- Источник: {data.get('istochnik', 'sovfed.ru')}")
+    return "\n".join(stroki)
 
 
 async def spisok_komitetov(ctx: Context) -> str:
@@ -74,7 +74,7 @@ async def spisok_komitetov(ctx: Context) -> str:
     await ctx.info("Запрос списка комитетов...")
     komitety_api = await client.spisok_komitetov()
     if komitety_api:
-        rows = [
+        stroki_tablitsy = [
             (
                 k.get("nazvanie", ""),
                 k.get("predsedatel", ""),
@@ -83,11 +83,11 @@ async def spisok_komitetov(ctx: Context) -> str:
             for k in komitety_api
         ]
         header = "**Комитеты Совета Федерации РФ**\n\n"
-        return header + tablitsa_v_markdown(["Комитет", "Председатель", "Членов"], rows)
+        return header + tablitsa_v_markdown(["Комитет", "Председатель", "Членов"], stroki_tablitsy)
     komitety = client.poluchit_spisok_komitetov()
-    rows = [(k["kod"], k["nazvanie"]) for k in komitety]
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
-    return header + tablitsa_v_markdown(["Код", "Комитет"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
 
 async def spisok_komissiy(ctx: Context) -> str:
@@ -95,7 +95,7 @@ async def spisok_komissiy(ctx: Context) -> str:
     await ctx.info("Запрос списка комиссий...")
     komissii_api = await client.spisok_komissiy()
     if komissii_api:
-        rows = [
+        stroki_tablitsy = [
             (
                 k.get("nazvanie", ""),
                 k.get("predsedatel", ""),
@@ -104,11 +104,13 @@ async def spisok_komissiy(ctx: Context) -> str:
             for k in komissii_api
         ]
         header = "**Комиссии Совета Федерации РФ**\n\n"
-        return header + tablitsa_v_markdown(["Комиссия", "Председатель", "Членов"], rows)
+        return header + tablitsa_v_markdown(
+            ["Комиссия", "Председатель", "Членов"], stroki_tablitsy
+        )
     komissii = client.poluchit_spisok_komissiy()
-    rows = [(k["kod"], k["nazvanie"]) for k in komissii]
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komissii]
     header = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
-    return header + tablitsa_v_markdown(["Код", "Комиссия"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комиссия"], stroki_tablitsy)
 
 
 async def poisk_zakonoproektov(
@@ -131,17 +133,17 @@ async def poisk_zakonoproektov(
         god=god,
     )
     if not zakonoproekty:
-        filters = []
+        filtry = []
         if sostoyanie:
-            filters.append(f"статус: {sostoyanie}")
+            filtry.append(f"статус: {sostoyanie}")
         if god:
-            filters.append(f"год: {god}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"год: {god}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Законопроекты{filter_text} не найдены.\n\n"
             f"Данные доступны на: https://sovfed.ru/bills"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             z.get("nomer", ""),
             z.get("nazvanie", "")[:50],
@@ -153,7 +155,7 @@ async def poisk_zakonoproektov(
     header = f"**Законопроекты Совета Федерации РФ** — найдено: {len(zakonoproekty)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Название", "Статус", "Дата рассмотрения"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -171,7 +173,7 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
     if not zasedaniya:
         god_text = f" за {god} год" if god else ""
         return f"Заседания{god_text} не найдены.\n\nДанные доступны на: https://sovfed.ru/sessions"
-    rows = [
+    stroki_tablitsy = [
         (
             z.get("nomer", ""),
             z.get("data", ""),
@@ -183,5 +185,5 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
     header = f"**Заседания Совета Федерации РФ** — найдено: {len(zasedaniya)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Дата", "Статус", "Повестка"],
-        rows,
+        stroki_tablitsy,
     )

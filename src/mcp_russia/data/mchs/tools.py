@@ -18,36 +18,36 @@ async def spisok_vidov_chs(ctx: Context) -> str:
     """Получить список видов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка видов ЧС...")
     vidy = client.poluchit_spisok_vidov_chs()
-    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды чрезвычайных ситуаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид ЧС"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид ЧС"], stroki_tablitsy)
 
 
 async def spisok_klassov_chs(ctx: Context) -> str:
     """Получить список классов чрезвычайных ситуаций."""
     await ctx.info("Запрос списка классов ЧС...")
     klassy = client.poluchit_spisok_klassov_chs()
-    rows = [(k["kod"], k["nazvanie"]) for k in klassy]
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in klassy]
     header = "**Классы чрезвычайных ситуаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Класс ЧС"], rows)
+    return header + tablitsa_v_markdown(["Код", "Класс ЧС"], stroki_tablitsy)
 
 
 async def spisok_vidov_pojarov(ctx: Context) -> str:
     """Получить список видов пожаров."""
     await ctx.info("Запрос списка видов пожаров...")
     vidy = client.poluchit_spisok_vidov_pozharov()
-    rows = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     header = "**Виды пожаров**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид пожара"], rows)
+    return header + tablitsa_v_markdown(["Код", "Вид пожара"], stroki_tablitsy)
 
 
 async def spisok_tipov_opasnosti(ctx: Context) -> str:
     """Получить список типов опасностей."""
     await ctx.info("Запрос списка типов опасностей...")
     tipy = client.poluchit_spisok_tipov_opasnosti()
-    rows = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     header = "**Типы опасностей для предупреждений МЧС**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип опасности"], rows)
+    return header + tablitsa_v_markdown(["Код", "Тип опасности"], stroki_tablitsy)
 
 
 async def statistika_pojarov(
@@ -75,7 +75,7 @@ async def statistika_pojarov(
     if not pojarov_data:
         static = client.poluchit_statistiku_pozharov_staticheskie()
         if static:
-            lines = [
+            stroki = [
                 "**Статистика пожаров в РФ (2023, резервные данные)**\n",
                 f"- Всего пожаров: {static['vsego_pojarov']:,}",
                 f"- Погибших: {static['pogibshikh']:,}",
@@ -94,15 +94,17 @@ async def statistika_pojarov(
                     .replace("sibirskiy", "Сибирский")
                     .replace("dalnevostochnyy", "Дальневосточный")
                 )
-                lines.append(f"| {fo_name} | {fo_data['pojarov']:,} | {fo_data['pogibshikh']:,} |")
-            lines.append("\nАктуальные данные доступны на: https://mchs.gov.ru/monitoring")
-            return "\n".join(lines)
+                stroki.append(
+                    f"| {fo_name} | {fo_data['pojarov']:,} | {fo_data['pogibshikh']:,} |"
+                )
+            stroki.append("\nАктуальные данные доступны на: https://mchs.gov.ru/monitoring")
+            return "\n".join(stroki)
         return (
             "Статистика пожаров не найдена.\n\n"
             "Актуальные данные доступны на: https://fires.ru и https://mchs.gov.ru"
         )
 
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nomer", ""),
             p.get("data", ""),
@@ -116,7 +118,7 @@ async def statistika_pojarov(
     header = f"**Статистика пожаров** — найдено: {len(pojarov_data)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Дата", "Регион", "Вид", "Погибших", "Пострадавших"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -143,19 +145,19 @@ async def poisk_chs(
         klass_chs=klass_chs,
     )
     if not chs_data:
-        filters = []
+        filtry = []
         if subiekt:
-            filters.append(f"регион: {subiekt}")
+            filtry.append(f"регион: {subiekt}")
         if vid_chs:
-            filters.append(f"вид: {vid_chs}")
+            filtry.append(f"вид: {vid_chs}")
         if klass_chs:
-            filters.append(f"класс: {klass_chs}")
-        filter_text = f" ({', '.join(filters)})" if filters else ""
+            filtry.append(f"класс: {klass_chs}")
+        filter_text = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Чрезвычайные ситуации{filter_text} не найдены.\n\n"
             f"Мониторинг ЧС доступен на: https://mchs.gov.ru/monitoring"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             c.get("nomer", ""),
             c.get("vid_chs", ""),
@@ -170,7 +172,7 @@ async def poisk_chs(
     header = f"**Чрезвычайные ситуации** — найдено: {len(chs_data)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Вид", "Класс", "Дата", "Регион", "Погибших", "Пострадавших"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -193,7 +195,7 @@ async def radiatsionnyy_monitoring(
             "Данные радиационного мониторинга не найдены.\n\n"
             "Актуальные данные доступны на: https://mchs.gov.ru/monitoring/radiation"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             m.get("stantsiya", ""),
             m.get("subiekt", "")[:30],
@@ -207,7 +209,7 @@ async def radiatsionnyy_monitoring(
     header = f"**Радиационный мониторинг** — станций: {len(monitoring_data)}\n\n"
     return header + tablitsa_v_markdown(
         ["Станция", "Регион", "Уровень", "Ед.", "Норма", "Дата"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -230,7 +232,7 @@ async def gidrologicheskaya_obstanovka(
             "Данные гидрологической обстановки не найдены.\n\n"
             "Актуальные данные доступны на: https://mchs.gov.ru/monitoring/hydro"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             g.get("reka", ""),
             g.get("punkt_nablyudeniya", "")[:30],
@@ -244,7 +246,7 @@ async def gidrologicheskaya_obstanovka(
     header = f"**Гидрологическая обстановка** — пунктов: {len(gidro_data)}\n\n"
     return header + tablitsa_v_markdown(
         ["Река", "Пункт", "Уровень (см)", "Опасный (см)", "Тенденция", "Дата"],
-        rows,
+        stroki_tablitsy,
     )
 
 
@@ -272,7 +274,7 @@ async def preduprezhdeniya_chs(
             "Действующие предупреждения о ЧС не найдены.\n\n"
             "Мониторинг предупреждений: https://mchs.gov.ru/monitoring"
         )
-    rows = [
+    stroki_tablitsy = [
         (
             p.get("nomer", ""),
             p.get("tip_opasnosti", ""),
@@ -286,5 +288,5 @@ async def preduprezhdeniya_chs(
     header = f"**Предупреждения о ЧС** — активно: {len(preduprezhdeniya)}\n\n"
     return header + tablitsa_v_markdown(
         ["№", "Тип опасности", "Регион", "Описание", "Начало", "Окончание"],
-        rows,
+        stroki_tablitsy,
     )

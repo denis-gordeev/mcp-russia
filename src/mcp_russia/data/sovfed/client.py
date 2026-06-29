@@ -45,9 +45,9 @@ async def poisk_senatorov(
         if komitet:
             params["committee"] = komitet
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_senator(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
 
@@ -55,9 +55,9 @@ async def poisk_senatorov(
         url = f"{DATA_GOV_RU_SOVFED}"
         params: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_senator(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("data.gov.ru API недоступен")
 
@@ -100,9 +100,9 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
     try:
         url = f"{SOVFED_API_BASE}/committees"
         data = await http_poluchit(url, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_komitet(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комитетов")
 
@@ -114,9 +114,9 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
     try:
         url = f"{SOVFED_API_BASE}/commissions"
         data = await http_poluchit(url, timeout=15.0)
-        items = _izvlech_spisok(data)
-        if items:
-            return [_razobrat_komitet(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        if elementy:
+            return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комиссий")
 
@@ -144,8 +144,8 @@ async def poisk_zakonoproektov(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_zakonoproekt(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_zakonoproekt(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
         return []
@@ -166,8 +166,8 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_zasedanie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_zasedanie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
         return []

@@ -98,9 +98,9 @@ async def http_poluchit(
     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
         for attempt in range(retries + 1):
             try:
-                response = await client.get(url, params=params)
+                otvet = await client.get(url, params=params)
 
-                if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
+                if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
                         wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                         logger.warning(
@@ -108,18 +108,18 @@ async def http_poluchit(
                             attempt + 1,
                             retries,
                             url,
-                            response.status_code,
+                            otvet.status_code,
                             wait,
                         )
                         await asyncio.sleep(wait)
                         continue
                     raise OshibkaHttpClienta(
                         f"Запрос к {url} не удался после {retries + 1} попыток "
-                        f"(последняя: HTTP {response.status_code})"
+                        f"(последняя: HTTP {otvet.status_code})"
                     )
 
-                response.raise_for_status()
-                return response.json()
+                otvet.raise_for_status()
+                return otvet.json()
 
             except httpx.HTTPStatusError as exc:
                 raise OshibkaHttpClienta(
@@ -179,9 +179,9 @@ async def http_otpravit(
     async with sozdat_klienta(timeout=timeout, headers=headers) as client:
         for attempt in range(retries + 1):
             try:
-                response = await client.post(url, json=json_body, params=params)
+                otvet = await client.post(url, json=json_body, params=params)
 
-                if response.status_code in _KODY_STATUSOV_DLYA_POVTORA:
+                if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if attempt < retries:
                         wait = BAZA_EKSPON_ZADERZH * (2**attempt)
                         logger.warning(
@@ -189,18 +189,18 @@ async def http_otpravit(
                             attempt + 1,
                             retries,
                             url,
-                            response.status_code,
+                            otvet.status_code,
                             wait,
                         )
                         await asyncio.sleep(wait)
                         continue
                     raise OshibkaHttpClienta(
                         f"Запрос к {url} не удался после {retries + 1} попыток "
-                        f"(последняя: HTTP {response.status_code})"
+                        f"(последняя: HTTP {otvet.status_code})"
                     )
 
-                response.raise_for_status()
-                return response.json()
+                otvet.raise_for_status()
+                return otvet.json()
 
             except httpx.HTTPStatusError as exc:
                 raise OshibkaHttpClienta(

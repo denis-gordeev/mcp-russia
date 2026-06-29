@@ -18,15 +18,15 @@ logger = logging.getLogger(__name__)
 
 def _razobrat_fio(fio: str) -> dict[str, str]:
     """Разбор ФИО на компоненты (фамилия, имя, отчество)."""
-    parts = fio.strip().split()
-    result: dict[str, str] = {}
-    if len(parts) >= 1:
-        result["lastName"] = parts[0]
-    if len(parts) >= 2:
-        result["firstName"] = parts[1]
-    if len(parts) >= 3:
-        result["patronymic"] = " ".join(parts[2:])
-    return result
+    chasti = fio.strip().split()
+    rezultat: dict[str, str] = {}
+    if len(chasti) >= 1:
+        rezultat["lastName"] = chasti[0]
+    if len(chasti) >= 2:
+        rezultat["firstName"] = chasti[1]
+    if len(chasti) >= 3:
+        rezultat["patronymic"] = " ".join(chasti[2:])
+    return rezultat
 
 
 def _razobrat_proizvodstva(data: Any) -> list[dict[str, Any]]:
@@ -36,30 +36,30 @@ def _razobrat_proizvodstva(data: Any) -> list[dict[str, Any]]:
     inner = data.get("data", data)
     if not isinstance(inner, dict):
         return []
-    result = inner.get("result", [])
-    if not isinstance(result, list):
+    rezultat = inner.get("result", [])
+    if not isinstance(rezultat, list):
         return []
-    records = []
-    for item in result:
-        if not isinstance(item, dict):
+    zapisi = []
+    for element in rezultat:
+        if not isinstance(element, dict):
             continue
-        records.append(_normalizovat_proizvodstvo(item))
-    return records
+        zapisi.append(_normalizovat_proizvodstvo(element))
+    return zapisi
 
 
-def _normalizovat_proizvodstvo(item: dict[str, Any]) -> dict[str, Any]:
+def _normalizovat_proizvodstvo(element: dict[str, Any]) -> dict[str, Any]:
     """Нормализация записи исполнительного производства."""
     return {
-        "nomer": item.get("number", item.get("номер", "")),
-        "dolzhnik": item.get("name", item.get("должник", item.get("nameRaw", ""))),
-        "data_vozbuzhdeniya": item.get("date", item.get("дата_возбуждения", "")),
-        "subiekt": item.get("subject", item.get("предмет", "")),
-        "summa": item.get("sum", item.get("сумма", "")),
-        "otdel_pristavov": item.get("department", item.get("отдел", "")),
-        "pristav": item.get("bailiff", item.get("пристав", "")),
-        "okonchanie_ip": item.get("ip_end", item.get("окончание", "")),
-        "osnovanie": item.get("basis", item.get("основание", "")),
-        "subiekt_rf": item.get("region", item.get("регион", "")),
+        "nomer": element.get("number", element.get("номер", "")),
+        "dolzhnik": element.get("name", element.get("должник", element.get("nameRaw", ""))),
+        "data_vozbuzhdeniya": element.get("date", element.get("дата_возбуждения", "")),
+        "subiekt": element.get("subject", element.get("предмет", "")),
+        "summa": element.get("sum", element.get("сумма", "")),
+        "otdel_pristavov": element.get("department", element.get("отдел", "")),
+        "pristav": element.get("bailiff", element.get("пристав", "")),
+        "okonchanie_ip": element.get("ip_end", element.get("окончание", "")),
+        "osnovanie": element.get("basis", element.get("основание", "")),
+        "subiekt_rf": element.get("region", element.get("регион", "")),
     }
 
 
@@ -79,13 +79,13 @@ async def poisk_proizvodstv(
         Список исполнительных производств.
     """
     fio_parts = _razobrat_fio(fio)
-    body: dict[str, Any] = {"is": fio_parts}
+    telo: dict[str, Any] = {"is": fio_parts}
     if data_rozhdeniya:
-        body["is"]["date"] = data_rozhdeniya
+        telo["is"]["date"] = data_rozhdeniya
     if subiekt:
-        body["is"]["region"] = subiekt
+        telo["is"]["region"] = subiekt
     try:
-        data = await http_otpravit(FSSP_SEARCH_API, json_body=body)
+        data = await http_otpravit(FSSP_SEARCH_API, json_body=telo)
         return _razobrat_proizvodstva(data)
     except Exception:
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
@@ -119,11 +119,11 @@ async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
     """
     try:
         data = await http_poluchit(f"{FSSP_IP_BASE}", params={"number": nomer})
-        records = _razobrat_proizvodstva(data)
-        for r in records:
+        zapisi = _razobrat_proizvodstva(data)
+        for r in zapisi:
             if r.get("nomer") == nomer:
                 return r
-        return records[0] if records else None
+        return zapisi[0] if zapisi else None
     except Exception:
         logger.exception("Ошибка при получении информации о производстве %s", nomer)
         return None

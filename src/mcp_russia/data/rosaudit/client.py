@@ -50,8 +50,8 @@ async def poisk_kontrolnyh_meropriyatiy(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_kontrolnoe_meropriyatie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_kontrolnoe_meropriyatie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске контрольных мероприятий")
         return []
@@ -147,8 +147,8 @@ async def poisk_narusheniy(
         if god:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=15.0)
-        items = _izvlech_spisok(data)
-        return [_razobrat_narushenie(p) for p in items if isinstance(p, dict)]
+        elementy = _izvlech_spisok(data)
+        return [_razobrat_narushenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске нарушений")
         return []

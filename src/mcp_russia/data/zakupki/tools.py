@@ -53,17 +53,17 @@ async def poisk_zakupok(
 
     if not zakupki:
         header = "**Результаты поиска в ЕИС закупок**\n\n"
-        filters = []
+        filtry = []
         if zapros:
-            filters.append(f"Запрос: {zapros}")
+            filtry.append(f"Запрос: {zapros}")
         if zakon:
-            filters.append(f"Закон: {zakon}")
+            filtry.append(f"Закон: {zakon}")
         if subiekt:
-            filters.append(f"Регион: {subiekt}")
+            filtry.append(f"Регион: {subiekt}")
         if sostoyanie:
-            filters.append(f"Статус: {sostoyanie}")
-        if filters:
-            header += "Фильтры: " + ", ".join(filters) + "\n\n"
+            filtry.append(f"Статус: {sostoyanie}")
+        if filtry:
+            header += "Фильтры: " + ", ".join(filtry) + "\n\n"
 
         header += (
             "Не удалось получить данные через API ЕИС.\n\n"
@@ -78,7 +78,7 @@ async def poisk_zakupok(
         )
         return header
 
-    rows = [
+    stroki_tablitsy = [
         (z.nomer, z.nazvanie[:60], z.zakon, z.sostoyanie, formatirovat_rubli(z.nachalnaya_tsena))
         for z in zakupki[:30]
     ]
@@ -86,7 +86,7 @@ async def poisk_zakupok(
     header += f"Найдено: {len(zakupki)} закупок\n\n"
     return (
         header
-        + tablitsa_v_markdown(["Номер", "Название", "Закон", "Статус", "Цена"], rows)
+        + tablitsa_v_markdown(["Номер", "Название", "Закон", "Статус", "Цена"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
 
@@ -112,29 +112,29 @@ async def info_zakupki(
             f"Используйте poisk_zakupok() для поиска."
         )
 
-    lines = [
+    stroki = [
         f"**Закупка {zakupka.nomer}**",
         f"- Название: {zakupka.nazvanie}",
     ]
     if zakupka.zakon:
-        lines.append(f"- Закон: {zakupka.zakon}")
+        stroki.append(f"- Закон: {zakupka.zakon}")
     if zakupka.sposob:
-        lines.append(f"- Способ: {zakupka.sposob}")
+        stroki.append(f"- Способ: {zakupka.sposob}")
     if zakupka.sostoyanie:
-        lines.append(f"- Статус: {zakupka.sostoyanie}")
+        stroki.append(f"- Статус: {zakupka.sostoyanie}")
     if zakupka.nachalnaya_tsena:
-        lines.append(f"- Начальная цена: {formatirovat_rubli(zakupka.nachalnaya_tsena)}")
+        stroki.append(f"- Начальная цена: {formatirovat_rubli(zakupka.nachalnaya_tsena)}")
     if zakupka.data_publikatsii:
-        lines.append(f"- Дата публикации: {zakupka.data_publikatsii}")
+        stroki.append(f"- Дата публикации: {zakupka.data_publikatsii}")
     if zakupka.srok_podachi:
-        lines.append(f"- Срок подачи заявок: {zakupka.srok_podachi}")
+        stroki.append(f"- Срок подачи заявок: {zakupka.srok_podachi}")
     if zakupka.nazvanie_organizatora:
-        lines.append(f"- Заказчик: {zakupka.nazvanie_organizatora}")
+        stroki.append(f"- Заказчик: {zakupka.nazvanie_organizatora}")
     if zakupka.organizator_inn:
-        lines.append(f"- ИНН заказчика: {zakupka.organizator_inn}")
+        stroki.append(f"- ИНН заказчика: {zakupka.organizator_inn}")
 
-    lines.append("\nИсточник: ЕИС закупок / zakupki.gov.ru")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: ЕИС закупок / zakupki.gov.ru")
+    return "\n".join(stroki)
 
 
 async def poisk_kontraktov(
@@ -166,7 +166,7 @@ async def poisk_kontraktov(
             "Реестр контрактов доступен на: https://zakupki.gov.ru"
         )
 
-    rows = [
+    stroki_tablitsy = [
         (
             k.nomer,
             k.nazvanie_podryadchika[:40],
@@ -179,7 +179,7 @@ async def poisk_kontraktov(
     header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
     return (
         header
-        + tablitsa_v_markdown(["Номер", "Поставщик", "Цена", "Статус", "Дата"], rows)
+        + tablitsa_v_markdown(["Номер", "Поставщик", "Цена", "Статус", "Дата"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
 
@@ -202,25 +202,25 @@ async def info_zakazchika(
     if not zakazchik:
         return f"Заказчик с ИНН {inn} не найден в ЕИС.\n\nПроверьте корректность ИНН."
 
-    lines = [
+    stroki = [
         f"**Заказчик: {zakazchik.nazvanie}**",
         f"- ИНН: {zakazchik.inn}",
     ]
     if zakazchik.kpp:
-        lines.append(f"- КПП: {zakazchik.kpp}")
+        stroki.append(f"- КПП: {zakazchik.kpp}")
     if zakazchik.subiekt:
-        lines.append(f"- Регион: {zakazchik.subiekt}")
+        stroki.append(f"- Регион: {zakazchik.subiekt}")
     if zakazchik.adres:
-        lines.append(f"- Адрес: {zakazchik.adres}")
+        stroki.append(f"- Адрес: {zakazchik.adres}")
     if zakazchik.zakupki_kolichestvo:
-        lines.append(f"- Количество закупок: {zakazchik.zakupki_kolichestvo}")
+        stroki.append(f"- Количество закупок: {zakazchik.zakupki_kolichestvo}")
     if zakazchik.obshchie_raskhody:
-        lines.append(
+        stroki.append(
             f"- Общая сумма контрактов: {formatirovat_rubli(zakazchik.obshchie_raskhody)}"
         )
 
-    lines.append("\nИсточник: ЕГРЮЛ / egrul.nalog.ru")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: ЕГРЮЛ / egrul.nalog.ru")
+    return "\n".join(stroki)
 
 
 async def info_postavshchika(
@@ -242,22 +242,22 @@ async def info_postavshchika(
         return f"Поставщик с ИНН {inn} не найден.\n\nПроверьте корректность ИНН."
 
     status = "Добросовестный" if postavshchik.is_dobrosovestny else "В реестре недобросовестных"
-    lines = [
+    stroki = [
         f"**Поставщик: {postavshchik.nazvanie}**",
         f"- ИНН: {postavshchik.inn}",
     ]
     if postavshchik.subiekt:
-        lines.append(f"- Регион: {postavshchik.subiekt}")
-    lines.append(f"- Статус: {status}")
+        stroki.append(f"- Регион: {postavshchik.subiekt}")
+    stroki.append(f"- Статус: {status}")
     if postavshchik.kontraktov_vyigrano:
-        lines.append(f"- Выиграно контрактов: {postavshchik.kontraktov_vyigrano}")
+        stroki.append(f"- Выиграно контрактов: {postavshchik.kontraktov_vyigrano}")
     if postavshchik.kontraktov_ispolneno:
-        lines.append(f"- Исполнено контрактов: {postavshchik.kontraktov_ispolneno}")
+        stroki.append(f"- Исполнено контрактов: {postavshchik.kontraktov_ispolneno}")
     if postavshchik.obshchiy_dokhod:
-        lines.append(f"- Общая выручка: {formatirovat_rubli(postavshchik.obshchiy_dokhod)}")
+        stroki.append(f"- Общая выручка: {formatirovat_rubli(postavshchik.obshchiy_dokhod)}")
 
-    lines.append("\nИсточник: ЕГРЮЛ/ЕГРИП / egrul.nalog.ru")
-    return "\n".join(lines)
+    stroki.append("\nИсточник: ЕГРЮЛ/ЕГРИП / egrul.nalog.ru")
+    return "\n".join(stroki)
 
 
 async def statusy_zakupok(ctx: Context) -> str:
@@ -269,9 +269,9 @@ async def statusy_zakupok(ctx: Context) -> str:
     await ctx.info("Запрос справочника статусов закупок...")
     statusy = client.poluchit_statusy_zakupok()
 
-    rows = [(s["kod"], s["nazvanie"]) for s in statusy]
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
     header = "**Статусы закупок в ЕИС**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Статус"], rows)
+    return header + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
 
 async def sposoby_zakupok(ctx: Context) -> str:
@@ -283,9 +283,9 @@ async def sposoby_zakupok(ctx: Context) -> str:
     await ctx.info("Запрос справочника способов закупок...")
     sposoby = client.poluchit_sposoby_zakupok()
 
-    rows = [(s["kod"], s["nazvanie"]) for s in sposoby]
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sposoby]
     header = "**Способы определения поставщиков**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Способ закупки"], rows)
+    return header + tablitsa_v_markdown(["Код", "Способ закупки"], stroki_tablitsy)
 
 
 async def plany_zakupok(
@@ -314,7 +314,7 @@ async def plany_zakupok(
             f"Для поиска планов по конкретному заказчику укажите ИНН организатора."
         )
 
-    rows = [
+    stroki_tablitsy = [
         (
             p.nazvanie_organizatora[:40],
             p.organizator_inn,
@@ -327,6 +327,6 @@ async def plany_zakupok(
     header += f"Найдено: {len(plany)}\n\n"
     return (
         header
-        + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], rows)
+        + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )

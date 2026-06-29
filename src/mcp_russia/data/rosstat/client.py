@@ -131,17 +131,17 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
-            items = data.get("data", [])
-            if isinstance(items, list):
+            elementy = data.get("data", [])
+            if isinstance(elementy, list):
                 return [
                     {
-                        "period": item.get("date", item.get("period", "")),
-                        "ipcz_mesyac": item.get("monthlyRate") or item.get("value"),
-                        "ipcz_nakoplenny": item.get("cumulativeRate"),
-                        "ipcz_god": item.get("yearlyRate"),
+                        "period": element.get("date", element.get("period", "")),
+                        "ipcz_mesyac": element.get("monthlyRate") or element.get("value"),
+                        "ipcz_nakoplenny": element.get("cumulativeRate"),
+                        "ipcz_god": element.get("yearlyRate"),
                     }
-                    for item in items
-                    if isinstance(item, dict)
+                    for element in elementy
+                    if isinstance(element, dict)
                 ]
         return []
     except Exception:
@@ -166,18 +166,18 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
             params["region"] = subiekt
         data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
-            items = data.get("data", [])
-            if isinstance(items, list):
+            elementy = data.get("data", [])
+            if isinstance(elementy, list):
                 return [
                     {
-                        "period": item.get("date", item.get("period", "")),
-                        "naselenie": item.get("population") or item.get("value"),
-                        "rozhdaemost": item.get("birthRate"),
-                        "smertnost": item.get("deathRate"),
-                        "estestvenny_prirost": item.get("naturalGrowth"),
+                        "period": element.get("date", element.get("period", "")),
+                        "naselenie": element.get("population") or element.get("value"),
+                        "rozhdaemost": element.get("birthRate"),
+                        "smertnost": element.get("deathRate"),
+                        "estestvenny_prirost": element.get("naturalGrowth"),
                     }
-                    for item in items
-                    if isinstance(item, dict)
+                    for element in elementy
+                    if isinstance(element, dict)
                 ]
         return []
     except Exception:
@@ -205,27 +205,27 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
-            items = data.get("data", [])
-            if isinstance(items, list):
-                results = []
-                for item in items:
-                    if not isinstance(item, dict):
+            elementy = data.get("data", [])
+            if isinstance(elementy, list):
+                rezultaty = []
+                for element in elementy:
+                    if not isinstance(element, dict):
                         continue
                     region_name = ""
-                    reg_code = item.get("region", subiekt)
+                    reg_code = element.get("region", subiekt)
                     if reg_code:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
                             region_name = ri["nazvanie"]
-                    results.append(
+                    rezultaty.append(
                         VRPDannye(
-                            period=item.get("date", item.get("period", "")),
+                            period=element.get("date", element.get("period", "")),
                             subiekt=region_name,
-                            vrp=item.get("value"),
-                            vrp_na_dushu=item.get("perCapita"),
+                            vrp=element.get("value"),
+                            vrp_na_dushu=element.get("perCapita"),
                         )
                     )
-                return results
+                return rezultaty
         return []
     except Exception:
         logger.exception("Ошибка при получении данных о ВРП")
@@ -252,27 +252,27 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
             params["year"] = god
         data = await http_poluchit(url, params=params, timeout=20.0)
         if isinstance(data, dict):
-            items = data.get("data", [])
-            if isinstance(items, list):
-                results = []
-                for item in items:
-                    if not isinstance(item, dict):
+            elementy = data.get("data", [])
+            if isinstance(elementy, list):
+                rezultaty = []
+                for element in elementy:
+                    if not isinstance(element, dict):
                         continue
                     region_name = ""
-                    reg_code = item.get("region", subiekt)
+                    reg_code = element.get("region", subiekt)
                     if reg_code:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                         if ri:
                             region_name = ri["nazvanie"]
-                    results.append(
+                    rezultaty.append(
                         DannyeZarplaty(
-                            period=item.get("date", item.get("period", "")),
+                            period=element.get("date", element.get("period", "")),
                             subiekt=region_name,
-                            nominalnaya_zp=item.get("value"),
-                            realnaya_zp_izmenenie=item.get("realChange"),
+                            nominalnaya_zp=element.get("value"),
+                            realnaya_zp_izmenenie=element.get("realChange"),
                         )
                     )
-                return results
+                return rezultaty
         return []
     except Exception:
         logger.exception("Ошибка при получении данных о заработной плате")
@@ -295,27 +295,27 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
         url = f"{EMISS_API_BASE}/data/{emiss_code}"
         data = await http_poluchit(url, params={"groupByRegion": "true"}, timeout=20.0)
         if isinstance(data, dict):
-            items = data.get("data", [])
-            if isinstance(items, list):
-                results = []
-                for item in items:
-                    if not isinstance(item, dict):
+            elementy = data.get("data", [])
+            if isinstance(elementy, list):
+                rezultaty = []
+                for element in elementy:
+                    if not isinstance(element, dict):
                         continue
-                    region_code = str(item.get("region", item.get("okato", "")))
-                    region_name = item.get("regionName", "")
+                    region_code = str(element.get("region", element.get("okato", "")))
+                    region_name = element.get("regionName", "")
                     if not region_name:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == region_code), None)
                         if ri:
                             region_name = ri["nazvanie"]
-                    results.append(
+                    rezultaty.append(
                         {
                             "subiekt": region_name,
                             "kod": region_code,
-                            "znachenie": item.get("value"),
-                            "period": item.get("date", item.get("period", "")),
+                            "znachenie": element.get("value"),
+                            "period": element.get("date", element.get("period", "")),
                         }
                     )
-                return results
+                return rezultaty
         return []
     except Exception:
         logger.exception("Ошибка при получении сравнения регионов по показателю %s", pokazatel)
@@ -352,30 +352,30 @@ async def poluchit_indikator_dannye(
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return []
-        items = data.get("data", [])
-        if not isinstance(items, list):
+        elementy = data.get("data", [])
+        if not isinstance(elementy, list):
             return []
-        results = []
-        for item in items:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in elementy:
+            if not isinstance(element, dict):
                 continue
             region_name = ""
-            reg_code = item.get("region", subiekt)
+            reg_code = element.get("region", subiekt)
             if reg_code:
                 ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
                 if ri:
                     region_name = ri["nazvanie"]
-            results.append(
+            rezultaty.append(
                 IndikatorDannye(
                     kod_emiss=emiss_code,
-                    nazvanie=imya_indikatora or item.get("name", kod),
-                    period=item.get("date", item.get("period", "")),
-                    znachenie=item.get("value"),
-                    edinitsa=item.get("unit", ""),
+                    nazvanie=imya_indikatora or element.get("name", kod),
+                    period=element.get("date", element.get("period", "")),
+                    znachenie=element.get("value"),
+                    edinitsa=element.get("unit", ""),
                     subiekt=region_name,
                 )
             )
-        return results
+        return rezultaty
     except Exception:
         logger.exception("Ошибка при получении данных индикатора %s", kod)
         return []
@@ -386,27 +386,27 @@ def _razobrat_otvet_indikatora(data: Any, code: str) -> list[PokazatelRosstata]:
     if not isinstance(data, dict):
         return []
 
-    items = data.get("data", [])
-    if not isinstance(items, list):
+    elementy = data.get("data", [])
+    if not isinstance(elementy, list):
         return []
 
-    results = []
-    for item in items:
-        if not isinstance(item, dict):
+    rezultaty = []
+    for element in elementy:
+        if not isinstance(element, dict):
             continue
         try:
-            results.append(
+            rezultaty.append(
                 PokazatelRosstata(
                     kod=code,
-                    nazvanie=item.get("name", code),
-                    znachenie=float(item.get("value", 0)),
-                    edinitsa=item.get("unit", ""),
-                    data=item.get("date", ""),
+                    nazvanie=element.get("name", code),
+                    znachenie=float(element.get("value", 0)),
+                    edinitsa=element.get("unit", ""),
+                    data=element.get("date", ""),
                 )
             )
         except (ValueError, TypeError):
             continue
-    return results
+    return rezultaty
 
 
 def poluchit_spisok_subiektov() -> list[dict[str, str]]:
@@ -443,34 +443,34 @@ async def poluchit_otraslevuyu_strukturu_vrp(
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return _rezerv_otraslevaya_struktura(subiekt, god)
-        items = data.get("data", [])
-        if not isinstance(items, list) or not items:
+        elementy = data.get("data", [])
+        if not isinstance(elementy, list) or not elementy:
             return _rezerv_otraslevaya_struktura(subiekt, god)
         region_name = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
                 region_name = ri["nazvanie"]
-        results = []
-        for item in items:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in elementy:
+            if not isinstance(element, dict):
                 continue
-            okved = item.get("okved", item.get("code", ""))
+            okved = element.get("okved", element.get("code", ""))
             otrasl = next(
                 (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == okved),
-                item.get("name", okved),
+                element.get("name", okved),
             )
-            results.append(
+            rezultaty.append(
                 OtraslevayaStrukturaVRP(
-                    subiekt=region_name or item.get("regionName", ""),
-                    period=item.get("date", item.get("period", god or "")),
+                    subiekt=region_name or element.get("regionName", ""),
+                    period=element.get("date", element.get("period", god or "")),
                     otrasl=otrasl,
                     kod_okved=okved,
-                    dolya_vvp=item.get("share") or item.get("dolya"),
-                    vrp=item.get("value"),
+                    dolya_vvp=element.get("share") or element.get("dolya"),
+                    vrp=element.get("value"),
                 )
             )
-        return results
+        return rezultaty
     except Exception:
         logger.exception("Ошибка при получении отраслевой структуры ВРП")
         return _rezerv_otraslevaya_struktura(subiekt, god)
@@ -526,34 +526,34 @@ async def poluchit_investitsii_po_vidam(
         data = await http_poluchit(url, params=params, timeout=20.0)
         if not isinstance(data, dict):
             return _rezerv_investitsii_po_vidam(subiekt, god)
-        items = data.get("data", [])
-        if not isinstance(items, list) or not items:
+        elementy = data.get("data", [])
+        if not isinstance(elementy, list) or not elementy:
             return _rezerv_investitsii_po_vidam(subiekt, god)
         region_name = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
                 region_name = ri["nazvanie"]
-        results = []
-        for item in items:
-            if not isinstance(item, dict):
+        rezultaty = []
+        for element in elementy:
+            if not isinstance(element, dict):
                 continue
-            okved = item.get("okved", item.get("activityCode", ""))
+            okved = element.get("okved", element.get("activityCode", ""))
             vid = next(
                 (v["nazvanie"] for v in VIDY_DEYATELNOSTI_INVESTITSII if v["kod"] == okved),
-                item.get("activityName", item.get("name", okved)),
+                element.get("activityName", element.get("name", okved)),
             )
-            results.append(
+            rezultaty.append(
                 InvestitsiiPoVidam(
-                    subiekt=region_name or item.get("regionName", ""),
-                    period=item.get("date", item.get("period", god or "")),
+                    subiekt=region_name or element.get("regionName", ""),
+                    period=element.get("date", element.get("period", god or "")),
                     vid_deyatelnosti=vid,
                     kod_okved=okved,
-                    investitsii=item.get("value"),
-                    dolya=item.get("share") or item.get("dolya"),
+                    investitsii=element.get("value"),
+                    dolya=element.get("share") or element.get("dolya"),
                 )
             )
-        return results
+        return rezultaty
     except Exception:
         logger.exception("Ошибка при получении инвестиций по видам деятельности")
         return _rezerv_investitsii_po_vidam(subiekt, god)

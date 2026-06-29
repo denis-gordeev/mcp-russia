@@ -47,7 +47,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
             f"Для доступа к API может потребоваться токен (DUMA_API_TOKEN)."
         )
 
-    rows = [
+    stroki_tablitsy = [
         (str(d.identifikator), f"{d.фамилия} {d.имя} {d.отчество}".strip(), d.фракция, d.комитет)
         for d in deputats[:50]
     ]
@@ -58,7 +58,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     header += "\n\n"
     return (
         header
-        + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], rows)
+        + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
 
@@ -81,22 +81,22 @@ async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
             f"Используйте spisok_deputatov() для поиска."
         )
 
-    lines = [
+    stroki = [
         f"**{deputat.фамилия} {deputat.имя} {deputat.отчество}**",
         f"- ID: {deputat.identifikator}",
     ]
     if deputat.фракция:
-        lines.append(f"- Фракция: {deputat.фракция}")
+        stroki.append(f"- Фракция: {deputat.фракция}")
     if deputat.комитет:
-        lines.append(f"- Комитет: {deputat.комитет}")
+        stroki.append(f"- Комитет: {deputat.комитет}")
     if deputat.регион:
-        lines.append(f"- Регион: {deputat.регион}")
+        stroki.append(f"- Регион: {deputat.регион}")
     if deputat.созыв:
-        lines.append(f"- Созыв: {deputat.созыв}")
+        stroki.append(f"- Созыв: {deputat.созыв}")
 
-    lines.append("\nИсточник: api.duma.gov.ru / Госдума ФС РФ")
+    stroki.append("\nИсточник: api.duma.gov.ru / Госдума ФС РФ")
 
-    return "\n".join(lines)
+    return "\n".join(stroki)
 
 
 async def spisok_frakcii(ctx: Context) -> str:
@@ -108,9 +108,9 @@ async def spisok_frakcii(ctx: Context) -> str:
     await ctx.info("Запрос списка фракций Госдумы...")
     frakcii = client.poluchit_fraktsii()
 
-    rows = [(f["kod"], f["nazvanie"]) for f in frakcii]
+    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in frakcii]
     header = "**Фракции Государственной Думы**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Фракция"], rows)
+    return header + tablitsa_v_markdown(["Код", "Фракция"], stroki_tablitsy)
 
 
 async def spisok_komitetov(ctx: Context) -> str:
@@ -122,9 +122,9 @@ async def spisok_komitetov(ctx: Context) -> str:
     await ctx.info("Запрос списка комитетов Госдумы...")
     komitety = client.poluchit_komitety()
 
-    rows = [(k["kod"], k["nazvanie"]) for k in komitety]
+    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
     header = "**Комитеты Государственной Думы**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Комитет"], rows)
+    return header + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
 
 async def spisok_sozyvov(ctx: Context) -> str:
@@ -136,9 +136,9 @@ async def spisok_sozyvov(ctx: Context) -> str:
     await ctx.info("Запрос списка созывов Госдумы...")
     sozyvy = client.poluchit_sozyvy()
 
-    rows = [(s["kod"], s["nazvanie"]) for s in sozyvy]
+    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sozyvy]
     header = "**Созывы Государственной Думы**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Созыв"], rows)
+    return header + tablitsa_v_markdown(["Код", "Созыв"], stroki_tablitsy)
 
 
 async def zakonoproekty(
@@ -171,12 +171,12 @@ async def zakonoproekty(
             f"используйте API СОЗД."
         )
 
-    rows = [(b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in bills]
+    stroki_tablitsy = [(b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in bills]
     header = "**Законопроекты Государственной Думы**\n\n"
     header += f"Найдено: {len(bills)} законопроектов\n\n"
     return (
         header
-        + tablitsa_v_markdown(["Номер", "Название", "Статус", "Дата внесения"], rows)
+        + tablitsa_v_markdown(["Номер", "Название", "Статус", "Дата внесения"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
 
@@ -209,7 +209,7 @@ async def golosovaniya(
             "Для доступа к API может потребоваться токен (DUMA_API_TOKEN)."
         )
 
-    rows = [
+    stroki_tablitsy = [
         (v.zakonoproekt_identifikator, v.nazvanie[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
         for v in votes
     ]
@@ -217,6 +217,6 @@ async def golosovaniya(
     header += f"Найдено: {len(votes)} голосований\n\n"
     return (
         header
-        + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], rows)
+        + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
