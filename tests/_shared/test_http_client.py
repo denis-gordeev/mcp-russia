@@ -25,11 +25,11 @@ class TestSozdatKlienta:
         assert str(client.base_url) == "https://www.cbr.ru"
 
     def test_polzovatelskiy_taimaut(self) -> None:
-        client = sozdat_klienta(timeout=5.0)
+        client = sozdat_klienta(taimaut=5.0)
         assert client.timeout.connect == 5.0
 
     def test_polzovatelskie_zagolovki_obedineny(self) -> None:
-        client = sozdat_klienta(headers={"X-Api-Key": "secret"})
+        client = sozdat_klienta(zagolovki={"X-Api-Key": "secret"})
         assert client.headers["x-api-key"] == "secret"
         assert "mcp-russia" in client.headers["user-agent"]
 
@@ -54,7 +54,7 @@ class TestHttpPoluchit:
         respx.get("https://api.example.com/search").mock(
             return_value=httpx.Response(200, json=[1, 2, 3])
         )
-        result = await http_poluchit("https://api.example.com/search", params={"q": "test"})
+        result = await http_poluchit("https://api.example.com/search", parametry={"q": "test"})
         assert result == [1, 2, 3]
 
     @pytest.mark.asyncio

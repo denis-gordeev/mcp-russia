@@ -66,20 +66,20 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
         Информация о проверке (тип, объект, даты, статус, результат).
     """
     await ctx.info(f"Запрос проверки № {nomer_proverki}...")
-    data = await client.info_proverki(nomer_proverki)
-    if not data:
+    dannye = await client.info_proverki(nomer_proverki)
+    if not dannye:
         return f"Проверка № {nomer_proverki} не найдена."
     stroki = [
-        f"**Проверка** № {data.get('nomer', nomer_proverki)}",
-        f"- Тип проверки: {data.get('tip_proverki', '')}",
-        f"- Организация: {data.get('obekt', '')}",
-        f"- ИНН: {data.get('inn', '')}",
-        f"- Дата начала: {data.get('data_nachala', '')}",
-        f"- Дата окончания: {data.get('data_okonchaniya', '')}",
-        f"- Статус: {data.get('sostoyanie', '')}",
-        f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
-        f"- Результат: {data.get('rezultat', '')}",
-        f"- Источник: {data.get('istochnik', 'proverki.rospotrebnadzor.ru')}",
+        f"**Проверка** № {dannye.get('nomer', nomer_proverki)}",
+        f"- Тип проверки: {dannye.get('tip_proverki', '')}",
+        f"- Организация: {dannye.get('obekt', '')}",
+        f"- ИНН: {dannye.get('inn', '')}",
+        f"- Дата начала: {dannye.get('data_nachala', '')}",
+        f"- Дата окончания: {dannye.get('data_okonchaniya', '')}",
+        f"- Статус: {dannye.get('sostoyanie', '')}",
+        f"- Выявлено нарушений: {dannye.get('vyavleno_narusheniy', 0)}",
+        f"- Результат: {dannye.get('rezultat', '')}",
+        f"- Источник: {dannye.get('istochnik', 'proverki.rospotrebnadzor.ru')}",
     ]
     return "\n".join(stroki)
 

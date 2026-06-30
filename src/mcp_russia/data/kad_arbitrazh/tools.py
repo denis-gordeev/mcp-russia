@@ -47,7 +47,7 @@ async def poisk_del(
         kategoriya=kategoriya,
     )
 
-    header = "**Картотека арбитражных дел**\n\n"
+    zagolovok = "**Картотека арбитражных дел**\n\n"
 
     filtry = []
     if nomer:
@@ -62,15 +62,15 @@ async def poisk_del(
         filtry.append(f"Категория: {kategoriya}")
 
     if filtry:
-        header += "Фильтры: " + ", ".join(filtry) + "\n\n"
+        zagolovok += "Фильтры: " + ", ".join(filtry) + "\n\n"
 
     if not dela:
-        header += (
+        zagolovok += (
             "Дела не найдены.\n\n"
             "Источник: Картотека арбитражных дел (kad.arbitr.ru)\n"
             "Попробуйте уточнить параметры поиска."
         )
-        return header
+        return zagolovok
 
     stroki_tablitsy = []
     for d in dela[:20]:
@@ -85,13 +85,13 @@ async def poisk_del(
             )
         )
 
-    header += f"Найдено дел: {len(dela)}\n\n"
-    header += tablitsa_v_markdown(
+    zagolovok += f"Найдено дел: {len(dela)}\n\n"
+    zagolovok += tablitsa_v_markdown(
         ["Номер дела", "Категория", "Статус", "Суд", "Сумма иска"],
         stroki_tablitsy,
     )
-    header += "\n\nИсточник: Картотека арбитражных дел (kad.arbitr.ru)"
-    return header
+    zagolovok += "\n\nИсточник: Картотека арбитражных дел (kad.arbitr.ru)"
+    return zagolovok
 
 
 async def info_dela(
@@ -152,8 +152,10 @@ async def akty_po_delu(
         )
 
     stroki_tablitsy = [(a.tip_akta, a.data_akta, a.sud, a.rezolyutsiya[:50]) for a in akty]
-    header = f"**Судебные акты по делу {nomer_dela}**\n\n"
-    return header + tablitsa_v_markdown(["Тип акта", "Дата", "Суд", "Резолюция"], stroki_tablitsy)
+    zagolovok = f"**Судебные акты по делу {nomer_dela}**\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Тип акта", "Дата", "Суд", "Резолюция"], stroki_tablitsy
+    )
 
 
 async def storony_dela(
@@ -194,8 +196,8 @@ async def spravochnik_kategoriy(ctx: Context) -> str:
     kategorii = client.poluchit_kategorii_del()
 
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
-    header = "**Категории арбитражных дел**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
+    zagolovok = "**Категории арбитражных дел**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
 async def spravochnik_instantsiy(ctx: Context) -> str:
@@ -208,8 +210,8 @@ async def spravochnik_instantsiy(ctx: Context) -> str:
     instantsii = client.poluchit_instantsii()
 
     stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in instantsii]
-    header = "**Инстанции арбитражных судов**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Инстанция"], stroki_tablitsy)
+    zagolovok = "**Инстанции арбитражных судов**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Инстанция"], stroki_tablitsy)
 
 
 async def spravochnik_statusov(ctx: Context) -> str:
@@ -222,8 +224,8 @@ async def spravochnik_statusov(ctx: Context) -> str:
     statusy = client.poluchit_statusy_del()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
-    header = "**Статусы судебных дел**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
+    zagolovok = "**Статусы судебных дел**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
 
 async def spravochnik_aktov(ctx: Context) -> str:
@@ -236,5 +238,5 @@ async def spravochnik_aktov(ctx: Context) -> str:
     tipy = client.poluchit_tipy_aktov()
 
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы судебных актов**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип акта"], stroki_tablitsy)
+    zagolovok = "**Типы судебных актов**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип акта"], stroki_tablitsy)

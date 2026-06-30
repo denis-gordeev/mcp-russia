@@ -32,8 +32,8 @@ async def tipy_vyborov(ctx: Context) -> str:
     tipy = await client.tipy_vyborov()
 
     stroki_tablitsy = [(str(t.kod), t.nazvanie) for t in tipy]
-    header = "**Типы выборов в РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
+    zagolovok = "**Типы выборов в РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
 
 
 async def subyekty_rf(ctx: Context) -> str:
@@ -48,8 +48,8 @@ async def subyekty_rf(ctx: Context) -> str:
     subyekty = await client.subyekty_rf()
 
     stroki_tablitsy = [(s.kod, s.nazvanie) for s in subyekty]
-    header = f"**Субъекты Российской Федерации** — {len(stroki_tablitsy)} субъектов\n\n"
-    return header + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
+    zagolovok = f"**Субъекты Российской Федерации** — {len(stroki_tablitsy)} субъектов\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 
 
 async def dolzhnosti_federal(ctx: Context) -> str:
@@ -65,8 +65,8 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     dolzhnosti = await client.dolzhnosti_federal()
 
     stroki_tablitsy = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
-    header = "**Федеральные избирательные должности**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Должность", "Уровень"], stroki_tablitsy)
+    zagolovok = "**Федеральные избирательные должности**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Должность", "Уровень"], stroki_tablitsy)
 
 
 async def partii_rf(ctx: Context) -> str:
@@ -79,8 +79,8 @@ async def partii_rf(ctx: Context) -> str:
     partii = await client.partii_rf()
 
     stroki_tablitsy = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
-    header = f"**Политические партии РФ** — {len(stroki_tablitsy)} партий\n\n"
-    return header + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], stroki_tablitsy)
+    zagolovok = f"**Политические партии РФ** — {len(stroki_tablitsy)} партий\n\n"
+    return zagolovok + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], stroki_tablitsy)
 
 
 async def gody_vyborov(ctx: Context) -> str:
@@ -124,8 +124,10 @@ async def spisok_vyborov(
         (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("klyuch", ""))
         for v in vybory
     ]
-    header = f"**Найдено выборов: {len(vybory)}**\n\n"
-    return header + tablitsa_v_markdown(["Наименование", "Год", "Дата", "Ключ"], stroki_tablitsy)
+    zagolovok = f"**Найдено выборов: {len(vybory)}**\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Наименование", "Год", "Дата", "Ключ"], stroki_tablitsy
+    )
 
 
 async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str:
@@ -147,8 +149,8 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     stroki_tablitsy = [
         (k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty
     ]
-    header = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["ID", "ФИО", "Партия", "Должность", "Статус"],
         stroki_tablitsy,
     )
@@ -232,8 +234,8 @@ async def rezultaty_vyborov(
         )
         for r in rezultaty
     ]
-    header = f"**Результаты выборов {god} года**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Результаты выборов {god} года**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Кандидат", "Партия", "Голоса", "%", "Избран"],
         stroki_tablitsy,
     )

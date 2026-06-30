@@ -16,7 +16,7 @@ def _mock_ctx():
 
 class TestParserRezultatyPoiska:
     def test_razbor_spiska(self) -> None:
-        data = [
+        dannye = [
             {
                 "CaseNumber": "А40-12345/2024",
                 "Court": "АС г. Москвы",
@@ -27,7 +27,7 @@ class TestParserRezultatyPoiska:
                 "ClaimSum": 1000000,
             }
         ]
-        results = kad_client._razobrat_rezultaty_poiska(data)
+        results = kad_client._razobrat_rezultaty_poiska(dannye)
         assert len(results) == 1
         assert results[0].nomer == "А40-12345/2024"
         assert results[0].nazvanie_suda == "АС г. Москвы"
@@ -35,7 +35,7 @@ class TestParserRezultatyPoiska:
         assert "ООО Альфа" in results[0].istorcy
 
     def test_razbor_slovarya_s_ekzemplyarami(self) -> None:
-        data = {
+        dannye = {
             "Instances": [
                 {
                     "CaseInfo": {
@@ -49,7 +49,7 @@ class TestParserRezultatyPoiska:
                 }
             ]
         }
-        results = kad_client._razobrat_rezultaty_poiska(data)
+        results = kad_client._razobrat_rezultaty_poiska(dannye)
         assert len(results) == 1
         assert results[0].nomer == "А77-5678/2023"
 
@@ -73,7 +73,7 @@ class TestParserRezultatyPoiska:
 
 class TestParserKartochkaDela:
     def test_razbor_polnyy(self) -> None:
-        data = {
+        dannye = {
             "CaseInfo": {
                 "CaseNumber": "А40-11111/2025",
                 "Court": "АС г. Москвы",
@@ -87,7 +87,7 @@ class TestParserKartochkaDela:
                 "ClaimSum": 5000000,
             }
         }
-        result = kad_client._razobrat_kartochka_dela(data)
+        result = kad_client._razobrat_kartochka_dela(dannye)
         assert result is not None
         assert result.nomer == "А40-11111/2025"
         assert result.kategoriya == "Банкротство"
@@ -100,7 +100,7 @@ class TestParserKartochkaDela:
 
 class TestParserAkty:
     def test_razbor_dokumentov(self) -> None:
-        data = {
+        dannye = {
             "Documents": [
                 {
                     "Document": {
@@ -115,7 +115,7 @@ class TestParserAkty:
                 }
             ]
         }
-        results = kad_client._razobrat_akty(data, "А40-12345/2024")
+        results = kad_client._razobrat_akty(dannye, "А40-12345/2024")
         assert len(results) == 1
         assert results[0].tip_akta == "Решение"
         assert results[0].delo_nomer == "А40-12345/2024"
@@ -126,11 +126,11 @@ class TestParserAkty:
 
 class TestParserStorony:
     def test_razbor_storon(self) -> None:
-        data = {
+        dannye = {
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
             "Defendants": ["ООО Бета", "Минфин РФ"],
         }
-        results = kad_client._razobrat_storony(data, "А40-12345/2024")
+        results = kad_client._razobrat_storony(dannye, "А40-12345/2024")
         assert len(results) == 4
         istorcy = [s for s in results if s.tip == "истец"]
         otvetchiki = [s for s in results if s.tip == "ответчик"]
@@ -138,11 +138,11 @@ class TestParserStorony:
         assert len(otvetchiki) == 2
 
     def test_razbor_strokovykh_storon(self) -> None:
-        data = {
+        dannye = {
             "Plaintiffs": "ООО Альфа, ООО Гамма",
             "Defendants": "ООО Бета",
         }
-        results = kad_client._razobrat_storony(data, "А40-12345/2024")
+        results = kad_client._razobrat_storony(dannye, "А40-12345/2024")
         assert len(results) == 3
 
 

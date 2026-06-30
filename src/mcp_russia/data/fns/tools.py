@@ -78,32 +78,32 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
     """
     if ctx:
         await ctx.info(f"Запрос данных ЕГРЮЛ по ИНН {inn}...")
-    data = await client.poluchit_organizaciyu(inn)
+    dannye = await client.poluchit_organizaciyu(inn)
 
-    if not data:
+    if not dannye:
         return (
             f"Организация с ИНН '{inn}' не найдена.\n\n"
             f"Проверьте корректность ИНН на egrul.nalog.ru"
         )
 
-    stroki = [f"**{data.nazvanie}**\n"]
-    stroki.append(f"- ИНН: {data.inn}")
-    if data.ogrn:
-        stroki.append(f"- ОГРН: {data.ogrn}")
-    if data.polnoe_nazvanie and data.polnoe_nazvanie != data.nazvanie:
-        stroki.append(f"- Полное название: {data.polnoe_nazvanie}")
-    if data.yuridicheskiy_adres:
-        stroki.append(f"- Юридический адрес: {data.yuridicheskiy_adres}")
-    if data.data_registracii:
-        stroki.append(f"- Дата регистрации: {data.data_registracii}")
-    if data.sostoyanie:
-        stroki.append(f"- Статус: {data.sostoyanie}")
-    if data.vid_deyatelnosti:
-        stroki.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
-    if data.rukovoditel:
-        stroki.append(f"- Руководитель: {data.rukovoditel}")
-    if data.ustroyennyy_kapital:
-        stroki.append(f"- Уставный капитал: {data.ustroyennyy_kapital}")
+    stroki = [f"**{dannye.nazvanie}**\n"]
+    stroki.append(f"- ИНН: {dannye.inn}")
+    if dannye.ogrn:
+        stroki.append(f"- ОГРН: {dannye.ogrn}")
+    if dannye.polnoe_nazvanie and dannye.polnoe_nazvanie != dannye.nazvanie:
+        stroki.append(f"- Полное название: {dannye.polnoe_nazvanie}")
+    if dannye.yuridicheskiy_adres:
+        stroki.append(f"- Юридический адрес: {dannye.yuridicheskiy_adres}")
+    if dannye.data_registracii:
+        stroki.append(f"- Дата регистрации: {dannye.data_registracii}")
+    if dannye.sostoyanie:
+        stroki.append(f"- Статус: {dannye.sostoyanie}")
+    if dannye.vid_deyatelnosti:
+        stroki.append(f"- Основной вид деятельности: {dannye.vid_deyatelnosti}")
+    if dannye.rukovoditel:
+        stroki.append(f"- Руководитель: {dannye.rukovoditel}")
+    if dannye.ustroyennyy_kapital:
+        stroki.append(f"- Уставный капитал: {dannye.ustroyennyy_kapital}")
     stroki.append("- Источник: ФНС / ЕГРЮЛ (egrul.nalog.ru)")
     return "\n".join(stroki)
 
@@ -121,21 +121,21 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
     """
     if ctx:
         await ctx.info(f"Запрос данных ЕГРИП по ИНН {inn}...")
-    data = await client.poluchit_ip(inn)
+    dannye = await client.poluchit_ip(inn)
 
-    if not data:
+    if not dannye:
         return f"ИП с ИНН '{inn}' не найден.\n\nПроверьте корректность ИНН на egrul.nalog.ru"
 
-    stroki = [f"**{data.fio}** (ИП)\n"]
-    stroki.append(f"- ИНН: {data.inn}")
-    if data.ogrnip:
-        stroki.append(f"- ОГРНИП: {data.ogrnip}")
-    if data.data_registracii:
-        stroki.append(f"- Дата регистрации: {data.data_registracii}")
-    if data.sostoyanie:
-        stroki.append(f"- Статус: {data.sostoyanie}")
-    if data.vid_deyatelnosti:
-        stroki.append(f"- Основной вид деятельности: {data.vid_deyatelnosti}")
+    stroki = [f"**{dannye.fio}** (ИП)\n"]
+    stroki.append(f"- ИНН: {dannye.inn}")
+    if dannye.ogrnip:
+        stroki.append(f"- ОГРНИП: {dannye.ogrnip}")
+    if dannye.data_registracii:
+        stroki.append(f"- Дата регистрации: {dannye.data_registracii}")
+    if dannye.sostoyanie:
+        stroki.append(f"- Статус: {dannye.sostoyanie}")
+    if dannye.vid_deyatelnosti:
+        stroki.append(f"- Основной вид деятельности: {dannye.vid_deyatelnosti}")
     stroki.append("- Источник: ФНС / ЕГРИП (egrul.nalog.ru)")
     return "\n".join(stroki)
 
@@ -154,18 +154,18 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
     """
     if ctx:
         await ctx.info(f"Запрос данных о проверках по ИНН {inn}...")
-    data = await client.poluchit_proverki(inn)
+    dannye = await client.poluchit_proverki(inn)
 
-    if not data:
+    if not dannye:
         return (
             f"Данные о налоговых проверках для ИНН '{inn}' недоступны.\n\n"
             f"Информация о проверках доступна через Личный кабинет налогоплательщика: lkfl2.nalog.ru\n\n"
             f"Планы проверок: pb.nalog.ru"
         )
 
-    stroki_tablitsy = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in data]
-    header = f"**Налоговые проверки** — ИНН {inn}\n\n"
-    return header + tablitsa_v_markdown(["Тип", "Период", "Статус"], stroki_tablitsy)
+    stroki_tablitsy = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in dannye]
+    zagolovok = f"**Налоговые проверки** — ИНН {inn}\n\n"
+    return zagolovok + tablitsa_v_markdown(["Тип", "Период", "Статус"], stroki_tablitsy)
 
 
 async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None = None) -> str:
@@ -183,9 +183,9 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
     """
     if ctx:
         await ctx.info(f"Запрос данных о начислениях по ИНН {inn}...")
-    data = await client.poluchit_nachisleniya(inn, period)
+    dannye = await client.poluchit_nachisleniya(inn, period)
 
-    if not data:
+    if not dannye:
         period_text = f" за период {period}" if period else ""
         return (
             f"Данные о налоговых начислениях для ИНН '{inn}'{period_text} недоступны.\n\n"
@@ -194,7 +194,7 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
 
     stroki_tablitsy = [
         (n.vid_naloga, n.period, formatirovat_chislo_ru(n.summa, 2) if n.summa else "—")
-        for n in data
+        for n in dannye
     ]
-    header = f"**Налоговые начисления** — ИНН {inn}\n\n"
-    return header + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], stroki_tablitsy)
+    zagolovok = f"**Налоговые начисления** — ИНН {inn}\n\n"
+    return zagolovok + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], stroki_tablitsy)

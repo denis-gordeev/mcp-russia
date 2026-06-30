@@ -34,21 +34,21 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        url = f"{PROVERKI_API_BASE}/api/procedure"
-        params: dict[str, Any] = {}
+        adres_url = f"{PROVERKI_API_BASE}/api/procedure"
+        parametry: dict[str, Any] = {}
         if inn_tseli:
-            params["targetInn"] = inn_tseli
+            parametry["targetInn"] = inn_tseli
         if nazvanie_tseli:
-            params["targetName"] = nazvanie_tseli
+            parametry["targetName"] = nazvanie_tseli
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
-        if isinstance(data, list):
-            return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_proverku(p) for p in dannye if isinstance(p, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске проверок")
@@ -65,10 +65,10 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         Данные о проверке или None.
     """
     try:
-        url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_proverku(data)
+        adres_url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_proverku(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении проверки №%s", nomer)
@@ -91,19 +91,19 @@ async def plan_proverok(
         Список запланированных проверок.
     """
     try:
-        url = f"{PROVERKI_API_BASE}/api/plan"
-        params: dict[str, Any] = {"organ": organ}
+        adres_url = f"{PROVERKI_API_BASE}/api/plan"
+        parametry: dict[str, Any] = {"organ": organ}
         if god:
-            params["year"] = god
+            parametry["year"] = god
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
-        if isinstance(data, list):
-            return [_razobrat_proverku(p) for p in data if isinstance(p, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_proverku(p) for p in dannye if isinstance(p, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при получении плана проверок")
@@ -124,19 +124,19 @@ async def poisk_zhalob(
         Список жалоб.
     """
     try:
-        url = f"{ZPP_API_BASE}/api/complaints"
-        params: dict[str, Any] = {}
+        adres_url = f"{ZPP_API_BASE}/api/complaints"
+        parametry: dict[str, Any] = {}
         if organizaciya:
-            params["organizationName"] = organizaciya
+            parametry["organizationName"] = organizaciya
         if inn:
-            params["inn"] = inn
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["inn"] = inn
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_zhalobu(z) for z in elementy if isinstance(z, dict)]
-        if isinstance(data, list):
-            return [_razobrat_zhalobu(z) for z in data if isinstance(z, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_zhalobu(z) for z in dannye if isinstance(z, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске жалоб потребителей")

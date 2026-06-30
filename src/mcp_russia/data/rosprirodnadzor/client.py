@@ -45,30 +45,30 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
-            params["organization"] = organizaciya
+            parametry["organization"] = organizaciya
         if vid_nadzora:
-            params["supervisionType"] = vid_nadzora
+            parametry["supervisionType"] = vid_nadzora
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
 
     try:
-        url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/inspections"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/inspections"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
-            params["organization"] = organizaciya
+            parametry["organization"] = organizaciya
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -87,10 +87,10 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         Данные проверки или None.
     """
     try:
-        url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_proverku(data)
+        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_proverku(dannye)
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для проверки №%s", nomer)
         return None
@@ -112,28 +112,28 @@ async def poisk_obektov_negativnogo(
         Список объектов ОНВ.
     """
     try:
-        url = f"{ONV_REGISTER_BASE}/search"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ONV_REGISTER_BASE}/search"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
-            params["name"] = organizaciya
+            parametry["name"] = organizaciya
         if kategoriya:
-            params["category"] = kategoriya
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["category"] = kategoriya
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("ONV реестр недоступен")
 
     try:
-        url = f"{ROSPRIRODNADZOR_API_BASE}/onv"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/onv"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
-            params["organization"] = organizaciya
+            parametry["organization"] = organizaciya
         if kategoriya:
-            params["category"] = kategoriya
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["category"] = kategoriya
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -158,28 +158,28 @@ async def poisk_litsenziy_nedra(
         Список лицензий.
     """
     try:
-        url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if territoriya:
-            params["territory"] = territoriya
+            parametry["territory"] = territoriya
         if vid_litsenzii:
-            params["licenseType"] = vid_litsenzii
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["licenseType"] = vid_litsenzii
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
     try:
-        url = f"{ROSPRIRODNADZOR_API_BASE}/licenses"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/licenses"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if territoriya:
-            params["territory"] = territoriya
+            parametry["territory"] = territoriya
         if vid_litsenzii:
-            params["licenseType"] = vid_litsenzii
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["licenseType"] = vid_litsenzii
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
@@ -200,14 +200,14 @@ async def poluchit_ekologicheskie_platezhi(
         Список экологических платежей.
     """
     try:
-        url = f"{GOSUSLUGI_EKO_BASE}/payments"
-        params: dict[str, Any] = {}
+        adres_url = f"{GOSUSLUGI_EKO_BASE}/payments"
+        parametry: dict[str, Any] = {}
         if god:
-            params["year"] = god
+            parametry["year"] = god
         if tip_platezha:
-            params["paymentType"] = tip_platezha
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["paymentType"] = tip_platezha
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_ekologicheskiy_platezh(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")
@@ -229,64 +229,66 @@ def poluchit_spisok_vidov_litsenziy_nedra() -> list[dict[str, str]]:
     return VIDY_LITSENZIY_NEDRA
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []
 
 
-def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных проверки Росприроднадзора."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "organizaciya": data.get("organization", "") or data.get("organizaciya", ""),
-        "vid_nadzora": data.get("supervisionType", "") or data.get("vid_nadzora", ""),
-        "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
-        "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
-        "sostoyanie": data.get("status", ""),
-        "vyavleno_narusheniy": data.get("violationsCount", 0)
-        or data.get("vyavleno_narusheniy", 0),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "organizaciya": dannye.get("organization", "") or dannye.get("organizaciya", ""),
+        "vid_nadzora": dannye.get("supervisionType", "") or dannye.get("vid_nadzora", ""),
+        "data_nachala": dannye.get("startDate", "") or dannye.get("data_nachala", ""),
+        "data_okonchaniya": dannye.get("endDate", "") or dannye.get("data_okonchaniya", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "vyavleno_narusheniy": dannye.get("violationsCount", 0)
+        or dannye.get("vyavleno_narusheniy", 0),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",
     }
 
 
-def _razobrat_obekt_negativnogo(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_obekt_negativnogo(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных объекта негативного воздействия."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "kategoriya": data.get("category", "") or data.get("kategoriya", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "vid_deyatelnosti": data.get("activityType", "") or data.get("vid_deyatelnosti", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "nazvanie": dannye.get("title", "")
+        or dannye.get("name", "")
+        or dannye.get("nazvanie", ""),
+        "kategoriya": dannye.get("category", "") or dannye.get("kategoriya", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "vid_deyatelnosti": dannye.get("activityType", "") or dannye.get("vid_deyatelnosti", ""),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",
     }
 
 
-def _razobrat_litsenziyu(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии на недропользование."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "vid_litsenzii": data.get("licenseType", "") or data.get("vid_litsenzii", ""),
-        "territoriya": data.get("territory", "") or data.get("region", ""),
-        "srok_deystviya": data.get("validityPeriod", "") or data.get("srok_deystviya", ""),
-        "derzhatel": data.get("holder", "") or data.get("derzhatel", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "vid_litsenzii": dannye.get("licenseType", "") or dannye.get("vid_litsenzii", ""),
+        "territoriya": dannye.get("territory", "") or dannye.get("region", ""),
+        "srok_deystviya": dannye.get("validityPeriod", "") or dannye.get("srok_deystviya", ""),
+        "derzhatel": dannye.get("holder", "") or dannye.get("derzhatel", ""),
         "istochnik": "Росприроднадзор (rpn.gov.ru)",
     }
 
 
-def _razobrat_ekologicheskiy_platezh(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ekologicheskiy_platezh(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных экологического платежа."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "tip_platezha": data.get("paymentType", "") or data.get("tip_platezha", ""),
-        "summa": data.get("amount") or data.get("summa"),
-        "god": data.get("year", "") or data.get("god", ""),
-        "platelshchik": data.get("payer", "") or data.get("platelshchik", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "tip_platezha": dannye.get("paymentType", "") or dannye.get("tip_platezha", ""),
+        "summa": dannye.get("amount") or dannye.get("summa"),
+        "god": dannye.get("year", "") or dannye.get("god", ""),
+        "platelshchik": dannye.get("payer", "") or dannye.get("platelshchik", ""),
         "istochnik": "Госуслуги ЭКО (gosuslugi.ru)",
     }

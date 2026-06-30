@@ -19,8 +19,8 @@ async def spisok_vidov_nadzora(ctx: Context) -> str:
     await ctx.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды государственного надзора Росприроднадзора**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
+    zagolovok = "**Виды государственного надзора Росприроднадзора**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_obnv(ctx: Context) -> str:
@@ -28,8 +28,8 @@ async def spisok_kategoriy_obnv(ctx: Context) -> str:
     await ctx.info("Запрос списка категорий ОНВ...")
     kategorii = client.poluchit_spisok_kategoriy_obnv()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
-    header = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
-    return header + tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
+    zagolovok = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
 
 async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
@@ -37,8 +37,8 @@ async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
     await ctx.info("Запрос списка видов лицензий...")
     vidy = client.poluchit_spisok_vidov_litsenziy_nedra()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды лицензий на пользование недрами**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид лицензии"], stroki_tablitsy)
+    zagolovok = "**Виды лицензий на пользование недрами**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид лицензии"], stroki_tablitsy)
 
 
 async def poisk_proverok(
@@ -94,26 +94,26 @@ async def info_proverki(nomer: str, ctx: Context) -> str:
         Информация о проверке.
     """
     await ctx.info(f"Запрос информации о проверке {nomer}...")
-    data = await client.info_proverki(nomer)
-    if not data:
+    dannye = await client.info_proverki(nomer)
+    if not dannye:
         return (
             f"Проверка '{nomer}' не найдена.\n\n"
             f"Проверьте номер на сайте Росприроднадзора: rpn.gov.ru"
         )
     stroki = [
-        f"**Проверка № {data.get('nomer', nomer)}**",
-        f"- Организация: {data.get('organizaciya', '')}",
-        f"- Вид надзора: {data.get('vid_nadzora', '')}",
+        f"**Проверка № {dannye.get('nomer', nomer)}**",
+        f"- Организация: {dannye.get('organizaciya', '')}",
+        f"- Вид надзора: {dannye.get('vid_nadzora', '')}",
     ]
-    if data.get("data_nachala"):
-        stroki.append(f"- Дата начала: {data['data_nachala']}")
-    if data.get("data_okonchaniya"):
-        stroki.append(f"- Дата окончания: {data['data_okonchaniya']}")
-    if data.get("sostoyanie"):
-        stroki.append(f"- Статус: {data['sostoyanie']}")
-    if data.get("vyavleno_narusheniy"):
-        stroki.append(f"- Выявлено нарушений: {data['vyavleno_narusheniy']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'rpn.gov.ru')}")
+    if dannye.get("data_nachala"):
+        stroki.append(f"- Дата начала: {dannye['data_nachala']}")
+    if dannye.get("data_okonchaniya"):
+        stroki.append(f"- Дата окончания: {dannye['data_okonchaniya']}")
+    if dannye.get("sostoyanie"):
+        stroki.append(f"- Статус: {dannye['sostoyanie']}")
+    if dannye.get("vyavleno_narusheniy"):
+        stroki.append(f"- Выявлено нарушений: {dannye['vyavleno_narusheniy']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'rpn.gov.ru')}")
     return "\n".join(stroki)
 
 
@@ -156,8 +156,8 @@ async def poisk_obektov_negativnogo(
         )
         for o in obekty
     ]
-    header = f"**Объекты негативного воздействия** — найдено: {len(obekty)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Объекты негативного воздействия** — найдено: {len(obekty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Название", "Категория", "Регион"],
         stroki_tablitsy,
     )
@@ -203,8 +203,8 @@ async def poisk_litsenziy_nedra(
         )
         for lic in litsenzii
     ]
-    header = f"**Лицензии на пользование недрами** — найдено: {len(litsenzii)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Лицензии на пользование недрами** — найдено: {len(litsenzii)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Вид лицензии", "Территория", "Держатель", "Срок действия"],
         stroki_tablitsy,
     )
@@ -245,8 +245,8 @@ async def ekologicheskie_platezhi(
         )
         for p in platezhi
     ]
-    header = f"**Экологические платежи** — найдено: {len(platezhi)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Экологические платежи** — найдено: {len(platezhi)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Плательщик", "Тип платежа", "Сумма (руб.)", "Год"],
         stroki_tablitsy,
     )

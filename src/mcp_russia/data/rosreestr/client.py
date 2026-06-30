@@ -32,48 +32,48 @@ TIPY_OBEKTA_CODE = {
 }
 
 
-def _razobrat_obekt(kadastrovyy_nomer: str, data: dict[str, Any]) -> KadastrovyyObekt:
+def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> KadastrovyyObekt:
     """Разбор данных объекта недвижимости из ответа pkk.rosreestr.ru."""
-    tip = data.get("type", "").lower()
+    tip = dannye.get("type", "").lower()
     tip_code = TIPY_OBEKTA_CODE.get(tip, "")
 
     adres = ""
-    if data.get("address"):
-        addr = data["address"]
+    if dannye.get("address"):
+        addr = dannye["address"]
         adres = addr.get("note", "") or addr.get("formatted", "") or str(addr)
 
     ploshchad = ""
-    if data.get("area"):
-        area_data = data["area"]
+    if dannye.get("area"):
+        area_data = dannye["area"]
         if isinstance(area_data, dict):
             ploshchad = str(area_data.get("value", ""))
         else:
             ploshchad = str(area_data)
 
     stoimost = ""
-    if data.get("cad_cost"):
-        stoimost = str(data["cad_cost"])
-    elif data.get("cadastral_cost"):
-        cost = data["cadastral_cost"]
+    if dannye.get("cad_cost"):
+        stoimost = str(dannye["cad_cost"])
+    elif dannye.get("cadastral_cost"):
+        cost = dannye["cadastral_cost"]
         stoimost = str(cost.get("value", "")) if isinstance(cost, dict) else str(cost)
 
     data_stoimosti = ""
-    if data.get("cad_record_date"):
-        data_stoimosti = str(data["cad_record_date"])
-    elif data.get("date_cad_cost"):
-        data_stoimosti = str(data["date_cad_cost"])
+    if dannye.get("cad_record_date"):
+        data_stoimosti = str(dannye["cad_record_date"])
+    elif dannye.get("date_cad_cost"):
+        data_stoimosti = str(dannye["date_cad_cost"])
 
     status = ""
-    if data.get("state"):
-        st = data["state"]
+    if dannye.get("state"):
+        st = dannye["state"]
         if isinstance(st, dict):
             status = STATUSY_UCHE_TA_MAP.get(st.get("code", ""), st.get("name", ""))
         else:
             status = str(st)
 
     kategoriya = ""
-    if data.get("category"):
-        cat = data["category"]
+    if dannye.get("category"):
+        cat = dannye["category"]
         if isinstance(cat, dict):
             kategoriya = KATEGORII_ZEMEL_MAP.get(cat.get("code", ""), cat.get("name", ""))
         else:
@@ -101,8 +101,8 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
         Данные объекта или None.
     """
     try:
-        url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         feature = rezultat.get("feature", rezultat)
         attrs = feature.get("attrs", feature)
         return _razobrat_obekt(kadastrovyy_nomer, attrs)
@@ -120,8 +120,8 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
         Данные о кадастровой стоимости или None.
     """
     try:
-        url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         feature = rezultat.get("feature", rezultat)
         attrs = feature.get("attrs", feature)
 
@@ -166,8 +166,8 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
         Список зарегистрированных прав.
     """
     try:
-        url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
-        rezultat = await http_poluchit(url, headers={"Accept": "application/json"})
+        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         feature = rezultat.get("feature", rezultat)
         rights = feature.get("rights", [])
         if not rights:
@@ -198,20 +198,20 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
         Список найденных объектов.
     """
     try:
-        url = f"{PKK_SEARCH_URL}"
+        adres_url = f"{PKK_SEARCH_URL}"
         rezultat = await http_poluchit(
-            url,
-            params={"sqo": zapros},
-            headers={"Accept": "application/json"},
+            adres_url,
+            parametry={"sqo": zapros},
+            zagolovki={"Accept": "application/json"},
         )
         features = rezultat.get("features", [])
         if not features:
             return []
 
-        found = []
+        naydennye = []
         for f in features[:10]:
             attrs = f.get("attrs", {})
-            found.append(
+            naydennye.append(
                 {
                     "kadastrovyy_nomer": attrs.get("cn", ""),
                     "tip": attrs.get("type", ""),
@@ -223,6 +223,6 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
                     else "",
                 }
             )
-        return found
+        return naydennye
     except Exception:
         return []

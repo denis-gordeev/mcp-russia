@@ -139,18 +139,18 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
 
     task_data = await http_otpravit(
         search_url,
-        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        zagolovki={"Content-Type": "application/x-www-form-urlencoded"},
         json_body=None,
-        params={"query": zapros},
+        parametry={"query": zapros},
     )
 
-    token = task_data.get("t") if isinstance(task_data, dict) else None
-    if not token:
+    zheton = task_data.get("t") if isinstance(task_data, dict) else None
+    if not zheton:
         return None
 
     await asyncio.sleep(0.5)
 
-    rezultat = await http_poluchit(f"{result_url}{token}")
+    rezultat = await http_poluchit(f"{result_url}{zheton}")
     return rezultat
 
 

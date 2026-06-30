@@ -29,8 +29,8 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
     tipy = client.poluchit_spisok_tipov_aktov()
 
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы нормативных актов РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    zagolovok = "**Типы нормативных актов РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
 
 
 async def spisok_otrasley(ctx: Context) -> str:
@@ -43,8 +43,10 @@ async def spisok_otrasley(ctx: Context) -> str:
     otrsli = client.poluchit_spisok_otrasley()
 
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in otrsli]
-    header = "**Отрасли законодательства РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    zagolovok = "**Отрасли законодательства РФ**\n\n"
+    return (
+        zagolovok + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    )
 
 
 async def spisok_istochnikov(ctx: Context) -> str:
@@ -57,8 +59,10 @@ async def spisok_istochnikov(ctx: Context) -> str:
     istochniki = client.poluchit_spisok_istochnikov()
 
     stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in istochniki]
-    header = "**Источники официальных публикаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    zagolovok = "**Источники официальных публикаций**\n\n"
+    return (
+        zagolovok + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    )
 
 
 async def spisok_statusov(ctx: Context) -> str:
@@ -71,8 +75,8 @@ async def spisok_statusov(ctx: Context) -> str:
     statusy = client.poluchit_spisok_statusov()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
-    header = "**Статусы документов**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    zagolovok = "**Статусы документов**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
 
 
 async def info_normativnogo_akta(
@@ -91,29 +95,29 @@ async def info_normativnogo_akta(
     """
     if ctx:
         await ctx.info(f"Запрос информации о нормативном акте {nomer}...")
-    data = await client.poluchit_normativnyy_akt(nomer, tip)
+    dannye = await client.poluchit_normativnyy_akt(nomer, tip)
 
-    if not data:
+    if not dannye:
         return (
             f"Нормативный акт '{nomer}' не найден.\n\n"
             f"Проверьте номер на портале: https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
     stroki = [
-        f"**{data.nazvanie}**",
-        f"- Номер: {data.nomer}",
-        f"- Тип: {data.tip}",
-        f"- Дата принятия: {data.data_prinyatiya}",
-        f"- Статус: {data.sostoyanie}",
-        f"- Отрасль: {data.otrysl}",
+        f"**{dannye.nazvanie}**",
+        f"- Номер: {dannye.nomer}",
+        f"- Тип: {dannye.tip}",
+        f"- Дата принятия: {dannye.data_prinyatiya}",
+        f"- Статус: {dannye.sostoyanie}",
+        f"- Отрасль: {dannye.otrysl}",
     ]
-    if data.kratkoe_opisanie:
-        stroki.append(f"- Описание: {data.kratkoe_opisanie}")
-    if data.izmeneniya:
-        stroki.append(f"- Изменений: {len(data.izmeneniya)}")
-    if data.tekst_ssylka:
-        stroki.append(f"- Текст: {data.tekst_ssylka}")
-    stroki.append(f"- Источник: {data.istochnik}")
+    if dannye.kratkoe_opisanie:
+        stroki.append(f"- Описание: {dannye.kratkoe_opisanie}")
+    if dannye.izmeneniya:
+        stroki.append(f"- Изменений: {len(dannye.izmeneniya)}")
+    if dannye.tekst_ssylka:
+        stroki.append(f"- Текст: {dannye.tekst_ssylka}")
+    stroki.append(f"- Источник: {dannye.istochnik}")
     stroki.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(stroki)
 
@@ -129,23 +133,23 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
     """
     if ctx:
         await ctx.info(f"Запрос информации о законопроекте {nomer}...")
-    data = await client.poluchit_zakon_proekt(nomer)
+    dannye = await client.poluchit_zakon_proekt(nomer)
 
-    if not data:
+    if not dannye:
         return f"Законопроект '{nomer}' не найден.\n\nПроверьте на https://sozd.duma.gov.ru или https://pravo.gov.ru"
 
     stroki = [
-        f"**{data.nazvanie}**",
-        f"- Номер: {data.nomer}",
-        f"- Стадия: {data.stadnya}",
-        f"- Дата внесения: {data.data_vneseniya}",
-        f"- Субъект внесения: {data.vnesen_subiekt}",
-        f"- Ответственный комитет: {data.otvetstvennyy_komitet}",
+        f"**{dannye.nazvanie}**",
+        f"- Номер: {dannye.nomer}",
+        f"- Стадия: {dannye.stadnya}",
+        f"- Дата внесения: {dannye.data_vneseniya}",
+        f"- Субъект внесения: {dannye.vnesen_subiekt}",
+        f"- Ответственный комитет: {dannye.otvetstvennyy_komitet}",
     ]
-    if data.chteniya:
-        stroki.append(f"- Чтений: {len(data.chteniya)}")
-    if data.tekst_ssylka:
-        stroki.append(f"- Текст: {data.tekst_ssylka}")
+    if dannye.chteniya:
+        stroki.append(f"- Чтений: {len(dannye.chteniya)}")
+    if dannye.tekst_ssylka:
+        stroki.append(f"- Текст: {dannye.tekst_ssylka}")
     stroki.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(stroki)
 
@@ -210,11 +214,11 @@ async def publikatsii_po_datam(
     """
     if ctx:
         await ctx.info("Запрос публикаций за период...")
-    data = await client.poluchit_publikatsii(
+    dannye = await client.poluchit_publikatsii(
         tip=tip, otrysl=otrysl, data_from=data_from, data_to=data_to
     )
 
-    if not data:
+    if not dannye:
         filtry = []
         if tip:
             filtry.append(f"тип: {tip}")
@@ -230,16 +234,16 @@ async def publikatsii_po_datam(
             f"Публикации доступны на https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
-    stroki = [f"**Официальные публикации** — найдено: {len(data)}\n"]
-    for p in data[:10]:
+    stroki = [f"**Официальные публикации** — найдено: {len(dannye)}\n"]
+    for p in dannye[:10]:
         stroki.append(f"- **{p.nazvanie}** ({p.tip_dokumenta})")
         stroki.append(f"  Дата: {p.data_publikatsii}, источник: {p.istochnik}")
         if p.annotaciya:
             stroki.append(f"  {p.annotaciya}")
         stroki.append("")
 
-    if len(data) > 10:
-        stroki.append(f"\n... и ещё {len(data) - 10} публикаций")
+    if len(dannye) > 10:
+        stroki.append(f"\n... и ещё {len(dannye) - 10} публикаций")
 
     stroki.append(_PRAVO_ATTRIBUTION.strip())
     return "\n".join(stroki)
@@ -256,16 +260,16 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
     """
     if ctx:
         await ctx.info(f"Запрос изменений акта {akt_nomer}...")
-    data = await client.poluchit_izmeneniya_akta(akt_nomer)
+    dannye = await client.poluchit_izmeneniya_akta(akt_nomer)
 
-    if not data:
+    if not dannye:
         return (
             f"Изменений акта '{akt_nomer}' не найдено.\n\n"
             f"Проверьте номер акта на https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 
-    stroki = [f"**Изменения акта {akt_nomer}** — изменений: {len(data)}\n"]
-    for izm in data:
+    stroki = [f"**Изменения акта {akt_nomer}** — изменений: {len(dannye)}\n"]
+    for izm in dannye:
         stroki.append(f"- {izm.izmenenie_nomer} ({izm.izmenenie_data})")
         stroki.append(f"  {izm.izmenenie_opisanie}")
         if izm.data_vstupleniya_v_silu:

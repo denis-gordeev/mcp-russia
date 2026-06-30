@@ -43,9 +43,9 @@ def _formatirovat_signaturu_instrumenta(
     signature = ", ".join(param_parts)
     full_name = f"{imya_modulya}_{imya_instrumenta}"
 
-    desc = (getattr(tool, "description", "") or "").split("\n")[0]
+    opisanie_kratkoe = (getattr(tool, "description", "") or "").split("\n")[0]
 
-    return f"- `{full_name}({signature})` — {desc}"
+    return f"- `{full_name}({signature})` — {opisanie_kratkoe}"
 
 
 def postroit_katalog(registry: object) -> str:
@@ -91,7 +91,7 @@ def postroit_katalog(registry: object) -> str:
     return _kesh_kataloga
 
 
-async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
+async def rekomendovat_instrumenty_impl(zapros: str, catalog: str) -> str:
     """Вызов API Anthropic для рекомендации инструментов по запросу пользователя.
 
     Аргументы:
@@ -137,10 +137,10 @@ async def rekomendovat_instrumenty_impl(query: str, catalog: str) -> str:
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
             system=system_prompt,
-            messages=[{"role": "user", "content": query}],
+            messages=[{"role": "user", "content": zapros}],
         )
-        block = otvet.content[0]
-        return str(getattr(block, "text", ""))
+        blok = otvet.content[0]
+        return str(getattr(blok, "text", ""))
     except Exception as e:
         logger.error("Ошибка вызова API Anthropic: %s", e)
         return (

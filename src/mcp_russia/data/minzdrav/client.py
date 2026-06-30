@@ -45,15 +45,15 @@ async def poisk_med_organizatsiy(
         Список медицинских организаций.
     """
     try:
-        url = f"{FRMO_API_BASE}/organizations"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{FRMO_API_BASE}/organizations"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if tip:
-            params["type"] = tip
-            params["city"] = gorod
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["type"] = tip
+            parametry["city"] = gorod
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_med_organizatsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
@@ -70,10 +70,10 @@ async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
         Данные организации или None.
     """
     try:
-        url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_med_organizatsiyu(data)
+        adres_url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_med_organizatsiyu(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении МО %s", identifikator_mo)
@@ -96,16 +96,16 @@ async def poisk_litsenziy(
         Список лицензий.
     """
     try:
-        url = f"{ROSZDRAVNADZOR_API}/licenses"
-        params: dict[str, Any] = {}
+        adres_url = f"{ROSZDRAVNADZOR_API}/licenses"
+        parametry: dict[str, Any] = {}
         if inn:
-            params["inn"] = inn
+            parametry["inn"] = inn
         if vid:
-            params["type"] = vid
+            parametry["type"] = vid
         if sostoyanie:
-            params["status"] = sostoyanie
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["status"] = sostoyanie
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -128,16 +128,16 @@ async def pokazateli_zdorovya(
         Список показателей здоровья.
     """
     try:
-        url = f"{MINZDRAV_OPEN_DATA}/indicators"
-        params: dict[str, Any] = {}
+        adres_url = f"{MINZDRAV_OPEN_DATA}/indicators"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if god:
-            params["year"] = god
+            parametry["year"] = god
         if kod_pokazatelya:
-            params["code"] = kod_pokazatelya
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["code"] = kod_pokazatelya
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_pokazatel(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
@@ -160,16 +160,16 @@ async def statistika_zabolevaniy(
         Статистика заболеваний.
     """
     try:
-        url = f"{MINZDRAV_OPEN_DATA}/morbidity"
-        params: dict[str, Any] = {}
+        adres_url = f"{MINZDRAV_OPEN_DATA}/morbidity"
+        parametry: dict[str, Any] = {}
         if kod_mkb:
-            params["mkb"] = kod_mkb
+            parametry["mkb"] = kod_mkb
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_zabolevanie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
@@ -201,13 +201,13 @@ def poluchit_spisok_pokazateley_zdorovya() -> list[dict[str, str]]:
     return POKAZATELI_ZDOROVYA
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []

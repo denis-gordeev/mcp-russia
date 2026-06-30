@@ -29,11 +29,11 @@ def _razobrat_fio(fio: str) -> dict[str, str]:
     return rezultat
 
 
-def _razobrat_proizvodstva(data: Any) -> list[dict[str, Any]]:
+def _razobrat_proizvodstva(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа API ФССП в список исполнительных производств."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return []
-    inner = data.get("data", data)
+    inner = dannye.get("data", dannye)
     if not isinstance(inner, dict):
         return []
     rezultat = inner.get("result", [])
@@ -85,24 +85,24 @@ async def poisk_proizvodstv(
     if subiekt:
         telo["is"]["region"] = subiekt
     try:
-        data = await http_otpravit(FSSP_SEARCH_API, json_body=telo)
-        return _razobrat_proizvodstva(data)
+        dannye = await http_otpravit(FSSP_SEARCH_API, json_body=telo)
+        return _razobrat_proizvodstva(dannye)
     except Exception:
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
         try:
-            params: dict[str, Any] = {}
+            parametry: dict[str, Any] = {}
             if "lastName" in fio_parts:
-                params["is[lastName]"] = fio_parts["lastName"]
+                parametry["is[lastName]"] = fio_parts["lastName"]
             if "firstName" in fio_parts:
-                params["is[firstName]"] = fio_parts["firstName"]
+                parametry["is[firstName]"] = fio_parts["firstName"]
             if "patronymic" in fio_parts:
-                params["is[patronymic]"] = fio_parts["patronymic"]
+                parametry["is[patronymic]"] = fio_parts["patronymic"]
             if data_rozhdeniya:
-                params["is[date]"] = data_rozhdeniya
+                parametry["is[date]"] = data_rozhdeniya
             if subiekt:
-                params["is[region]"] = subiekt
-            data = await http_poluchit(FSSP_IP_BASE, params=params)
-            return _razobrat_proizvodstva(data)
+                parametry["is[region]"] = subiekt
+            dannye = await http_poluchit(FSSP_IP_BASE, parametry=parametry)
+            return _razobrat_proizvodstva(dannye)
         except Exception:
             logger.exception("Ошибка при резервном поиске производств по ФИО «%s»", fio)
             return []
@@ -118,8 +118,8 @@ async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
         Данные производства или None.
     """
     try:
-        data = await http_poluchit(f"{FSSP_IP_BASE}", params={"number": nomer})
-        zapisi = _razobrat_proizvodstva(data)
+        dannye = await http_poluchit(f"{FSSP_IP_BASE}", parametry={"number": nomer})
+        zapisi = _razobrat_proizvodstva(dannye)
         for r in zapisi:
             if r.get("nomer") == nomer:
                 return r
@@ -143,16 +143,16 @@ async def ogranicheniya_dolzhnika(
         Список производств с ограничениями.
     """
     proizvodstva = await poisk_proizvodstv(fio, data_rozhdeniya)
-    restrictions = []
+    ogranicheniya = []
     for p in proizvodstva:
-        subject = p.get("subject", "").lower()
+        predmet = p.get("subject", "").lower()
         okonchanie_ip = p.get("okonchanie_ip", "")
         if (
-            any(kw in subject for kw in ("ограничен", "запрет", "арест", "выезд", "управлен"))
+            any(kw in predmet for kw in ("ограничен", "запрет", "арест", "выезд", "управлен"))
             or okonchanie_ip
         ):
-            restrictions.append(p)
-    return restrictions
+            ogranicheniya.append(p)
+    return ogranicheniya
 
 
 async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
@@ -165,9 +165,9 @@ async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
         Список производств с розыском.
     """
     proizvodstva = await poisk_proizvodstv(fio)
-    wanted = []
+    razyskivaemye = []
     for p in proizvodstva:
-        subject = p.get("subject", "").lower()
-        if "розыск" in subject or "разыск" in subject:
-            wanted.append(p)
-    return wanted
+        predmet = p.get("subject", "").lower()
+        if "розыск" in predmet or "разыск" in predmet:
+            razyskivaemye.append(p)
+    return razyskivaemye

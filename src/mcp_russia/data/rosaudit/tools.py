@@ -19,8 +19,8 @@ async def spisok_napravleniy(ctx: Context) -> str:
     await ctx.info("Запрос списка направлений контроля...")
     napravleniya = client.poluchit_spisok_napravleniy()
     stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in napravleniya]
-    header = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
+    zagolovok = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
 async def spisok_tipov_meropriyatiy(ctx: Context) -> str:
@@ -28,8 +28,8 @@ async def spisok_tipov_meropriyatiy(ctx: Context) -> str:
     await ctx.info("Запрос списка типов мероприятий...")
     tipy = client.poluchit_spisok_tipov_meropriyatiy()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы контрольных мероприятий**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy)
+    zagolovok = "**Типы контрольных мероприятий**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy)
 
 
 async def spisok_subiektov_audita(ctx: Context) -> str:
@@ -37,8 +37,8 @@ async def spisok_subiektov_audita(ctx: Context) -> str:
     await ctx.info("Запрос списка субъектов аудита...")
     subiekty = client.poluchit_spisok_subiektov_audita()
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in subiekty]
-    header = "**Субъекты внешнего государственного аудита**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Субъект"], stroki_tablitsy)
+    zagolovok = "**Субъекты внешнего государственного аудита**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Субъект"], stroki_tablitsy)
 
 
 async def poisk_kontrolnyh_meropriyatiy(
@@ -94,26 +94,28 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
         Информация о мероприятии.
     """
     await ctx.info(f"Запрос информации о контрольном мероприятии {nomer}...")
-    data = await client.poluchit_kontrolnoe_meropriyatie(nomer)
-    if not data:
+    dannye = await client.poluchit_kontrolnoe_meropriyatie(nomer)
+    if not dannye:
         return (
             f"Контрольное мероприятие '{nomer}' не найдено.\n\n"
             f"Проверьте номер на сайте Счётной палаты: ach.gov.ru"
         )
     stroki = [
-        f"**{data.get('nazvanie', '')}** (№ {data.get('nomer', nomer)})",
-        f"- Тип: {data.get('tip', '')}",
-        f"- Направление: {data.get('napravlenie', '')}",
+        f"**{dannye.get('nazvanie', '')}** (№ {dannye.get('nomer', nomer)})",
+        f"- Тип: {dannye.get('tip', '')}",
+        f"- Направление: {dannye.get('napravlenie', '')}",
     ]
-    if data.get("data_nachala"):
-        stroki.append(f"- Дата начала: {data['data_nachala']}")
-    if data.get("data_okonchaniya"):
-        stroki.append(f"- Дата окончания: {data['data_okonchaniya']}")
-    if data.get("sostoyanie"):
-        stroki.append(f"- Статус: {data['sostoyanie']}")
-    if data.get("obiem_sredstv"):
-        stroki.append(f"- Объём средств: {formatirovat_chislo_ru(data['obiem_sredstv'], 2)} руб.")
-    stroki.append(f"- Источник: {data.get('istochnik', 'ach.gov.ru')}")
+    if dannye.get("data_nachala"):
+        stroki.append(f"- Дата начала: {dannye['data_nachala']}")
+    if dannye.get("data_okonchaniya"):
+        stroki.append(f"- Дата окончания: {dannye['data_okonchaniya']}")
+    if dannye.get("sostoyanie"):
+        stroki.append(f"- Статус: {dannye['sostoyanie']}")
+    if dannye.get("obiem_sredstv"):
+        stroki.append(
+            f"- Объём средств: {formatirovat_chislo_ru(dannye['obiem_sredstv'], 2)} руб."
+        )
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'ach.gov.ru')}")
     return "\n".join(stroki)
 
 
@@ -127,29 +129,29 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
         Информация о заключении.
     """
     await ctx.info(f"Запрос аудиторского заключения {nomer}...")
-    data = await client.poluchit_auditorskoe_zaklyuchenie(nomer)
-    if not data:
+    dannye = await client.poluchit_auditorskoe_zaklyuchenie(nomer)
+    if not dannye:
         return (
             f"Аудиторское заключение '{nomer}' не найдено.\n\n"
             f"Проверьте номер на сайте Счётной палаты: ach.gov.ru"
         )
     stroki = [
-        f"**{data.get('nazvanie', '')}** (№ {data.get('nomer', nomer)})",
-        f"- Дата публикации: {data.get('data_publikacii', '')}",
-        f"- Объект аудита: {data.get('obekt_audita', '')}",
-        f"- Направление: {data.get('napravlenie', '')}",
-        f"- Выявлено нарушений: {data.get('vyavleno_narusheniy', 0)}",
+        f"**{dannye.get('nazvanie', '')}** (№ {dannye.get('nomer', nomer)})",
+        f"- Дата публикации: {dannye.get('data_publikacii', '')}",
+        f"- Объект аудита: {dannye.get('obekt_audita', '')}",
+        f"- Направление: {dannye.get('napravlenie', '')}",
+        f"- Выявлено нарушений: {dannye.get('vyavleno_narusheniy', 0)}",
     ]
-    if data.get("summa_narusheniy"):
+    if dannye.get("summa_narusheniy"):
         stroki.append(
-            f"- Сумма нарушений: {formatirovat_chislo_ru(data['summa_narusheniy'], 2)} руб."
+            f"- Сумма нарушений: {formatirovat_chislo_ru(dannye['summa_narusheniy'], 2)} руб."
         )
-    rekomendacii = data.get("rekomendacii", [])
+    rekomendacii = dannye.get("rekomendacii", [])
     if rekomendacii:
         stroki.append(f"- Рекомендации: {', '.join(str(r)[:80] for r in rekomendacii[:5])}")
-    if data.get("ispolnenie"):
-        stroki.append(f"- Исполнение: {data['ispolnenie']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'ach.gov.ru')}")
+    if dannye.get("ispolnenie"):
+        stroki.append(f"- Исполнение: {dannye['ispolnenie']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'ach.gov.ru')}")
     return "\n".join(stroki)
 
 
@@ -163,8 +165,8 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
         Данные об исполнении бюджета.
     """
     await ctx.info("Запрос данных об исполнении бюджета...")
-    data = await client.poluchit_byudzhet_ispolnenie(period)
-    if not data:
+    dannye = await client.poluchit_byudzhet_ispolnenie(period)
+    if not dannye:
         period_text = f" за период {period}" if period else ""
         return (
             f"Данные об исполнении федерального бюджета{period_text} недоступны.\n\n"
@@ -172,14 +174,14 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
             f"- Счётная палата: ach.gov.ru/controls/budget\n"
             f"- Портал бюджетных данных: budget.gov.ru"
         )
-    stroki = [f"**Исполнение федерального бюджета за {data.get('period', '')}**"]
-    if data.get("dohody"):
-        stroki.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
-    if data.get("raskhody"):
-        stroki.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
-    if data.get("defitsit") is not None:
-        stroki.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
-    stroki.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
+    stroki = [f"**Исполнение федерального бюджета за {dannye.get('period', '')}**"]
+    if dannye.get("dohody"):
+        stroki.append(f"- Доходы: {formatirovat_chislo_ru(dannye['dohody'], 2)} млрд руб.")
+    if dannye.get("raskhody"):
+        stroki.append(f"- Расходы: {formatirovat_chislo_ru(dannye['raskhody'], 2)} млрд руб.")
+    if dannye.get("defitsit") is not None:
+        stroki.append(f"- Дефицит: {formatirovat_chislo_ru(dannye['defitsit'], 2)} млрд руб.")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'budget.gov.ru')}")
     return "\n".join(stroki)
 
 
@@ -225,8 +227,8 @@ async def poisk_narusheniy(
         )
         for n in narusheniya
     ]
-    header = f"**Выявленные нарушения** — найдено: {len(narusheniya)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Выявленные нарушения** — найдено: {len(narusheniya)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Организация", "Тип", "Описание", "Сумма (руб.)"],
         stroki_tablitsy,
     )

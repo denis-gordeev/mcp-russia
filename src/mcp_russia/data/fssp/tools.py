@@ -76,7 +76,7 @@ async def spisok_regionov(ctx: Context) -> str:
         Список регионов и их кодов.
     """
     stroki_tablitsy = [
-        (str(code), name) for name, code in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
+        (str(kod), name) for name, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
     ]
     return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ATTRIBUTION
 

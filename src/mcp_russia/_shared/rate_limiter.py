@@ -46,8 +46,8 @@ class OgranichitelChastoty:
                     self._timestamps.append(now)
                     return
                 # Расчёт времени ожидания до истечения самой старой записи
-                wait = self._timestamps[0] + self._period - now
-            await asyncio.sleep(max(wait, 0.01))
+                ozhidanie = self._timestamps[0] + self._period - now
+            await asyncio.sleep(max(ozhidanie, 0.01))
 
     async def __aenter__(self) -> OgranichitelChastoty:
         """Вход в контекст: ожидание и резервирование слота."""

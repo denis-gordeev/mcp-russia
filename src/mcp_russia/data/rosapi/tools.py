@@ -90,9 +90,9 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
             )
         )
 
-    header = f"**Результаты поиска: {zapros}**\n\n"
-    header += "Источник: ФИАС / Dadata\n\n"
-    return header + tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
+    zagolovok = f"**Результаты поиска: {zapros}**\n\n"
+    zagolovok += "Источник: ФИАС / Dadata\n\n"
+    return zagolovok + tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
 
 
 async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
@@ -189,12 +189,12 @@ async def spisok_bankov(ctx: Context) -> str:
             )
         )
 
-    header = "**Основные банки России** (справочник)\n\n"
-    header += (
+    zagolovok = "**Основные банки России** (справочник)\n\n"
+    zagolovok += (
         "Для полного справочника всех банков ЦБ РФ "
         "используйте konsul_bank_po_bik или подключите API Dadata.\n\n"
     )
-    return header + tablitsa_v_markdown(["БИК", "Название"], stroki_tablitsy)
+    return zagolovok + tablitsa_v_markdown(["БИК", "Название"], stroki_tablitsy)
 
 
 async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
@@ -211,15 +211,17 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     rezultat = await client.nayti_bank_po_bik(bik)
 
     if isinstance(rezultat, dict) and "oshibka" in rezultat:
-        found = None
+        naydennye = None
         for bank in OSNOVNYE_BANKI:
             if bank["bik"] == bik:
-                found = bank
+                naydennye = bank
                 break
 
-        if found:
+        if naydennye:
             return (
-                f"**{found['nazvanie']}**\n\n- БИК: {found['bik']}\n- Источник: Справочник ЦБ РФ"
+                f"**{naydennye['nazvanie']}**\n\n"
+                f"- БИК: {naydennye['bik']}\n"
+                f"- Источник: Справочник ЦБ РФ"
             )
 
         return (
@@ -263,8 +265,8 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
         date_str = h["data"][5:]
         stroki_tablitsy.append((date_str, h["nazvanie"], h["tip"]))
 
-    header = f"**Национальные праздники РФ ({god})**\n\n"
-    return header + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)
+    zagolovok = f"**Национальные праздники РФ ({god})**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)
 
 
 async def nalogovye_stavki(ctx: Context) -> str:
@@ -285,10 +287,10 @@ async def nalogovye_stavki(ctx: Context) -> str:
     }
 
     stroki_tablitsy = []
-    for code, name in NALOGOVYE_STAVKI.items():
-        stavka = stavki_info.get(code, "Уточняйте в ФНС")
-        stroki_tablitsy.append((code, name, stavka))
+    for kod, name in NALOGOVYE_STAVKI.items():
+        stavka = stavki_info.get(kod, "Уточняйте в ФНС")
+        stroki_tablitsy.append((kod, name, stavka))
 
-    header = "**Основные налоговые ставки РФ**\n\n"
-    header += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
-    return header + tablitsa_v_markdown(["Код", "Налог", "Ставка"], stroki_tablitsy)
+    zagolovok = "**Основные налоговые ставки РФ**\n\n"
+    zagolovok += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Налог", "Ставка"], stroki_tablitsy)

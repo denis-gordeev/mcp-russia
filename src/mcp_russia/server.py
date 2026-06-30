@@ -44,9 +44,9 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
         """Логирование вызова инструмента с замером времени."""
         name = context.message.name
         logger.info("Вызов инструмента: %s", name)
-        start = time.monotonic()
+        nachalo = time.monotonic()
         result = await call_next(context)
-        elapsed = time.monotonic() - start
+        elapsed = time.monotonic() - nachalo
         logger.info("Инструмент %s завершён за %.2fс", name, elapsed)
         return result
 
@@ -108,7 +108,7 @@ def spisok_funktsiy() -> str:
 
 
 @mcp.tool(tags={"meta", "discovery"})
-async def rekomendovat_instrumenty(query: str, ctx: Context) -> str:
+async def rekomendovat_instrumenty(zapros: str, ctx: Context) -> str:
     """Рекомендует релевантные инструменты по запросу на естественном языке.
 
     Использует ИИ для понимания намерения и подбора наиболее подходящих
@@ -120,13 +120,13 @@ async def rekomendovat_instrumenty(query: str, ctx: Context) -> str:
     """
     from ._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 
-    await ctx.info(f"Поиск рекомендаций для: {query}")
+    await ctx.info(f"Поиск рекомендаций для: {zapros}")
     catalog = postroit_katalog(registry)
-    return await rekomendovat_instrumenty_impl(query, catalog)
+    return await rekomendovat_instrumenty_impl(zapros, catalog)
 
 
 @mcp.tool(tags={"meta", "discovery", "планирование"})
-async def splanirovat_zapros(query: str, ctx: Context) -> str:
+async def splanirovat_zapros(zapros: str, ctx: Context) -> str:
     """Создаёт план выполнения для сложных запросов.
 
     Анализирует вопрос, определяет, какие инструменты использовать,
@@ -140,9 +140,9 @@ async def splanirovat_zapros(query: str, ctx: Context) -> str:
     from ._shared.discovery import postroit_katalog
     from ._shared.planner import splanirovat_zapros_impl
 
-    await ctx.info(f"Планирование запроса: {query}")
+    await ctx.info(f"Планирование запроса: {zapros}")
     catalog = postroit_katalog(registry)
-    return await splanirovat_zapros_impl(query, catalog)
+    return await splanirovat_zapros_impl(zapros, catalog)
 
 
 @mcp.tool(tags={"meta", "batch"})

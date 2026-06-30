@@ -45,30 +45,30 @@ async def statistika_pojarov(
         Список данных о пожарах.
     """
     try:
-        url = f"{FIRES_STAT_BASE}/statistics"
-        params: dict[str, Any] = {"limit": 50}
+        adres_url = f"{FIRES_STAT_BASE}/statistics"
+        parametry: dict[str, Any] = {"limit": 50}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if god:
-            params["year"] = god
+            parametry["year"] = god
         if vid_pozhara:
-            params["fireType"] = vid_pozhara
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["fireType"] = vid_pozhara
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fires.ru API недоступен")
 
     try:
-        url = f"{MCHS_API_BASE}/fires/statistics"
-        params = {"limit": 50}
+        adres_url = f"{MCHS_API_BASE}/fires/statistics"
+        parametry = {"limit": 50}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -95,30 +95,30 @@ async def poisk_chs(
         Список чрезвычайных ситуаций.
     """
     try:
-        url = f"{MCHS_API_BASE}/emergencies"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{MCHS_API_BASE}/emergencies"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if vid_chs:
-            params["type"] = vid_chs
+            parametry["type"] = vid_chs
         if klass_chs:
-            params["class"] = klass_chs
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["class"] = klass_chs
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для ЧС")
 
     try:
-        url = f"{MCHS_OPENDATA_BASE}/emergencies"
-        params = {"limit": ogranichenie}
+        adres_url = f"{MCHS_OPENDATA_BASE}/emergencies"
+        parametry = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if vid_chs:
-            params["type"] = vid_chs
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["type"] = vid_chs
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -139,12 +139,12 @@ async def radiatsionnyy_monitoring(
         Список данных радиационного мониторинга.
     """
     try:
-        url = f"{MCHS_API_BASE}/radiation"
-        params: dict[str, Any] = {}
+        adres_url = f"{MCHS_API_BASE}/radiation"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_radiatsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -165,12 +165,12 @@ async def gidrologicheskaya_obstanovka(
         Список данных гидрологической обстановки.
     """
     try:
-        url = f"{MCHS_API_BASE}/hydrology"
-        params: dict[str, Any] = {}
+        adres_url = f"{MCHS_API_BASE}/hydrology"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_gidrologiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -193,14 +193,14 @@ async def preduprezhdeniya_chs(
         Список предупреждений.
     """
     try:
-        url = f"{MCHS_API_BASE}/warnings"
-        params: dict[str, Any] = {}
+        adres_url = f"{MCHS_API_BASE}/warnings"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if tip_opasnosti:
-            params["dangerType"] = tip_opasnosti
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["dangerType"] = tip_opasnosti
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -239,82 +239,82 @@ def poluchit_statistiku_pozharov_staticheskie() -> dict[str, Any]:
     return STATISTIKA_POZHAROV_2023
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []
 
 
-def _razobrat_pozhar(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_pozhar(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о пожаре."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "data": data.get("date", "") or data.get("data", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "vid_pozhara": data.get("fireType", "") or data.get("vid_pozhara", ""),
-        "pogibshikh": data.get("deaths", 0) or data.get("pogibshikh", 0),
-        "postradavshikh": data.get("injured", 0) or data.get("postradavshikh", 0),
-        "ushcherb": data.get("damage") or data.get("ushcherb"),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "data": dannye.get("date", "") or dannye.get("data", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "vid_pozhara": dannye.get("fireType", "") or dannye.get("vid_pozhara", ""),
+        "pogibshikh": dannye.get("deaths", 0) or dannye.get("pogibshikh", 0),
+        "postradavshikh": dannye.get("injured", 0) or dannye.get("postradavshikh", 0),
+        "ushcherb": dannye.get("damage") or dannye.get("ushcherb"),
         "istochnik": "МЧС России (mchs.gov.ru)",
     }
 
 
-def _razobrat_chs(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_chs(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о чрезвычайной ситуации."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "vid_chs": data.get("type", "") or data.get("vid_chs", ""),
-        "klass_chs": data.get("class", "") or data.get("klass_chs", ""),
-        "data_vozniknoveniya": data.get("date", "") or data.get("data_vozniknoveniya", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "opisanie": data.get("description", "") or data.get("opisanie", ""),
-        "sostoyanie": data.get("status", ""),
-        "pogibshikh": data.get("deaths", 0) or data.get("pogibshikh", 0),
-        "postradavshikh": data.get("injured", 0) or data.get("postradavshikh", 0),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "vid_chs": dannye.get("type", "") or dannye.get("vid_chs", ""),
+        "klass_chs": dannye.get("class", "") or dannye.get("klass_chs", ""),
+        "data_vozniknoveniya": dannye.get("date", "") or dannye.get("data_vozniknoveniya", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "pogibshikh": dannye.get("deaths", 0) or dannye.get("pogibshikh", 0),
+        "postradavshikh": dannye.get("injured", 0) or dannye.get("postradavshikh", 0),
         "istochnik": "МЧС России (mchs.gov.ru)",
     }
 
 
-def _razobrat_radiatsiyu(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_radiatsiyu(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных радиационного мониторинга."""
     return {
-        "stantsiya": data.get("station", "") or data.get("stantsiya", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "uroven_radiatsii": data.get("level", 0.0) or data.get("uroven_radiatsii", 0.0),
-        "edinitsa": data.get("unit", "мкЗв/ч"),
-        "data_izmereniya": data.get("date", "") or data.get("data_izmereniya", ""),
-        "norma": data.get("norm", 0.30) or data.get("norma", 0.30),
+        "stantsiya": dannye.get("station", "") or dannye.get("stantsiya", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "uroven_radiatsii": dannye.get("level", 0.0) or dannye.get("uroven_radiatsii", 0.0),
+        "edinitsa": dannye.get("unit", "мкЗв/ч"),
+        "data_izmereniya": dannye.get("date", "") or dannye.get("data_izmereniya", ""),
+        "norma": dannye.get("norm", 0.30) or dannye.get("norma", 0.30),
         "istochnik": "МЧС России (mchs.gov.ru)",
     }
 
 
-def _razobrat_gidrologiyu(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_gidrologiyu(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных гидрологической обстановки."""
     return {
-        "reka": data.get("river", "") or data.get("reka", ""),
-        "punkt_nablyudeniya": data.get("point", "") or data.get("punkt_nablyudeniya", ""),
-        "uroven_vody": data.get("level", 0.0) or data.get("uroven_vody", 0.0),
-        "opasnyy_uroven": data.get("dangerLevel") or data.get("opasnyy_uroven"),
-        "tendentsiya": data.get("trend", "") or data.get("tendentsiya", ""),
-        "data_izmereniya": data.get("date", "") or data.get("data_izmereniya", ""),
+        "reka": dannye.get("river", "") or dannye.get("reka", ""),
+        "punkt_nablyudeniya": dannye.get("point", "") or dannye.get("punkt_nablyudeniya", ""),
+        "uroven_vody": dannye.get("level", 0.0) or dannye.get("uroven_vody", 0.0),
+        "opasnyy_uroven": dannye.get("dangerLevel") or dannye.get("opasnyy_uroven"),
+        "tendentsiya": dannye.get("trend", "") or dannye.get("tendentsiya", ""),
+        "data_izmereniya": dannye.get("date", "") or dannye.get("data_izmereniya", ""),
         "istochnik": "МЧС России (mchs.gov.ru)",
     }
 
 
-def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_preduprezhdenie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных предупреждения о ЧС."""
     return {
-        "nomer": data.get("id", "") or data.get("nomer", ""),
-        "tip_opasnosti": data.get("dangerType", "") or data.get("tip_opasnosti", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "opisanie": data.get("description", "") or data.get("opisanie", ""),
-        "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
-        "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
+        "nomer": dannye.get("id", "") or dannye.get("nomer", ""),
+        "tip_opasnosti": dannye.get("dangerType", "") or dannye.get("tip_opasnosti", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
+        "data_nachala": dannye.get("startDate", "") or dannye.get("data_nachala", ""),
+        "data_okonchaniya": dannye.get("endDate", "") or dannye.get("data_okonchaniya", ""),
         "istochnik": "МЧС России (mchs.gov.ru)",
     }

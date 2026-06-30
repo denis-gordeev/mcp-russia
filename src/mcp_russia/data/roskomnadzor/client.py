@@ -34,18 +34,18 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
     """
     try:
         url = f"{RKN_API_BASE}/pdn/search"
-        params: dict[str, Any] = {}
+        parametry: dict[str, Any] = {}
         if inn:
-            params["inn"] = inn
+            parametry["inn"] = inn
         if nazvanie:
-            params["name"] = nazvanie
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["name"] = nazvanie
+        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_operatora_pd(o) for o in elementy if isinstance(o, dict)]
-        if isinstance(data, list):
-            return [_razobrat_operatora_pd(o) for o in data if isinstance(o, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_operatora_pd(o) for o in dannye if isinstance(o, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске оператора ПД")
@@ -64,18 +64,18 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
     """
     try:
         url = f"{RKN_API_BASE}/registry-ori/search"
-        params: dict[str, Any] = {}
+        parametry: dict[str, Any] = {}
         if nazvanie:
-            params["name"] = nazvanie
+            parametry["name"] = nazvanie
         if inn:
-            params["inn"] = inn
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["inn"] = inn
+        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_ori(o) for o in elementy if isinstance(o, dict)]
-        if isinstance(data, list):
-            return [_razobrat_ori(o) for o in data if isinstance(o, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_ori(o) for o in dannye if isinstance(o, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске ОРИ")
@@ -95,10 +95,10 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
         return {"blokirovka": False, "osnovanie": ""}
     try:
         url = f"{EAIS_API_BASE}/api/check"
-        params = {"domain": domen}
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_blokirovku(data, domen)
+        parametry = {"domain": domen}
+        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_blokirovku(dannye, domen)
         return {"domen": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
     except Exception:
         logger.exception("Ошибка при проверке блокировки %s", domen)
@@ -122,22 +122,24 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
     """
     try:
         url = f"{RKN_API_BASE}/licenses/search"
-        params: dict[str, Any] = {}
+        parametry: dict[str, Any] = {}
         if nomer:
-            params["number"] = nomer
+            parametry["number"] = nomer
         if inn:
-            params["inn"] = inn
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["inn"] = inn
+        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [
                     _razobrat_litsenziyu(element)
                     for element in elementy
                     if isinstance(element, dict)
                 ]
-        if isinstance(data, list):
-            return [_razobrat_litsenziyu(element) for element in data if isinstance(element, dict)]
+        if isinstance(dannye, list):
+            return [
+                _razobrat_litsenziyu(element) for element in dannye if isinstance(element, dict)
+            ]
         return []
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -156,18 +158,18 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
     """
     try:
         url = f"{RKN_API_BASE}/mass-media/search"
-        params: dict[str, Any] = {}
+        parametry: dict[str, Any] = {}
         if registracionnyy_nomer:
-            params["regNumber"] = registracionnyy_nomer
+            parametry["regNumber"] = registracionnyy_nomer
         if nazvanie:
-            params["name"] = nazvanie
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            elementy = data.get("data", data.get("items", []))
+            parametry["name"] = nazvanie
+        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [_razobrat_smi(s) for s in elementy if isinstance(s, dict)]
-        if isinstance(data, list):
-            return [_razobrat_smi(s) for s in data if isinstance(s, dict)]
+        if isinstance(dannye, list):
+            return [_razobrat_smi(s) for s in dannye if isinstance(s, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске СМИ")

@@ -219,7 +219,7 @@ _SISTEMNYY_PROMPT = """\
 """
 
 
-async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
+async def splanirovat_zapros_impl(zapros: str, catalog: str) -> str:
     """Вызов API Anthropic для построения структурированного плана выполнения.
 
     Аргументы:
@@ -254,10 +254,10 @@ async def splanirovat_zapros_impl(query: str, catalog: str) -> str:
             model="claude-haiku-4-5-20251001",
             max_tokens=2048,
             system=system_prompt,
-            messages=[{"role": "user", "content": query}],
+            messages=[{"role": "user", "content": zapros}],
         )
-        block = otvet.content[0]
-        raw_text = str(getattr(block, "text", ""))
+        blok = otvet.content[0]
+        raw_text = str(getattr(blok, "text", ""))
 
         try:
             plan = PlanZaprosa.model_validate(json.loads(raw_text))

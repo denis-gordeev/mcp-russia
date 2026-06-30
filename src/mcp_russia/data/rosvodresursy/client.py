@@ -45,19 +45,19 @@ async def poisk_vodnykh_obektov(
         Список водных объектов.
     """
     try:
-        url = f"{VODNYY_REESTR_BASE}/api/objects"
-        params: dict[str, Any] = {}
+        adres_url = f"{VODNYY_REESTR_BASE}/api/objects"
+        parametry: dict[str, Any] = {}
         if zapros:
-            params["query"] = zapros
+            parametry["query"] = zapros
         if tip:
-            params["type"] = tip
+            parametry["type"] = tip
         if basseyn:
-            params["basin"] = basseyn
+            parametry["basin"] = basseyn
         if subiekt:
-            params["region"] = subiekt
-        params["limit"] = ogranichenie
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        parametry["limit"] = ogranichenie
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_vodnyy_obekt(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске водных объектов")
@@ -74,10 +74,10 @@ async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
         Данные о водном объекте или None.
     """
     try:
-        url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_vodnyy_obekt(data)
+        adres_url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_vodnyy_obekt(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении водного объекта %s", kod)
@@ -100,14 +100,14 @@ async def poluchit_gidro_dannye(
         Список гидрологических данных.
     """
     try:
-        url = f"{GMVO_API_BASE}/api/data"
-        params: dict[str, Any] = {"type": tip_dannykh}
+        adres_url = f"{GMVO_API_BASE}/api/data"
+        parametry: dict[str, Any] = {"type": tip_dannykh}
         if identifikator_posta:
-            params["post"] = identifikator_posta
+            parametry["post"] = identifikator_posta
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_gidro_zapis(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении гидрологических данных")
@@ -124,10 +124,10 @@ async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
         Данные о водохранилище или None.
     """
     try:
-        url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_vodokhranilishche(data)
+        adres_url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_vodokhranilishche(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении данных водохранилища %s", kod)
@@ -148,14 +148,14 @@ async def poluchit_vodopolzovanie(
         Список данных о водопользовании.
     """
     try:
-        url = f"{VODNYY_REESTR_BASE}/api/water-use"
-        params: dict[str, Any] = {}
+        adres_url = f"{VODNYY_REESTR_BASE}/api/water-use"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_vodopolzovanie_zapis(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при получении данных о водопользовании")
@@ -190,13 +190,13 @@ def poluchit_vodokhranilishche_podrobno() -> list[dict[str, Any]]:
     return KRUPNYE_VODOKHRANILISHCHA
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []

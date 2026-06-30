@@ -70,7 +70,7 @@ async def test_sputnik_monitoring_empty():
 
 
 def test_razobrat_openmeteo_pogodu():
-    data = {
+    dannye = {
         "current": {
             "temperature_2m": 5.3,
             "relative_humidity_2m": 72,
@@ -84,7 +84,7 @@ def test_razobrat_openmeteo_pogodu():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_pogodu(data, info)
+    result = _razobrat_openmeteo_pogodu(dannye, info)
     assert result.gorod == "Москва"
     assert result.temperatura == 5.3
     assert result.oshchushchaetsya_kak == 2.1
@@ -94,7 +94,7 @@ def test_razobrat_openmeteo_pogodu():
 
 
 def test_razobrat_openmeteo_prognoz():
-    data = {
+    dannye = {
         "daily": {
             "time": ["2026-06-01", "2026-06-02"],
             "temperature_2m_max": [22.0, 24.0],
@@ -105,7 +105,7 @@ def test_razobrat_openmeteo_prognoz():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_prognoz(data, info)
+    result = _razobrat_openmeteo_prognoz(dannye, info)
     assert len(result) == 2
     assert result[0].gorod == "Москва"
     assert result[0].temperatura_dnem == 22.0
@@ -115,7 +115,7 @@ def test_razobrat_openmeteo_prognoz():
 
 
 def test_razobrat_openmeteo_ekologiyu():
-    data = {
+    dannye = {
         "current": {
             "pm2_5": 12.5,
             "pm10": 35.0,
@@ -127,7 +127,7 @@ def test_razobrat_openmeteo_ekologiyu():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_ekologiyu(data, info)
+    result = _razobrat_openmeteo_ekologiyu(dannye, info)
     assert len(result) == 6
     assert result[0].pokazatel == "PM2.5"
     assert result[0].znachenie == 12.5
@@ -138,7 +138,7 @@ def test_razobrat_openmeteo_ekologiyu():
 
 
 def test_razobrat_openmeteo_ekologiyu_prevyshenie():
-    data = {
+    dannye = {
         "current": {
             "pm2_5": 55.0,
             "pm10": 80.0,
@@ -150,7 +150,7 @@ def test_razobrat_openmeteo_ekologiyu_prevyshenie():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_ekologiyu(data, info)
+    result = _razobrat_openmeteo_ekologiyu(dannye, info)
     assert result[0].prevyshenie is True
     assert result[1].prevyshenie is True
     assert result[3].prevyshenie is True

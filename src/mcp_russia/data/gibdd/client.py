@@ -32,10 +32,10 @@ async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
     Возвращает:
         Список регистрационных действий.
     """
-    url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
+    adres_url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_istoriyu(data, vin)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_istoriyu(dannye, vin)
     except Exception:
         logger.exception("Ошибка при проверке истории ТС по VIN %s", vin)
         return []
@@ -50,10 +50,10 @@ async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей о ДТП.
     """
-    url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
+    adres_url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_dtp(data)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_dtp(dannye)
     except Exception:
         logger.exception("Ошибка при проверке ДТП по VIN %s", vin)
         return []
@@ -68,10 +68,10 @@ async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей о розыске.
     """
-    url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
+    adres_url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_rozysk(data)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_rozysk(dannye)
     except Exception:
         logger.exception("Ошибка при проверке розыска ТС по VIN %s", vin)
         return []
@@ -86,10 +86,10 @@ async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей об ограничениях.
     """
-    url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
+    adres_url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_ogranichenie(data)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_ogranichenie(dannye)
     except Exception:
         logger.exception("Ошибка при проверке ограничений ТС по VIN %s", vin)
         return []
@@ -104,10 +104,10 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     Возвращает:
         Данные ВУ или None.
     """
-    url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
+    adres_url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_voditelya(data, nomer_vu)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_voditelya(dannye, nomer_vu)
     except Exception:
         logger.exception("Ошибка при проверке ВУ %s", nomer_vu)
         return None
@@ -123,24 +123,24 @@ async def statistika_dtp_region(subiekt: str, god: int) -> StatistikaDTP | None:
     Возвращает:
         Статистика ДТП или None.
     """
-    url = f"{GIBDD_STAT_BASE}/map/dtp"
-    params = {"region": subiekt, "year": str(god)}
+    adres_url = f"{GIBDD_STAT_BASE}/map/dtp"
+    parametry = {"region": subiekt, "year": str(god)}
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_statistiku(data, subiekt, god)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_statistiku(dannye, subiekt, god)
     except Exception:
         logger.exception("Ошибка при получении статистики ДТП для %s, %d", subiekt, god)
         return None
 
 
-def _izvlech_rezultat(data: Any, klyuch: str) -> dict[str, Any]:
+def _izvlech_rezultat(dannye: Any, klyuch: str) -> dict[str, Any]:
     """Извлечение секции результата из ответа API проверки ГИБДД.
 
     Типичный формат: {"RequestResult": {"result": {<key>: {...}}}}
     """
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return {}
-    request_result = data.get("RequestResult", {})
+    request_result = dannye.get("RequestResult", {})
     if not isinstance(request_result, dict):
         return {}
     rezultat = request_result.get("result", {})
@@ -149,9 +149,9 @@ def _izvlech_rezultat(data: Any, klyuch: str) -> dict[str, Any]:
     return rezultat.get(klyuch, {})
 
 
-def _razobrat_istoriyu(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
+def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
     """Разбор ответа истории регистрации ТС."""
-    history = _izvlech_rezultat(data, "history")
+    history = _izvlech_rezultat(dannye, "history")
     if not isinstance(history, dict):
         return []
 
@@ -171,9 +171,9 @@ def _razobrat_istoriyu(data: Any, vin: str) -> list[RegistracionnoeDeystvie]:
     return zapisi
 
 
-def _razobrat_dtp(data: Any) -> list[dict[str, Any]]:
+def _razobrat_dtp(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа истории ДТП."""
-    dtp = _izvlech_rezultat(data, "dtp")
+    dtp = _izvlech_rezultat(dannye, "dtp")
     if not isinstance(dtp, dict):
         return []
 
@@ -194,14 +194,14 @@ def _razobrat_dtp(data: Any) -> list[dict[str, Any]]:
     return zapisi
 
 
-def _razobrat_rozysk(data: Any) -> list[dict[str, Any]]:
+def _razobrat_rozysk(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа о розыске ТС."""
-    wanted = _izvlech_rezultat(data, "wanted")
-    if not isinstance(wanted, dict):
+    razyskivaemye = _izvlech_rezultat(dannye, "wanted")
+    if not isinstance(razyskivaemye, dict):
         return []
 
     zapisi = []
-    for element in wanted.get("records", []) or []:
+    for element in razyskivaemye.get("records", []) or []:
         if not isinstance(element, dict):
             continue
         zapisi.append(
@@ -217,9 +217,9 @@ def _razobrat_rozysk(data: Any) -> list[dict[str, Any]]:
     return zapisi
 
 
-def _razobrat_ogranichenie(data: Any) -> list[dict[str, Any]]:
+def _razobrat_ogranichenie(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа об ограничениях транспортного средства."""
-    restrict = _izvlech_rezultat(data, "restrict")
+    restrict = _izvlech_rezultat(dannye, "restrict")
     if not isinstance(restrict, dict):
         return []
 
@@ -240,9 +240,9 @@ def _razobrat_ogranichenie(data: Any) -> list[dict[str, Any]]:
     return zapisi
 
 
-def _razobrat_voditelya(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
+def _razobrat_voditelya(dannye: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     """Разбор ответа проверки водительского удостоверения."""
-    driver = _izvlech_rezultat(data, "driver")
+    driver = _izvlech_rezultat(dannye, "driver")
     if not isinstance(driver, dict):
         return None
 
@@ -272,12 +272,12 @@ def _razobrat_voditelya(data: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | 
     )
 
 
-def _razobrat_statistiku(data: Any, subiekt: str, god: int) -> StatistikaDTP | None:
+def _razobrat_statistiku(dannye: Any, subiekt: str, god: int) -> StatistikaDTP | None:
     """Разбор ответа статистики ДТП."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return None
 
-    stats = data.get("data", data)
+    stats = dannye.get("data", dannye)
     if not isinstance(stats, dict):
         return None
 

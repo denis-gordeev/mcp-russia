@@ -56,8 +56,8 @@ async def tekushchie_kursy(ctx: Context) -> str:
             )
         )
 
-    header = "**Официальные курсы валют ЦБ РФ**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = "**Официальные курсы валют ЦБ РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Код", "Валюта", "Номинал", "Курс (₽)", "Изменение"],
         stroki_tablitsy,
     )
@@ -119,17 +119,17 @@ async def spisok_valyut(ctx: Context) -> str:
     valute_data = rezultat.get("Valute", {})
 
     stroki_tablitsy = []
-    for code, zapis in sorted(valute_data.items()):
-        name = zapis.get("Name", code)
+    for kod, zapis in sorted(valute_data.items()):
+        name = zapis.get("Name", kod)
         nominal = zapis.get("Nominal", 1)
         value = zapis.get("Value", 0)
         znachenie_za_edinitsu = value / nominal if nominal else value
         stroki_tablitsy.append(
-            (code, name, str(nominal), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
+            (kod, name, str(nominal), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
         )
 
-    header = f"**Справочник валют ЦБ РФ** — {len(stroki_tablitsy)} валют\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Справочник валют ЦБ РФ** — {len(stroki_tablitsy)} валют\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Код", "Валюта", "Номинал", "Курс (₽)"],
         stroki_tablitsy,
     )
@@ -204,8 +204,8 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
             change = f"{znak}{formatirovat_chislo_ru(pct, 2)}%"
         stroki_tablitsy.append((m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), change))
 
-    header = "**Сравнение курсов валют ЦБ РФ**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = "**Сравнение курсов валют ЦБ РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Код", "Валюта", "Курс (₽)", "Изменение"],
         stroki_tablitsy,
     )
@@ -228,8 +228,8 @@ async def kursy_po_stranam(ctx: Context) -> str:
         strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == m.kod), m.kod)
         stroki_tablitsy.append((strana, m.kod, formatirovat_chislo_ru(m.znachenie, 4)))
 
-    header = "**Курсы валют основных стран-партнёров России**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = "**Курсы валют основных стран-партнёров России**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Страна", "Код", "Курс (₽)"],
         stroki_tablitsy,
     )

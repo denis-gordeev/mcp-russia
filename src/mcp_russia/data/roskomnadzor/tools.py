@@ -91,16 +91,16 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
     licenzii = await client.poisk_licenziy(nomer=nomer_licenzii, inn=inn)
     if not licenzii:
         return "Лицензия не найдена.\n\nРеестр лицензий связи: https://rkn.gov.ru/licenses"
-    data = licenzii[0]
+    dannye = licenzii[0]
     stroki = [
-        f"**Лицензия связи** № {data.get('nomer', nomer_licenzii)}",
-        f"- Организация: {data.get('organizaciya', '')}",
-        f"- Тип лицензии: {data.get('tip_licenzii', '')}",
-        f"- Дата выдачи: {data.get('data_vydachi', '')}",
-        f"- Дата окончания: {data.get('data_okonchaniya', '')}",
-        f"- Статус: {data.get('sostoyanie', '')}",
-        f"- Территория: {data.get('territoriya', '')}",
-        f"- Источник: {data.get('istochnik', 'Роскомнадзор')}",
+        f"**Лицензия связи** № {dannye.get('nomer', nomer_licenzii)}",
+        f"- Организация: {dannye.get('organizaciya', '')}",
+        f"- Тип лицензии: {dannye.get('tip_licenzii', '')}",
+        f"- Дата выдачи: {dannye.get('data_vydachi', '')}",
+        f"- Дата окончания: {dannye.get('data_okonchaniya', '')}",
+        f"- Статус: {dannye.get('sostoyanie', '')}",
+        f"- Территория: {dannye.get('territoriya', '')}",
+        f"- Источник: {dannye.get('istochnik', 'Роскомнадзор')}",
     ]
     return "\n".join(stroki)
 
@@ -201,19 +201,19 @@ async def proverka_blokirovki(ctx: Context, domen: str) -> str:
         Информация о наличии сайта в реестре блокировок.
     """
     await ctx.info(f"Проверка блокировки {domen}...")
-    data = await client.proverka_blokirovki(domen)
-    if data.get("blokirovka"):
+    dannye = await client.proverka_blokirovki(domen)
+    if dannye.get("blokirovka"):
         stroki = [
             f"**Домен {domen} — ЗАБЛОКИРОВАН**",
-            f"- Основание: {data.get('osnovanie', '')}",
-            f"- Дата включения: {data.get('data_vklyucheniya', '')}",
-            f"- Решившие органы: {data.get('organy', '')}",
-            f"- Источник: {data.get('istochnik', 'ЕАИС')}",
+            f"- Основание: {dannye.get('osnovanie', '')}",
+            f"- Дата включения: {dannye.get('data_vklyucheniya', '')}",
+            f"- Решившие органы: {dannye.get('organy', '')}",
+            f"- Источник: {dannye.get('istochnik', 'ЕАИС')}",
         ]
     else:
         stroki = [
             f"**Домен {domen} — НЕ найден** в реестре запрещённых сайтов",
-            f"- Источник: {data.get('istochnik', 'ЕАИС (eais.rkn.gov.ru)')}",
+            f"- Источник: {dannye.get('istochnik', 'ЕАИС (eais.rkn.gov.ru)')}",
         ]
     return "\n".join(stroki)
 

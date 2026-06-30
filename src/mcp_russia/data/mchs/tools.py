@@ -19,8 +19,8 @@ async def spisok_vidov_chs(ctx: Context) -> str:
     await ctx.info("Запрос списка видов ЧС...")
     vidy = client.poluchit_spisok_vidov_chs()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды чрезвычайных ситуаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид ЧС"], stroki_tablitsy)
+    zagolovok = "**Виды чрезвычайных ситуаций**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид ЧС"], stroki_tablitsy)
 
 
 async def spisok_klassov_chs(ctx: Context) -> str:
@@ -28,8 +28,8 @@ async def spisok_klassov_chs(ctx: Context) -> str:
     await ctx.info("Запрос списка классов ЧС...")
     klassy = client.poluchit_spisok_klassov_chs()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in klassy]
-    header = "**Классы чрезвычайных ситуаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Класс ЧС"], stroki_tablitsy)
+    zagolovok = "**Классы чрезвычайных ситуаций**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Класс ЧС"], stroki_tablitsy)
 
 
 async def spisok_vidov_pojarov(ctx: Context) -> str:
@@ -37,8 +37,8 @@ async def spisok_vidov_pojarov(ctx: Context) -> str:
     await ctx.info("Запрос списка видов пожаров...")
     vidy = client.poluchit_spisok_vidov_pozharov()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды пожаров**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид пожара"], stroki_tablitsy)
+    zagolovok = "**Виды пожаров**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид пожара"], stroki_tablitsy)
 
 
 async def spisok_tipov_opasnosti(ctx: Context) -> str:
@@ -46,8 +46,8 @@ async def spisok_tipov_opasnosti(ctx: Context) -> str:
     await ctx.info("Запрос списка типов опасностей...")
     tipy = client.poluchit_spisok_tipov_opasnosti()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы опасностей для предупреждений МЧС**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип опасности"], stroki_tablitsy)
+    zagolovok = "**Типы опасностей для предупреждений МЧС**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип опасности"], stroki_tablitsy)
 
 
 async def statistika_pojarov(
@@ -115,8 +115,8 @@ async def statistika_pojarov(
         )
         for p in pojarov_data
     ]
-    header = f"**Статистика пожаров** — найдено: {len(pojarov_data)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Статистика пожаров** — найдено: {len(pojarov_data)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Дата", "Регион", "Вид", "Погибших", "Пострадавших"],
         stroki_tablitsy,
     )
@@ -169,8 +169,8 @@ async def poisk_chs(
         )
         for c in chs_data
     ]
-    header = f"**Чрезвычайные ситуации** — найдено: {len(chs_data)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Чрезвычайные ситуации** — найдено: {len(chs_data)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Вид", "Класс", "Дата", "Регион", "Погибших", "Пострадавших"],
         stroki_tablitsy,
     )
@@ -206,8 +206,8 @@ async def radiatsionnyy_monitoring(
         )
         for m in monitoring_data
     ]
-    header = f"**Радиационный мониторинг** — станций: {len(monitoring_data)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Радиационный мониторинг** — станций: {len(monitoring_data)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Станция", "Регион", "Уровень", "Ед.", "Норма", "Дата"],
         stroki_tablitsy,
     )
@@ -243,8 +243,8 @@ async def gidrologicheskaya_obstanovka(
         )
         for g in gidro_data
     ]
-    header = f"**Гидрологическая обстановка** — пунктов: {len(gidro_data)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Гидрологическая обстановка** — пунктов: {len(gidro_data)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Река", "Пункт", "Уровень (см)", "Опасный (см)", "Тенденция", "Дата"],
         stroki_tablitsy,
     )
@@ -285,8 +285,8 @@ async def preduprezhdeniya_chs(
         )
         for p in preduprezhdeniya
     ]
-    header = f"**Предупреждения о ЧС** — активно: {len(preduprezhdeniya)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Предупреждения о ЧС** — активно: {len(preduprezhdeniya)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Тип опасности", "Регион", "Описание", "Начало", "Окончание"],
         stroki_tablitsy,
     )

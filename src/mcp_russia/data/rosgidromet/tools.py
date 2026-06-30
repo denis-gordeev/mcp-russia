@@ -26,8 +26,8 @@ async def spisok_stanciy(ctx: Context) -> str:
     stancii = client.poluchit_spisok_stantsiy()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
-    header = "**Станции мониторинга Росгидромета**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
+    zagolovok = "**Станции мониторинга Росгидромета**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
 
 
 async def spisok_tipov_dannykh(ctx: Context) -> str:
@@ -61,33 +61,35 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
         Текущие погодные данные.
     """
     await ctx.info(f"Запрос текущей погоды на станции {stanciya}...")
-    data = await client.poluchit_pogodu(stanciya)
+    dannye = await client.poluchit_pogodu(stanciya)
 
-    if not data:
+    if not dannye:
         return (
             f"Данные о погоде для станции '{stanciya}' недоступны.\n\n"
             f"Используйте spisok_stanciy() для списка станций."
         )
 
-    stroki = [f"**Погода: {data.gorod}** ({data.subiekt})"]
-    if data.temperatura:
-        stroki.append(f"- Температура: {formatirovat_chislo_ru(data.temperatura, 1)}°C")
-    if data.oshchushchaetsya_kak:
-        stroki.append(f"- Ощущается как: {formatirovat_chislo_ru(data.oshchushchaetsya_kak, 1)}°C")
-    if data.vlazhnost:
-        stroki.append(f"- Влажность: {formatirovat_chislo_ru(data.vlazhnost, 0)}%")
-    if data.davlenie:
-        stroki.append(f"- Давление: {formatirovat_chislo_ru(data.davlenie, 0)} мм рт.ст.")
-    if data.veter_skorost:
+    stroki = [f"**Погода: {dannye.gorod}** ({dannye.subiekt})"]
+    if dannye.temperatura:
+        stroki.append(f"- Температура: {formatirovat_chislo_ru(dannye.temperatura, 1)}°C")
+    if dannye.oshchushchaetsya_kak:
         stroki.append(
-            f"- Ветер: {formatirovat_chislo_ru(data.veter_skorost, 1)} м/с {data.veter_napravlenie}"
+            f"- Ощущается как: {formatirovat_chislo_ru(dannye.oshchushchaetsya_kak, 1)}°C"
         )
-    if data.osadki is not None:
-        stroki.append(f"- Осадки: {formatirovat_chislo_ru(data.osadki, 1)} мм")
-    if data.opisaniye:
-        stroki.append(f"- Описание: {data.opisaniye}")
-    if data.data_vremya:
-        stroki.append(f"- Данные на: {data.data_vremya}")
+    if dannye.vlazhnost:
+        stroki.append(f"- Влажность: {formatirovat_chislo_ru(dannye.vlazhnost, 0)}%")
+    if dannye.davlenie:
+        stroki.append(f"- Давление: {formatirovat_chislo_ru(dannye.davlenie, 0)} мм рт.ст.")
+    if dannye.veter_skorost:
+        stroki.append(
+            f"- Ветер: {formatirovat_chislo_ru(dannye.veter_skorost, 1)} м/с {dannye.veter_napravlenie}"
+        )
+    if dannye.osadki is not None:
+        stroki.append(f"- Осадки: {formatirovat_chislo_ru(dannye.osadki, 1)} мм")
+    if dannye.opisaniye:
+        stroki.append(f"- Описание: {dannye.opisaniye}")
+    if dannye.data_vremya:
+        stroki.append(f"- Данные на: {dannye.data_vremya}")
     stroki.append("- Источник: Open-Meteo / Росгидромет")
     return "\n".join(stroki)
 
@@ -147,9 +149,9 @@ async def ekologiya_regiona(
         Данные об экологической обстановке.
     """
     await ctx.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
-    data = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
+    dannye = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
 
-    if not data:
+    if not dannye:
         filtry = []
         if gorod:
             filtry.append(f"город: {gorod}")
@@ -161,8 +163,8 @@ async def ekologiya_regiona(
             f"Данные доступны на сайте Росприроднадзора: rpn.gov.ru"
         )
 
-    stroki = [f"**Экологическая обстановка** — измерений: {len(data)}\n"]
-    for d in data[:10]:
+    stroki = [f"**Экологическая обстановка** — измерений: {len(dannye)}\n"]
+    for d in dannye[:10]:
         line = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
         if d.znachenie is not None:
             line += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
@@ -170,8 +172,8 @@ async def ekologiya_regiona(
             line += " ⚠️ ПРЕВЫШЕНИЕ нормы"
         stroki.append(line)
 
-    if len(data) > 10:
-        stroki.append(f"\n... и ещё {len(data) - 10} измерений")
+    if len(dannye) > 10:
+        stroki.append(f"\n... и ещё {len(dannye) - 10} измерений")
 
     stroki.append("- Источник: Open-Meteo Air Quality")
     return "\n".join(stroki)
@@ -187,17 +189,17 @@ async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str
         Активные предупреждения.
     """
     await ctx.info(f"Запрос предупреждений для региона {subiekt}...")
-    data = await client.poluchit_preduprezhdeniya(subiekt)
+    dannye = await client.poluchit_preduprezhdeniya(subiekt)
 
-    if not data:
+    if not dannye:
         region_text = f" для региона '{subiekt}'" if subiekt else ""
         return (
             f"Активные предупреждения{region_text} отсутствуют.\n\n"
             f"Метеорологические данные: open-meteo.com / meteorf.ru"
         )
 
-    stroki = [f"**Активные предупреждения** — {len(data)}\n"]
-    for p in data:
+    stroki = [f"**Активные предупреждения** — {len(dannye)}\n"]
+    for p in dannye:
         stroki.append(f"⚠️ **{p.tip}** — {p.subiekt}, {p.gorod}")
         stroki.append(f"   {p.opisanie}")
         if p.data_nachala:
@@ -226,9 +228,9 @@ async def sputnik_monitoring(
         Данные спутникового мониторинга.
     """
     await ctx.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
-    data = await client.poluchit_sputnik_dannye(subiekt, tip)
+    dannye = await client.poluchit_sputnik_dannye(subiekt, tip)
 
-    if not data:
+    if not dannye:
         filtry = []
         if subiekt:
             filtry.append(f"регион: {subiekt}")
@@ -240,16 +242,16 @@ async def sputnik_monitoring(
             f"Спутниковые данные: niikp-atm.ru"
         )
 
-    stroki = [f"**Спутниковый мониторинг** — снимков: {len(data)}\n"]
-    for s in data[:5]:
+    stroki = [f"**Спутниковый мониторинг** — снимков: {len(dannye)}\n"]
+    for s in dannye[:5]:
         stroki.append(f"- {s.subiekt} ({s.data_syomki}): {s.tip_dannykh}")
         stroki.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
         if s.izobrazhenie_ssylka:
             stroki.append(f"  Изображение: {s.izobrazhenie_ssylka}")
         stroki.append("")
 
-    if len(data) > 5:
-        stroki.append(f"\n... и ещё {len(data) - 5} снимков")
+    if len(dannye) > 5:
+        stroki.append(f"\n... и ещё {len(dannye) - 5} снимков")
 
     stroki.append("- Источник: Росгидромет / НИИ КП")
     return "\n".join(stroki)

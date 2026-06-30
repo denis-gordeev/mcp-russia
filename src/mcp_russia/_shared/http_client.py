@@ -38,8 +38,8 @@ _KODY_STATUSOV_DLYA_POVTORA = frozenset({429, 500, 502, 503, 504})
 
 def sozdat_klienta(
     base_url: str = "",
-    timeout: float | None = None,
-    headers: dict[str, str] | None = None,
+    taimaut: float | None = None,
+    zagolovki: dict[str, str] | None = None,
 ) -> httpx.AsyncClient:
     """Создание настроенного httpx.AsyncClient.
 
@@ -55,23 +55,23 @@ def sozdat_klienta(
         "User-Agent": POLZOVATELSKIY_AGENT,
         "Accept": "application/json",
     }
-    if headers:
-        default_headers.update(headers)
+    if zagolovki:
+        default_headers.update(zagolovki)
 
     return httpx.AsyncClient(
         base_url=base_url,
-        timeout=httpx.Timeout(timeout or TAIMAUT_HTTP),
+        timeout=httpx.Timeout(taimaut or TAIMAUT_HTTP),
         headers=default_headers,
         follow_redirects=True,
     )
 
 
 async def http_poluchit(
-    url: str,
+    adres_url: str,
     *,
-    params: dict[str, Any] | None = None,
-    headers: dict[str, str] | None = None,
-    timeout: float | None = None,
+    parametry: dict[str, Any] | None = None,
+    zagolovki: dict[str, str] | None = None,
+    taimaut: float | None = None,
     maks_povtorov: int | None = None,
 ) -> Any:
     """Выполнение GET-запроса с повторными попытками и экспоненциальной задержкой.
@@ -92,29 +92,29 @@ async def http_poluchit(
     Вызывает:
         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
-    retries = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
-    last_error: Exception | None = None
+    povtory = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
+    poslednyaya_oshibka: Exception | None = None
 
-    async with sozdat_klienta(timeout=timeout, headers=headers) as client:
-        for attempt in range(retries + 1):
+    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as client:
+        for popytka in range(povtory + 1):
             try:
-                otvet = await client.get(url, params=params)
+                otvet = await client.get(adres_url, params=parametry)
 
                 if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
-                    if attempt < retries:
-                        wait = BAZA_EKSPON_ZADERZH * (2**attempt)
+                    if popytka < povtory:
+                        ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                         logger.warning(
                             "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
-                            attempt + 1,
-                            retries,
-                            url,
+                            popytka + 1,
+                            povtory,
+                            adres_url,
                             otvet.status_code,
-                            wait,
+                            ozhidanie,
                         )
-                        await asyncio.sleep(wait)
+                        await asyncio.sleep(ozhidanie)
                         continue
                     raise OshibkaHttpClienta(
-                        f"Запрос к {url} не удался после {retries + 1} попыток "
+                        f"Запрос к {adres_url} не удался после {povtory + 1} попыток "
                         f"(последняя: HTTP {otvet.status_code})"
                     )
 
@@ -123,36 +123,36 @@ async def http_poluchit(
 
             except httpx.HTTPStatusError as exc:
                 raise OshibkaHttpClienta(
-                    f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
+                    f"HTTP {exc.response.status_code} от {adres_url}: {exc.response.text[:200]}"
                 ) from exc
 
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
-                last_error = exc
-                if attempt < retries:
-                    wait = BAZA_EKSPON_ZADERZH * (2**attempt)
+                poslednyaya_oshibka = exc
+                if popytka < povtory:
+                    ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                     logger.warning(
                         "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
-                        url,
-                        attempt + 1,
-                        retries,
+                        adres_url,
+                        popytka + 1,
+                        povtory,
                         type(exc).__name__,
-                        wait,
+                        ozhidanie,
                     )
-                    await asyncio.sleep(wait)
+                    await asyncio.sleep(ozhidanie)
                     continue
 
     raise OshibkaHttpClienta(
-        f"Запрос к {url} не удался после {retries + 1} попыток"
-    ) from last_error
+        f"Запрос к {adres_url} не удался после {povtory + 1} попыток"
+    ) from poslednyaya_oshibka
 
 
 async def http_otpravit(
-    url: str,
+    adres_url: str,
     *,
     json_body: Any | None = None,
-    params: dict[str, Any] | None = None,
-    headers: dict[str, str] | None = None,
-    timeout: float | None = None,
+    parametry: dict[str, Any] | None = None,
+    zagolovki: dict[str, str] | None = None,
+    taimaut: float | None = None,
     maks_povtorov: int | None = None,
 ) -> Any:
     """Выполнение POST-запроса с повторными попытками и экспоненциальной задержкой.
@@ -173,29 +173,29 @@ async def http_otpravit(
     Вызывает:
         OshibkaHttpClienta: При неповторяемых ошибках или исчерпании попыток.
     """
-    retries = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
-    last_error: Exception | None = None
+    povtory = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
+    poslednyaya_oshibka: Exception | None = None
 
-    async with sozdat_klienta(timeout=timeout, headers=headers) as client:
-        for attempt in range(retries + 1):
+    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as client:
+        for popytka in range(povtory + 1):
             try:
-                otvet = await client.post(url, json=json_body, params=params)
+                otvet = await client.post(adres_url, json=json_body, params=parametry)
 
                 if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
-                    if attempt < retries:
-                        wait = BAZA_EKSPON_ZADERZH * (2**attempt)
+                    if popytka < povtory:
+                        ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                         logger.warning(
                             "Повтор %d/%d для %s (HTTP %d), ожидание %.1fс",
-                            attempt + 1,
-                            retries,
-                            url,
+                            popytka + 1,
+                            povtory,
+                            adres_url,
                             otvet.status_code,
-                            wait,
+                            ozhidanie,
                         )
-                        await asyncio.sleep(wait)
+                        await asyncio.sleep(ozhidanie)
                         continue
                     raise OshibkaHttpClienta(
-                        f"Запрос к {url} не удался после {retries + 1} попыток "
+                        f"Запрос к {adres_url} не удался после {povtory + 1} попыток "
                         f"(последняя: HTTP {otvet.status_code})"
                     )
 
@@ -204,24 +204,24 @@ async def http_otpravit(
 
             except httpx.HTTPStatusError as exc:
                 raise OshibkaHttpClienta(
-                    f"HTTP {exc.response.status_code} от {url}: {exc.response.text[:200]}"
+                    f"HTTP {exc.response.status_code} от {adres_url}: {exc.response.text[:200]}"
                 ) from exc
 
             except (httpx.TimeoutException, httpx.ConnectError) as exc:
-                last_error = exc
-                if attempt < retries:
-                    wait = BAZA_EKSPON_ZADERZH * (2**attempt)
+                poslednyaya_oshibka = exc
+                if popytka < povtory:
+                    ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                     logger.warning(
                         "Запрос к %s не удался (попытка %d/%d): %s, ожидание %.1fс",
-                        url,
-                        attempt + 1,
-                        retries,
+                        adres_url,
+                        popytka + 1,
+                        povtory,
                         type(exc).__name__,
-                        wait,
+                        ozhidanie,
                     )
-                    await asyncio.sleep(wait)
+                    await asyncio.sleep(ozhidanie)
                     continue
 
     raise OshibkaHttpClienta(
-        f"Запрос к {url} не удался после {retries + 1} попыток"
-    ) from last_error
+        f"Запрос к {adres_url} не удался после {povtory + 1} попыток"
+    ) from poslednyaya_oshibka

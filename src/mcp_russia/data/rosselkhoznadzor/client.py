@@ -46,28 +46,28 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        url = f"{FSVPS_API_BASE}/inspections"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{FSVPS_API_BASE}/inspections"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if vid_nadzora:
-            params["supervisionType"] = vid_nadzora
+            parametry["supervisionType"] = vid_nadzora
         if tip_proverki:
-            params["inspectionType"] = tip_proverki
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["inspectionType"] = tip_proverki
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для проверок")
 
     try:
-        url = f"{FSVPS_OPENDATA_BASE}/inspections"
-        params = {"limit": ogranichenie}
+        adres_url = f"{FSVPS_OPENDATA_BASE}/inspections"
+        parametry = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -90,14 +90,14 @@ async def poisk_karantinnykh_obektov(
         Список карантинных объектов.
     """
     try:
-        url = f"{FSVPS_API_BASE}/quarantine"
-        params: dict[str, Any] = {}
+        adres_url = f"{FSVPS_API_BASE}/quarantine"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if tip:
-            params["type"] = tip
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["type"] = tip
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_karantin(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -122,14 +122,14 @@ async def poisk_registratsiy_produktsii(
         Список зарегистрированной продукции.
     """
     try:
-        url = f"{FSVPS_API_BASE}/registrations"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{FSVPS_API_BASE}/registrations"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if tip_produktsii:
-            params["productType"] = tip_produktsii
+            parametry["productType"] = tip_produktsii
         if proizvoditel:
-            params["manufacturer"] = proizvoditel
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["manufacturer"] = proizvoditel
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_registratsiyu(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -154,14 +154,14 @@ async def veterinarsnye_sertifikaty(
         Список ветеринарных сертификатов.
     """
     try:
-        url = f"{FSVPS_API_BASE}/certificates"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{FSVPS_API_BASE}/certificates"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if tip_produktsii:
-            params["productType"] = tip_produktsii
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["productType"] = tip_produktsii
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_sertifikat(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -182,12 +182,12 @@ async def preduprezhdeniya_karantina(
         Список предупреждений.
     """
     try:
-        url = f"{FSVPS_API_BASE}/warnings"
-        params: dict[str, Any] = {}
+        adres_url = f"{FSVPS_API_BASE}/warnings"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["region"] = subiekt
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -231,81 +231,83 @@ def poluchit_statistiku_rskhn_staticheskie() -> dict[str, Any]:
     return STATISTIKA_RSKHN_2023
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []
 
 
-def _razobrat_proverku(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о проверке."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "vid_nadzora": data.get("supervisionType", "") or data.get("vid_nadzora", ""),
-        "tip_proverki": data.get("inspectionType", "") or data.get("tip_proverki", ""),
-        "data_provedeniya": data.get("date", "") or data.get("data_provedeniya", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "sostoyanie": data.get("status", ""),
-        "narusheniya": data.get("violations", 0) or data.get("narusheniya", 0),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "vid_nadzora": dannye.get("supervisionType", "") or dannye.get("vid_nadzora", ""),
+        "tip_proverki": dannye.get("inspectionType", "") or dannye.get("tip_proverki", ""),
+        "data_provedeniya": dannye.get("date", "") or dannye.get("data_provedeniya", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "narusheniya": dannye.get("violations", 0) or dannye.get("narusheniya", 0),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
 
-def _razobrat_karantin(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_karantin(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о карантинном объекте."""
     return {
-        "nazvanie": data.get("name", "") or data.get("nazvanie", ""),
-        "tip": data.get("type", "") or data.get("tip", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "status_karantina": data.get("quarantineStatus", "") or data.get("status_karantina", ""),
-        "data_vvedeniya": data.get("startDate", "") or data.get("data_vvedeniya", ""),
-        "opisanie": data.get("description", "") or data.get("opisanie", ""),
+        "nazvanie": dannye.get("name", "") or dannye.get("nazvanie", ""),
+        "tip": dannye.get("type", "") or dannye.get("tip", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "status_karantina": dannye.get("quarantineStatus", "")
+        or dannye.get("status_karantina", ""),
+        "data_vvedeniya": dannye.get("startDate", "") or dannye.get("data_vvedeniya", ""),
+        "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
 
-def _razobrat_registratsiyu(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_registratsiyu(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о регистрации продукции."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "naimenovanie": data.get("name", "") or data.get("naimenovanie", ""),
-        "proizvoditel": data.get("manufacturer", "") or data.get("proizvoditel", ""),
-        "tip_produktsii": data.get("productType", "") or data.get("tip_produktsii", ""),
-        "data_registratsii": data.get("registrationDate", "") or data.get("data_registratsii", ""),
-        "srok_deystviya": data.get("validUntil", "") or data.get("srok_deystviya", ""),
-        "sostoyanie": data.get("status", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "naimenovanie": dannye.get("name", "") or dannye.get("naimenovanie", ""),
+        "proizvoditel": dannye.get("manufacturer", "") or dannye.get("proizvoditel", ""),
+        "tip_produktsii": dannye.get("productType", "") or dannye.get("tip_produktsii", ""),
+        "data_registratsii": dannye.get("registrationDate", "")
+        or dannye.get("data_registratsii", ""),
+        "srok_deystviya": dannye.get("validUntil", "") or dannye.get("srok_deystviya", ""),
+        "sostoyanie": dannye.get("status", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
 
-def _razobrat_sertifikat(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_sertifikat(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о ветеринарном сертификате."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "tip_produktsii": data.get("productType", "") or data.get("tip_produktsii", ""),
-        "otpravitel": data.get("sender", "") or data.get("otpravitel", ""),
-        "poluchatel": data.get("receiver", "") or data.get("poluchatel", ""),
-        "data_oformleniya": data.get("date", "") or data.get("data_oformleniya", ""),
-        "region_otpravki": data.get("senderRegion", "") or data.get("region_otpravki", ""),
-        "sostoyanie": data.get("status", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "tip_produktsii": dannye.get("productType", "") or dannye.get("tip_produktsii", ""),
+        "otpravitel": dannye.get("sender", "") or dannye.get("otpravitel", ""),
+        "poluchatel": dannye.get("receiver", "") or dannye.get("poluchatel", ""),
+        "data_oformleniya": dannye.get("date", "") or dannye.get("data_oformleniya", ""),
+        "region_otpravki": dannye.get("senderRegion", "") or dannye.get("region_otpravki", ""),
+        "sostoyanie": dannye.get("status", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }
 
 
-def _razobrat_preduprezhdenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_preduprezhdenie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных предупреждения о карантине."""
     return {
-        "nomer": data.get("id", "") or data.get("nomer", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "opisanie": data.get("description", "") or data.get("opisanie", ""),
-        "tip_karantina": data.get("quarantineType", "") or data.get("tip_karantina", ""),
-        "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
-        "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
+        "nomer": dannye.get("id", "") or dannye.get("nomer", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
+        "tip_karantina": dannye.get("quarantineType", "") or dannye.get("tip_karantina", ""),
+        "data_nachala": dannye.get("startDate", "") or dannye.get("data_nachala", ""),
+        "data_okonchaniya": dannye.get("endDate", "") or dannye.get("data_okonchaniya", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }

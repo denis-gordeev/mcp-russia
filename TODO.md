@@ -2,7 +2,62 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-06-29 (пятьдесят шестой проход — русификация английских переменных в телах функций client.py/tools.py/_shared)
+## Статус раунда 2026-06-30 (пятьдесят седьмой проход — русификация `data`→`dannye`, `header`→`zagolovok`, `url`→`adres_url`, параметров HTTP-клиента)
+
+### Выполнено
+
+- **Русификация `data` → `dannye`** (~1 309 замен в 42 файлах):
+  - Локальные переменные в client.py: `data = await http_poluchit(...)` → `dannye = await http_poluchit(...)`
+  - Локальные переменные в tools.py: `data = await client.method(...)` → `dannye = await client.method(...)`
+  - Параметры функций `_razobrat_*` и `_izvlech_spisok`: `data: dict` / `data: Any` → `dannye: dict` / `dannye: Any`
+  - Использован AST-анализ для контекстного разделения: `data` = «дата» (оставлено) vs `data` = «данные» (→ `dannye`)
+  - Параметры `data: str` (дата) в `poluchit_vse_valyuty(data=)` и `poluchit_valyutu(data=)` оставлены без изменений
+  - Поля Pydantic-схем `data: str = Field(description="Дата...")` оставлены без изменений
+  - Ключевые аргументы Pydantic-конструкторов `ZnachenieValyuty(data=...)`, `Golosovanie(data=...)`, `PrognozDannye(data=...)`, `PokazatelRosstata(data=...)` оставлены без изменений
+- **Русификация `header` → `zagolovok`** (~230 замен в 19 tools.py): заголовки форматированного вывода
+- **Русификация `url` → `adres_url`** (~200 замен в 22 client.py): URL-адреса запросов
+- **Русификация `restrictions` → `ogranicheniya`** (3 замены в fssp/client.py): список ограничений ФССП
+- **Русификация `wanted` → `razyskivaemye`** (7 замен в fssp/client.py + gibdd/client.py + gibdd/tools.py): розыскные записи
+- **Русификация `subject` → `predmet`** (5 замен в fssp/client.py): предмет исполнения ФССП
+- **Русификация `info` → `svedeniya`** (19 замен в rosgidromet/client.py): сведения о станции
+- **Русификация `temp` → `temperatura`** (7 замен в rosgidromet/client.py): температура
+- **Русификация `found` → `naydennye`** (8 замен в rosapi/tools.py + rosreestr/client.py): найденные результаты
+- **Русификация `query` → `zapros`** (6 замен в discovery.py + planner.py + server.py): запрос пользователя
+- **Русификация `desc` → `opisanie_kratkoe`** (2 замены в discovery.py): краткое описание инструмента
+- **Русификация `block` → `blok`** (4 замены в discovery.py + planner.py): блок ответа LLM
+- **Русификация `wait` → `ozhidanie`** (14 замен в http_client.py + rate_limiter.py): время ожидания
+- **Русификация `check` → `proverochnaya_tsifra`** (6 замен в validators.py): проверочная цифра ИНН/СНИЛС
+- **Русификация `text` → `tekst`** (11 замен в cekrf/client.py): текст HTML-парсера
+- **Русификация `code` → `kod`** (14 замен в 6 файлах): код валюты/выборов/индикатора
+- **Русификация `number` → `nomer`** (18 замен в kad_arbitrazh/client.py): номер дела
+- **Русификация `token` → `zheton`** (~31 замена в 4 client.py): API-токен
+- **Русификация `start` → `nachalo`** (2 замены в server.py): начало замера времени
+- **Русификация `search_url` → `adres_url_poiska`** (2 замены в cekrf/client.py): URL поиска
+- **Русификация параметров HTTP-клиента** (~482 замены в 23 client.py):
+  - `params` → `parametry`: параметры HTTP-запроса
+  - `headers` → `zagolovki`: HTTP-заголовки (внутренние переменные и параметры `sozdat_klienta`/`http_poluchit`/`http_otpravit`)
+  - `timeout` → `taimaut`: таймаут запроса
+  - `retries` → `povtory`: счётчик повторных попыток
+  - `last_error` → `poslednyaya_oshibka`: последняя ошибка
+  - `attempt` → `popytka`: номер попытки
+  - Ключевые аргументы httpx (`client.get(params=...)`, `httpx.AsyncClient(timeout=..., headers=...)`) оставлены на английском — это API внешней библиотеки
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` (680 passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **`data` → `dannye` с контекстным анализом**: использован AST для определения типов параметров; `data: str` = «дата» (оставлено), `data: dict` / `data: Any` = «данные» (→ `dannye`); функция `handle_data` в cekrf (SAX callback) оставлена без изменений
+- **`url` → `adres_url`**: выбрано `adres_url` вместо простого `url` для однозначной семантики; параметр `base_url` в `sozdat_klienta` оставлен без изменений (имя параметра httpx)
+- **`token` → `zheton`**: API-токены авторизации переименованы; строковые ключи API (`.get("token")`) не затронуты
+- **Параметры HTTP-клиента русифицированы**: `sozdat_klienta(taimaut=, zagolovki=)`, `http_poluchit(parametry=, zagolovki=, taimaut=, maks_povtorov=)` — user-facing API; вызовы httpx внутри используют английские kwargs (`client.get(params=parametry)`)
+- **`check` → `proverochnaya_tsifra`**: в алгоритмах валидации ИНН/КПП/СНИЛС; `check` как встроенное имя не используется
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских переменных**: `value` (cbrf/client.py — значение валюты), `previous` (cbrf/client.py — предыдущее значение), `wind` (rosgidromet/client.py — ветер), `city` (rosapi/client.py — город), `nominal` (cbrf — номинал валюты) и другие единичные переменные
+- **Русификация docstrings**: обновление описаний параметров `url:`, `params:`, `headers:`, `timeout:` в docstrings http_client.py на русские имена
 
 ### Выполнено
 

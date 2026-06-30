@@ -196,9 +196,9 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
             )
         )
 
-    header = f"**Зарегистрированные права на объект {kadastrovyy_nomer}**\n\n"
-    header += "Источник: Росреестр / pkk.rosreestr.ru\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Зарегистрированные права на объект {kadastrovyy_nomer}**\n\n"
+    zagolovok += "Источник: Росреестр / pkk.rosreestr.ru\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Тип права", "Правообладатель", "Дата регистрации", "Номер регистрации"],
         stroki_tablitsy,
     )

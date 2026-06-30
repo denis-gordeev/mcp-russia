@@ -36,8 +36,8 @@ def proverit_inn(inn: str) -> bool:
         weights = [2, 4, 10, 3, 5, 9, 4, 6, 8]
         itogo = sum(int(digits[i]) * weights[i] for i in range(9))
         remainder = itogo % 11
-        check = remainder % 10
-        return int(digits[9]) == check
+        proverochnaya_tsifra = remainder % 10
+        return int(digits[9]) == proverochnaya_tsifra
 
     weights1 = [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
     weights2 = [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
@@ -139,14 +139,14 @@ def proverit_snils(snils: str) -> bool:
         itogo += int(digits[i]) * (9 - i)
 
     if itogo < 100:
-        check = itogo
+        proverochnaya_tsifra = itogo
     elif itogo in (100, 101):
-        check = 0
+        proverochnaya_tsifra = 0
     else:
         remainder = itogo % 101
-        check = 0 if remainder == 100 else remainder
+        proverochnaya_tsifra = 0 if remainder == 100 else remainder
 
-    check_str = f"{check:02d}"
+    check_str = f"{proverochnaya_tsifra:02d}"
     return digits[9:] == check_str
 
 

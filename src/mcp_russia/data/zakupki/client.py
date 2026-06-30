@@ -50,40 +50,40 @@ async def poisk_zakupok(
     Возвращает:
         Список закупок.
     """
-    params: dict[str, str | int] = {
+    parametry: dict[str, str | int] = {
         "pageNumber": 1,
         "pageSize": min(ogranichenie, 50),
     }
     if zapros:
-        params["searchString"] = zapros
+        parametry["searchString"] = zapros
     if zakon:
         if "44" in zakon:
-            params["fz44"] = "on"
+            parametry["fz44"] = "on"
         elif "223" in zakon:
-            params["fz223"] = "on"
+            parametry["fz223"] = "on"
     if subiekt:
-        params["regions"] = subiekt
+        parametry["regions"] = subiekt
     if status:
-        params["statuses"] = status
+        parametry["statuses"] = status
 
-    token = _poluchit_api_token()
-    if token:
-        params["token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["token"] = zheton
 
-    url = f"{ZAKUPKI_API_BASE}/api/nsi/search"
+    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/search"
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_poisk_zakupok(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_poisk_zakupok(dannye)
     except Exception:
         return []
 
 
-def _razobrat_poisk_zakupok(data: Any) -> list[Zakupka]:
+def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
     """Разбор результатов поиска в список Zakupka."""
-    if isinstance(data, dict):
-        elementy = data.get("results", data.get("items", data.get("list", [])))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -145,16 +145,16 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     Возвращает:
         Данные закупки или None.
     """
-    token = _poluchit_api_token()
-    params: dict[str, str] = {}
-    if token:
-        params["token"] = token
+    zheton = _poluchit_api_token()
+    parametry: dict[str, str] = {}
+    if zheton:
+        parametry["token"] = zheton
 
-    url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{identifikator_zakupki}"
+    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{identifikator_zakupki}"
     try:
-        data = await http_poluchit(url, params=params)
-        if isinstance(data, dict):
-            elementy = _razobrat_poisk_zakupok([data])
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        if isinstance(dannye, dict):
+            elementy = _razobrat_poisk_zakupok([dannye])
             return elementy[0] if elementy else None
     except Exception:
         pass
@@ -176,33 +176,33 @@ async def poisk_kontraktov(
     Возвращает:
         Список контрактов.
     """
-    params: dict[str, str | int] = {
+    parametry: dict[str, str | int] = {
         "pageNumber": 1,
         "pageSize": min(ogranichenie, 50),
     }
     if inn_podryadchika:
-        params["supplierInn"] = inn_podryadchika
+        parametry["supplierInn"] = inn_podryadchika
     if inn_zakazchika:
-        params["customerInn"] = inn_zakazchika
+        parametry["customerInn"] = inn_zakazchika
 
-    token = _poluchit_api_token()
-    if token:
-        params["token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["token"] = zheton
 
-    url = f"{ZAKUPKI_API_BASE}/api/nsi/contracts"
+    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/contracts"
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_kontrakty(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_kontrakty(dannye)
     except Exception:
         return []
 
 
-def _razobrat_kontrakty(data: Any) -> list[Kontrakt]:
+def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
     """Разбор результатов поиска контрактов."""
-    if isinstance(data, dict):
-        elementy = data.get("results", data.get("items", data.get("list", [])))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -316,31 +316,31 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
     Возвращает:
         Список планов-графиков.
     """
-    params: dict[str, str | int] = {
+    parametry: dict[str, str | int] = {
         "year": god,
         "pageSize": 50,
     }
     if inn_organizatora:
-        params["customerInn"] = inn_organizatora
+        parametry["customerInn"] = inn_organizatora
 
-    token = _poluchit_api_token()
-    if token:
-        params["token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["token"] = zheton
 
-    url = f"{ZAKUPKI_API_BASE}/api/nsi/plans"
+    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/plans"
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_plany(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_plany(dannye)
     except Exception:
         return []
 
 
-def _razobrat_plany(data: Any) -> list[PlanZakupki]:
+def _razobrat_plany(dannye: Any) -> list[PlanZakupki]:
     """Разбор планов закупок."""
-    if isinstance(data, dict):
-        elementy = data.get("results", data.get("items", data.get("list", [])))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 

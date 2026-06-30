@@ -19,8 +19,8 @@ async def spisok_vidov_nadzora(ctx: Context) -> str:
     await ctx.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды надзора Россельхознадзора**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
+    zagolovok = "**Виды надзора Россельхознадзора**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_proverok(ctx: Context) -> str:
@@ -28,8 +28,8 @@ async def spisok_kategoriy_proverok(ctx: Context) -> str:
     await ctx.info("Запрос списка категорий проверок...")
     kategorii = client.poluchit_spisok_kategoriy_proverok()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
-    header = "**Категории проверок Россельхознадзора**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
+    zagolovok = "**Категории проверок Россельхознадзора**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
 async def spisok_vidov_narusheniy(ctx: Context) -> str:
@@ -37,8 +37,8 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
     await ctx.info("Запрос списка видов нарушений...")
     vidy = client.poluchit_spisok_vidov_narusheniy()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды нарушений Россельхознадзора**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид нарушений"], stroki_tablitsy)
+    zagolovok = "**Виды нарушений Россельхознадзора**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид нарушений"], stroki_tablitsy)
 
 
 async def spisok_tipov_produktsii(ctx: Context) -> str:
@@ -46,8 +46,8 @@ async def spisok_tipov_produktsii(ctx: Context) -> str:
     await ctx.info("Запрос списка типов продукции...")
     tipy = client.poluchit_spisok_tipov_produktsii()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы поднадзорной продукции**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип продукции"], stroki_tablitsy)
+    zagolovok = "**Типы поднадзорной продукции**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип продукции"], stroki_tablitsy)
 
 
 async def poisk_proverok(
@@ -84,7 +84,7 @@ async def poisk_proverok(
                 "| Вид надзора | Проверок | Нарушений |",
                 "|-------------|----------|-----------|",
             ]
-            for vid, data in static["po_vidam"].items():
+            for vid, dannye in static["po_vidam"].items():
                 vid_name = (
                     vid.replace("veterinarnyy", "Ветеринарный")
                     .replace("fitosanitarnyy", "Фитосанитарный")
@@ -92,7 +92,9 @@ async def poisk_proverok(
                     .replace("karantin_rasteniy", "Карантин растений")
                     .replace("pestitsidy", "Пестициды")
                 )
-                stroki.append(f"| {vid_name} | {data['proverok']:,} | {data['narusheniy']:,} |")
+                stroki.append(
+                    f"| {vid_name} | {dannye['proverok']:,} | {dannye['narusheniy']:,} |"
+                )
             stroki.append("\nАктуальные данные доступны на: https://fsvps.gov.ru/inspections")
             return "\n".join(stroki)
         return "Проверки не найдены.\n\nАктуальные данные доступны на: https://fsvps.gov.ru"
@@ -108,8 +110,8 @@ async def poisk_proverok(
         )
         for p in proverki
     ]
-    header = f"**Проверки Россельхознадзора** — найдено: {len(proverki)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Проверки Россельхознадзора** — найдено: {len(proverki)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Вид надзора", "Дата", "Регион", "Статус", "Нарушений"],
         stroki_tablitsy,
     )
@@ -146,8 +148,8 @@ async def poisk_karantinnykh_obektov(
         )
         for o in obekty
     ]
-    header = f"**Карантинные объекты** — найдено: {len(obekty)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Карантинные объекты** — найдено: {len(obekty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Статус", "Дата введения"],
         stroki_tablitsy,
     )
@@ -187,8 +189,8 @@ async def poisk_registratsiy_produktsii(
         )
         for r in registratsii
     ]
-    header = f"**Зарегистрированная продукция** — найдено: {len(registratsii)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Зарегистрированная продукция** — найдено: {len(registratsii)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Наименование", "Производитель", "Тип", "Статус"],
         stroki_tablitsy,
     )
@@ -228,8 +230,8 @@ async def veterinarsnye_sertifikaty(
         )
         for s in sertifikaty
     ]
-    header = f"**Ветеринарные сертификаты** — найдено: {len(sertifikaty)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Ветеринарные сертификаты** — найдено: {len(sertifikaty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Тип продукции", "Регион отправки", "Дата", "Статус"],
         stroki_tablitsy,
     )
@@ -265,8 +267,8 @@ async def preduprezhdeniya_karantina(
         )
         for p in preduprezhdeniya
     ]
-    header = f"**Предупреждения о карантине** — активно: {len(preduprezhdeniya)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Предупреждения о карантине** — активно: {len(preduprezhdeniya)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Тип", "Регион", "Описание", "Начало", "Окончание"],
         stroki_tablitsy,
     )

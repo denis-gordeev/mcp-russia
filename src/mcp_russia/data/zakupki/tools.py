@@ -52,7 +52,7 @@ async def poisk_zakupok(
     )
 
     if not zakupki:
-        header = "**Результаты поиска в ЕИС закупок**\n\n"
+        zagolovok = "**Результаты поиска в ЕИС закупок**\n\n"
         filtry = []
         if zapros:
             filtry.append(f"Запрос: {zapros}")
@@ -63,9 +63,9 @@ async def poisk_zakupok(
         if sostoyanie:
             filtry.append(f"Статус: {sostoyanie}")
         if filtry:
-            header += "Фильтры: " + ", ".join(filtry) + "\n\n"
+            zagolovok += "Фильтры: " + ", ".join(filtry) + "\n\n"
 
-        header += (
+        zagolovok += (
             "Не удалось получить данные через API ЕИС.\n\n"
             "Данные о закупках доступны через:\n"
             "- Портал ЕИС: https://zakupki.gov.ru\n"
@@ -76,16 +76,16 @@ async def poisk_zakupok(
             "- `subiekt` — субъект РФ\n"
             "- `sostoyanie` — статус закупки"
         )
-        return header
+        return zagolovok
 
     stroki_tablitsy = [
         (z.nomer, z.nazvanie[:60], z.zakon, z.sostoyanie, formatirovat_rubli(z.nachalnaya_tsena))
         for z in zakupki[:30]
     ]
-    header = "**Результаты поиска в ЕИС закупок**\n\n"
-    header += f"Найдено: {len(zakupki)} закупок\n\n"
+    zagolovok = "**Результаты поиска в ЕИС закупок**\n\n"
+    zagolovok += f"Найдено: {len(zakupki)} закупок\n\n"
     return (
-        header
+        zagolovok
         + tablitsa_v_markdown(["Номер", "Название", "Закон", "Статус", "Цена"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
@@ -176,9 +176,9 @@ async def poisk_kontraktov(
         )
         for k in kontrakty[:30]
     ]
-    header = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
+    zagolovok = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
     return (
-        header
+        zagolovok
         + tablitsa_v_markdown(["Номер", "Поставщик", "Цена", "Статус", "Дата"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
@@ -270,8 +270,8 @@ async def statusy_zakupok(ctx: Context) -> str:
     statusy = client.poluchit_statusy_zakupok()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
-    header = "**Статусы закупок в ЕИС**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
+    zagolovok = "**Статусы закупок в ЕИС**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
 
 async def sposoby_zakupok(ctx: Context) -> str:
@@ -284,8 +284,8 @@ async def sposoby_zakupok(ctx: Context) -> str:
     sposoby = client.poluchit_sposoby_zakupok()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sposoby]
-    header = "**Способы определения поставщиков**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Способ закупки"], stroki_tablitsy)
+    zagolovok = "**Способы определения поставщиков**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Способ закупки"], stroki_tablitsy)
 
 
 async def plany_zakupok(
@@ -323,10 +323,10 @@ async def plany_zakupok(
         )
         for p in plany[:30]
     ]
-    header = f"**Планы-графики закупок на {god} год**\n\n"
-    header += f"Найдено: {len(plany)}\n\n"
+    zagolovok = f"**Планы-графики закупок на {god} год**\n\n"
+    zagolovok += f"Найдено: {len(plany)}\n\n"
     return (
-        header
+        zagolovok
         + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )

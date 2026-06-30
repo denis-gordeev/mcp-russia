@@ -24,8 +24,8 @@ async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
     await ctx.info("Запрос списка бассейновых округов...")
     okruga = client.poluchit_spisok_basseynovykh_okrugov()
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
-    header = "**Бассейновые округа Российской Федерации**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Бассейновый округ"], stroki_tablitsy)
+    zagolovok = "**Бассейновые округа Российской Федерации**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Бассейновый округ"], stroki_tablitsy)
 
 
 async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
@@ -62,8 +62,8 @@ async def spisok_vodokhranilishch(ctx: Context) -> str:
         (v["nazvanie"], v["subiekt"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
         for v in vodokhr
     ]
-    header = "**Крупные водохранилища РФ**\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = "**Крупные водохранилища РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Водохранилище", "Регион", "Объём (км³)", "Площадь (км²)"],
         stroki_tablitsy,
     )
@@ -121,28 +121,28 @@ async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
         Информация о водном объекте.
     """
     await ctx.info(f"Запрос информации о водном объекте {kod}...")
-    data = await client.info_vodnogo_obekta(kod)
+    dannye = await client.info_vodnogo_obekta(kod)
 
-    if not data:
+    if not dannye:
         return (
             f"Водный объект с кодом '{kod}' не найден.\n\n"
             f"Проверьте код в Государственном водном реестре: text.water.ru"
         )
 
     stroki = [
-        f"**{data.get('nazvanie', '')}**",
-        f"- Тип: {data.get('tip', '')}",
-        f"- Бассейн: {data.get('basseyn', '')}",
+        f"**{dannye.get('nazvanie', '')}**",
+        f"- Тип: {dannye.get('tip', '')}",
+        f"- Бассейн: {dannye.get('basseyn', '')}",
     ]
-    if data.get("dlinna_km"):
-        stroki.append(f"- Длина: {formatirovat_chislo_ru(data['dlinna_km'], 1)} км")
-    if data.get("ploshchad_km2"):
-        stroki.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
-    if data.get("subiekt"):
-        stroki.append(f"- Регион: {data['subiekt']}")
-    if data.get("opisaniye"):
-        stroki.append(f"- Описание: {data['opisaniye']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'Государственный водный реестр')}")
+    if dannye.get("dlinna_km"):
+        stroki.append(f"- Длина: {formatirovat_chislo_ru(dannye['dlinna_km'], 1)} км")
+    if dannye.get("ploshchad_km2"):
+        stroki.append(f"- Площадь: {formatirovat_chislo_ru(dannye['ploshchad_km2'], 1)} км²")
+    if dannye.get("subiekt"):
+        stroki.append(f"- Регион: {dannye['subiekt']}")
+    if dannye.get("opisaniye"):
+        stroki.append(f"- Описание: {dannye['opisaniye']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'Государственный водный реестр')}")
     return "\n".join(stroki)
 
 
@@ -187,8 +187,8 @@ async def gidro_monitoring(
         )
         for z in zapisi
     ]
-    header = f"**Данные гидрологического мониторинга** ({tip_dannykh})\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Данные гидрологического мониторинга** ({tip_dannykh})\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Пост", "Водный объект", "Дата", "Уровень (м)", "Расход (м³/с)"],
         stroki_tablitsy,
     )
@@ -204,9 +204,9 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
         Информация о водохранилище.
     """
     await ctx.info(f"Запрос информации о водохранилище {kod}...")
-    data = await client.poluchit_dannye_vodokhranilishcha(kod)
+    dannye = await client.poluchit_dannye_vodokhranilishcha(kod)
 
-    if not data:
+    if not dannye:
         vodokhr_list = client.poluchit_vodokhranilishche_podrobno()
         static = next((v for v in vodokhr_list if v["kod"] == kod), None)
         if static:
@@ -225,21 +225,21 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
         )
 
     stroki = [
-        f"**{data.get('nazvanie', '')}** ({data.get('subiekt', '')})",
+        f"**{dannye.get('nazvanie', '')}** ({dannye.get('subiekt', '')})",
     ]
-    if data.get("obiem_km3"):
-        stroki.append(f"- Объём: {formatirovat_chislo_ru(data['obiem_km3'], 2)} км³")
-    if data.get("ploshchad_km2"):
-        stroki.append(f"- Площадь: {formatirovat_chislo_ru(data['ploshchad_km2'], 1)} км²")
-    if data.get("uroven_m") is not None:
-        stroki.append(f"- Уровень: {formatirovat_chislo_ru(data['uroven_m'], 2)} м")
-    nap = data.get("priznak_napolneniya", "")
+    if dannye.get("obiem_km3"):
+        stroki.append(f"- Объём: {formatirovat_chislo_ru(dannye['obiem_km3'], 2)} км³")
+    if dannye.get("ploshchad_km2"):
+        stroki.append(f"- Площадь: {formatirovat_chislo_ru(dannye['ploshchad_km2'], 1)} км²")
+    if dannye.get("uroven_m") is not None:
+        stroki.append(f"- Уровень: {formatirovat_chislo_ru(dannye['uroven_m'], 2)} м")
+    nap = dannye.get("priznak_napolneniya", "")
     if nap:
         nap_name = PRIZNAKI_NAPOLNENIYA.get(nap, nap)
         stroki.append(f"- Наполнение: {nap_name}")
-    if data.get("data_izmereniya"):
-        stroki.append(f"- Дата измерения: {data['data_izmereniya']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'ГМВО')}")
+    if dannye.get("data_izmereniya"):
+        stroki.append(f"- Дата измерения: {dannye['data_izmereniya']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'ГМВО')}")
     return "\n".join(stroki)
 
 
@@ -258,9 +258,9 @@ async def vodopolzovanie_regionov(
         Данные о водопользовании.
     """
     await ctx.info("Запрос данных о водопользовании...")
-    data = await client.poluchit_vodopolzovanie(subiekt=subiekt, god=god)
+    dannye = await client.poluchit_vodopolzovanie(subiekt=subiekt, god=god)
 
-    if not data:
+    if not dannye:
         filtry = []
         if subiekt:
             filtry.append(f"регион: {subiekt}")
@@ -280,10 +280,10 @@ async def vodopolzovanie_regionov(
             str(v.get("ispolzovano_vody_km3", "")),
             str(v.get("sbrosheno_stokov_km3", "")),
         )
-        for v in data
+        for v in dannye
     ]
-    header = f"**Водопользование** — записей: {len(data)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Водопользование** — записей: {len(dannye)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Регион", "Год", "Забрано (км³)", "Использовано (км³)", "Сброс стоков (км³)"],
         stroki_tablitsy,
     )

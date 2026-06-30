@@ -26,26 +26,26 @@ from .constants import (
 from .schemas import StoronaDela, SudebnoeDelo, SudebnoeZasedanie, SudebnyyAkt, Sudy
 
 
-def _opredelit_sud_po_nomeru(number: str) -> str:
+def _opredelit_sud_po_nomeru(nomer: str) -> str:
     """Определить суд по префиксу номера дела."""
-    kod = number.split("-")[0] if "-" in number else number[:3]
+    kod = nomer.split("-")[0] if "-" in nomer else nomer[:3]
     return SUDY_PRYAMYE.get(kod, "")
 
 
-def _opredelit_kategoriyu(number: str) -> str:
+def _opredelit_kategoriyu(nomer: str) -> str:
     """Определить категорию дела по букве номера."""
-    if len(number) > 4 and number[4] == "-":
-        letter = number[3] if len(number) > 3 else ""
+    if len(nomer) > 4 and nomer[4] == "-":
+        letter = nomer[3] if len(nomer) > 3 else ""
         return KATEGORII_KAD.get(letter, "")
     return ""
 
 
-def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
+def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
     """Разбор результатов поиска дел из API КАД."""
-    if isinstance(data, dict):
-        elementy = data.get("Instances", data.get("Result", []))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("Instances", dannye.get("Result", []))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -54,13 +54,13 @@ def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
         if not isinstance(element, dict):
             continue
         case_info = element.get("CaseInfo", element)
-        number = case_info.get("CaseNumber", element.get("caseNumber", ""))
-        category = _opredelit_kategoriyu(number) or case_info.get(
+        nomer = case_info.get("CaseNumber", element.get("caseNumber", ""))
+        category = _opredelit_kategoriyu(nomer) or case_info.get(
             "Category", element.get("category", "")
         )
         sud_name = case_info.get("Court", element.get("courtName", ""))
         if not sud_name:
-            sud_name = _opredelit_sud_po_nomeru(number)
+            sud_name = _opredelit_sud_po_nomeru(nomer)
 
         istorcy_raw = case_info.get("Plaintiffs", element.get("plaintiffs", ""))
         if isinstance(istorcy_raw, str):
@@ -86,7 +86,7 @@ def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
 
         rezultaty.append(
             SudebnoeDelo(
-                nomer=number,
+                nomer=nomer,
                 kategoriya=category,
                 sostoyanie=case_info.get("Status", element.get("status", "")),
                 sudya=case_info.get("Judge", element.get("judge", "")),
@@ -105,22 +105,24 @@ def _razobrat_rezultaty_poiska(data: Any) -> list[SudebnoeDelo]:
     return rezultaty
 
 
-def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
+def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     """Разбор карточки судебного дела из API КАД."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return None
 
-    case_info = data.get("CaseInfo", data.get("Case", data))
-    number = case_info.get("CaseNumber", data.get("caseNumber", ""))
-    if not number:
+    case_info = dannye.get("CaseInfo", dannye.get("Case", dannye))
+    nomer = case_info.get("CaseNumber", dannye.get("caseNumber", ""))
+    if not nomer:
         return None
 
-    category = _opredelit_kategoriyu(number) or case_info.get("Category", data.get("category", ""))
-    sud_name = case_info.get("Court", data.get("courtName", ""))
+    category = _opredelit_kategoriyu(nomer) or case_info.get(
+        "Category", dannye.get("category", "")
+    )
+    sud_name = case_info.get("Court", dannye.get("courtName", ""))
     if not sud_name:
-        sud_name = _opredelit_sud_po_nomeru(number)
+        sud_name = _opredelit_sud_po_nomeru(nomer)
 
-    istorcy_raw = case_info.get("Plaintiffs", data.get("plaintiffs", ""))
+    istorcy_raw = case_info.get("Plaintiffs", dannye.get("plaintiffs", ""))
     if isinstance(istorcy_raw, str):
         istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
     elif isinstance(istorcy_raw, list):
@@ -128,7 +130,7 @@ def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
     else:
         istorcy = []
 
-    otvetchiki_raw = case_info.get("Defendants", data.get("defendants", ""))
+    otvetchiki_raw = case_info.get("Defendants", dannye.get("defendants", ""))
     if isinstance(otvetchiki_raw, str):
         otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
     elif isinstance(otvetchiki_raw, list):
@@ -137,31 +139,31 @@ def _razobrat_kartochka_dela(data: Any) -> SudebnoeDelo | None:
         otvetchiki = []
 
     summa = 0.0
-    summa_raw = case_info.get("ClaimSum", data.get("claimSum"))
+    summa_raw = case_info.get("ClaimSum", dannye.get("claimSum"))
     if summa_raw:
         with contextlib.suppress(ValueError, TypeError):
             summa = float(summa_raw)
 
     return SudebnoeDelo(
-        nomer=number,
+        nomer=nomer,
         kategoriya=category,
-        sostoyanie=case_info.get("Status", data.get("status", "")),
-        sudya=case_info.get("Judge", data.get("judge", "")),
+        sostoyanie=case_info.get("Status", dannye.get("status", "")),
+        sudya=case_info.get("Judge", dannye.get("judge", "")),
         nazvanie_suda=sud_name,
-        data_vozbuzhdeniya=case_info.get("RegistrationDate", data.get("registrationDate", "")),
-        data_poslednego_akta=case_info.get("LastDocumentDate", data.get("lastDocumentDate", "")),
+        data_vozbuzhdeniya=case_info.get("RegistrationDate", dannye.get("registrationDate", "")),
+        data_poslednego_akta=case_info.get("LastDocumentDate", dannye.get("lastDocumentDate", "")),
         istorcy=istorcy,
         otvetchiki=otvetchiki,
         summa_iska=summa,
     )
 
 
-def _razobrat_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
+def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
     """Разбор судебных актов из ответа API КАД."""
-    if isinstance(data, dict):
-        elementy = data.get("Documents", data.get("Result", []))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("Documents", dannye.get("Result", []))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -186,14 +188,14 @@ def _razobrat_akty(data: Any, delo_number: str) -> list[SudebnyyAkt]:
     return rezultaty
 
 
-def _razobrat_storony(data: Any, delo_number: str) -> list[StoronaDela]:
+def _razobrat_storony(dannye: Any, delo_number: str) -> list[StoronaDela]:
     """Разбор сторон судебного дела из ответа API КАД."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return []
 
     rezultaty = []
     for side_type, tip_label in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
-        raw = data.get(side_type, [])
+        raw = dannye.get(side_type, [])
         if isinstance(raw, str):
             names = [s.strip() for s in raw.split(",") if s.strip()]
         elif isinstance(raw, list):
@@ -263,12 +265,12 @@ async def poisk_del(
     }
 
     try:
-        data = await http_otpravit(
+        dannye = await http_otpravit(
             "https://kad.arbitr.ru/Kad/Search",
             json_body=telo,
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _razobrat_rezultaty_poiska(data)
+        return _razobrat_rezultaty_poiska(dannye)
     except Exception:
         return []
 
@@ -283,11 +285,11 @@ async def info_dela(nomer: str) -> SudebnoeDelo | None:
         Данные дела или None.
     """
     try:
-        data = await http_poluchit(
+        dannye = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Case/{nomer}",
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _razobrat_kartochka_dela(data)
+        return _razobrat_kartochka_dela(dannye)
     except Exception:
         return None
 
@@ -302,11 +304,11 @@ async def akty_po_delu(nomer: str) -> list[SudebnyyAkt]:
         Список судебных актов.
     """
     try:
-        data = await http_poluchit(
+        dannye = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Documents/{nomer}",
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _razobrat_akty(data, nomer)
+        return _razobrat_akty(dannye, nomer)
     except Exception:
         return []
 
@@ -321,12 +323,12 @@ async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
         Данные акта или None.
     """
     try:
-        data = await http_poluchit(
+        dannye = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Document/{identifikator_akta}",
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        if isinstance(data, dict):
-            doc = data.get("Document", data)
+        if isinstance(dannye, dict):
+            doc = dannye.get("Document", dannye)
             return SudebnyyAkt(
                 identifikator=str(doc.get("Id", identifikator_akta)),
                 delo_nomer=doc.get("CaseNumber", ""),
@@ -353,14 +355,14 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
         Список заседаний.
     """
     try:
-        data = await http_poluchit(
+        dannye = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Sessions/{nomer}",
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        if isinstance(data, dict):
-            elementy = data.get("Sessions", data.get("Result", []))
-        elif isinstance(data, list):
-            elementy = data
+        if isinstance(dannye, dict):
+            elementy = dannye.get("Sessions", dannye.get("Result", []))
+        elif isinstance(dannye, list):
+            elementy = dannye
         else:
             return []
 
@@ -408,11 +410,11 @@ async def storony_dela(nomer: str) -> list[StoronaDela]:
         Список сторон (истцы и ответчики).
     """
     try:
-        data = await http_poluchit(
+        dannye = await http_poluchit(
             f"https://kad.arbitr.ru/Kad/Sides/{nomer}",
-            headers={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
+            zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
-        return _razobrat_storony(data, nomer)
+        return _razobrat_storony(dannye, nomer)
     except Exception:
         return []
 

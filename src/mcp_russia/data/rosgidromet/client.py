@@ -32,10 +32,10 @@ from .schemas import (
 )
 
 
-def _nayti_stantsiyu(code: str) -> dict[str, Any] | None:
+def _nayti_stantsiyu(kod: str) -> dict[str, Any] | None:
     """Поиск станции мониторинга по коду."""
     for s in STANCII_MONITORINGA:
-        if s["kod"] == code:
+        if s["kod"] == kod:
             return s
     return None
 
@@ -49,19 +49,19 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaDannye | None:
     Возвращает:
         Данные о текущей погоде или None.
     """
-    info = _nayti_stantsiyu(stanciya)
-    if not info:
+    svedeniya = _nayti_stantsiyu(stanciya)
+    if not svedeniya:
         return None
 
-    params = {
-        "latitude": info["shirota"],
-        "longitude": info["dolgota"],
+    parametry = {
+        "latitude": svedeniya["shirota"],
+        "longitude": svedeniya["dolgota"],
         "current": "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,surface_pressure",
         "timezone": "Europe/Moscow",
     }
     try:
-        data = await http_poluchit(OPEN_METEO_BASE, params=params)
-        return _razobrat_openmeteo_pogodu(data, info)
+        dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+        return _razobrat_openmeteo_pogodu(dannye, svedeniya)
     except Exception:
         return None
 
@@ -79,20 +79,20 @@ async def poluchit_prognoz(
     Возвращает:
         Список данных прогноза.
     """
-    info = _nayti_stantsiyu(stanciya)
-    if not info:
+    svedeniya = _nayti_stantsiyu(stanciya)
+    if not svedeniya:
         return []
 
-    params = {
-        "latitude": info["shirota"],
-        "longitude": info["dolgota"],
+    parametry = {
+        "latitude": svedeniya["shirota"],
+        "longitude": svedeniya["dolgota"],
         "daily": "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max",
         "timezone": "Europe/Moscow",
         "forecast_days": min(max(dni, 1), 16),
     }
     try:
-        data = await http_poluchit(OPEN_METEO_BASE, params=params)
-        return _razobrat_openmeteo_prognoz(data, info)
+        dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+        return _razobrat_openmeteo_prognoz(dannye, svedeniya)
     except Exception:
         return []
 
@@ -118,15 +118,15 @@ async def poluchit_ekologiyu(
 
     rezultaty = []
     for station in stations[:5]:
-        params = {
+        parametry = {
             "latitude": station["shirota"],
             "longitude": station["dolgota"],
             "current": "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone",
             "timezone": "Europe/Moscow",
         }
         try:
-            data = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, params=params)
-            razobrannye = _razobrat_openmeteo_ekologiyu(data, station)
+            dannye = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, parametry=parametry)
+            razobrannye = _razobrat_openmeteo_ekologiyu(dannye, station)
             rezultaty.extend(razobrannye)
         except Exception:
             continue
@@ -162,36 +162,36 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
 
     warnings = []
     for station in stations[:3]:
-        params = {
+        parametry = {
             "latitude": station["shirota"],
             "longitude": station["dolgota"],
             "current": "temperature_2m,wind_speed_10m,weather_code",
             "timezone": "Europe/Moscow",
         }
         try:
-            data = await http_poluchit(OPEN_METEO_BASE, params=params)
-            current = data.get("current", {})
-            temp = current.get("temperature_2m")
+            dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+            current = dannye.get("current", {})
+            temperatura = current.get("temperature_2m")
             wind = current.get("wind_speed_10m")
             wmo = current.get("weather_code", 0)
 
-            if temp is not None and temp <= -30:
+            if temperatura is not None and temperatura <= -30:
                 warnings.append(
                     Preduprezhdenie(
                         tip="moroz",
                         subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
-                        opisanie=f"Сильный мороз: {temp}°C",
+                        opisanie=f"Сильный мороз: {temperatura}°C",
                         uroven_opasnosti="vysokiy",
                     )
                 )
-            elif temp is not None and temp >= 35:
+            elif temperatura is not None and temperatura >= 35:
                 warnings.append(
                     Preduprezhdenie(
                         tip="zhara",
                         subiekt=station.get("subiekt", ""),
                         gorod=station["nazvanie"],
-                        opisanie=f"Сильная жара: {temp}°C",
+                        opisanie=f"Сильная жара: {temperatura}°C",
                         uroven_opasnosti="sredniy",
                     )
                 )
@@ -264,17 +264,17 @@ def poluchit_spisok_tipov_preduprezhdeniy() -> list[dict[str, str]]:
 # --- Разборщики ответов Open-Meteo ---
 
 
-def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> PogodaDannye:
+def _razobrat_openmeteo_pogodu(dannye: dict[str, Any], svedeniya: dict[str, Any]) -> PogodaDannye:
     """Разбор ответа прогноза Open-Meteo в PogodaDannye."""
-    current = data.get("current", {})
+    current = dannye.get("current", {})
     wmo_code = current.get("weather_code", 0)
     wind_dir_deg = current.get("wind_direction_10m", 0)
     opisaniye = WMO_KODY_POGODY.get(wmo_code, "")
 
     return PogodaDannye(
-        stanciya=info["kod"],
-        gorod=info["nazvanie"],
-        subiekt=info.get("subiekt", ""),
+        stanciya=svedeniya["kod"],
+        gorod=svedeniya["nazvanie"],
+        subiekt=svedeniya.get("subiekt", ""),
         temperatura=current.get("temperature_2m"),
         oshchushchaetsya_kak=current.get("apparent_temperature"),
         vlazhnost=current.get("relative_humidity_2m"),
@@ -288,9 +288,11 @@ def _razobrat_openmeteo_pogodu(data: dict[str, Any], info: dict[str, Any]) -> Po
     )
 
 
-def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> list[PrognozDannye]:
+def _razobrat_openmeteo_prognoz(
+    dannye: dict[str, Any], svedeniya: dict[str, Any]
+) -> list[PrognozDannye]:
     """Разбор ежедневного прогноза Open-Meteo в список PrognozDannye."""
-    daily = data.get("daily", {})
+    daily = dannye.get("daily", {})
     dates = daily.get("time", [])
     t_max = daily.get("temperature_2m_max", [])
     t_min = daily.get("temperature_2m_min", [])
@@ -303,7 +305,7 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
         wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
         rezultaty.append(
             PrognozDannye(
-                gorod=info["nazvanie"],
+                gorod=svedeniya["nazvanie"],
                 data=date_str,
                 temperatura_dnem=t_max[i] if i < len(t_max) else None,
                 temperatura_nochyu=t_min[i] if i < len(t_min) else None,
@@ -316,10 +318,10 @@ def _razobrat_openmeteo_prognoz(data: dict[str, Any], info: dict[str, Any]) -> l
 
 
 def _razobrat_openmeteo_ekologiyu(
-    data: dict[str, Any], info: dict[str, Any]
+    dannye: dict[str, Any], svedeniya: dict[str, Any]
 ) -> list[EkologiyaDannye]:
     """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaDannye."""
-    current = data.get("current", {})
+    current = dannye.get("current", {})
     time_str = current.get("time", "")
 
     indicators = [
@@ -338,8 +340,8 @@ def _razobrat_openmeteo_ekologiyu(
             prevyshenie = value > norma
             rezultaty.append(
                 EkologiyaDannye(
-                    gorod=info["nazvanie"],
-                    stanciya=info["kod"],
+                    gorod=svedeniya["nazvanie"],
+                    stanciya=svedeniya["kod"],
                     tip="vozdukh",
                     pokazatel=name,
                     znachenie=round(value, 2),

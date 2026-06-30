@@ -19,8 +19,8 @@ async def spisok_vidov_byudzhetov(ctx: Context) -> str:
     await ctx.info("Запрос списка видов бюджетов...")
     vidy = client.poluchit_spisok_vidov_byudzhetov()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
-    header = "**Виды бюджетов бюджетной системы РФ**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Вид бюджета"], stroki_tablitsy)
+    zagolovok = "**Виды бюджетов бюджетной системы РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Вид бюджета"], stroki_tablitsy)
 
 
 async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
@@ -28,8 +28,8 @@ async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
     await ctx.info("Запрос списка категорий расходов...")
     kategorii = client.poluchit_spisok_kategoriy_raskhodov()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
-    header = "**Категории расходов бюджета**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
+    zagolovok = "**Категории расходов бюджета**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
 async def ispolnenie_byudzheta(
@@ -47,8 +47,8 @@ async def ispolnenie_byudzheta(
         Данные об исполнении бюджета.
     """
     await ctx.info("Запрос данных об исполнении бюджета...")
-    data = await client.poluchit_ispolnenie_byudzheta(god=god, tip=tip)
-    if not data:
+    dannye = await client.poluchit_ispolnenie_byudzheta(god=god, tip=tip)
+    if not dannye:
         tip_text = f" ({tip})" if tip else ""
         god_text = f" за {god} год" if god else ""
         return (
@@ -57,18 +57,18 @@ async def ispolnenie_byudzheta(
             f"- Федеральное казначейство: roskazna.gov.ru\n"
             f"- Портал бюджетных данных: budget.gov.ru"
         )
-    stroki = [f"**Исполнение бюджета за {data.get('period', '')}**"]
-    if data.get("tip"):
-        stroki.append(f"- Тип бюджета: {data['tip']}")
-    if data.get("dohody"):
-        stroki.append(f"- Доходы: {formatirovat_chislo_ru(data['dohody'], 2)} млрд руб.")
-    if data.get("raskhody"):
-        stroki.append(f"- Расходы: {formatirovat_chislo_ru(data['raskhody'], 2)} млрд руб.")
-    if data.get("defitsit") is not None:
-        stroki.append(f"- Дефицит: {formatirovat_chislo_ru(data['defitsit'], 2)} млрд руб.")
-    if data.get("sostoyanie"):
-        stroki.append(f"- Статус: {data['sostoyanie']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'budget.gov.ru')}")
+    stroki = [f"**Исполнение бюджета за {dannye.get('period', '')}**"]
+    if dannye.get("tip"):
+        stroki.append(f"- Тип бюджета: {dannye['tip']}")
+    if dannye.get("dohody"):
+        stroki.append(f"- Доходы: {formatirovat_chislo_ru(dannye['dohody'], 2)} млрд руб.")
+    if dannye.get("raskhody"):
+        stroki.append(f"- Расходы: {formatirovat_chislo_ru(dannye['raskhody'], 2)} млрд руб.")
+    if dannye.get("defitsit") is not None:
+        stroki.append(f"- Дефицит: {formatirovat_chislo_ru(dannye['defitsit'], 2)} млрд руб.")
+    if dannye.get("sostoyanie"):
+        stroki.append(f"- Статус: {dannye['sostoyanie']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'budget.gov.ru')}")
     return "\n".join(stroki)
 
 
@@ -108,8 +108,8 @@ async def poisk_uchastnikov_bp(
         )
         for u in uchastniki
     ]
-    header = f"**Участники бюджетного процесса** — найдено: {len(uchastniki)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Участники бюджетного процесса** — найдено: {len(uchastniki)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Бюджет"],
         stroki_tablitsy,
     )
@@ -155,8 +155,8 @@ async def poisk_uchrezhdeniy(
         )
         for u in uchrezhdeniya
     ]
-    header = f"**Учреждения** — найдено: {len(uchrezhdeniya)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Учреждения** — найдено: {len(uchrezhdeniya)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["ИНН", "Название", "Тип", "Основной вид деятельности"],
         stroki_tablitsy,
     )
@@ -195,8 +195,8 @@ async def mezhbyudzhetnye_transferty(
         )
         for t in transferty
     ]
-    header = f"**Межбюджетные трансферты** — найдено: {len(transferty)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Межбюджетные трансферты** — найдено: {len(transferty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["Вид", "Отправитель", "Получатель", "Сумма (руб.)", "Год"],
         stroki_tablitsy,
     )

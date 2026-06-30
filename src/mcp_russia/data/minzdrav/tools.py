@@ -148,8 +148,8 @@ async def pokazateli_zdorovya(
         Показатели здоровья населения.
     """
     await ctx.info(f"Запрос показателей здоровья: {subiekt or 'РФ'}, {god or 'последние'}...")
-    data = await client.pokazateli_zdorovya(subiekt=subiekt, god=god)
-    if not data:
+    dannye = await client.pokazateli_zdorovya(subiekt=subiekt, god=god)
+    if not dannye:
         return (
             f"**Показатели здоровья населения**\n\n"
             f"Регион: {subiekt or 'Вся Россия'}\n\n"
@@ -164,7 +164,7 @@ async def pokazateli_zdorovya(
             str(p.get("god", "")),
             p.get("subiekt", ""),
         )
-        for p in data
+        for p in dannye
     ]
     return tablitsa_v_markdown(
         ["Показатель", "Значение", "Ед. изм.", "Год", "Регион"],
@@ -189,18 +189,18 @@ async def statistika_zabolevaniy(
         Статистика заболеваний.
     """
     await ctx.info(f"Запрос статистики заболеваний: {kod_mkb or 'все'}, {god or 'последние'}...")
-    data = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, subiekt=subiekt, god=god)
-    if not data:
-        header = "**Статистика заболеваний**\n\n"
+    dannye = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, subiekt=subiekt, god=god)
+    if not dannye:
+        zagolovok = "**Статистика заболеваний**\n\n"
         if kod_mkb:
-            header += f"Код МКБ-10: {kod_mkb}\n"
+            zagolovok += f"Код МКБ-10: {kod_mkb}\n"
         if subiekt:
-            header += f"Регион: {subiekt}\n"
-        header += (
+            zagolovok += f"Регион: {subiekt}\n"
+        zagolovok += (
             "\nДанные о заболеваемости доступны через:\n"
             "- Открытые данные Минздрава: https://data.minzdrav.gov.ru\n"
         )
-        return header
+        return zagolovok
     stroki_tablitsy = [
         (
             z.get("kod_mkb", ""),
@@ -209,7 +209,7 @@ async def statistika_zabolevaniy(
             str(z.get("letalnykh_sluchaev", "")),
             str(z.get("god", "")),
         )
-        for z in data
+        for z in dannye
     ]
     return tablitsa_v_markdown(
         ["МКБ-10", "Заболевание", "Заболевших", "Летальных", "Год"],
@@ -226,8 +226,8 @@ async def spravochnik_mo(ctx: Context) -> str:
     await ctx.info("Запрос справочника типов медицинских организаций...")
     tipy = client.poluchit_tipy_mo()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
-    header = "**Типы медицинских организаций**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Тип организации"], stroki_tablitsy)
+    zagolovok = "**Типы медицинских организаций**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип организации"], stroki_tablitsy)
 
 
 async def spravochnik_spetsialnostey(ctx: Context) -> str:
@@ -239,8 +239,8 @@ async def spravochnik_spetsialnostey(ctx: Context) -> str:
     await ctx.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.poluchit_spetsialnosti()
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
-    header = "**Врачебные специальности**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Специальность"], stroki_tablitsy)
+    zagolovok = "**Врачебные специальности**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Специальность"], stroki_tablitsy)
 
 
 async def spravochnik_mkb10(ctx: Context) -> str:
@@ -252,5 +252,5 @@ async def spravochnik_mkb10(ctx: Context) -> str:
     await ctx.info("Запрос справочника МКБ-10...")
     mkb_classes = client.poluchit_klassy_mkb10()
     stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
-    header = "**Классы МКБ-10**\n\n"
-    return header + tablitsa_v_markdown(["Код", "Класс заболеваний"], stroki_tablitsy)
+    zagolovok = "**Классы МКБ-10**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Класс заболеваний"], stroki_tablitsy)

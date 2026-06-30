@@ -38,24 +38,24 @@ async def poisk_senatorov(
         Список сенаторов.
     """
     try:
-        url = f"{SOVFED_API_BASE}/senators"
-        params: dict[str, Any] = {}
+        adres_url = f"{SOVFED_API_BASE}/senators"
+        parametry: dict[str, Any] = {}
         if subiekt:
-            params["region"] = subiekt
+            parametry["region"] = subiekt
         if komitet:
-            params["committee"] = komitet
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["committee"] = komitet
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
 
     try:
-        url = f"{DATA_GOV_RU_SOVFED}"
-        params: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+        adres_url = f"{DATA_GOV_RU_SOVFED}"
+        parametry: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -82,10 +82,10 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
         Данные сенатора или None.
     """
     try:
-        url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_senator(data)
+        adres_url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_senator(dannye)
     except Exception:
         logger.debug("sovfed.ru API недоступен для сенатора %s", identifikator_senatora)
 
@@ -98,9 +98,9 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
 async def spisok_komitetov() -> list[dict[str, Any]]:
     """Получить список комитетов Совета Федерации из API sovfed.ru."""
     try:
-        url = f"{SOVFED_API_BASE}/committees"
-        data = await http_poluchit(url, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+        adres_url = f"{SOVFED_API_BASE}/committees"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -112,9 +112,9 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
 async def spisok_komissiy() -> list[dict[str, Any]]:
     """Получить список комиссий Совета Федерации из API sovfed.ru."""
     try:
-        url = f"{SOVFED_API_BASE}/commissions"
-        data = await http_poluchit(url, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+        adres_url = f"{SOVFED_API_BASE}/commissions"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
     except Exception:
@@ -137,14 +137,14 @@ async def poisk_zakonoproektov(
         Список законопроектов.
     """
     try:
-        url = f"{SOVFED_API_BASE}/bills"
-        params: dict[str, Any] = {}
+        adres_url = f"{SOVFED_API_BASE}/bills"
+        parametry: dict[str, Any] = {}
         if status:
-            params["status"] = status
+            parametry["status"] = status
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_zakonoproekt(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
@@ -161,12 +161,12 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         Список заседаний.
     """
     try:
-        url = f"{SOVFED_API_BASE}/sessions"
-        params: dict[str, Any] = {}
+        adres_url = f"{SOVFED_API_BASE}/sessions"
+        parametry: dict[str, Any] = {}
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_zasedanie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
@@ -183,63 +183,69 @@ def poluchit_spisok_komissiy() -> list[dict[str, str]]:
     return KOMISSII_SOVFEDA
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []
 
 
-def _razobrat_senator(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_senator(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных сенатора."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "familiya": data.get("lastName", "") or data.get("familiya", ""),
-        "imya": data.get("firstName", "") or data.get("imya", ""),
-        "otchestvo": data.get("middleName", "") or data.get("otchestvo", ""),
-        "subiekt": data.get("region", "") or data.get("subject", ""),
-        "dolzhnost": data.get("position", "") or data.get("dolzhnost", ""),
-        "komitet": data.get("committee", "") or data.get("komitet", ""),
-        "frakciya": data.get("faction", "") or data.get("frakciya", ""),
-        "data_naznacheniya": data.get("appointmentDate", "") or data.get("data_naznacheniya", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "familiya": dannye.get("lastName", "") or dannye.get("familiya", ""),
+        "imya": dannye.get("firstName", "") or dannye.get("imya", ""),
+        "otchestvo": dannye.get("middleName", "") or dannye.get("otchestvo", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "dolzhnost": dannye.get("position", "") or dannye.get("dolzhnost", ""),
+        "komitet": dannye.get("committee", "") or dannye.get("komitet", ""),
+        "frakciya": dannye.get("faction", "") or dannye.get("frakciya", ""),
+        "data_naznacheniya": dannye.get("appointmentDate", "")
+        or dannye.get("data_naznacheniya", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }
 
 
-def _razobrat_komitet(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_komitet(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных комитета/комиссии."""
     return {
-        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "predsedatel": data.get("chairman", "") or data.get("predsedatel", ""),
-        "kolichestvo_chlenov": data.get("membersCount", 0) or data.get("kolichestvo_chlenov", 0),
-        "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
+        "nazvanie": dannye.get("title", "")
+        or dannye.get("name", "")
+        or dannye.get("nazvanie", ""),
+        "predsedatel": dannye.get("chairman", "") or dannye.get("predsedatel", ""),
+        "kolichestvo_chlenov": dannye.get("membersCount", 0)
+        or dannye.get("kolichestvo_chlenov", 0),
+        "napravlenie": dannye.get("direction", "") or dannye.get("napravlenie", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }
 
 
-def _razobrat_zasedanie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zasedanie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных заседания."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "data": data.get("date", "") or data.get("data", ""),
-        "sostoyanie": data.get("status", ""),
-        "povestka": data.get("agenda", "") or data.get("povestka", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "data": dannye.get("date", "") or dannye.get("data", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "povestka": dannye.get("agenda", "") or dannye.get("povestka", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }
 
 
-def _razobrat_zakonoproekt(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zakonoproekt(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных законопроекта."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "sostoyanie": data.get("status", ""),
-        "data_rassmotreniya": data.get("reviewDate", "") or data.get("data_rassmotreniya", ""),
-        "iniciator": data.get("initiator", "") or data.get("iniciator", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "nazvanie": dannye.get("title", "")
+        or dannye.get("name", "")
+        or dannye.get("nazvanie", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "data_rassmotreniya": dannye.get("reviewDate", "") or dannye.get("data_rassmotreniya", ""),
+        "iniciator": dannye.get("initiator", "") or dannye.get("iniciator", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }

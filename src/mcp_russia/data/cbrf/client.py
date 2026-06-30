@@ -15,9 +15,9 @@ from .constants import CBR_DAILY_JSON
 from .schemas import ZnachenieValyuty
 
 
-def _razobrat_valyutu(kod: str, data: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
+def _razobrat_valyutu(kod: str, dannye: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
     """Разбор данных о валютах из JSON API ЦБ РФ."""
-    zapis = data.get(kod, {})
+    zapis = dannye.get(kod, {})
     if not zapis:
         return ZnachenieValyuty(
             kod=kod,
@@ -51,8 +51,8 @@ async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
     Возвращает:
         Сырой JSON-ответ от API ЦБ РФ.
     """
-    url = CBR_DAILY_JSON
-    return await http_poluchit(url)
+    adres_url = CBR_DAILY_JSON
+    return await http_poluchit(adres_url)
 
 
 async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyuty | None:
@@ -112,8 +112,8 @@ async def poluchit_dinamiku_kursa(kod: str) -> dict[str, Any]:
     Возвращает:
         Исторические данные о валюте.
     """
-    url = f"https://www.cbr-xml-daily.ru/dynamics/{kod}/dynamic_json.js"
+    adres_url = f"https://www.cbr-xml-daily.ru/dynamics/{kod}/dynamic_json.js"
     try:
-        return await http_poluchit(url)
+        return await http_poluchit(adres_url)
     except Exception:
         return {"oshibka": f"Нет данных для валюты {kod}"}

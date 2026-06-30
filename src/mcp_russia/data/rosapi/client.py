@@ -25,41 +25,41 @@ DADATA_SUGGEST_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/sugge
 DADATA_FIND_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
 
 
-def _zagolovki_dadaty(token: str | None = None) -> dict[str, str]:
+def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
     """Сформировать заголовки для авторизации в API Dadata."""
-    headers: dict[str, str] = {
+    zagolovki: dict[str, str] = {
         "Content-Type": "application/json",
         "Accept": "application/json",
     }
-    key = token or KLYUCH_DADATA_API
+    key = zheton or KLYUCH_DADATA_API
     if not key:
         raise OshibkaAutentifikatsii(
             "Для работы с Dadata API необходим ключ MCP_RUSSIA_DADATA_API_KEY. "
             "Зарегистрируйтесь: https://dadata.ru/api/"
         )
-    headers["Authorization"] = f"Token {key}"
-    return headers
+    zagolovki["Authorization"] = f"Token {key}"
+    return zagolovki
 
 
-def _vlozhennoe_poluchenie(data: dict, *keys: str, default: Any = None) -> Any:
+def _vlozhennoe_poluchenie(dannye: dict, *keys: str, default: Any = None) -> Any:
     """Безопасное извлечение вложенного значения из словаря."""
     for key in keys:
-        if not isinstance(data, dict):
+        if not isinstance(dannye, dict):
             return default
-        data = data.get(key, default)
-    return data
+        dannye = dannye.get(key, default)
+    return dannye
 
 
-def _razobrat_dannye_organizatsii(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_dannye_organizatsii(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных организации из ответа Dadata."""
-    name_obj = data.get("name")
+    name_obj = dannye.get("name")
     name_full = name_obj.get("full") if isinstance(name_obj, dict) else None
     name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
-    state_obj = data.get("state")
+    state_obj = dannye.get("state")
     status = state_obj.get("status") if isinstance(state_obj, dict) else None
-    addr_obj = data.get("address")
+    addr_obj = dannye.get("address")
     address = addr_obj.get("value") if isinstance(addr_obj, dict) else None
-    mgmt_obj = data.get("management")
+    mgmt_obj = dannye.get("management")
     director = mgmt_obj.get("name") if isinstance(mgmt_obj, dict) else None
     reg_date = state_obj.get("registration_date") if isinstance(state_obj, dict) else None
     return {
@@ -72,12 +72,12 @@ def _razobrat_dannye_organizatsii(data: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _razobrat_dannye_banka(data: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
+def _razobrat_dannye_banka(dannye: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
     """Разбор данных банка из ответа Dadata."""
-    name_obj = data.get("name")
+    name_obj = dannye.get("name")
     name_full = name_obj.get("full") if isinstance(name_obj, dict) else rezervnoe_imya
     name_short = name_obj.get("short") if isinstance(name_obj, dict) else None
-    addr_obj = data.get("address")
+    addr_obj = dannye.get("address")
     city = _vlozhennoe_poluchenie(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
     return {
         "nazvanie_polnoe": name_full,
@@ -86,53 +86,53 @@ def _razobrat_dannye_banka(data: dict[str, Any], rezervnoe_imya: str = "") -> di
     }
 
 
-async def _predlozhit_adres(zapros: str, token: str | None = None) -> dict[str, Any]:
+async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str, Any]:
     """Получить подсказки по адресу через Dadata API."""
     telo = {"query": zapros, "count": 10}
     try:
         return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {"predlozheniya": []}
 
 
-async def _nayti_po_fias(identifikator_fias: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> dict[str, Any]:
     """Найти адрес по ФИАС-идентификатору через Dadata API."""
     telo = {"query": identifikator_fias}
     try:
         return await http_otpravit(
             f"{DADATA_FIND_URL}/address",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {"predlozheniya": []}
 
 
-async def _pochtovyy_po_indeksu(indeks: str, token: str | None = None) -> dict[str, Any]:
+async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[str, Any]:
     """Найти адрес по почтовому индексу через Dadata API."""
     telo = {"query": indeks, "count": 1}
     try:
         return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/address",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {"predlozheniya": []}
 
 
-async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> dict[str, Any]:
     """Найти организацию по ИНН через Dadata API."""
     telo = {"query": inn}
     try:
         return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {
@@ -145,14 +145,14 @@ async def _nayti_organizatsiyu_po_inn(inn: str, token: str | None = None) -> dic
         }
 
 
-async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> dict[str, Any]:
     """Найти организацию по ОГРН через Dadata API."""
     telo = {"query": ogrn}
     try:
         return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/party",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {
@@ -161,28 +161,28 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, token: str | None = None) -> d
         }
 
 
-async def _spisok_bankov(token: str | None = None) -> list[dict[str, Any]]:
+async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
     """Получить список банков через Dadata API."""
     telo = {"query": "", "count": 100}
     try:
         rezultat = await http_otpravit(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
         return rezultat.get("suggestions", [])
     except Exception:
         return []
 
 
-async def _nayti_bank_po_bik(bik: str, token: str | None = None) -> dict[str, Any]:
+async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, Any]:
     """Найти банк по БИК через Dadata API."""
     telo = {"query": bik}
     try:
         return await http_otpravit(
             f"{DADATA_SUGGEST_URL}/bank",
             json_body=telo,
-            headers=_zagolovki_dadaty(token),
+            zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
         return {"predlozheniya": []}
@@ -237,13 +237,13 @@ async def konsultirovat_adres_po_pochtovomu(pochtovyy_indeks: str) -> AdresRF | 
         }
 
     s = suggestions[0]
-    data = s.get("data", {})
+    dannye = s.get("data", {})
     return AdresRF(
-        pochtovyy_indeks=data.get("postal_code", pochtovyy_indeks),
-        subiekt=data.get("region_with_type", ""),
-        gorod=data.get("city_with_type") or data.get("settlement_with_type", ""),
-        ulitsa=data.get("street_with_type"),
-        dom=data.get("house"),
+        pochtovyy_indeks=dannye.get("postal_code", pochtovyy_indeks),
+        subiekt=dannye.get("region_with_type", ""),
+        gorod=dannye.get("city_with_type") or dannye.get("settlement_with_type", ""),
+        ulitsa=dannye.get("street_with_type"),
+        dom=dannye.get("house"),
         polnyy_adres=s.get("unrestricted_value") or s.get("value", ""),
     )
 
@@ -262,17 +262,17 @@ async def poisk_adresa(zapros: str) -> list[dict[str, str]]:
 
     rezultaty = []
     for s in suggestions:
-        data = s.get("data", {})
-        city = data.get("city_with_type") or data.get("settlement_with_type", "")
+        dannye = s.get("data", {})
+        city = dannye.get("city_with_type") or dannye.get("settlement_with_type", "")
         rezultaty.append(
             {
                 "znachenie": s.get("value", ""),
-                "pochtovyy_indeks": data.get("postal_code", ""),
-                "subiekt": data.get("region_with_type", ""),
+                "pochtovyy_indeks": dannye.get("postal_code", ""),
+                "subiekt": dannye.get("region_with_type", ""),
                 "gorod": city,
-                "ulitsa": data.get("street_with_type", ""),
-                "dom": data.get("house", ""),
-                "identifikator_fias": data.get("fias_id", ""),
+                "ulitsa": dannye.get("street_with_type", ""),
+                "dom": dannye.get("house", ""),
+                "identifikator_fias": dannye.get("fias_id", ""),
             }
         )
     return rezultaty
@@ -295,12 +295,12 @@ async def nayti_organizatsiyu_po_inn(inn: str) -> Organizatsiya | dict[str, str]
     if not suggestions:
         return {"oshibka": f"Организация с ИНН {inn} не найдена"}
 
-    data = suggestions[0].get("data", {})
-    razobrannye = _razobrat_dannye_organizatsii(data)
+    dannye = suggestions[0].get("data", {})
+    razobrannye = _razobrat_dannye_organizatsii(dannye)
     return Organizatsiya(
-        inn=data.get("inn", inn),
-        kpp=data.get("kpp"),
-        ogrn=data.get("ogrn"),
+        inn=dannye.get("inn", inn),
+        kpp=dannye.get("kpp"),
+        ogrn=dannye.get("ogrn"),
         nazvanie_polnoe=razobrannye["nazvanie_polnoe"],
         nazvanie_kratkoe=razobrannye["nazvanie_kratkoe"],
         sostoyanie=razobrannye["sostoyanie"],
@@ -327,12 +327,12 @@ async def nayti_organizatsiyu_po_ogrn(ogrn: str) -> Organizatsiya | dict[str, st
     if not suggestions:
         return {"oshibka": f"Организация с ОГРН {ogrn} не найдена"}
 
-    data = suggestions[0].get("data", {})
-    razobrannye = _razobrat_dannye_organizatsii(data)
+    dannye = suggestions[0].get("data", {})
+    razobrannye = _razobrat_dannye_organizatsii(dannye)
     return Organizatsiya(
-        inn=data.get("inn", ""),
-        kpp=data.get("kpp"),
-        ogrn=data.get("ogrn", ogrn),
+        inn=dannye.get("inn", ""),
+        kpp=dannye.get("kpp"),
+        ogrn=dannye.get("ogrn", ogrn),
         nazvanie_polnoe=razobrannye["nazvanie_polnoe"],
         nazvanie_kratkoe=razobrannye["nazvanie_kratkoe"],
         sostoyanie=razobrannye["sostoyanie"],
@@ -345,16 +345,16 @@ async def spisok_bankov_publichnyy() -> list[BankRF]:
     banks_raw = await _spisok_bankov()
     banks = []
     for b in banks_raw:
-        data = b.get("data", {})
-        razobrannye = _razobrat_dannye_banka(data, b.get("value", ""))
+        dannye = b.get("data", {})
+        razobrannye = _razobrat_dannye_banka(dannye, b.get("value", ""))
         banks.append(
             BankRF(
-                bik=data.get("bic", ""),
+                bik=dannye.get("bic", ""),
                 nazvanie=razobrannye["nazvanie_polnoe"],
                 nazvanie_kratkoe=razobrannye["nazvanie_kratkoe"],
                 gorod=razobrannye["gorod"],
                 subiekt=None,
-                svift=data.get("swift"),
+                svift=dannye.get("swift"),
             )
         )
     return banks
@@ -375,13 +375,13 @@ async def nayti_bank_po_bik(bik: str) -> BankRF | dict[str, str]:
     if not suggestions:
         return {"oshibka": f"Банк с БИК {bik} не найден"}
 
-    data = suggestions[0].get("data", {})
-    razobrannye = _razobrat_dannye_banka(data, suggestions[0].get("value", ""))
+    dannye = suggestions[0].get("data", {})
+    razobrannye = _razobrat_dannye_banka(dannye, suggestions[0].get("value", ""))
     return BankRF(
-        bik=data.get("bic", bik),
+        bik=dannye.get("bic", bik),
         nazvanie=razobrannye["nazvanie_polnoe"],
         nazvanie_kratkoe=razobrannye["nazvanie_kratkoe"],
         gorod=razobrannye["gorod"],
         subiekt=None,
-        svift=data.get("swift"),
+        svift=dannye.get("swift"),
     )

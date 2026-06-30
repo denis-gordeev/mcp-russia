@@ -19,7 +19,7 @@ def _mock_ctx():
 
 
 def test_parse_zakupki_search():
-    data = {
+    dannye = {
         "results": [
             {
                 "id": 1,
@@ -34,7 +34,7 @@ def test_parse_zakupki_search():
             }
         ]
     }
-    result = zakupki_client._razobrat_poisk_zakupok(data)
+    result = zakupki_client._razobrat_poisk_zakupok(dannye)
     assert len(result) == 1
     assert result[0].nomer == "0123400000125000001"
     assert result[0].nachalnaya_tsena == 1500000.0
@@ -46,7 +46,7 @@ def test_parse_zakupki_search_empty():
 
 
 def test_parse_kontrakty():
-    data = {
+    dannye = {
         "results": [
             {
                 "id": 100,
@@ -59,7 +59,7 @@ def test_parse_kontrakty():
             }
         ]
     }
-    result = zakupki_client._razobrat_kontrakty(data)
+    result = zakupki_client._razobrat_kontrakty(dannye)
     assert len(result) == 1
     assert result[0].nazvanie_podryadchika == "ООО Ромашка"
     assert result[0].tsena == 500000.0

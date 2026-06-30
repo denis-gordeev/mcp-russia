@@ -18,7 +18,7 @@ def _mock_ctx():
 
 
 def test_razobrat_deputatov_list():
-    data = [
+    dannye = [
         {
             "id": 1,
             "surname": "Иванов",
@@ -30,14 +30,14 @@ def test_razobrat_deputatov_list():
             "convocation": 8,
         }
     ]
-    result = gosduma_client._razobrat_deputatov(data)
+    result = gosduma_client._razobrat_deputatov(dannye)
     assert len(result) == 1
     assert result[0].фамилия == "Иванов"
     assert result[0].фракция == "Единая Россия"
 
 
 def test_razobrat_deputatov_dict():
-    data = {
+    dannye = {
         "deputies": [
             {
                 "id": 2,
@@ -51,7 +51,7 @@ def test_razobrat_deputatov_dict():
             }
         ]
     }
-    result = gosduma_client._razobrat_deputatov(data)
+    result = gosduma_client._razobrat_deputatov(dannye)
     assert len(result) == 1
     assert result[0].фамилия == "Петров"
     assert result[0].фракция == "КПРФ"
@@ -63,7 +63,7 @@ def test_razobrat_deputatov_empty():
 
 
 def test_razobrat_zakonoproekty():
-    data = {
+    dannye = {
         "bills": [
             {
                 "id": 100,
@@ -76,14 +76,14 @@ def test_razobrat_zakonoproekty():
             }
         ]
     }
-    result = gosduma_client._razobrat_zakonoproekty(data)
+    result = gosduma_client._razobrat_zakonoproekty(dannye)
     assert len(result) == 1
     assert result[0].nomer == "12345-8"
     assert result[0].sostoyanie == "Рассматривается"
 
 
 def test_razobrat_golosovaniya():
-    data = {
+    dannye = {
         "votes": [
             {
                 "billId": 200,
@@ -96,21 +96,21 @@ def test_razobrat_golosovaniya():
             }
         ]
     }
-    result = gosduma_client._razobrat_golosovaniya(data)
+    result = gosduma_client._razobrat_golosovaniya(dannye)
     assert len(result) == 1
     assert result[0].za == 300
     assert result[0].protiv == 50
 
 
 def test_razobrat_odnogo_deputata():
-    data = {
+    dannye = {
         "id": 1,
         "surname": "Сидоров",
         "name": "Сидор",
         "patronymic": "Сидорович",
         "factionName": "ЛДПР",
     }
-    result = gosduma_client._razobrat_odnogo_deputata(data)
+    result = gosduma_client._razobrat_odnogo_deputata(dannye)
     assert result is not None
     assert result.фамилия == "Сидоров"
 

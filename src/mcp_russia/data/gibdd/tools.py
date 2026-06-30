@@ -88,7 +88,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
     Возвращает:
         Сведения о ТС: история регистраций, розыск, ограничения, ДТП.
     """
-    history, dtp, wanted, restrict = await _polnaya_proverka_ts(vin)
+    history, dtp, razyskivaemye, restrict = await _polnaya_proverka_ts(vin)
 
     stroki = [f"**Транспортное средство** (VIN: {vin})"]
 
@@ -114,10 +114,11 @@ async def info_ts(ctx: Context, vin: str) -> str:
     else:
         stroki.append("\nДТП: данные не найдены.")
 
-    if wanted:
-        stroki.append(f"\n**⚠ Розыск** ({len(wanted)} записей)")
+    if razyskivaemye:
+        stroki.append(f"\n**⚠ Розыск** ({len(razyskivaemye)} записей)")
         stroki_tablitsy = [
-            (w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"]) for w in wanted
+            (w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"])
+            for w in razyskivaemye
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], stroki_tablitsy)
@@ -230,18 +231,18 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
     Возвращает:
         Статистика ДТП: количество, погибшие, раненые, пешеходы, дети.
     """
-    data = await client.statistika_dtp_region(subiekt, god)
-    if not data:
+    dannye = await client.statistika_dtp_region(subiekt, god)
+    if not dannye:
         return f"Статистика ДТП по региону «{subiekt}» за {god} год не найдена." + _ATTRIBUTION
 
     stroki = [
-        f"**Статистика ДТП** — {data.subiekt}, {data.god} г.",
-        f"- Всего ДТП: {formatirovat_chislo_ru(data.kolichestvo_dtp, 0)}",
-        f"- Погибшие: {formatirovat_chislo_ru(data.pogibshie, 0)}",
-        f"- Раненые: {formatirovat_chislo_ru(data.ranennye, 0)}",
-        f"- ДТП с пешеходами: {formatirovat_chislo_ru(data.dtp_s_peshchodami, 0)}",
-        f"- ДТП с участием детей: {formatirovat_chislo_ru(data.dtp_s_detmi, 0)}",
-        f"- ДТП по вине нетрезвых: {formatirovat_chislo_ru(data.alco_gibdd, 0)}",
+        f"**Статистика ДТП** — {dannye.subiekt}, {dannye.god} г.",
+        f"- Всего ДТП: {formatirovat_chislo_ru(dannye.kolichestvo_dtp, 0)}",
+        f"- Погибшие: {formatirovat_chislo_ru(dannye.pogibshie, 0)}",
+        f"- Раненые: {formatirovat_chislo_ru(dannye.ranennye, 0)}",
+        f"- ДТП с пешеходами: {formatirovat_chislo_ru(dannye.dtp_s_peshchodami, 0)}",
+        f"- ДТП с участием детей: {formatirovat_chislo_ru(dannye.dtp_s_detmi, 0)}",
+        f"- ДТП по вине нетрезвых: {formatirovat_chislo_ru(dannye.alco_gibdd, 0)}",
     ]
     return "\n".join(stroki) + _ATTRIBUTION
 

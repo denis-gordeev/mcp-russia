@@ -100,26 +100,26 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     """
     await ctx.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
     if inn:
-        data = await client.info_akkreditacii(inn)
+        dannye = await client.info_akkreditacii(inn)
     else:
         rezultaty = await client.poisk_akreditovannyh_vuzov(nazvanie=nazvanie)
-        data = rezultaty[0] if rezultaty else None
+        dannye = rezultaty[0] if rezultaty else None
 
-    if not data:
+    if not dannye:
         return f"Информация о вузе «{nazvanie or inn}» не найдена в реестре Рособрнадзора."
     stroki = [
-        f"**{data.get('nazvanie', nazvanie or inn)}**",
-        f"- ИНН: {data.get('inn', '')}",
-        f"- Тип: {data.get('tip', '')}",
-        f"- Город: {data.get('gorod', '')}",
-        f"- Регион: {data.get('subiekt', '')}",
-        f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
-        f"- Дата аккредитации: {data.get('data_akkreditatsii', '')}",
-        f"- Срок действия: {data.get('srok_deystviya', '')}",
-        f"- № свидетельства: {data.get('nomer_svidetelstva', '')}",
-        f"- Адрес: {data.get('adres', '')}",
-        f"- Сайт: {data.get('sayt', '')}",
-        f"- Источник: {data.get('istochnik', 'Рособрнадзор')}",
+        f"**{dannye.get('nazvanie', nazvanie or inn)}**",
+        f"- ИНН: {dannye.get('inn', '')}",
+        f"- Тип: {dannye.get('tip', '')}",
+        f"- Город: {dannye.get('gorod', '')}",
+        f"- Регион: {dannye.get('subiekt', '')}",
+        f"- Аккредитация: {dannye.get('status_akkreditatsii', '')}",
+        f"- Дата аккредитации: {dannye.get('data_akkreditatsii', '')}",
+        f"- Срок действия: {dannye.get('srok_deystviya', '')}",
+        f"- № свидетельства: {dannye.get('nomer_svidetelstva', '')}",
+        f"- Адрес: {dannye.get('adres', '')}",
+        f"- Сайт: {dannye.get('sayt', '')}",
+        f"- Источник: {dannye.get('istochnik', 'Рособрнадзор')}",
     ]
     return "\n".join(stroki)
 
@@ -139,14 +139,14 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
     if not rezultaty:
         return f"Вуз «{vuz}» не найден в реестре Рособрнадзора."
 
-    data = rezultaty[0]
+    dannye = rezultaty[0]
     stroki = [
-        f"**{data.get('nazvanie', vuz)}**",
-        f"- Аккредитация: {data.get('status_akkreditatsii', '')}",
-        f"- № свидетельства: {data.get('nomer_svidetelstva', '')}",
+        f"**{dannye.get('nazvanie', vuz)}**",
+        f"- Аккредитация: {dannye.get('status_akkreditatsii', '')}",
+        f"- № свидетельства: {dannye.get('nomer_svidetelstva', '')}",
         "",
         "Подробная информация об образовательных программах доступна на:",
-        f"- {data.get('sayt', 'сайте вуза')}",
+        f"- {dannye.get('sayt', 'сайте вуза')}",
         "- Рособрнадзор: https://obrnadzor.gov.ru/ru/registry_accreditation",
     ]
     return "\n".join(stroki)

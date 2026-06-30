@@ -38,11 +38,11 @@ async def poisk_akreditovannyh_vuzov(
         Список аккредитованных учреждений.
     """
     try:
-        data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
-        if not isinstance(data, list):
+        dannye = await http_poluchit(OBRNADZOR_ACCRED_URL, taimaut=30.0)
+        if not isinstance(dannye, list):
             return []
         rezultaty = []
-        for element in data:
+        for element in dannye:
             if not isinstance(element, dict):
                 continue
             if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
@@ -68,10 +68,10 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         Данные об аккредитации или None.
     """
     try:
-        data = await http_poluchit(OBRNADZOR_ACCRED_URL, timeout=30.0)
-        if not isinstance(data, list):
+        dannye = await http_poluchit(OBRNADZOR_ACCRED_URL, taimaut=30.0)
+        if not isinstance(dannye, list):
             return None
-        for element in data:
+        for element in dannye:
             if not isinstance(element, dict):
                 continue
             if element.get("inn") == inn:
@@ -96,11 +96,11 @@ async def poisk_licenziy(
         Список лицензированных учреждений.
     """
     try:
-        data = await http_poluchit(OBRNADZOR_LICENSE_URL, timeout=30.0)
-        if not isinstance(data, list):
+        dannye = await http_poluchit(OBRNADZOR_LICENSE_URL, taimaut=30.0)
+        if not isinstance(dannye, list):
             return []
         rezultaty = []
-        for element in data:
+        for element in dannye:
             if not isinstance(element, dict):
                 continue
             if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
@@ -125,12 +125,12 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
         Список рейтинговых данных.
     """
     try:
-        url = f"{VUZ_RATING_URL}/api/rating"
-        params: dict[str, Any] = {}
+        adres_url = f"{VUZ_RATING_URL}/api/rating"
+        parametry: dict[str, Any] = {}
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if not isinstance(data, list):
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        if not isinstance(dannye, list):
             return []
         return [
             {
@@ -140,7 +140,7 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
                 "tip_reytinga": r.get("category", tip_reytinga),
                 "gorod": r.get("city", ""),
             }
-            for r in data
+            for r in dannye
             if isinstance(r, dict)
         ]
     except Exception:

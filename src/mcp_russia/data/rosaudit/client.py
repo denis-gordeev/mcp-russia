@@ -41,16 +41,16 @@ async def poisk_kontrolnyh_meropriyatiy(
         Список контрольных мероприятий.
     """
     try:
-        url = f"{ACH_API_BASE}/controls"
-        params: dict[str, Any] = {"limit": ogranichenie}
+        adres_url = f"{ACH_API_BASE}/controls"
+        parametry: dict[str, Any] = {"limit": ogranichenie}
         if napravlenie:
-            params["direction"] = napravlenie
+            parametry["direction"] = napravlenie
         if status:
-            params["status"] = status
+            parametry["status"] = status
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_kontrolnoe_meropriyatie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске контрольных мероприятий")
@@ -67,10 +67,10 @@ async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
         Данные о мероприятии или None.
     """
     try:
-        url = f"{ACH_API_BASE}/controls/{nomer}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_kontrolnoe_meropriyatie(data)
+        adres_url = f"{ACH_API_BASE}/controls/{nomer}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_kontrolnoe_meropriyatie(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении мероприятия №%s", nomer)
@@ -87,10 +87,10 @@ async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None
         Данные о заключении или None.
     """
     try:
-        url = f"{ACH_API_BASE}/conclusions/{nomer}"
-        data = await http_poluchit(url, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_auditorskoe_zaklyuchenie(data)
+        adres_url = f"{ACH_API_BASE}/conclusions/{nomer}"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_auditorskoe_zaklyuchenie(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении заключения №%s", nomer)
@@ -109,13 +109,13 @@ async def poluchit_byudzhet_ispolnenie(
         Данные об исполнении бюджета или None.
     """
     try:
-        url = f"{BUDGET_GOV_RU_BASE}/execution"
-        params: dict[str, str] = {}
+        adres_url = f"{BUDGET_GOV_RU_BASE}/execution"
+        parametry: dict[str, str] = {}
         if period:
-            params["period"] = period
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        if isinstance(data, dict):
-            return _razobrat_ispolnenie_byudzheta(data)
+            parametry["period"] = period
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        if isinstance(dannye, dict):
+            return _razobrat_ispolnenie_byudzheta(dannye)
         return None
     except Exception:
         logger.exception("Ошибка при получении данных об исполнении бюджета")
@@ -138,16 +138,16 @@ async def poisk_narusheniy(
         Список нарушений.
     """
     try:
-        url = f"{ACH_API_BASE}/violations"
-        params: dict[str, Any] = {}
+        adres_url = f"{ACH_API_BASE}/violations"
+        parametry: dict[str, Any] = {}
         if organizaciya:
-            params["organization"] = organizaciya
+            parametry["organization"] = organizaciya
         if tip:
-            params["type"] = tip
+            parametry["type"] = tip
         if god:
-            params["year"] = god
-        data = await http_poluchit(url, params=params, timeout=15.0)
-        elementy = _izvlech_spisok(data)
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
         return [_razobrat_narushenie(p) for p in elementy if isinstance(p, dict)]
     except Exception:
         logger.exception("Ошибка при поиске нарушений")
@@ -169,69 +169,73 @@ def poluchit_spisok_subiektov_audita() -> list[dict[str, str]]:
     return SUBIEKTY_AUDITA
 
 
-def _izvlech_spisok(data: Any) -> list[Any]:
+def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(data, list):
-        return data
-    if isinstance(data, dict):
+    if isinstance(dannye, list):
+        return dannye
+    if isinstance(dannye, dict):
         for key in ("data", "items", "results", "records"):
-            val = data.get(key)
+            val = dannye.get(key)
             if isinstance(val, list):
                 return val
     return []
 
 
-def _razobrat_kontrolnoe_meropriyatie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_kontrolnoe_meropriyatie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных контрольного мероприятия."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "tip": data.get("type", "") or data.get("tip", ""),
-        "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
-        "data_nachala": data.get("startDate", "") or data.get("data_nachala", ""),
-        "data_okonchaniya": data.get("endDate", "") or data.get("data_okonchaniya", ""),
-        "sostoyanie": data.get("status", ""),
-        "obiem_sredstv": data.get("amount") or data.get("obiem_sredstv"),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "nazvanie": dannye.get("title", "")
+        or dannye.get("name", "")
+        or dannye.get("nazvanie", ""),
+        "tip": dannye.get("type", "") or dannye.get("tip", ""),
+        "napravlenie": dannye.get("direction", "") or dannye.get("napravlenie", ""),
+        "data_nachala": dannye.get("startDate", "") or dannye.get("data_nachala", ""),
+        "data_okonchaniya": dannye.get("endDate", "") or dannye.get("data_okonchaniya", ""),
+        "sostoyanie": dannye.get("status", ""),
+        "obiem_sredstv": dannye.get("amount") or dannye.get("obiem_sredstv"),
         "valyuta": "руб.",
         "istochnik": "Счётная палата РФ (ach.gov.ru)",
     }
 
 
-def _razobrat_auditorskoe_zaklyuchenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_auditorskoe_zaklyuchenie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных аудиторского заключения."""
     return {
-        "nomer": data.get("id", "") or data.get("number", "") or data.get("nomer", ""),
-        "nazvanie": data.get("title", "") or data.get("name", "") or data.get("nazvanie", ""),
-        "data_publikacii": data.get("publishDate", "") or data.get("data_publikacii", ""),
-        "obekt_audita": data.get("auditObject", "") or data.get("obekt_audita", ""),
-        "napravlenie": data.get("direction", "") or data.get("napravlenie", ""),
-        "vyavleno_narusheniy": data.get("violationsCount", 0)
-        or data.get("vyavleno_narusheniy", 0),
-        "summa_narusheniy": data.get("violationsAmount") or data.get("summa_narusheniy"),
-        "rekomendacii": data.get("recommendations", []) or data.get("rekomendacii", []),
-        "ispolnenie": data.get("execution", "") or data.get("ispolnenie", ""),
+        "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
+        "nazvanie": dannye.get("title", "")
+        or dannye.get("name", "")
+        or dannye.get("nazvanie", ""),
+        "data_publikacii": dannye.get("publishDate", "") or dannye.get("data_publikacii", ""),
+        "obekt_audita": dannye.get("auditObject", "") or dannye.get("obekt_audita", ""),
+        "napravlenie": dannye.get("direction", "") or dannye.get("napravlenie", ""),
+        "vyavleno_narusheniy": dannye.get("violationsCount", 0)
+        or dannye.get("vyavleno_narusheniy", 0),
+        "summa_narusheniy": dannye.get("violationsAmount") or dannye.get("summa_narusheniy"),
+        "rekomendacii": dannye.get("recommendations", []) or dannye.get("rekomendacii", []),
+        "ispolnenie": dannye.get("execution", "") or dannye.get("ispolnenie", ""),
         "istochnik": "Счётная палата РФ (ach.gov.ru)",
     }
 
 
-def _razobrat_ispolnenie_byudzheta(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_ispolnenie_byudzheta(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных об исполнении бюджета."""
     return {
-        "period": data.get("period", "") or data.get("year", ""),
-        "dohody": data.get("revenue") or data.get("income") or data.get("dohody"),
-        "raskhody": data.get("expenditure") or data.get("expenses") or data.get("raskhody"),
-        "defitsit": data.get("deficit"),
+        "period": dannye.get("period", "") or dannye.get("year", ""),
+        "dohody": dannye.get("revenue") or dannye.get("income") or dannye.get("dohody"),
+        "raskhody": dannye.get("expenditure") or dannye.get("expenses") or dannye.get("raskhody"),
+        "defitsit": dannye.get("deficit"),
         "istochnik": "Портал бюджетных данных (budget.gov.ru)",
     }
 
 
-def _razobrat_narushenie(data: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_narushenie(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о нарушении."""
     return {
-        "opisanie": data.get("description", "") or data.get("opisanie", ""),
-        "summa": data.get("amount") or data.get("summa"),
-        "tip_narusheniya": data.get("type", "") or data.get("tip_narusheniya", ""),
-        "organizaciya": data.get("organization", "") or data.get("organizaciya", ""),
-        "norma_prava": data.get("legalNorm", "") or data.get("norma_prava", ""),
+        "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
+        "summa": dannye.get("amount") or dannye.get("summa"),
+        "tip_narusheniya": dannye.get("type", "") or dannye.get("tip_narusheniya", ""),
+        "organizaciya": dannye.get("organization", "") or dannye.get("organizaciya", ""),
+        "norma_prava": dannye.get("legalNorm", "") or dannye.get("norma_prava", ""),
         "istochnik": "Счётная палата РФ (ach.gov.ru)",
     }

@@ -37,13 +37,13 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
     Возвращает:
         Данные акта или None.
     """
-    url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
-    params: dict[str, str] = {}
+    adres_url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
+    parametry: dict[str, str] = {}
     if tip:
-        params["tip"] = tip
+        parametry["tip"] = tip
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_normativnyy_akt(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_normativnyy_akt(dannye)
     except Exception:
         return None
 
@@ -57,10 +57,10 @@ async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     Возвращает:
         Данные законопроекта или None.
     """
-    url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
+    adres_url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_zakon_proekt(data)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_zakon_proekt(dannye)
     except Exception:
         return None
 
@@ -82,19 +82,19 @@ async def poluchit_publikatsii(
     Возвращает:
         Список публикаций.
     """
-    url = PRAVO_SEARCH_URL
-    params: dict[str, str] = {}
+    adres_url = PRAVO_SEARCH_URL
+    parametry: dict[str, str] = {}
     if tip:
-        params["type"] = tip
+        parametry["type"] = tip
     if otrysl:
-        params["branch"] = otrysl
+        parametry["branch"] = otrysl
     if data_from:
-        params["dateFrom"] = data_from
+        parametry["dateFrom"] = data_from
     if data_to:
-        params["dateTo"] = data_to
+        parametry["dateTo"] = data_to
     try:
-        data = await http_poluchit(url, params=params)
-        return _razobrat_publikatsii(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_publikatsii(dannye)
     except Exception:
         return []
 
@@ -108,10 +108,10 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     Возвращает:
         Список поправок.
     """
-    url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
+    adres_url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
     try:
-        data = await http_poluchit(url)
-        return _razobrat_izmeneniya(data)
+        dannye = await http_poluchit(adres_url)
+        return _razobrat_izmeneniya(dannye)
     except Exception:
         return []
 
@@ -126,13 +126,13 @@ async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
     Возвращает:
         Список найденных актов.
     """
-    url = PRAVO_SEARCH_URL
-    params: dict[str, str] = {"q": tekst}
+    adres_url = PRAVO_SEARCH_URL
+    parametry: dict[str, str] = {"q": tekst}
     if tip:
-        params["type"] = tip
+        parametry["type"] = tip
     try:
-        data = await http_poluchit(url, params=params)
-        return _rezultaty_poiska(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _rezultaty_poiska(dannye)
     except Exception:
         return []
 
@@ -160,48 +160,49 @@ def poluchit_spisok_statusov() -> list[dict[str, str]]:
 # --- Разборщики ответов ---
 
 
-def _razobrat_normativnyy_akt(data: Any) -> NormativnyyAkt | None:
+def _razobrat_normativnyy_akt(dannye: Any) -> NormativnyyAkt | None:
     """Разбор ответа открытых данных pravo.gov.ru в NormativnyyAkt."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return None
-    tip_code = str(data.get("type", data.get("tip", "")) or "")
+    tip_code = str(dannye.get("type", dannye.get("tip", "")) or "")
     tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
     return NormativnyyAkt(
-        nomer=data.get("number", data.get("nomer", "")) or "",
-        nazvanie=data.get("title", data.get("nazvanie", "")) or "",
+        nomer=dannye.get("number", dannye.get("nomer", "")) or "",
+        nazvanie=dannye.get("title", dannye.get("nazvanie", "")) or "",
         tip=tip_name,
-        data_prinyatiya=data.get("date", data.get("data_prinyatiya", "")) or "",
-        data_publikatsii=data.get("publishDate", data.get("data_publikatsii", "")) or "",
-        istochnik=data.get("source", data.get("istochnik", "pravo.gov.ru")) or "",
-        sostoyanie=data.get("status", "") or "",
-        otrysl=data.get("branch", data.get("otrysl", "")) or "",
-        kratkoe_opisanie=data.get("description", data.get("kratkoe_opisanie", "")) or "",
-        tekst_ssylka=data.get("url", data.get("tekst_ssylka", "")) or "",
-        izmeneniya=data.get("amendments", data.get("izmeneniya", [])) or [],
+        data_prinyatiya=dannye.get("date", dannye.get("data_prinyatiya", "")) or "",
+        data_publikatsii=dannye.get("publishDate", dannye.get("data_publikatsii", "")) or "",
+        istochnik=dannye.get("source", dannye.get("istochnik", "pravo.gov.ru")) or "",
+        sostoyanie=dannye.get("status", "") or "",
+        otrysl=dannye.get("branch", dannye.get("otrysl", "")) or "",
+        kratkoe_opisanie=dannye.get("description", dannye.get("kratkoe_opisanie", "")) or "",
+        tekst_ssylka=dannye.get("url", dannye.get("tekst_ssylka", "")) or "",
+        izmeneniya=dannye.get("amendments", dannye.get("izmeneniya", [])) or [],
     )
 
 
-def _razobrat_zakon_proekt(data: Any) -> ZakonProekt | None:
+def _razobrat_zakon_proekt(dannye: Any) -> ZakonProekt | None:
     """Разбор ответа открытых данных pravo.gov.ru в ZakonProekt."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return None
     return ZakonProekt(
-        nomer=data.get("number", data.get("nomer", "")) or "",
-        nazvanie=data.get("title", data.get("nazvanie", "")) or "",
-        stadnya=data.get("stage", data.get("stadnya", "")) or "",
-        data_vneseniya=data.get("introducedDate", data.get("data_vneseniya", "")) or "",
-        vnesen_subiekt=data.get("introducedBy", data.get("vnesen_subiekt", "")) or "",
-        otvetstvennyy_komitet=data.get("committee", data.get("otvetstvennyy_komitet", "")) or "",
-        chteniya=data.get("readings", data.get("chteniya", [])) or [],
-        tekst_ssylka=data.get("url", data.get("tekst_ssylka", "")) or "",
+        nomer=dannye.get("number", dannye.get("nomer", "")) or "",
+        nazvanie=dannye.get("title", dannye.get("nazvanie", "")) or "",
+        stadnya=dannye.get("stage", dannye.get("stadnya", "")) or "",
+        data_vneseniya=dannye.get("introducedDate", dannye.get("data_vneseniya", "")) or "",
+        vnesen_subiekt=dannye.get("introducedBy", dannye.get("vnesen_subiekt", "")) or "",
+        otvetstvennyy_komitet=dannye.get("committee", dannye.get("otvetstvennyy_komitet", ""))
+        or "",
+        chteniya=dannye.get("readings", dannye.get("chteniya", [])) or [],
+        tekst_ssylka=dannye.get("url", dannye.get("tekst_ssylka", "")) or "",
     )
 
 
-def _razobrat_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
+def _razobrat_publikatsii(dannye: Any) -> list[OficialnayaPublikatsiya]:
     """Разбор поискового ответа открытых данных pravo.gov.ru в список OficialnayaPublikatsiya."""
-    elementy = data
-    if isinstance(data, dict):
-        elementy = data.get("items", data.get("results", data.get("documents", [])))
+    elementy = dannye
+    if isinstance(dannye, dict):
+        elementy = dannye.get("items", dannye.get("results", dannye.get("documents", [])))
     if not isinstance(elementy, list):
         return []
     rezultaty = []
@@ -223,11 +224,11 @@ def _razobrat_publikatsii(data: Any) -> list[OficialnayaPublikatsiya]:
     return rezultaty
 
 
-def _razobrat_izmeneniya(data: Any) -> list[IzmenenieAkta]:
+def _razobrat_izmeneniya(dannye: Any) -> list[IzmenenieAkta]:
     """Разбор ответа поправок открытых данных pravo.gov.ru в список IzmenenieAkta."""
-    elementy = data
-    if isinstance(data, dict):
-        elementy = data.get("items", data.get("results", data.get("amendments", [])))
+    elementy = dannye
+    if isinstance(dannye, dict):
+        elementy = dannye.get("items", dannye.get("results", dannye.get("amendments", [])))
     if not isinstance(elementy, list):
         return []
     rezultaty = []
@@ -250,11 +251,11 @@ def _razobrat_izmeneniya(data: Any) -> list[IzmenenieAkta]:
     return rezultaty
 
 
-def _rezultaty_poiska(data: Any) -> list[NormativnyyAkt]:
+def _rezultaty_poiska(dannye: Any) -> list[NormativnyyAkt]:
     """Разбор результатов поиска открытых данных pravo.gov.ru в список NormativnyyAkt."""
-    elementy = data
-    if isinstance(data, dict):
-        elementy = data.get("items", data.get("results", data.get("documents", [])))
+    elementy = dannye
+    if isinstance(dannye, dict):
+        elementy = dannye.get("items", dannye.get("results", dannye.get("documents", [])))
     if not isinstance(elementy, list):
         return []
     rezultaty = []

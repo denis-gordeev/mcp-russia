@@ -30,8 +30,8 @@ async def spisok_senatorov(ctx: Context) -> str:
         )
         for s in senatory
     ]
-    header = f"**Сенаторы Совета Федерации РФ** — найдено: {len(senatory)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Сенаторы Совета Федерации РФ** — найдено: {len(senatory)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Фамилия", "Имя", "Регион", "Комитет"],
         stroki_tablitsy,
     )
@@ -47,25 +47,25 @@ async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
         Информация о сенаторе.
     """
     await ctx.info(f"Запрос информации о сенаторе {identifikator_senatora}...")
-    data = await client.info_senatora(identifikator_senatora)
-    if not data:
+    dannye = await client.info_senatora(identifikator_senatora)
+    if not dannye:
         return (
             f"Сенатор '{identifikator_senatora}' не найден.\n\n"
             f"Проверьте идентификатор на сайте Совета Федерации: sovfed.ru/senators"
         )
-    fio = f"{data.get('familiya', '')} {data.get('imya', '')} {data.get('otchestvo', '')}".strip()
+    fio = f"{dannye.get('familiya', '')} {dannye.get('imya', '')} {dannye.get('otchestvo', '')}".strip()
     stroki = [
-        f"**{fio}** (№ {data.get('nomer', identifikator_senatora)})",
-        f"- Регион: {data.get('subiekt', '')}",
-        f"- Должность: {data.get('dolzhnost', '')}",
+        f"**{fio}** (№ {dannye.get('nomer', identifikator_senatora)})",
+        f"- Регион: {dannye.get('subiekt', '')}",
+        f"- Должность: {dannye.get('dolzhnost', '')}",
     ]
-    if data.get("komitet"):
-        stroki.append(f"- Комитет: {data['komitet']}")
-    if data.get("frakciya"):
-        stroki.append(f"- Фракция: {data['frakciya']}")
-    if data.get("data_naznacheniya"):
-        stroki.append(f"- Дата назначения: {data['data_naznacheniya']}")
-    stroki.append(f"- Источник: {data.get('istochnik', 'sovfed.ru')}")
+    if dannye.get("komitet"):
+        stroki.append(f"- Комитет: {dannye['komitet']}")
+    if dannye.get("frakciya"):
+        stroki.append(f"- Фракция: {dannye['frakciya']}")
+    if dannye.get("data_naznacheniya"):
+        stroki.append(f"- Дата назначения: {dannye['data_naznacheniya']}")
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'sovfed.ru')}")
     return "\n".join(stroki)
 
 
@@ -82,12 +82,14 @@ async def spisok_komitetov(ctx: Context) -> str:
             )
             for k in komitety_api
         ]
-        header = "**Комитеты Совета Федерации РФ**\n\n"
-        return header + tablitsa_v_markdown(["Комитет", "Председатель", "Членов"], stroki_tablitsy)
+        zagolovok = "**Комитеты Совета Федерации РФ**\n\n"
+        return zagolovok + tablitsa_v_markdown(
+            ["Комитет", "Председатель", "Членов"], stroki_tablitsy
+        )
     komitety = client.poluchit_spisok_komitetov()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
-    header = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
-    return header + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
+    zagolovok = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
 
 async def spisok_komissiy(ctx: Context) -> str:
@@ -103,14 +105,14 @@ async def spisok_komissiy(ctx: Context) -> str:
             )
             for k in komissii_api
         ]
-        header = "**Комиссии Совета Федерации РФ**\n\n"
-        return header + tablitsa_v_markdown(
+        zagolovok = "**Комиссии Совета Федерации РФ**\n\n"
+        return zagolovok + tablitsa_v_markdown(
             ["Комиссия", "Председатель", "Членов"], stroki_tablitsy
         )
     komissii = client.poluchit_spisok_komissiy()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komissii]
-    header = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
-    return header + tablitsa_v_markdown(["Код", "Комиссия"], stroki_tablitsy)
+    zagolovok = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Комиссия"], stroki_tablitsy)
 
 
 async def poisk_zakonoproektov(
@@ -152,8 +154,8 @@ async def poisk_zakonoproektov(
         )
         for z in zakonoproekty
     ]
-    header = f"**Законопроекты Совета Федерации РФ** — найдено: {len(zakonoproekty)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Законопроекты Совета Федерации РФ** — найдено: {len(zakonoproekty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Название", "Статус", "Дата рассмотрения"],
         stroki_tablitsy,
     )
@@ -182,8 +184,8 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
         )
         for z in zasedaniya
     ]
-    header = f"**Заседания Совета Федерации РФ** — найдено: {len(zasedaniya)}\n\n"
-    return header + tablitsa_v_markdown(
+    zagolovok = f"**Заседания Совета Федерации РФ** — найдено: {len(zasedaniya)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
         ["№", "Дата", "Статус", "Повестка"],
         stroki_tablitsy,
     )

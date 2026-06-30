@@ -34,27 +34,27 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
     Возвращает:
         Список депутатов.
     """
-    params: dict[str, str] = {}
+    parametry: dict[str, str] = {}
     if sozyv:
-        params["convocation"] = sozyv
+        parametry["convocation"] = sozyv
 
-    token = _poluchit_api_token()
-    if token:
-        params["app_token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["app_token"] = zheton
 
     try:
-        data = await http_poluchit(DUMA_DEPUTATS, params=params)
-        return _razobrat_deputatov(data)
+        dannye = await http_poluchit(DUMA_DEPUTATS, parametry=parametry)
+        return _razobrat_deputatov(dannye)
     except Exception:
         return []
 
 
-def _razobrat_deputatov(data: Any) -> list[Deputat]:
+def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
     """Разбор данных депутатов из ответа API."""
-    if isinstance(data, dict):
-        elementy = data.get("deputies", data.get("items", []))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("deputies", dannye.get("items", []))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -88,16 +88,16 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     Возвращает:
         Данные депутата или None.
     """
-    token = _poluchit_api_token()
-    params: dict[str, str] = {}
-    if token:
-        params["app_token"] = token
+    zheton = _poluchit_api_token()
+    parametry: dict[str, str] = {}
+    if zheton:
+        parametry["app_token"] = zheton
 
-    url = f"{DUMA_DEPUTATS}/{identifikator}"
+    adres_url = f"{DUMA_DEPUTATS}/{identifikator}"
     try:
-        data = await http_poluchit(url, params=params)
-        if isinstance(data, dict):
-            return _razobrat_odnogo_deputata(data)
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        if isinstance(dannye, dict):
+            return _razobrat_odnogo_deputata(dannye)
     except Exception:
         pass
 
@@ -108,20 +108,20 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     return None
 
 
-def _razobrat_odnogo_deputata(data: dict[str, Any]) -> Deputat | None:
+def _razobrat_odnogo_deputata(dannye: dict[str, Any]) -> Deputat | None:
     """Разбор данных одного депутата из ответа API."""
-    if not isinstance(data, dict):
+    if not isinstance(dannye, dict):
         return None
     return Deputat(
-        identifikator=data.get("id", 0),
-        фамилия=data.get("surname", data.get("lastName", "")),
-        имя=data.get("name", data.get("firstName", "")),
-        отчество=data.get("patronymic", data.get("middleName", "")),
-        фракция=data.get("factionName", data.get("faction", "")),
-        комитет=data.get("committeeName", data.get("committee", "")),
-        регион=data.get("districtName", data.get("region", "")),
-        созыв=str(data.get("convocation", data.get("sozyv", ""))),
-        foto_ssylka=data.get("photoUrl", data.get("photo", "")),
+        identifikator=dannye.get("id", 0),
+        фамилия=dannye.get("surname", dannye.get("lastName", "")),
+        имя=dannye.get("name", dannye.get("firstName", "")),
+        отчество=dannye.get("patronymic", dannye.get("middleName", "")),
+        фракция=dannye.get("factionName", dannye.get("faction", "")),
+        комитет=dannye.get("committeeName", dannye.get("committee", "")),
+        регион=dannye.get("districtName", dannye.get("region", "")),
+        созыв=str(dannye.get("convocation", dannye.get("sozyv", ""))),
+        foto_ssylka=dannye.get("photoUrl", dannye.get("photo", "")),
     )
 
 
@@ -140,27 +140,27 @@ async def poluchit_zakonoproekty(
     Возвращает:
         Список законопроектов.
     """
-    params: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
+    parametry: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
     if status:
-        params["status"] = status
+        parametry["status"] = status
 
-    token = _poluchit_api_token()
-    if token:
-        params["app_token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["app_token"] = zheton
 
     try:
-        data = await http_poluchit(f"{DUMA_LAWS}/bills", params=params)
-        return _razobrat_zakonoproekty(data)
+        dannye = await http_poluchit(f"{DUMA_LAWS}/bills", parametry=parametry)
+        return _razobrat_zakonoproekty(dannye)
     except Exception:
         return []
 
 
-def _razobrat_zakonoproekty(data: Any) -> list[Zakonoproekt]:
+def _razobrat_zakonoproekty(dannye: Any) -> list[Zakonoproekt]:
     """Разбор данных законопроектов из ответа API."""
-    if isinstance(data, dict):
-        elementy = data.get("bills", data.get("items", []))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("bills", dannye.get("items", []))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 
@@ -199,27 +199,27 @@ async def poluchit_golosovaniya(
     Возвращает:
         Список результатов голосований.
     """
-    params: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
+    parametry: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
     if sozyv:
-        params["convocation"] = sozyv
+        parametry["convocation"] = sozyv
 
-    token = _poluchit_api_token()
-    if token:
-        params["app_token"] = token
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["app_token"] = zheton
 
     try:
-        data = await http_poluchit(DUMA_VOTES, params=params)
-        return _razobrat_golosovaniya(data)
+        dannye = await http_poluchit(DUMA_VOTES, parametry=parametry)
+        return _razobrat_golosovaniya(dannye)
     except Exception:
         return []
 
 
-def _razobrat_golosovaniya(data: Any) -> list[Golosovanie]:
+def _razobrat_golosovaniya(dannye: Any) -> list[Golosovanie]:
     """Разбор результатов голосований из ответа API."""
-    if isinstance(data, dict):
-        elementy = data.get("votes", data.get("items", []))
-    elif isinstance(data, list):
-        elementy = data
+    if isinstance(dannye, dict):
+        elementy = dannye.get("votes", dannye.get("items", []))
+    elif isinstance(dannye, list):
+        elementy = dannye
     else:
         return []
 

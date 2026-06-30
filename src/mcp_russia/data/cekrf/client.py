@@ -107,30 +107,30 @@ class _VyboryTableParser(HTMLParser):
 
     def handle_data(self, data: str) -> None:
         """Обработка текстового содержимого HTML."""
-        text = data.strip()
-        if not text:
+        tekst = data.strip()
+        if not tekst:
             return
         if self._in_td or self._in_th:
             current = getattr(self, "_current_cell", "")
-            self._current_cell = current + " " + text if current else text
+            self._current_cell = current + " " + tekst if current else tekst
         if self._in_title:
-            self.title_text += text + " "
+            self.title_text += tekst + " "
         if self._in_stats:
-            self.stats_text += text + " "
+            self.stats_text += tekst + " "
 
 
-def _razobrat_chislo(text: str) -> int:
+def _razobrat_chislo(tekst: str) -> int:
     """Извлечь целое число из текста (убрать пробелы, %, и т.д.)."""
-    ochishchennoe = re.sub(r"[^\d]", "", text.split(",")[0].split(".")[0])
+    ochishchennoe = re.sub(r"[^\d]", "", tekst.split(",")[0].split(".")[0])
     return int(ochishchennoe) if ochishchennoe else 0
 
 
-def _razobrat_veshchestvennoe(text: str) -> float:
+def _razobrat_veshchestvennoe(tekst: str) -> float:
     """Извлечь число с плавающей точкой из текста."""
-    m = re.search(r"[\d]+[.,][\d]+", text)
+    m = re.search(r"[\d]+[.,][\d]+", tekst)
     if m:
         return float(m.group().replace(",", "."))
-    m = re.search(r"[\d]+", text)
+    m = re.search(r"[\d]+", tekst)
     return float(m.group()) if m else 0.0
 
 
@@ -143,7 +143,7 @@ async def _zaprosit_html_vyborov(
     vibid: str | None = None,
 ) -> str | None:
     """Получить HTML-страницу результатов выборов из ГАС «Выборы»."""
-    params: dict[str, Any] = {
+    parametry: dict[str, Any] = {
         "action": "show",
         "root": 1,
         "tvd": tvd,
@@ -155,28 +155,28 @@ async def _zaprosit_html_vyborov(
         "type": tip_golosovaniya,
         "vibid": vibid or vrn,
     }
-    url = f"{VYBORY_API}/izbirkom"
+    adres_url = f"{VYBORY_API}/izbirkom"
     try:
         async with sozdat_klienta(
             base_url=VYBORY_API_BASE,
-            headers={"Accept": "text/html,application/xhtml+xml"},
-            timeout=30.0,
+            zagolovki={"Accept": "text/html,application/xhtml+xml"},
+            taimaut=30.0,
         ) as c:
-            otvet = await c.get(url, params=params)
+            otvet = await c.get(adres_url, params=parametry)
             otvet.raise_for_status()
             return otvet.text
     except Exception as exc:
-        logger.warning("Не удалось получить страницу ГАС «Выборы» %s: %s", url, exc)
+        logger.warning("Не удалось получить страницу ГАС «Выборы» %s: %s", adres_url, exc)
         return None
 
 
-async def _zaprosit_json_tsik(path: str, params: dict[str, Any] | None = None) -> Any:
+async def _zaprosit_json_tsik(path: str, parametry: dict[str, Any] | None = None) -> Any:
     """Получить JSON данные из API cikrf.ru."""
-    url = f"{CIK_API_BASE}{path}"
+    adres_url = f"{CIK_API_BASE}{path}"
     try:
-        return await http_poluchit(url, params=params, timeout=15.0, max_retries=1)
+        return await http_poluchit(adres_url, parametry=parametry, taimaut=15.0, maks_povtorov=1)
     except Exception as exc:
-        logger.debug("CIK API %s недоступен: %s", url, exc)
+        logger.debug("CIK API %s недоступен: %s", adres_url, exc)
         return None
 
 
@@ -334,10 +334,10 @@ async def tipy_vyborov() -> list[TipVyborov]:
     """Получить список типов выборов."""
     rezultaty: list[TipVyborov] = []
     for v in TIPOVY_VYBORY.values():
-        code: Any = v["kod"]
+        kod: Any = v["kod"]
         name: Any = v["nazvanie"]
         rezultaty.append(
-            TipVyborov(kod=code if isinstance(code, int) else int(str(code)), nazvanie=str(name))
+            TipVyborov(kod=kod if isinstance(kod, int) else int(str(kod)), nazvanie=str(name))
         )
     return rezultaty
 
@@ -351,10 +351,10 @@ async def dolzhnosti_federal() -> list[Dolzhnost]:
     """Получить список федеральных избирательных должностей."""
     rezultaty: list[Dolzhnost] = []
     for d in DOLZHNOSTI_FEDERAL:
-        code: Any = d["kod"]
+        kod: Any = d["kod"]
         rezultaty.append(
             Dolzhnost(
-                kod=code if isinstance(code, int) else int(str(code)),
+                kod=kod if isinstance(kod, int) else int(str(kod)),
                 nazvanie=str(d["nazvanie"]),
                 uroven=str(d["uroven"]),
             )
@@ -408,8 +408,8 @@ async def spisok_vyborov(
         rezultaty.append({**v, "klyuch": key})
 
     if not rezultaty and god is not None:
-        url = f"{VYBORY_API}/izbirkom"
-        params: dict[str, Any] = {
+        adres_url = f"{VYBORY_API}/izbirkom"
+        parametry: dict[str, Any] = {
             "action": "show",
             "root": 1,
             "region": subiekt or 0,
@@ -418,10 +418,10 @@ async def spisok_vyborov(
         try:
             async with sozdat_klienta(
                 base_url=VYBORY_API_BASE,
-                headers={"Accept": "text/html,application/xhtml+xml"},
-                timeout=20.0,
+                zagolovki={"Accept": "text/html,application/xhtml+xml"},
+                taimaut=20.0,
             ) as c:
-                otvet = await c.get(url, params=params)
+                otvet = await c.get(adres_url, params=parametry)
                 otvet.raise_for_status()
                 html = otvet.text
                 year_pattern = re.compile(rf"\b{god}\b")
@@ -460,7 +460,7 @@ async def poisk_kandidata(
     Возвращает:
         Список найденных кандидатов.
     """
-    search_url = f"{VYBORY_API}/izbirkom"
+    adres_url_poiska = f"{VYBORY_API}/izbirkom"
     region_num = IZBIRATELNYY_KOD_REGIONA.get(subiekt, 0) if subiekt else 0
 
     vybory_info = None
@@ -470,25 +470,25 @@ async def poisk_kandidata(
                 vybory_info = v
                 break
 
-    params: dict[str, Any] = {
+    parametry: dict[str, Any] = {
         "action": "show",
         "root": 1,
         "region": region_num,
         "sub_region": 0,
     }
     if vybory_info:
-        params["tvd"] = vybory_info["tvd"]
-        params["vrn"] = vybory_info["vrn"]
-        params["type"] = vybory_info.get("tip", 242)
-        params["vibid"] = vybory_info["vrn"]
+        parametry["tvd"] = vybory_info["tvd"]
+        parametry["vrn"] = vybory_info["vrn"]
+        parametry["type"] = vybory_info.get("tip", 242)
+        parametry["vibid"] = vybory_info["vrn"]
 
     try:
         async with sozdat_klienta(
             base_url=VYBORY_API_BASE,
-            headers={"Accept": "text/html,application/xhtml+xml"},
-            timeout=20.0,
+            zagolovki={"Accept": "text/html,application/xhtml+xml"},
+            taimaut=20.0,
         ) as c:
-            otvet = await c.get(search_url, params=params)
+            otvet = await c.get(adres_url_poiska, params=parametry)
             otvet.raise_for_status()
             html = otvet.text
             all_kandidaty = _razobrat_kandidatov_iz_html(html)
