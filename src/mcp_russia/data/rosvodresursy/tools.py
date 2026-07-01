@@ -266,9 +266,9 @@ async def vodopolzovanie_regionov(
             filtry.append(f"регион: {subiekt}")
         if god:
             filtry.append(f"год: {god}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Данные о водопользовании{filter_text} недоступны.\n\n"
+            f"Данные о водопользовании{tekst_filtra} недоступны.\n\n"
             f"Данные доступны на сайте Росводресурсов: rosvodresursy.ru"
         )
 

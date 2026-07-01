@@ -2,6 +2,100 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-01 (пятьдесят девятый проход — русификация оставшихся английских локальных переменных client.py/tools.py)
+
+### Выполнено
+
+- **Русификация локальных переменных rosreestr/client.py** (7 переменных):
+  - `area_data` → `dannye_ploshchadi` (данные площади)
+  - `cost` → `stoimost_slovar` (словарь кадастровой стоимости)
+  - `status` → `status_ucheta` (статус учёта — совпадает с полем Pydantic)
+  - `cat` → `kategoriya_slovar` (словарь категории земель)
+  - `feature` → `obekt_dannykh` (объект данных — 3 вхождения)
+  - `rights` → `prava_spisok` (список прав)
+  - `features` → `obekty_spisok` (список объектов)
+- **Русификация локальных переменных kad_arbitrazh/client.py** (6 переменных):
+  - `letter` → `bukva` (буква номера дела)
+  - `doc` → `dokument` (документ акта — 2 вхождения)
+  - `raw` → `syr_dannye` (сырые данные сторон)
+  - `names` → `nazvaniya` (названия сторон)
+  - `name` → `nazvanie` (название одной стороны)
+  - `sides` → `storony` (стороны дела)
+- **Русификация локальных переменных gibdd/client.py** (6 переменных):
+  - `history` → `istoriya` (история регистрации ТС)
+  - `dtp` → `dtp_dannye` (данные ДТП)
+  - `restrict` → `ogranicheniya_dannye` (данные ограничений)
+  - `driver` → `voditel_dannye` (данные водителя)
+  - `categories` → `kategorii_vu` (категории ВУ)
+  - `cat` → `kategoriya` (одна категория)
+  - `stats` → `statistika` (статистика ДТП)
+- **Русификация локальных переменных cekrf/client.py** (11 переменных):
+  - `attr_dict` → `slovar_atributov` (словарь атрибутов HTML)
+  - `tag_lower` → `teg_nizhniy` (тег в нижнем регистре — 2 вхождения)
+  - `cell` → `yacheyka` (ячейка таблицы — 2 вхождения)
+  - `cell_lower` → `yacheyka_nizhniy` (ячейка в нижнем регистре)
+  - `val` → `znachenie` (значение числа)
+  - `status` → `sostoyanie` (состояние кандидата — локальная переменная)
+  - `name` → `nazvanie` (название типа выборов)
+  - `html` → `html_tekst` (HTML-текст — 5 вхождений)
+  - `year_pattern` → `shablon_goda` (шаблон поиска года)
+  - `title_match` → `sovpadenie_zagolovka` (совпадение заголовка)
+  - `all_kandidaty` → `vse_kandidaty` (все кандидаты)
+  - `fio_lower` → `fio_nizhniy` (ФИО в нижнем регистре)
+  - `turnout` → `yavka` (явка на выборы)
+- **Русификация локальных переменных fssp/client.py** (1 переменная):
+  - `inner` → `vnutrennie` (внутренние данные ответа)
+- **Русификация переменных roskomnadzor/client.py** (6 переменных):
+  - `url` → `adres_url` (5 вхождений)
+  - `domain` → `domen` (параметр функции `_razobrat_blokirovku`)
+- **Русификация переменных rosstat/client.py** (10 вхождений):
+  - `url` → `adres_url` (10 вхождений)
+- **Русификация переменных rosapi/tools.py** (2 переменные):
+  - `holidays` → `prazdniki` (список праздников)
+  - `date_str` → `data_stroka` (строка даты)
+- **Русификация `filter_text` → `tekst_filtra`** (~17 вхождений в 9 tools.py):
+  - rosgidromet, sovfed, rosvodresursy, kaznacheistvo, publikatsii, rosaudit, rosprirodnadzor, rosstat, mchs
+- **Русификация `filter_parts` → `chasti_filtra`** (3 вхождения в rosstat/tools.py)
+- **Русификация `region_text` → `tekst_regiona`** (2 вхождения: kaznacheistvo, rosgidromet)
+- **Русификация переменных cbrf/tools.py** (3 переменные):
+  - `prev_str` → `predydushchaya_stroka` (предыдущая строка)
+  - `name` → `nazvanie_valyuty` (название валюты)
+  - `rubles` → `rubli` (рубли)
+- **Русификация переменных cbrf/client.py** (1 переменная):
+  - `date_str` → `stroka_daty` (строка даты — параметр + 2 присвоения)
+- **Русификация переменных fns/client.py** (3 переменные):
+  - `search_url` → `adres_poiska` (адрес поиска)
+  - `result_url` → `adres_rezultata` (адрес результата)
+  - `org` → `organizaciya` (организация)
+- **Русификация переменных rosstat/tools.py** (4 переменные):
+  - `available` → `dostupnye` (доступные показатели)
+  - `sorted_data` → `otsortirovannye_dannye` (отсортированные данные)
+  - `val` → `znachenie` (значение — 2 вхождения)
+  - `title` → `zagolovok_tekst` (текст заголовка)
+- **Русификация переменных rosgidromet/tools.py** (1 переменная):
+  - `line` → `stroka` (строка вывода)
+- **Русификация `key`/`val` в `_izvlech_spisok`** (8 файлов):
+  - `key` → `klyuch`, `val` → `znachenie_spiska`
+  - minzdrav, mchs, rosaudit, kaznacheistvo, rosprirodnadzor, rosselkhoznadzor, rosvodresursy, sovfed
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 3 файла переформатированы, `pytest` — 355+ passed (unit), 1 skipped
+
+### Ключевые архитектурные решения
+
+- **`feature` → `obekt_dannykh`**: в API Росреестра `feature` — GeoJSON-объект; выбрано `obekt_dannykh` (объект данных) как наиболее общее русское название
+- **`doc` → `dokument`**: в КАД `Document` — запись судебного акта; `dokument` однозначно передаёт смысл
+- **`domain` → `domen`**: параметр функции `_razobrat_blokirovku` переименован; строковый ключ `"domain"` в parametry не затронут
+- **`date_str` → `stroka_daty`**: параметр функции `_razobrat_valyutu` и локальные переменные; Pydantic-ключ `data=` оставлен без изменений (имя поля схемы)
+- **`html` → `html_tekst`**: во всех функциях ЦИК РФ, где HTML-страница хранится в локальной переменной
+- **`turnout` → `yavka`**: явка на выборы — устоявшийся русский термин
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских параметров**: `tool`/`catalog` в server.py (MCP-инструменты — user-facing), `base_url` в `sozdat_klienta` (httpx API), `period` (rate_limiter — русское слово, совпадающее с английским)
+- **Финальная дочистка**: поиск и русификация единичных оставшихся английских локальных переменных (case_info, region_name, region_code, reg_code в rosstat/client.py; addr в rosreestr/client.py и т.д.)
+
 ## Статус раунда 2026-07-01 (пятьдесят восьмой проход — русификация локальных переменных client.py/tools.py, параметров функций, docstrings)
 
 ### Выполнено

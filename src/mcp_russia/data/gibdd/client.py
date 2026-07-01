@@ -151,12 +151,12 @@ def _izvlech_rezultat(dannye: Any, klyuch: str) -> dict[str, Any]:
 
 def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
     """Разбор ответа истории регистрации ТС."""
-    history = _izvlech_rezultat(dannye, "history")
-    if not isinstance(history, dict):
+    istoriya = _izvlech_rezultat(dannye, "history")
+    if not isinstance(istoriya, dict):
         return []
 
     zapisi = []
-    for element in history.get("records", []) or []:
+    for element in istoriya.get("records", []) or []:
         if not isinstance(element, dict):
             continue
         zapisi.append(
@@ -173,12 +173,12 @@ def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
 
 def _razobrat_dtp(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа истории ДТП."""
-    dtp = _izvlech_rezultat(dannye, "dtp")
-    if not isinstance(dtp, dict):
+    dtp_dannye = _izvlech_rezultat(dannye, "dtp")
+    if not isinstance(dtp_dannye, dict):
         return []
 
     zapisi = []
-    for element in dtp.get("records", []) or []:
+    for element in dtp_dannye.get("records", []) or []:
         if not isinstance(element, dict):
             continue
         zapisi.append(
@@ -219,12 +219,12 @@ def _razobrat_rozysk(dannye: Any) -> list[dict[str, Any]]:
 
 def _razobrat_ogranichenie(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа об ограничениях транспортного средства."""
-    restrict = _izvlech_rezultat(dannye, "restrict")
-    if not isinstance(restrict, dict):
+    ogranicheniya_dannye = _izvlech_rezultat(dannye, "restrict")
+    if not isinstance(ogranicheniya_dannye, dict):
         return []
 
     zapisi = []
-    for element in restrict.get("records", []) or []:
+    for element in ogranicheniya_dannye.get("records", []) or []:
         if not isinstance(element, dict):
             continue
         zapisi.append(
@@ -242,33 +242,33 @@ def _razobrat_ogranichenie(dannye: Any) -> list[dict[str, Any]]:
 
 def _razobrat_voditelya(dannye: Any, nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     """Разбор ответа проверки водительского удостоверения."""
-    driver = _izvlech_rezultat(dannye, "driver")
-    if not isinstance(driver, dict):
+    voditel_dannye = _izvlech_rezultat(dannye, "driver")
+    if not isinstance(voditel_dannye, dict):
         return None
 
     fio_parts = []
-    if driver.get("lastName"):
-        fio_parts.append(driver["lastName"])
-    if driver.get("firstName"):
-        fio_parts.append(driver["firstName"])
-    if driver.get("middleName"):
-        fio_parts.append(driver["middleName"])
+    if voditel_dannye.get("lastName"):
+        fio_parts.append(voditel_dannye["lastName"])
+    if voditel_dannye.get("firstName"):
+        fio_parts.append(voditel_dannye["firstName"])
+    if voditel_dannye.get("middleName"):
+        fio_parts.append(voditel_dannye["middleName"])
 
-    categories = []
-    for cat in driver.get("categories", []) or []:
-        if isinstance(cat, dict):
-            categories.append(cat.get("category", ""))
+    kategorii_vu = []
+    for kategoriya in voditel_dannye.get("categories", []) or []:
+        if isinstance(kategoriya, dict):
+            kategorii_vu.append(kategoriya.get("category", ""))
 
     return VoditelskoeUdostoverenie(
         nomer_vu=nomer_vu,
-        kategoriya=", ".join(categories),
-        data_vydachi=driver.get("dateIssue", ""),
-        srok_deystviya=driver.get("dateExpiry", ""),
+        kategoriya=", ".join(kategorii_vu),
+        data_vydachi=voditel_dannye.get("dateIssue", ""),
+        srok_deystviya=voditel_dannye.get("dateExpiry", ""),
         fio=" ".join(fio_parts),
-        mesto_rozhdeniya=driver.get("birthPlace", ""),
-        ograniceniya=driver.get("restriction", ""),
-        osoboie_otmetki=driver.get("specialNote", ""),
-        sostoyanie=driver.get("status", ""),
+        mesto_rozhdeniya=voditel_dannye.get("birthPlace", ""),
+        ograniceniya=voditel_dannye.get("restriction", ""),
+        osoboie_otmetki=voditel_dannye.get("specialNote", ""),
+        sostoyanie=voditel_dannye.get("status", ""),
     )
 
 
@@ -277,17 +277,17 @@ def _razobrat_statistiku(dannye: Any, subiekt: str, god: int) -> StatistikaDTP |
     if not isinstance(dannye, dict):
         return None
 
-    stats = dannye.get("data", dannye)
-    if not isinstance(stats, dict):
+    statistika = dannye.get("data", dannye)
+    if not isinstance(statistika, dict):
         return None
 
     return StatistikaDTP(
         subiekt=subiekt,
         god=god,
-        kolichestvo_dtp=int(stats.get("dtpCount", 0) or 0),
-        pogibshie=int(stats.get("deadCount", 0) or 0),
-        ranennye=int(stats.get("injuredCount", 0) or 0),
-        dtp_s_peshchodami=int(stats.get("pedestrianDtpCount", 0) or 0),
-        dtp_s_detmi=int(stats.get("childDtpCount", 0) or 0),
-        alco_gibdd=int(stats.get("drunkDtpCount", 0) or 0),
+        kolichestvo_dtp=int(statistika.get("dtpCount", 0) or 0),
+        pogibshie=int(statistika.get("deadCount", 0) or 0),
+        ranennye=int(statistika.get("injuredCount", 0) or 0),
+        dtp_s_peshchodami=int(statistika.get("pedestrianDtpCount", 0) or 0),
+        dtp_s_detmi=int(statistika.get("childDtpCount", 0) or 0),
+        alco_gibdd=int(statistika.get("drunkDtpCount", 0) or 0),
     )

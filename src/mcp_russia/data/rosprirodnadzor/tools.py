@@ -142,9 +142,9 @@ async def poisk_obektov_negativnogo(
             filtry.append(f"организация: {organizaciya}")
         if kategoriya:
             filtry.append(f"категория: {kategoriya}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Объекты негативного воздействия{filter_text} не найдены.\n\n"
+            f"Объекты негативного воздействия{tekst_filtra} не найдены.\n\n"
             f"Реестр ОНВ доступен на: https://rpn.gov.ru/onv"
         )
     stroki_tablitsy = [
@@ -188,9 +188,9 @@ async def poisk_litsenziy_nedra(
             filtry.append(f"территория: {territoriya}")
         if vid_litsenzii:
             filtry.append(f"вид лицензии: {vid_litsenzii}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Лицензии на недропользование{filter_text} не найдены.\n\n"
+            f"Лицензии на недропользование{tekst_filtra} не найдены.\n\n"
             f"Реестр лицензий доступен на: https://rpn.gov.ru/licenses"
         )
     stroki_tablitsy = [

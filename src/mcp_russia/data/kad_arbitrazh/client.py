@@ -35,8 +35,8 @@ def _opredelit_sud_po_nomeru(nomer: str) -> str:
 def _opredelit_kategoriyu(nomer: str) -> str:
     """Определить категорию дела по букве номера."""
     if len(nomer) > 4 and nomer[4] == "-":
-        letter = nomer[3] if len(nomer) > 3 else ""
-        return KATEGORII_KAD.get(letter, "")
+        bukva = nomer[3] if len(nomer) > 3 else ""
+        return KATEGORII_KAD.get(bukva, "")
     return ""
 
 
@@ -171,18 +171,18 @@ def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
     for element in elementy:
         if not isinstance(element, dict):
             continue
-        doc = element.get("Document", element)
+        dokument = element.get("Document", element)
         rezultaty.append(
             SudebnyyAkt(
-                identifikator=str(doc.get("Id", doc.get("id", ""))),
+                identifikator=str(dokument.get("Id", dokument.get("id", ""))),
                 delo_nomer=delo_number,
-                tip_akta=doc.get("DocumentType", doc.get("type", "")),
-                data_akta=doc.get("DocumentDate", doc.get("date", "")),
-                sud=doc.get("CourtName", doc.get("court", "")),
-                sudya=doc.get("Judge", doc.get("judge", "")),
-                kratkoe_soderzhanie=doc.get("ShortContent", doc.get("summary", "")),
-                rezolyutsiya=doc.get("Resolution", doc.get("resolution", "")),
-                pdf_ssylka=doc.get("PdfUrl", doc.get("pdfUrl", "")),
+                tip_akta=dokument.get("DocumentType", dokument.get("type", "")),
+                data_akta=dokument.get("DocumentDate", dokument.get("date", "")),
+                sud=dokument.get("CourtName", dokument.get("court", "")),
+                sudya=dokument.get("Judge", dokument.get("judge", "")),
+                kratkoe_soderzhanie=dokument.get("ShortContent", dokument.get("summary", "")),
+                rezolyutsiya=dokument.get("Resolution", dokument.get("resolution", "")),
+                pdf_ssylka=dokument.get("PdfUrl", dokument.get("pdfUrl", "")),
             )
         )
     return rezultaty
@@ -195,22 +195,22 @@ def _razobrat_storony(dannye: Any, delo_number: str) -> list[StoronaDela]:
 
     rezultaty = []
     for side_type, tip_label in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
-        raw = dannye.get(side_type, [])
-        if isinstance(raw, str):
-            names = [s.strip() for s in raw.split(",") if s.strip()]
-        elif isinstance(raw, list):
-            names = [s if isinstance(s, str) else str(s) for s in raw]
+        syr_dannye = dannye.get(side_type, [])
+        if isinstance(syr_dannye, str):
+            nazvaniya = [s.strip() for s in syr_dannye.split(",") if s.strip()]
+        elif isinstance(syr_dannye, list):
+            nazvaniya = [s if isinstance(s, str) else str(s) for s in syr_dannye]
         else:
             continue
-        for name in names:
+        for nazvanie in nazvaniya:
             inn = ""
-            if "ИНН" in name:
-                chasti = name.split("ИНН")
-                name = chasti[0].strip().rstrip(",").strip()
+            if "ИНН" in nazvanie:
+                chasti = nazvanie.split("ИНН")
+                nazvanie = chasti[0].strip().rstrip(",").strip()
                 inn = chasti[1].strip().lstrip(":").strip().split()[0] if len(chasti) > 1 else ""
             rezultaty.append(
                 StoronaDela(
-                    nazvanie=name,
+                    nazvanie=nazvanie,
                     inn=inn,
                     tip=tip_label,
                 )
@@ -243,13 +243,13 @@ async def poisk_del(
     Возвращает:
         Список судебных дел.
     """
-    sides: list[dict[str, Any]] = []
+    storony: list[dict[str, Any]] = []
     if istorcz:
-        sides.append({"Name": istorcz, "Type": 1, "ExactMatch": False})
+        storony.append({"Name": istorcz, "Type": 1, "ExactMatch": False})
     if otvetchik:
-        sides.append({"Name": otvetchik, "Type": 2, "ExactMatch": False})
+        storony.append({"Name": otvetchik, "Type": 2, "ExactMatch": False})
     if inn:
-        sides.append({"Name": inn, "Type": -1, "ExactMatch": True})
+        storony.append({"Name": inn, "Type": -1, "ExactMatch": True})
 
     telo: dict[str, Any] = {
         "Page": 1,
@@ -258,7 +258,7 @@ async def poisk_del(
         "Judges": [sudya] if sudya else [],
         "DateFrom": None,
         "DateTo": None,
-        "Sides": sides,
+        "Sides": storony,
         "CaseNumber": nomer,
         "WithNewInstances": False,
         "OnlyNew": False,
@@ -328,17 +328,17 @@ async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
             zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         if isinstance(dannye, dict):
-            doc = dannye.get("Document", dannye)
+            dokument = dannye.get("Document", dannye)
             return SudebnyyAkt(
-                identifikator=str(doc.get("Id", identifikator_akta)),
-                delo_nomer=doc.get("CaseNumber", ""),
-                tip_akta=doc.get("DocumentType", ""),
-                data_akta=doc.get("DocumentDate", ""),
-                sud=doc.get("CourtName", ""),
-                sudya=doc.get("Judge", ""),
-                kratkoe_soderzhanie=doc.get("ShortContent", ""),
-                rezolyutsiya=doc.get("Resolution", ""),
-                pdf_ssylka=doc.get("PdfUrl", ""),
+                identifikator=str(dokument.get("Id", identifikator_akta)),
+                delo_nomer=dokument.get("CaseNumber", ""),
+                tip_akta=dokument.get("DocumentType", ""),
+                data_akta=dokument.get("DocumentDate", ""),
+                sud=dokument.get("CourtName", ""),
+                sudya=dokument.get("Judge", ""),
+                kratkoe_soderzhanie=dokument.get("ShortContent", ""),
+                rezolyutsiya=dokument.get("Resolution", ""),
+                pdf_ssylka=dokument.get("PdfUrl", ""),
             )
     except Exception:
         pass

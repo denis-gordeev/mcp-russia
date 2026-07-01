@@ -33,13 +33,13 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
         Список операторов ПД.
     """
     try:
-        url = f"{RKN_API_BASE}/pdn/search"
+        adres_url = f"{RKN_API_BASE}/pdn/search"
         parametry: dict[str, Any] = {}
         if inn:
             parametry["inn"] = inn
         if nazvanie:
             parametry["name"] = nazvanie
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
@@ -63,13 +63,13 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
         Список организаторов ОРИ.
     """
     try:
-        url = f"{RKN_API_BASE}/registry-ori/search"
+        adres_url = f"{RKN_API_BASE}/registry-ori/search"
         parametry: dict[str, Any] = {}
         if nazvanie:
             parametry["name"] = nazvanie
         if inn:
             parametry["inn"] = inn
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
@@ -94,9 +94,9 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
     if not domen:
         return {"blokirovka": False, "osnovanie": ""}
     try:
-        url = f"{EAIS_API_BASE}/api/check"
+        adres_url = f"{EAIS_API_BASE}/api/check"
         parametry = {"domain": domen}
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_blokirovku(dannye, domen)
         return {"domen": domen, "blokirovka": False, "istochnik": "ЕАИС (eais.rkn.gov.ru)"}
@@ -121,13 +121,13 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
         Список лицензий.
     """
     try:
-        url = f"{RKN_API_BASE}/licenses/search"
+        adres_url = f"{RKN_API_BASE}/licenses/search"
         parametry: dict[str, Any] = {}
         if nomer:
             parametry["number"] = nomer
         if inn:
             parametry["inn"] = inn
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
@@ -157,13 +157,13 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
         Список СМИ.
     """
     try:
-        url = f"{RKN_API_BASE}/mass-media/search"
+        adres_url = f"{RKN_API_BASE}/mass-media/search"
         parametry: dict[str, Any] = {}
         if registracionnyy_nomer:
             parametry["regNumber"] = registracionnyy_nomer
         if nazvanie:
             parametry["name"] = nazvanie
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=15.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
@@ -203,10 +203,10 @@ def _razobrat_ori(element: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _razobrat_blokirovku(element: dict[str, Any], domain: str) -> dict[str, Any]:
+def _razobrat_blokirovku(element: dict[str, Any], domen: str) -> dict[str, Any]:
     """Парсинг результата проверки блокировки."""
     return {
-        "domen": domain,
+        "domen": domen,
         "blokirovka": bool(element.get("blocked", element.get("isBlocked", False))),
         "osnovanie": element.get("reason", "") or element.get("ground", ""),
         "data_vklyucheniya": element.get("inclusionDate", ""),

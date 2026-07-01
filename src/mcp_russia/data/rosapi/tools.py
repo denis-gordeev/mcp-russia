@@ -258,12 +258,12 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
         god = datetime.now().year
 
     await ctx.info(f"Запрос праздников на {god} год...")
-    holidays = client.poluchit_prazdniki(god)
+    prazdniki = client.poluchit_prazdniki(god)
 
     stroki_tablitsy = []
-    for h in holidays:
-        date_str = h["data"][5:]
-        stroki_tablitsy.append((date_str, h["nazvanie"], h["tip"]))
+    for h in prazdniki:
+        data_stroka = h["data"][5:]
+        stroki_tablitsy.append((data_stroka, h["nazvanie"], h["tip"]))
 
     zagolovok = f"**Национальные праздники РФ ({god})**\n\n"
     return zagolovok + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)

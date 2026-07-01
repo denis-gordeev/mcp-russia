@@ -94,9 +94,9 @@ async def poisk_uchastnikov_bp(
             filtry.append(f"ИНН: {inn}")
         if nazvanie:
             filtry.append(f"название: {nazvanie}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Участники бюджетного процесса{filter_text} не найдены.\n\n"
+            f"Участники бюджетного процесса{tekst_filtra} не найдены.\n\n"
             f"Реестр участников доступен на: roskazna.gov.ru"
         )
     stroki_tablitsy = [
@@ -141,9 +141,9 @@ async def poisk_uchrezhdeniy(
             filtry.append(f"название: {nazvanie}")
         if tip:
             filtry.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Учреждения{filter_text} не найдены.\n\n"
+            f"Учреждения{tekst_filtra} не найдены.\n\n"
             f"Сводный реестр учреждений доступен на: roskazna.gov.ru"
         )
     stroki_tablitsy = [
@@ -180,9 +180,9 @@ async def mezhbyudzhetnye_transferty(
     transferty = await client.poluchit_mezhbyudzhetnye(god=god, subiekt=subiekt)
     if not transferty:
         god_text = f" за {god} год" if god else ""
-        region_text = f", регион: {subiekt}" if subiekt else ""
+        tekst_regiona = f", регион: {subiekt}" if subiekt else ""
         return (
-            f"Межбюджетные трансферты{god_text}{region_text} не найдены.\n\n"
+            f"Межбюджетные трансферты{god_text}{tekst_regiona} не найдены.\n\n"
             f"Данные доступны на: budget.gov.ru"
         )
     stroki_tablitsy = [

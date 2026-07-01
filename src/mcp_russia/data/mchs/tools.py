@@ -152,9 +152,9 @@ async def poisk_chs(
             filtry.append(f"вид: {vid_chs}")
         if klass_chs:
             filtry.append(f"класс: {klass_chs}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Чрезвычайные ситуации{filter_text} не найдены.\n\n"
+            f"Чрезвычайные ситуации{tekst_filtra} не найдены.\n\n"
             f"Мониторинг ЧС доступен на: https://mchs.gov.ru/monitoring"
         )
     stroki_tablitsy = [

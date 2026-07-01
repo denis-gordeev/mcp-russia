@@ -228,9 +228,9 @@ async def publikatsii_po_datam(
             filtry.append(f"с {data_from}")
         if data_to:
             filtry.append(f"по {data_to}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Публикации{filter_text} не найдены.\n\n"
+            f"Публикации{tekst_filtra} не найдены.\n\n"
             f"Публикации доступны на https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 

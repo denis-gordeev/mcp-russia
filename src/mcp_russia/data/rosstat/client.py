@@ -47,11 +47,11 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if diapazon_dat:
             parametry["date"] = diapazon_dat
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         return _razobrat_otvet_indikatora(dannye, kod)
     except Exception:
         logger.exception("Ошибка при получении индикатора %s", kod)
@@ -71,8 +71,8 @@ async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
     if not info_o_regionye:
         return None
     try:
-        url = f"{EMISS_API_BASE}/region/{kod}"
-        dannye = await http_poluchit(url, taimaut=20.0)
+        adres_url = f"{EMISS_API_BASE}/region/{kod}"
+        dannye = await http_poluchit(adres_url, taimaut=20.0)
         if isinstance(dannye, dict):
             return DannyeRegiona(
                 kod=kod,
@@ -125,11 +125,11 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
     """
     try:
         emiss_code = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
@@ -160,11 +160,11 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
     """
     try:
         emiss_code = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
@@ -197,13 +197,13 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
@@ -244,13 +244,13 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
@@ -292,8 +292,8 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
     if not emiss_code:
         return []
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
-        dannye = await http_poluchit(url, parametry={"groupByRegion": "true"}, taimaut=20.0)
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        dannye = await http_poluchit(adres_url, parametry={"groupByRegion": "true"}, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
@@ -343,13 +343,13 @@ async def poluchit_indikator_dannye(
         "",
     )
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if not isinstance(dannye, dict):
             return []
         elementy = dannye.get("data", [])
@@ -434,13 +434,13 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if not isinstance(dannye, dict):
             return _rezerv_otraslevaya_struktura(subiekt, god)
         elementy = dannye.get("data", [])
@@ -517,13 +517,13 @@ async def poluchit_investitsii_po_vidam(
     """
     emiss_code = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
     try:
-        url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
         parametry: dict[str, str] = {"groupByActivity": "true"}
         if subiekt:
             parametry["region"] = subiekt
         if god:
             parametry["year"] = god
-        dannye = await http_poluchit(url, parametry=parametry, taimaut=20.0)
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
         if not isinstance(dannye, dict):
             return _rezerv_investitsii_po_vidam(subiekt, god)
         elementy = dannye.get("data", [])

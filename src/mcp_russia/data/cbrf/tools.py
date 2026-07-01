@@ -95,8 +95,8 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
         znak = "+" if raznitsa >= 0 else ""
         predydushchee = valyuta.predydushchee_znachenie
         protsent = (raznitsa / predydushchee) * 100 if predydushchee else 0
-        prev_str = formatirovat_chislo_ru(valyuta.predydushchee_znachenie, 4)
-        stroki.append(f"- Предыдущий: {prev_str} ₽")
+        predydushchaya_stroka = formatirovat_chislo_ru(valyuta.predydushchee_znachenie, 4)
+        stroki.append(f"- Предыдущий: {predydushchaya_stroka} ₽")
         protsent_str = f"{znak}{formatirovat_chislo_ru(protsent, 2)}%"
         raznitsa_str = f"{znak}{formatirovat_chislo_ru(raznitsa, 4)}"
         stroki.append(f"- Изменение: {raznitsa_str} ({protsent_str})")
@@ -120,14 +120,19 @@ async def spisok_valyut(ctx: Context) -> str:
 
     stroki_tablitsy = []
     for kod, zapis in sorted(valute_data.items()):
-        name = zapis.get("Name", kod)
+        nazvanie_valyuty = zapis.get("Name", kod)
         nominal_valyuty = zapis.get("Nominal", 1)
         znachenie_kursa = zapis.get("Value", 0)
         znachenie_za_edinitsu = (
             znachenie_kursa / nominal_valyuty if nominal_valyuty else znachenie_kursa
         )
         stroki_tablitsy.append(
-            (kod, name, str(nominal_valyuty), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
+            (
+                kod,
+                nazvanie_valyuty,
+                str(nominal_valyuty),
+                formatirovat_chislo_ru(znachenie_za_edinitsu, 4),
+            )
         )
 
     zagolovok = f"**Справочник валют ЦБ РФ** — {len(stroki_tablitsy)} валют\n\n"
@@ -157,14 +162,14 @@ async def konvertirovat_valyutu(
     if not dannye:
         return f"Валюта '{valyuta}' не найдена в справочнике ЦБ РФ."
 
-    rubles = dannye.znachenie * kolichestvo
+    rubli = dannye.znachenie * kolichestvo
 
     stroki = [
         "**Конвертация валюты**",
         f"- Сумма: {formatirovat_chislo_ru(kolichestvo, 2)} {dannye.kod} ({dannye.nazvanie})",
         f"- Курс ЦБ РФ: {formatirovat_chislo_ru(dannye.znachenie, 4)} ₽ за 1 {dannye.kod}",
         f"- Номинал: {dannye.nominal}",
-        f"- **Результат: {formatirovat_chislo_ru(rubles, 2)} ₽**",
+        f"- **Результат: {formatirovat_chislo_ru(rubli, 2)} ₽**",
     ]
 
     if dannye.data:

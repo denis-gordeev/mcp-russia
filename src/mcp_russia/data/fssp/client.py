@@ -33,10 +33,10 @@ def _razobrat_proizvodstva(dannye: Any) -> list[dict[str, Any]]:
     """Разбор ответа API ФССП в список исполнительных производств."""
     if not isinstance(dannye, dict):
         return []
-    inner = dannye.get("data", dannye)
-    if not isinstance(inner, dict):
+    vnutrennie = dannye.get("data", dannye)
+    if not isinstance(vnutrennie, dict):
         return []
-    rezultat = inner.get("result", [])
+    rezultat = vnutrennie.get("result", [])
     if not isinstance(rezultat, list):
         return []
     zapisi = []

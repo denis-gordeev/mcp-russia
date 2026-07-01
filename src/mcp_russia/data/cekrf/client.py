@@ -63,46 +63,46 @@ class _VyboryTableParser(HTMLParser):
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         """Обработка открывающего HTML-тега."""
-        attr_dict = dict(attrs)
-        tag_lower = tag.lower()
+        slovar_atributov = dict(attrs)
+        teg_nizhniy = tag.lower()
 
-        if tag_lower == "td":
+        if teg_nizhniy == "td":
             self._in_td = True
             self._current_cell = ""
-        elif tag_lower == "th":
+        elif teg_nizhniy == "th":
             self._in_th = True
             self._current_cell = ""
-        elif tag_lower == "tr":
+        elif teg_nizhniy == "tr":
             self._current_row = []
-        elif tag_lower in ("h1", "h2", "h3"):
-            cls = attr_dict.get("class", "") or ""
-            if "title" in cls.lower() or tag_lower == "h1":
+        elif teg_nizhniy in ("h1", "h2", "h3"):
+            cls = slovar_atributov.get("class", "") or ""
+            if "title" in cls.lower() or teg_nizhniy == "h1":
                 self._in_title = True
                 self.title_text = ""
-        elif tag_lower in ("div", "span"):
-            cls = attr_dict.get("class", "") or ""
+        elif teg_nizhniy in ("div", "span"):
+            cls = slovar_atributov.get("class", "") or ""
             if any(k in cls.lower() for k in ("stats", "itog", "total")):
                 self._in_stats = True
                 self.stats_text = ""
 
     def handle_endtag(self, tag: str) -> None:
         """Обработка закрывающего HTML-тега."""
-        tag_lower = tag.lower()
-        if tag_lower == "td" and self._in_td:
+        teg_nizhniy = tag.lower()
+        if teg_nizhniy == "td" and self._in_td:
             self._in_td = False
-            cell = getattr(self, "_current_cell", "").strip()
-            self._current_row.append(cell)
-        elif tag_lower == "th" and self._in_th:
+            yacheyka = getattr(self, "_current_cell", "").strip()
+            self._current_row.append(yacheyka)
+        elif teg_nizhniy == "th" and self._in_th:
             self._in_th = False
-            cell = getattr(self, "_current_cell", "").strip()
-            self._current_row.append(cell)
-        elif tag_lower == "tr":
+            yacheyka = getattr(self, "_current_cell", "").strip()
+            self._current_row.append(yacheyka)
+        elif teg_nizhniy == "tr":
             if self._current_row:
                 self.stroki_tablitsy.append(self._current_row)
             self._current_row = []
-        elif tag_lower in ("h1", "h2", "h3") and self._in_title:
+        elif teg_nizhniy in ("h1", "h2", "h3") and self._in_title:
             self._in_title = False
-        elif tag_lower in ("div", "span") and self._in_stats:
+        elif teg_nizhniy in ("div", "span") and self._in_stats:
             self._in_stats = False
 
     def handle_data(self, data: str) -> None:
@@ -207,30 +207,30 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
         procent = 0.0
         izbrann = False
 
-        for i, cell in enumerate(row):
-            cell_lower = cell.lower()
-            if i == 1 and len(cell) > 2:
-                fio = cell
-            elif i == 2 and len(cell) > 1:
-                partia = cell
-            if "%" in cell:
-                procent = _razobrat_veshchestvennoe(cell)
-            if "избран" in cell_lower or "избрана" in cell_lower:
+        for i, yacheyka in enumerate(row):
+            yacheyka_nizhniy = yacheyka.lower()
+            if i == 1 and len(yacheyka) > 2:
+                fio = yacheyka
+            elif i == 2 and len(yacheyka) > 1:
+                partia = yacheyka
+            if "%" in yacheyka:
+                procent = _razobrat_veshchestvennoe(yacheyka)
+            if "избран" in yacheyka_nizhniy or "избрана" in yacheyka_nizhniy:
                 izbrann = True
 
-        for cell in row:
-            digits = re.sub(r"[^\d]", "", cell)
+        for yacheyka in row:
+            digits = re.sub(r"[^\d]", "", yacheyka)
             if digits and 100 < len(digits) < 15 and fio:
                 golosov = int(digits)
                 break
 
         if fio:
-            for cell in row:
-                m = re.match(r"^[\d\s]+$", cell.replace("\xa0", "").strip())
+            for yacheyka in row:
+                m = re.match(r"^[\d\s]+$", yacheyka.replace("\xa0", "").strip())
                 if m and fio:
-                    val = _razobrat_chislo(cell)
-                    if val > 0:
-                        golosov = val
+                    znachenie = _razobrat_chislo(yacheyka)
+                    if znachenie > 0:
+                        golosov = znachenie
                         break
 
         if fio:
@@ -296,24 +296,24 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
             continue
         fio = ""
         partia = ""
-        status = ""
+        sostoyanie = ""
         dolzhnost = ""
         region = ""
         kandidat_id = ""
 
-        for i, cell in enumerate(row):
-            if i == 0 and re.match(r"^\d+$", cell.strip()):
-                kandidat_id = cell.strip()
-            elif i == 1 and len(cell) > 2:
-                fio = cell.strip()
-            elif i == 2 and len(cell) > 1:
-                partia = cell.strip()
-            elif "зарегистрирован" in cell.lower():
-                status = "Зарегистрирован"
-            elif "снят" in cell.lower():
-                status = "Снят"
-            elif "исключён" in cell.lower():
-                status = "Исключён"
+        for i, yacheyka in enumerate(row):
+            if i == 0 and re.match(r"^\d+$", yacheyka.strip()):
+                kandidat_id = yacheyka.strip()
+            elif i == 1 and len(yacheyka) > 2:
+                fio = yacheyka.strip()
+            elif i == 2 and len(yacheyka) > 1:
+                partia = yacheyka.strip()
+            elif "зарегистрирован" in yacheyka.lower():
+                sostoyanie = "Зарегистрирован"
+            elif "снят" in yacheyka.lower():
+                sostoyanie = "Снят"
+            elif "исключён" in yacheyka.lower():
+                sostoyanie = "Исключён"
 
         if fio:
             kandidaty.append(
@@ -323,7 +323,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
                     partia=partia,
                     dolzhnost=dolzhnost,
                     subiekt=region,
-                    sostoyanie=status,
+                    sostoyanie=sostoyanie,
                 )
             )
 
@@ -335,9 +335,9 @@ async def tipy_vyborov() -> list[TipVyborov]:
     rezultaty: list[TipVyborov] = []
     for v in TIPOVY_VYBORY.values():
         kod: Any = v["kod"]
-        name: Any = v["nazvanie"]
+        nazvanie: Any = v["nazvanie"]
         rezultaty.append(
-            TipVyborov(kod=kod if isinstance(kod, int) else int(str(kod)), nazvanie=str(name))
+            TipVyborov(kod=kod if isinstance(kod, int) else int(str(kod)), nazvanie=str(nazvanie))
         )
     return rezultaty
 
@@ -423,14 +423,16 @@ async def spisok_vyborov(
             ) as c:
                 otvet = await c.get(adres_url, params=parametry)
                 otvet.raise_for_status()
-                html = otvet.text
-                year_pattern = re.compile(rf"\b{god}\b")
-                if year_pattern.search(html):
-                    title_match = re.search(r"<h[12][^>]*>([^<]+)</h[12]>", html, re.IGNORECASE)
-                    if title_match:
+                html_tekst = otvet.text
+                shablon_goda = re.compile(rf"\b{god}\b")
+                if shablon_goda.search(html_tekst):
+                    sovpadenie_zagolovka = re.search(
+                        r"<h[12][^>]*>([^<]+)</h[12]>", html_tekst, re.IGNORECASE
+                    )
+                    if sovpadenie_zagolovka:
                         rezultaty.append(
                             {
-                                "nazvanie": title_match.group(1).strip(),
+                                "nazvanie": sovpadenie_zagolovka.group(1).strip(),
                                 "tip": tip or 0,
                                 "god": god,
                                 "tvd": "",
@@ -490,15 +492,15 @@ async def poisk_kandidata(
         ) as c:
             otvet = await c.get(adres_url_poiska, params=parametry)
             otvet.raise_for_status()
-            html = otvet.text
-            all_kandidaty = _razobrat_kandidatov_iz_html(html)
+            html_tekst = otvet.text
+            vse_kandidaty = _razobrat_kandidatov_iz_html(html_tekst)
 
-            fio_lower = fio.lower()
-            otfiltrovannye = [k for k in all_kandidaty if fio_lower in k.fio.lower()]
+            fio_nizhniy = fio.lower()
+            otfiltrovannye = [k for k in vse_kandidaty if fio_nizhniy in k.fio.lower()]
 
             if otfiltrovannye:
                 return otfiltrovannye
-            return all_kandidaty[:20]
+            return vse_kandidaty[:20]
 
     except Exception as exc:
         logger.warning("Поиск кандидата '%s' не удался: %s", fio, exc)
@@ -572,14 +574,14 @@ async def kandidat_podrobno(
                 break
 
     if vybory_info:
-        html = await _zaprosit_html_vyborov(
+        html_tekst = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             subiekt=0,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
-        if html:
-            kandidaty = _razobrat_kandidatov_iz_html(html)
+        if html_tekst:
+            kandidaty = _razobrat_kandidatov_iz_html(html_tekst)
             for k in kandidaty:
                 if k.identifikator == kandidat_id or kandidat_id.lower() in k.fio.lower():
                     return Kandidat(
@@ -616,14 +618,14 @@ async def rezultaty_vyborov(
         if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
             region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
-        html = await _zaprosit_html_vyborov(
+        html_tekst = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             subiekt=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
-        if html:
-            rezultaty = _razobrat_rezultaty_iz_html(html)
+        if html_tekst:
+            rezultaty = _razobrat_rezultaty_iz_html(html_tekst)
             if rezultaty:
                 return rezultaty
 
@@ -675,22 +677,22 @@ async def yavka_i_itogi(
         if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
             region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
-        html = await _zaprosit_html_vyborov(
+        html_tekst = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
             subiekt=region_num,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
-        if html:
-            turnout = _razobrat_yavku_iz_html(html)
-            if turnout["vseh_izbirateley"] > 0 or turnout["yavka_procent"] > 0:
+        if html_tekst:
+            yavka = _razobrat_yavku_iz_html(html_tekst)
+            if yavka["vseh_izbirateley"] > 0 or yavka["yavka_procent"] > 0:
                 return {
                     "god": god,
                     "tip": tip,
                     "subiekt": subiekt,
                     "nazvanie": str(vybory_info["nazvanie"]),
                     "data": str(vybory_info["data"]),
-                    **turnout,
+                    **yavka,
                     "istochnik": f"ГАС «Выборы» ({VYBORY_API_BASE})",
                 }
 

@@ -174,10 +174,10 @@ def _izvlech_spisok(dannye: Any) -> list[Any]:
     if isinstance(dannye, list):
         return dannye
     if isinstance(dannye, dict):
-        for key in ("data", "items", "results", "records"):
-            val = dannye.get(key)
-            if isinstance(val, list):
-                return val
+        for klyuch in ("data", "items", "results", "records"):
+            znachenie_spiska = dannye.get(klyuch)
+            if isinstance(znachenie_spiska, list):
+                return znachenie_spiska
     return []
 
 

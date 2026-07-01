@@ -213,9 +213,9 @@ async def poisk_narusheniy(
             filtry.append(f"организация: {organizaciya}")
         if tip:
             filtry.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Нарушения{filter_text} не найдены.\n\n"
+            f"Нарушения{tekst_filtra} не найдены.\n\n"
             f"Данные доступны на сайте Счётной палаты: ach.gov.ru"
         )
     stroki_tablitsy = [

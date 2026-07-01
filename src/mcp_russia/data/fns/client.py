@@ -107,15 +107,15 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
     Возвращает:
         Данные организации или None.
     """
-    org = await poluchit_organizaciyu(inn)
-    if not org:
+    organizaciya = await poluchit_organizaciyu(inn)
+    if not organizaciya:
         return None
 
     return SvedeniyaOrganizacii(
-        inn=org.inn,
-        nazvanie=org.nazvanie,
-        registracionnyy_nomer=org.ogrn,
-        data_postanovki_na_uchet=org.data_registracii,
+        inn=organizaciya.inn,
+        nazvanie=organizaciya.nazvanie,
+        registracionnyy_nomer=organizaciya.ogrn,
+        data_postanovki_na_uchet=organizaciya.data_registracii,
         nalogovyy_organ="",
         rezhim_nalogooblozheniya="",
         srednespisochnaya_chislennost=None,
@@ -134,11 +134,11 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     Возвращает:
         Данные результата поиска или None.
     """
-    search_url = EGRUL_API_BASE
-    result_url = f"{EGRUL_API_BASE}/search-result/"
+    adres_poiska = EGRUL_API_BASE
+    adres_rezultata = f"{EGRUL_API_BASE}/search-result/"
 
     task_data = await http_otpravit(
-        search_url,
+        adres_poiska,
         zagolovki={"Content-Type": "application/x-www-form-urlencoded"},
         json_body=None,
         parametry={"query": zapros},
@@ -150,7 +150,7 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
 
     await asyncio.sleep(0.5)
 
-    rezultat = await http_poluchit(f"{result_url}{zheton}")
+    rezultat = await http_poluchit(f"{adres_rezultata}{zheton}")
     return rezultat
 
 

@@ -173,10 +173,10 @@ async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
     if ctx:
         await ctx.info("Запрос демографических данных...")
     dannye = await client.poluchit_demografiyu(subiekt=subiekt)
-    filter_text = f" по региону {subiekt}" if subiekt else " по России"
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
         return (
-            f"**Демографические данные{filter_text}**\n\n"
+            f"**Демографические данные{tekst_filtra}**\n\n"
             f"Демографическая статистика (рождаемость, смертность, "
             f"численность населения) доступна через:\n"
             f"- ЕМИСС: https://fedstat.ru/indicator/24133\n"
@@ -189,7 +189,7 @@ async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
         rozh = f"{d.get('rozhdaemost', '')}‰" if d.get("rozhdaemost") else "—"
         sm = f"{d.get('smertnost', '')}‰" if d.get("smertnost") else "—"
         stroki_tablitsy.append((d.get("period", ""), nas, rozh, sm))
-    zagolovok = f"**Демографические данные{filter_text}**\n\n"
+    zagolovok = f"**Демографические данные{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Период", "Население", "Рожд.", "Смерт."],
@@ -210,10 +210,10 @@ async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = Non
     if ctx:
         await ctx.info("Запрос данных о ВРП...")
     dannye = await client.poluchit_vrp(subiekt=subiekt, god=god)
-    filter_text = f" по региону {subiekt}" if subiekt else ""
+    tekst_filtra = f" по региону {subiekt}" if subiekt else ""
     if not dannye:
         return (
-            f"**Валовой региональный продукт{filter_text}**\n\n"
+            f"**Валовой региональный продукт{tekst_filtra}**\n\n"
             f"Данные о ВРП доступны через:\n"
             f"- ЕМИСС: https://fedstat.ru/indicator/26975\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
@@ -225,7 +225,7 @@ async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = Non
         vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp else "—"
         vrp_pc = formatirovat_chislo_ru(d.vrp_na_dushu, 2) if d.vrp_na_dushu else "—"
         stroki_tablitsy.append((d.period, d.subiekt or "—", vrp_val, vrp_pc))
-    zagolovok = f"**Валовой региональный продукт{filter_text}**\n\n"
+    zagolovok = f"**Валовой региональный продукт{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Период", "Регион", "ВРП (млрд ₽)", "ВРП на душу (тыс. ₽)"],
@@ -246,10 +246,10 @@ async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None 
     if ctx:
         await ctx.info("Запрос данных о заработной плате...")
     dannye = await client.poluchit_zarplatu(subiekt=subiekt, god=god)
-    filter_text = f" по региону {subiekt}" if subiekt else " по России"
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
         return (
-            f"**Средняя заработная плата{filter_text}**\n\n"
+            f"**Средняя заработная плата{tekst_filtra}**\n\n"
             f"Данные о заработной плате доступны через:\n"
             f"- ЕМИСС: https://fedstat.ru/indicator/24140\n"
             f"- Росстат: https://rosstat.gov.ru/labor\n\n"
@@ -261,7 +261,7 @@ async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None 
         zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
         real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
         stroki_tablitsy.append((d.period, d.subiekt or "—", zp, real))
-    zagolovok = f"**Средняя заработная плата{filter_text}**\n\n"
+    zagolovok = f"**Средняя заработная плата{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Период", "Регион", "Номин. (₽)", "Реальн. изм."],
@@ -280,10 +280,10 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     """
     await ctx.info(f"Запрос сравнения регионов по показателю '{pokazatel}'...")
     if pokazatel not in REGIONALNYE_POKAZATELI:
-        available = ", ".join(sorted(REGIONALNYE_POKAZATELI.keys()))
+        dostupnye = ", ".join(sorted(REGIONALNYE_POKAZATELI.keys()))
         return (
             f"Показатель '{pokazatel}' не поддерживается для регионального сравнения.\n\n"
-            f"Доступные показатели: {available}"
+            f"Доступные показатели: {dostupnye}"
         )
     dannye = await client.poluchit_sravnenie_regionov(pokazatel)
     if not dannye:
@@ -293,12 +293,12 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}"
         )
-    sorted_data = sorted(dannye, key=lambda x: x.get("znachenie") or 0, reverse=True)
+    otsortirovannye_dannye = sorted(dannye, key=lambda x: x.get("znachenie") or 0, reverse=True)
     stroki_tablitsy = []
-    for i, d in enumerate(sorted_data, 1):
-        val = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
+    for i, d in enumerate(otsortirovannye_dannye, 1):
+        znachenie = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
         stroki_tablitsy.append(
-            (i, d.get("subiekt", "—"), d.get("kod", "—"), val, d.get("period", "—"))
+            (i, d.get("subiekt", "—"), d.get("kod", "—"), znachenie, d.get("period", "—"))
         )
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
@@ -344,25 +344,25 @@ async def indikator_dannye(
             f"Показатель ЕМИСС {emiss_code}",
         )
     dannye = await client.poluchit_indikator_dannye(kod=kod, subiekt=subiekt, god=god)
-    filter_parts = []
+    chasti_filtra = []
     if subiekt:
-        filter_parts.append(f"регион {subiekt}")
+        chasti_filtra.append(f"регион {subiekt}")
     if god:
-        filter_parts.append(f"год {god}")
-    filter_text = f" ({', '.join(filter_parts)})" if filter_parts else ""
+        chasti_filtra.append(f"год {god}")
+    tekst_filtra = f" ({', '.join(chasti_filtra)})" if chasti_filtra else ""
     if not dannye:
         return (
-            f"**{imya_indikatora or kod}**{filter_text}\n\n"
+            f"**{imya_indikatora or kod}**{tekst_filtra}\n\n"
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}\n\n"
             f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
         )
     stroki_tablitsy = []
     for d in dannye:
-        val = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
-        stroki_tablitsy.append((d.period, d.subiekt or "—", val, d.edinitsa or "—"))
-    title = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
-    zagolovok = f"**{title}**{filter_text}\n\n"
+        znachenie = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
+        stroki_tablitsy.append((d.period, d.subiekt or "—", znachenie, d.edinitsa or "—"))
+    zagolovok_tekst = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
+    zagolovok = f"**{zagolovok_tekst}**{tekst_filtra}\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Период", "Регион", "Значение", "Ед. изм."],
@@ -387,10 +387,10 @@ async def otraslevaya_struktura_vrp(
     if ctx:
         await ctx.info("Запрос отраслевой структуры ВРП...")
     dannye = await client.poluchit_otraslevuyu_strukturu_vrp(subiekt=subiekt, god=god)
-    filter_text = f" по региону {subiekt}" if subiekt else " по России"
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
         return (
-            f"**Отраслевая структура ВРП{filter_text}**\n\n"
+            f"**Отраслевая структура ВРП{tekst_filtra}**\n\n"
             f"Данные доступны через:\n"
             f"- ЕМИСС: https://fedstat.ru/indicator/27103\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
@@ -402,7 +402,7 @@ async def otraslevaya_struktura_vrp(
         dolya = f"{d.dolya_vvp:.1f}%" if d.dolya_vvp is not None else "—"
         vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp is not None else "—"
         stroki_tablitsy.append((d.kod_okved, d.otrasl, vrp_val, dolya))
-    zagolovok = f"**Отраслевая структура ВРП{filter_text}**\n\n"
+    zagolovok = f"**Отраслевая структура ВРП{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["ОКВЭД", "Отрасль", "ВРП (млрд ₽)", "Доля (%)"],
@@ -427,10 +427,10 @@ async def investitsii_po_vidam(
     if ctx:
         await ctx.info("Запрос инвестиций по видам деятельности...")
     dannye = await client.poluchit_investitsii_po_vidam(subiekt=subiekt, god=god)
-    filter_text = f" по региону {subiekt}" if subiekt else " по России"
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
         return (
-            f"**Инвестиции по видам деятельности{filter_text}**\n\n"
+            f"**Инвестиции по видам деятельности{tekst_filtra}**\n\n"
             f"Данные доступны через:\n"
             f"- ЕМИСС: https://fedstat.ru/indicator/24145\n"
             f"- Росстат: https://rosstat.gov.ru/investment\n\n"
@@ -442,7 +442,7 @@ async def investitsii_po_vidam(
         inv_val = formatirovat_chislo_ru(d.investitsii, 2) if d.investitsii is not None else "—"
         dolya = f"{d.dolya:.1f}%" if d.dolya is not None else "—"
         stroki_tablitsy.append((d.kod_okved, d.vid_deyatelnosti, inv_val, dolya))
-    zagolovok = f"**Инвестиции по видам деятельности{filter_text}**\n\n"
+    zagolovok = f"**Инвестиции по видам деятельности{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["ОКВЭД", "Вид деятельности", "Инвестиции (млрд ₽)", "Доля (%)"],

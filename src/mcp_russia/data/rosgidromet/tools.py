@@ -157,20 +157,20 @@ async def ekologiya_regiona(
             filtry.append(f"город: {gorod}")
         if tip:
             filtry.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Экологические данные{filter_text} недоступны.\n\n"
+            f"Экологические данные{tekst_filtra} недоступны.\n\n"
             f"Данные доступны на сайте Росприроднадзора: rpn.gov.ru"
         )
 
     stroki = [f"**Экологическая обстановка** — измерений: {len(dannye)}\n"]
     for d in dannye[:10]:
-        line = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
+        stroka = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
         if d.znachenie is not None:
-            line += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
+            stroka += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
         if d.prevyshenie:
-            line += " ⚠️ ПРЕВЫШЕНИЕ нормы"
-        stroki.append(line)
+            stroka += " ⚠️ ПРЕВЫШЕНИЕ нормы"
+        stroki.append(stroka)
 
     if len(dannye) > 10:
         stroki.append(f"\n... и ещё {len(dannye) - 10} измерений")
@@ -192,9 +192,9 @@ async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str
     dannye = await client.poluchit_preduprezhdeniya(subiekt)
 
     if not dannye:
-        region_text = f" для региона '{subiekt}'" if subiekt else ""
+        tekst_regiona = f" для региона '{subiekt}'" if subiekt else ""
         return (
-            f"Активные предупреждения{region_text} отсутствуют.\n\n"
+            f"Активные предупреждения{tekst_regiona} отсутствуют.\n\n"
             f"Метеорологические данные: open-meteo.com / meteorf.ru"
         )
 
@@ -236,9 +236,9 @@ async def sputnik_monitoring(
             filtry.append(f"регион: {subiekt}")
         if tip:
             filtry.append(f"тип: {tip}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Данные спутникового мониторинга{filter_text} недоступны.\n\n"
+            f"Данные спутникового мониторинга{tekst_filtra} недоступны.\n\n"
             f"Спутниковые данные: niikp-atm.ru"
         )
 

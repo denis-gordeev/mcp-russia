@@ -44,18 +44,22 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
 
     ploshchad = ""
     if dannye.get("area"):
-        area_data = dannye["area"]
-        if isinstance(area_data, dict):
-            ploshchad = str(area_data.get("value", ""))
+        dannye_ploshchadi = dannye["area"]
+        if isinstance(dannye_ploshchadi, dict):
+            ploshchad = str(dannye_ploshchadi.get("value", ""))
         else:
-            ploshchad = str(area_data)
+            ploshchad = str(dannye_ploshchadi)
 
     stoimost = ""
     if dannye.get("cad_cost"):
         stoimost = str(dannye["cad_cost"])
     elif dannye.get("cadastral_cost"):
-        cost = dannye["cadastral_cost"]
-        stoimost = str(cost.get("value", "")) if isinstance(cost, dict) else str(cost)
+        stoimost_slovar = dannye["cadastral_cost"]
+        stoimost = (
+            str(stoimost_slovar.get("value", ""))
+            if isinstance(stoimost_slovar, dict)
+            else str(stoimost_slovar)
+        )
 
     data_stoimosti = ""
     if dannye.get("cad_record_date"):
@@ -63,21 +67,23 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     elif dannye.get("date_cad_cost"):
         data_stoimosti = str(dannye["date_cad_cost"])
 
-    status = ""
+    status_ucheta = ""
     if dannye.get("state"):
         st = dannye["state"]
         if isinstance(st, dict):
-            status = STATUSY_UCHE_TA_MAP.get(st.get("code", ""), st.get("name", ""))
+            status_ucheta = STATUSY_UCHE_TA_MAP.get(st.get("code", ""), st.get("name", ""))
         else:
-            status = str(st)
+            status_ucheta = str(st)
 
     kategoriya = ""
     if dannye.get("category"):
-        cat = dannye["category"]
-        if isinstance(cat, dict):
-            kategoriya = KATEGORII_ZEMEL_MAP.get(cat.get("code", ""), cat.get("name", ""))
+        kategoriya_slovar = dannye["category"]
+        if isinstance(kategoriya_slovar, dict):
+            kategoriya = KATEGORII_ZEMEL_MAP.get(
+                kategoriya_slovar.get("code", ""), kategoriya_slovar.get("name", "")
+            )
         else:
-            kategoriya = str(cat)
+            kategoriya = str(kategoriya_slovar)
 
     return KadastrovyyObekt(
         kadastrovyy_nomer=kadastrovyy_nomer,
@@ -86,7 +92,7 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
         ploshchad=ploshchad,
         kadastrovaya_stoimost=stoimost,
         data_opredeleniya_stoimosti=data_stoimosti,
-        status_ucheta=status,
+        status_ucheta=status_ucheta,
         kategoriya_zemel=kategoriya,
     )
 
@@ -103,8 +109,8 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
     try:
         adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
-        feature = rezultat.get("feature", rezultat)
-        attrs = feature.get("attrs", feature)
+        obekt_dannykh = rezultat.get("feature", rezultat)
+        attrs = obekt_dannykh.get("attrs", obekt_dannykh)
         return _razobrat_obekt(kadastrovyy_nomer, attrs)
     except Exception:
         return None
@@ -122,18 +128,18 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
     try:
         adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
-        feature = rezultat.get("feature", rezultat)
-        attrs = feature.get("attrs", feature)
+        obekt_dannykh = rezultat.get("feature", rezultat)
+        attrs = obekt_dannykh.get("attrs", obekt_dannykh)
 
         stoimost = None
         if attrs.get("cad_cost"):
             with contextlib.suppress(ValueError, TypeError):
                 stoimost = float(attrs["cad_cost"])
         elif attrs.get("cadastral_cost"):
-            cost = attrs["cadastral_cost"]
-            if isinstance(cost, dict):
+            stoimost_slovar = attrs["cadastral_cost"]
+            if isinstance(stoimost_slovar, dict):
                 with contextlib.suppress(ValueError, TypeError):
-                    stoimost = float(cost.get("value", 0))
+                    stoimost = float(stoimost_slovar.get("value", 0))
 
         data_opr = ""
         if attrs.get("cad_record_date"):
@@ -168,13 +174,13 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
     try:
         adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
-        feature = rezultat.get("feature", rezultat)
-        rights = feature.get("rights", [])
-        if not rights:
+        obekt_dannykh = rezultat.get("feature", rezultat)
+        prava_spisok = obekt_dannykh.get("rights", [])
+        if not prava_spisok:
             return []
 
         razobrannye = []
-        for r in rights:
+        for r in prava_spisok:
             razobrannye.append(
                 {
                     "tip_prava": r.get("type", "") or r.get("name", ""),
@@ -204,12 +210,12 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
             parametry={"sqo": zapros},
             zagolovki={"Accept": "application/json"},
         )
-        features = rezultat.get("features", [])
-        if not features:
+        obekty_spisok = rezultat.get("features", [])
+        if not obekty_spisok:
             return []
 
         naydennye = []
-        for f in features[:10]:
+        for f in obekty_spisok[:10]:
             attrs = f.get("attrs", {})
             naydennye.append(
                 {

@@ -15,7 +15,7 @@ from .constants import CBR_DAILY_JSON
 from .schemas import ZnachenieValyuty
 
 
-def _razobrat_valyutu(kod: str, dannye: dict[str, Any], date_str: str = "") -> ZnachenieValyuty:
+def _razobrat_valyutu(kod: str, dannye: dict[str, Any], stroka_daty: str = "") -> ZnachenieValyuty:
     """Разбор данных о валютах из JSON API ЦБ РФ."""
     zapis = dannye.get(kod, {})
     if not zapis:
@@ -42,7 +42,7 @@ def _razobrat_valyutu(kod: str, dannye: dict[str, Any], date_str: str = "") -> Z
         predydushchee_znachenie=predydushchiy_kurs / nominal_valyuty
         if predydushchiy_kurs and nominal_valyuty
         else predydushchiy_kurs,
-        data=date_str,
+        data=stroka_daty,
     )
 
 
@@ -71,10 +71,10 @@ async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyut
     """
     rezultat = await poluchit_vse_valyuty(data)
     valute_data = rezultat.get("Valute", {})
-    date_str = rezultat.get("Date", "")
+    stroka_daty = rezultat.get("Date", "")
 
     if kod in valute_data:
-        return _razobrat_valyutu(kod, valute_data, date_str)
+        return _razobrat_valyutu(kod, valute_data, stroka_daty)
     return None
 
 
@@ -89,9 +89,9 @@ async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
     """
     rezultat = await poluchit_vse_valyuty()
     valute_data = rezultat.get("Valute", {})
-    date_str = rezultat.get("Date", "")
+    stroka_daty = rezultat.get("Date", "")
 
-    return [_razobrat_valyutu(c, valute_data, date_str) for c in kody if c in valute_data]
+    return [_razobrat_valyutu(c, valute_data, stroka_daty) for c in kody if c in valute_data]
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:

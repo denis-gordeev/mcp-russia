@@ -140,9 +140,9 @@ async def poisk_zakonoproektov(
             filtry.append(f"статус: {sostoyanie}")
         if god:
             filtry.append(f"год: {god}")
-        filter_text = f" ({', '.join(filtry)})" if filtry else ""
+        tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
-            f"Законопроекты{filter_text} не найдены.\n\n"
+            f"Законопроекты{tekst_filtra} не найдены.\n\n"
             f"Данные доступны на: https://sovfed.ru/bills"
         )
     stroki_tablitsy = [
