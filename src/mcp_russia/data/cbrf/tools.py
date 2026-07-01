@@ -34,17 +34,17 @@ async def tekushchie_kursy(ctx: Context) -> str:
 
     stroki_tablitsy = []
     for m in valyuty:
-        change = ""
+        izmenenie = ""
         if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
-            diff = m.znachenie - m.predydushchee_znachenie
-            znak = "+" if diff >= 0 else ""
-            pct = (diff / m.predydushchee_znachenie) * 100
-            change = (
-                f"{znak}{formatirovat_chislo_ru(diff, 4)}"
-                f" ({znak}{formatirovat_chislo_ru(pct, 2)}%)"
+            raznitsa = m.znachenie - m.predydushchee_znachenie
+            znak = "+" if raznitsa >= 0 else ""
+            protsent = (raznitsa / m.predydushchee_znachenie) * 100
+            izmenenie = (
+                f"{znak}{formatirovat_chislo_ru(raznitsa, 4)}"
+                f" ({znak}{formatirovat_chislo_ru(protsent, 2)}%)"
             )
         else:
-            change = "—"
+            izmenenie = "—"
 
         stroki_tablitsy.append(
             (
@@ -52,7 +52,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
                 m.nazvanie,
                 str(m.nominal),
                 formatirovat_chislo_ru(m.znachenie, 4),
-                change,
+                izmenenie,
             )
         )
 
@@ -91,15 +91,15 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     ]
 
     if valyuta.predydushchee_znachenie is not None:
-        diff = valyuta.znachenie - valyuta.predydushchee_znachenie
-        znak = "+" if diff >= 0 else ""
-        prev = valyuta.predydushchee_znachenie
-        pct = (diff / prev) * 100 if prev else 0
+        raznitsa = valyuta.znachenie - valyuta.predydushchee_znachenie
+        znak = "+" if raznitsa >= 0 else ""
+        predydushchee = valyuta.predydushchee_znachenie
+        protsent = (raznitsa / predydushchee) * 100 if predydushchee else 0
         prev_str = formatirovat_chislo_ru(valyuta.predydushchee_znachenie, 4)
         stroki.append(f"- Предыдущий: {prev_str} ₽")
-        pct_str = f"{znak}{formatirovat_chislo_ru(pct, 2)}%"
-        diff_str = f"{znak}{formatirovat_chislo_ru(diff, 4)}"
-        stroki.append(f"- Изменение: {diff_str} ({pct_str})")
+        protsent_str = f"{znak}{formatirovat_chislo_ru(protsent, 2)}%"
+        raznitsa_str = f"{znak}{formatirovat_chislo_ru(raznitsa, 4)}"
+        stroki.append(f"- Изменение: {raznitsa_str} ({protsent_str})")
 
     if valyuta.data:
         stroki.append(f"- Дата: {valyuta.data}")
@@ -121,11 +121,13 @@ async def spisok_valyut(ctx: Context) -> str:
     stroki_tablitsy = []
     for kod, zapis in sorted(valute_data.items()):
         name = zapis.get("Name", kod)
-        nominal = zapis.get("Nominal", 1)
-        value = zapis.get("Value", 0)
-        znachenie_za_edinitsu = value / nominal if nominal else value
+        nominal_valyuty = zapis.get("Nominal", 1)
+        znachenie_kursa = zapis.get("Value", 0)
+        znachenie_za_edinitsu = (
+            znachenie_kursa / nominal_valyuty if nominal_valyuty else znachenie_kursa
+        )
         stroki_tablitsy.append(
-            (kod, name, str(nominal), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
+            (kod, name, str(nominal_valyuty), formatirovat_chislo_ru(znachenie_za_edinitsu, 4))
         )
 
     zagolovok = f"**Справочник валют ЦБ РФ** — {len(stroki_tablitsy)} валют\n\n"
@@ -196,13 +198,15 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
 
     stroki_tablitsy = []
     for m in sorted(valyuty, key=lambda x: x.kod):
-        change = "—"
+        izmenenie = "—"
         if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
-            diff = m.znachenie - m.predydushchee_znachenie
-            pct = (diff / m.predydushchee_znachenie) * 100
-            znak = "+" if pct >= 0 else ""
-            change = f"{znak}{formatirovat_chislo_ru(pct, 2)}%"
-        stroki_tablitsy.append((m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), change))
+            raznitsa = m.znachenie - m.predydushchee_znachenie
+            protsent = (raznitsa / m.predydushchee_znachenie) * 100
+            znak = "+" if protsent >= 0 else ""
+            izmenenie = f"{znak}{formatirovat_chislo_ru(protsent, 2)}%"
+        stroki_tablitsy.append(
+            (m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), izmenenie)
+        )
 
     zagolovok = "**Сравнение курсов валют ЦБ РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(

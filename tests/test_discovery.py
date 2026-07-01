@@ -75,7 +75,7 @@ class TestPostroenieKataloga:
     def setup_method(self) -> None:
         import mcp_russia._shared.discovery as disc
 
-        disc._catalog_cache = ""
+        disc._kesh_kataloga = ""
 
     def test_postroit_katalog_s_pustym_reestrom(self) -> None:
         mock_registry = MagicMock()
@@ -260,7 +260,7 @@ _VALID_PLAN_JSON = json.dumps(
             {
                 "etap": 1,
                 "opisanie": "Найти депутата по фамилии",
-                "tool": "gosduma_poluchit_deputatov",
+                "instrument": "gosduma_poluchit_deputatov",
                 "parametry": {"familiya": "X"},
                 "zavisit_ot": [],
                 "obosnovanie": "Нужен ID депутата",
@@ -268,7 +268,7 @@ _VALID_PLAN_JSON = json.dumps(
             {
                 "etap": 2,
                 "opisanie": "Запросить расходы депутата",
-                "tool": "gosduma_raskhody_deputata",
+                "instrument": "gosduma_raskhody_deputata",
                 "parametry": {"id": "{etap_1.id}"},
                 "zavisit_ot": [1],
                 "obosnovanie": "Получить расходы используя ID",
@@ -380,7 +380,7 @@ class TestPlanZaprosaVMarkdown:
                 {
                     "etap": 1,
                     "opisanie": "Единственный шаг",
-                    "tool": "rosstat_poluchit_indikator",
+                    "instrument": "rosstat_poluchit_indikator",
                     "parametry": {},
                     "zavisit_ot": [],
                     "obosnovanie": "Необходимо",

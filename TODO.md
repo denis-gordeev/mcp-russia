@@ -2,6 +2,91 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-01 (пятьдесят восьмой проход — русификация локальных переменных client.py/tools.py, параметров функций, docstrings)
+
+### Выполнено
+
+- **Русификация локальных переменных cbrf/client.py** (5 переменных):
+  - `value` → `znachenie_kursa` (значение курса валюты)
+  - `previous` → `predydushchiy_kurs` (предыдущий курс)
+  - `nominal` → `nominal_valyuty` (номинал валюты)
+  - Pydantic-ключ `nominal=` оставлен без изменений (имя поля схемы)
+- **Русификация локальных переменных cbrf/tools.py** (7 переменных):
+  - `change` → `izmenenie` (изменение курса)
+  - `diff` → `raznitsa` (разница текущего и предыдущего)
+  - `pct` → `protsent` (процент изменения)
+  - `prev` → `predydushchee` (предыдущее значение — shorthand)
+  - `name` → `nazvanie_valyuty` (название валюты)
+  - `nominal` → `nominal_valyuty` (номинал)
+  - `value` → `znachenie_kursa` (значение курса)
+- **Русификация локальных переменных rosgidromet/client.py** (7 переменных):
+  - `wind` → `skorost_vetra` (скорость ветра)
+  - `stations` → `stantsii` (список станций)
+  - `station` → `stantsiya` (одна станция в цикле)
+  - `warnings` → `preduprezhdeniya` (список предупреждений)
+  - `indicators` → `pokazateli` (показатели качества воздуха)
+  - `directions` → `napravleniya` (компасные направления)
+  - `idx` → `indeks` (индекс в массиве направлений)
+  - `value` (в экологии) → `znachenie_pokazatelya`
+  - `key`, `name` (в цикле indicators) → `klyuch`, `nazvanie_pokazatelya`
+- **Русификация локальных переменных rosapi/client.py** (11 переменных):
+  - `city` → `gorod` (город)
+  - `key` → `klyuch_api` (API-ключ Dadata)
+  - `name_obj` → `obiekt_imeni` (объект имени организации/банка)
+  - `name_full` → `polnoe_nazvanie` (полное название)
+  - `name_short` → `kratkoe_nazvanie` (краткое название)
+  - `status` → `sostoyanie_org` (состояние организации)
+  - `address` → `adres_str` (адресная строка)
+  - `director` → `rukovoditel_imya` (имя руководителя)
+  - `reg_date` → `data_reg` (дата регистрации)
+  - `holidays` → `prazdniki` (список праздников)
+  - `suggestions` → `predlozheniya` (подсказки Dadata)
+  - `banks` / `banks_raw` → `banki` / `banki_raw` (список банков)
+- **Русификация параметров функций** (~12 замен):
+  - `max_items` → `maks_elementov` (в `usech_spisok`, _shared/formatting.py)
+  - `maxsize` → `maks_razmer` (в `KeshSVremenemZhizni.__init__` и `kesh_s_vremenem_zhizni`, _shared/cache.py)
+  - `region` → `subiekt` (в `poluchit_mezhbyudzhetnye`, kaznacheistvo/client.py)
+  - `status` → `sostoyanie` (в `poisk_zakupok`, zakupki/client.py — исправлена рассинхронизация с tools.py)
+  - `value` → `znachenie` (в `_bezopasnoe_veshchestvennoe`, zakupki/client.py)
+  - `tool` → `instrument` (поле Pydantic `EtapPlana`, _shared/planner.py)
+  - `catalog` → `katalog` (параметр `rekomendovat_instrumenty_impl` и `splanirovat_zapros_impl`, discovery.py + planner.py)
+  - `registry` → `reyestr` (параметр `postroit_katalog`, discovery.py)
+  - `tool` → `instrument` (параметр `_formatirovat_signaturu_instrumenta`, discovery.py)
+- **Русификация docstrings — исправление несоответствий** (~62 замены в 14 файлах):
+  - _shared/http_client.py: `url:` → `adres_url:`, `params:` → `parametry:`, `headers:` → `zagolovki:`, `timeout:` → `taimaut:` (10 замен в 3 функциях)
+  - _shared/formatting.py: `rows:` → `stroki_tablitsy:`, `items:` → `elementy:`
+  - _shared/discovery.py: `query:` → `zapros:`, `tool:` → `instrument:`, `registry:` → `reyestr:`, `catalog:` → `katalog:`
+  - _shared/planner.py: `query:` → `zapros:`, `tool:` → `instrument:`, `catalog:` → `katalog:`
+  - server.py: `query:` → `zapros:` (2 функции)
+  - 11 модулей data/*/client.py: `region:` → `subiekt:` (33 замены в docstrings)
+- **Русификация переменных в server.py**:
+  - `catalog` → `katalog` (локальные переменные в `rekomendovat_instrumenty` и `splanirovat_zapros`)
+- **Русификация переменных в planner.py**:
+  - `raw_text` → `syrovoy_tekst` (сырой текст ответа LLM)
+  - JSON-схема в `_SISTEMNYY_PROMPT`: поле `"tool"` → `"instrument"` во всех примерах
+- **Обновлены тесты**:
+  - tests/_shared/test_cache.py: `maxsize=2` → `maks_razmer=2`
+  - tests/_shared/test_formatting.py: `max_items=5/2/3` → `maks_elementov=5/2/3`
+  - tests/test_discovery.py: `_catalog_cache` → `_kesh_kataloga`, `"tool"` → `"instrument"` в _VALID_PLAN_JSON и PlanZaprosa
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` — unit-тесты пройдены (580+ passed, 1 skipped)
+
+### Ключевые архитектурные решения
+
+- **`tool` → `instrument` в EtapPlana**: поле Pydantic-модели переименовано; JSON-схема в промпте и тесты обновлены синхронно
+- **`maxsize` → `maks_razmer`**: параметр `KeshSVremenemZhizni` и декоратора `kesh_s_vremenem_zhizni` переименован
+- **`catalog` → `katalog`**: параметр переименован в `rekomendovat_instrumenty_impl` и `splanirovat_zapros_impl`; строка подстановки `{catalog}` → `{katalog}` в `_SISTEMNYY_PROMPT`
+- **`registry` → `reyestr`**: параметр `postroit_katalog` переименован; все обращения через `getattr(reyestr, ...)` обновлены
+- **`status` → `sostoyanie` в `poisk_zakupok`**: исправлена рассинхронизация — tools.py использовал `sostoyanie`, но client.py имел `status`
+- **Docstrings синхронизированы**: все 62 несоответствия между именами параметров в сигнатурах и docstrings устранены
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация оставшихся английских переменных в client.py**: `url` (roskomnadzor, rosstat — ещё ~12 вхождений), `feature`/`rights`/`features`/`cost`/`area_data`/`status` (rosreestr), `doc`/`name`/`sides` (kad_arbitrazh), `history`/`dtp`/`restrict`/`driver`/`categories`/`stats` (gibdd), `attr_dict`/`tag_lower`/`cell_lower`/`status`/`name`/`turnout` (cekrf), `inner` (fssp), `domain` (roskomnadzor), `filter_text`/`region_text` (8 tools.py), `holidays` (rosapi/tools.py)
+- **Русификация оставшихся английских параметров**: `tool`/`catalog` в server.py (MCP-инструменты — user-facing), `base_url` в `sozdat_klienta` (httpx API), `period` (rate_limiter — русское слово, совпадающее с английским)
+
 ## Статус раунда 2026-06-30 (пятьдесят седьмой проход — русификация `data`→`dannye`, `header`→`zagolovok`, `url`→`adres_url`, параметров HTTP-клиента)
 
 ### Выполнено

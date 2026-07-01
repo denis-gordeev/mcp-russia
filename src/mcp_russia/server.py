@@ -115,14 +115,14 @@ async def rekomendovat_instrumenty(zapros: str, ctx: Context) -> str:
     инструментов mcp-russia с объяснением, когда и как их применять.
 
     Аргументы:
-        query: Вопрос или описание потребности
+        zapros: Вопрос или описание потребности
                (напр.: «нужны данные о расходах федерального бюджета»).
     """
     from ._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 
     await ctx.info(f"Поиск рекомендаций для: {zapros}")
-    catalog = postroit_katalog(registry)
-    return await rekomendovat_instrumenty_impl(zapros, catalog)
+    katalog = postroit_katalog(registry)
+    return await rekomendovat_instrumenty_impl(zapros, katalog)
 
 
 @mcp.tool(tags={"meta", "discovery", "планирование"})
@@ -134,15 +134,15 @@ async def splanirovat_zapros(zapros: str, ctx: Context) -> str:
     требующих нескольких комбинированных вызовов.
 
     Аргументы:
-        query: Вопрос на естественном языке
+        zapros: Вопрос на естественном языке
                (напр.: «сравните расходы депутата X со средним значением»).
     """
     from ._shared.discovery import postroit_katalog
     from ._shared.planner import splanirovat_zapros_impl
 
     await ctx.info(f"Планирование запроса: {zapros}")
-    catalog = postroit_katalog(registry)
-    return await splanirovat_zapros_impl(zapros, catalog)
+    katalog = postroit_katalog(registry)
+    return await splanirovat_zapros_impl(zapros, katalog)
 
 
 @mcp.tool(tags={"meta", "batch"})

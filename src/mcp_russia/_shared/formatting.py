@@ -15,7 +15,7 @@ def tablitsa_v_markdown(headers: Sequence[str], stroki_tablitsy: Sequence[Sequen
 
     Аргументы:
         headers: Заголовки столбцов.
-        rows: Список строк (каждая строка — последовательность значений).
+        stroki_tablitsy: Список строк (каждая строка — последовательность значений).
 
     Возвращает:
         Строка таблицы в формате Markdown.
@@ -108,19 +108,19 @@ def razobrat_rublevoe_chislo(value: Any) -> float | None:
     return None
 
 
-def usech_spisok(elementy: Sequence[str], max_items: int = 50) -> str:
+def usech_spisok(elementy: Sequence[str], maks_elementov: int = 50) -> str:
     """Объединение элементов через перевод строки с усечением длинных списков.
 
     Аргументы:
-        items: Список строк.
-        max_items: Максимальное количество элементов перед усечением.
+        elementy: Список строк.
+        maks_elementov: Максимальное количество элементов перед усечением.
 
     Возвращает:
         Объединённая строка с уведомлением об усечении при необходимости.
     """
-    if len(elementy) <= max_items:
+    if len(elementy) <= maks_elementov:
         return "\n".join(elementy)
 
-    shown = elementy[:max_items]
-    remaining = len(elementy) - max_items
+    shown = elementy[:maks_elementov]
+    remaining = len(elementy) - maks_elementov
     return "\n".join(shown) + f"\n\n... и ещё {remaining} результатов."

@@ -16,7 +16,7 @@ _kesh_kataloga: str = ""
 
 
 def _formatirovat_signaturu_instrumenta(
-    imya_modulya: str, imya_instrumenta: str, tool: object
+    imya_modulya: str, imya_instrumenta: str, instrument: object
 ) -> str:
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
@@ -26,9 +26,9 @@ def _formatirovat_signaturu_instrumenta(
     Аргументы:
         imya_modulya: Имя модуля (префикс инструмента).
         imya_instrumenta: Имя инструмента.
-        tool: Объект инструмента.
+        instrument: Объект инструмента.
     """
-    params = getattr(tool, "parameters", {})
+    params = getattr(instrument, "parameters", {})
     properties: dict[str, dict[str, object]] = params.get("properties", {})
     required: list[str] = params.get("required", [])
 
@@ -43,19 +43,19 @@ def _formatirovat_signaturu_instrumenta(
     signature = ", ".join(param_parts)
     full_name = f"{imya_modulya}_{imya_instrumenta}"
 
-    opisanie_kratkoe = (getattr(tool, "description", "") or "").split("\n")[0]
+    opisanie_kratkoe = (getattr(instrument, "description", "") or "").split("\n")[0]
 
     return f"- `{full_name}({signature})` — {opisanie_kratkoe}"
 
 
-def postroit_katalog(registry: object) -> str:
+def postroit_katalog(reyestr: object) -> str:
     """Построение подробного каталога всех инструментов из реестра.
 
     Использует MetaFunktsii (имя, описание, авторизация) и схемы инструментов
     (параметры, типы, описания) для формирования детального каталога для LLM.
 
     Аргументы:
-        registry: Экземпляр ReyestrFunktsiy с обнаруженными функциями.
+        reyestr: Экземпляр ReyestrFunktsiy с обнаруженными функциями.
 
     Возвращает:
         Каталог в формате Markdown с контекстом функций и сигнатурами инструментов.
@@ -65,7 +65,7 @@ def postroit_katalog(registry: object) -> str:
         return _kesh_kataloga
 
     stroki: list[str] = []
-    features = getattr(registry, "funktsii", {})
+    features = getattr(reyestr, "funktsii", {})
     for feat in features.values():
         meta = feat.meta
         auth_info = (
@@ -82,21 +82,21 @@ def postroit_katalog(registry: object) -> str:
 
         server = feat.server
         if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
-            for imya_instrumenta, tool in server._tool_manager._tools.items():
+            for imya_instrumenta, instrument in server._tool_manager._tools.items():
                 stroki.append(
-                    _formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, tool)
+                    _formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, instrument)
                 )
 
     _kesh_kataloga = "\n".join(stroki)
     return _kesh_kataloga
 
 
-async def rekomendovat_instrumenty_impl(zapros: str, catalog: str) -> str:
+async def rekomendovat_instrumenty_impl(zapros: str, katalog: str) -> str:
     """Вызов API Anthropic для рекомендации инструментов по запросу пользователя.
 
     Аргументы:
-        query: Вопрос пользователя на естественном языке.
-        catalog: Предварительно собранный каталог всех инструментов.
+        zapros: Вопрос пользователя на естественном языке.
+        katalog: Предварительно собранный каталог всех инструментов.
 
     Возвращает:
         Рекомендации LLM с пояснениями.
@@ -129,7 +129,7 @@ async def rekomendovat_instrumenty_impl(zapros: str, catalog: str) -> str:
         "2. Почему он релевантен запросу\n"
         "3. Пример использования с основными параметрами\n\n"
         "Отвечай по-русски, кратко и по делу.\n\n"
-        f"## Каталог инструментов\n{catalog}"
+        f"## Каталог инструментов\n{katalog}"
     )
 
     try:

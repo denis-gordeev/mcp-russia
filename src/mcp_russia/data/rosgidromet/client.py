@@ -110,23 +110,23 @@ async def poluchit_ekologiyu(
     Возвращает:
         Список экологических данных.
     """
-    stations = STANCII_MONITORINGA
+    stantsii = STANCII_MONITORINGA
     if gorod:
-        stations = [s for s in stations if gorod.lower() in s["nazvanie"].lower()]
-    if not stations:
-        stations = STANCII_MONITORINGA[:5]
+        stantsii = [s for s in stantsii if gorod.lower() in s["nazvanie"].lower()]
+    if not stantsii:
+        stantsii = STANCII_MONITORINGA[:5]
 
     rezultaty = []
-    for station in stations[:5]:
+    for stantsiya in stantsii[:5]:
         parametry = {
-            "latitude": station["shirota"],
-            "longitude": station["dolgota"],
+            "latitude": stantsiya["shirota"],
+            "longitude": stantsiya["dolgota"],
             "current": "pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone",
             "timezone": "Europe/Moscow",
         }
         try:
             dannye = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, parametry=parametry)
-            razobrannye = _razobrat_openmeteo_ekologiyu(dannye, station)
+            razobrannye = _razobrat_openmeteo_ekologiyu(dannye, stantsiya)
             rezultaty.extend(razobrannye)
         except Exception:
             continue
@@ -144,27 +144,27 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
     проверяет текущие погодные условия и генерирует предупреждения для экстремальных значений.
 
     Аргументы:
-        region: Код или название региона.
+        subiekt: Код или название региона.
 
     Возвращает:
         Список активных предупреждений.
     """
-    stations = STANCII_MONITORINGA
+    stantsii = STANCII_MONITORINGA
     if subiekt:
-        stations = [
+        stantsii = [
             s
-            for s in stations
+            for s in stantsii
             if subiekt.lower() in s.get("subiekt", "").lower()
             or subiekt.lower() in s.get("nazvanie", "").lower()
         ]
-    if not stations:
-        stations = STANCII_MONITORINGA
+    if not stantsii:
+        stantsii = STANCII_MONITORINGA
 
-    warnings = []
-    for station in stations[:3]:
+    preduprezhdeniya = []
+    for stantsiya in stantsii[:3]:
         parametry = {
-            "latitude": station["shirota"],
-            "longitude": station["dolgota"],
+            "latitude": stantsiya["shirota"],
+            "longitude": stantsiya["dolgota"],
             "current": "temperature_2m,wind_speed_10m,weather_code",
             "timezone": "Europe/Moscow",
         }
@@ -172,47 +172,47 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
             dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
             current = dannye.get("current", {})
             temperatura = current.get("temperature_2m")
-            wind = current.get("wind_speed_10m")
+            skorost_vetra = current.get("wind_speed_10m")
             wmo = current.get("weather_code", 0)
 
             if temperatura is not None and temperatura <= -30:
-                warnings.append(
+                preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="moroz",
-                        subiekt=station.get("subiekt", ""),
-                        gorod=station["nazvanie"],
+                        subiekt=stantsiya.get("subiekt", ""),
+                        gorod=stantsiya["nazvanie"],
                         opisanie=f"Сильный мороз: {temperatura}°C",
                         uroven_opasnosti="vysokiy",
                     )
                 )
             elif temperatura is not None and temperatura >= 35:
-                warnings.append(
+                preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="zhara",
-                        subiekt=station.get("subiekt", ""),
-                        gorod=station["nazvanie"],
+                        subiekt=stantsiya.get("subiekt", ""),
+                        gorod=stantsiya["nazvanie"],
                         opisanie=f"Сильная жара: {temperatura}°C",
                         uroven_opasnosti="sredniy",
                     )
                 )
 
-            if wind is not None and wind >= 20:
-                warnings.append(
+            if skorost_vetra is not None and skorost_vetra >= 20:
+                preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="shtorm",
-                        subiekt=station.get("subiekt", ""),
-                        gorod=station["nazvanie"],
-                        opisanie=f"Сильный ветер: {wind:.1f} м/с",
-                        uroven_opasnosti="vysokiy" if wind >= 30 else "sredniy",
+                        subiekt=stantsiya.get("subiekt", ""),
+                        gorod=stantsiya["nazvanie"],
+                        opisanie=f"Сильный ветер: {skorost_vetra:.1f} м/с",
+                        uroven_opasnosti="vysokiy" if skorost_vetra >= 30 else "sredniy",
                     )
                 )
 
             if wmo in (95, 96, 99):
-                warnings.append(
+                preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="uroagan",
-                        subiekt=station.get("subiekt", ""),
-                        gorod=station["nazvanie"],
+                        subiekt=stantsiya.get("subiekt", ""),
+                        gorod=stantsiya["nazvanie"],
                         opisanie=f"Гроза ({WMO_KODY_POGODY.get(wmo, '')})",
                         uroven_opasnosti="sredniy" if wmo == 95 else "vysokiy",
                     )
@@ -220,7 +220,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
         except Exception:
             continue
 
-    return warnings
+    return preduprezhdeniya
 
 
 async def poluchit_sputnik_dannye(
@@ -232,7 +232,7 @@ async def poluchit_sputnik_dannye(
     Open-Meteo не предоставляет спутниковые снимки. Остаётся заглушкой.
 
     Аргументы:
-        region: Фильтр по региону.
+        subiekt: Фильтр по региону.
         tip: Тип данных (lesa, voda, pozhary, snezhnyy_pokrov).
 
     Возвращает:
@@ -334,17 +334,17 @@ def _razobrat_openmeteo_ekologiyu(
     ]
 
     rezultaty = []
-    for key, name, norma in indicators:
-        value = current.get(key)
-        if value is not None:
-            prevyshenie = value > norma
+    for klyuch, nazvanie_pokazatelya, norma in indicators:
+        znachenie_pokazatelya = current.get(klyuch)
+        if znachenie_pokazatelya is not None:
+            prevyshenie = znachenie_pokazatelya > norma
             rezultaty.append(
                 EkologiyaDannye(
                     gorod=svedeniya["nazvanie"],
                     stanciya=svedeniya["kod"],
                     tip="vozdukh",
-                    pokazatel=name,
-                    znachenie=round(value, 2),
+                    pokazatel=nazvanie_pokazatelya,
+                    znachenie=round(znachenie_pokazatelya, 2),
                     norma_max=norma,
                     norma_min=None,
                     prevyshenie=prevyshenie,
@@ -363,7 +363,7 @@ def _gpa_v_mmrtst(hpa: float | None) -> float | None:
 
 def _gradusy_v_napravlenie(deg: float) -> str:
     """Преобразование градусов направления ветра в российское компасное направление."""
-    directions = [
+    napravleniya = [
         "С",
         "ССВ",
         "СВ",
@@ -381,5 +381,5 @@ def _gradusy_v_napravlenie(deg: float) -> str:
         "СЗ",
         "ССЗ",
     ]
-    idx = round(deg / 22.5) % 16
-    return directions[idx]
+    indeks = round(deg / 22.5) % 16
+    return napravleniya[indeks]

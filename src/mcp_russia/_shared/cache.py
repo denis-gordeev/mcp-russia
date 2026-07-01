@@ -30,10 +30,10 @@ class KeshSVremenemZhizni:
     Не подходит для многопроцессных развертываний — используйте Redis.
     """
 
-    def __init__(self, ttl: float = 300.0, maxsize: int = 256) -> None:
+    def __init__(self, ttl: float = 300.0, maks_razmer: int = 256) -> None:
         """Инициализация кэша с заданным TTL и максимальным размером."""
         self._ttl = ttl
-        self._maxsize = maxsize
+        self._maks_razmer = maks_razmer
         self._store: dict[str, tuple[float, Any]] = {}
 
     @property
@@ -54,7 +54,7 @@ class KeshSVremenemZhizni:
 
     def ustanovit(self, klyuch: str, znachenie: Any) -> None:
         """Сохранение значения с TTL-истечением."""
-        if len(self._store) >= self._maxsize:
+        if len(self._store) >= self._maks_razmer:
             self._ischislit()
         self._store[klyuch] = (time.monotonic() + self._ttl, znachenie)
 
@@ -70,19 +70,19 @@ class KeshSVremenemZhizni:
             del self._store[k]
 
         # Всё ещё полон? Удаляем запись с ближайшим истечением
-        if len(self._store) >= self._maxsize:
+        if len(self._store) >= self._maks_razmer:
             samyy_staryy_klyuch = min(self._store, key=lambda k: self._store[k][0])
             del self._store[samyy_staryy_klyuch]
 
 
-def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[F], F]:
+def kesh_s_vremenem_zhizni(ttl: float = 300.0, maks_razmer: int = 256) -> Callable[[F], F]:
     """Декоратор кэширования результатов асинхронных функций с TTL.
 
     Ключ кэша строится из имени функции + строковых аргументов/kwargs.
 
     Аргументы:
         ttl: Время жизни в секундах. По умолчанию: 300 (5 минут).
-        maxsize: Максимальное число записей в кэше. По умолчанию: 256.
+        maks_razmer: Максимальное число записей в кэше. По умолчанию: 256.
 
     Возвращает:
         Декоратор, оборачивающий асинхронную функцию кэшированием.
@@ -92,7 +92,7 @@ def kesh_s_vremenem_zhizni(ttl: float = 300.0, maxsize: int = 256) -> Callable[[
         async def poluchit_region() -> list[Region]:
             return await http_poluchit(...)
     """
-    cache = KeshSVremenemZhizni(ttl=ttl, maxsize=maxsize)
+    cache = KeshSVremenemZhizni(ttl=ttl, maks_razmer=maks_razmer)
 
     def dekorator(func: F) -> F:
         """Обёртка функции с привязкой к кэшу."""

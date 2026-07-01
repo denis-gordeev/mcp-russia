@@ -26,7 +26,7 @@ class EtapPlana(BaseModel):
     opisanie: str
     """Описание действия шага."""
 
-    tool: str
+    instrument: str
     """Имя инструмента (с префиксом модуля, напр. gosduma_poluchit_deputatov)."""
 
     parametry: dict[str, str]
@@ -69,7 +69,7 @@ class PlanZaprosa(BaseModel):
 
         for etap in self.etapy:
             stroki.append(f"### Этап {etap.etap}: {etap.opisanie}")
-            stroki.append(f"- **Инструмент:** `{etap.tool}`")
+            stroki.append(f"- **Инструмент:** `{etap.instrument}`")
 
             if etap.parametry:
                 params = ", ".join(f'{k}="{v}"' for k, v in etap.parametry.items())
@@ -143,7 +143,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "что делает этот этап",
-      "tool": "modul_imya_instrumenta",
+      "instrument": "modul_imya_instrumenta",
       "parametry": {{"param": "znachenie"}},
       "zavisit_ot": [],
       "obosnovanie": "почему этот этап необходим"
@@ -166,7 +166,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "Найти депутата по фамилии",
-      "tool": "gosduma_poluchit_deputatov",
+      "instrument": "gosduma_poluchit_deputatov",
       "parametry": {{"familiya": "Иванов"}},
       "zavisit_ot": [],
       "obosnovanie": "Нужен ID депутата для запроса расходов"
@@ -174,7 +174,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 2,
       "opisanie": "Запросить расходы депутата за 2024 год",
-      "tool": "gosduma_raskhody_deputata",
+      "instrument": "gosduma_raskhody_deputata",
       "parametry": {{"id": "{{etap_1.id}}", "god": "2024"}},
       "zavisit_ot": [1],
       "obosnovanie": "Получить расходы используя ID из предыдущего этапа"
@@ -195,7 +195,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "Запросить расходы на здравоохранение в Татарстане",
-      "tool": "rosstat_poluchit_indikator",
+      "instrument": "rosstat_poluchit_indikator",
       "parametry": {{"indikator": "zdravookhranenie", "region": "16", "god": "2024"}},
       "zavisit_ot": [],
       "obosnovanie": "Получить общую сумму расходов на здравоохранение в регионе"
@@ -203,7 +203,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 2,
       "opisanie": "Запросить численность населения Татарстана",
-      "tool": "rosstat_poluchit_dannye_regiona",
+      "instrument": "rosstat_poluchit_dannye_regiona",
       "parametry": {{"region": "16"}},
       "zavisit_ot": [],
       "obosnovanie": "Получить население для расчёта на душу населения"
@@ -215,16 +215,16 @@ _SISTEMNYY_PROMPT = """\
 
 ## Каталог инструментов
 
-{catalog}
+{katalog}
 """
 
 
-async def splanirovat_zapros_impl(zapros: str, catalog: str) -> str:
+async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
     """Вызов API Anthropic для построения структурированного плана выполнения.
 
     Аргументы:
-        query: Вопрос пользователя на естественном языке.
-        catalog: Предварительно собранный каталог всех инструментов.
+        zapros: Вопрос пользователя на естественном языке.
+        katalog: Предварительно собранный каталог всех инструментов.
 
     Возвращает:
         План выполнения в формате Markdown или сообщение об ошибке.
@@ -247,7 +247,7 @@ async def splanirovat_zapros_impl(zapros: str, catalog: str) -> str:
         )
 
     client = anthropic.AsyncAnthropic(api_key=api_key)
-    system_prompt = _SISTEMNYY_PROMPT.format(catalog=catalog)
+    system_prompt = _SISTEMNYY_PROMPT.format(katalog=katalog)
 
     try:
         otvet = await client.messages.create(
@@ -257,14 +257,14 @@ async def splanirovat_zapros_impl(zapros: str, catalog: str) -> str:
             messages=[{"role": "user", "content": zapros}],
         )
         blok = otvet.content[0]
-        raw_text = str(getattr(blok, "text", ""))
+        syrovoy_tekst = str(getattr(blok, "text", ""))
 
         try:
-            plan = PlanZaprosa.model_validate(json.loads(raw_text))
+            plan = PlanZaprosa.model_validate(json.loads(syrovoy_tekst))
             return plan.v_markdown()
         except (json.JSONDecodeError, Exception):
             logger.warning("Не удалось разобрать JSON плана; возврат сырого текста")
-            return raw_text
+            return syrovoy_tekst
 
     except Exception as e:
         logger.error("Ошибка вызова API Anthropic: %s", e)

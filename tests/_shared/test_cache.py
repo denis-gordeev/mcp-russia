@@ -31,14 +31,14 @@ class TestKeshSVremenemZhizni:
         assert cache.razmer == 0
 
     def test_vytyesnenie_pri_maks_razmere(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60, maxsize=2)
+        cache = KeshSVremenemZhizni(ttl=60, maks_razmer=2)
         cache.ustanovit("a", 1)
         cache.ustanovit("b", 2)
         cache.ustanovit("c", 3)  # должен вытеснить самый старый
         assert cache.razmer <= 2
 
     def test_vytyesnyaet_istekshie_pervymi(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=0.01, maxsize=2)
+        cache = KeshSVremenemZhizni(ttl=0.01, maks_razmer=2)
         cache.ustanovit("a", 1)
         time.sleep(0.02)  # «a» истекает
         cache.ustanovit("b", 2)

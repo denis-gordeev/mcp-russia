@@ -38,7 +38,7 @@ async def poisk_vodnykh_obektov(
         zapros: Поисковый запрос (название водного объекта).
         tip: Тип водного объекта (reka, ozero и т.д.).
         basseyn: Код бассейнового округа.
-        region: Регион.
+        subiekt: Регион.
         ogranichenie: Максимум результатов.
 
     Возвращает:
@@ -93,7 +93,7 @@ async def poluchit_gidro_dannye(
 
     Аргументы:
         identifikator_posta: Идентификатор гидрологического поста.
-        region: Регион.
+        subiekt: Регион.
         tip_dannykh: Тип данных (uroven, raskhod, temperatura, led, navodnenie).
 
     Возвращает:
@@ -141,7 +141,7 @@ async def poluchit_vodopolzovanie(
     """Получить данные о водопользовании из открытых данных.
 
     Аргументы:
-        region: Регион.
+        subiekt: Регион.
         god: Год.
 
     Возвращает:

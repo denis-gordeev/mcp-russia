@@ -35,7 +35,7 @@ async def poisk_zakupok(
     zapros: str = "",
     zakon: str = "",
     subiekt: str = "",
-    status: str = "",
+    sostoyanie: str = "",
     ogranichenie: int = 20,
 ) -> list[Zakupka]:
     """Поиск закупок в ЕИС по параметрам.
@@ -43,8 +43,8 @@ async def poisk_zakupok(
     Аргументы:
         zapros: Поисковый запрос (название закупки).
         zakon: Тип закона ("44-ФЗ" или "223-ФЗ").
-        region: Регион заказчика.
-        status: Статус закупки.
+        subiekt: Регион заказчика.
+        sostoyanie: Статус закупки.
         ogranichenie: Максимальное количество результатов.
 
     Возвращает:
@@ -63,8 +63,8 @@ async def poisk_zakupok(
             parametry["fz223"] = "on"
     if subiekt:
         parametry["regions"] = subiekt
-    if status:
-        parametry["statuses"] = status
+    if sostoyanie:
+        parametry["statuses"] = sostoyanie
 
     zheton = _poluchit_api_token()
     if zheton:
@@ -126,12 +126,12 @@ def _opredelit_zakon(element: dict[str, Any]) -> str:
     return ""
 
 
-def _bezopasnoe_veshchestvennoe(value: Any) -> float:
+def _bezopasnoe_veshchestvennoe(znachenie: Any) -> float:
     """Безопасное преобразование значения в float."""
-    if value is None:
+    if znachenie is None:
         return 0.0
     try:
-        return float(value)
+        return float(znachenie)
     except (ValueError, TypeError):
         return 0.0
 

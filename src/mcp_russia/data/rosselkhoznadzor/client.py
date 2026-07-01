@@ -37,7 +37,7 @@ async def poisk_proverok(
     """Поиск проверок Россельхознадзора.
 
     Аргументы:
-        region: Регион.
+        subiekt: Регион.
         vid_nadzora: Вид надзора.
         tip_proverki: Тип проверки.
         ogranichenie: Максимум результатов.
@@ -83,7 +83,7 @@ async def poisk_karantinnykh_obektov(
     """Поиск карантинных объектов.
 
     Аргументы:
-        region: Регион.
+        subiekt: Регион.
         tip: Тип карантинного объекта.
 
     Возвращает:
@@ -146,7 +146,7 @@ async def veterinarsnye_sertifikaty(
     """Поиск ветеринарных сертификатов.
 
     Аргументы:
-        region: Регион отправки.
+        subiekt: Регион отправки.
         tip_produktsii: Тип продукции.
         ogranichenie: Максимум результатов.
 
@@ -176,7 +176,7 @@ async def preduprezhdeniya_karantina(
     """Получить предупреждения о карантинных ограничениях.
 
     Аргументы:
-        region: Регион.
+        subiekt: Регион.
 
     Возвращает:
         Список предупреждений.

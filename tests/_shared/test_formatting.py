@@ -74,17 +74,17 @@ class TestFormatirovatProtsent:
 class TestUsechSpisok:
     def test_korotkiy_spisok(self) -> None:
         items = ["a", "b", "c"]
-        result = usech_spisok(items, max_items=5)
+        result = usech_spisok(items, maks_elementov=5)
         assert result == "a\nb\nc"
 
     def test_tochnyy_limit(self) -> None:
         items = ["a", "b"]
-        result = usech_spisok(items, max_items=2)
+        result = usech_spisok(items, maks_elementov=2)
         assert result == "a\nb"
 
     def test_usechyonnyy(self) -> None:
         items = [f"элемент {i}" for i in range(10)]
-        result = usech_spisok(items, max_items=3)
+        result = usech_spisok(items, maks_elementov=3)
         assert "элемент 0" in result
         assert "элемент 2" in result
         assert "... и ещё 7 результатов." in result

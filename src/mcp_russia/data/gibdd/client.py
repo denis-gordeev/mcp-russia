@@ -117,7 +117,7 @@ async def statistika_dtp_region(subiekt: str, god: int) -> StatistikaDTP | None:
     """Получение статистики ДТП с stat.gibdd.ru.
 
     Аргументы:
-        region: Название региона (субъект РФ).
+        subiekt: Название региона (субъект РФ).
         god: Год для статистики.
 
     Возвращает:

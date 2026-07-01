@@ -128,13 +128,13 @@ async def poisk_uchrezhdeniy(
 
 async def poluchit_mezhbyudzhetnye(
     god: int = 0,
-    region: str = "",
+    subiekt: str = "",
 ) -> list[dict[str, Any]]:
     """Получить данные о межбюджетных трансфертах.
 
     Аргументы:
         god: Год.
-        region: Регион.
+        subiekt: Регион.
 
     Возвращает:
         Список межбюджетных трансфертов.
@@ -144,8 +144,8 @@ async def poluchit_mezhbyudzhetnye(
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god
-        if region:
-            parametry["region"] = region
+        if subiekt:
+            parametry["region"] = subiekt
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in elementy if isinstance(p, dict)]

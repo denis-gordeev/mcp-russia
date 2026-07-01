@@ -26,18 +26,22 @@ def _razobrat_valyutu(kod: str, dannye: dict[str, Any], date_str: str = "") -> Z
             znachenie=0.0,
         )
 
-    nominal = zapis.get("Nominal", 1)
-    value = zapis.get("Value", 0.0)
-    previous = zapis.get("PreviousValue")
+    nominal_valyuty = zapis.get("Nominal", 1)
+    znachenie_kursa = zapis.get("Value", 0.0)
+    predydushchiy_kurs = zapis.get("PreviousValue")
 
-    znachenie_za_edinitsu = value / nominal if nominal else value
+    znachenie_za_edinitsu = (
+        znachenie_kursa / nominal_valyuty if nominal_valyuty else znachenie_kursa
+    )
 
     return ZnachenieValyuty(
         kod=kod,
         nazvanie=zapis.get("Name", kod),
-        nominal=nominal,
+        nominal=nominal_valyuty,
         znachenie=znachenie_za_edinitsu,
-        predydushchee_znachenie=previous / nominal if previous and nominal else previous,
+        predydushchee_znachenie=predydushchiy_kurs / nominal_valyuty
+        if predydushchiy_kurs and nominal_valyuty
+        else predydushchiy_kurs,
         data=date_str,
     )
 
