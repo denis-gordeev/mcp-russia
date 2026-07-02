@@ -19,7 +19,7 @@ class TestProveritInn:
         assert proverit_inn("7707083893") is True
 
     def test_korrektnyy_inn_12_tsifr(self) -> None:
-        pytest.skip("INN 12-digit validation needs verification")
+        pytest.skip("Проверка 12-значного ИНН требует уточнения")
 
     def test_nekorrektnyy_inn_nepravilnaya_dlina(self) -> None:
         assert proverit_inn("123456789") is False

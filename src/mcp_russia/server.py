@@ -42,13 +42,13 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
         call_next: CallNext[mt.CallToolRequestParams, ToolResult],
     ) -> ToolResult:
         """Логирование вызова инструмента с замером времени."""
-        name = context.message.name
-        logger.info("Вызов инструмента: %s", name)
+        imya = context.message.name
+        logger.info("Вызов инструмента: %s", imya)
         nachalo = time.monotonic()
-        result = await call_next(context)
+        rezultat = await call_next(context)
         proshlo_vremeni = time.monotonic() - nachalo
-        logger.info("Инструмент %s завершён за %.2fс", name, proshlo_vremeni)
-        return result
+        logger.info("Инструмент %s завершён за %.2fс", imya, proshlo_vremeni)
+        return rezultat
 
     async def pri_chtenii_resursa(
         self,
@@ -66,8 +66,8 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
         call_next: CallNext[mt.GetPromptRequestParams, PromptResult],
     ) -> PromptResult:
         """Логирование запроса промпта."""
-        name = context.message.name
-        logger.info("Запрос промпта: %s", name)
+        imya = context.message.name
+        logger.info("Запрос промпта: %s", imya)
         return await call_next(context)
 
 

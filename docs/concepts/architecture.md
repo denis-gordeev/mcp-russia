@@ -34,11 +34,11 @@ src/
 Фактическая сборка корневого сервера сейчас устроена так:
 
 ```python
-mcp = FastMCP("mcp-russia", lifespan=http_lifespan)
-registry = FeatureRegistry()
-registry.discover("mcp_russia.data")
-registry.discover("mcp_russia.agenty")
-registry.mount_all(mcp)
+mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
+reestr = ReyestrFunktsiy()
+reestr.obnaruzhit("mcp_russia.data")
+reestr.obnaruzhit("mcp_russia.agenty")
+reestr.smontirovat_vse(mcp)
 ```
 
 Следствие простое:

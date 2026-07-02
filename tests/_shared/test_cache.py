@@ -9,48 +9,48 @@ from mcp_russia._shared.cache import KeshSVremenemZhizni, kesh_s_vremenem_zhizni
 
 class TestKeshSVremenemZhizni:
     def test_ustanovka_i_poluchenie(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60)
-        cache.ustanovit("key", "value")
-        assert cache.poluchit("key") == "value"
+        kesh = KeshSVremenemZhizni(vremya_zhizni=60)
+        kesh.ustanovit("key", "value")
+        assert kesh.poluchit("key") == "value"
 
     def test_poluchenie_otsutstvuyushchego_klyucha(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60)
-        assert cache.poluchit("missing") is None
+        kesh = KeshSVremenemZhizni(vremya_zhizni=60)
+        assert kesh.poluchit("missing") is None
 
     def test_istekshaya_zapis_vozvrashchaet_none(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=0.01)
-        cache.ustanovit("key", "value")
+        kesh = KeshSVremenemZhizni(vremya_zhizni=0.01)
+        kesh.ustanovit("key", "value")
         time.sleep(0.02)
-        assert cache.poluchit("key") is None
+        assert kesh.poluchit("key") is None
 
     def test_ochistka(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60)
-        cache.ustanovit("a", 1)
-        cache.ustanovit("b", 2)
-        cache.ochistit()
-        assert cache.razmer == 0
+        kesh = KeshSVremenemZhizni(vremya_zhizni=60)
+        kesh.ustanovit("a", 1)
+        kesh.ustanovit("b", 2)
+        kesh.ochistit()
+        assert kesh.razmer == 0
 
     def test_vytyesnenie_pri_maks_razmere(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60, maks_razmer=2)
-        cache.ustanovit("a", 1)
-        cache.ustanovit("b", 2)
-        cache.ustanovit("c", 3)  # должен вытеснить самый старый
-        assert cache.razmer <= 2
+        kesh = KeshSVremenemZhizni(vremya_zhizni=60, maks_razmer=2)
+        kesh.ustanovit("a", 1)
+        kesh.ustanovit("b", 2)
+        kesh.ustanovit("c", 3)  # должен вытеснить самый старый
+        assert kesh.razmer <= 2
 
     def test_vytyesnyaet_istekshie_pervymi(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=0.01, maks_razmer=2)
-        cache.ustanovit("a", 1)
+        kesh = KeshSVremenemZhizni(vremya_zhizni=0.01, maks_razmer=2)
+        kesh.ustanovit("a", 1)
         time.sleep(0.02)  # «a» истекает
-        cache.ustanovit("b", 2)
-        cache.ustanovit("c", 3)  # вытесняет истекший «a», а не «b»
-        assert cache.poluchit("b") == 2
-        assert cache.poluchit("c") == 3
+        kesh.ustanovit("b", 2)
+        kesh.ustanovit("c", 3)  # вытесняет истекший «a», а не «b»
+        assert kesh.poluchit("b") == 2
+        assert kesh.poluchit("c") == 3
 
     def test_svoystvo_razmer(self) -> None:
-        cache = KeshSVremenemZhizni(ttl=60)
-        assert cache.razmer == 0
-        cache.ustanovit("x", 1)
-        assert cache.razmer == 1
+        kesh = KeshSVremenemZhizni(vremya_zhizni=60)
+        assert kesh.razmer == 0
+        kesh.ustanovit("x", 1)
+        assert kesh.razmer == 1
 
 
 class TestDekoratorKeshaSVremenemZhizni:
@@ -58,82 +58,82 @@ class TestDekoratorKeshaSVremenemZhizni:
     async def test_keshiruet_rezultat(self) -> None:
         call_count = 0
 
-        @kesh_s_vremenem_zhizni(ttl=60)
-        async def fetch_data(key: str) -> str:
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
+        async def poluchit_dannye(klyuch: str) -> str:
             nonlocal call_count
             call_count += 1
-            return f"result-{key}"
+            return f"rezultat-{klyuch}"
 
-        result1 = await fetch_data("a")
-        result2 = await fetch_data("a")
-        assert result1 == "result-a"
-        assert result2 == "result-a"
+        rezultat1 = await poluchit_dannye("a")
+        rezultat2 = await poluchit_dannye("a")
+        assert rezultat1 == "rezultat-a"
+        assert rezultat2 == "rezultat-a"
         assert call_count == 1  # второй вызов был из кэша
 
     @pytest.mark.asyncio
     async def test_raznye_argumenty_raznyy_kesh(self) -> None:
         call_count = 0
 
-        @kesh_s_vremenem_zhizni(ttl=60)
-        async def fetch(key: str) -> str:
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
+        async def poluchit(klyuch: str) -> str:
             nonlocal call_count
             call_count += 1
-            return f"result-{key}"
+            return f"rezultat-{klyuch}"
 
-        await fetch("a")
-        await fetch("b")
+        await poluchit("a")
+        await poluchit("b")
         assert call_count == 2
 
     @pytest.mark.asyncio
     async def test_istekshiy_kesh_perezaprashivaet(self) -> None:
         call_count = 0
 
-        @kesh_s_vremenem_zhizni(ttl=0.01)
-        async def fetch() -> str:
+        @kesh_s_vremenem_zhizni(vremya_zhizni=0.01)
+        async def poluchit() -> str:
             nonlocal call_count
             call_count += 1
-            return "data"
+            return "dannye"
 
-        await fetch()
+        await poluchit()
         time.sleep(0.02)
-        await fetch()
+        await poluchit()
         assert call_count == 2
 
     @pytest.mark.asyncio
     async def test_atribut_kesha_dostupen(self) -> None:
-        @kesh_s_vremenem_zhizni(ttl=60)
-        async def fetch() -> str:
-            return "data"
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
+        async def poluchit() -> str:
+            return "dannye"
 
-        assert hasattr(fetch, "cache")
-        assert isinstance(fetch.cache, KeshSVremenemZhizni)
+        assert hasattr(poluchit, "kesh")
+        assert isinstance(poluchit.kesh, KeshSVremenemZhizni)
 
     @pytest.mark.asyncio
     async def test_ochistka_kesha(self) -> None:
         call_count = 0
 
-        @kesh_s_vremenem_zhizni(ttl=60)
-        async def fetch() -> str:
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
+        async def poluchit() -> str:
             nonlocal call_count
             call_count += 1
-            return "data"
+            return "dannye"
 
-        await fetch()
-        fetch.cache.ochistit()
-        await fetch()
+        await poluchit()
+        poluchit.kesh.ochistit()
+        await poluchit()
         assert call_count == 2
 
     @pytest.mark.asyncio
     async def test_imenovannye_argumenty_v_klyuche_kesha(self) -> None:
         call_count = 0
 
-        @kesh_s_vremenem_zhizni(ttl=60)
-        async def fetch(uf: str = "SP") -> str:
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
+        async def poluchit(uf: str = "SP") -> str:
             nonlocal call_count
             call_count += 1
-            return f"data-{uf}"
+            return f"dannye-{uf}"
 
-        await fetch(uf="SP")
-        await fetch(uf="RJ")
-        await fetch(uf="SP")  # из кэша
+        await poluchit(uf="SP")
+        await poluchit(uf="RJ")
+        await poluchit(uf="SP")  # из кэша
         assert call_count == 2

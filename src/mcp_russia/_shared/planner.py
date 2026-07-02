@@ -72,8 +72,8 @@ class PlanZaprosa(BaseModel):
             stroki.append(f"- **Инструмент:** `{etap.instrument}`")
 
             if etap.parametry:
-                params = ", ".join(f'{k}="{v}"' for k, v in etap.parametry.items())
-                stroki.append(f"- **Параметры:** {params}")
+                parametry_str = ", ".join(f'{k}="{v}"' for k, v in etap.parametry.items())
+                stroki.append(f"- **Параметры:** {parametry_str}")
 
             if etap.zavisit_ot:
                 deps = ", ".join(f"Этап {d}" for d in etap.zavisit_ot)
@@ -238,22 +238,22 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    api_key = KLYUCH_ANTHROPIC_API
-    if not api_key:
+    klyuch_api = KLYUCH_ANTHROPIC_API
+    if not klyuch_api:
         return (
             "Ошибка: переменная ANTHROPIC_API_KEY не настроена. "
             "Задайте ANTHROPIC_API_KEY, чтобы использовать этот мета-инструмент.\n\n"
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    client = anthropic.AsyncAnthropic(api_key=api_key)
-    system_prompt = _SISTEMNYY_PROMPT.format(katalog=katalog)
+    klient = anthropic.AsyncAnthropic(api_key=klyuch_api)
+    sistemnyy_prompt = _SISTEMNYY_PROMPT.format(katalog=katalog)
 
     try:
-        otvet = await client.messages.create(
+        otvet = await klient.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=2048,
-            system=system_prompt,
+            system=sistemnyy_prompt,
             messages=[{"role": "user", "content": zapros}],
         )
         blok = otvet.content[0]

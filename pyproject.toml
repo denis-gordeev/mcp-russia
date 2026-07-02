@@ -5,7 +5,7 @@ description = "Русскоязычная адаптация MCP-сервера 
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"
-authors = [{ name = "mcp-russia contributors" }]
+authors = [{ name = "mcp-russia участники" }]
 keywords = [
     "mcp",
     "russia",

@@ -7,9 +7,9 @@ import re
 _DIGITS_RE = re.compile(r"\D")
 
 
-def _tolko_tsifry(value: str) -> str:
+def _tolko_tsifry(stroka: str) -> str:
     """Удаление всех нецифровых символов."""
-    return _DIGITS_RE.sub("", value)
+    return _DIGITS_RE.sub("", stroka)
 
 
 # ---------------------------------------------------------------------------
@@ -28,30 +28,30 @@ def proverit_inn(inn: str) -> bool:
     Возвращает:
         True если валиден, иначе False.
     """
-    digits = _tolko_tsifry(inn)
-    if len(digits) not in (10, 12):
+    tsifry = _tolko_tsifry(inn)
+    if len(tsifry) not in (10, 12):
         return False
 
-    if len(digits) == 10:
-        weights = [2, 4, 10, 3, 5, 9, 4, 6, 8]
-        itogo = sum(int(digits[i]) * weights[i] for i in range(9))
-        remainder = itogo % 11
-        proverochnaya_tsifra = remainder % 10
-        return int(digits[9]) == proverochnaya_tsifra
+    if len(tsifry) == 10:
+        vesa = [2, 4, 10, 3, 5, 9, 4, 6, 8]
+        itogo = sum(int(tsifry[i]) * vesa[i] for i in range(9))
+        ostatok = itogo % 11
+        proverochnaya_tsifra = ostatok % 10
+        return int(tsifry[9]) == proverochnaya_tsifra
 
-    weights1 = [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
-    weights2 = [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
+    vesa1 = [7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
+    vesa2 = [3, 7, 2, 4, 10, 3, 5, 9, 4, 6, 8]
 
-    total1 = sum(int(digits[i]) * weights1[i] for i in range(10))
-    remainder1 = total1 % 11
-    check1 = remainder1 % 10
-    if int(digits[10]) != check1:
+    summa1 = sum(int(tsifry[i]) * vesa1[i] for i in range(10))
+    ostatok1 = summa1 % 11
+    kontrol1 = ostatok1 % 10
+    if int(tsifry[10]) != kontrol1:
         return False
 
-    total2 = sum(int(digits[i]) * weights2[i] for i in range(11))
-    remainder2 = total2 % 11
-    check2 = remainder2 % 10
-    return int(digits[11]) == check2
+    summa2 = sum(int(tsifry[i]) * vesa2[i] for i in range(11))
+    ostatok2 = summa2 % 11
+    kontrol2 = ostatok2 % 10
+    return int(tsifry[11]) == kontrol2
 
 
 def formatirovat_inn(inn: str) -> str:
@@ -66,12 +66,12 @@ def formatirovat_inn(inn: str) -> str:
     Вызывает:
         ValueError: Если ИНН не содержит 10 или 12 цифр.
     """
-    digits = _tolko_tsifry(inn)
-    if len(digits) == 10:
-        return digits
-    if len(digits) == 12:
-        return digits
-    raise ValueError(f"ИНН должен содержать 10 или 12 цифр, получено {len(digits)}")
+    tsifry = _tolko_tsifry(inn)
+    if len(tsifry) == 10:
+        return tsifry
+    if len(tsifry) == 12:
+        return tsifry
+    raise ValueError(f"ИНН должен содержать 10 или 12 цифр, получено {len(tsifry)}")
 
 
 # ---------------------------------------------------------------------------
@@ -90,10 +90,10 @@ def proverit_kpp(kpp: str) -> bool:
     Возвращает:
         True если формат корректен, иначе False.
     """
-    digits = _tolko_tsifry(kpp)
-    if len(digits) != 9:
+    tsifry = _tolko_tsifry(kpp)
+    if len(tsifry) != 9:
         return False
-    return digits[:2] != "00"
+    return tsifry[:2] != "00"
 
 
 def formatirovat_kpp(kpp: str) -> str:
@@ -108,10 +108,10 @@ def formatirovat_kpp(kpp: str) -> str:
     Вызывает:
         ValueError: Если КПП не содержит ровно 9 цифр.
     """
-    digits = _tolko_tsifry(kpp)
-    if len(digits) != 9:
-        raise ValueError(f"КПП должен содержать 9 цифр, получено {len(digits)}")
-    return digits
+    tsifry = _tolko_tsifry(kpp)
+    if len(tsifry) != 9:
+        raise ValueError(f"КПП должен содержать 9 цифр, получено {len(tsifry)}")
+    return tsifry
 
 
 # ---------------------------------------------------------------------------
@@ -130,24 +130,24 @@ def proverit_snils(snils: str) -> bool:
     Возвращает:
         True если валиден, иначе False.
     """
-    digits = _tolko_tsifry(snils)
-    if len(digits) != 11:
+    tsifry = _tolko_tsifry(snils)
+    if len(tsifry) != 11:
         return False
 
     itogo = 0
     for i in range(9):
-        itogo += int(digits[i]) * (9 - i)
+        itogo += int(tsifry[i]) * (9 - i)
 
     if itogo < 100:
         proverochnaya_tsifra = itogo
     elif itogo in (100, 101):
         proverochnaya_tsifra = 0
     else:
-        remainder = itogo % 101
-        proverochnaya_tsifra = 0 if remainder == 100 else remainder
+        ostatok = itogo % 101
+        proverochnaya_tsifra = 0 if ostatok == 100 else ostatok
 
-    check_str = f"{proverochnaya_tsifra:02d}"
-    return digits[9:] == check_str
+    stroka_kontrolya = f"{proverochnaya_tsifra:02d}"
+    return tsifry[9:] == stroka_kontrolya
 
 
 def formatirovat_snils(snils: str) -> str:
@@ -162,10 +162,10 @@ def formatirovat_snils(snils: str) -> str:
     Вызывает:
         ValueError: Если СНИЛС не содержит ровно 11 цифр.
     """
-    digits = _tolko_tsifry(snils)
-    if len(digits) != 11:
-        raise ValueError(f"СНИЛС должен содержать 11 цифр, получено {len(digits)}")
-    return f"{digits[:3]}-{digits[3:6]}-{digits[6:9]} {digits[9:]}"
+    tsifry = _tolko_tsifry(snils)
+    if len(tsifry) != 11:
+        raise ValueError(f"СНИЛС должен содержать 11 цифр, получено {len(tsifry)}")
+    return f"{tsifry[:3]}-{tsifry[3:6]}-{tsifry[6:9]} {tsifry[9:]}"
 
 
 # ---------------------------------------------------------------------------
@@ -182,10 +182,10 @@ def proverit_pochtovyy_indeks(pochtovyy_indeks: str) -> bool:
     Возвращает:
         True если формат корректен, иначе False.
     """
-    digits = _tolko_tsifry(pochtovyy_indeks)
-    if len(digits) != 6:
+    tsifry = _tolko_tsifry(pochtovyy_indeks)
+    if len(tsifry) != 6:
         return False
-    return digits[0] in "123456"
+    return tsifry[0] in "123456"
 
 
 def formatirovat_pochtovyy_indeks(pochtovyy_indeks: str) -> str:
@@ -200,9 +200,9 @@ def formatirovat_pochtovyy_indeks(pochtovyy_indeks: str) -> str:
     Вызывает:
         ValueError: Если почтовый индекс не содержит ровно 6 цифр.
     """
-    digits = _tolko_tsifry(pochtovyy_indeks)
-    if len(digits) != 6:
+    tsifry = _tolko_tsifry(pochtovyy_indeks)
+    if len(tsifry) != 6:
         raise ValueError(
-            f"Российский почтовый индекс должен содержать 6 цифр, получено {len(digits)}"
+            f"Российский почтовый индекс должен содержать 6 цифр, получено {len(tsifry)}"
         )
-    return digits
+    return tsifry

@@ -10,11 +10,11 @@ from collections.abc import Sequence
 from typing import Any
 
 
-def tablitsa_v_markdown(headers: Sequence[str], stroki_tablitsy: Sequence[Sequence[Any]]) -> str:
+def tablitsa_v_markdown(zagolovki: Sequence[str], stroki_tablitsy: Sequence[Sequence[Any]]) -> str:
     """Рендеринг табличных данных в Markdown.
 
     Аргументы:
-        headers: Заголовки столбцов.
+        zagolovki: Заголовки столбцов.
         stroki_tablitsy: Список строк (каждая строка — последовательность значений).
 
     Возвращает:
@@ -23,61 +23,61 @@ def tablitsa_v_markdown(headers: Sequence[str], stroki_tablitsy: Sequence[Sequen
     if not stroki_tablitsy:
         return "Результаты не найдены."
 
-    header_line = "| " + " | ".join(str(h) for h in headers) + " |"
-    separator = "| " + " | ".join("---" for _ in headers) + " |"
-    body_lines = ["| " + " | ".join(str(v) for v in row) + " |" for row in stroki_tablitsy]
+    stroka_zagolovka = "| " + " | ".join(str(h) for h in zagolovki) + " |"
+    razdelitel = "| " + " | ".join("---" for _ in zagolovki) + " |"
+    stroki_tela = ["| " + " | ".join(str(v) for v in stroka) + " |" for stroka in stroki_tablitsy]
 
-    return "\n".join([header_line, separator, *body_lines])
+    return "\n".join([stroka_zagolovka, razdelitel, *stroki_tela])
 
 
-def formatirovat_rubli(value: float) -> str:
+def formatirovat_rubli(znacheniye: float) -> str:
     """Форматирование числа в российском рублёвом стиле.
 
     Аргументы:
-        value: Числовое значение.
+        znacheniye: Числовое значение.
 
     Возвращает:
         Отформатированная строка вида «1 234,56 ₽».
     """
-    sign = "-" if value < 0 else ""
-    abs_value = abs(value)
-    integer_part = int(abs_value)
-    decimal_part = round((abs_value - integer_part) * 100)
-    if decimal_part >= 100:
-        integer_part += 1
-        decimal_part = 0
-    int_str = f"{integer_part:,}".replace(",", " ")
-    return f"{sign}{int_str},{decimal_part:02d} ₽"
+    znak = "-" if znacheniye < 0 else ""
+    abs_znacheniye = abs(znacheniye)
+    tselaya_chast = int(abs_znacheniye)
+    drobnaya_chast = round((abs_znacheniye - tselaya_chast) * 100)
+    if drobnaya_chast >= 100:
+        tselaya_chast += 1
+        drobnaya_chast = 0
+    stroka_tseloy = f"{tselaya_chast:,}".replace(",", " ")
+    return f"{znak}{stroka_tseloy},{drobnaya_chast:02d} ₽"
 
 
-def formatirovat_chislo_ru(value: float, decimals: int = 2) -> str:
+def formatirovat_chislo_ru(znacheniye: float, desyatichnykh: int = 2) -> str:
     """Форматирование числа в российском стиле (пробел — тысячи, запятая — десятичные).
 
     Аргументы:
-        value: Числовое значение.
-        decimals: Количество десятичных знаков.
+        znacheniye: Числовое значение.
+        desyatichnykh: Количество десятичных знаков.
 
     Возвращает:
         Отформатированная строка вида «1 234,56».
     """
-    otformatirovannoe = f"{value:,.{decimals}f}"
+    otformatirovannoe = f"{znacheniye:,.{desyatichnykh}f}"
     return otformatirovannoe.replace(",", " ").replace(".", ",")
 
 
-def formatirovat_protsent(value: float, decimals: int = 2) -> str:
+def formatirovat_protsent(znacheniye: float, desyatichnykh: int = 2) -> str:
     """Форматирование числового значения как процент.
 
     Аргументы:
-        value: Числовое значение (напр. 0.05 для 5%).
-        decimals: Количество десятичных знаков.
+        znacheniye: Числовое значение (напр. 0.05 для 5%).
+        desyatichnykh: Количество десятичных знаков.
 
     Возвращает:
         Отформатированная строка вида «5,00%».
     """
-    return f"{formatirovat_chislo_ru(value * 100, decimals)}%"
+    return f"{formatirovat_chislo_ru(znacheniye * 100, desyatichnykh)}%"
 
 
-def razobrat_rublevoe_chislo(value: Any) -> float | None:
+def razobrat_rublevoe_chislo(znacheniye: Any) -> float | None:
     """Разбор локализованной строки числа в число с плавающей точкой.
 
     Обрабатывает строки вида «1 234,56» (пробел=тысячи, запятая=десятичные)
@@ -86,17 +86,17 @@ def razobrat_rublevoe_chislo(value: Any) -> float | None:
     Значения int/float пропускаются без изменений.
 
     Аргументы:
-        value: Исходное значение из API (строка, int, float или None).
+        znacheniye: Исходное значение из API (строка, int, float или None).
 
     Возвращает:
         Расобранное число float или None при невозможности разбора.
     """
-    if value is None:
+    if znacheniye is None:
         return None
-    if isinstance(value, (int, float)):
-        return float(value)
-    if isinstance(value, str):
-        ochishchennoe = value.replace(" ", "")
+    if isinstance(znacheniye, (int, float)):
+        return float(znacheniye)
+    if isinstance(znacheniye, str):
+        ochishchennoe = znacheniye.replace(" ", "")
         if "," in ochishchennoe and "." in ochishchennoe:
             ochishchennoe = ochishchennoe.replace(".", "").replace(",", ".")
         elif "," in ochishchennoe:
@@ -121,6 +121,6 @@ def usech_spisok(elementy: Sequence[str], maks_elementov: int = 50) -> str:
     if len(elementy) <= maks_elementov:
         return "\n".join(elementy)
 
-    shown = elementy[:maks_elementov]
-    remaining = len(elementy) - maks_elementov
-    return "\n".join(shown) + f"\n\n... и ещё {remaining} результатов."
+    pokazannye = elementy[:maks_elementov]
+    ostalos = len(elementy) - maks_elementov
+    return "\n".join(pokazannye) + f"\n\n... и ещё {ostalos} результатов."

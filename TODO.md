@@ -2,6 +2,98 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-02 (шестьдесят первый проход — русификация _shared/ инфраструктуры, документации, атрибутов dataclass)
+
+### Выполнено
+
+- **Русификация параметров и переменных _shared/formatting.py** (13 замен):
+  - `headers` → `zagolovki` (параметр `tablitsa_v_markdown`)
+  - `header_line` → `stroka_zagolovka`, `separator` → `razdelitel`, `body_lines` → `stroki_tela`, `row` → `stroka` (локальные переменные)
+  - `value` → `znacheniye` (параметры 4 функций: `formatirovat_rubli`, `formatirovat_chislo_ru`, `formatirovat_protsent`, `razobrat_rublevoe_chislo`)
+  - `sign` → `znak`, `abs_value` → `abs_znacheniye`, `integer_part` → `tselaya_chast`, `decimal_part` → `drobnaya_chast`, `int_str` → `stroka_tseloy`
+  - `decimals` → `desyatichnykh` (параметр `formatirovat_chislo_ru`, `formatirovat_protsent`)
+  - `shown` → `pokazannye`, `remaining` → `ostalos` (локальные переменные в `usech_spisok`)
+- **Русификация переменных _shared/validators.py** (11 замен):
+  - `value` → `stroka` (параметр `_tolko_tsifry`)
+  - `digits` → `tsifry` (6 вхождений в 5 функциях)
+  - `weights` → `vesa`, `weights1` → `vesa1`, `weights2` → `vesa2` (веса контрольных сумм)
+  - `remainder` → `ostatok`, `remainder1` → `ostatok1`, `remainder2` → `ostatok2` (остатки деления)
+  - `total1` → `summa1`, `total2` → `summa2` (контрольные суммы)
+  - `check1` → `kontrol1`, `check2` → `kontrol2` (контрольные цифры)
+  - `check_str` → `stroka_kontrolya` (строка контрольных цифр СНИЛС)
+- **Русификация переменных _shared/discovery.py** (7 замен):
+  - `params` → `parametry`, `properties` → `svoystva`, `required` → `obyazatelnye` (параметры инструмента)
+  - `param_parts` → `chasti_parametra`, `pname` → `imya_param`, `pschema` → `skhema_param`, `ptype` → `tip_param`, `opt` → `neobyazatelen` (разбор сигнатуры)
+  - `signature` → `signatura`, `full_name` → `polnoe_imya` (формирование подписи)
+  - `features` → `funktsii` (локальная переменная), `feat` → `funktsiya` (цикл)
+  - `meta` → `metadannye`, `server` → `server_fn` (атрибуты ZaregistrirovannayaFunktsiya)
+  - `api_key` → `klyuch_api`, `client` → `klient`, `system_prompt` → `sistemnyy_prompt` (LLM-вызовы)
+- **Русификация переменных _shared/planner.py** (3 замены):
+  - `params` → `parametry_str` (форматирование параметров плана)
+  - `api_key` → `klyuch_api`, `client` → `klient`, `system_prompt` → `sistemnyy_prompt` (LLM-вызовы)
+- **Русификация параметров и переменных _shared/cache.py** (6 замен):
+  - `ttl` → `vremya_zhizni` (параметр `KeshSVremenemZhizni.__init__` и `kesh_s_vremenem_zhizni`; атрибут `self._ttl` → `self._vremya_zhizni`)
+  - `expires_at` → `istekaet_v` (распаковка записи кэша)
+  - `now` → `seychas` (в `_ischislit` и `zakhvatit`)
+  - `cache` → `kesh` (локальная переменная в `kesh_s_vremenem_zhizni`; атрибут `obertka.cache` → `obertka.kesh`)
+- **Русификация переменных _shared/batch.py** (2 замены):
+  - `fn_name` → `imya_fn`, `key` → `klyuch` (сканирование инструментов)
+- **Русификация параметров _shared/lifespan.py** (2 замены):
+  - `server` → `server_fn` (параметр `http_zhiznennyy_tsikl`), `client` → `klient` (локальная переменная httpx)
+- **Русификация переменных _shared/rate_limiter.py** (2 замены):
+  - `now` → `seychas` (в `zakhvatit`), `cutoff` → `porog` (в `_ochistit`)
+- **Русификация атрибутов dataclass ZaregistrirovannayaFunktsiya** (2 поля):
+  - `meta` → `metadannye` (атрибут MetaFunktsii)
+  - `server` → `server_fn` (атрибут FastMCP)
+  - Обновлены все ссылки: `feature.py` (конструктор + `smontirovat_vse` + `svodka`), `discovery.py`, `test_feature.py`
+- **Русификация переменных server.py** (3 замены):
+  - `name` → `imya` (в `pri_vyzove_instrumenta` и `pri_zaprose_prompta`)
+  - `result` → `rezultat` (в `pri_vyzove_instrumenta`)
+- **Обновление документации** (~20 замен в 4 файлах):
+  - `docs/guide/adding-features.md`: `FeatureMeta` → `MetaFunktsii`, `FEATURE_META` → `META_FUNKTSII`, `name=` → `imya=`, `description=` → `opisanie=`, `version=` → `versiya=`, `api_base=` → `baza_api=`, `requires_auth=` → `trebuet_autentifikatsii=`, `tags=` → `tegi=`, `http_get` → `http_poluchit`, `data` → `dannye`, `item` → `element`, `page` → `stranitsa`, `id` → `identifikator`, `name` → `nazvanie`, `amount` → `summa`
+  - `docs/concepts/architecture.md`: `http_lifespan` → `http_zhiznennyy_tsikl`, `FeatureRegistry` → `ReyestrFunktsiy`, `registry` → `reestr`, `discover` → `obnaruzhit`, `mount_all` → `smontirovat_vse`
+  - `docs/reference/smart-tools.md`: `build_catalog` → `postroit_katalog`, `build_dispatch(registry)` → `postroit_dispetcherizatsiyu(reestr)`, `tool` → `instrument` (поле EtapPlana), `Tool` → `Инструмент` (заголовок таблицы)
+  - `docs/reference/configuration.md`: `RateLimiter` → `OgranichitelChastoty`, `max_requests` → `maks_zaprosov`, `http_get(url)` → `http_poluchit(adres_url)`, `data` → `dannye`
+- **Обновление scripts/generate_diagrams.py** (11 замен):
+  - `FEATURE_META` → `META_FUNKTSII` (2 вхождения)
+  - `http_get() async` → `http_poluchit() async`
+  - `http_client` → `http_klient`, `formatting` → `formatirovanie`
+  - `discover(pkg)` → `obnaruzhit(paket)`, `iter_modules(pkg)` → `iteratsiya_moduley(paket)`
+  - `import __init__.py` → `zagruzit __init__.py`
+  - `requires_auth и env var OK?` → `trebuet_autentifikatsii и переменная окружения задана?`
+  - `import server.py` → `zagruzit server.py`
+  - `mount(mcp, namespace=name)` → `smontirovat(mcp, prostranstvo_imen=imya)`
+  - `httpx async` → `httpx асинхр.`
+- **Обновление конфигурационных файлов** (2 замены):
+  - `cliff.toml`: `Changelog generator for mcp-russia` → `Генератор журнала изменений для mcp-russia`
+  - `pyproject.toml`: `mcp-russia contributors` → `mcp-russia участники`
+- **Обновлены тесты**:
+  - `tests/_shared/test_cache.py`: `ttl=60` → `vremya_zhizni=60`, `cache` → `kesh` (12 замен), `fetch_data` → `poluchit_dannye`, `fetch` → `poluchit`, `result-` → `rezultat-`, `"data"` → `"dannye"`, `.cache` → `.kesh`
+  - `tests/_shared/test_formatting.py`: `decimals=0/4/1` → `desyatichnykh=0/4/1`
+  - `tests/_shared/test_validators.py`: `INN 12-digit validation needs verification` → `Проверка 12-значного ИНН требует уточнения`
+  - `tests/_shared/test_feature.py`: `meta=meta` → `metadannye=meta`, `server=sub_server` → `server_fn=sub_server`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `mypy` — no issues, `pytest` — 547 passed, 1 skipped
+
+### Ключевые архитектурные решения
+
+- **`meta` → `metadannye`**: атрибут ZaregistrirovannayaFunktsiya переименован для устранения английского слова; `meta` как локальная переменная (MetaFunktsii-экземпляр) в test_feature.py оставлена без изменений
+- **`server` → `server_fn`**: атрибут переименован чтобы избежать конфликта с ключевым словом `server` (часто используется как локальная переменная и имя параметра)
+- **`ttl` → `vremya_zhizni`**: параметр и внутренний атрибут KeshSVremenemZhizni; `obertka.cache` → `obertka.kesh` для доступа к кэшу из тестов
+- **`value` → `znacheniye`**: параметр функций форматирования; `stroka` — в `_tolko_tsifry` (вместо `value` чтобы избежать конфликта с `znacheniye`)
+- **`decimals` → `desyatichnykh`**: параметр количества десятичных знаков
+- **Документация синхронизирована**: 4 файла docs/ обновлены чтобы отражать актуальные русские имена API; `adding-features.md` — наиболее значительное обновление (шаблон добавления модуля)
+- **`scripts/generate_diagrams.py` обновлён**: `FEATURE_META` → `META_FUNKTSII` — устранена несогласованность с реальным кодом
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Русификация английских суффиксов тестовых функций**: `_empty`, `_found`, `_not_found`, `_unavailable`, `_with_data`, `_fallback` (~170 вхождений в 24 файлах)
+- **Русификация `_mock_ctx` → `_maket_konteksta`**: ~260 ссылок в 24 тестовых файлах
+- **Русификация английских строковых значений в тестах**: `"nonexistent"` (13 вхождений), assert-сообщения (6 вхождений), строковые значения в mock-объектах (~20 вхождений)
+- **Русификация оставшихся Pydantic-полей `data` и `period`**: 12 + 9 вхождений в schemas.py (совпадение транслитерации «дата»/«data» и «период»/«period»)
+
 ## Статус раунда 2026-07-02 (шестидесятый проход — переименование Portuguese каталога, русификация оставшихся английских переменных)
 
 ### Выполнено

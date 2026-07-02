@@ -51,10 +51,10 @@ class TestFormatirovatChisloRu:
         assert formatirovat_chislo_ru(1234.5) == "1 234,50"
 
     def test_nol_desyatykh(self) -> None:
-        assert formatirovat_chislo_ru(1234.5, decimals=0) == "1 234"
+        assert formatirovat_chislo_ru(1234.5, desyatichnykh=0) == "1 234"
 
     def test_chetyre_desyatykh(self) -> None:
-        assert formatirovat_chislo_ru(3.14159, decimals=4) == "3,1416"
+        assert formatirovat_chislo_ru(3.14159, desyatichnykh=4) == "3,1416"
 
     def test_bolshoe_chislo(self) -> None:
         assert formatirovat_chislo_ru(1_234_567.89) == "1 234 567,89"
@@ -68,7 +68,7 @@ class TestFormatirovatProtsent:
         assert formatirovat_protsent(0) == "0,00%"
 
     def test_svoi_desyatye(self) -> None:
-        assert formatirovat_protsent(0.1234, decimals=1) == "12,3%"
+        assert formatirovat_protsent(0.1234, desyatichnykh=1) == "12,3%"
 
 
 class TestUsechSpisok:

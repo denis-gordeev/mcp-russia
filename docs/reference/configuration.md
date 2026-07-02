@@ -109,11 +109,11 @@ ANTHROPIC_API_KEY=xxx \
 
 ### Ограничение частоты запросов
 
-Отдельные модули могут использовать общий `RateLimiter` из `src/mcp_russia/_shared/rate_limiter.py`:
+Отдельные модули могут использовать общий `OgranichitelChastoty` из `src/mcp_russia/_shared/rate_limiter.py`:
 
 ```python
-limiter = RateLimiter(max_requests=5, period=1.0)
+limiter = OgranichitelChastoty(maks_zaprosov=5, period=1.0)
 
 async with limiter:
-    data = await http_get(url)
+    dannye = await http_poluchit(adres_url)
 ```

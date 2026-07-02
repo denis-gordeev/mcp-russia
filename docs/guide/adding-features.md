@@ -62,9 +62,9 @@ from pydantic import BaseModel, Field
 
 
 class PrimerZapisi(BaseModel):
-    id: int
-    name: str
-    amount: float = Field(description="Сумма в валюте источника")
+    identifikator: int
+    nazvanie: str
+    summa: float = Field(description="Сумма в валюте источника")
 ```
 
 Без сетевых вызовов, без форматирования, без бизнес-логики.
@@ -78,15 +78,15 @@ class PrimerZapisi(BaseModel):
 - не форматируйте ответ под LLM.
 
 ```python
-from mcp_russia._shared.http_client import http_get
+from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import PRIMER_API_BASE
 from .schemas import PrimerZapisi
 
 
-async def spisok_zapisey(page: int = 1) -> list[PrimerZapisi]:
-    data = await http_get(f"{PRIMER_API_BASE}/items", params={"page": page})
-    return [PrimerZapisi(**item) for item in data]
+async def spisok_zapisey(stranitsa: int = 1) -> list[PrimerZapisi]:
+    dannye = await http_poluchit(f"{PRIMER_API_BASE}/items", parametry={"page": stranitsa})
+    return [PrimerZapisi(**element) for element in dannye]
 ```
 
 ## Шаг 4. Описать инструменты
@@ -101,12 +101,12 @@ async def spisok_zapisey(page: int = 1) -> list[PrimerZapisi]:
 from . import client
 
 
-async def spisok_zapisey(page: int = 1) -> str:
+async def spisok_zapisey(stranitsa: int = 1) -> str:
     """Возвращает список записей из внешнего источника."""
-    zapisi = await client.spisok_zapisey(page=page)
+    zapisi = await client.spisok_zapisey(stranitsa=stranitsa)
     if not zapisi:
         return "Ничего не найдено."
-    return "\n".join(f"- {z.name}" for z in zapisi)
+    return "\n".join(f"- {z.nazvanie}" for z in zapisi)
 ```
 
 ## Шаг 5. Зарегистрировать сервер модуля
@@ -125,25 +125,25 @@ mcp.tool(tools.spisok_zapisey)
 
 Если у модуля есть ресурсы и промпты, регистрируйте их тут же.
 
-## Шаг 6. Экспортировать `FEATURE_META`
+## Шаг 6. Экспортировать `META_FUNKTSII`
 
 В `__init__.py`:
 
 ```python
-from mcp_russia._shared.feature import FeatureMeta
+from mcp_russia._shared.feature import MetaFunktsii
 
 
-FEATURE_META = FeatureMeta(
-    name="example",
-    description="Описание новой интеграции",
-    version="0.1.0",
-    api_base="https://api.example.gov/v1",
-    requires_auth=False,
-    tags=["example", "public-data"],
+META_FUNKTSII = MetaFunktsii(
+    imya="example",
+    opisanie="Описание новой интеграции",
+    versiya="0.1.0",
+    baza_api="https://api.example.gov/v1",
+    trebuet_autentifikatsii=False,
+    tegi=["primer", "publichnye-dannye"],
 )
 ```
 
-Без `FEATURE_META` автообнаружение не увидит пакет.
+Без `META_FUNKTSII` автообнаружение не увидит пакет.
 
 ## Шаг 7. Добавить тесты
 

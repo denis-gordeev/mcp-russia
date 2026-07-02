@@ -30,9 +30,9 @@ class KeshSVremenemZhizni:
     Не подходит для многопроцессных развертываний — используйте Redis.
     """
 
-    def __init__(self, ttl: float = 300.0, maks_razmer: int = 256) -> None:
+    def __init__(self, vremya_zhizni: float = 300.0, maks_razmer: int = 256) -> None:
         """Инициализация кэша с заданным TTL и максимальным размером."""
-        self._ttl = ttl
+        self._vremya_zhizni = vremya_zhizni
         self._maks_razmer = maks_razmer
         self._store: dict[str, tuple[float, Any]] = {}
 
@@ -46,8 +46,8 @@ class KeshSVremenemZhizni:
         zapis = self._store.get(klyuch)
         if zapis is None:
             return None
-        expires_at, znachenie = zapis
-        if time.monotonic() > expires_at:
+        istekaet_v, znachenie = zapis
+        if time.monotonic() > istekaet_v:
             del self._store[klyuch]
             return None
         return znachenie
@@ -56,7 +56,7 @@ class KeshSVremenemZhizni:
         """Сохранение значения с TTL-истечением."""
         if len(self._store) >= self._maks_razmer:
             self._ischislit()
-        self._store[klyuch] = (time.monotonic() + self._ttl, znachenie)
+        self._store[klyuch] = (time.monotonic() + self._vremya_zhizni, znachenie)
 
     def ochistit(self) -> None:
         """Удаление всех записей."""
@@ -64,8 +64,8 @@ class KeshSVremenemZhizni:
 
     def _ischislit(self) -> None:
         """Удаление просроченных записей; если кэш полон — удаление самой старой."""
-        now = time.monotonic()
-        istekshie = [k for k, (exp, _) in self._store.items() if now > exp]
+        seychas = time.monotonic()
+        istekshie = [k for k, (exp, _) in self._store.items() if seychas > exp]
         for k in istekshie:
             del self._store[k]
 
@@ -75,24 +75,26 @@ class KeshSVremenemZhizni:
             del self._store[samyy_staryy_klyuch]
 
 
-def kesh_s_vremenem_zhizni(ttl: float = 300.0, maks_razmer: int = 256) -> Callable[[F], F]:
+def kesh_s_vremenem_zhizni(
+    vremya_zhizni: float = 300.0, maks_razmer: int = 256
+) -> Callable[[F], F]:
     """Декоратор кэширования результатов асинхронных функций с TTL.
 
     Ключ кэша строится из имени функции + строковых аргументов/kwargs.
 
     Аргументы:
-        ttl: Время жизни в секундах. По умолчанию: 300 (5 минут).
+        vremya_zhizni: Время жизни в секундах. По умолчанию: 300 (5 минут).
         maks_razmer: Максимальное число записей в кэше. По умолчанию: 256.
 
     Возвращает:
         Декоратор, оборачивающий асинхронную функцию кэшированием.
 
     Пример:
-        @kesh_s_vremenem_zhizni(ttl=60)
+        @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit_region() -> list[Region]:
             return await http_poluchit(...)
     """
-    cache = KeshSVremenemZhizni(ttl=ttl, maks_razmer=maks_razmer)
+    kesh = KeshSVremenemZhizni(vremya_zhizni=vremya_zhizni, maks_razmer=maks_razmer)
 
     def dekorator(func: F) -> F:
         """Обёртка функции с привязкой к кэшу."""
@@ -101,15 +103,15 @@ def kesh_s_vremenem_zhizni(ttl: float = 300.0, maks_razmer: int = 256) -> Callab
         async def obertka(*args: Any, **kwargs: Any) -> Any:
             """Асинхронное выполнение с проверкой кэша перед вызовом."""
             klyuch = f"{func.__qualname__}:{args!r}:{kwargs!r}"
-            zakeshirovano = cache.poluchit(klyuch)
+            zakeshirovano = kesh.poluchit(klyuch)
             if zakeshirovano is not None:
                 return zakeshirovano
             rezultat = await func(*args, **kwargs)
-            cache.ustanovit(klyuch, rezultat)
+            kesh.ustanovit(klyuch, rezultat)
             return rezultat
 
         # Доступ к кэшу для тестирования/очистки
-        obertka.cache = cache  # type: ignore[attr-defined]
+        obertka.kesh = kesh  # type: ignore[attr-defined]
         return obertka  # type: ignore[return-value]
 
     return dekorator

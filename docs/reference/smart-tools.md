@@ -31,7 +31,7 @@
 
 Как работает:
 
-1. `build_catalog()` собирает markdown-каталог всех инструментов
+1. `postroit_katalog()` собирает markdown-каталог всех инструментов
 2. Каталог и пользовательский вопрос отправляются в LLM
 3. Модель возвращает краткий список инструментов с объяснением и примером использования
 
@@ -55,7 +55,7 @@
 class EtapPlana(BaseModel):
     etap: int
     opisanie: str
-    tool: str
+    instrument: str
     parametry: dict[str, str]
     zavisit_ot: list[int]
     obosnovanie: str
@@ -92,7 +92,7 @@ class PlanZaprosa(BaseModel):
 
 Как работает:
 
-1. `build_dispatch(registry)` строит отображение `имя инструмента -> асинхронная функция`
+1. `postroit_dispetcherizatsiyu(reestr)` строит отображение `имя инструмента -> асинхронная функция`
 2. `asyncio.gather()` выполняет вызовы параллельно
 3. Результаты возвращаются в исходном порядке
 
@@ -100,7 +100,7 @@ class PlanZaprosa(BaseModel):
 
 ## Когда использовать
 
-| Ситуация | Tool |
+| Ситуация | Инструмент |
 |----------|------|
 | Нужно понять, что вообще доступно | `spisok_funktsiy` |
 | Нужно быстро подобрать инструмент под вопрос | `rekomendovat_instrumenty` |

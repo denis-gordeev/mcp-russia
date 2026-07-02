@@ -119,10 +119,10 @@ def anatomiya_modulya() -> None:
         edge_attr=ATRIBUBY_REBRA,
     ):
         with Cluster("data/rosstat/"):
-            init = Python("__init__.py\nFEATURE_META")
+            init = Python("__init__.py\nMETA_FUNKTSII")
             server = FastAPI("server.py\nmcp: FastMCP")
             tools = Python("tools.py\nspisok_regionov()\npoluchit_indikator()")
-            client = Python("client.py\nhttp_get() async")
+            client = Python("client.py\nhttp_poluchit() async")
             schemas = Python("schemas.py\nBaseModel")
             constants = Python("constants.py\nROSSTAT_API_BASE")
 
@@ -130,7 +130,7 @@ def anatomiya_modulya() -> None:
             tools >> Edge(label="делегирует HTTP") >> client
             client >> Edge(label="возвращает") >> schemas
 
-        shared = Python("_shared/\nhttp_client\nkesh\nformatting")
+        shared = Python("_shared/\nhttp_klient\nkesh\nformatirovanie")
         api = Server("API Росстата\nrosstat.gov.ru")
 
         tools >> Edge(style="dashed", label="использует") >> shared
@@ -149,17 +149,17 @@ def potok_avtoobnaruzheniya() -> None:
         node_attr=ATRIBUBY_UZLA,
         edge_attr=ATRIBUBY_REBRA,
     ):
-        start = StartEnd("discover(pkg)")
-        iter_mod = Action("iter_modules(pkg)")
+        start = StartEnd("obnaruzhit(paket)")
+        iter_mod = Action("iteratsiya_moduley(paket)")
         proverka_imeni = Decision("имя начинается\nс '_'?")
         propusk = Action("пропустить")
-        import_init = Action("import __init__.py")
-        proverka_meta = Decision("FEATURE_META\nсуществует?")
+        import_init = Action("zagruzit __init__.py")
+        proverka_meta = Decision("META_FUNKTSII\nсуществует?")
         propusk2 = Action("пропустить")
-        proverka_auth = Decision("requires_auth\nи env var OK?")
+        proverka_auth = Decision("trebuet_autentifikatsii\nи переменная окружения задана?")
         propusk3 = Action("пропустить\n(молча)")
-        import_server = Action("import server.py")
-        mount = Action("mount(mcp,\nnamespace=name)")
+        import_server = Action("zagruzit server.py")
+        mount = Action("smontirovat(mcp,\nprostranstvo_imen=imya)")
         end = StartEnd("следующий модуль\nили конец")
 
         start >> iter_mod >> proverka_imeni
@@ -188,7 +188,7 @@ def potok_dannykh() -> None:
 
         with Cluster("mcp-russia"):
             tools = Python("tools.py\nоркестрирует")
-            client = Python("client.py\nhttpx async")
+            client = Python("client.py\nhttpx асинхр.")
             ogranichitel = Python("Ограничитель частоты\nскользящее окно")
 
         api = Server("Гос. API\n(JSON)")

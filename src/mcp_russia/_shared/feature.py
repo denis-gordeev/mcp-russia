@@ -78,8 +78,8 @@ class MetaFunktsii:
 class ZaregistrirovannayaFunktsiya:
     """Обнаруженная, провалидированная и зарегистрированная функция."""
 
-    meta: MetaFunktsii
-    server: FastMCP
+    metadannye: MetaFunktsii
+    server_fn: FastMCP
     put_modulya: str
 
 
@@ -176,15 +176,15 @@ class ReyestrFunktsiy:
 
         # Шаг 5: Импорт server.py и получение объекта mcp
         modul_servera = importlib.import_module(f"{put_modulya}.server")
-        server = getattr(modul_servera, "mcp", None)
+        server_obj = getattr(modul_servera, "mcp", None)
 
-        if server is None:
+        if server_obj is None:
             raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
         self._features[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
-            meta=meta,
-            server=server,
+            metadannye=meta,
+            server_fn=server_obj,
             put_modulya=put_modulya,
         )
         logger.info(
@@ -203,8 +203,8 @@ class ReyestrFunktsiy:
             kornevoy_server: Корневой FastMCP-сервер для монтирования функций.
         """
         for imya, modul in sorted(self._features.items()):
-            kornevoy_server.mount(modul.server, namespace=imya)
-            logger.info("Смонтирована '%s' — %s", imya, modul.meta.opisanie)
+            kornevoy_server.mount(modul.server_fn, namespace=imya)
+            logger.info("Смонтирована '%s' — %s", imya, modul.metadannye.opisanie)
 
     def svodka(self) -> str:
         """Читаемая сводка зарегистрированных функций.
@@ -221,10 +221,10 @@ class ReyestrFunktsiy:
             for imya, funktsiya in sorted(self._features.items()):
                 ikona_avt = (
                     "🔑"
-                    if funktsiya.meta.trebuet_autentifikatsii
-                    else ("🔏" if funktsiya.meta.peremennaya_avt_env else "🔓")
+                    if funktsiya.metadannye.trebuet_autentifikatsii
+                    else ("🔏" if funktsiya.metadannye.peremennaya_avt_env else "🔓")
                 )
-                stroki.append(f"  /{imya:<20} {ikona_avt} {funktsiya.meta.opisanie}")
+                stroki.append(f"  /{imya:<20} {ikona_avt} {funktsiya.metadannye.opisanie}")
 
         if self._skipped:
             stroki.append("\nПропущенные:")

@@ -28,24 +28,24 @@ def _formatirovat_signaturu_instrumenta(
         imya_instrumenta: Имя инструмента.
         instrument: Объект инструмента.
     """
-    params = getattr(instrument, "parameters", {})
-    properties: dict[str, dict[str, object]] = params.get("properties", {})
-    required: list[str] = params.get("required", [])
+    parametry = getattr(instrument, "parameters", {})
+    svoystva: dict[str, dict[str, object]] = parametry.get("properties", {})
+    obyazatelnye: list[str] = parametry.get("required", [])
 
-    param_parts: list[str] = []
-    for pname, pschema in properties.items():
-        if pname == "ctx":
+    chasti_parametra: list[str] = []
+    for imya_param, skhema_param in svoystva.items():
+        if imya_param == "ctx":
             continue
-        ptype = pschema.get("type", "any")
-        opt = "" if pname in required else "?"
-        param_parts.append(f"{pname}{opt}: {ptype}")
+        tip_param = skhema_param.get("type", "any")
+        neobyazatelen = "" if imya_param in obyazatelnye else "?"
+        chasti_parametra.append(f"{imya_param}{neobyazatelen}: {tip_param}")
 
-    signature = ", ".join(param_parts)
-    full_name = f"{imya_modulya}_{imya_instrumenta}"
+    signatura = ", ".join(chasti_parametra)
+    polnoe_imya = f"{imya_modulya}_{imya_instrumenta}"
 
     opisanie_kratkoe = (getattr(instrument, "description", "") or "").split("\n")[0]
 
-    return f"- `{full_name}({signature})` — {opisanie_kratkoe}"
+    return f"- `{polnoe_imya}({signatura})` — {opisanie_kratkoe}"
 
 
 def postroit_katalog(reyestr: object) -> str:
@@ -65,26 +65,28 @@ def postroit_katalog(reyestr: object) -> str:
         return _kesh_kataloga
 
     stroki: list[str] = []
-    features = getattr(reyestr, "funktsii", {})
-    for feat in features.values():
-        meta = feat.meta
+    funktsii = getattr(reyestr, "funktsii", {})
+    for funktsiya in funktsii.values():
+        metadannye = funktsiya.metadannye
         auth_info = (
-            f"Требуется аутентификация ({meta.peremennaya_avt_env})"
-            if meta.trebuet_autentifikatsii
+            f"Требуется аутентификация ({metadannye.peremennaya_avt_env})"
+            if metadannye.trebuet_autentifikatsii
             else (
-                f"Рекомендуется аутентификация ({meta.peremennaya_avt_env})"
-                if meta.peremennaya_avt_env
+                f"Рекомендуется аутентификация ({metadannye.peremennaya_avt_env})"
+                if metadannye.peremennaya_avt_env
                 else "Без аутентификации"
             )
         )
-        stroki.append(f"\n## {meta.imya}: {meta.opisanie}")
+        stroki.append(f"\n## {metadannye.imya}: {metadannye.opisanie}")
         stroki.append(f"Авторизация: {auth_info}")
 
-        server = feat.server
-        if hasattr(server, "_tool_manager") and hasattr(server._tool_manager, "_tools"):
-            for imya_instrumenta, instrument in server._tool_manager._tools.items():
+        server_fn = funktsiya.server_fn
+        if hasattr(server_fn, "_tool_manager") and hasattr(server_fn._tool_manager, "_tools"):
+            for imya_instrumenta, instrument in server_fn._tool_manager._tools.items():
                 stroki.append(
-                    _formatirovat_signaturu_instrumenta(meta.imya, imya_instrumenta, instrument)
+                    _formatirovat_signaturu_instrumenta(
+                        metadannye.imya, imya_instrumenta, instrument
+                    )
                 )
 
     _kesh_kataloga = "\n".join(stroki)
@@ -110,17 +112,17 @@ async def rekomendovat_instrumenty_impl(zapros: str, katalog: str) -> str:
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    api_key = KLYUCH_ANTHROPIC_API
-    if not api_key:
+    klyuch_api = KLYUCH_ANTHROPIC_API
+    if not klyuch_api:
         return (
             "Ошибка: переменная ANTHROPIC_API_KEY не настроена. "
             "Задайте ANTHROPIC_API_KEY, чтобы использовать этот мета-инструмент.\n\n"
             "В качестве альтернативы используйте инструмент 'search_tools'."
         )
 
-    client = anthropic.AsyncAnthropic(api_key=api_key)
+    klient = anthropic.AsyncAnthropic(api_key=klyuch_api)
 
-    system_prompt = (
+    sistemnyy_prompt = (
         "Ты помогаешь подобрать инструменты из каталога mcp-russia. "
         "В каталоге могут встречаться исторические названия функций, "
         "сохранённые для совместимости. На основе вопроса пользователя "
@@ -133,10 +135,10 @@ async def rekomendovat_instrumenty_impl(zapros: str, katalog: str) -> str:
     )
 
     try:
-        otvet = await client.messages.create(
+        otvet = await klient.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
-            system=system_prompt,
+            system=sistemnyy_prompt,
             messages=[{"role": "user", "content": zapros}],
         )
         blok = otvet.content[0]

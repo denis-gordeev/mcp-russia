@@ -24,10 +24,10 @@ logger = logging.getLogger(__name__)
 
 
 @lifespan
-async def http_zhiznennyy_tsikl(server: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
+async def http_zhiznennyy_tsikl(server_fn: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
     """Создание общего httpx.AsyncClient при запуске, закрытие при завершении."""
     logger.info("Запуск общего HTTP-клиента")
-    client = httpx.AsyncClient(
+    klient = httpx.AsyncClient(
         timeout=httpx.Timeout(TAIMAUT_HTTP),
         headers={
             "User-Agent": POLZOVATELSKIY_AGENT,
@@ -36,7 +36,7 @@ async def http_zhiznennyy_tsikl(server: FastMCP[Any]) -> AsyncIterator[dict[str,
         follow_redirects=True,
     )
     try:
-        yield {"http_klient": client}
+        yield {"http_klient": klient}
     finally:
-        await client.aclose()
+        await klient.aclose()
         logger.info("Общий HTTP-клиент закрыт")

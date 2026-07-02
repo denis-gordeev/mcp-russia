@@ -154,8 +154,8 @@ class TestReyestrFunktsiy:
             return "pong"
 
         registry._features["test_feat"] = ZaregistrirovannayaFunktsiya(
-            meta=meta,
-            server=sub_server,
+            metadannye=meta,
+            server_fn=sub_server,
             put_modulya="fake.module",
         )
 
@@ -170,7 +170,7 @@ class TestReyestrFunktsiy:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
         sub = FastMCP("sub")
         registry._features["cbrf"] = ZaregistrirovannayaFunktsiya(
-            meta=meta, server=sub, put_modulya="m"
+            metadannye=meta, server_fn=sub, put_modulya="m"
         )
         summary = registry.svodka()
         assert "1 функция(й) активно" in summary

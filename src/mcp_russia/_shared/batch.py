@@ -61,10 +61,10 @@ def _skanirovat_modul_instrumentov(put_modulya: str, namespace: str) -> None:
     except ImportError:
         return
 
-    for fn_name, fn in inspect.getmembers(mod, inspect.iscoroutinefunction):
-        if not fn_name.startswith("_"):
-            key = f"{namespace}_{fn_name}"
-            _dispetcher[key] = fn
+    for imya_fn, fn in inspect.getmembers(mod, inspect.iscoroutinefunction):
+        if not imya_fn.startswith("_"):
+            klyuch = f"{namespace}_{imya_fn}"
+            _dispetcher[klyuch] = fn
 
 
 async def vypolnit_paket_vnutrenniy(

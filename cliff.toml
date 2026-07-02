@@ -1,4 +1,4 @@
-# git-cliff — Changelog generator for mcp-russia
+# git-cliff — Генератор журнала изменений для mcp-russia
 # https://git-cliff.org/docs/configuration
 
 [changelog]
