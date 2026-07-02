@@ -46,8 +46,8 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
         logger.info("Вызов инструмента: %s", name)
         nachalo = time.monotonic()
         result = await call_next(context)
-        elapsed = time.monotonic() - nachalo
-        logger.info("Инструмент %s завершён за %.2fс", name, elapsed)
+        proshlo_vremeni = time.monotonic() - nachalo
+        logger.info("Инструмент %s завершён за %.2fс", name, proshlo_vremeni)
         return result
 
     async def pri_chtenii_resursa(

@@ -47,7 +47,7 @@
       "command": "uvx",
       "args": ["--from", "mcp-russia", "python", "-m", "mcp_russia.server"],
       "env": {
-        "ANTHROPIC_API_KEY": "your-key",
+        "ANTHROPIC_API_KEY": "ваш-ключ",
         "MCP_RUSSIA_TOOL_SEARCH": "bm25"
       }
     }
@@ -81,7 +81,7 @@ claude mcp add mcp-russia -- uvx --from mcp-russia python -m mcp_russia.server
 
 ```bash
 claude mcp add mcp-russia \
-  -e ANTHROPIC_API_KEY=your-key \
+  -e ANTHROPIC_API_KEY=ваш-ключ \
   -- uvx --from mcp-russia python -m mcp_russia.server
 ```
 

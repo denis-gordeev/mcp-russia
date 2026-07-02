@@ -4,7 +4,7 @@ from datetime import datetime
 
 import pytest
 
-from mcp_russia.agenty.redator import tools
+from mcp_russia.agenty.deloproizvodstvo import tools
 
 
 class TestFormatirovatDataExtenso:
@@ -24,7 +24,7 @@ class TestFormatirovatDataExtenso:
     @pytest.mark.asyncio
     async def test_soderzhit_mesyats(self) -> None:
         result = await tools.formatirovat_data_extenso()
-        from mcp_russia.agenty.redator.constants import МЕСЯЦЫ
+        from mcp_russia.agenty.deloproizvodstvo.constants import МЕСЯЦЫ
 
         now = datetime.now()
         assert МЕСЯЦЫ[now.month] in result

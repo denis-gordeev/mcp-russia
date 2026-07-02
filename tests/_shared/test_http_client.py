@@ -21,7 +21,7 @@ class TestSozdatKlienta:
         assert client.headers["accept"] == "application/json"
 
     def test_polzovatelskiy_bazovyy_url(self) -> None:
-        client = sozdat_klienta(base_url="https://www.cbr.ru")
+        client = sozdat_klienta(bazovyy_adres_url="https://www.cbr.ru")
         assert str(client.base_url) == "https://www.cbr.ru"
 
     def test_polzovatelskiy_taimaut(self) -> None:

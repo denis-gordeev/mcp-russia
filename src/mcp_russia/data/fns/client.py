@@ -137,14 +137,14 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     adres_poiska = EGRUL_API_BASE
     adres_rezultata = f"{EGRUL_API_BASE}/search-result/"
 
-    task_data = await http_otpravit(
+    dannye_zadachi = await http_otpravit(
         adres_poiska,
         zagolovki={"Content-Type": "application/x-www-form-urlencoded"},
         json_body=None,
         parametry={"query": zapros},
     )
 
-    zheton = task_data.get("t") if isinstance(task_data, dict) else None
+    zheton = dannye_zadachi.get("t") if isinstance(dannye_zadachi, dict) else None
     if not zheton:
         return None
 

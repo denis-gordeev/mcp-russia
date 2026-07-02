@@ -94,7 +94,7 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
             "https://pkk.rosreestr.ru"
         )
 
-    tip_name = {
+    nazvanie_tipa = {
         "zemelnyy_uchastok": "Земельный участок",
         "zdanie": "Здание",
         "pomeshchenie": "Помещение",
@@ -105,7 +105,7 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
 
     stroki = [
         f"**Кадастровый номер:** {obekt.kadastrovyy_nomer}",
-        f"**Тип:** {tip_name}",
+        f"**Тип:** {nazvanie_tipa}",
     ]
     if obekt.adreshnye_svedeniya:
         stroki.append(f"**Адрес:** {obekt.adreshnye_svedeniya}")

@@ -170,10 +170,10 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
         }
         try:
             dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
-            current = dannye.get("current", {})
-            temperatura = current.get("temperature_2m")
-            skorost_vetra = current.get("wind_speed_10m")
-            wmo = current.get("weather_code", 0)
+            tekushchie = dannye.get("current", {})
+            temperatura = tekushchie.get("temperature_2m")
+            skorost_vetra = tekushchie.get("wind_speed_10m")
+            vmo = tekushchie.get("weather_code", 0)
 
             if temperatura is not None and temperatura <= -30:
                 preduprezhdeniya.append(
@@ -207,14 +207,14 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
                     )
                 )
 
-            if wmo in (95, 96, 99):
+            if vmo in (95, 96, 99):
                 preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="uroagan",
                         subiekt=stantsiya.get("subiekt", ""),
                         gorod=stantsiya["nazvanie"],
-                        opisanie=f"Гроза ({WMO_KODY_POGODY.get(wmo, '')})",
-                        uroven_opasnosti="sredniy" if wmo == 95 else "vysokiy",
+                        opisanie=f"Гроза ({WMO_KODY_POGODY.get(vmo, '')})",
+                        uroven_opasnosti="sredniy" if vmo == 95 else "vysokiy",
                     )
                 )
         except Exception:
@@ -266,25 +266,25 @@ def poluchit_spisok_tipov_preduprezhdeniy() -> list[dict[str, str]]:
 
 def _razobrat_openmeteo_pogodu(dannye: dict[str, Any], svedeniya: dict[str, Any]) -> PogodaDannye:
     """Разбор ответа прогноза Open-Meteo в PogodaDannye."""
-    current = dannye.get("current", {})
-    wmo_code = current.get("weather_code", 0)
-    wind_dir_deg = current.get("wind_direction_10m", 0)
-    opisaniye = WMO_KODY_POGODY.get(wmo_code, "")
+    tekushchie = dannye.get("current", {})
+    kod_vmo = tekushchie.get("weather_code", 0)
+    gradusy_napravleniya_vetra = tekushchie.get("wind_direction_10m", 0)
+    opisaniye = WMO_KODY_POGODY.get(kod_vmo, "")
 
     return PogodaDannye(
         stanciya=svedeniya["kod"],
         gorod=svedeniya["nazvanie"],
         subiekt=svedeniya.get("subiekt", ""),
-        temperatura=current.get("temperature_2m"),
-        oshchushchaetsya_kak=current.get("apparent_temperature"),
-        vlazhnost=current.get("relative_humidity_2m"),
-        davlenie=_gpa_v_mmrtst(current.get("surface_pressure")),
-        veter_skorost=current.get("wind_speed_10m"),
-        veter_napravlenie=_gradusy_v_napravlenie(wind_dir_deg),
-        osadki=current.get("precipitation"),
+        temperatura=tekushchie.get("temperature_2m"),
+        oshchushchaetsya_kak=tekushchie.get("apparent_temperature"),
+        vlazhnost=tekushchie.get("relative_humidity_2m"),
+        davlenie=_gpa_v_mmrtst(tekushchie.get("surface_pressure")),
+        veter_skorost=tekushchie.get("wind_speed_10m"),
+        veter_napravlenie=_gradusy_v_napravlenie(gradusy_napravleniya_vetra),
+        osadki=tekushchie.get("precipitation"),
         vidimost=None,
         opisaniye=opisaniye,
-        data_vremya=current.get("time", ""),
+        data_vremya=tekushchie.get("time", ""),
     )
 
 
@@ -292,26 +292,28 @@ def _razobrat_openmeteo_prognoz(
     dannye: dict[str, Any], svedeniya: dict[str, Any]
 ) -> list[PrognozDannye]:
     """Разбор ежедневного прогноза Open-Meteo в список PrognozDannye."""
-    daily = dannye.get("daily", {})
-    dates = daily.get("time", [])
-    t_max = daily.get("temperature_2m_max", [])
-    t_min = daily.get("temperature_2m_min", [])
-    precip_prob = daily.get("precipitation_probability_max", [])
-    wind_max = daily.get("wind_speed_10m_max", [])
-    wmo_codes = daily.get("weather_code", [])
+    ezhednevnye = dannye.get("daily", {})
+    daty = ezhednevnye.get("time", [])
+    temperatura_maks = ezhednevnye.get("temperature_2m_max", [])
+    temperatura_min = ezhednevnye.get("temperature_2m_min", [])
+    veroyatnost_osadkov = ezhednevnye.get("precipitation_probability_max", [])
+    skorost_vetra_maks = ezhednevnye.get("wind_speed_10m_max", [])
+    kody_vmo = ezhednevnye.get("weather_code", [])
 
     rezultaty = []
-    for i, date_str in enumerate(dates):
-        wmo_code = wmo_codes[i] if i < len(wmo_codes) else 0
+    for i, stroka_daty in enumerate(daty):
+        kod_vmo = kody_vmo[i] if i < len(kody_vmo) else 0
         rezultaty.append(
             PrognozDannye(
                 gorod=svedeniya["nazvanie"],
-                data=date_str,
-                temperatura_dnem=t_max[i] if i < len(t_max) else None,
-                temperatura_nochyu=t_min[i] if i < len(t_min) else None,
-                osadki_veroyatnost=precip_prob[i] if i < len(precip_prob) else None,
-                veter_skorost=wind_max[i] if i < len(wind_max) else None,
-                opisaniye=WMO_KODY_POGODY.get(wmo_code, ""),
+                data=stroka_daty,
+                temperatura_dnem=temperatura_maks[i] if i < len(temperatura_maks) else None,
+                temperatura_nochyu=temperatura_min[i] if i < len(temperatura_min) else None,
+                osadki_veroyatnost=veroyatnost_osadkov[i]
+                if i < len(veroyatnost_osadkov)
+                else None,
+                veter_skorost=skorost_vetra_maks[i] if i < len(skorost_vetra_maks) else None,
+                opisaniye=WMO_KODY_POGODY.get(kod_vmo, ""),
             )
         )
     return rezultaty
@@ -321,10 +323,10 @@ def _razobrat_openmeteo_ekologiyu(
     dannye: dict[str, Any], svedeniya: dict[str, Any]
 ) -> list[EkologiyaDannye]:
     """Разбор ответа о качестве воздуха Open-Meteo в список EkologiyaDannye."""
-    current = dannye.get("current", {})
-    time_str = current.get("time", "")
+    tekushchie = dannye.get("current", {})
+    stroka_vremeni = tekushchie.get("time", "")
 
-    indicators = [
+    pokazateli_kachestva = [
         ("pm2_5", "PM2.5", 25.0),
         ("pm10", "PM10", 50.0),
         ("carbon_monoxide", "CO", 4.0),
@@ -334,8 +336,8 @@ def _razobrat_openmeteo_ekologiyu(
     ]
 
     rezultaty = []
-    for klyuch, nazvanie_pokazatelya, norma in indicators:
-        znachenie_pokazatelya = current.get(klyuch)
+    for klyuch, nazvanie_pokazatelya, norma in pokazateli_kachestva:
+        znachenie_pokazatelya = tekushchie.get(klyuch)
         if znachenie_pokazatelya is not None:
             prevyshenie = znachenie_pokazatelya > norma
             rezultaty.append(
@@ -348,7 +350,7 @@ def _razobrat_openmeteo_ekologiyu(
                     norma_max=norma,
                     norma_min=None,
                     prevyshenie=prevyshenie,
-                    data_izmereniya=time_str,
+                    data_izmereniya=stroka_vremeni,
                 )
             )
     return rezultaty

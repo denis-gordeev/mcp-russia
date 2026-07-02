@@ -140,10 +140,10 @@ def _izvlech_rezultat(dannye: Any, klyuch: str) -> dict[str, Any]:
     """
     if not isinstance(dannye, dict):
         return {}
-    request_result = dannye.get("RequestResult", {})
-    if not isinstance(request_result, dict):
+    rezultat_zaprosa = dannye.get("RequestResult", {})
+    if not isinstance(rezultat_zaprosa, dict):
         return {}
-    rezultat = request_result.get("result", {})
+    rezultat = rezultat_zaprosa.get("result", {})
     if not isinstance(rezultat, dict):
         return {}
     return rezultat.get(klyuch, {})
@@ -246,13 +246,13 @@ def _razobrat_voditelya(dannye: Any, nomer_vu: str) -> VoditelskoeUdostoverenie 
     if not isinstance(voditel_dannye, dict):
         return None
 
-    fio_parts = []
+    chasti_fio = []
     if voditel_dannye.get("lastName"):
-        fio_parts.append(voditel_dannye["lastName"])
+        chasti_fio.append(voditel_dannye["lastName"])
     if voditel_dannye.get("firstName"):
-        fio_parts.append(voditel_dannye["firstName"])
+        chasti_fio.append(voditel_dannye["firstName"])
     if voditel_dannye.get("middleName"):
-        fio_parts.append(voditel_dannye["middleName"])
+        chasti_fio.append(voditel_dannye["middleName"])
 
     kategorii_vu = []
     for kategoriya in voditel_dannye.get("categories", []) or []:
@@ -264,7 +264,7 @@ def _razobrat_voditelya(dannye: Any, nomer_vu: str) -> VoditelskoeUdostoverenie 
         kategoriya=", ".join(kategorii_vu),
         data_vydachi=voditel_dannye.get("dateIssue", ""),
         srok_deystviya=voditel_dannye.get("dateExpiry", ""),
-        fio=" ".join(fio_parts),
+        fio=" ".join(chasti_fio),
         mesto_rozhdeniya=voditel_dannye.get("birthPlace", ""),
         ograniceniya=voditel_dannye.get("restriction", ""),
         osoboie_otmetki=voditel_dannye.get("specialNote", ""),

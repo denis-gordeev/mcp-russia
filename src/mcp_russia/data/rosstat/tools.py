@@ -287,11 +287,11 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
         )
     dannye = await client.poluchit_sravnenie_regionov(pokazatel)
     if not dannye:
-        emiss_code = REGIONALNYE_POKAZATELI[pokazatel]
+        kod_emiss = REGIONALNYE_POKAZATELI[pokazatel]
         return (
             f"**Сравнение регионов по показателю '{pokazatel}'**\n\n"
             f"Данные временно недоступны.\n"
-            f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}"
+            f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}"
         )
     otsortirovannye_dannye = sorted(dannye, key=lambda x: x.get("znachenie") or 0, reverse=True)
     stroki_tablitsy = []
@@ -333,7 +333,7 @@ async def indikator_dannye(
     """
     if ctx:
         await ctx.info(f"Запрос данных показателя '{kod}'...")
-    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
+    kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
@@ -341,7 +341,7 @@ async def indikator_dannye(
     if not imya_indikatora and kod in EMISS_KODY_POKAZATELEY:
         imya_indikatora = next(
             (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
-            f"Показатель ЕМИСС {emiss_code}",
+            f"Показатель ЕМИСС {kod_emiss}",
         )
     dannye = await client.poluchit_indikator_dannye(kod=kod, subiekt=subiekt, god=god)
     chasti_filtra = []
@@ -354,14 +354,14 @@ async def indikator_dannye(
         return (
             f"**{imya_indikatora or kod}**{tekst_filtra}\n\n"
             f"Данные временно недоступны.\n"
-            f"ЕМИСС: https://fedstat.ru/indicator/{emiss_code}\n\n"
+            f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}\n\n"
             f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
         )
     stroki_tablitsy = []
     for d in dannye:
         znachenie = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
         stroki_tablitsy.append((d.period, d.subiekt or "—", znachenie, d.edinitsa or "—"))
-    zagolovok_tekst = imya_indikatora or f"Показатель ЕМИСС {emiss_code}"
+    zagolovok_tekst = imya_indikatora or f"Показатель ЕМИСС {kod_emiss}"
     zagolovok = f"**{zagolovok_tekst}**{tekst_filtra}\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(

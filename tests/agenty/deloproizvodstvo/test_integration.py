@@ -3,7 +3,7 @@
 import pytest
 from fastmcp import Client
 
-from mcp_russia.agenty.redator.server import mcp
+from mcp_russia.agenty.deloproizvodstvo.server import mcp
 
 
 class TestInstrumentyZaregistrirovany:

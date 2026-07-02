@@ -206,7 +206,7 @@ async def spisok_tipov_dokumentov() -> str:
         stroki.append(f"  - {tip}: {opisanie}")
 
     stroki.append(
-        "\nИспользуйте инструменты redator для создания каждого типа. "
+        "\nИспользуйте инструменты deloproizvodstvo для создания каждого типа. "
         "Шаблоны доступны в templates/."
     )
     return "\n".join(stroki)

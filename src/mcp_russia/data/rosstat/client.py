@@ -45,9 +45,9 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
     Возвращает:
         Список значений показателя.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
+    kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if diapazon_dat:
             parametry["date"] = diapazon_dat
@@ -124,8 +124,8 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
         Список точек данных ИПЦ.
     """
     try:
-        emiss_code = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        kod_emiss = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if god:
             parametry["year"] = god
@@ -159,8 +159,8 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
         Список точек демографических данных.
     """
     try:
-        emiss_code = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        kod_emiss = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -195,9 +195,9 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
     Возвращает:
         Список точек данных ВРП.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -211,16 +211,16 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
                 for element in elementy:
                     if not isinstance(element, dict):
                         continue
-                    region_name = ""
-                    reg_code = element.get("region", subiekt)
-                    if reg_code:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
+                    nazvanie_subiekta = ""
+                    kod_reg = element.get("region", subiekt)
+                    if kod_reg:
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                         if ri:
-                            region_name = ri["nazvanie"]
+                            nazvanie_subiekta = ri["nazvanie"]
                     rezultaty.append(
                         VRPDannye(
                             period=element.get("date", element.get("period", "")),
-                            subiekt=region_name,
+                            subiekt=nazvanie_subiekta,
                             vrp=element.get("value"),
                             vrp_na_dushu=element.get("perCapita"),
                         )
@@ -242,9 +242,9 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
     Возвращает:
         Список точек данных о заработной плате.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -258,16 +258,16 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
                 for element in elementy:
                     if not isinstance(element, dict):
                         continue
-                    region_name = ""
-                    reg_code = element.get("region", subiekt)
-                    if reg_code:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
+                    nazvanie_subiekta = ""
+                    kod_reg = element.get("region", subiekt)
+                    if kod_reg:
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                         if ri:
-                            region_name = ri["nazvanie"]
+                            nazvanie_subiekta = ri["nazvanie"]
                     rezultaty.append(
                         DannyeZarplaty(
                             period=element.get("date", element.get("period", "")),
-                            subiekt=region_name,
+                            subiekt=nazvanie_subiekta,
                             nominalnaya_zp=element.get("value"),
                             realnaya_zp_izmenenie=element.get("realChange"),
                         )
@@ -288,11 +288,11 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
     Возвращает:
         Список пар «регион — значение».
     """
-    emiss_code = REGIONALNYE_POKAZATELI.get(pokazatel)
-    if not emiss_code:
+    kod_emiss = REGIONALNYE_POKAZATELI.get(pokazatel)
+    if not kod_emiss:
         return []
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         dannye = await http_poluchit(adres_url, parametry={"groupByRegion": "true"}, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
@@ -301,16 +301,16 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                 for element in elementy:
                     if not isinstance(element, dict):
                         continue
-                    region_code = str(element.get("region", element.get("okato", "")))
-                    region_name = element.get("regionName", "")
-                    if not region_name:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == region_code), None)
+                    kod_subiekta = str(element.get("region", element.get("okato", "")))
+                    nazvanie_subiekta = element.get("regionName", "")
+                    if not nazvanie_subiekta:
+                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == kod_subiekta), None)
                         if ri:
-                            region_name = ri["nazvanie"]
+                            nazvanie_subiekta = ri["nazvanie"]
                     rezultaty.append(
                         {
-                            "subiekt": region_name,
-                            "kod": region_code,
+                            "subiekt": nazvanie_subiekta,
+                            "kod": kod_subiekta,
                             "znachenie": element.get("value"),
                             "period": element.get("date", element.get("period", "")),
                         }
@@ -337,13 +337,13 @@ async def poluchit_indikator_dannye(
     Возвращает:
         Список точек данных показателя.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get(kod, kod)
+    kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
         "",
     )
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -359,20 +359,20 @@ async def poluchit_indikator_dannye(
         for element in elementy:
             if not isinstance(element, dict):
                 continue
-            region_name = ""
-            reg_code = element.get("region", subiekt)
-            if reg_code:
-                ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(reg_code)), None)
+            nazvanie_subiekta = ""
+            kod_reg = element.get("region", subiekt)
+            if kod_reg:
+                ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                 if ri:
-                    region_name = ri["nazvanie"]
+                    nazvanie_subiekta = ri["nazvanie"]
             rezultaty.append(
                 IndikatorDannye(
-                    kod_emiss=emiss_code,
+                    kod_emiss=kod_emiss,
                     nazvanie=imya_indikatora or element.get("name", kod),
                     period=element.get("date", element.get("period", "")),
                     znachenie=element.get("value"),
                     edinitsa=element.get("unit", ""),
-                    subiekt=region_name,
+                    subiekt=nazvanie_subiekta,
                 )
             )
         return rezultaty
@@ -432,9 +432,9 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     Возвращает:
         Список точек данных отраслевой структуры.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -446,26 +446,26 @@ async def poluchit_otraslevuyu_strukturu_vrp(
         elementy = dannye.get("data", [])
         if not isinstance(elementy, list) or not elementy:
             return _rezerv_otraslevaya_struktura(subiekt, god)
-        region_name = ""
+        nazvanie_subiekta = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
-                region_name = ri["nazvanie"]
+                nazvanie_subiekta = ri["nazvanie"]
         rezultaty = []
         for element in elementy:
             if not isinstance(element, dict):
                 continue
-            okved = element.get("okved", element.get("code", ""))
+            znachenie_okved = element.get("znachenie_okved", element.get("code", ""))
             otrasl = next(
-                (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == okved),
-                element.get("name", okved),
+                (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == znachenie_okved),
+                element.get("name", znachenie_okved),
             )
             rezultaty.append(
                 OtraslevayaStrukturaVRP(
-                    subiekt=region_name or element.get("regionName", ""),
+                    subiekt=nazvanie_subiekta or element.get("regionName", ""),
                     period=element.get("date", element.get("period", god or "")),
                     otrasl=otrasl,
-                    kod_okved=okved,
+                    kod_znachenie_okved=znachenie_okved,
                     dolya_vvp=element.get("share") or element.get("dolya"),
                     vrp=element.get("value"),
                 )
@@ -484,17 +484,17 @@ def _rezerv_otraslevaya_struktura(
 
     Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
-    region_name = ""
+    nazvanie_subiekta = ""
     if subiekt:
         ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
         if ri:
-            region_name = ri["nazvanie"]
+            nazvanie_subiekta = ri["nazvanie"]
     return [
         OtraslevayaStrukturaVRP(
-            subiekt=region_name,
+            subiekt=nazvanie_subiekta,
             period=god or "2022",
             otrasl=o["nazvanie"],
-            kod_okved=o["kod"],
+            kod_znachenie_okved=o["kod"],
             dolya_vvp=o.get("dolya_2022"),
             vrp=o.get("vrp_2022"),
         )
@@ -515,9 +515,9 @@ async def poluchit_investitsii_po_vidam(
     Возвращает:
         Список точек данных об инвестициях по видам деятельности.
     """
-    emiss_code = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{emiss_code}"
+        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
         parametry: dict[str, str] = {"groupByActivity": "true"}
         if subiekt:
             parametry["region"] = subiekt
@@ -529,26 +529,30 @@ async def poluchit_investitsii_po_vidam(
         elementy = dannye.get("data", [])
         if not isinstance(elementy, list) or not elementy:
             return _rezerv_investitsii_po_vidam(subiekt, god)
-        region_name = ""
+        nazvanie_subiekta = ""
         if subiekt:
             ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
             if ri:
-                region_name = ri["nazvanie"]
+                nazvanie_subiekta = ri["nazvanie"]
         rezultaty = []
         for element in elementy:
             if not isinstance(element, dict):
                 continue
-            okved = element.get("okved", element.get("activityCode", ""))
+            znachenie_okved = element.get("znachenie_okved", element.get("activityCode", ""))
             vid = next(
-                (v["nazvanie"] for v in VIDY_DEYATELNOSTI_INVESTITSII if v["kod"] == okved),
-                element.get("activityName", element.get("name", okved)),
+                (
+                    v["nazvanie"]
+                    for v in VIDY_DEYATELNOSTI_INVESTITSII
+                    if v["kod"] == znachenie_okved
+                ),
+                element.get("activityName", element.get("name", znachenie_okved)),
             )
             rezultaty.append(
                 InvestitsiiPoVidam(
-                    subiekt=region_name or element.get("regionName", ""),
+                    subiekt=nazvanie_subiekta or element.get("regionName", ""),
                     period=element.get("date", element.get("period", god or "")),
                     vid_deyatelnosti=vid,
-                    kod_okved=okved,
+                    kod_znachenie_okved=znachenie_okved,
                     investitsii=element.get("value"),
                     dolya=element.get("share") or element.get("dolya"),
                 )
@@ -567,17 +571,17 @@ def _rezerv_investitsii_po_vidam(
 
     Использует опубликованные данные Росстата за 2022 год при недоступности API.
     """
-    region_name = ""
+    nazvanie_subiekta = ""
     if subiekt:
         ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
         if ri:
-            region_name = ri["nazvanie"]
+            nazvanie_subiekta = ri["nazvanie"]
     return [
         InvestitsiiPoVidam(
-            subiekt=region_name,
+            subiekt=nazvanie_subiekta,
             period=god or "2022",
             vid_deyatelnosti=v["nazvanie"],
-            kod_okved=v["kod"],
+            kod_znachenie_okved=v["kod"],
             investitsii=v.get("inv_2022"),
             dolya=v.get("dolya_2022"),
         )

@@ -53,16 +53,16 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
     for element in elementy:
         if not isinstance(element, dict):
             continue
-        case_info = element.get("CaseInfo", element)
-        nomer = case_info.get("CaseNumber", element.get("caseNumber", ""))
-        category = _opredelit_kategoriyu(nomer) or case_info.get(
+        dannye_dela = element.get("CaseInfo", element)
+        nomer = dannye_dela.get("CaseNumber", element.get("caseNumber", ""))
+        kategoriya = _opredelit_kategoriyu(nomer) or dannye_dela.get(
             "Category", element.get("category", "")
         )
-        sud_name = case_info.get("Court", element.get("courtName", ""))
-        if not sud_name:
-            sud_name = _opredelit_sud_po_nomeru(nomer)
+        nazvanie_suda = dannye_dela.get("Court", element.get("courtName", ""))
+        if not nazvanie_suda:
+            nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-        istorcy_raw = case_info.get("Plaintiffs", element.get("plaintiffs", ""))
+        istorcy_raw = dannye_dela.get("Plaintiffs", element.get("plaintiffs", ""))
         if isinstance(istorcy_raw, str):
             istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
         elif isinstance(istorcy_raw, list):
@@ -70,7 +70,7 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
         else:
             istorcy = []
 
-        otvetchiki_raw = case_info.get("Defendants", element.get("defendants", ""))
+        otvetchiki_raw = dannye_dela.get("Defendants", element.get("defendants", ""))
         if isinstance(otvetchiki_raw, str):
             otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
         elif isinstance(otvetchiki_raw, list):
@@ -79,7 +79,7 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
             otvetchiki = []
 
         summa = 0.0
-        summa_raw = case_info.get("ClaimSum", element.get("claimSum"))
+        summa_raw = dannye_dela.get("ClaimSum", element.get("claimSum"))
         if summa_raw:
             with contextlib.suppress(ValueError, TypeError):
                 summa = float(summa_raw)
@@ -87,14 +87,14 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
         rezultaty.append(
             SudebnoeDelo(
                 nomer=nomer,
-                kategoriya=category,
-                sostoyanie=case_info.get("Status", element.get("status", "")),
-                sudya=case_info.get("Judge", element.get("judge", "")),
-                nazvanie_suda=sud_name,
-                data_vozbuzhdeniya=case_info.get(
+                kategoriya=kategoriya,
+                sostoyanie=dannye_dela.get("Status", element.get("status", "")),
+                sudya=dannye_dela.get("Judge", element.get("judge", "")),
+                nazvanie_suda=nazvanie_suda,
+                data_vozbuzhdeniya=dannye_dela.get(
                     "RegistrationDate", element.get("registrationDate", "")
                 ),
-                data_poslednego_akta=case_info.get(
+                data_poslednego_akta=dannye_dela.get(
                     "LastDocumentDate", element.get("lastDocumentDate", "")
                 ),
                 istorcy=istorcy,
@@ -110,19 +110,19 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     if not isinstance(dannye, dict):
         return None
 
-    case_info = dannye.get("CaseInfo", dannye.get("Case", dannye))
-    nomer = case_info.get("CaseNumber", dannye.get("caseNumber", ""))
+    dannye_dela = dannye.get("CaseInfo", dannye.get("Case", dannye))
+    nomer = dannye_dela.get("CaseNumber", dannye.get("caseNumber", ""))
     if not nomer:
         return None
 
-    category = _opredelit_kategoriyu(nomer) or case_info.get(
+    kategoriya = _opredelit_kategoriyu(nomer) or dannye_dela.get(
         "Category", dannye.get("category", "")
     )
-    sud_name = case_info.get("Court", dannye.get("courtName", ""))
-    if not sud_name:
-        sud_name = _opredelit_sud_po_nomeru(nomer)
+    nazvanie_suda = dannye_dela.get("Court", dannye.get("courtName", ""))
+    if not nazvanie_suda:
+        nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-    istorcy_raw = case_info.get("Plaintiffs", dannye.get("plaintiffs", ""))
+    istorcy_raw = dannye_dela.get("Plaintiffs", dannye.get("plaintiffs", ""))
     if isinstance(istorcy_raw, str):
         istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
     elif isinstance(istorcy_raw, list):
@@ -130,7 +130,7 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     else:
         istorcy = []
 
-    otvetchiki_raw = case_info.get("Defendants", dannye.get("defendants", ""))
+    otvetchiki_raw = dannye_dela.get("Defendants", dannye.get("defendants", ""))
     if isinstance(otvetchiki_raw, str):
         otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
     elif isinstance(otvetchiki_raw, list):
@@ -139,19 +139,21 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
         otvetchiki = []
 
     summa = 0.0
-    summa_raw = case_info.get("ClaimSum", dannye.get("claimSum"))
+    summa_raw = dannye_dela.get("ClaimSum", dannye.get("claimSum"))
     if summa_raw:
         with contextlib.suppress(ValueError, TypeError):
             summa = float(summa_raw)
 
     return SudebnoeDelo(
         nomer=nomer,
-        kategoriya=category,
-        sostoyanie=case_info.get("Status", dannye.get("status", "")),
-        sudya=case_info.get("Judge", dannye.get("judge", "")),
-        nazvanie_suda=sud_name,
-        data_vozbuzhdeniya=case_info.get("RegistrationDate", dannye.get("registrationDate", "")),
-        data_poslednego_akta=case_info.get("LastDocumentDate", dannye.get("lastDocumentDate", "")),
+        kategoriya=kategoriya,
+        sostoyanie=dannye_dela.get("Status", dannye.get("status", "")),
+        sudya=dannye_dela.get("Judge", dannye.get("judge", "")),
+        nazvanie_suda=nazvanie_suda,
+        data_vozbuzhdeniya=dannye_dela.get("RegistrationDate", dannye.get("registrationDate", "")),
+        data_poslednego_akta=dannye_dela.get(
+            "LastDocumentDate", dannye.get("lastDocumentDate", "")
+        ),
         istorcy=istorcy,
         otvetchiki=otvetchiki,
         summa_iska=summa,
@@ -194,8 +196,8 @@ def _razobrat_storony(dannye: Any, delo_number: str) -> list[StoronaDela]:
         return []
 
     rezultaty = []
-    for side_type, tip_label in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
-        syr_dannye = dannye.get(side_type, [])
+    for tip_storony, metka_tipa in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
+        syr_dannye = dannye.get(tip_storony, [])
         if isinstance(syr_dannye, str):
             nazvaniya = [s.strip() for s in syr_dannye.split(",") if s.strip()]
         elif isinstance(syr_dannye, list):
@@ -212,7 +214,7 @@ def _razobrat_storony(dannye: Any, delo_number: str) -> list[StoronaDela]:
                 StoronaDela(
                     nazvanie=nazvanie,
                     inn=inn,
-                    tip=tip_label,
+                    tip=metka_tipa,
                 )
             )
     return rezultaty
@@ -387,12 +389,12 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
         return []
 
 
-async def poisk_sudey(familiya: str = "", sud_name: str = "") -> list[Sudy]:
+async def poisk_sudey(familiya: str = "", nazvanie_suda: str = "") -> list[Sudy]:
     """Поиск судей арбитражных судов.
 
     Аргументы:
         familiya: Фамилия судьи.
-        sud_name: Наименование суда.
+        nazvanie_suda: Наименование суда.
 
     Возвращает:
         Список судей.

@@ -119,11 +119,11 @@ class TestReyestrFunktsiy:
         registry.obnaruzhit("mcp_russia.data")
         assert "cbrf" in registry.funktsii
 
-    def test_obnaruzhenie_nakhodit_redator(self) -> None:
-        """Discovery находит feature redator в пакете agenty."""
+    def test_obnaruzhenie_nakhodit_deloproizvodstvo(self) -> None:
+        """Discovery находит feature deloproizvodstvo в пакете agenty."""
         registry = ReyestrFunktsiy()
         registry.obnaruzhit("mcp_russia.agenty")
-        assert "redator" in registry.funktsii
+        assert "deloproizvodstvo" in registry.funktsii
 
     def test_svodka_pustoy(self) -> None:
         registry = ReyestrFunktsiy()

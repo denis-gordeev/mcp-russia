@@ -62,14 +62,14 @@ def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
     for d in elementy:
         if not isinstance(d, dict):
             continue
-        frakciya_raw = d.get("factionName", d.get("faction", ""))
+        frakciya_syraya = d.get("factionName", d.get("faction", ""))
         rezultaty.append(
             Deputat(
                 identifikator=d.get("id", 0),
                 фамилия=d.get("surname", d.get("lastName", "")),
                 имя=d.get("name", d.get("firstName", "")),
                 отчество=d.get("patronymic", d.get("middleName", "")),
-                фракция=frakciya_raw,
+                фракция=frakciya_syraya,
                 комитет=d.get("committeeName", d.get("committee", "")),
                 регион=d.get("districtName", d.get("region", "")),
                 созыв=str(d.get("convocation", d.get("sozyv", ""))),

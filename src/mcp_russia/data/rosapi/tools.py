@@ -42,7 +42,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
             f"**Почтовый индекс: {indeks}**\n\n"
             f"{rezultat['oshibka']}\n\n"
             f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
-            f"https://dadata.ru/api/address/"
+            f"https://dadata.ru/api/adres_dannyeess/"
         )
 
     stroki = [
@@ -81,12 +81,12 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
         )
 
     stroki_tablitsy = []
-    for i, addr in enumerate(rezultaty[:10], 1):
+    for i, adres_dannye in enumerate(rezultaty[:10], 1):
         stroki_tablitsy.append(
             (
                 str(i),
-                addr.get("znachenie", ""),
-                addr.get("pochtovyy_indeks", ""),
+                adres_dannye.get("znachenie", ""),
+                adres_dannye.get("pochtovyy_indeks", ""),
             )
         )
 

@@ -55,13 +55,17 @@ def _razobrat_dannye_organizatsii(dannye: dict[str, Any]) -> dict[str, Any]:
     obiekt_imeni = dannye.get("name")
     polnoe_nazvanie = obiekt_imeni.get("full") if isinstance(obiekt_imeni, dict) else None
     kratkoe_nazvanie = obiekt_imeni.get("short") if isinstance(obiekt_imeni, dict) else None
-    state_obj = dannye.get("state")
-    sostoyanie_org = state_obj.get("status") if isinstance(state_obj, dict) else None
-    addr_obj = dannye.get("address")
-    adres_str = addr_obj.get("value") if isinstance(addr_obj, dict) else None
-    mgmt_obj = dannye.get("management")
-    rukovoditel_imya = mgmt_obj.get("name") if isinstance(mgmt_obj, dict) else None
-    data_reg = state_obj.get("registration_date") if isinstance(state_obj, dict) else None
+    obiekt_subiekta = dannye.get("state")
+    sostoyanie_org = obiekt_subiekta.get("status") if isinstance(obiekt_subiekta, dict) else None
+    obiekt_adresa = dannye.get("address")
+    adres_str = obiekt_adresa.get("value") if isinstance(obiekt_adresa, dict) else None
+    obiekt_upravleniya = dannye.get("management")
+    rukovoditel_imya = (
+        obiekt_upravleniya.get("name") if isinstance(obiekt_upravleniya, dict) else None
+    )
+    data_reg = (
+        obiekt_subiekta.get("registration_date") if isinstance(obiekt_subiekta, dict) else None
+    )
     return {
         "nazvanie_polnoe": polnoe_nazvanie,
         "nazvanie_kratkoe": kratkoe_nazvanie,
@@ -79,9 +83,11 @@ def _razobrat_dannye_banka(dannye: dict[str, Any], rezervnoe_imya: str = "") -> 
         obiekt_imeni.get("full") if isinstance(obiekt_imeni, dict) else rezervnoe_imya
     )
     kratkoe_nazvanie = obiekt_imeni.get("short") if isinstance(obiekt_imeni, dict) else None
-    addr_obj = dannye.get("address")
+    obiekt_adresa = dannye.get("address")
     gorod = (
-        _vlozhennoe_poluchenie(addr_obj, "data", "city") if isinstance(addr_obj, dict) else None
+        _vlozhennoe_poluchenie(obiekt_adresa, "data", "city")
+        if isinstance(obiekt_adresa, dict)
+        else None
     )
     return {
         "nazvanie_polnoe": polnoe_nazvanie,
@@ -195,14 +201,14 @@ async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, A
 def poluchit_prazdniki(god: int) -> list[dict[str, str]]:
     """Вернуть список государственных праздников РФ на указанный год."""
     prazdniki = []
-    for date_str, name in PRAZDNIKI_RF.items():
-        full_date = f"{god}-{date_str}"
+    for stroka_daty, name in PRAZDNIKI_RF.items():
+        full_date = f"{god}-{stroka_daty}"
         prazdniki.append(
             {
                 "data": full_date,
                 "nazvanie": name,
                 "tip": "natsionalnyy"
-                if date_str
+                if stroka_daty
                 in [
                     "01-01",
                     "01-07",
@@ -295,11 +301,11 @@ async def nayti_organizatsiyu_po_inn(inn: str) -> Organizatsiya | dict[str, str]
     if "oshibka" in rezultat and not rezultat.get("suggestions"):
         return {"oshibka": rezultat["oshibka"]}
 
-    suggestions = rezultat.get("suggestions", [])
-    if not suggestions:
+    predlozheniya = rezultat.get("suggestions", [])
+    if not predlozheniya:
         return {"oshibka": f"Организация с ИНН {inn} не найдена"}
 
-    dannye = suggestions[0].get("data", {})
+    dannye = predlozheniya[0].get("data", {})
     razobrannye = _razobrat_dannye_organizatsii(dannye)
     return Organizatsiya(
         inn=dannye.get("inn", inn),

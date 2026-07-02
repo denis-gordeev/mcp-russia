@@ -2,6 +2,87 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-02 (шестидесятый проход — переименование Portuguese каталога, русификация оставшихся английских переменных)
+
+### Выполнено
+
+- **Устранение последнего Portuguese каталога `redator/` → `deloproizvodstvo/`**:
+  - Переименованы каталоги: `src/mcp_russia/agenty/redator/` → `deloproizvodstvo/`, `tests/agenty/redator/` → `deloproizvodstvo/`
+  - Обновлены все импорты: `mcp_russia.agenty.redator` → `mcp_russia.agenty.deloproizvodstvo`
+  - Обновлены ссылки: pyproject.toml (per-file-ignores), CONTRIBUTING.md (дерево каталогов), scripts/generate_diagrams.py (диаграмма), test_feature.py (тест и ассерты), docs/examples/ofitsialnyy-redaktor.md (Redator → Deloproizvodstvo)
+  - Обновлена строка в tools.py: «инструменты redator» → «инструменты deloproizvodstvo»
+- **Русификация локальных переменных rosstat/client.py** (5 переменных, 63 замены):
+  - `region_name` → `nazvanie_subiekta` (25 вхождений)
+  - `region_code` → `kod_subiekta` (3 вхождения)
+  - `reg_code` → `kod_reg` (9 вхождений)
+  - `emiss_code` → `kod_emiss` (20 вхождений в client.py + 6 в tools.py)
+  - `okved` → `znachenie_okved` (8 вхождений)
+- **Русификация локальных переменных kad_arbitrazh/client.py** (5 переменных, 40 замен):
+  - `case_info` → `dannye_dela` (22 вхождения)
+  - `category` → `kategoriya` (4 вхождения)
+  - `sud_name` → `nazvanie_suda` (10 вхождений)
+  - `side_type` → `tip_storony` (2 вхождения)
+  - `tip_label` → `metka_tipa` (2 вхождения)
+- **Русификация локальных переменных rosreestr/** (4 переменных, 36 замен):
+  - `addr` → `adres_dannye` (3 вхождения — в client.py, выбрано `adres_dannye` для избежания конфликта с существующей переменной `adres`)
+  - `attrs` → `atributy` (17 вхождений)
+  - `tip_code` → `kod_tipa` (2 вхождения в rosreestr + 6 в publikatsii)
+  - `tip_name` → `nazvanie_tipa` (2 вхождения в rosreestr/tools.py + 6 в publikatsii/client.py)
+- **Русификация параметров и переменных _shared/http_client.py** (3 переменных, 10 замен):
+  - `base_url` → `bazovyy_adres_url` (параметр `sozdat_klienta` — 4 замены; httpx keyword `base_url=` оставлен без изменений)
+  - `default_headers` → `zagolovki_po_umolchaniyu` (3 замены)
+  - `json_body` → `telo_json` (параметр `http_otpravit` — 3 замены)
+  - Обновлены вызовы `sozdat_klienta(base_url=...)` → `sozdat_klienta(bazovyy_adres_url=...)` в cekrf/client.py (3 вхождения) и tests/_shared/test_http_client.py (1 вхождение)
+- **Русификация локальных переменных rosgidromet/client.py** (14 переменных, ~50 замен):
+  - `current` → `tekushchie` (17 вхождений)
+  - `wmo_code` → `kod_vmo` (4 вхождения)
+  - `wmo_codes` → `kody_vmo` (2 вхождения)
+  - `wmo` → `vmo` (4 вхождения)
+  - `wind_dir_deg` → `gradusy_napravleniya_vetra` (2 вхождения)
+  - `daily` → `ezhednevnye` (7 вхождений)
+  - `dates` → `daty` (2 вхождения)
+  - `t_max` → `temperatura_maks` (2 вхождения)
+  - `t_min` → `temperatura_min` (2 вхождения)
+  - `precip_prob` → `veroyatnost_osadkov` (2 вхождения)
+  - `wind_max` → `skorost_vetra_maks` (2 вхождения)
+  - `date_str` → `stroka_daty` (2 вхождения)
+  - `time_str` → `stroka_vremeni` (2 вхождения)
+  - `indicators` → `pokazateli_kachestva` (2 вхождения)
+- **Русификация локальных переменных rosapi/** (6 переменных, 18 замен):
+  - `state_obj` → `obiekt_subiekta` (3 вхождения)
+  - `addr_obj` → `obiekt_adresa` (4 вхождения)
+  - `mgmt_obj` → `obiekt_upravleniya` (2 вхождения)
+  - `suggestions` → `predlozheniya` (3 вхождения — переменная; строковые ключи `"suggestions"` в .get() оставлены без изменений)
+  - `date_str` → `stroka_daty` (3 вхождения)
+  - `addr` → `adres_dannye` (3 вхождения в tools.py)
+- **Русификация прочих переменных** (6 переменных, 21 замена):
+  - `request_result` → `rezultat_zaprosa` (3 вхождения, gibdd/client.py)
+  - `fio_parts` → `chasti_fio` (5 вхождений gibdd + 7 fssp = 12)
+  - `task_data` → `dannye_zadachi` (2 вхождения, fns/client.py)
+  - `frakciya_raw` → `frakciya_syraya` (2 вхождения, gosduma/client.py — заменён английский суффикс `_raw` на русский `_syraya`)
+  - `elapsed` → `proshlo_vremeni` (2 вхождения, server.py)
+- **Исправление английских слов в шаблонах и документации** (4 замены):
+  - `director` → `директора` (шаблон akt.md)
+  - `planned` → `запланированных` (шаблон protokol.md)
+  - `"your-key"` → `"ваш-ключ"` (configuration.md, 2 вхождения)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 5 файлов переформатированы, `pytest` — 547 passed, 1 skipped (unit-тесты; интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`redator/` → `deloproizvodstvo/`**: устранён последний Portuguese каталог в репозитории; слово «redator» (порт. «редактор») заменено на Russian эквивалент «deloproizvodstvo» (делопроизводство), совпадающий с внутренним именем feature `imya="deloproizvodstvo"` и FastMCP-сервером `mcp-russia-deloproizvodstvo`
+- **`base_url` → `bazovyy_adres_url`**: параметр `sozdat_klienta` переименован; httpx keyword `base_url=` остаётся без изменений (API внешней библиотеки)
+- **`addr` → `adres_dannye`**: выбрано `adres_dannye` вместо `adres` из-за существующей переменной `adres` в rosreestr/client.py (адрес пустой строки)
+- **`suggestions` → `predlozheniya`**: переменная переименована, но строковые ключи `"suggestions"` в `.get("suggestions")` оставлены (ключи ответа API Dadata)
+- **`okved` → `znachenie_okved`**: выбрано вместо `kod_okved` чтобы избежать затенения одноимённого поля Pydantic-схемы `kod_okved=`
+- **`frakciya_raw` → `frakciya_syraya`**: английский суффикс `_raw` заменён на русский `_syraya` (сырая)
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: код полностью русифицирован — оставшиеся английские идентификаторы являются только строковыми ключами API-ответов (`.get("key")`), keyword-аргументами внешних библиотек (httpx, Pydantic) и стандартными Python-идентификаторами; оставшиеся English слова в CHANGELOG.md/README.md — исторические записи о миграции
+
 ## Статус раунда 2026-07-01 (пятьдесят девятый проход — русификация оставшихся английских локальных переменных client.py/tools.py)
 
 ### Выполнено

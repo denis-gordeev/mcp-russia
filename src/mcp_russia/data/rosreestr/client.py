@@ -35,12 +35,14 @@ TIPY_OBEKTA_CODE = {
 def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> KadastrovyyObekt:
     """Разбор данных объекта недвижимости из ответа pkk.rosreestr.ru."""
     tip = dannye.get("type", "").lower()
-    tip_code = TIPY_OBEKTA_CODE.get(tip, "")
+    kod_tipa = TIPY_OBEKTA_CODE.get(tip, "")
 
     adres = ""
     if dannye.get("address"):
-        addr = dannye["address"]
-        adres = addr.get("note", "") or addr.get("formatted", "") or str(addr)
+        adres_dannye = dannye["address"]
+        adres = (
+            adres_dannye.get("note", "") or adres_dannye.get("formatted", "") or str(adres_dannye)
+        )
 
     ploshchad = ""
     if dannye.get("area"):
@@ -87,7 +89,7 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
 
     return KadastrovyyObekt(
         kadastrovyy_nomer=kadastrovyy_nomer,
-        tip_obekta=tip_code,
+        tip_obekta=kod_tipa,
         adreshnye_svedeniya=adres,
         ploshchad=ploshchad,
         kadastrovaya_stoimost=stoimost,
@@ -110,8 +112,8 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
         adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         obekt_dannykh = rezultat.get("feature", rezultat)
-        attrs = obekt_dannykh.get("attrs", obekt_dannykh)
-        return _razobrat_obekt(kadastrovyy_nomer, attrs)
+        atributy = obekt_dannykh.get("attrs", obekt_dannykh)
+        return _razobrat_obekt(kadastrovyy_nomer, atributy)
     except Exception:
         return None
 
@@ -129,27 +131,27 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
         adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         obekt_dannykh = rezultat.get("feature", rezultat)
-        attrs = obekt_dannykh.get("attrs", obekt_dannykh)
+        atributy = obekt_dannykh.get("attrs", obekt_dannykh)
 
         stoimost = None
-        if attrs.get("cad_cost"):
+        if atributy.get("cad_cost"):
             with contextlib.suppress(ValueError, TypeError):
-                stoimost = float(attrs["cad_cost"])
-        elif attrs.get("cadastral_cost"):
-            stoimost_slovar = attrs["cadastral_cost"]
+                stoimost = float(atributy["cad_cost"])
+        elif atributy.get("cadastral_cost"):
+            stoimost_slovar = atributy["cadastral_cost"]
             if isinstance(stoimost_slovar, dict):
                 with contextlib.suppress(ValueError, TypeError):
                     stoimost = float(stoimost_slovar.get("value", 0))
 
         data_opr = ""
-        if attrs.get("cad_record_date"):
-            data_opr = str(attrs["cad_record_date"])
-        elif attrs.get("date_cad_cost"):
-            data_opr = str(attrs["date_cad_cost"])
+        if atributy.get("cad_record_date"):
+            data_opr = str(atributy["cad_record_date"])
+        elif atributy.get("date_cad_cost"):
+            data_opr = str(atributy["date_cad_cost"])
 
         data_vneseniya = ""
-        if attrs.get("date_created"):
-            data_vneseniya = str(attrs["date_created"])
+        if atributy.get("date_created"):
+            data_vneseniya = str(atributy["date_created"])
 
         return KadastrovayaStoimost(
             kadastrovyy_nomer=kadastrovyy_nomer,
@@ -216,16 +218,16 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
 
         naydennye = []
         for f in obekty_spisok[:10]:
-            attrs = f.get("attrs", {})
+            atributy = f.get("attrs", {})
             naydennye.append(
                 {
-                    "kadastrovyy_nomer": attrs.get("cn", ""),
-                    "tip": attrs.get("type", ""),
-                    "adres": attrs.get("address", {}).get("note", "")
-                    if isinstance(attrs.get("address"), dict)
+                    "kadastrovyy_nomer": atributy.get("cn", ""),
+                    "tip": atributy.get("type", ""),
+                    "adres": atributy.get("address", {}).get("note", "")
+                    if isinstance(atributy.get("address"), dict)
                     else "",
-                    "sostoyanie": attrs.get("state", {}).get("name", "")
-                    if isinstance(attrs.get("state"), dict)
+                    "sostoyanie": atributy.get("state", {}).get("name", "")
+                    if isinstance(atributy.get("state"), dict)
                     else "",
                 }
             )

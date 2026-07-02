@@ -83,7 +83,7 @@ def obzor_sistemy() -> None:
             minobrnauki = Python("minobrnauki")
 
         with Cluster("Агенты"):
-            redator = Python("redator")
+            deloproizvodstvo = Python("deloproizvodstvo")
 
         reyestr >> Edge(style="dashed") >> cbrf
         reyestr >> Edge(style="dashed") >> gosduma
@@ -92,7 +92,7 @@ def obzor_sistemy() -> None:
         reyestr >> Edge(style="dashed") >> rosaudit
         reyestr >> Edge(style="dashed") >> rosgidromet
         reyestr >> Edge(style="dashed") >> zakupki
-        reyestr >> Edge(style="dashed") >> redator
+        reyestr >> Edge(style="dashed") >> deloproizvodstvo
         reyestr >> Edge(style="dashed") >> rosapi
 
         api = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")

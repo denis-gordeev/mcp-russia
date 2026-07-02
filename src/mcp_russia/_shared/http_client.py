@@ -7,7 +7,7 @@
     from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit
 
     # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
-    async with sozdat_klienta(base_url="https://api.example.com") as client:
+    async with sozdat_klienta(bazovyy_adres_url="https://api.example.com") as client:
         response = await client.get("/endpoint")
 
     # Вариант 2: разовый запрос с автоматическими повторными попытками
@@ -37,31 +37,31 @@ _KODY_STATUSOV_DLYA_POVTORA = frozenset({429, 500, 502, 503, 504})
 
 
 def sozdat_klienta(
-    base_url: str = "",
+    bazovyy_adres_url: str = "",
     taimaut: float | None = None,
     zagolovki: dict[str, str] | None = None,
 ) -> httpx.AsyncClient:
     """Создание настроенного httpx.AsyncClient.
 
     Аргументы:
-        base_url: Базовый URL для всех запросов.
+        bazovyy_adres_url: Базовый URL для всех запросов.
         taimaut: Таймаут запроса в секундах. По умолчанию: settings.TAIMAUT_HTTP.
         zagolovki: Дополнительные заголовки для слияния с заголовками по умолчанию.
 
     Возвращает:
         Настроенный httpx.AsyncClient (использовать как async context manager).
     """
-    default_headers = {
+    zagolovki_po_umolchaniyu = {
         "User-Agent": POLZOVATELSKIY_AGENT,
         "Accept": "application/json",
     }
     if zagolovki:
-        default_headers.update(zagolovki)
+        zagolovki_po_umolchaniyu.update(zagolovki)
 
     return httpx.AsyncClient(
-        base_url=base_url,
+        base_url=bazovyy_adres_url,
         timeout=httpx.Timeout(taimaut or TAIMAUT_HTTP),
-        headers=default_headers,
+        headers=zagolovki_po_umolchaniyu,
         follow_redirects=True,
     )
 
@@ -149,7 +149,7 @@ async def http_poluchit(
 async def http_otpravit(
     adres_url: str,
     *,
-    json_body: Any | None = None,
+    telo_json: Any | None = None,
     parametry: dict[str, Any] | None = None,
     zagolovki: dict[str, str] | None = None,
     taimaut: float | None = None,
@@ -161,7 +161,7 @@ async def http_otpravit(
 
     Аргументы:
         adres_url: Полный URL для запроса.
-        json_body: JSON-тело для отправки.
+        telo_json: JSON-тело для отправки.
         parametry: Параметры запроса.
         zagolovki: Дополнительные заголовки (сливаются с заголовками по умолчанию).
         taimaut: Таймаут запроса в секундах.
@@ -179,7 +179,7 @@ async def http_otpravit(
     async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as client:
         for popytka in range(povtory + 1):
             try:
-                otvet = await client.post(adres_url, json=json_body, params=parametry)
+                otvet = await client.post(adres_url, json=telo_json, params=parametry)
 
                 if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if popytka < povtory:

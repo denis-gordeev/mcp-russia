@@ -164,12 +164,12 @@ def _razobrat_normativnyy_akt(dannye: Any) -> NormativnyyAkt | None:
     """Разбор ответа открытых данных pravo.gov.ru в NormativnyyAkt."""
     if not isinstance(dannye, dict):
         return None
-    tip_code = str(dannye.get("type", dannye.get("tip", "")) or "")
-    tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
+    kod_tipa = str(dannye.get("type", dannye.get("tip", "")) or "")
+    nazvanie_tipa = TIPY_DOKUMENTOV_PRAVO.get(kod_tipa, kod_tipa)
     return NormativnyyAkt(
         nomer=dannye.get("number", dannye.get("nomer", "")) or "",
         nazvanie=dannye.get("title", dannye.get("nazvanie", "")) or "",
-        tip=tip_name,
+        tip=nazvanie_tipa,
         data_prinyatiya=dannye.get("date", dannye.get("data_prinyatiya", "")) or "",
         data_publikatsii=dannye.get("publishDate", dannye.get("data_publikatsii", "")) or "",
         istochnik=dannye.get("source", dannye.get("istochnik", "pravo.gov.ru")) or "",
@@ -207,12 +207,12 @@ def _razobrat_publikatsii(dannye: Any) -> list[OficialnayaPublikatsiya]:
         return []
     rezultaty = []
     for element in elementy:
-        tip_code = str(element.get("type", element.get("tip_dokumenta", "")))
-        tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
+        kod_tipa = str(element.get("type", element.get("tip_dokumenta", "")))
+        nazvanie_tipa = TIPY_DOKUMENTOV_PRAVO.get(kod_tipa, kod_tipa)
         rezultaty.append(
             OficialnayaPublikatsiya(
                 nazvanie=element.get("title", element.get("nazvanie", "")),
-                tip_dokumenta=tip_name,
+                tip_dokumenta=nazvanie_tipa,
                 data_publikatsii=element.get("publishDate", element.get("data_publikatsii", "")),
                 nomer_vypuska=element.get("issueNumber", element.get("nomer_vypuska", "")),
                 istochnik=element.get("source", element.get("istochnik", "pravo.gov.ru")),
@@ -260,13 +260,13 @@ def _rezultaty_poiska(dannye: Any) -> list[NormativnyyAkt]:
         return []
     rezultaty = []
     for element in elementy:
-        tip_code = str(element.get("type", element.get("tip", "")))
-        tip_name = TIPY_DOKUMENTOV_PRAVO.get(tip_code, tip_code)
+        kod_tipa = str(element.get("type", element.get("tip", "")))
+        nazvanie_tipa = TIPY_DOKUMENTOV_PRAVO.get(kod_tipa, kod_tipa)
         rezultaty.append(
             NormativnyyAkt(
                 nomer=element.get("number", element.get("nomer", "")),
                 nazvanie=element.get("title", element.get("nazvanie", "")),
-                tip=tip_name,
+                tip=nazvanie_tipa,
                 data_prinyatiya=element.get("date", element.get("data_prinyatiya", "")),
                 sostoyanie=element.get("status", ""),
                 otrysl=element.get("branch", element.get("otrysl", "")),

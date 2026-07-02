@@ -78,8 +78,8 @@ async def poisk_proizvodstv(
     Возвращает:
         Список исполнительных производств.
     """
-    fio_parts = _razobrat_fio(fio)
-    telo: dict[str, Any] = {"is": fio_parts}
+    chasti_fio = _razobrat_fio(fio)
+    telo: dict[str, Any] = {"is": chasti_fio}
     if data_rozhdeniya:
         telo["is"]["date"] = data_rozhdeniya
     if subiekt:
@@ -91,12 +91,12 @@ async def poisk_proizvodstv(
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
         try:
             parametry: dict[str, Any] = {}
-            if "lastName" in fio_parts:
-                parametry["is[lastName]"] = fio_parts["lastName"]
-            if "firstName" in fio_parts:
-                parametry["is[firstName]"] = fio_parts["firstName"]
-            if "patronymic" in fio_parts:
-                parametry["is[patronymic]"] = fio_parts["patronymic"]
+            if "lastName" in chasti_fio:
+                parametry["is[lastName]"] = chasti_fio["lastName"]
+            if "firstName" in chasti_fio:
+                parametry["is[firstName]"] = chasti_fio["firstName"]
+            if "patronymic" in chasti_fio:
+                parametry["is[patronymic]"] = chasti_fio["patronymic"]
             if data_rozhdeniya:
                 parametry["is[date]"] = data_rozhdeniya
             if subiekt:

@@ -158,7 +158,7 @@ async def _zaprosit_html_vyborov(
     adres_url = f"{VYBORY_API}/izbirkom"
     try:
         async with sozdat_klienta(
-            base_url=VYBORY_API_BASE,
+            bazovyy_adres_url=VYBORY_API_BASE,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=30.0,
         ) as c:
@@ -417,7 +417,7 @@ async def spisok_vyborov(
         }
         try:
             async with sozdat_klienta(
-                base_url=VYBORY_API_BASE,
+                bazovyy_adres_url=VYBORY_API_BASE,
                 zagolovki={"Accept": "text/html,application/xhtml+xml"},
                 taimaut=20.0,
             ) as c:
@@ -486,7 +486,7 @@ async def poisk_kandidata(
 
     try:
         async with sozdat_klienta(
-            base_url=VYBORY_API_BASE,
+            bazovyy_adres_url=VYBORY_API_BASE,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=20.0,
         ) as c:
