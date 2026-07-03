@@ -58,25 +58,25 @@ async def test_prompty_zaregistrirovany(client):
 async def test_spisok_tipov_aktov(client):
     """Проверка работы инструмента spisok_tipov_aktov."""
     async with client:
-        result = await client.call_tool("spisok_tipov_aktov", {})
-    assert result is not None
-    text = str(result)
-    assert "Федеральный закон" in text or "Указ" in text
+        rezultat = await client.call_tool("spisok_tipov_aktov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Федеральный закон" in tekst or "Указ" in tekst
 
 
 async def test_spisok_otrasley(client):
     """Проверка работы инструмента spisok_otrasley."""
     async with client:
-        result = await client.call_tool("spisok_otrasley", {})
-    assert result is not None
-    text = str(result)
-    assert "Гражданское" in text or "Уголовное" in text
+        rezultat = await client.call_tool("spisok_otrasley", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Гражданское" in tekst or "Уголовное" in tekst
 
 
 async def test_spisok_statusov(client):
     """Проверка работы инструмента spisok_statusov."""
     async with client:
-        result = await client.call_tool("spisok_statusov", {})
-    assert result is not None
-    text = str(result)
-    assert "Действующий" in text or "Утратил" in text
+        rezultat = await client.call_tool("spisok_statusov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Действующий" in tekst or "Утратил" in tekst

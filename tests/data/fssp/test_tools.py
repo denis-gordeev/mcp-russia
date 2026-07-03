@@ -14,57 +14,57 @@ def _maket_konteksta():
 
 async def test_spisok_vidov_proizvodstv():
     ctx = _maket_konteksta()
-    result = await fssp_tools.spisok_vidov_proizvodstv(ctx)
-    assert "Штрафы ГИБДД" in result
+    rezultat = await fssp_tools.spisok_vidov_proizvodstv(ctx)
+    assert "Штрафы ГИБДД" in rezultat
 
 
 async def test_spisok_statusov_proizvodstva():
     ctx = _maket_konteksta()
-    result = await fssp_tools.spisok_statusov_proizvodstva(ctx)
-    assert "производстве" in result
+    rezultat = await fssp_tools.spisok_statusov_proizvodstva(ctx)
+    assert "производстве" in rezultat
 
 
 async def test_spisok_ogranicheniy():
     ctx = _maket_konteksta()
-    result = await fssp_tools.spisok_ogranicheniy(ctx)
-    assert "выезд" in result.lower()
+    rezultat = await fssp_tools.spisok_ogranicheniy(ctx)
+    assert "выезд" in rezultat.lower()
 
 
 async def test_spisok_kategoriy_dolzhnikov():
     ctx = _maket_konteksta()
-    result = await fssp_tools.spisok_kategoriy_dolzhnikov(ctx)
-    assert "Индивидуальный предприниматель" in result
+    rezultat = await fssp_tools.spisok_kategoriy_dolzhnikov(ctx)
+    assert "Индивидуальный предприниматель" in rezultat
 
 
 async def test_spisok_osnovaniy_vozbuzhdeniya():
     ctx = _maket_konteksta()
-    result = await fssp_tools.spisok_osnovaniy_vozbuzhdeniya(ctx)
-    assert "Судебный акт" in result
+    rezultat = await fssp_tools.spisok_osnovaniy_vozbuzhdeniya(ctx)
+    assert "Судебный акт" in rezultat
 
 
 async def test_info_proizvodstva_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(fssp_tools.client, "info_proizvodstva", return_value=None):
-        result = await fssp_tools.info_proizvodstva(ctx, nomer="12345/23/77001-ИП")
-    assert "не найдено" in result
+        rezultat = await fssp_tools.info_proizvodstva(ctx, nomer="12345/23/77001-ИП")
+    assert "не найдено" in rezultat
 
 
 async def test_poisk_dolzhnika_pustoy():
     ctx = _maket_konteksta()
     with patch.object(fssp_tools.client, "poisk_proizvodstv", return_value=[]):
-        result = await fssp_tools.poisk_dolzhnika(ctx, fio="Иванов Иван Иванович")
-    assert "не найдены" in result
+        rezultat = await fssp_tools.poisk_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in rezultat
 
 
 async def test_ogranicheniya_dolzhnika_pustoy():
     ctx = _maket_konteksta()
     with patch.object(fssp_tools.client, "ogranicheniya_dolzhnika", return_value=[]):
-        result = await fssp_tools.ogranicheniya_dolzhnika(ctx, fio="Иванов Иван Иванович")
-    assert "не найдены" in result
+        rezultat = await fssp_tools.ogranicheniya_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in rezultat
 
 
 async def test_rozysk_dolzhnika_pustoy():
     ctx = _maket_konteksta()
     with patch.object(fssp_tools.client, "rozysk_dolzhnika", return_value=[]):
-        result = await fssp_tools.rozysk_dolzhnika(ctx, fio="Иванов Иван Иванович")
-    assert "не найдены" in result
+        rezultat = await fssp_tools.rozysk_dolzhnika(ctx, fio="Иванов Иван Иванович")
+    assert "не найдены" in rezultat

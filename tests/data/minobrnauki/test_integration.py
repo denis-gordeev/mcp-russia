@@ -58,15 +58,15 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_tool_spisok_tipov_vuzov(client):
     async with client:
-        result = await client.call_tool("spisok_tipov_vuzov", {})
-    assert result is not None
-    text = str(result)
-    assert "Университет" in text
+        rezultat = await client.call_tool("spisok_tipov_vuzov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Университет" in tekst
 
 
 async def test_tool_info_vuza(client):
     async with client:
-        result = await client.call_tool("info_vuza", {"nazvanie": "МГУ"})
-    assert result is not None
-    text = str(result)
-    assert "не найден" in text or "не найдена" in text or "placeholder" in text.lower()
+        rezultat = await client.call_tool("info_vuza", {"nazvanie": "МГУ"})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "не найден" in tekst or "не найдена" in tekst or "placeholder" in tekst.lower()

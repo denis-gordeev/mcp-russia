@@ -72,36 +72,36 @@ class TestVypolnenieInstrumentov:
     @pytest.mark.asyncio
     async def test_formatirovat_data_e2e(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool(
+            rezultat = await c.call_tool(
                 "formatirovat_data_extenso",
                 {"gorod": "Санкт-Петербург"},
             )
-            assert "г. Санкт-Петербург" in result.data
+            assert "г. Санкт-Петербург" in rezultat.data
 
     @pytest.mark.asyncio
     async def test_generirovat_numeraciyu_e2e(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool(
+            rezultat = await c.call_tool(
                 "generirovat_numeraciyu",
                 {"tip": "письмо", "nomer": 42, "god": 2026, "otdel": "Д-15"},
             )
-            assert "ПИСЬМО № 42/2026/Д-15" in result.data
+            assert "ПИСЬМО № 42/2026/Д-15" in rezultat.data
 
     @pytest.mark.asyncio
     async def test_konsulitirovat_obrashchenie_e2e(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool(
+            rezultat = await c.call_tool(
                 "konsulitirovat_obrashchenie",
                 {"dolzhnost": "Губернатор"},
             )
-            assert "Уважаемый господин Губернатор" in result.data
+            assert "Уважаемый господин Губернатор" in rezultat.data
 
     @pytest.mark.asyncio
     async def test_spisok_tipov_e2e(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool("spisok_tipov_dokumentov", {})
-            assert "приказ" in result.data
-            assert "письмо" in result.data
+            rezultat = await c.call_tool("spisok_tipov_dokumentov", {})
+            assert "приказ" in rezultat.data
+            assert "письмо" in rezultat.data
 
 
 class TestVypolnenieResursov:
@@ -109,36 +109,36 @@ class TestVypolnenieResursov:
     async def test_chtenie_shablona_pismo(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("template://pismo")
-            text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "ПИСЬМО" in text or "ОФИЦИАЛЬНОЕ ПИСЬМО" in text
+            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            assert "ПИСЬМО" in tekst or "ОФИЦИАЛЬНОЕ ПИСЬМО" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_shablona_prikaz(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("template://prikaz")
-            text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "ПРИКАЗ" in text
+            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            assert "ПРИКАЗ" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_manual(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("normas://manual")
-            text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "ГОСТ" in text or "единообразие" in text.lower()
+            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            assert "ГОСТ" in tekst or "единообразие" in tekst.lower()
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_obrashcheniya(self) -> None:
         async with Client(mcp) as c:
             content = await c.read_resource("normas://obrashcheniya")
-            text = content[0].text if hasattr(content[0], "text") else str(content[0])
-            assert "Президент" in text or "Уважаемый" in text
+            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            assert "Президент" in tekst or "Уважаемый" in tekst
 
 
 class TestVypolneniePromtov:
     @pytest.mark.asyncio
     async def test_prompt_pismo(self) -> None:
         async with Client(mcp) as c:
-            result = await c.get_prompt(
+            rezultat = await c.get_prompt(
                 "redaktor_pismo",
                 arguments={
                     "adresat": "Иванов Иван Иванович",
@@ -146,7 +146,7 @@ class TestVypolneniePromtov:
                     "tema": "Согласование проекта",
                 },
             )
-            messages = result.messages
+            messages = rezultat.messages
             assert len(messages) == 2
             assert "ПИСЬМО" in messages[0].content.text
             assert "Согласование проекта" in messages[0].content.text
@@ -154,11 +154,11 @@ class TestVypolneniePromtov:
     @pytest.mark.asyncio
     async def test_prompt_prikaz(self) -> None:
         async with Client(mcp) as c:
-            result = await c.get_prompt(
+            rezultat = await c.get_prompt(
                 "redaktor_prikaz",
                 arguments={"tema": "О проведении инвентаризации"},
             )
-            messages = result.messages
+            messages = rezultat.messages
             assert len(messages) == 2
             assert "ПРИКАЗ" in messages[0].content.text
             assert "инвентаризации" in messages[0].content.text

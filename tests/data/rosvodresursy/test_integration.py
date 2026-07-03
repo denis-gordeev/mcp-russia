@@ -57,22 +57,22 @@ async def test_prompty_zaregistrirovany(client):
 async def test_spisok_basseynovykh_okrugov(client):
     """Проверка работы инструмента spisok_basseynovykh_okrugov."""
     async with client:
-        result = await client.call_tool("spisok_basseynovykh_okrugov", {})
-    assert result is not None
-    text = str(result)
-    assert "Волжский" in text or "Донской" in text
+        rezultat = await client.call_tool("spisok_basseynovykh_okrugov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Волжский" in tekst or "Донской" in tekst
 
 
 async def test_spisok_vodokhranilishch(client):
     """Проверка работы инструмента spisok_vodokhranilishch."""
     async with client:
-        result = await client.call_tool("spisok_vodokhranilishch", {})
-    assert result is not None
-    text = str(result)
-    assert "Братское" in text or "Куйбышевское" in text
+        rezultat = await client.call_tool("spisok_vodokhranilishch", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Братское" in tekst or "Куйбышевское" in tekst
 
 
 async def test_gidro_monitoring(client):
     async with client:
-        result = await client.call_tool("gidro_monitoring", {"identifikator_posta": ""})
-    assert result is not None
+        rezultat = await client.call_tool("gidro_monitoring", {"identifikator_posta": ""})
+    assert rezultat is not None

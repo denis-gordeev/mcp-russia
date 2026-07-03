@@ -126,14 +126,14 @@ def _razobrat_odnogo_deputata(dannye: dict[str, Any]) -> Deputat | None:
 
 
 async def poluchit_zakonoproekty(
-    status: str = "",
+    sostoyanie: str = "",
     ogranichenie: int = 20,
     stranitsa: int = 1,
 ) -> list[Zakonoproekt]:
     """Получение законопроектов из API СОЗД.
 
     Аргументы:
-        status: Фильтр по статусу (необязательно).
+        sostoyanie: Фильтр по статусу (необязательно).
         ogranichenie: Максимальное количество результатов.
         stranitsa: Номер страницы.
 
@@ -141,8 +141,8 @@ async def poluchit_zakonoproekty(
         Список законопроектов.
     """
     parametry: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
-    if status:
-        parametry["status"] = status
+    if sostoyanie:
+        parametry["status"] = sostoyanie
 
     zheton = _poluchit_api_token()
     if zheton:

@@ -16,62 +16,62 @@ def _maket_konteksta():
 async def test_tipy_vyborov():
     """Проверка tipy_vyborov."""
     ctx = _maket_konteksta()
-    result = await cekrf_tools.tipy_vyborov(ctx)
-    assert "Типы выборов" in result
-    assert "Президент" in result
+    rezultat = await cekrf_tools.tipy_vyborov(ctx)
+    assert "Типы выборов" in rezultat
+    assert "Президент" in rezultat
 
 
 async def test_subyekty_rf():
     """Проверка subyekty_rf."""
     ctx = _maket_konteksta()
-    result = await cekrf_tools.subyekty_rf(ctx)
-    assert "Субъекты" in result
-    assert "Москва" in result
+    rezultat = await cekrf_tools.subyekty_rf(ctx)
+    assert "Субъекты" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_dolzhnosti_federal():
     """Проверка dolzhnosti_federal."""
     ctx = _maket_konteksta()
-    result = await cekrf_tools.dolzhnosti_federal(ctx)
-    assert "должност" in result.lower()
+    rezultat = await cekrf_tools.dolzhnosti_federal(ctx)
+    assert "должност" in rezultat.lower()
 
 
 async def test_partii_rf():
     """Проверка partii_rf."""
     ctx = _maket_konteksta()
-    result = await cekrf_tools.partii_rf(ctx)
-    assert "Единая Россия" in result
+    rezultat = await cekrf_tools.partii_rf(ctx)
+    assert "Единая Россия" in rezultat
 
 
 async def test_gody_vyborov():
     """Проверка gody_vyborov."""
     ctx = _maket_konteksta()
-    result = await cekrf_tools.gody_vyborov(ctx)
-    assert "2024" in result
+    rezultat = await cekrf_tools.gody_vyborov(ctx)
+    assert "2024" in rezultat
 
 
 async def test_poisk_kandidata_ne_nayden():
     """Проверка poisk_kandidata при отсутствии результатов."""
     ctx = _maket_konteksta()
     with patch.object(cekrf_tools.client, "poisk_kandidata", return_value=[]):
-        result = await cekrf_tools.poisk_kandidata("Иванов", ctx)
-    assert "не найден" in result
+        rezultat = await cekrf_tools.poisk_kandidata("Иванов", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_kandidat_podrobno_ne_nayden():
     """Проверка kandidat_podrobno при отсутствии кандидата."""
     ctx = _maket_konteksta()
     with patch.object(cekrf_tools.client, "kandidat_podrobno", return_value=None):
-        result = await cekrf_tools.kandidat_podrobno("nesushchestvuyushchiy", ctx)
-    assert "не найден" in result
+        rezultat = await cekrf_tools.kandidat_podrobno("nesushchestvuyushchiy", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_rezultaty_vyborov_pustoy():
     """Проверка rezultaty_vyborov при отсутствии данных."""
     ctx = _maket_konteksta()
     with patch.object(cekrf_tools.client, "rezultaty_vyborov", return_value=[]):
-        result = await cekrf_tools.rezultaty_vyborov(ctx, god=2024)
-    assert "недоступны" in result or "ГАС" in result
+        rezultat = await cekrf_tools.rezultaty_vyborov(ctx, god=2024)
+    assert "недоступны" in rezultat or "ГАС" in rezultat
 
 
 async def test_yavka_i_itogi():
@@ -84,6 +84,6 @@ async def test_yavka_i_itogi():
             "progalosovalo": 650000,
             "yavka_procent": 65.0,
         }
-        result = await cekrf_tools.yavka_i_itogi(ctx, god=2024)
-    assert "65" in result
-    assert "избирател" in result
+        rezultat = await cekrf_tools.yavka_i_itogi(ctx, god=2024)
+    assert "65" in rezultat
+    assert "избирател" in rezultat

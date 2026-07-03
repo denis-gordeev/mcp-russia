@@ -398,14 +398,14 @@ async def spisok_vyborov(
             return [vybory]
 
     rezultaty = []
-    for key, v in IZVESTNYE_VYBORY.items():
+    for klyuch, v in IZVESTNYE_VYBORY.items():
         if god is not None and v["god"] != god:
             continue
         if tip is not None and v["tip"] != tip:
             continue
         if subiekt is not None and v.get("subiekt", 0) != subiekt:
             continue
-        rezultaty.append({**v, "klyuch": key})
+        rezultaty.append({**v, "klyuch": klyuch})
 
     if not rezultaty and god is not None:
         adres_url = f"{VYBORY_API}/izbirkom"

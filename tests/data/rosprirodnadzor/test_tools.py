@@ -14,27 +14,27 @@ def _maket_konteksta():
 
 async def test_spisok_vidov_nadzora():
     ctx = _maket_konteksta()
-    result = await rpn_tools.spisok_vidov_nadzora(ctx)
-    assert "надзор" in result.lower() or "экологический" in result.lower()
+    rezultat = await rpn_tools.spisok_vidov_nadzora(ctx)
+    assert "надзор" in rezultat.lower() or "экологический" in rezultat.lower()
 
 
 async def test_spisok_kategoriy_obnv():
     ctx = _maket_konteksta()
-    result = await rpn_tools.spisok_kategoriy_obnv(ctx)
-    assert "категория" in result.lower() or "значительн" in result.lower()
+    rezultat = await rpn_tools.spisok_kategoriy_obnv(ctx)
+    assert "категория" in rezultat.lower() or "значительн" in rezultat.lower()
 
 
 async def test_spisok_vidov_litsenziy_nedra():
     ctx = _maket_konteksta()
-    result = await rpn_tools.spisok_vidov_litsenziy_nedra(ctx)
-    assert "лицензий" in result.lower() or "недр" in result.lower()
+    rezultat = await rpn_tools.spisok_vidov_litsenziy_nedra(ctx)
+    assert "лицензий" in rezultat.lower() or "недр" in rezultat.lower()
 
 
 async def test_poisk_proverok_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=[]):
-        result = await rpn_tools.poisk_proverok(ctx)
-    assert isinstance(result, str)
+        rezultat = await rpn_tools.poisk_proverok(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_proverok_nayden():
@@ -51,15 +51,15 @@ async def test_poisk_proverok_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=mock_data):
-        result = await rpn_tools.poisk_proverok(ctx)
-    assert "Промышленник" in result
+        rezultat = await rpn_tools.poisk_proverok(ctx)
+    assert "Промышленник" in rezultat
 
 
 async def test_info_proverki_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "info_proverki", return_value=None):
-        result = await rpn_tools.info_proverki("nesushchestvuyushchiy", ctx)
-    assert "не найдена" in result
+        rezultat = await rpn_tools.info_proverki("nesushchestvuyushchiy", ctx)
+    assert "не найдена" in rezultat
 
 
 async def test_info_proverki_nayden():
@@ -74,15 +74,15 @@ async def test_info_proverki_nayden():
         "vyavleno_narusheniy": 3,
     }
     with patch.object(rpn_tools.client, "info_proverki", return_value=mock_data):
-        result = await rpn_tools.info_proverki("ПР-2026-001", ctx)
-    assert "Промышленник" in result
+        rezultat = await rpn_tools.info_proverki("ПР-2026-001", ctx)
+    assert "Промышленник" in rezultat
 
 
 async def test_poisk_obektov_negativnogo_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=[]):
-        result = await rpn_tools.poisk_obektov_negativnogo(ctx)
-    assert isinstance(result, str)
+        rezultat = await rpn_tools.poisk_obektov_negativnogo(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_obektov_negativnogo_nayden():
@@ -97,15 +97,15 @@ async def test_poisk_obektov_negativnogo_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=mock_data):
-        result = await rpn_tools.poisk_obektov_negativnogo(ctx)
-    assert "Химпром" in result
+        rezultat = await rpn_tools.poisk_obektov_negativnogo(ctx)
+    assert "Химпром" in rezultat
 
 
 async def test_poisk_litsenziy_nedra_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=[]):
-        result = await rpn_tools.poisk_litsenziy_nedra(ctx)
-    assert isinstance(result, str)
+        rezultat = await rpn_tools.poisk_litsenziy_nedra(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_litsenziy_nedra_nayden():
@@ -120,5 +120,5 @@ async def test_poisk_litsenziy_nedra_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=mock_data):
-        result = await rpn_tools.poisk_litsenziy_nedra(ctx)
-    assert "Газпром" in result
+        rezultat = await rpn_tools.poisk_litsenziy_nedra(ctx)
+    assert "Газпром" in rezultat

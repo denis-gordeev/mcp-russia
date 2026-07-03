@@ -30,10 +30,10 @@ def test_razobrat_deputatov_list():
             "convocation": 8,
         }
     ]
-    result = gosduma_client._razobrat_deputatov(dannye)
-    assert len(result) == 1
-    assert result[0].фамилия == "Иванов"
-    assert result[0].фракция == "Единая Россия"
+    rezultat = gosduma_client._razobrat_deputatov(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].фамилия == "Иванов"
+    assert rezultat[0].фракция == "Единая Россия"
 
 
 def test_razobrat_deputatov_dict():
@@ -51,10 +51,10 @@ def test_razobrat_deputatov_dict():
             }
         ]
     }
-    result = gosduma_client._razobrat_deputatov(dannye)
-    assert len(result) == 1
-    assert result[0].фамилия == "Петров"
-    assert result[0].фракция == "КПРФ"
+    rezultat = gosduma_client._razobrat_deputatov(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].фамилия == "Петров"
+    assert rezultat[0].фракция == "КПРФ"
 
 
 def test_razobrat_deputatov_pustoy():
@@ -76,10 +76,10 @@ def test_razobrat_zakonoproekty():
             }
         ]
     }
-    result = gosduma_client._razobrat_zakonoproekty(dannye)
-    assert len(result) == 1
-    assert result[0].nomer == "12345-8"
-    assert result[0].sostoyanie == "Рассматривается"
+    rezultat = gosduma_client._razobrat_zakonoproekty(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].nomer == "12345-8"
+    assert rezultat[0].sostoyanie == "Рассматривается"
 
 
 def test_razobrat_golosovaniya():
@@ -96,10 +96,10 @@ def test_razobrat_golosovaniya():
             }
         ]
     }
-    result = gosduma_client._razobrat_golosovaniya(dannye)
-    assert len(result) == 1
-    assert result[0].za == 300
-    assert result[0].protiv == 50
+    rezultat = gosduma_client._razobrat_golosovaniya(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].za == 300
+    assert rezultat[0].protiv == 50
 
 
 def test_razobrat_odnogo_deputata():
@@ -110,9 +110,9 @@ def test_razobrat_odnogo_deputata():
         "patronymic": "Сидорович",
         "factionName": "ЛДПР",
     }
-    result = gosduma_client._razobrat_odnogo_deputata(dannye)
-    assert result is not None
-    assert result.фамилия == "Сидоров"
+    rezultat = gosduma_client._razobrat_odnogo_deputata(dannye)
+    assert rezultat is not None
+    assert rezultat.фамилия == "Сидоров"
 
 
 def test_razobrat_odnogo_deputata_nichego():
@@ -125,8 +125,8 @@ def test_razobrat_odnogo_deputata_nichego():
 
 async def test_spisok_deputatov_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_deputatov", return_value=[]):
-        result = await gosduma_tools.spisok_deputatov(sozyv="8")
-    assert "API" in result or "duma" in result.lower()
+        rezultat = await gosduma_tools.spisok_deputatov(sozyv="8")
+    assert "API" in rezultat or "duma" in rezultat.lower()
 
 
 async def test_spisok_deputatov_s_dannymi():
@@ -153,16 +153,16 @@ async def test_spisok_deputatov_s_dannymi():
         ),
     ]
     with patch.object(gosduma_tools.client, "poluchit_deputatov", return_value=deputats):
-        result = await gosduma_tools.spisok_deputatov(sozyv="8")
-    assert "Иванов" in result
-    assert "Единая Россия" in result
+        rezultat = await gosduma_tools.spisok_deputatov(sozyv="8")
+    assert "Иванов" in rezultat
+    assert "Единая Россия" in rezultat
 
 
 async def test_info_deputata_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=None):
-        result = await gosduma_tools.info_deputata(99999, ctx)
-    assert "не найден" in result
+        rezultat = await gosduma_tools.info_deputata(99999, ctx)
+    assert "не найден" in rezultat
 
 
 async def test_info_deputata_nayden():
@@ -178,37 +178,37 @@ async def test_info_deputata_nayden():
         созыв="8",
     )
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=deputat):
-        result = await gosduma_tools.info_deputata(1, ctx)
-    assert "Иванов" in result
-    assert "Единая Россия" in result
+        rezultat = await gosduma_tools.info_deputata(1, ctx)
+    assert "Иванов" in rezultat
+    assert "Единая Россия" in rezultat
 
 
 async def test_spisok_frakcii():
     ctx = _maket_konteksta()
-    result = await gosduma_tools.spisok_frakcii(ctx)
-    assert "Единая Россия" in result
-    assert "КПРФ" in result
-    assert "ЛДПР" in result
+    rezultat = await gosduma_tools.spisok_frakcii(ctx)
+    assert "Единая Россия" in rezultat
+    assert "КПРФ" in rezultat
+    assert "ЛДПР" in rezultat
 
 
 async def test_spisok_komitetov():
     ctx = _maket_konteksta()
-    result = await gosduma_tools.spisok_komitetov(ctx)
-    assert "Комитет" in result
-    assert "бюджет" in result.lower() or "обороне" in result.lower()
+    rezultat = await gosduma_tools.spisok_komitetov(ctx)
+    assert "Комитет" in rezultat
+    assert "бюджет" in rezultat.lower() or "обороне" in rezultat.lower()
 
 
 async def test_spisok_sozyvov():
     ctx = _maket_konteksta()
-    result = await gosduma_tools.spisok_sozyvov(ctx)
-    assert "Созыв" in result
-    assert "VIII" in result or "1993" in result
+    rezultat = await gosduma_tools.spisok_sozyvov(ctx)
+    assert "Созыв" in rezultat
+    assert "VIII" in rezultat or "1993" in rezultat
 
 
 async def test_zakonoproekty_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=[]):
-        result = await gosduma_tools.zakonoproekty(sostoyanie="принят")
-    assert "Законопроект" in result or "СОЗД" in result
+        rezultat = await gosduma_tools.zakonoproekty(sostoyanie="принят")
+    assert "Законопроект" in rezultat or "СОЗД" in rezultat
 
 
 async def test_zakonoproekty_s_dannymi():
@@ -224,15 +224,15 @@ async def test_zakonoproekty_s_dannymi():
         )
     ]
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=bills):
-        result = await gosduma_tools.zakonoproekty(sostoyanie="рассматривается")
-    assert "12345-8" in result
-    assert "Рассматривается" in result
+        rezultat = await gosduma_tools.zakonoproekty(sostoyanie="рассматривается")
+    assert "12345-8" in rezultat
+    assert "Рассматривается" in rezultat
 
 
 async def test_golosovaniya_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_golosovaniya", return_value=[]):
-        result = await gosduma_tools.golosovaniya(sozyv="8")
-    assert "Голосован" in result or "API" in result or "duma" in result.lower()
+        rezultat = await gosduma_tools.golosovaniya(sozyv="8")
+    assert "Голосован" in rezultat or "API" in rezultat or "duma" in rezultat.lower()
 
 
 async def test_golosovaniya_s_dannymi():
@@ -248,9 +248,9 @@ async def test_golosovaniya_s_dannymi():
         )
     ]
     with patch.object(gosduma_tools.client, "poluchit_golosovaniya", return_value=votes):
-        result = await gosduma_tools.golosovaniya(sozyv="8")
-    assert "О бюджете" in result
-    assert "300" in result
+        rezultat = await gosduma_tools.golosovaniya(sozyv="8")
+    assert "О бюджете" in rezultat
+    assert "300" in rezultat
 
 
 async def test_zametka_ob_aut_bez_tokena():

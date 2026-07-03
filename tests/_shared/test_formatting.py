@@ -12,18 +12,18 @@ from mcp_russia._shared.formatting import (
 
 class TestTablitsaVMarkdown:
     def test_bazovaya_tablitsa(self) -> None:
-        result = tablitsa_v_markdown(["Имя", "Регион"], [["Москва", "ЦФО"], ["Казань", "ПФО"]])
-        assert "| Имя | Регион |" in result
-        assert "| Москва | ЦФО |" in result
-        assert "| --- | --- |" in result
+        rezultat = tablitsa_v_markdown(["Имя", "Регион"], [["Москва", "ЦФО"], ["Казань", "ПФО"]])
+        assert "| Имя | Регион |" in rezultat
+        assert "| Москва | ЦФО |" in rezultat
+        assert "| --- | --- |" in rezultat
 
     def test_pustye_stroki(self) -> None:
-        result = tablitsa_v_markdown(["A"], [])
-        assert result == "Результаты не найдены."
+        rezultat = tablitsa_v_markdown(["A"], [])
+        assert rezultat == "Результаты не найдены."
 
     def test_odna_kolonka(self) -> None:
-        result = tablitsa_v_markdown(["Субъект"], [["Москва"], ["Татарстан"]])
-        assert "| Субъект |" in result
+        rezultat = tablitsa_v_markdown(["Субъект"], [["Москва"], ["Татарстан"]])
+        assert "| Субъект |" in rezultat
 
 
 class TestFormatirovatRubli:
@@ -73,21 +73,21 @@ class TestFormatirovatProtsent:
 
 class TestUsechSpisok:
     def test_korotkiy_spisok(self) -> None:
-        items = ["a", "b", "c"]
-        result = usech_spisok(items, maks_elementov=5)
-        assert result == "a\nb\nc"
+        elementy = ["a", "b", "c"]
+        rezultat = usech_spisok(elementy, maks_elementov=5)
+        assert rezultat == "a\nb\nc"
 
     def test_tochnyy_limit(self) -> None:
-        items = ["a", "b"]
-        result = usech_spisok(items, maks_elementov=2)
-        assert result == "a\nb"
+        elementy = ["a", "b"]
+        rezultat = usech_spisok(elementy, maks_elementov=2)
+        assert rezultat == "a\nb"
 
     def test_usechyonnyy(self) -> None:
-        items = [f"элемент {i}" for i in range(10)]
-        result = usech_spisok(items, maks_elementov=3)
-        assert "элемент 0" in result
-        assert "элемент 2" in result
-        assert "... и ещё 7 результатов." in result
+        elementy = [f"элемент {i}" for i in range(10)]
+        rezultat = usech_spisok(elementy, maks_elementov=3)
+        assert "элемент 0" in rezultat
+        assert "элемент 2" in rezultat
+        assert "... и ещё 7 результатов." in rezultat
 
 
 class TestRazobratRublevoeChislo:

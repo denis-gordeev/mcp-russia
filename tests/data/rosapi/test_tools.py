@@ -31,10 +31,10 @@ async def test_konsul_adres_po_indeksu_uspekh():
             polnyy_adres="г Москва, Красная площадь, д 1",
         ),
     ):
-        result = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
-    assert "101000" in result
-    assert "Москва" in result
-    assert "Dadata" in result
+        rezultat = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
+    assert "101000" in rezultat
+    assert "Москва" in rezultat
+    assert "Dadata" in rezultat
 
 
 async def test_konsul_adres_po_indeksu_oshibka():
@@ -44,16 +44,16 @@ async def test_konsul_adres_po_indeksu_oshibka():
         "konsultirovat_adres_po_pochtovomu",
         return_value={"oshibka": "Адрес по индексу 000000 не найден"},
     ):
-        result = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
-    assert "000000" in result
-    assert "Dadata" in result or "API" in result
+        rezultat = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
+    assert "000000" in rezultat
+    assert "Dadata" in rezultat or "API" in rezultat
 
 
 async def test_poisk_adresa_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosapi_tools.client, "poisk_adresa", return_value=[]):
-        result = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
-    assert "не найден" in result
+        rezultat = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_poisk_adresa_uspekh():
@@ -73,9 +73,9 @@ async def test_poisk_adresa_uspekh():
             }
         ],
     ):
-        result = await rosapi_tools.poisk_adresa("Красная площадь", ctx)
-    assert "Красная площадь" in result
-    assert "Dadata" in result
+        rezultat = await rosapi_tools.poisk_adresa("Красная площадь", ctx)
+    assert "Красная площадь" in rezultat
+    assert "Dadata" in rezultat
 
 
 async def test_poisk_org_po_inn_uspekh():
@@ -95,10 +95,10 @@ async def test_poisk_org_po_inn_uspekh():
             data_registratsii="2002-08-23",
         ),
     ):
-        result = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
-    assert "7707083893" in result
-    assert "Сбербанк" in result
-    assert "Действующая" in result
+        rezultat = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
+    assert "7707083893" in rezultat
+    assert "Сбербанк" in rezultat
+    assert "Действующая" in rezultat
 
 
 async def test_poisk_org_po_inn_oshibka():
@@ -108,8 +108,8 @@ async def test_poisk_org_po_inn_oshibka():
         "nayti_organizatsiyu_po_inn",
         return_value={"oshibka": "Не удалось подключиться к API Dadata"},
     ):
-        result = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
-    assert "Dadata" in result or "API" in result
+        rezultat = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
+    assert "Dadata" in rezultat or "API" in rezultat
 
 
 async def test_poisk_org_po_ogrn_oshibka():
@@ -119,16 +119,16 @@ async def test_poisk_org_po_ogrn_oshibka():
         "nayti_organizatsiyu_po_ogrn",
         return_value={"oshibka": "не найдена"},
     ):
-        result = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
-    assert "0000000000000" in result
+        rezultat = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
+    assert "0000000000000" in rezultat
 
 
 async def test_spisok_bankov():
     ctx = _maket_konteksta()
-    result = await rosapi_tools.spisok_bankov(ctx)
-    assert "Сбербанк" in result
-    assert "ВТБ" in result
-    assert "БИК" in result
+    rezultat = await rosapi_tools.spisok_bankov(ctx)
+    assert "Сбербанк" in rezultat
+    assert "ВТБ" in rezultat
+    assert "БИК" in rezultat
 
 
 async def test_konsul_bank_po_bik_dadata():
@@ -144,9 +144,9 @@ async def test_konsul_bank_po_bik_dadata():
             svift="SABRRUMM",
         ),
     ):
-        result = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)
-    assert "Сбербанк" in result
-    assert "Dadata" in result
+        rezultat = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)
+    assert "Сбербанк" in rezultat
+    assert "Dadata" in rezultat
 
 
 async def test_konsul_bank_po_bik_ne_nayden():
@@ -156,31 +156,31 @@ async def test_konsul_bank_po_bik_ne_nayden():
         "nayti_bank_po_bik",
         return_value={"oshibka": "Банк с БИК 000000000 не найден"},
     ):
-        result = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
-    assert "не найден" in result
+        rezultat = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_prazdniki_rf():
     ctx = _maket_konteksta()
-    result = await rosapi_tools.prazdniki_rf(god=2025, ctx=ctx)
-    assert "Новый год" in result
-    assert "День Победы" in result
-    assert "2025" in result
+    rezultat = await rosapi_tools.prazdniki_rf(god=2025, ctx=ctx)
+    assert "Новый год" in rezultat
+    assert "День Победы" in rezultat
+    assert "2025" in rezultat
 
 
 async def test_prazdniki_rf_default_year():
     ctx = _maket_konteksta()
-    result = await rosapi_tools.prazdniki_rf(ctx=ctx)
-    assert "Новый год" in result
+    rezultat = await rosapi_tools.prazdniki_rf(ctx=ctx)
+    assert "Новый год" in rezultat
 
 
 async def test_nalogovye_stavki():
     ctx = _maket_konteksta()
-    result = await rosapi_tools.nalogovye_stavki(ctx)
-    assert "НДС" in result
-    assert "20%" in result
-    assert "НДФЛ" in result
-    assert "13%" in result
+    rezultat = await rosapi_tools.nalogovye_stavki(ctx)
+    assert "НДС" in rezultat
+    assert "20%" in rezultat
+    assert "НДФЛ" in rezultat
+    assert "13%" in rezultat
 
 
 async def test_zagolovki_dadaty_raises_auth_error_without_key():

@@ -14,46 +14,46 @@ def _maket_konteksta():
 
 async def test_spisok_napravleniy():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_napravleniy(ctx)
-    assert "Надзор в сфере СМИ" in result
+    rezultat = await rkn_tools.spisok_napravleniy(ctx)
+    assert "Надзор в сфере СМИ" in rezultat
 
 
 async def test_spisok_tipov_licenziy():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_tipov_licenziy(ctx)
-    assert "Интернет-доступ" in result
+    rezultat = await rkn_tools.spisok_tipov_licenziy(ctx)
+    assert "Интернет-доступ" in rezultat
 
 
 async def test_spisok_kategoriy_narusheniy():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_kategoriy_narusheniy(ctx)
-    assert "Утечка персональных данных" in result
+    rezultat = await rkn_tools.spisok_kategoriy_narusheniy(ctx)
+    assert "Утечка персональных данных" in rezultat
 
 
 async def test_spisok_reestrov():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_reestrov(ctx)
-    assert "запрещённых сайтов" in result
+    rezultat = await rkn_tools.spisok_reestrov(ctx)
+    assert "запрещённых сайтов" in rezultat
 
 
 async def test_spisok_tipov_smi():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_tipov_smi(ctx)
-    assert "Сетевое издание" in result
+    rezultat = await rkn_tools.spisok_tipov_smi(ctx)
+    assert "Сетевое издание" in rezultat
 
 
 async def test_spisok_kategoriy_pd_operatorov():
     ctx = _maket_konteksta()
-    result = await rkn_tools.spisok_kategoriy_pd_operatorov(ctx)
-    assert isinstance(result, str)
-    assert len(result) > 0
+    rezultat = await rkn_tools.spisok_kategoriy_pd_operatorov(ctx)
+    assert isinstance(rezultat, str)
+    assert len(rezultat) > 0
 
 
 async def test_info_licenzii_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(rkn_tools.client, "poisk_licenziy", return_value=[]):
-        result = await rkn_tools.info_licenzii(ctx, nomer_licenzii="LIC-001")
-    assert "не найдена" in result
+        rezultat = await rkn_tools.info_licenzii(ctx, nomer_licenzii="LIC-001")
+    assert "не найдена" in rezultat
 
 
 async def test_info_licenzii_nayden():
@@ -71,23 +71,23 @@ async def test_info_licenzii_nayden():
         }
     ]
     with patch.object(rkn_tools.client, "poisk_licenziy", return_value=mock_data):
-        result = await rkn_tools.info_licenzii(ctx, nomer_licenzii="LIC-001")
-    assert "LIC-001" in result
-    assert "ООО Тест" in result
+        rezultat = await rkn_tools.info_licenzii(ctx, nomer_licenzii="LIC-001")
+    assert "LIC-001" in rezultat
+    assert "ООО Тест" in rezultat
 
 
 async def test_poisk_smi_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rkn_tools.client, "poisk_smi", return_value=[]):
-        result = await rkn_tools.poisk_smi(ctx)
-    assert "не найдены" in result
+        rezultat = await rkn_tools.poisk_smi(ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_info_operatora_pd_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rkn_tools.client, "poisk_operatora_pd", return_value=[]):
-        result = await rkn_tools.info_operatora_pd(ctx)
-    assert "не найдены" in result
+        rezultat = await rkn_tools.info_operatora_pd(ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_info_operatora_pd_nayden():
@@ -102,8 +102,8 @@ async def test_info_operatora_pd_nayden():
         }
     ]
     with patch.object(rkn_tools.client, "poisk_operatora_pd", return_value=mock_data):
-        result = await rkn_tools.info_operatora_pd(ctx, inn="7710563663")
-    assert "ООО Тест" in result
+        rezultat = await rkn_tools.info_operatora_pd(ctx, inn="7710563663")
+    assert "ООО Тест" in rezultat
 
 
 async def test_proverka_blokirovki_not_blocked():
@@ -113,8 +113,8 @@ async def test_proverka_blokirovki_not_blocked():
         "proverka_blokirovki",
         return_value={"domen": "example.com", "blokirovka": False, "istochnik": "ЕАИС"},
     ):
-        result = await rkn_tools.proverka_blokirovki(ctx, domen="example.com")
-    assert "НЕ найден" in result
+        rezultat = await rkn_tools.proverka_blokirovki(ctx, domen="example.com")
+    assert "НЕ найден" in rezultat
 
 
 async def test_proverka_blokirovki_blocked():
@@ -130,24 +130,24 @@ async def test_proverka_blokirovki_blocked():
             "organy": "Роскомнадзор",
         },
     ):
-        result = await rkn_tools.proverka_blokirovki(ctx, domen="blocked-site.ru")
-    assert "ЗАБЛОКИРОВАН" in result
+        rezultat = await rkn_tools.proverka_blokirovki(ctx, domen="blocked-site.ru")
+    assert "ЗАБЛОКИРОВАН" in rezultat
 
 
 async def test_poisk_ori_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rkn_tools.client, "poisk_ori", return_value=[]):
-        result = await rkn_tools.poisk_ori(ctx)
-    assert "не найдены" in result
+        rezultat = await rkn_tools.poisk_ori(ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_zapisi_reestra_nayden():
     ctx = _maket_konteksta()
-    result = await rkn_tools.zapisi_reestra(ctx, kod_reestra="zapreshchennye_sayty")
-    assert "запрещённых сайтов" in result
+    rezultat = await rkn_tools.zapisi_reestra(ctx, kod_reestra="zapreshchennye_sayty")
+    assert "запрещённых сайтов" in rezultat
 
 
 async def test_zapisi_reestra_ne_nayden():
     ctx = _maket_konteksta()
-    result = await rkn_tools.zapisi_reestra(ctx, kod_reestra="nesushchestvuyushchiy")
-    assert "не найден" in result
+    rezultat = await rkn_tools.zapisi_reestra(ctx, kod_reestra="nesushchestvuyushchiy")
+    assert "не найден" in rezultat

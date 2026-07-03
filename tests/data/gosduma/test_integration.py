@@ -51,23 +51,23 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_frakcii(client):
     async with client:
-        result = await client.call_tool("spisok_frakcii", {})
-    assert result is not None
-    text = str(result)
-    assert "Единая Россия" in text
+        rezultat = await client.call_tool("spisok_frakcii", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Единая Россия" in tekst
 
 
 async def test_spisok_sozyvov(client):
     async with client:
-        result = await client.call_tool("spisok_sozyvov", {})
-    assert result is not None
-    text = str(result)
-    assert "VIII" in text or "созыв" in text.lower()
+        rezultat = await client.call_tool("spisok_sozyvov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "VIII" in tekst or "созыв" in tekst.lower()
 
 
 async def test_spisok_komitetov(client):
     async with client:
-        result = await client.call_tool("spisok_komitetov", {})
-    assert result is not None
-    text = str(result)
-    assert "Комитет" in text
+        rezultat = await client.call_tool("spisok_komitetov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Комитет" in tekst

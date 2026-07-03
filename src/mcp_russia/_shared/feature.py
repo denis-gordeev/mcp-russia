@@ -95,9 +95,9 @@ class ReyestrFunktsiy:
         2. Имя НЕ начинается с '_'
         3. __init__.py экспортирует META_FUNKTSII: MetaFunktsii
         4. server.py экспортирует mcp: FastMCP
-        5. Если requires_auth=True, auth_env_var должен быть задан в окружении
+        5. Если trebuet_autentifikatsii=True, peremennaya_avt_env должен быть задан в окружении
 
-    Для отключения функции: установите enabled=False в META_FUNKTSII.
+    Для отключения функции: установите vklyuchena=False в META_FUNKTSII.
     """
 
     def __init__(self) -> None:

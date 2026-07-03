@@ -45,8 +45,8 @@ class TestHttpPoluchit:
         respx.get("https://api.example.com/data").mock(
             return_value=httpx.Response(200, json={"ok": True})
         )
-        result = await http_poluchit("https://api.example.com/data")
-        assert result == {"ok": True}
+        rezultat = await http_poluchit("https://api.example.com/data")
+        assert rezultat == {"ok": True}
 
     @pytest.mark.asyncio
     @respx.mock
@@ -54,8 +54,8 @@ class TestHttpPoluchit:
         respx.get("https://api.example.com/search").mock(
             return_value=httpx.Response(200, json=[1, 2, 3])
         )
-        result = await http_poluchit("https://api.example.com/search", parametry={"q": "test"})
-        assert result == [1, 2, 3]
+        rezultat = await http_poluchit("https://api.example.com/search", parametry={"q": "test"})
+        assert rezultat == [1, 2, 3]
 
     @pytest.mark.asyncio
     @respx.mock
@@ -77,8 +77,8 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"recovered": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/flaky", maks_povtorov=2)
-        assert result == {"recovered": True}
+            rezultat = await http_poluchit("https://api.example.com/flaky", maks_povtorov=2)
+        assert rezultat == {"recovered": True}
 
     @pytest.mark.asyncio
     @respx.mock
@@ -90,8 +90,8 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/limited", maks_povtorov=2)
-        assert result == {"ok": True}
+            rezultat = await http_poluchit("https://api.example.com/limited", maks_povtorov=2)
+        assert rezultat == {"ok": True}
 
     @pytest.mark.asyncio
     @respx.mock
@@ -116,8 +116,8 @@ class TestHttpPoluchit:
             httpx.Response(200, json={"ok": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
-            result = await http_poluchit("https://api.example.com/slow", maks_povtorov=2)
-        assert result == {"ok": True}
+            rezultat = await http_poluchit("https://api.example.com/slow", maks_povtorov=2)
+        assert rezultat == {"ok": True}
 
     @pytest.mark.asyncio
     @respx.mock

@@ -14,34 +14,34 @@ def _maket_konteksta():
 
 
 def test_spisok_tipov_nedvizhimosti():
-    result = rre_tools.spisok_tipov_nedvizhimosti()
-    assert isinstance(result, list)
-    assert len(result) > 0
-    assert any(t["kod"] == "zemelnyy_uchastok" for t in result)
+    rezultat = rre_tools.spisok_tipov_nedvizhimosti()
+    assert isinstance(rezultat, list)
+    assert len(rezultat) > 0
+    assert any(t["kod"] == "zemelnyy_uchastok" for t in rezultat)
 
 
 def test_spisok_kategoriy_zemel():
-    result = rre_tools.spisok_kategoriy_zemel()
-    assert isinstance(result, list)
-    assert any(k["kod"] == "naselennyh_punktov" for k in result)
+    rezultat = rre_tools.spisok_kategoriy_zemel()
+    assert isinstance(rezultat, list)
+    assert any(k["kod"] == "naselennyh_punktov" for k in rezultat)
 
 
 def test_spisok_vidov_ispolzovaniya():
-    result = rre_tools.spisok_vidov_ispolzovaniya()
-    assert isinstance(result, list)
-    assert any(v["kod"] == "zhiloe" for v in result)
+    rezultat = rre_tools.spisok_vidov_ispolzovaniya()
+    assert isinstance(rezultat, list)
+    assert any(v["kod"] == "zhiloe" for v in rezultat)
 
 
 def test_spisok_statusov_obiekta():
-    result = rre_tools.spisok_statusov_obiekta()
-    assert isinstance(result, list)
-    assert any(s["kod"] == "uchtenny" for s in result)
+    rezultat = rre_tools.spisok_statusov_obiekta()
+    assert isinstance(rezultat, list)
+    assert any(s["kod"] == "uchtenny" for s in rezultat)
 
 
 def test_spisok_form_sobstvennosti():
-    result = rre_tools.spisok_form_sobstvennosti()
-    assert isinstance(result, list)
-    assert any(f["kod"] == "chastnaya" for f in result)
+    rezultat = rre_tools.spisok_form_sobstvennosti()
+    assert isinstance(rezultat, list)
+    assert any(f["kod"] == "chastnaya" for f in rezultat)
 
 
 async def test_info_obekta_uspekh():
@@ -60,17 +60,17 @@ async def test_info_obekta_uspekh():
             kategoriya_zemel="Земли населённых пунктов",
         ),
     ):
-        result = await rre_tools.info_obekta("77:01:0001001:1001", ctx)
-    assert "77:01:0001001:1001" in result
-    assert "Земельный участок" in result
-    assert "pkk.rosreestr.ru" in result
+        rezultat = await rre_tools.info_obekta("77:01:0001001:1001", ctx)
+    assert "77:01:0001001:1001" in rezultat
+    assert "Земельный участок" in rezultat
+    assert "pkk.rosreestr.ru" in rezultat
 
 
 async def test_info_obekta_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_obekt", return_value=None):
-        result = await rre_tools.info_obekta("00:00:0000000:000", ctx)
-    assert "не найден" in result
+        rezultat = await rre_tools.info_obekta("00:00:0000000:000", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_kadastrovaya_stoimost_uspekh():
@@ -86,17 +86,17 @@ async def test_kadastrovaya_stoimost_uspekh():
             osnovanie="Определена в порядке массовой оценки",
         ),
     ):
-        result = await rre_tools.kadastrovaya_stoimost("77:01:0001001:1001", ctx)
-    assert "77:01:0001001:1001" in result
-    assert "5" in result
-    assert "pkk.rosreestr.ru" in result
+        rezultat = await rre_tools.kadastrovaya_stoimost("77:01:0001001:1001", ctx)
+    assert "77:01:0001001:1001" in rezultat
+    assert "5" in rezultat
+    assert "pkk.rosreestr.ru" in rezultat
 
 
 async def test_kadastrovaya_stoimost_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_kadastrovnuyu_stoimost", return_value=None):
-        result = await rre_tools.kadastrovaya_stoimost("00:00:0000000:000", ctx)
-    assert "не найден" in result
+        rezultat = await rre_tools.kadastrovaya_stoimost("00:00:0000000:000", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_prava_na_obekt_uspekh():
@@ -113,13 +113,13 @@ async def test_prava_na_obekt_uspekh():
             }
         ],
     ):
-        result = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
-    assert "Собственность" in result
-    assert "Иванов" in result
+        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
+    assert "Собственность" in rezultat
+    assert "Иванов" in rezultat
 
 
 async def test_prava_na_obekt_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_prava", return_value=[]):
-        result = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
-    assert "отсутствуют" in result or "ЕГРН" in result
+        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
+    assert "отсутствуют" in rezultat or "ЕГРН" in rezultat

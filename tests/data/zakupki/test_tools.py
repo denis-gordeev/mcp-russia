@@ -34,10 +34,10 @@ def test_parse_zakupki_search():
             }
         ]
     }
-    result = zakupki_client._razobrat_poisk_zakupok(dannye)
-    assert len(result) == 1
-    assert result[0].nomer == "0123400000125000001"
-    assert result[0].nachalnaya_tsena == 1500000.0
+    rezultat = zakupki_client._razobrat_poisk_zakupok(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].nomer == "0123400000125000001"
+    assert rezultat[0].nachalnaya_tsena == 1500000.0
 
 
 def test_parse_zakupki_search_pustoy():
@@ -59,10 +59,10 @@ def test_parse_kontrakty():
             }
         ]
     }
-    result = zakupki_client._razobrat_kontrakty(dannye)
-    assert len(result) == 1
-    assert result[0].nazvanie_podryadchika == "ООО Ромашка"
-    assert result[0].tsena == 500000.0
+    rezultat = zakupki_client._razobrat_kontrakty(dannye)
+    assert len(rezultat) == 1
+    assert rezultat[0].nazvanie_podryadchika == "ООО Ромашка"
+    assert rezultat[0].tsena == 500000.0
 
 
 def test_determine_zakon():
@@ -84,8 +84,8 @@ def test_bezopasnoe_veshchestvennoe():
 async def test_poisk_zakupok_pustoy():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
-        result = await zakupki_tools.poisk_zakupok(ctx=ctx)
-    assert "ЕИС" in result or "zakupki.gov.ru" in result
+        rezultat = await zakupki_tools.poisk_zakupok(ctx=ctx)
+    assert "ЕИС" in rezultat or "zakupki.gov.ru" in rezultat
 
 
 async def test_poisk_zakupok_s_dannymi():
@@ -105,27 +105,27 @@ async def test_poisk_zakupok_s_dannymi():
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=zakupki):
-        result = await zakupki_tools.poisk_zakupok(zapros="компьютеры", ctx=ctx)
-    assert "0123400000125000001" in result
-    assert "44-ФЗ" in result
+        rezultat = await zakupki_tools.poisk_zakupok(zapros="компьютеры", ctx=ctx)
+    assert "0123400000125000001" in rezultat
+    assert "44-ФЗ" in rezultat
 
 
 async def test_poisk_zakupok_with_filters():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
-        result = await zakupki_tools.poisk_zakupok(
+        rezultat = await zakupki_tools.poisk_zakupok(
             zapros="компьютеры", zakon="44-ФЗ", subiekt="Москва", ctx=ctx
         )
-    assert "компьютеры" in result
-    assert "44-ФЗ" in result
-    assert "Москва" in result
+    assert "компьютеры" in rezultat
+    assert "44-ФЗ" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_info_zakupki_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=None):
-        result = await zakupki_tools.info_zakupki("0000000001", ctx)
-    assert "не найдена" in result
+        rezultat = await zakupki_tools.info_zakupki("0000000001", ctx)
+    assert "не найдена" in rezultat
 
 
 async def test_info_zakupki_nayden():
@@ -144,17 +144,17 @@ async def test_info_zakupki_nayden():
         organizator_inn="7700000000",
     )
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=zakupka):
-        result = await zakupki_tools.info_zakupki("0123400000125000001", ctx)
-    assert "0123400000125000001" in result
-    assert "44-ФЗ" in result
-    assert "Срок подачи" in result
+        rezultat = await zakupki_tools.info_zakupki("0123400000125000001", ctx)
+    assert "0123400000125000001" in rezultat
+    assert "44-ФЗ" in rezultat
+    assert "Срок подачи" in rezultat
 
 
 async def test_poisk_kontraktov_pustoy():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=[]):
-        result = await zakupki_tools.poisk_kontraktov(ctx=ctx)
-    assert "контракт" in result.lower() or "ЕИС" in result
+        rezultat = await zakupki_tools.poisk_kontraktov(ctx=ctx)
+    assert "контракт" in rezultat.lower() or "ЕИС" in rezultat
 
 
 async def test_poisk_kontraktov_s_dannymi():
@@ -172,44 +172,44 @@ async def test_poisk_kontraktov_s_dannymi():
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=kontrakty):
-        result = await zakupki_tools.poisk_kontraktov(inn_postavshchika="7700000001", ctx=ctx)
-    assert "ООО Ромашка" in result
+        rezultat = await zakupki_tools.poisk_kontraktov(inn_postavshchika="7700000001", ctx=ctx)
+    assert "ООО Ромашка" in rezultat
 
 
 async def test_info_zakazchika_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_zakazchika", return_value=None):
-        result = await zakupki_tools.info_zakazchika("0000000000", ctx)
-    assert "не найден" in result
+        rezultat = await zakupki_tools.info_zakazchika("0000000000", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_info_postavshchika_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_postavshchika", return_value=None):
-        result = await zakupki_tools.info_postavshchika("0000000000", ctx)
-    assert "не найден" in result
+        rezultat = await zakupki_tools.info_postavshchika("0000000000", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_statusy_zakupok():
     ctx = _maket_konteksta()
-    result = await zakupki_tools.statusy_zakupok(ctx)
-    assert "Статусы" in result
-    assert "Планирование" in result
+    rezultat = await zakupki_tools.statusy_zakupok(ctx)
+    assert "Статусы" in rezultat
+    assert "Планирование" in rezultat
 
 
 async def test_sposoby_zakupok():
     ctx = _maket_konteksta()
-    result = await zakupki_tools.sposoby_zakupok(ctx)
-    assert "Способы" in result
-    assert "Электронный аукцион" in result
+    rezultat = await zakupki_tools.sposoby_zakupok(ctx)
+    assert "Способы" in rezultat
+    assert "Электронный аукцион" in rezultat
 
 
 async def test_plany_zakupok_pustoy():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "plany_zakupok", return_value=[]):
-        result = await zakupki_tools.plany_zakupok(god=2025, ctx=ctx)
-    assert "2025" in result
-    assert "Планы-графики" in result
+        rezultat = await zakupki_tools.plany_zakupok(god=2025, ctx=ctx)
+    assert "2025" in rezultat
+    assert "Планы-графики" in rezultat
 
 
 async def test_zametka_ob_aut_bez_tokena():

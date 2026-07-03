@@ -35,9 +35,9 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
     if _dispetcher:
         return _dispetcher
 
-    for name, feat in registry.funktsii.items():
+    for imya, feat in registry.funktsii.items():
         base = feat.put_modulya
-        _skanirovat_modul_instrumentov(base, name)
+        _skanirovat_modul_instrumentov(base, imya)
 
         # Подпакеты (напр., модуль данных с подфункциями)
         try:
@@ -46,7 +46,7 @@ def postroit_dispetcherizatsiyu(registry: ReyestrFunktsiy) -> dict[str, Any]:
                 for _, sub_path, is_pkg in pkgutil.iter_modules(pkg.__path__, base + "."):
                     sub_name = sub_path.rsplit(".", 1)[-1]
                     if is_pkg and not sub_name.startswith("_"):
-                        _skanirovat_modul_instrumentov(sub_path, f"{name}_{sub_name}")
+                        _skanirovat_modul_instrumentov(sub_path, f"{imya}_{sub_name}")
         except Exception:
             pass
 

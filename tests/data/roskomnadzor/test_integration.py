@@ -58,15 +58,15 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_reestrov(client):
     async with client:
-        result = await client.call_tool("spisok_reestrov", {})
-    assert result is not None
-    text = str(result)
-    assert "запрещённых сайтов" in text
+        rezultat = await client.call_tool("spisok_reestrov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "запрещённых сайтов" in tekst
 
 
 async def test_spisok_kategoriy_narusheniy(client):
     async with client:
-        result = await client.call_tool("spisok_kategoriy_narusheniy", {})
-    assert result is not None
-    text = str(result)
-    assert "персональных данных" in text
+        rezultat = await client.call_tool("spisok_kategoriy_narusheniy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "персональных данных" in tekst

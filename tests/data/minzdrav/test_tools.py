@@ -15,8 +15,8 @@ def _maket_konteksta():
 async def test_poisk_med_organizatsiy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=[]):
-        result = await minzdrav_tools.poisk_med_organizatsiy(ctx=ctx)
-    assert "не найдены" in result
+        rezultat = await minzdrav_tools.poisk_med_organizatsiy(ctx=ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_poisk_med_organizatsiy_nayden():
@@ -30,17 +30,17 @@ async def test_poisk_med_organizatsiy_nayden():
         },
     ]
     with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
-        result = await minzdrav_tools.poisk_med_organizatsiy(
+        rezultat = await minzdrav_tools.poisk_med_organizatsiy(
             subiekt="Москва", tip="больница", ctx=ctx
         )
-    assert "Городская больница" in result
+    assert "Городская больница" in rezultat
 
 
 async def test_info_med_organizatsii_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=None):
-        result = await minzdrav_tools.info_med_organizatsii(ctx, "nesushchestvuyushchiy")
-    assert "не найдена" in result
+        rezultat = await minzdrav_tools.info_med_organizatsii(ctx, "nesushchestvuyushchiy")
+    assert "не найдена" in rezultat
 
 
 async def test_info_med_organizatsii_nayden():
@@ -57,16 +57,16 @@ async def test_info_med_organizatsii_nayden():
         "vrachey": 200,
     }
     with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=mock_data):
-        result = await minzdrav_tools.info_med_organizatsii(ctx, "12345")
-    assert "Городская больница" in result
-    assert "500" in result
+        rezultat = await minzdrav_tools.info_med_organizatsii(ctx, "12345")
+    assert "Городская больница" in rezultat
+    assert "500" in rezultat
 
 
 async def test_poisk_litsenziy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=[]):
-        result = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
-    assert "не найдены" in result
+        rezultat = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
+    assert "не найдены" in rezultat
 
 
 async def test_poisk_litsenziy_nayden():
@@ -81,15 +81,15 @@ async def test_poisk_litsenziy_nayden():
         },
     ]
     with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=mock_data):
-        result = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
-    assert "Л041" in result
+        rezultat = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
+    assert "Л041" in rezultat
 
 
 async def test_pokazateli_zdorovya_pustoy():
     ctx = _maket_konteksta()
     with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=[]):
-        result = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
-    assert "Минздрав" in result
+        rezultat = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
+    assert "Минздрав" in rezultat
 
 
 async def test_pokazateli_zdorovya_nayden():
@@ -104,15 +104,15 @@ async def test_pokazateli_zdorovya_nayden():
         },
     ]
     with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=mock_data):
-        result = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
-    assert "73.5" in result
+        rezultat = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
+    assert "73.5" in rezultat
 
 
 async def test_statistika_zabolevaniy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=[]):
-        result = await minzdrav_tools.statistika_zabolevaniy(ctx)
-    assert "заболеваемости" in result or "Минздрав" in result
+        rezultat = await minzdrav_tools.statistika_zabolevaniy(ctx)
+    assert "заболеваемости" in rezultat or "Минздрав" in rezultat
 
 
 async def test_statistika_zabolevaniy_nayden():
@@ -127,26 +127,26 @@ async def test_statistika_zabolevaniy_nayden():
         },
     ]
     with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=mock_data):
-        result = await minzdrav_tools.statistika_zabolevaniy(ctx, kod_mkb="I00-I99")
-    assert "кровообращения" in result
+        rezultat = await minzdrav_tools.statistika_zabolevaniy(ctx, kod_mkb="I00-I99")
+    assert "кровообращения" in rezultat
 
 
 async def test_spravochnik_mo():
     ctx = _maket_konteksta()
-    result = await minzdrav_tools.spravochnik_mo(ctx)
-    assert "Типы медицинских организаций" in result
-    assert "Больница" in result
+    rezultat = await minzdrav_tools.spravochnik_mo(ctx)
+    assert "Типы медицинских организаций" in rezultat
+    assert "Больница" in rezultat
 
 
 async def test_spravochnik_spetsialnostey():
     ctx = _maket_konteksta()
-    result = await minzdrav_tools.spravochnik_spetsialnostey(ctx)
-    assert "Врачебные специальности" in result
-    assert "Терапевт" in result
+    rezultat = await minzdrav_tools.spravochnik_spetsialnostey(ctx)
+    assert "Врачебные специальности" in rezultat
+    assert "Терапевт" in rezultat
 
 
 async def test_spravochnik_mkb10():
     ctx = _maket_konteksta()
-    result = await minzdrav_tools.spravochnik_mkb10(ctx)
-    assert "МКБ-10" in result
-    assert "Инфекционные" in result
+    rezultat = await minzdrav_tools.spravochnik_mkb10(ctx)
+    assert "МКБ-10" in rezultat
+    assert "Инфекционные" in rezultat

@@ -54,15 +54,15 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_vidov_proizvodstv(client):
     async with client:
-        result = await client.call_tool("spisok_vidov_proizvodstv", {})
-    assert result is not None
-    text = str(result)
-    assert "ГИБДД" in text
+        rezultat = await client.call_tool("spisok_vidov_proizvodstv", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "ГИБДД" in tekst
 
 
 async def test_spisok_ogranicheniy(client):
     async with client:
-        result = await client.call_tool("spisok_ogranicheniy", {})
-    assert result is not None
-    text = str(result)
-    assert "выезд" in text
+        rezultat = await client.call_tool("spisok_ogranicheniy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "выезд" in tekst

@@ -63,11 +63,11 @@ class TestOgranichitelChastoty:
     @pytest.mark.asyncio
     async def test_parallelnyy_dostup(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
-        results: list[int] = []
+        rezultaty: list[int] = []
 
         async def worker(i: int) -> None:
             async with limiter:
-                results.append(i)
+                rezultaty.append(i)
 
         await asyncio.gather(worker(0), worker(1), worker(2))
-        assert sorted(results) == [0, 1, 2]
+        assert sorted(rezultaty) == [0, 1, 2]

@@ -22,51 +22,51 @@ def _maket_konteksta():
 
 async def test_spisok_stanciy():
     ctx = _maket_konteksta()
-    result = await rosgidromet_tools.spisok_stanciy(ctx)
-    assert "Станции мониторинга" in result
-    assert "Москва" in result
+    rezultat = await rosgidromet_tools.spisok_stanciy(ctx)
+    assert "Станции мониторинга" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_spisok_tipov_dannykh():
     ctx = _maket_konteksta()
-    result = await rosgidromet_tools.spisok_tipov_dannykh(ctx)
-    assert "метеорологических данных" in result
-    assert "экологических данных" in result
+    rezultat = await rosgidromet_tools.spisok_tipov_dannykh(ctx)
+    assert "метеорологических данных" in rezultat
+    assert "экологических данных" in rezultat
 
 
 async def test_pogoda_seychas_nedostupen():
     ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_pogodu", return_value=None):
-        result = await rosgidromet_tools.pogoda_seychas(stanciya="99", ctx=ctx)
-    assert "недоступны" in result
+        rezultat = await rosgidromet_tools.pogoda_seychas(stanciya="99", ctx=ctx)
+    assert "недоступны" in rezultat
 
 
 async def test_prognoz_pogody_nedostupen():
     ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_prognoz", return_value=[]):
-        result = await rosgidromet_tools.prognoz_pogody(stanciya="99", ctx=ctx)
-    assert "недоступен" in result
+        rezultat = await rosgidromet_tools.prognoz_pogody(stanciya="99", ctx=ctx)
+    assert "недоступен" in rezultat
 
 
 async def test_ekologiya_regiona_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_ekologiyu", return_value=[]):
-        result = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", ctx=ctx)
-    assert "недоступны" in result
+        rezultat = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", ctx=ctx)
+    assert "недоступны" in rezultat
 
 
 async def test_preduprezhdeniya_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_preduprezhdeniya", return_value=[]):
-        result = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", ctx=ctx)
-    assert "отсутствуют" in result
+        rezultat = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", ctx=ctx)
+    assert "отсутствуют" in rezultat
 
 
 async def test_sputnik_monitoring_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_sputnik_dannye", return_value=[]):
-        result = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", ctx=ctx)
-    assert "недоступны" in result
+        rezultat = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", ctx=ctx)
+    assert "недоступны" in rezultat
 
 
 def test_razobrat_openmeteo_pogodu():
@@ -84,13 +84,13 @@ def test_razobrat_openmeteo_pogodu():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_pogodu(dannye, info)
-    assert result.gorod == "Москва"
-    assert result.temperatura == 5.3
-    assert result.oshchushchaetsya_kak == 2.1
-    assert result.vlazhnost == 72
-    assert result.opisaniye == "Пасмурно"
-    assert result.veter_napravlenie == "Ю"
+    rezultat = _razobrat_openmeteo_pogodu(dannye, info)
+    assert rezultat.gorod == "Москва"
+    assert rezultat.temperatura == 5.3
+    assert rezultat.oshchushchaetsya_kak == 2.1
+    assert rezultat.vlazhnost == 72
+    assert rezultat.opisaniye == "Пасмурно"
+    assert rezultat.veter_napravlenie == "Ю"
 
 
 def test_razobrat_openmeteo_prognoz():
@@ -105,13 +105,13 @@ def test_razobrat_openmeteo_prognoz():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_prognoz(dannye, info)
-    assert len(result) == 2
-    assert result[0].gorod == "Москва"
-    assert result[0].temperatura_dnem == 22.0
-    assert result[0].temperatura_nochyu == 10.0
-    assert result[0].opisaniye == "Преимущественно ясно"
-    assert result[1].opisaniye == "Ясно"
+    rezultat = _razobrat_openmeteo_prognoz(dannye, info)
+    assert len(rezultat) == 2
+    assert rezultat[0].gorod == "Москва"
+    assert rezultat[0].temperatura_dnem == 22.0
+    assert rezultat[0].temperatura_nochyu == 10.0
+    assert rezultat[0].opisaniye == "Преимущественно ясно"
+    assert rezultat[1].opisaniye == "Ясно"
 
 
 def test_razobrat_openmeteo_ekologiyu():
@@ -127,14 +127,14 @@ def test_razobrat_openmeteo_ekologiyu():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_ekologiyu(dannye, info)
-    assert len(result) == 6
-    assert result[0].pokazatel == "PM2.5"
-    assert result[0].znachenie == 12.5
-    assert result[0].prevyshenie is False
-    assert result[1].pokazatel == "PM10"
-    assert result[1].znachenie == 35.0
-    assert result[1].prevyshenie is False
+    rezultat = _razobrat_openmeteo_ekologiyu(dannye, info)
+    assert len(rezultat) == 6
+    assert rezultat[0].pokazatel == "PM2.5"
+    assert rezultat[0].znachenie == 12.5
+    assert rezultat[0].prevyshenie is False
+    assert rezultat[1].pokazatel == "PM10"
+    assert rezultat[1].znachenie == 35.0
+    assert rezultat[1].prevyshenie is False
 
 
 def test_razobrat_openmeteo_ekologiyu_prevyshenie():
@@ -150,12 +150,12 @@ def test_razobrat_openmeteo_ekologiyu_prevyshenie():
         }
     }
     info = STANCII_MONITORINGA[0]
-    result = _razobrat_openmeteo_ekologiyu(dannye, info)
-    assert result[0].prevyshenie is True
-    assert result[1].prevyshenie is True
-    assert result[3].prevyshenie is True
-    assert result[4].prevyshenie is True
-    assert result[5].prevyshenie is True
+    rezultat = _razobrat_openmeteo_ekologiyu(dannye, info)
+    assert rezultat[0].prevyshenie is True
+    assert rezultat[1].prevyshenie is True
+    assert rezultat[3].prevyshenie is True
+    assert rezultat[4].prevyshenie is True
+    assert rezultat[5].prevyshenie is True
 
 
 def test_gpa_v_mmrtst():

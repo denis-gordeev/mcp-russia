@@ -63,23 +63,23 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_bankov(client):
     async with client:
-        result = await client.call_tool("spisok_bankov", {})
-    assert result is not None
-    text = str(result)
-    assert "Сбербанк" in text or "ВТБ" in text
+        rezultat = await client.call_tool("spisok_bankov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Сбербанк" in tekst or "ВТБ" in tekst
 
 
 async def test_prazdniki_rf(client):
     async with client:
-        result = await client.call_tool("prazdniki_rf", {"god": 2025})
-    assert result is not None
-    text = str(result)
-    assert "Новый год" in text or "Победы" in text
+        rezultat = await client.call_tool("prazdniki_rf", {"god": 2025})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Новый год" in tekst or "Победы" in tekst
 
 
 async def test_nalogovye_stavki(client):
     async with client:
-        result = await client.call_tool("nalogovye_stavki", {})
-    assert result is not None
-    text = str(result)
-    assert "НДС" in text or "налог" in text.lower()
+        rezultat = await client.call_tool("nalogovye_stavki", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "НДС" in tekst or "налог" in tekst.lower()

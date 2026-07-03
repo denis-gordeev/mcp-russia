@@ -53,15 +53,15 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_tipov_nedvizhimosti(client):
     async with client:
-        result = await client.call_tool("spisok_tipov_nedvizhimosti", {})
-    assert result is not None
-    text = str(result)
-    assert "Земельный участок" in text
+        rezultat = await client.call_tool("spisok_tipov_nedvizhimosti", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Земельный участок" in tekst
 
 
 async def test_spisok_kategoriy_zemel(client):
     async with client:
-        result = await client.call_tool("spisok_kategoriy_zemel", {})
-    assert result is not None
-    text = str(result)
-    assert "населённых пунктов" in text
+        rezultat = await client.call_tool("spisok_kategoriy_zemel", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "населённых пунктов" in tekst

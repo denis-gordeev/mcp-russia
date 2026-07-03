@@ -15,8 +15,8 @@ def _maket_konteksta():
 async def test_spisok_senatorov():
     ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "poisk_senatorov", return_value=[]):
-        result = await sovfed_tools.spisok_senatorov(ctx)
-    assert isinstance(result, str)
+        rezultat = await sovfed_tools.spisok_senatorov(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_spisok_senatorov_nayden():
@@ -33,15 +33,15 @@ async def test_spisok_senatorov_nayden():
         },
     ]
     with patch.object(sovfed_tools.client, "poisk_senatorov", return_value=mock_data):
-        result = await sovfed_tools.spisok_senatorov(ctx)
-    assert "Матвиенко" in result
+        rezultat = await sovfed_tools.spisok_senatorov(ctx)
+    assert "Матвиенко" in rezultat
 
 
 async def test_info_senatora_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "info_senatora", return_value=None):
-        result = await sovfed_tools.info_senatora("nesushchestvuyushchiy", ctx)
-    assert "не найден" in result
+        rezultat = await sovfed_tools.info_senatora("nesushchestvuyushchiy", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_info_senatora_nayden():
@@ -57,27 +57,27 @@ async def test_info_senatora_nayden():
         "data_naznacheniya": "2011",
     }
     with patch.object(sovfed_tools.client, "info_senatora", return_value=mock_data):
-        result = await sovfed_tools.info_senatora("1", ctx)
-    assert "Матвиенко" in result
+        rezultat = await sovfed_tools.info_senatora("1", ctx)
+    assert "Матвиенко" in rezultat
 
 
 async def test_spisok_komitetov():
     ctx = _maket_konteksta()
-    result = await sovfed_tools.spisok_komitetov(ctx)
-    assert "Комитет" in result
+    rezultat = await sovfed_tools.spisok_komitetov(ctx)
+    assert "Комитет" in rezultat
 
 
 async def test_spisok_komissiy():
     ctx = _maket_konteksta()
-    result = await sovfed_tools.spisok_komissiy(ctx)
-    assert "Комиссия" in result or "комиссия" in result.lower()
+    rezultat = await sovfed_tools.spisok_komissiy(ctx)
+    assert "Комиссия" in rezultat or "комиссия" in rezultat.lower()
 
 
 async def test_poisk_zakonoproektov_pustoy():
     ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "poisk_zakonoproektov", return_value=[]):
-        result = await sovfed_tools.poisk_zakonoproektov(ctx)
-    assert isinstance(result, str)
+        rezultat = await sovfed_tools.poisk_zakonoproektov(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_zakonoproektov_nayden():
@@ -91,15 +91,15 @@ async def test_poisk_zakonoproektov_nayden():
         },
     ]
     with patch.object(sovfed_tools.client, "poisk_zakonoproektov", return_value=mock_data):
-        result = await sovfed_tools.poisk_zakonoproektov(ctx)
-    assert "федеральном бюджете" in result
+        rezultat = await sovfed_tools.poisk_zakonoproektov(ctx)
+    assert "федеральном бюджете" in rezultat
 
 
 async def test_spisok_zasedaniy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "spisok_zasedaniy", return_value=[]):
-        result = await sovfed_tools.spisok_zasedaniy(ctx)
-    assert isinstance(result, str)
+        rezultat = await sovfed_tools.spisok_zasedaniy(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_spisok_zasedaniy_nayden():
@@ -113,5 +113,5 @@ async def test_spisok_zasedaniy_nayden():
         },
     ]
     with patch.object(sovfed_tools.client, "spisok_zasedaniy", return_value=mock_data):
-        result = await sovfed_tools.spisok_zasedaniy(ctx, god=2026)
-    assert "2026-01-15" in result
+        rezultat = await sovfed_tools.spisok_zasedaniy(ctx, god=2026)
+    assert "2026-01-15" in rezultat

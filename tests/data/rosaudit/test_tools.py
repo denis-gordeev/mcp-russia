@@ -14,30 +14,30 @@ def _maket_konteksta():
 
 async def test_spisok_napravleniy():
     ctx = _maket_konteksta()
-    result = await rosaudit_tools.spisok_napravleniy(ctx)
-    assert "Направления контрольной деятельности" in result
-    assert "бюджет" in result.lower()
+    rezultat = await rosaudit_tools.spisok_napravleniy(ctx)
+    assert "Направления контрольной деятельности" in rezultat
+    assert "бюджет" in rezultat.lower()
 
 
 async def test_spisok_tipov_meropriyatiy():
     ctx = _maket_konteksta()
-    result = await rosaudit_tools.spisok_tipov_meropriyatiy(ctx)
-    assert "Типы контрольных мероприятий" in result
-    assert "Проверка" in result
+    rezultat = await rosaudit_tools.spisok_tipov_meropriyatiy(ctx)
+    assert "Типы контрольных мероприятий" in rezultat
+    assert "Проверка" in rezultat
 
 
 async def test_spisok_subiektov_audita():
     ctx = _maket_konteksta()
-    result = await rosaudit_tools.spisok_subiektov_audita(ctx)
-    assert "Субъекты" in result
-    assert "Федеральные" in result
+    rezultat = await rosaudit_tools.spisok_subiektov_audita(ctx)
+    assert "Субъекты" in rezultat
+    assert "Федеральные" in rezultat
 
 
 async def test_poisk_kontrolnyh_meropriyatiy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_kontrolnyh_meropriyatiy", return_value=[]):
-        result = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx)
-    assert "не найдены" in result
+        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_poisk_kontrolnyh_meropriyatiy_nayden():
@@ -54,8 +54,8 @@ async def test_poisk_kontrolnyh_meropriyatiy_nayden():
     with patch.object(
         rosaudit_tools.client, "poisk_kontrolnyh_meropriyatiy", return_value=mock_data
     ):
-        result = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx, god=2026)
-    assert "КМ-2026-001" in result
+        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx, god=2026)
+    assert "КМ-2026-001" in rezultat
 
 
 async def test_info_kontrolnogo_meropriyatiya_ne_nayden():
@@ -63,8 +63,10 @@ async def test_info_kontrolnogo_meropriyatiya_ne_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None
     ):
-        result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("nesushchestvuyushchiy", ctx)
-    assert "не найдено" in result
+        rezultat = await rosaudit_tools.info_kontrolnogo_meropriyatiya(
+            "nesushchestvuyushchiy", ctx
+        )
+    assert "не найдено" in rezultat
 
 
 async def test_info_kontrolnogo_meropriyatiya_nayden():
@@ -82,9 +84,9 @@ async def test_info_kontrolnogo_meropriyatiya_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=mock_data
     ):
-        result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("КМ-2026-001", ctx)
-    assert "Проверка исполнения бюджета" in result
-    assert "2026-01-15" in result
+        rezultat = await rosaudit_tools.info_kontrolnogo_meropriyatiya("КМ-2026-001", ctx)
+    assert "Проверка исполнения бюджета" in rezultat
+    assert "2026-01-15" in rezultat
 
 
 async def test_info_auditorskogo_zaklyucheniya_ne_nayden():
@@ -92,8 +94,10 @@ async def test_info_auditorskogo_zaklyucheniya_ne_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None
     ):
-        result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("nesushchestvuyushchiy", ctx)
-    assert "не найдено" in result
+        rezultat = await rosaudit_tools.info_auditorskogo_zaklyucheniya(
+            "nesushchestvuyushchiy", ctx
+        )
+    assert "не найдено" in rezultat
 
 
 async def test_info_auditorskogo_zaklyucheniya_nayden():
@@ -110,16 +114,16 @@ async def test_info_auditorskogo_zaklyucheniya_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=mock_data
     ):
-        result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("АЗ-2026-001", ctx)
-    assert "Заключение" in result
-    assert "Минфин" in result
+        rezultat = await rosaudit_tools.info_auditorskogo_zaklyucheniya("АЗ-2026-001", ctx)
+    assert "Заключение" in rezultat
+    assert "Минфин" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nedostupen():
     ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=None):
-        result = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2024")
-    assert "недоступны" in result
+        rezultat = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2024")
+    assert "недоступны" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nayden():
@@ -133,16 +137,16 @@ async def test_ispolnenie_byudzheta_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=mock_data
     ):
-        result = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2025")
-    assert "2025" in result
-    assert "Доходы" in result
+        rezultat = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2025")
+    assert "2025" in rezultat
+    assert "Доходы" in rezultat
 
 
 async def test_poisk_narusheniy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=[]):
-        result = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Тест")
-    assert "не найдены" in result
+        rezultat = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Тест")
+    assert "не найдены" in rezultat
 
 
 async def test_poisk_narusheniy_nayden():
@@ -156,5 +160,5 @@ async def test_poisk_narusheniy_nayden():
         },
     ]
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=mock_data):
-        result = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Минобороны")
-    assert "Минобороны" in result
+        rezultat = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Минобороны")
+    assert "Минобороны" in rezultat

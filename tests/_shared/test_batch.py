@@ -24,14 +24,14 @@ def _reset_dispatch() -> None:
 class TestPostroenieDispetcherizatsii:
     def test_stroitsya_iz_reestra(self) -> None:
         """Должен обнаруживать инструменты из модулей features."""
-        result = batch.postroit_dispetcherizatsiyu(_real_registry())
-        assert any(k.startswith("cbrf_") for k in result)
+        rezultat = batch.postroit_dispetcherizatsiyu(_real_registry())
+        assert any(k.startswith("cbrf_") for k in rezultat)
 
     def test_nakhodit_vlozhennye_moduli(self) -> None:
         """Должен обнаруживать инструменты в подпакетах."""
-        result = batch.postroit_dispetcherizatsiyu(_real_registry())
-        assert any(k.startswith("sovfed_") for k in result)
-        assert any(k.startswith("kaznacheistvo_") for k in result)
+        rezultat = batch.postroit_dispetcherizatsiyu(_real_registry())
+        assert any(k.startswith("sovfed_") for k in rezultat)
+        assert any(k.startswith("kaznacheistvo_") for k in rezultat)
 
     def test_keshiruet_rezultat(self) -> None:
         """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
@@ -45,23 +45,23 @@ class TestVypolneniePaketa:
     @pytest.mark.asyncio
     async def test_pustoy_spisok(self) -> None:
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy([], ctx)
-        assert "Нет запросов" in result
+        rezultat = await batch.vypolnit_paket_vnutrenniy([], ctx)
+        assert "Нет запросов" in rezultat
 
     @pytest.mark.asyncio
     async def test_prevyshaet_limit(self) -> None:
         ctx = _maket_konteksta()
         queries = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
-        result = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
-        assert "Максимум 10" in result
+        rezultat = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
+        assert "Максимум 10" in rezultat
 
     @pytest.mark.asyncio
     async def test_neizvestnyy_instrument(self) -> None:
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "nonexistent_tool", "argumenty": {}}], ctx
         )
-        assert "не найден" in result
+        assert "не найден" in rezultat
 
     @pytest.mark.asyncio
     async def test_vyzyvaet_instrument_s_kontekstom(self) -> None:
@@ -73,10 +73,10 @@ class TestVypolneniePaketa:
         batch._dispetcher["test_tool"] = mock_fn
 
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "test_tool", "argumenty": {"param": "value"}}], ctx
         )
-        assert "rezultat ok" in result
+        assert "rezultat ok" in rezultat
         mock_fn.assert_called_once()
 
     @pytest.mark.asyncio
@@ -89,10 +89,10 @@ class TestVypolneniePaketa:
         batch._dispetcher["greet"] = no_ctx_tool
 
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "greet", "argumenty": {"name": "world"}}], ctx
         )
-        assert "hello world" in result
+        assert "hello world" in rezultat
 
     @pytest.mark.asyncio
     async def test_parallelnoe_vypolnenie(self) -> None:
@@ -102,12 +102,12 @@ class TestVypolneniePaketa:
         async def counting_tool(n: int) -> str:
             nonlocal call_count
             call_count += 1
-            return f"result-{n}"
+            return f"rezultat-{n}"
 
         batch._dispetcher["counter"] = counting_tool
 
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "counter", "argumenty": {"n": 1}},
                 {"instrument": "counter", "argumenty": {"n": 2}},
@@ -116,9 +116,9 @@ class TestVypolneniePaketa:
             ctx,
         )
         assert call_count == 3
-        assert "result-1" in result
-        assert "result-2" in result
-        assert "result-3" in result
+        assert "rezultat-1" in rezultat
+        assert "rezultat-2" in rezultat
+        assert "rezultat-3" in rezultat
 
     @pytest.mark.asyncio
     async def test_obrabatyvaet_oshibku_instrumenta(self) -> None:
@@ -131,11 +131,11 @@ class TestVypolneniePaketa:
         batch._dispetcher["fail"] = failing_tool
 
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "fail", "argumenty": {}}], ctx
         )
-        assert "Ошибка" in result
-        assert "timeout" in result.lower()
+        assert "Ошибка" in rezultat
+        assert "timeout" in rezultat.lower()
 
     @pytest.mark.asyncio
     async def test_smeshannye_uspekh_i_oshibka(self) -> None:
@@ -152,15 +152,15 @@ class TestVypolneniePaketa:
         batch._dispetcher["bad"] = bad_tool
 
         ctx = _maket_konteksta()
-        result = await batch.vypolnit_paket_vnutrenniy(
+        rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "ok", "argumenty": {}},
                 {"instrument": "bad", "argumenty": {}},
             ],
             ctx,
         )
-        assert "success" in result
-        assert "Ошибка" in result
+        assert "success" in rezultat
+        assert "Ошибка" in rezultat
 
 
 def _real_registry() -> batch.ReyestrFunktsiy:

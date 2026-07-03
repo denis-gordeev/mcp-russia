@@ -42,7 +42,7 @@ async def test_resursy_zaregistrirovany(client):
 
 async def test_spisok_komitetov(client):
     async with client:
-        result = await client.call_tool("spisok_komitetov", {})
-    assert result is not None
-    text = str(result)
-    assert "Комитет" in text
+        rezultat = await client.call_tool("spisok_komitetov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Комитет" in tekst

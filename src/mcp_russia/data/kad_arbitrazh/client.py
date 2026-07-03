@@ -226,7 +226,7 @@ async def poisk_del(
     otvetchik: str = "",
     inn: str = "",
     kategoriya: str = "",
-    status: str = "",
+    sostoyanie: str = "",
     sudya: str = "",
     ogranichenie: int = 20,
 ) -> list[SudebnoeDelo]:
@@ -238,7 +238,7 @@ async def poisk_del(
         otvetchik: Название ответчика.
         inn: ИНН участника.
         kategoriya: Категория дела.
-        status: Статус дела.
+        sostoyanie: Статус дела.
         sudya: Фамилия судьи.
         ogranichenie: Максимальное количество результатов.
 

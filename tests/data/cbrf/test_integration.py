@@ -50,21 +50,21 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_valyut(client):
     async with client:
-        result = await client.call_tool("spisok_valyut", {})
-    assert result is not None
-    text = str(result)
-    assert "USD" in text or "валют" in text
+        rezultat = await client.call_tool("spisok_valyut", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "USD" in tekst or "валют" in tekst
 
 
 async def test_uznat_kurs_valyuty(client):
     async with client:
-        result = await client.call_tool("uznat_kurs_valyuty", {"kod": "USD"})
-    assert result is not None
-    text = str(result)
-    assert "USD" in text or "ЦБ РФ" in text or "не найдена" in text
+        rezultat = await client.call_tool("uznat_kurs_valyuty", {"kod": "USD"})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "USD" in tekst or "ЦБ РФ" in tekst or "не найдена" in tekst
 
 
 async def test_kursy_po_stranam(client):
     async with client:
-        result = await client.call_tool("kursy_po_stranam", {})
-    assert result is not None
+        rezultat = await client.call_tool("kursy_po_stranam", {})
+    assert rezultat is not None

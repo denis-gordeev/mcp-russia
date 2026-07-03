@@ -2,6 +2,70 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-03 (шестьдесят третий проход — русификация `status`→`sostoyanie`, `result`→`rezultat`, `text`→`tekst`, `name`→`imya`/`nazvanie`, `key`→`klyuch`)
+
+### Выполнено
+
+- **Исправление критического бага: `status`→`sostoyanie` в параметрах client.py** (4 файла):
+  - `gosduma/client.py:129` — параметр `status` → `sostoyanie`; tools.py уже вызывал с `sostoyanie=sostoyanie`, но client.py ожидал `status` (TypeError при runtime)
+  - `sovfed/client.py:127` — аналогичный баг (tools.py вызывал с `sostoyanie=`, client.py имел `status`)
+  - `rosaudit/client.py:28` — аналогичный баг
+  - `kad_arbitrazh/client.py:229` — параметр переименован для согласованности
+  - Во всех случаях `parametry["status"] = sostoyanie` — ключ API оставлен без изменений
+- **Русификация `status`→`sostoyanie` как локальной переменной** (1 файл):
+  - `zakupki/tools.py:244` — `status = "Добросовестный"...` → `sostoyanie`
+- **Русификация `name`→`imya`/`nazvanie` в цикловых переменных** (4 файла):
+  - `batch.py:38` — `for name, feat in` → `for imya, feat in` (+ `_skanirovat_modul_instrumentov(base, imya)` и f-string)
+  - `fssp/tools.py:79` — `for name, kod in` → `for nazvanie, kod in`
+  - `rosapi/tools.py:290` — `for kod, name in` → `for kod, nazvanie in`
+  - `rosapi/client.py:204` — `for stroka_daty, name in` → `for stroka_daty, nazvanie in` (+ `"nazvanie": name` → `"nazvanie": nazvanie`)
+- **Русификация `key`→`klyuch` в цикловых переменных** (3 файла):
+  - `deloproizvodstvo/tools.py:96` — `for key, o in ОБРАЩЕНИЯ.items()` → `for klyuch, o in` (+ f-string и условие)
+  - `cekrf/client.py:401` — `for key, v in IZVESTNYE_VYBORY.items()` → `for klyuch, v in` (+ `"klyuch": key` → `"klyuch": klyuch`)
+  - `rosapi/client.py:46` — `for key in keys:` → `for klyuch in keys:` (+ `dannye.get(key, default)` → `dannye.get(klyuch, default)`)
+- **Исправление устаревших docstring-ссылок в feature.py** (2 строки):
+  - `requires_auth=True, auth_env_var` → `trebuet_autentifikatsii=True, peremennaya_avt_env`
+  - `enabled=False` → `vklyuchena=False`
+- **Исправление docstring-примеров в http_client.py** (2 строки):
+  - `response = await client.get(...)` → `otvet = await client.get(...)`
+  - `data = await http_poluchit(...)` → `dannye = await http_poluchit(...)`
+- **Массовая русификация `result`→`rezultat` в тестах** (~1 092 замены в 54 файлах):
+  - Все `result = ...` → `rezultat = ...`
+  - Все `assert "..." in result` → `assert "..." in rezultat`
+  - Все `result.lower()` → `rezultat.lower()`
+  - Все `result.endswith()` → `rezultat.endswith()`
+  - Все `result.data` → `rezultat.data`, `result.messages` → `rezultat.messages`, `result.content` → `rezultat.content`
+  - `results` (множественное число) → `rezultaty` (по установленной конвенции)
+  - `max_results=` (параметр BM25SearchTransform) оставлен без изменений (API внешней библиотеки)
+  - Строковые ключи `"results"` в mock-данных оставлены без изменений (ключи ответа API)
+- **Русификация `text`→`tekst` в тестах** (~66 замен в 23 файлах):
+  - `text = str(rezultat)` → `tekst = str(rezultat)`
+  - `text = str(rezultat.content)` → `tekst = str(rezultat.content)`
+  - `text = content[0].text ...` → `tekst = content[0].text ...`
+  - `assert "..." in text` → `assert "..." in tekst`
+  - `text.lower()` → `tekst.lower()`
+  - `text or` → `tekst or`
+  - `.text` (атрибут FastMCP) и `text=` (параметр httpx.Response) оставлены без изменений
+- **Русификация `items`→`elementy` в test_formatting.py** (3 замены)
+- **Русификация `"catalog text"`→`"tekst_kataloga"`** (6 замен в test_discovery.py)
+- **Исправлены 3 mypy-ошибки**: `status`→`sostoyanie` в client.py устранило `Unexpected keyword argument "sostoyanie"`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` — 545 passed, 1 skipped (unit), mypy — 183 ошибки (было 186, −3)
+
+### Ключевые архитектурные решения
+
+- **`status`→`sostoyanie` в client.py**: критический баг — tools.py передавал `sostoyanie=sostoyanie`, но client.py ожидал `status`; замена устранила TypeError при runtime и рассинхронизацию mypy
+- **`results`→`rezultaty`**: при массовой замене `result`→`rezultat` множественное число `results` превратилось в `rezultats`, исправлено на `rezultaty` по конвенции
+- **`max_results` не переименован**: параметр BM25SearchTransform из fastmcp (внешняя библиотека)
+- **`.text` и `text=` не переименованы**: атрибут FastMCP и параметр httpx.Response — API внешних библиотек
+- **Строковые ключи `"results"` не переименованы**: ключи в mock-данных тестов закупок, соответствующие реальным ключам API
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: код и тесты полностью русифицированы — оставшиеся английские идентификаторы являются только строковыми ключами API-ответов (`.get("key")`), keyword-аргументами внешних библиотек (httpx, Pydantic, FastMCP) и стандартными Python-идентификаторами
+
 ## Статус раунда 2026-07-03 (шестьдесят второй проход — русификация тестовых суффиксов, фикстуры _mock_ctx, строковых значений)
 
 ### Выполнено

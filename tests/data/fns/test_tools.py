@@ -14,34 +14,34 @@ def _maket_konteksta():
 
 
 def test_spisok_nalogovyh_rezhimov():
-    result = fns_tools.spisok_nalogovyh_rezhimov()
-    assert isinstance(result, list)
-    assert len(result) > 0
-    assert any(r["kod"] == "osno" for r in result)
+    rezultat = fns_tools.spisok_nalogovyh_rezhimov()
+    assert isinstance(rezultat, list)
+    assert len(rezultat) > 0
+    assert any(r["kod"] == "osno" for r in rezultat)
 
 
 def test_spisok_vidov_nalogov():
-    result = fns_tools.spisok_vidov_nalogov()
-    assert isinstance(result, list)
-    assert any(v["kod"] == "nds" for v in result)
+    rezultat = fns_tools.spisok_vidov_nalogov()
+    assert isinstance(rezultat, list)
+    assert any(v["kod"] == "nds" for v in rezultat)
 
 
 def test_spisok_tipov_proverok():
-    result = fns_tools.spisok_tipov_proverok()
-    assert isinstance(result, list)
-    assert any(t["kod"] == "kameralnaya" for t in result)
+    rezultat = fns_tools.spisok_tipov_proverok()
+    assert isinstance(rezultat, list)
+    assert any(t["kod"] == "kameralnaya" for t in rezultat)
 
 
 def test_spisok_statusov_organizaciy():
-    result = fns_tools.spisok_statusov_organizaciy()
-    assert isinstance(result, list)
-    assert any(s["kod"] == "deystvuyushchaya" for s in result)
+    rezultat = fns_tools.spisok_statusov_organizaciy()
+    assert isinstance(rezultat, list)
+    assert any(s["kod"] == "deystvuyushchaya" for s in rezultat)
 
 
 def test_spisok_kategoriy_nalogoplatelshchikov():
-    result = fns_tools.spisok_kategoriy_nalogoplatelshchikov()
-    assert isinstance(result, list)
-    assert any(k["kod"] == "ip" for k in result)
+    rezultat = fns_tools.spisok_kategoriy_nalogoplatelshchikov()
+    assert isinstance(rezultat, list)
+    assert any(k["kod"] == "ip" for k in rezultat)
 
 
 async def test_info_organizacii_nayden():
@@ -56,17 +56,17 @@ async def test_info_organizacii_nayden():
         sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=mock_org):
-        result = await fns_tools.info_organizacii("7707083893", ctx=ctx)
-    assert "7707083893" in result
-    assert "ПАО Сбербанк" in result
-    assert "Действующая" in result
+        rezultat = await fns_tools.info_organizacii("7707083893", ctx=ctx)
+    assert "7707083893" in rezultat
+    assert "ПАО Сбербанк" in rezultat
+    assert "Действующая" in rezultat
 
 
 async def test_info_organizacii_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=None):
-        result = await fns_tools.info_organizacii("0000000000", ctx=ctx)
-    assert "не найдена" in result
+        rezultat = await fns_tools.info_organizacii("0000000000", ctx=ctx)
+    assert "не найдена" in rezultat
 
 
 async def test_info_ip_nayden():
@@ -79,27 +79,27 @@ async def test_info_ip_nayden():
         sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_ip", return_value=mock_ip):
-        result = await fns_tools.info_ip("500100732259", ctx=ctx)
-    assert "500100732259" in result
-    assert "Иванов" in result
+        rezultat = await fns_tools.info_ip("500100732259", ctx=ctx)
+    assert "500100732259" in rezultat
+    assert "Иванов" in rezultat
 
 
 async def test_info_ip_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_ip", return_value=None):
-        result = await fns_tools.info_ip("000000000000", ctx=ctx)
-    assert "не найден" in result
+        rezultat = await fns_tools.info_ip("000000000000", ctx=ctx)
+    assert "не найден" in rezultat
 
 
 async def test_proverki_organizacii():
     ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_proverki", return_value=[]):
-        result = await fns_tools.proverki_organizacii("7707083893", ctx=ctx)
-    assert "недоступны" in result
+        rezultat = await fns_tools.proverki_organizacii("7707083893", ctx=ctx)
+    assert "недоступны" in rezultat
 
 
 async def test_nalogovye_nachisleniya():
     ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_nachisleniya", return_value=[]):
-        result = await fns_tools.nalogovye_nachisleniya("7707083893", ctx=ctx)
-    assert "недоступны" in result
+        rezultat = await fns_tools.nalogovye_nachisleniya("7707083893", ctx=ctx)
+    assert "недоступны" in rezultat

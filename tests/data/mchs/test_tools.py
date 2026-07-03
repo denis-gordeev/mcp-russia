@@ -15,33 +15,33 @@ def _maket_konteksta():
 
 async def test_spisok_vidov_chs():
     ctx = _maket_konteksta()
-    result = await mchs_tools.spisok_vidov_chs(ctx)
-    assert "техногенн" in result.lower() or "природн" in result.lower()
+    rezultat = await mchs_tools.spisok_vidov_chs(ctx)
+    assert "техногенн" in rezultat.lower() or "природн" in rezultat.lower()
 
 
 async def test_spisok_klassov_chs():
     ctx = _maket_konteksta()
-    result = await mchs_tools.spisok_klassov_chs(ctx)
-    assert "локальн" in result.lower() or "федеральн" in result.lower()
+    rezultat = await mchs_tools.spisok_klassov_chs(ctx)
+    assert "локальн" in rezultat.lower() or "федеральн" in rezultat.lower()
 
 
 async def test_spisok_vidov_pojarov():
     ctx = _maket_konteksta()
-    result = await mchs_tools.spisok_vidov_pojarov(ctx)
-    assert "пожар" in result.lower()
+    rezultat = await mchs_tools.spisok_vidov_pojarov(ctx)
+    assert "пожар" in rezultat.lower()
 
 
 async def test_spisok_tipov_opasnosti():
     ctx = _maket_konteksta()
-    result = await mchs_tools.spisok_tipov_opasnosti(ctx)
-    assert "радиац" in result.lower() or "опасн" in result.lower()
+    rezultat = await mchs_tools.spisok_tipov_opasnosti(ctx)
+    assert "радиац" in rezultat.lower() or "опасн" in rezultat.lower()
 
 
 async def test_statistika_pojarov_zapasnoy():
     ctx = _maket_konteksta()
     with patch.object(mchs_tools.client, "statistika_pojarov", return_value=[]):
-        result = await mchs_tools.statistika_pojarov(ctx)
-    assert "356" in result or "2023" in result or "резервные данные" in result
+        rezultat = await mchs_tools.statistika_pojarov(ctx)
+    assert "356" in rezultat or "2023" in rezultat or "резервные данные" in rezultat
 
 
 async def test_statistika_pojarov_s_dannymi():
@@ -57,15 +57,15 @@ async def test_statistika_pojarov_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "statistika_pojarov", return_value=mock_data):
-        result = await mchs_tools.statistika_pojarov(ctx)
-    assert "Московск" in result
+        rezultat = await mchs_tools.statistika_pojarov(ctx)
+    assert "Московск" in rezultat
 
 
 async def test_poisk_chs_pustoy():
     ctx = _maket_konteksta()
     with patch.object(mchs_tools.client, "poisk_chs", return_value=[]):
-        result = await mchs_tools.poisk_chs(ctx)
-    assert isinstance(result, str)
+        rezultat = await mchs_tools.poisk_chs(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_chs_nayden():
@@ -84,15 +84,15 @@ async def test_poisk_chs_nayden():
         },
     ]
     with patch.object(mchs_tools.client, "poisk_chs", return_value=mock_data):
-        result = await mchs_tools.poisk_chs(ctx)
-    assert "Техногенн" in result
+        rezultat = await mchs_tools.poisk_chs(ctx)
+    assert "Техногенн" in rezultat
 
 
 async def test_radiatsionnyy_monitoring_pustoy():
     ctx = _maket_konteksta()
     with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=[]):
-        result = await mchs_tools.radiatsionnyy_monitoring(ctx)
-    assert isinstance(result, str)
+        rezultat = await mchs_tools.radiatsionnyy_monitoring(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_radiatsionnyy_monitoring_s_dannymi():
@@ -108,15 +108,15 @@ async def test_radiatsionnyy_monitoring_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=mock_data):
-        result = await mchs_tools.radiatsionnyy_monitoring(ctx)
-    assert "Москва" in result
+        rezultat = await mchs_tools.radiatsionnyy_monitoring(ctx)
+    assert "Москва" in rezultat
 
 
 async def test_gidrologicheskaya_obstanovka_pustoy():
     ctx = _maket_konteksta()
     with patch.object(mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=[]):
-        result = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
-    assert isinstance(result, str)
+        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_gidrologicheskaya_obstanovka_s_dannymi():
@@ -132,15 +132,15 @@ async def test_gidrologicheskaya_obstanovka_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=mock_data):
-        result = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
-    assert "Амур" in result
+        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
+    assert "Амур" in rezultat
 
 
 async def test_preduprezhdeniya_chs_pustoy():
     ctx = _maket_konteksta()
     with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=[]):
-        result = await mchs_tools.preduprezhdeniya_chs(ctx)
-    assert isinstance(result, str)
+        rezultat = await mchs_tools.preduprezhdeniya_chs(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_preduprezhdeniya_chs_s_dannymi():
@@ -156,8 +156,8 @@ async def test_preduprezhdeniya_chs_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=mock_data):
-        result = await mchs_tools.preduprezhdeniya_chs(ctx)
-    assert "гидролог" in result.lower() or "Амур" in result
+        rezultat = await mchs_tools.preduprezhdeniya_chs(ctx)
+    assert "гидролог" in rezultat.lower() or "Амур" in rezultat
 
 
 def test_constants_vidy_chs():

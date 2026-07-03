@@ -72,10 +72,10 @@ class TestInstrumentyKornevogoServera:
     @pytest.mark.asyncio
     async def test_spisok_funktsiy_vozvrashchaet_svodku(self) -> None:
         async with Client(mcp) as c:
-            result = await c.call_tool("spisok_funktsiy", {})
-            assert "cbrf" in result.data
-            assert "gosduma" in result.data
-            assert "sovfed" in result.data
+            rezultat = await c.call_tool("spisok_funktsiy", {})
+            assert "cbrf" in rezultat.data
+            assert "gosduma" in rezultat.data
+            assert "sovfed" in rezultat.data
 
 
 class TestResursyKornevogoServera:

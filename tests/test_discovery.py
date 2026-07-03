@@ -20,8 +20,10 @@ class TestRekomendovatInstrumenty:
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_paket_antropic(self) -> None:
         with patch.dict("sys.modules", {"anthropic": None}):
-            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
-            assert "anthropic" in result.lower() or "search_tools" in result
+            rezultat = await rekomendovat_instrumenty_impl(
+                "расходы правительства", "tekst_kataloga"
+            )
+            assert "anthropic" in rezultat.lower() or "search_tools" in rezultat
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
@@ -30,8 +32,10 @@ class TestRekomendovatInstrumenty:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", ""),
         ):
-            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
-            assert "ANTHROPIC_API_KEY" in result
+            rezultat = await rekomendovat_instrumenty_impl(
+                "расходы правительства", "tekst_kataloga"
+            )
+            assert "ANTHROPIC_API_KEY" in rezultat
 
     @pytest.mark.asyncio
     async def test_uspeshnaya_rekomendatsiya(self) -> None:
@@ -51,8 +55,10 @@ class TestRekomendovatInstrumenty:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
-            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
-            assert "rosstat_poluchit_indikator" in result
+            rezultat = await rekomendovat_instrumenty_impl(
+                "расходы правительства", "tekst_kataloga"
+            )
+            assert "rosstat_poluchit_indikator" in rezultat
 
     @pytest.mark.asyncio
     async def test_obrabotka_oshibki_api(self) -> None:
@@ -66,9 +72,11 @@ class TestRekomendovatInstrumenty:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
-            result = await rekomendovat_instrumenty_impl("расходы правительства", "catalog text")
-            assert "Ошибка" in result
-            assert "search_tools" in result
+            rezultat = await rekomendovat_instrumenty_impl(
+                "расходы правительства", "tekst_kataloga"
+            )
+            assert "Ошибка" in rezultat
+            assert "search_tools" in rezultat
 
 
 class TestPostroenieKataloga:
@@ -80,8 +88,8 @@ class TestPostroenieKataloga:
     def test_postroit_katalog_s_pustym_reestrom(self) -> None:
         mock_registry = MagicMock()
         mock_registry.funktsii = {}
-        result = postroit_katalog(mock_registry)
-        assert result == ""
+        rezultat = postroit_katalog(mock_registry)
+        assert rezultat == ""
 
     def test_postroit_katalog_keshiruet_rezultat(self) -> None:
         import mcp_russia._shared.discovery as disc
@@ -91,8 +99,8 @@ class TestPostroenieKataloga:
         postroit_katalog(mock_registry)
 
         disc._kesh_kataloga = "cached"
-        result = postroit_katalog(mock_registry)
-        assert result == "cached"
+        rezultat = postroit_katalog(mock_registry)
+        assert rezultat == "cached"
 
 
 class TestTransformatsiyaBM25:
@@ -141,9 +149,9 @@ class TestTransformatsiyaBM25:
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "spisok regionov"})
-            text = str(result.content)
-            assert "spisok_regionov" in text
+            rezultat = await c.call_tool("search_tools", {"query": "spisok regionov"})
+            tekst = str(rezultat.content)
+            assert "spisok_regionov" in tekst
 
     @pytest.mark.asyncio
     async def test_bm25_vsegda_vidimye_zakrepleny(self) -> None:
@@ -188,12 +196,12 @@ class TestTransformatsiyaBM25:
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool(
+            rezultat = await c.call_tool(
                 "call_tool",
                 {"name": "slozhit", "arguments": {"a": 3, "b": 4}},
             )
-            text = str(result.content)
-            assert "7" in text
+            tekst = str(rezultat.content)
+            assert "7" in tekst
 
 
 class TestKonfiguratsiyaPoiskaInstrumentov:
@@ -246,9 +254,9 @@ class TestRasprostranenieTegov:
         server.add_transform(BM25SearchTransform(max_results=5))
 
         async with Client(server) as c:
-            result = await c.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
-            text = str(result.content)
-            assert "nayti_ochagi" in text
+            rezultat = await c.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
+            tekst = str(rezultat.content)
+            assert "nayti_ochagi" in tekst
 
 
 _VALID_PLAN_JSON = json.dumps(
@@ -283,8 +291,8 @@ class TestSplanirovatZapros:
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_paket_antropic(self) -> None:
         with patch.dict("sys.modules", {"anthropic": None}):
-            result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
-            assert "anthropic" in result.lower() or "search_tools" in result
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "tekst_kataloga")
+            assert "anthropic" in rezultat.lower() or "search_tools" in rezultat
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
@@ -293,8 +301,8 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", ""),
         ):
-            result = await splanirovat_zapros_impl("расходы правительства", "catalog text")
-            assert "ANTHROPIC_API_KEY" in result
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "tekst_kataloga")
+            assert "ANTHROPIC_API_KEY" in rezultat
 
     @pytest.mark.asyncio
     async def test_uspeshnyy_plan(self) -> None:
@@ -314,12 +322,12 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
-            result = await splanirovat_zapros_impl("расходы депутата X", "catalog")
-            assert "## План запроса" in result
-            assert "Этап 1" in result
-            assert "Этап 2" in result
-            assert "gosduma_poluchit_deputatov" in result
-            assert "Зависит от:** Этап 1" in result
+            rezultat = await splanirovat_zapros_impl("расходы депутата X", "catalog")
+            assert "## План запроса" in rezultat
+            assert "Этап 1" in rezultat
+            assert "Этап 2" in rezultat
+            assert "gosduma_poluchit_deputatov" in rezultat
+            assert "Зависит от:** Этап 1" in rezultat
 
     @pytest.mark.asyncio
     async def test_rezervnyy_variant_pri_nekorrektnom_json(self) -> None:
@@ -339,8 +347,8 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
-            result = await splanirovat_zapros_impl("расходы правительства", "catalog")
-            assert "Не удалось построить структурированный план." in result
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            assert "Не удалось построить структурированный план." in rezultat
 
     @pytest.mark.asyncio
     async def test_obrabotka_oshibki_api(self) -> None:
@@ -354,9 +362,9 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": mock_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
-            result = await splanirovat_zapros_impl("расходы правительства", "catalog")
-            assert "Ошибка" in result
-            assert "search_tools" in result
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            assert "Ошибка" in rezultat
+            assert "search_tools" in rezultat
 
 
 class TestPlanZaprosaVMarkdown:

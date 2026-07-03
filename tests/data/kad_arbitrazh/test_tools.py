@@ -27,12 +27,12 @@ class TestParserRezultatyPoiska:
                 "ClaimSum": 1000000,
             }
         ]
-        results = kad_client._razobrat_rezultaty_poiska(dannye)
-        assert len(results) == 1
-        assert results[0].nomer == "А40-12345/2024"
-        assert results[0].nazvanie_suda == "АС г. Москвы"
-        assert results[0].summa_iska == 1000000.0
-        assert "ООО Альфа" in results[0].istorcy
+        rezultaty = kad_client._razobrat_rezultaty_poiska(dannye)
+        assert len(rezultaty) == 1
+        assert rezultaty[0].nomer == "А40-12345/2024"
+        assert rezultaty[0].nazvanie_suda == "АС г. Москвы"
+        assert rezultaty[0].summa_iska == 1000000.0
+        assert "ООО Альфа" in rezultaty[0].istorcy
 
     def test_razbor_slovarya_s_ekzemplyarami(self) -> None:
         dannye = {
@@ -49,9 +49,9 @@ class TestParserRezultatyPoiska:
                 }
             ]
         }
-        results = kad_client._razobrat_rezultaty_poiska(dannye)
-        assert len(results) == 1
-        assert results[0].nomer == "А77-5678/2023"
+        rezultaty = kad_client._razobrat_rezultaty_poiska(dannye)
+        assert len(rezultaty) == 1
+        assert rezultaty[0].nomer == "А77-5678/2023"
 
     def test_razbor_pustogo(self) -> None:
         assert kad_client._razobrat_rezultaty_poiska(None) == []
@@ -87,11 +87,11 @@ class TestParserKartochkaDela:
                 "ClaimSum": 5000000,
             }
         }
-        result = kad_client._razobrat_kartochka_dela(dannye)
-        assert result is not None
-        assert result.nomer == "А40-11111/2025"
-        assert result.kategoriya == "Банкротство"
-        assert result.summa_iska == 5000000.0
+        rezultat = kad_client._razobrat_kartochka_dela(dannye)
+        assert rezultat is not None
+        assert rezultat.nomer == "А40-11111/2025"
+        assert rezultat.kategoriya == "Банкротство"
+        assert rezultat.summa_iska == 5000000.0
 
     def test_razbor_nichego(self) -> None:
         assert kad_client._razobrat_kartochka_dela(None) is None
@@ -115,10 +115,10 @@ class TestParserAkty:
                 }
             ]
         }
-        results = kad_client._razobrat_akty(dannye, "А40-12345/2024")
-        assert len(results) == 1
-        assert results[0].tip_akta == "Решение"
-        assert results[0].delo_nomer == "А40-12345/2024"
+        rezultaty = kad_client._razobrat_akty(dannye, "А40-12345/2024")
+        assert len(rezultaty) == 1
+        assert rezultaty[0].tip_akta == "Решение"
+        assert rezultaty[0].delo_nomer == "А40-12345/2024"
 
     def test_razbor_pustogo(self) -> None:
         assert kad_client._razobrat_akty(None, "А40-1/2024") == []
@@ -130,10 +130,10 @@ class TestParserStorony:
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
             "Defendants": ["ООО Бета", "Минфин РФ"],
         }
-        results = kad_client._razobrat_storony(dannye, "А40-12345/2024")
-        assert len(results) == 4
-        istorcy = [s for s in results if s.tip == "истец"]
-        otvetchiki = [s for s in results if s.tip == "ответчик"]
+        rezultaty = kad_client._razobrat_storony(dannye, "А40-12345/2024")
+        assert len(rezultaty) == 4
+        istorcy = [s for s in rezultaty if s.tip == "истец"]
+        otvetchiki = [s for s in rezultaty if s.tip == "ответчик"]
         assert len(istorcy) == 2
         assert len(otvetchiki) == 2
 
@@ -142,19 +142,19 @@ class TestParserStorony:
             "Plaintiffs": "ООО Альфа, ООО Гамма",
             "Defendants": "ООО Бета",
         }
-        results = kad_client._razobrat_storony(dannye, "А40-12345/2024")
-        assert len(results) == 3
+        rezultaty = kad_client._razobrat_storony(dannye, "А40-12345/2024")
+        assert len(rezultaty) == 3
 
 
 async def test_poisk_del_pustoy():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "poisk_del", return_value=[]):
-        result = await kad_tools.poisk_del(ctx=ctx)
-    assert "Картотека арбитражных дел" in result
-    assert "не найдены" in result
+        rezultat = await kad_tools.poisk_del(ctx=ctx)
+    assert "Картотека арбитражных дел" in rezultat
+    assert "не найдены" in rezultat
 
 
-async def test_poisk_del_with_results():
+async def test_poisk_del_with_rezultaty():
     ctx = _maket_konteksta()
     mock_dela = [
         SudebnoeDelo(
@@ -169,24 +169,26 @@ async def test_poisk_del_with_results():
         )
     ]
     with patch.object(kad_tools.client, "poisk_del", return_value=mock_dela):
-        result = await kad_tools.poisk_del(nomer="А40-12345/2024", ctx=ctx)
-    assert "А40-12345/2024" in result
-    assert "1 000 000" in result or "1000000" in result or "₽" in result
+        rezultat = await kad_tools.poisk_del(nomer="А40-12345/2024", ctx=ctx)
+    assert "А40-12345/2024" in rezultat
+    assert "1 000 000" in rezultat or "1000000" in rezultat or "₽" in rezultat
 
 
 async def test_poisk_del_with_filters():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "poisk_del", return_value=[]):
-        result = await kad_tools.poisk_del(nomer="А40-12345/2024", istorcz="ООО Ромашка", ctx=ctx)
-    assert "А40-12345/2024" in result
-    assert "Ромашка" in result
+        rezultat = await kad_tools.poisk_del(
+            nomer="А40-12345/2024", istorcz="ООО Ромашка", ctx=ctx
+        )
+    assert "А40-12345/2024" in rezultat
+    assert "Ромашка" in rezultat
 
 
 async def test_info_dela_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "info_dela", return_value=None):
-        result = await kad_tools.info_dela("А40-00000/2024", ctx)
-    assert "не найдено" in result
+        rezultat = await kad_tools.info_dela("А40-00000/2024", ctx)
+    assert "не найдено" in rezultat
 
 
 async def test_info_dela_nayden():
@@ -203,48 +205,48 @@ async def test_info_dela_nayden():
         summa_iska=500000,
     )
     with patch.object(kad_tools.client, "info_dela", return_value=mock_delo):
-        result = await kad_tools.info_dela("А40-12345/2024", ctx)
-    assert "А40-12345/2024" in result
-    assert "Банкротство" in result
+        rezultat = await kad_tools.info_dela("А40-12345/2024", ctx)
+    assert "А40-12345/2024" in rezultat
+    assert "Банкротство" in rezultat
 
 
 async def test_akty_po_delu_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "akty_po_delu", return_value=[]):
-        result = await kad_tools.akty_po_delu("А40-00000/2024", ctx)
-    assert "не найдены" in result
+        rezultat = await kad_tools.akty_po_delu("А40-00000/2024", ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_storony_dela_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "storony_dela", return_value=[]):
-        result = await kad_tools.storony_dela("А40-00000/2024", ctx)
-    assert "не найдены" in result
+        rezultat = await kad_tools.storony_dela("А40-00000/2024", ctx)
+    assert "не найдены" in rezultat
 
 
 async def test_spravochnik_kategoriy():
     ctx = _maket_konteksta()
-    result = await kad_tools.spravochnik_kategoriy(ctx)
-    assert "Категории" in result
-    assert "Банкротство" in result
+    rezultat = await kad_tools.spravochnik_kategoriy(ctx)
+    assert "Категории" in rezultat
+    assert "Банкротство" in rezultat
 
 
 async def test_spravochnik_instantsiy():
     ctx = _maket_konteksta()
-    result = await kad_tools.spravochnik_instantsiy(ctx)
-    assert "Инстанции" in result
-    assert "первая инстанция" in result
+    rezultat = await kad_tools.spravochnik_instantsiy(ctx)
+    assert "Инстанции" in rezultat
+    assert "первая инстанция" in rezultat
 
 
 async def test_spravochnik_statusov():
     ctx = _maket_konteksta()
-    result = await kad_tools.spravochnik_statusov(ctx)
-    assert "Статусы" in result
-    assert "Новое" in result
+    rezultat = await kad_tools.spravochnik_statusov(ctx)
+    assert "Статусы" in rezultat
+    assert "Новое" in rezultat
 
 
 async def test_spravochnik_aktov():
     ctx = _maket_konteksta()
-    result = await kad_tools.spravochnik_aktov(ctx)
-    assert "Типы судебных актов" in result
-    assert "Решение" in result
+    rezultat = await kad_tools.spravochnik_aktov(ctx)
+    assert "Типы судебных актов" in rezultat
+    assert "Решение" in rezultat

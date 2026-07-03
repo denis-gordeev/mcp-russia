@@ -287,9 +287,9 @@ async def nalogovye_stavki(ctx: Context) -> str:
     }
 
     stroki_tablitsy = []
-    for kod, name in NALOGOVYE_STAVKI.items():
+    for kod, nazvanie in NALOGOVYE_STAVKI.items():
         stavka = stavki_info.get(kod, "Уточняйте в ФНС")
-        stroki_tablitsy.append((kod, name, stavka))
+        stroki_tablitsy.append((kod, nazvanie, stavka))
 
     zagolovok = "**Основные налоговые ставки РФ**\n\n"
     zagolovok += "⚠️ Актуальные ставки уточняйте на сайте ФНС: https://www.nalog.ru\n\n"

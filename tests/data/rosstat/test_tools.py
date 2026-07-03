@@ -22,23 +22,23 @@ def _maket_konteksta():
 
 async def test_spisok_regionov():
     ctx = _maket_konteksta()
-    result = await rosstat_tools.spisok_regionov(ctx)
-    assert "Субъект" in result
-    assert "Москва" in result
+    rezultat = await rosstat_tools.spisok_regionov(ctx)
+    assert "Субъект" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_spisok_regionov_has_many():
     ctx = _maket_konteksta()
-    result = await rosstat_tools.spisok_regionov(ctx)
-    assert "Татарстан" in result
-    assert "Краснодар" in result
+    rezultat = await rosstat_tools.spisok_regionov(ctx)
+    assert "Татарстан" in rezultat
+    assert "Краснодар" in rezultat
 
 
 async def test_spisok_okrugov():
     ctx = _maket_konteksta()
-    result = await rosstat_tools.spisok_okrugov(ctx)
-    assert "Федеральн" in result
-    assert "Центральн" in result
+    rezultat = await rosstat_tools.spisok_okrugov(ctx)
+    assert "Федеральн" in rezultat
+    assert "Центральн" in rezultat
 
 
 async def test_informatsiya_o_regionye():
@@ -47,16 +47,16 @@ async def test_informatsiya_o_regionye():
         kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000
     )
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
-        result = await rosstat_tools.informatsiya_o_regionye("77", ctx)
-    assert "Москва" in result
-    assert "13" in result
+        rezultat = await rosstat_tools.informatsiya_o_regionye("77", ctx)
+    assert "Москва" in rezultat
+    assert "13" in rezultat
 
 
 async def test_informatsiya_o_regionye_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=None):
-        result = await rosstat_tools.informatsiya_o_regionye("999", ctx)
-    assert "не найден" in result
+        rezultat = await rosstat_tools.informatsiya_o_regionye("999", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_informatsiya_ob_okruge():
@@ -71,9 +71,9 @@ async def test_informatsiya_ob_okruge():
             "subiekty": ["г. Москва", "Московская область"],
         },
     ):
-        result = await rosstat_tools.informatsiya_ob_okruge("CFO", ctx)
-    assert "Центральн" in result
-    assert "18" in result
+        rezultat = await rosstat_tools.informatsiya_ob_okruge("CFO", ctx)
+    assert "Центральн" in rezultat
+    assert "18" in rezultat
 
 
 async def test_informatsiya_ob_okruge_ne_nayden():
@@ -83,21 +83,21 @@ async def test_informatsiya_ob_okruge_ne_nayden():
         "poluchit_federalny_okrug",
         return_value={"oshibka": "не найден"},
     ):
-        result = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
-    assert "не найден" in result
+        rezultat = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
+    assert "не найден" in rezultat
 
 
 async def test_pokazateli_rosstata():
     ctx = _maket_konteksta()
-    result = await rosstat_tools.pokazateli_rosstata(ctx)
-    assert "показател" in result.lower()
-    assert "населени" in result or "naselenie" in result
+    rezultat = await rosstat_tools.pokazateli_rosstata(ctx)
+    assert "показател" in rezultat.lower()
+    assert "населени" in rezultat or "naselenie" in rezultat
 
 
 async def test_inflyaciya_zapasnoy():
-    result = await rosstat_tools.inflyaciya(god="2025")
-    assert "Инфляц" in result or "ИПЦ" in result
-    assert "2025" in result
+    rezultat = await rosstat_tools.inflyaciya(god="2025")
+    assert "Инфляц" in rezultat or "ИПЦ" in rezultat
+    assert "2025" in rezultat
 
 
 async def test_inflyaciya_s_dannymi():
@@ -105,14 +105,14 @@ async def test_inflyaciya_s_dannymi():
         {"period": "2025-01", "ipcz_mesyac": 0.5, "ipcz_nakoplenny": 0.5, "ipcz_god": 9.9},
     ]
     with patch.object(rosstat_tools.client, "poluchit_inflyaciyu", return_value=mock_data):
-        result = await rosstat_tools.inflyaciya(god="2025")
-    assert "2025-01" in result
+        rezultat = await rosstat_tools.inflyaciya(god="2025")
+    assert "2025-01" in rezultat
 
 
 async def test_demografiya_zapasnoy():
-    result = await rosstat_tools.demografiya(subiekt="")
-    assert "Демограф" in result
-    assert "Росси" in result
+    rezultat = await rosstat_tools.demografiya(subiekt="")
+    assert "Демограф" in rezultat
+    assert "Росси" in rezultat
 
 
 async def test_demografiya_s_dannymi():
@@ -120,13 +120,13 @@ async def test_demografiya_s_dannymi():
         {"period": "2025-01", "naselenie": 146000000, "rozhdaemost": 9.0, "smertnost": 12.5},
     ]
     with patch.object(rosstat_tools.client, "poluchit_demografiyu", return_value=mock_data):
-        result = await rosstat_tools.demografiya(subiekt="")
-    assert "146" in result or "2025-01" in result
+        rezultat = await rosstat_tools.demografiya(subiekt="")
+    assert "146" in rezultat or "2025-01" in rezultat
 
 
 async def test_demografiya_with_region():
-    result = await rosstat_tools.demografiya(subiekt="77")
-    assert "77" in result
+    rezultat = await rosstat_tools.demografiya(subiekt="77")
+    assert "77" in rezultat
 
 
 async def test_constants_subiekty_count():
@@ -165,8 +165,8 @@ async def test_constants_regionalnye_pokazateli():
 
 
 async def test_vrp_dannye_zapasnoy():
-    result = await rosstat_tools.vrp_dannye(subiekt="77")
-    assert "ВРП" in result or "Валовой" in result
+    rezultat = await rosstat_tools.vrp_dannye(subiekt="77")
+    assert "ВРП" in rezultat or "Валовой" in rezultat
 
 
 async def test_vrp_dannye_s_dannymi():
@@ -174,20 +174,20 @@ async def test_vrp_dannye_s_dannymi():
         VRPDannye(period="2023", subiekt="г. Москва", vrp=25400.5, vrp_na_dushu=1953.8),
     ]
     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=mock_data):
-        result = await rosstat_tools.vrp_dannye(subiekt="77", god="2023")
-    assert "2023" in result
-    assert "Москва" in result
+        rezultat = await rosstat_tools.vrp_dannye(subiekt="77", god="2023")
+    assert "2023" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_vrp_dannye_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_vrp", return_value=[]):
-        result = await rosstat_tools.vrp_dannye()
-    assert "Валовой" in result or "ВРП" in result
+        rezultat = await rosstat_tools.vrp_dannye()
+    assert "Валовой" in rezultat or "ВРП" in rezultat
 
 
 async def test_zarplata_dannye_zapasnoy():
-    result = await rosstat_tools.zarplata_dannye(subiekt="77")
-    assert "заработ" in result.lower()
+    rezultat = await rosstat_tools.zarplata_dannye(subiekt="77")
+    assert "заработ" in rezultat.lower()
 
 
 async def test_zarplata_dannye_s_dannymi():
@@ -200,21 +200,21 @@ async def test_zarplata_dannye_s_dannymi():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=mock_data):
-        result = await rosstat_tools.zarplata_dannye(subiekt="77", god="2024")
-    assert "2024" in result
-    assert "Москва" in result
+        rezultat = await rosstat_tools.zarplata_dannye(subiekt="77", god="2024")
+    assert "2024" in rezultat
+    assert "Москва" in rezultat
 
 
 async def test_zarplata_dannye_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_zarplatu", return_value=[]):
-        result = await rosstat_tools.zarplata_dannye()
-    assert "Заработ" in result or "заработ" in result.lower()
+        rezultat = await rosstat_tools.zarplata_dannye()
+    assert "Заработ" in rezultat or "заработ" in rezultat.lower()
 
 
 async def test_sravnenie_regionov_invalid_pokazatel():
     ctx = _maket_konteksta()
-    result = await rosstat_tools.sravnenie_regionov("invalid_code", ctx)
-    assert "не поддерживается" in result
+    rezultat = await rosstat_tools.sravnenie_regionov("invalid_code", ctx)
+    assert "не поддерживается" in rezultat
 
 
 async def test_sravnenie_regionov_s_dannymi():
@@ -224,22 +224,22 @@ async def test_sravnenie_regionov_s_dannymi():
         {"subiekt": "Тюменская область", "kod": "72", "znachenie": 8900.3, "period": "2023"},
     ]
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=mock_data):
-        result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
-    assert "Москва" in result
-    assert "Тюмен" in result
-    assert "Рейтинг" in result
+        rezultat = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+    assert "Москва" in rezultat
+    assert "Тюмен" in rezultat
+    assert "Рейтинг" in rezultat
 
 
 async def test_sravnenie_regionov_pustoy():
     ctx = _maket_konteksta()
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
-        result = await rosstat_tools.sravnenie_regionov("vrp", ctx)
-    assert "недоступны" in result or "ВРП" in result
+        rezultat = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+    assert "недоступны" in rezultat or "ВРП" in rezultat
 
 
 async def test_indikator_dannye_zapasnoy():
-    result = await rosstat_tools.indikator_dannye(kod="ipcz")
-    assert "ИПЦ" in result or "Инфляц" in result or "31088" in result
+    rezultat = await rosstat_tools.indikator_dannye(kod="ipcz")
+    assert "ИПЦ" in rezultat or "Инфляц" in rezultat or "31088" in rezultat
 
 
 async def test_indikator_dannye_s_dannymi():
@@ -254,9 +254,9 @@ async def test_indikator_dannye_s_dannymi():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="ipcz")
-    assert "2025-01" in result
-    assert "105" in result
+        rezultat = await rosstat_tools.indikator_dannye(kod="ipcz")
+    assert "2025-01" in rezultat
+    assert "105" in rezultat
 
 
 async def test_indikator_dannye_with_region():
@@ -271,14 +271,14 @@ async def test_indikator_dannye_with_region():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="zarplata", subiekt="77", god="2024")
-    assert "Москва" in result
+        rezultat = await rosstat_tools.indikator_dannye(kod="zarplata", subiekt="77", god="2024")
+    assert "Москва" in rezultat
 
 
 async def test_indikator_dannye_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
-        result = await rosstat_tools.indikator_dannye(kod="ipcz")
-    assert "недоступны" in result or "31088" in result
+        rezultat = await rosstat_tools.indikator_dannye(kod="ipcz")
+    assert "недоступны" in rezultat or "31088" in rezultat
 
 
 async def test_indikator_dannye_emiss_code_direct():
@@ -293,8 +293,8 @@ async def test_indikator_dannye_emiss_code_direct():
         ),
     ]
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=mock_data):
-        result = await rosstat_tools.indikator_dannye(kod="99999")
-    assert "99999" in result
+        rezultat = await rosstat_tools.indikator_dannye(kod="99999")
+    assert "99999" in rezultat
 
 
 async def test_constants_subiekty_no_duplicates():
@@ -306,8 +306,8 @@ async def test_constants_subiekty_no_duplicates():
 
 
 async def test_otraslevaya_struktura_vrp_zapasnoy():
-    result = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77")
-    assert "ОКВЭД" in result or "отраслев" in result.lower()
+    rezultat = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77")
+    assert "ОКВЭД" in rezultat or "отраслев" in rezultat.lower()
 
 
 async def test_otraslevaya_struktura_vrp_s_dannymi():
@@ -324,20 +324,20 @@ async def test_otraslevaya_struktura_vrp_s_dannymi():
     with patch.object(
         rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=mock_data
     ):
-        result = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77", god="2023")
-    assert "C" in result
-    assert "Обрабатыва" in result
+        rezultat = await rosstat_tools.otraslevaya_struktura_vrp(subiekt="77", god="2023")
+    assert "C" in rezultat
+    assert "Обрабатыва" in rezultat
 
 
 async def test_otraslevaya_struktura_vrp_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=[]):
-        result = await rosstat_tools.otraslevaya_struktura_vrp()
-    assert "ОКВЭД" in result or "27103" in result
+        rezultat = await rosstat_tools.otraslevaya_struktura_vrp()
+    assert "ОКВЭД" in rezultat or "27103" in rezultat
 
 
 async def test_investitsii_po_vidam_zapasnoy():
-    result = await rosstat_tools.investitsii_po_vidam(subiekt="77")
-    assert "инвестиц" in result.lower() or "ОКВЭД" in result
+    rezultat = await rosstat_tools.investitsii_po_vidam(subiekt="77")
+    assert "инвестиц" in rezultat.lower() or "ОКВЭД" in rezultat
 
 
 async def test_investitsii_po_vidam_s_dannymi():
@@ -354,15 +354,15 @@ async def test_investitsii_po_vidam_s_dannymi():
     with patch.object(
         rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=mock_data
     ):
-        result = await rosstat_tools.investitsii_po_vidam(subiekt="77", god="2023")
-    assert "C" in result
-    assert "Обрабатыва" in result
+        rezultat = await rosstat_tools.investitsii_po_vidam(subiekt="77", god="2023")
+    assert "C" in rezultat
+    assert "Обрабатыва" in rezultat
 
 
 async def test_investitsii_po_vidam_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=[]):
-        result = await rosstat_tools.investitsii_po_vidam()
-    assert "инвестиц" in result.lower() or "24145" in result
+        rezultat = await rosstat_tools.investitsii_po_vidam()
+    assert "инвестиц" in rezultat.lower() or "24145" in rezultat
 
 
 async def test_constants_otraslevaya_struktura():

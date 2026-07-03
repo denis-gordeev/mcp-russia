@@ -14,14 +14,14 @@ def _maket_konteksta():
 
 async def test_spisok_vidov_byudzhetov():
     ctx = _maket_konteksta()
-    result = await kaznacheistvo_tools.spisok_vidov_byudzhetov(ctx)
-    assert "бюджет" in result.lower()
+    rezultat = await kaznacheistvo_tools.spisok_vidov_byudzhetov(ctx)
+    assert "бюджет" in rezultat.lower()
 
 
 async def test_spisok_kategoriy_raskhodov():
     ctx = _maket_konteksta()
-    result = await kaznacheistvo_tools.spisok_kategoriy_raskhodov(ctx)
-    assert "Образование" in result or "Расходы" in result
+    rezultat = await kaznacheistvo_tools.spisok_kategoriy_raskhodov(ctx)
+    assert "Образование" in rezultat or "Расходы" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nedostupen():
@@ -29,8 +29,8 @@ async def test_ispolnenie_byudzheta_nedostupen():
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=None
     ):
-        result = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx)
-    assert isinstance(result, str)
+        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_ispolnenie_byudzheta_nayden():
@@ -45,15 +45,15 @@ async def test_ispolnenie_byudzheta_nayden():
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=mock_data
     ):
-        result = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx, god=2025)
-    assert "2025" in result
+        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx, god=2025)
+    assert "2025" in rezultat
 
 
 async def test_poisk_uchastnikov_bp_pustoy():
     ctx = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=[]):
-        result = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx)
-    assert isinstance(result, str)
+        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_poisk_uchastnikov_bp_nayden():
@@ -67,15 +67,15 @@ async def test_poisk_uchastnikov_bp_nayden():
         },
     ]
     with patch.object(kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=mock_data):
-        result = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx, inn="7707083893")
-    assert "Минфин" in result
+        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx, inn="7707083893")
+    assert "Минфин" in rezultat
 
 
 async def test_poisk_uchrezhdeniy_pustoy():
     ctx = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchrezhdeniy", return_value=[]):
-        result = await kaznacheistvo_tools.poisk_uchrezhdeniy(ctx)
-    assert isinstance(result, str)
+        rezultat = await kaznacheistvo_tools.poisk_uchrezhdeniy(ctx)
+    assert isinstance(rezultat, str)
 
 
 async def test_mezhbyudzhetnye_transferty_nayden():
@@ -92,5 +92,5 @@ async def test_mezhbyudzhetnye_transferty_nayden():
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_mezhbyudzhetnye", return_value=mock_data
     ):
-        result = await kaznacheistvo_tools.mezhbyudzhetnye_transferty(ctx, god=2025)
-    assert "Татарстан" in result
+        rezultat = await kaznacheistvo_tools.mezhbyudzhetnye_transferty(ctx, god=2025)
+    assert "Татарстан" in rezultat

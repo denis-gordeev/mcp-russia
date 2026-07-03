@@ -57,24 +57,24 @@ async def test_prompty_zaregistrirovany(client):
 async def test_poisk_med_organizatsiy(client):
     """Проверка работы инструмента poisk_med_organizatsiy."""
     async with client:
-        result = await client.call_tool("poisk_med_organizatsiy", {})
-    assert result is not None
-    text = str(result)
-    assert "Медицинские организации" in text or "minzdrav.gov.ru" in text
+        rezultat = await client.call_tool("poisk_med_organizatsiy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Медицинские организации" in tekst or "minzdrav.gov.ru" in tekst
 
 
 async def test_spravochnik_mo(client):
     """Проверка работы инструмента spravochnik_mo."""
     async with client:
-        result = await client.call_tool("spravochnik_mo", {})
-    assert result is not None
-    text = str(result)
-    assert "Больница" in text or "Поликлиника" in text
+        rezultat = await client.call_tool("spravochnik_mo", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Больница" in tekst or "Поликлиника" in tekst
 
 
 async def test_pokazateli_zdorovya(client):
     async with client:
-        result = await client.call_tool("pokazateli_zdorovya", {"god": 2024})
-    assert result is not None
-    text = str(result)
-    assert "Показатели" in text or "Минздрав" in text
+        rezultat = await client.call_tool("pokazateli_zdorovya", {"god": 2024})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Показатели" in tekst or "Минздрав" in tekst

@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
 
 async def poisk_kontrolnyh_meropriyatiy(
     napravlenie: str = "",
-    status: str = "",
+    sostoyanie: str = "",
     god: int = 0,
     ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
@@ -33,7 +33,7 @@ async def poisk_kontrolnyh_meropriyatiy(
 
     Аргументы:
         napravlenie: Код направления контроля.
-        status: Статус мероприятия.
+        sostoyanie: Статус мероприятия.
         god: Год.
         ogranichenie: Максимум результатов.
 
@@ -45,8 +45,8 @@ async def poisk_kontrolnyh_meropriyatiy(
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if napravlenie:
             parametry["direction"] = napravlenie
-        if status:
-            parametry["status"] = status
+        if sostoyanie:
+            parametry["status"] = sostoyanie
         if god:
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)

@@ -55,47 +55,47 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_spisok_regionov(client):
     async with client:
-        result = await client.call_tool("spisok_regionov", {})
-    assert result is not None
-    text = str(result)
-    assert "Москва" in text or "Санкт-Петербург" in text
+        rezultat = await client.call_tool("spisok_regionov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Москва" in tekst or "Санкт-Петербург" in tekst
 
 
 async def test_pokazateli_rosstata(client):
     async with client:
-        result = await client.call_tool("pokazateli_rosstata", {})
-    assert result is not None
-    text = str(result)
-    assert "населени" in text.lower() or "показател" in text.lower()
+        rezultat = await client.call_tool("pokazateli_rosstata", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "населени" in tekst.lower() or "показател" in tekst.lower()
 
 
 async def test_inflyaciya(client):
     async with client:
-        result = await client.call_tool("inflyaciya", {"god": "2025"})
-    assert result is not None
-    text = str(result)
-    assert "ИПЦ" in text or "Инфляц" in text
+        rezultat = await client.call_tool("inflyaciya", {"god": "2025"})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "ИПЦ" in tekst or "Инфляц" in tekst
 
 
 async def test_vrp_dannye(client):
     async with client:
-        result = await client.call_tool("vrp_dannye", {})
-    assert result is not None
-    text = str(result)
-    assert "ВРП" in text or "Валовой" in text
+        rezultat = await client.call_tool("vrp_dannye", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "ВРП" in tekst or "Валовой" in tekst
 
 
 async def test_zarplata_dannye(client):
     async with client:
-        result = await client.call_tool("zarplata_dannye", {})
-    assert result is not None
-    text = str(result)
-    assert "заработ" in text.lower()
+        rezultat = await client.call_tool("zarplata_dannye", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "заработ" in tekst.lower()
 
 
 async def test_indikator_dannye(client):
     async with client:
-        result = await client.call_tool("indikator_dannye", {"kod": "ipcz"})
-    assert result is not None
-    text = str(result)
-    assert "ИПЦ" in text or "Инфляц" in text or "31088" in text
+        rezultat = await client.call_tool("indikator_dannye", {"kod": "ipcz"})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "ИПЦ" in tekst or "Инфляц" in tekst or "31088" in tekst

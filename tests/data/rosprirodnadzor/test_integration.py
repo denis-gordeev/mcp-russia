@@ -43,5 +43,5 @@ async def test_resursy_zaregistrirovany(client):
 
 async def test_spisok_vidov_nadzora(client):
     async with client:
-        result = await client.call_tool("spisok_vidov_nadzora", {})
-    assert result is not None
+        rezultat = await client.call_tool("spisok_vidov_nadzora", {})
+    assert rezultat is not None

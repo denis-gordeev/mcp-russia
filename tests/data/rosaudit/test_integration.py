@@ -57,25 +57,25 @@ async def test_prompty_zaregistrirovany(client):
 async def test_spisok_napravleniy(client):
     """Проверка работы инструмента spisok_napravleniy."""
     async with client:
-        result = await client.call_tool("spisok_napravleniy", {})
-    assert result is not None
-    text = str(result)
-    assert "бюджет" in text.lower() or "Контроль" in text
+        rezultat = await client.call_tool("spisok_napravleniy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "бюджет" in tekst.lower() or "Контроль" in tekst
 
 
 async def test_spisok_tipov_meropriyatiy(client):
     """Проверка работы инструмента spisok_tipov_meropriyatiy."""
     async with client:
-        result = await client.call_tool("spisok_tipov_meropriyatiy", {})
-    assert result is not None
-    text = str(result)
-    assert "Проверка" in text or "Экспертиза" in text
+        rezultat = await client.call_tool("spisok_tipov_meropriyatiy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Проверка" in tekst or "Экспертиза" in tekst
 
 
 async def test_spisok_subiektov_audita(client):
     """Проверка работы инструмента spisok_subiektov_audita."""
     async with client:
-        result = await client.call_tool("spisok_subiektov_audita", {})
-    assert result is not None
-    text = str(result)
-    assert "Федеральные" in text or "Государственные" in text
+        rezultat = await client.call_tool("spisok_subiektov_audita", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Федеральные" in tekst or "Государственные" in tekst

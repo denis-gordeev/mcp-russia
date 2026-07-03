@@ -110,8 +110,8 @@ class TestReyestrFunktsiy:
     def test_obnaruzhenie_vozvrashchaet_self_dlya_tsepochki(self) -> None:
         """obnaruzhit() возвращает self для цепочки вызовов."""
         registry = ReyestrFunktsiy()
-        result = registry.obnaruzhit("mcp_russia.data")
-        assert result is registry
+        rezultat = registry.obnaruzhit("mcp_russia.data")
+        assert rezultat is registry
 
     def test_obnaruzhenie_nakhodit_cbrf(self) -> None:
         """Discovery находит feature cbrf в пакете data."""
@@ -218,8 +218,8 @@ class TestIntegratsiyaReestra:
         root.mount(sub, namespace="test")
 
         async with Client(root) as client:
-            result = await client.call_tool("test_echo", {"msg": "hello"})
-            assert result.data == "echo: hello"
+            rezultat = await client.call_tool("test_echo", {"msg": "hello"})
+            assert rezultat.data == "echo: hello"
 
     @pytest.mark.asyncio
     async def test_kornevoy_server_zapuskaetsya_pustym(self) -> None:
@@ -237,5 +237,5 @@ class TestIntegratsiyaReestra:
         from mcp_russia.server import mcp
 
         async with Client(mcp) as client:
-            result = await client.call_tool("spisok_funktsiy", {})
-            assert "mcp-russia" in result.data
+            rezultat = await client.call_tool("spisok_funktsiy", {})
+            assert "mcp-russia" in rezultat.data

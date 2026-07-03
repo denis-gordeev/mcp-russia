@@ -8,10 +8,10 @@
 
     # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
     async with sozdat_klienta(bazovyy_adres_url="https://api.example.com") as client:
-        response = await client.get("/endpoint")
+        otvet = await client.get("/endpoint")
 
     # Вариант 2: разовый запрос с автоматическими повторными попытками
-    data = await http_poluchit("https://api.example.com/endpoint")
+    dannye = await http_poluchit("https://api.example.com/endpoint")
 """
 
 from __future__ import annotations

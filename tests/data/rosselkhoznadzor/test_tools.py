@@ -49,34 +49,34 @@ class TestInstrumenty:
     @pytest.mark.asyncio
     async def test_spisok_vidov_nadzora(self) -> None:
         ctx = AsyncMock()
-        result = await tools.spisok_vidov_nadzora(ctx)
-        assert "Ветеринарный надзор" in result
-        assert "Фитосанитарный контроль" in result
+        rezultat = await tools.spisok_vidov_nadzora(ctx)
+        assert "Ветеринарный надзор" in rezultat
+        assert "Фитосанитарный контроль" in rezultat
 
     @pytest.mark.asyncio
     async def test_spisok_kategoriy_proverok(self) -> None:
         ctx = AsyncMock()
-        result = await tools.spisok_kategoriy_proverok(ctx)
-        assert "Плановая" in result
+        rezultat = await tools.spisok_kategoriy_proverok(ctx)
+        assert "Плановая" in rezultat
 
     @pytest.mark.asyncio
     async def test_spisok_vidov_narusheniy(self) -> None:
         ctx = AsyncMock()
-        result = await tools.spisok_vidov_narusheniy(ctx)
-        assert "ветеринарного" in result
+        rezultat = await tools.spisok_vidov_narusheniy(ctx)
+        assert "ветеринарного" in rezultat
 
     @pytest.mark.asyncio
     async def test_spisok_tipov_produktsii(self) -> None:
         ctx = AsyncMock()
-        result = await tools.spisok_tipov_produktsii(ctx)
-        assert "Животноводческая" in result
+        rezultat = await tools.spisok_tipov_produktsii(ctx)
+        assert "Животноводческая" in rezultat
 
     @pytest.mark.asyncio
     async def test_poisk_proverok_zapasnoy(self) -> None:
         ctx = AsyncMock()
         with patch.object(client, "poisk_proverok", return_value=[]):
-            result = await tools.poisk_proverok(ctx)
-        assert "резервные данные" in result or "не найдены" in result
+            rezultat = await tools.poisk_proverok(ctx)
+        assert "резервные данные" in rezultat or "не найдены" in rezultat
 
     @pytest.mark.asyncio
     async def test_poisk_proverok_s_dannymi(self) -> None:
@@ -92,16 +92,16 @@ class TestInstrumenty:
             }
         ]
         with patch.object(client, "poisk_proverok", return_value=mock_data):
-            result = await tools.poisk_proverok(ctx)
-        assert "123" in result
-        assert "Ветеринарный" in result
+            rezultat = await tools.poisk_proverok(ctx)
+        assert "123" in rezultat
+        assert "Ветеринарный" in rezultat
 
     @pytest.mark.asyncio
     async def test_poisk_karantinnykh_obektov_pustoy(self) -> None:
         ctx = AsyncMock()
         with patch.object(client, "poisk_karantinnykh_obektov", return_value=[]):
-            result = await tools.poisk_karantinnykh_obektov(ctx)
-        assert "не найдены" in result
+            rezultat = await tools.poisk_karantinnykh_obektov(ctx)
+        assert "не найдены" in rezultat
 
     @pytest.mark.asyncio
     async def test_poisk_karantinnykh_obektov_s_dannymi(self) -> None:
@@ -116,29 +116,29 @@ class TestInstrumenty:
             }
         ]
         with patch.object(client, "poisk_karantinnykh_obektov", return_value=mock_data):
-            result = await tools.poisk_karantinnykh_obektov(ctx)
-        assert "Калифорнийская" in result
+            rezultat = await tools.poisk_karantinnykh_obektov(ctx)
+        assert "Калифорнийская" in rezultat
 
     @pytest.mark.asyncio
     async def test_poisk_registratsiy_pustoy(self) -> None:
         ctx = AsyncMock()
         with patch.object(client, "poisk_registratsiy_produktsii", return_value=[]):
-            result = await tools.poisk_registratsiy_produktsii(ctx)
-        assert "не найдена" in result
+            rezultat = await tools.poisk_registratsiy_produktsii(ctx)
+        assert "не найдена" in rezultat
 
     @pytest.mark.asyncio
     async def test_veterinarsnye_sertifikaty_pustoy(self) -> None:
         ctx = AsyncMock()
         with patch.object(client, "veterinarsnye_sertifikaty", return_value=[]):
-            result = await tools.veterinarsnye_sertifikaty(ctx)
-        assert "не найдены" in result
+            rezultat = await tools.veterinarsnye_sertifikaty(ctx)
+        assert "не найдены" in rezultat
 
     @pytest.mark.asyncio
     async def test_preduprezhdeniya_karantina_pustoy(self) -> None:
         ctx = AsyncMock()
         with patch.object(client, "preduprezhdeniya_karantina", return_value=[]):
-            result = await tools.preduprezhdeniya_karantina(ctx)
-        assert "не найдены" in result
+            rezultat = await tools.preduprezhdeniya_karantina(ctx)
+        assert "не найдены" in rezultat
 
 
 class TestIntegratsiya:

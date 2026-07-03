@@ -124,13 +124,13 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
 
 
 async def poisk_zakonoproektov(
-    status: str = "",
+    sostoyanie: str = "",
     god: int = 0,
 ) -> list[dict[str, Any]]:
     """Поиск законопроектов Совета Федерации.
 
     Аргументы:
-        status: Статус законопроекта.
+        sostoyanie: Статус законопроекта.
         god: Год рассмотрения.
 
     Возвращает:
@@ -139,8 +139,8 @@ async def poisk_zakonoproektov(
     try:
         adres_url = f"{SOVFED_API_BASE}/bills"
         parametry: dict[str, Any] = {}
-        if status:
-            parametry["status"] = status
+        if sostoyanie:
+            parametry["status"] = sostoyanie
         if god:
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)

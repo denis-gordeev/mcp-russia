@@ -43,10 +43,10 @@ def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
 
 def _vlozhennoe_poluchenie(dannye: dict, *keys: str, default: Any = None) -> Any:
     """Безопасное извлечение вложенного значения из словаря."""
-    for key in keys:
+    for klyuch in keys:
         if not isinstance(dannye, dict):
             return default
-        dannye = dannye.get(key, default)
+        dannye = dannye.get(klyuch, default)
     return dannye
 
 
@@ -201,12 +201,12 @@ async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, A
 def poluchit_prazdniki(god: int) -> list[dict[str, str]]:
     """Вернуть список государственных праздников РФ на указанный год."""
     prazdniki = []
-    for stroka_daty, name in PRAZDNIKI_RF.items():
+    for stroka_daty, nazvanie in PRAZDNIKI_RF.items():
         full_date = f"{god}-{stroka_daty}"
         prazdniki.append(
             {
                 "data": full_date,
-                "nazvanie": name,
+                "nazvanie": nazvanie,
                 "tip": "natsionalnyy"
                 if stroka_daty
                 in [

@@ -57,16 +57,16 @@ async def test_prompty_zaregistrirovany(client):
 async def test_statusy_zakupok(client):
     """Проверка работы инструмента statusy_zakupok."""
     async with client:
-        result = await client.call_tool("statusy_zakupok", {})
-    assert result is not None
-    text = str(result)
-    assert "Планирование" in text or "Завершена" in text
+        rezultat = await client.call_tool("statusy_zakupok", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Планирование" in tekst or "Завершена" in tekst
 
 
 async def test_sposoby_zakupok(client):
     """Проверка работы инструмента sposoby_zakupok."""
     async with client:
-        result = await client.call_tool("sposoby_zakupok", {})
-    assert result is not None
-    text = str(result)
-    assert "Электронный аукцион" in text or "аукцион" in text.lower()
+        rezultat = await client.call_tool("sposoby_zakupok", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Электронный аукцион" in tekst or "аукцион" in tekst.lower()

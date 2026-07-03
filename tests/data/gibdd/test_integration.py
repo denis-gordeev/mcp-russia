@@ -59,10 +59,10 @@ async def test_prompty_zaregistrirovany(client):
 
 async def test_tool_spisok_tipov_ts(client):
     async with client:
-        result = await client.call_tool("spisok_tipov_ts", {})
-    assert result is not None
-    text = str(result)
-    assert "Легковой" in text
+        rezultat = await client.call_tool("spisok_tipov_ts", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Легковой" in tekst
 
 
 async def test_tool_info_ts(client):
@@ -70,7 +70,7 @@ async def test_tool_info_ts(client):
 
     with patch.object(gibdd_tools, "_polnaya_proverka_ts", return_value=([], [], [], [])):
         async with client:
-            result = await client.call_tool("info_ts", {"vin": "XTA21140052XXXXXX"})
-    assert result is not None
-    text = str(result)
-    assert "не найден" in text
+            rezultat = await client.call_tool("info_ts", {"vin": "XTA21140052XXXXXX"})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "не найден" in tekst

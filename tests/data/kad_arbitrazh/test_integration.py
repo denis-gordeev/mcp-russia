@@ -57,25 +57,25 @@ async def test_prompty_zaregistrirovany(client):
 async def test_poisk_del(client):
     """Проверка работы инструмента poisk_del."""
     async with client:
-        result = await client.call_tool("poisk_del", {})
-    assert result is not None
-    text = str(result)
-    assert "Картотека" in text or "kad.arbitr.ru" in text
+        rezultat = await client.call_tool("poisk_del", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Картотека" in tekst or "kad.arbitr.ru" in tekst
 
 
 async def test_spravochnik_kategoriy(client):
     """Проверка работы инструмента spravochnik_kategoriy."""
     async with client:
-        result = await client.call_tool("spravochnik_kategoriy", {})
-    assert result is not None
-    text = str(result)
-    assert "Банкротство" in text or "Налоговые" in text
+        rezultat = await client.call_tool("spravochnik_kategoriy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Банкротство" in tekst or "Налоговые" in tekst
 
 
 async def test_spravochnik_instantsiy(client):
     """Проверка работы инструмента spravochnik_instantsiy."""
     async with client:
-        result = await client.call_tool("spravochnik_instantsiy", {})
-    assert result is not None
-    text = str(result)
-    assert "первая инстанция" in text or "кассация" in text
+        rezultat = await client.call_tool("spravochnik_instantsiy", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "первая инстанция" in tekst or "кассация" in tekst

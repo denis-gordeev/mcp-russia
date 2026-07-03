@@ -59,34 +59,34 @@ async def test_prompty_zaregistrirovany(client):
 async def test_tipy_vyborov(client):
     """Проверка работы инструмента tipy_vyborov."""
     async with client:
-        result = await client.call_tool("tipy_vyborov", {})
-    assert result is not None
-    text = str(result.content) if hasattr(result, "content") else str(result)
-    assert "Президент" in text or "Государственная" in text
+        rezultat = await client.call_tool("tipy_vyborov", {})
+    assert rezultat is not None
+    tekst = str(rezultat.content) if hasattr(rezultat, "content") else str(rezultat)
+    assert "Президент" in tekst or "Государственная" in tekst
 
 
 async def test_subyekty_rf(client):
     """Проверка работы инструмента subyekty_rf."""
     async with client:
-        result = await client.call_tool("subyekty_rf", {})
-    assert result is not None
-    text = str(result)
-    assert "Москва" in text or "Санкт-Петербург" in text
+        rezultat = await client.call_tool("subyekty_rf", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Москва" in tekst or "Санкт-Петербург" in tekst
 
 
 async def test_partii_rf(client):
     """Проверка работы инструмента partii_rf."""
     async with client:
-        result = await client.call_tool("partii_rf", {})
-    assert result is not None
-    text = str(result)
-    assert "Единая Россия" in text
+        rezultat = await client.call_tool("partii_rf", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "Единая Россия" in tekst
 
 
 async def test_gody_vyborov(client):
     """Проверка работы инструмента gody_vyborov."""
     async with client:
-        result = await client.call_tool("gody_vyborov", {})
-    assert result is not None
-    text = str(result)
-    assert "2024" in text or "2021" in text
+        rezultat = await client.call_tool("gody_vyborov", {})
+    assert rezultat is not None
+    tekst = str(rezultat)
+    assert "2024" in tekst or "2021" in tekst
