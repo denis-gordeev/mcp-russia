@@ -6,7 +6,7 @@ from mcp_russia.data.fns import tools as fns_tools
 from mcp_russia.data.fns.schemas import IPEGRIP, OrganizaciyaEGRUL
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -44,8 +44,8 @@ def test_spisok_kategoriy_nalogoplatelshchikov():
     assert any(k["kod"] == "ip" for k in result)
 
 
-async def test_info_organizacii_found():
-    ctx = _mock_ctx()
+async def test_info_organizacii_nayden():
+    ctx = _maket_konteksta()
     mock_org = OrganizaciyaEGRUL(
         inn="7707083893",
         ogrn="1027700132195",
@@ -62,15 +62,15 @@ async def test_info_organizacii_found():
     assert "Действующая" in result
 
 
-async def test_info_organizacii_not_found():
-    ctx = _mock_ctx()
+async def test_info_organizacii_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=None):
         result = await fns_tools.info_organizacii("0000000000", ctx=ctx)
     assert "не найдена" in result
 
 
-async def test_info_ip_found():
-    ctx = _mock_ctx()
+async def test_info_ip_nayden():
+    ctx = _maket_konteksta()
     mock_ip = IPEGRIP(
         inn="500100732259",
         ogrnip="304500116000157",
@@ -84,22 +84,22 @@ async def test_info_ip_found():
     assert "Иванов" in result
 
 
-async def test_info_ip_not_found():
-    ctx = _mock_ctx()
+async def test_info_ip_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_ip", return_value=None):
         result = await fns_tools.info_ip("000000000000", ctx=ctx)
     assert "не найден" in result
 
 
 async def test_proverki_organizacii():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_proverki", return_value=[]):
         result = await fns_tools.proverki_organizacii("7707083893", ctx=ctx)
     assert "недоступны" in result
 
 
 async def test_nalogovye_nachisleniya():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_nachisleniya", return_value=[]):
         result = await fns_tools.nalogovye_nachisleniya("7707083893", ctx=ctx)
     assert "недоступны" in result

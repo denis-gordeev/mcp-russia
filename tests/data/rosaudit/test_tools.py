@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 from mcp_russia.data.rosaudit import tools as rosaudit_tools
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -13,35 +13,35 @@ def _mock_ctx():
 
 
 async def test_spisok_napravleniy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosaudit_tools.spisok_napravleniy(ctx)
     assert "Направления контрольной деятельности" in result
     assert "бюджет" in result.lower()
 
 
 async def test_spisok_tipov_meropriyatiy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosaudit_tools.spisok_tipov_meropriyatiy(ctx)
     assert "Типы контрольных мероприятий" in result
     assert "Проверка" in result
 
 
 async def test_spisok_subiektov_audita():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosaudit_tools.spisok_subiektov_audita(ctx)
     assert "Субъекты" in result
     assert "Федеральные" in result
 
 
-async def test_poisk_kontrolnyh_meropriyatiy_empty():
-    ctx = _mock_ctx()
+async def test_poisk_kontrolnyh_meropriyatiy_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_kontrolnyh_meropriyatiy", return_value=[]):
         result = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx)
     assert "не найдены" in result
 
 
-async def test_poisk_kontrolnyh_meropriyatiy_found():
-    ctx = _mock_ctx()
+async def test_poisk_kontrolnyh_meropriyatiy_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "nomer": "КМ-2026-001",
@@ -58,17 +58,17 @@ async def test_poisk_kontrolnyh_meropriyatiy_found():
     assert "КМ-2026-001" in result
 
 
-async def test_info_kontrolnogo_meropriyatiya_not_found():
-    ctx = _mock_ctx()
+async def test_info_kontrolnogo_meropriyatiya_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(
         rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None
     ):
-        result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("nonexistent", ctx)
+        result = await rosaudit_tools.info_kontrolnogo_meropriyatiya("nesushchestvuyushchiy", ctx)
     assert "не найдено" in result
 
 
-async def test_info_kontrolnogo_meropriyatiya_found():
-    ctx = _mock_ctx()
+async def test_info_kontrolnogo_meropriyatiya_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "nomer": "КМ-2026-001",
         "nazvanie": "Проверка исполнения бюджета",
@@ -87,17 +87,17 @@ async def test_info_kontrolnogo_meropriyatiya_found():
     assert "2026-01-15" in result
 
 
-async def test_info_auditorskogo_zaklyucheniya_not_found():
-    ctx = _mock_ctx()
+async def test_info_auditorskogo_zaklyucheniya_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(
         rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None
     ):
-        result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("nonexistent", ctx)
+        result = await rosaudit_tools.info_auditorskogo_zaklyucheniya("nesushchestvuyushchiy", ctx)
     assert "не найдено" in result
 
 
-async def test_info_auditorskogo_zaklyucheniya_found():
-    ctx = _mock_ctx()
+async def test_info_auditorskogo_zaklyucheniya_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "nomer": "АЗ-2026-001",
         "nazvanie": "Заключение по проверке Минфина",
@@ -115,15 +115,15 @@ async def test_info_auditorskogo_zaklyucheniya_found():
     assert "Минфин" in result
 
 
-async def test_ispolnenie_byudzheta_unavailable():
-    ctx = _mock_ctx()
+async def test_ispolnenie_byudzheta_nedostupen():
+    ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=None):
         result = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2024")
     assert "недоступны" in result
 
 
-async def test_ispolnenie_byudzheta_found():
-    ctx = _mock_ctx()
+async def test_ispolnenie_byudzheta_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "period": "2025",
         "dohody": 28000.5,
@@ -138,15 +138,15 @@ async def test_ispolnenie_byudzheta_found():
     assert "Доходы" in result
 
 
-async def test_poisk_narusheniy_empty():
-    ctx = _mock_ctx()
+async def test_poisk_narusheniy_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=[]):
         result = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Тест")
     assert "не найдены" in result
 
 
-async def test_poisk_narusheniy_found():
-    ctx = _mock_ctx()
+async def test_poisk_narusheniy_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "organizaciya": "Минобороны",

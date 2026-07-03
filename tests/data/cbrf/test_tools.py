@@ -6,7 +6,7 @@ from mcp_russia.data.cbrf import tools as cbrf_tools
 from mcp_russia.data.cbrf.schemas import ZnachenieValyuty
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -32,7 +32,7 @@ def _mock_valyuta(
 
 
 async def test_tekushchie_kursy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     valyuty = [
         _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0),
         _mock_valyuta("EUR", "Евро", 1, 98.0, 97.5),
@@ -44,15 +44,15 @@ async def test_tekushchie_kursy():
     assert "EUR" in result
 
 
-async def test_tekushchie_kursy_empty():
-    ctx = _mock_ctx()
+async def test_tekushchie_kursy_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(cbrf_tools.client, "poluchit_osnovnye_valyuty", return_value=[]):
         result = await cbrf_tools.tekushchie_kursy(ctx)
     assert "Не удалось" in result
 
 
 async def test_uznat_kurs_valyuty():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     valyuta = _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0)
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=valyuta):
         result = await cbrf_tools.uznat_kurs_valyuty("USD", ctx)
@@ -61,15 +61,15 @@ async def test_uznat_kurs_valyuty():
     assert "90" in result
 
 
-async def test_uznat_kurs_valyuty_not_found():
-    ctx = _mock_ctx()
+async def test_uznat_kurs_valyuty_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=None):
         result = await cbrf_tools.uznat_kurs_valyuty("XYZ", ctx)
     assert "не найдена" in result
 
 
 async def test_spisok_valyut():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     raw = {
         "Valute": {
             "USD": {"Name": "Доллар США", "Nominal": 1, "Value": 90.0},
@@ -84,7 +84,7 @@ async def test_spisok_valyut():
 
 
 async def test_konvertirovat_valyutu():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     valyuta = _mock_valyuta("USD", "Доллар США", 1, 90.0)
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=valyuta):
         result = await cbrf_tools.konvertirovat_valyutu("USD", 100, ctx)
@@ -92,15 +92,15 @@ async def test_konvertirovat_valyutu():
     assert "Конвертация" in result
 
 
-async def test_konvertirovat_valyutu_not_found():
-    ctx = _mock_ctx()
+async def test_konvertirovat_valyutu_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=None):
         result = await cbrf_tools.konvertirovat_valyutu("XYZ", 100, ctx)
     assert "не найдена" in result
 
 
 async def test_sravnit_valyuty():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     valyuty = [
         _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0),
         _mock_valyuta("EUR", "Евро", 1, 98.0, 97.0),
@@ -113,7 +113,7 @@ async def test_sravnit_valyuty():
 
 
 async def test_sravnit_valyuty_default():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(cbrf_tools.client, "poluchit_valyuty_spisok", return_value=[]):
         result = await cbrf_tools.sravnit_valyuty(ctx=ctx)
     assert "Не удалось" in result
@@ -126,7 +126,7 @@ async def test_sravnit_valyuty_too_many():
 
 
 async def test_kursy_po_stranam():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     valyuty = [
         _mock_valyuta("USD", "Доллар США", 1, 90.0),
         _mock_valyuta("CNY", "Китайский юань", 1, 12.5),

@@ -7,7 +7,7 @@ from mcp_russia.data.gosduma import tools as gosduma_tools
 from mcp_russia.data.gosduma.schemas import Deputat, Golosovanie, Zakonoproekt
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -57,7 +57,7 @@ def test_razobrat_deputatov_dict():
     assert result[0].фракция == "КПРФ"
 
 
-def test_razobrat_deputatov_empty():
+def test_razobrat_deputatov_pustoy():
     assert gosduma_client._razobrat_deputatov(None) == []
     assert gosduma_client._razobrat_deputatov("not a list") == []
 
@@ -115,7 +115,7 @@ def test_razobrat_odnogo_deputata():
     assert result.фамилия == "Сидоров"
 
 
-def test_razobrat_odnogo_deputata_none():
+def test_razobrat_odnogo_deputata_nichego():
     assert gosduma_client._razobrat_odnogo_deputata(None) is None
     assert gosduma_client._razobrat_odnogo_deputata("string") is None
 
@@ -123,13 +123,13 @@ def test_razobrat_odnogo_deputata_none():
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---
 
 
-async def test_spisok_deputatov_empty():
+async def test_spisok_deputatov_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_deputatov", return_value=[]):
         result = await gosduma_tools.spisok_deputatov(sozyv="8")
     assert "API" in result or "duma" in result.lower()
 
 
-async def test_spisok_deputatov_with_data():
+async def test_spisok_deputatov_s_dannymi():
     deputats = [
         Deputat(
             identifikator=1,
@@ -158,15 +158,15 @@ async def test_spisok_deputatov_with_data():
     assert "Единая Россия" in result
 
 
-async def test_info_deputata_not_found():
-    ctx = _mock_ctx()
+async def test_info_deputata_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=None):
         result = await gosduma_tools.info_deputata(99999, ctx)
     assert "не найден" in result
 
 
-async def test_info_deputata_found():
-    ctx = _mock_ctx()
+async def test_info_deputata_nayden():
+    ctx = _maket_konteksta()
     deputat = Deputat(
         identifikator=1,
         фамилия="Иванов",
@@ -184,7 +184,7 @@ async def test_info_deputata_found():
 
 
 async def test_spisok_frakcii():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await gosduma_tools.spisok_frakcii(ctx)
     assert "Единая Россия" in result
     assert "КПРФ" in result
@@ -192,26 +192,26 @@ async def test_spisok_frakcii():
 
 
 async def test_spisok_komitetov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await gosduma_tools.spisok_komitetov(ctx)
     assert "Комитет" in result
     assert "бюджет" in result.lower() or "обороне" in result.lower()
 
 
 async def test_spisok_sozyvov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await gosduma_tools.spisok_sozyvov(ctx)
     assert "Созыв" in result
     assert "VIII" in result or "1993" in result
 
 
-async def test_zakonoproekty_empty():
+async def test_zakonoproekty_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=[]):
         result = await gosduma_tools.zakonoproekty(sostoyanie="принят")
     assert "Законопроект" in result or "СОЗД" in result
 
 
-async def test_zakonoproekty_with_data():
+async def test_zakonoproekty_s_dannymi():
     bills = [
         Zakonoproekt(
             identifikator="1",
@@ -229,13 +229,13 @@ async def test_zakonoproekty_with_data():
     assert "Рассматривается" in result
 
 
-async def test_golosovaniya_empty():
+async def test_golosovaniya_pustoy():
     with patch.object(gosduma_tools.client, "poluchit_golosovaniya", return_value=[]):
         result = await gosduma_tools.golosovaniya(sozyv="8")
     assert "Голосован" in result or "API" in result or "duma" in result.lower()
 
 
-async def test_golosovaniya_with_data():
+async def test_golosovaniya_s_dannymi():
     votes = [
         Golosovanie(
             zakonoproekt_identifikator="1",

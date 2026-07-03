@@ -7,7 +7,7 @@ from mcp_russia.data.zakupki import tools as zakupki_tools
 from mcp_russia.data.zakupki.schemas import Kontrakt, Zakupka
 
 
-def _mock_ctx():
+def _maket_konteksta():
     """Создать мок контекста."""
     ctx = AsyncMock()
     ctx.info = AsyncMock()
@@ -40,7 +40,7 @@ def test_parse_zakupki_search():
     assert result[0].nachalnaya_tsena == 1500000.0
 
 
-def test_parse_zakupki_search_empty():
+def test_parse_zakupki_search_pustoy():
     assert zakupki_client._razobrat_poisk_zakupok(None) == []
     assert zakupki_client._razobrat_poisk_zakupok("not a list") == []
 
@@ -81,15 +81,15 @@ def test_bezopasnoe_veshchestvennoe():
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---
 
 
-async def test_poisk_zakupok_empty():
-    ctx = _mock_ctx()
+async def test_poisk_zakupok_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
         result = await zakupki_tools.poisk_zakupok(ctx=ctx)
     assert "ЕИС" in result or "zakupki.gov.ru" in result
 
 
-async def test_poisk_zakupok_with_data():
-    ctx = _mock_ctx()
+async def test_poisk_zakupok_s_dannymi():
+    ctx = _maket_konteksta()
     zakupki = [
         Zakupka(
             identifikator="1",
@@ -111,7 +111,7 @@ async def test_poisk_zakupok_with_data():
 
 
 async def test_poisk_zakupok_with_filters():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
         result = await zakupki_tools.poisk_zakupok(
             zapros="компьютеры", zakon="44-ФЗ", subiekt="Москва", ctx=ctx
@@ -121,15 +121,15 @@ async def test_poisk_zakupok_with_filters():
     assert "Москва" in result
 
 
-async def test_info_zakupki_not_found():
-    ctx = _mock_ctx()
+async def test_info_zakupki_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=None):
         result = await zakupki_tools.info_zakupki("0000000001", ctx)
     assert "не найдена" in result
 
 
-async def test_info_zakupki_found():
-    ctx = _mock_ctx()
+async def test_info_zakupki_nayden():
+    ctx = _maket_konteksta()
     zakupka = Zakupka(
         identifikator="1",
         nomer="0123400000125000001",
@@ -150,15 +150,15 @@ async def test_info_zakupki_found():
     assert "Срок подачи" in result
 
 
-async def test_poisk_kontraktov_empty():
-    ctx = _mock_ctx()
+async def test_poisk_kontraktov_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=[]):
         result = await zakupki_tools.poisk_kontraktov(ctx=ctx)
     assert "контракт" in result.lower() or "ЕИС" in result
 
 
-async def test_poisk_kontraktov_with_data():
-    ctx = _mock_ctx()
+async def test_poisk_kontraktov_s_dannymi():
+    ctx = _maket_konteksta()
     kontrakty = [
         Kontrakt(
             identifikator="1",
@@ -176,36 +176,36 @@ async def test_poisk_kontraktov_with_data():
     assert "ООО Ромашка" in result
 
 
-async def test_info_zakazchika_not_found():
-    ctx = _mock_ctx()
+async def test_info_zakazchika_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_zakazchika", return_value=None):
         result = await zakupki_tools.info_zakazchika("0000000000", ctx)
     assert "не найден" in result
 
 
-async def test_info_postavshchika_not_found():
-    ctx = _mock_ctx()
+async def test_info_postavshchika_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_postavshchika", return_value=None):
         result = await zakupki_tools.info_postavshchika("0000000000", ctx)
     assert "не найден" in result
 
 
 async def test_statusy_zakupok():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await zakupki_tools.statusy_zakupok(ctx)
     assert "Статусы" in result
     assert "Планирование" in result
 
 
 async def test_sposoby_zakupok():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await zakupki_tools.sposoby_zakupok(ctx)
     assert "Способы" in result
     assert "Электронный аукцион" in result
 
 
-async def test_plany_zakupok_empty():
-    ctx = _mock_ctx()
+async def test_plany_zakupok_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "plany_zakupok", return_value=[]):
         result = await zakupki_tools.plany_zakupok(god=2025, ctx=ctx)
     assert "2025" in result

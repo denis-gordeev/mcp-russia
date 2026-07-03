@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 from mcp_russia.data.rospotrebnadzor import tools as rpn_tools
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -13,38 +13,38 @@ def _mock_ctx():
 
 
 async def test_spisok_napravleniy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.spisok_napravleniy(ctx)
     assert "Санитарно-эпидемиологический надзор" in result
 
 
 async def test_spisok_tipov_proverok():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.spisok_tipov_proverok(ctx)
     assert "Плановая проверка" in result
 
 
 async def test_spisok_kategoriy_obiektov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.spisok_kategoriy_obiektov(ctx)
     assert "Предприятия пищевой промышленности" in result
 
 
 async def test_spisok_regionalnyh_upravleniy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.spisok_regionalnyh_upravleniy(ctx)
     assert "Центральному федеральному округу" in result
 
 
-async def test_info_proverki_not_found():
-    ctx = _mock_ctx()
+async def test_info_proverki_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "info_proverki", return_value=None):
         result = await rpn_tools.info_proverki(ctx, nomer_proverki="12345")
     assert "не найдена" in result
 
 
-async def test_info_proverki_found():
-    ctx = _mock_ctx()
+async def test_info_proverki_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "nomer": "12345",
         "tip_proverki": "Плановая",
@@ -63,15 +63,15 @@ async def test_info_proverki_found():
     assert "Завершена" in result
 
 
-async def test_poisk_proverok_empty():
-    ctx = _mock_ctx()
+async def test_poisk_proverok_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=[]):
         result = await rpn_tools.poisk_proverok(ctx, inn="7710563663")
     assert "не найдены" in result
 
 
-async def test_poisk_proverok_found():
-    ctx = _mock_ctx()
+async def test_poisk_proverok_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "nomer": "12345",
@@ -87,28 +87,28 @@ async def test_poisk_proverok_found():
     assert "ООО Тест" in result
 
 
-async def test_plan_proverok_empty():
-    ctx = _mock_ctx()
+async def test_plan_proverok_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "plan_proverok", return_value=[]):
         result = await rpn_tools.plan_proverok(ctx, god=2024)
     assert "не получен" in result
 
 
 async def test_spisok_sanpinov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.spisok_sanpinov(ctx)
     assert "2.1.3684-21" in result
 
 
-async def test_zhaloby_potrebiteley_empty():
-    ctx = _mock_ctx()
+async def test_zhaloby_potrebiteley_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_zhalob", return_value=[]):
         result = await rpn_tools.zhaloby_potrebiteley(ctx)
     assert "не найдены" in result
 
 
-async def test_zhaloby_potrebiteley_found():
-    ctx = _mock_ctx()
+async def test_zhaloby_potrebiteley_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "tema": "Некачественный товар",
@@ -124,6 +124,6 @@ async def test_zhaloby_potrebiteley_found():
 
 
 async def test_pokazateli_bezopasnosti():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rpn_tools.pokazateli_bezopasnosti(ctx)
     assert "ЕМИСС" in result or "rospotrebnadzor" in result

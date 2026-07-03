@@ -10,15 +10,15 @@ from mcp_russia.data.rosapi.schemas import AdresRF, BankRF, Organizatsiya
 from mcp_russia.exceptions import OshibkaAutentifikatsii
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
     return ctx
 
 
-async def test_konsul_adres_po_indeksu_success():
-    ctx = _mock_ctx()
+async def test_konsul_adres_po_indeksu_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "konsultirovat_adres_po_pochtovomu",
@@ -37,8 +37,8 @@ async def test_konsul_adres_po_indeksu_success():
     assert "Dadata" in result
 
 
-async def test_konsul_adres_po_indeksu_error():
-    ctx = _mock_ctx()
+async def test_konsul_adres_po_indeksu_oshibka():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "konsultirovat_adres_po_pochtovomu",
@@ -49,15 +49,15 @@ async def test_konsul_adres_po_indeksu_error():
     assert "Dadata" in result or "API" in result
 
 
-async def test_poisk_adresa_empty():
-    ctx = _mock_ctx()
+async def test_poisk_adresa_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosapi_tools.client, "poisk_adresa", return_value=[]):
         result = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
     assert "не найден" in result
 
 
-async def test_poisk_adresa_success():
-    ctx = _mock_ctx()
+async def test_poisk_adresa_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "poisk_adresa",
@@ -78,8 +78,8 @@ async def test_poisk_adresa_success():
     assert "Dadata" in result
 
 
-async def test_poisk_org_po_inn_success():
-    ctx = _mock_ctx()
+async def test_poisk_org_po_inn_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_inn",
@@ -101,8 +101,8 @@ async def test_poisk_org_po_inn_success():
     assert "Действующая" in result
 
 
-async def test_poisk_org_po_inn_error():
-    ctx = _mock_ctx()
+async def test_poisk_org_po_inn_oshibka():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_inn",
@@ -112,8 +112,8 @@ async def test_poisk_org_po_inn_error():
     assert "Dadata" in result or "API" in result
 
 
-async def test_poisk_org_po_ogrn_error():
-    ctx = _mock_ctx()
+async def test_poisk_org_po_ogrn_oshibka():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_ogrn",
@@ -124,7 +124,7 @@ async def test_poisk_org_po_ogrn_error():
 
 
 async def test_spisok_bankov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosapi_tools.spisok_bankov(ctx)
     assert "Сбербанк" in result
     assert "ВТБ" in result
@@ -132,7 +132,7 @@ async def test_spisok_bankov():
 
 
 async def test_konsul_bank_po_bik_dadata():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_bank_po_bik",
@@ -149,8 +149,8 @@ async def test_konsul_bank_po_bik_dadata():
     assert "Dadata" in result
 
 
-async def test_konsul_bank_po_bik_not_found():
-    ctx = _mock_ctx()
+async def test_konsul_bank_po_bik_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_bank_po_bik",
@@ -161,7 +161,7 @@ async def test_konsul_bank_po_bik_not_found():
 
 
 async def test_prazdniki_rf():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosapi_tools.prazdniki_rf(god=2025, ctx=ctx)
     assert "Новый год" in result
     assert "День Победы" in result
@@ -169,13 +169,13 @@ async def test_prazdniki_rf():
 
 
 async def test_prazdniki_rf_default_year():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosapi_tools.prazdniki_rf(ctx=ctx)
     assert "Новый год" in result
 
 
 async def test_nalogovye_stavki():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosapi_tools.nalogovye_stavki(ctx)
     assert "НДС" in result
     assert "20%" in result

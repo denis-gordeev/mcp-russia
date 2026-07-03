@@ -91,7 +91,7 @@ class TestUsechSpisok:
 
 
 class TestRazobratRublevoeChislo:
-    def test_none(self) -> None:
+    def test_nichego(self) -> None:
         assert razobrat_rublevoe_chislo(None) is None
 
     def test_tseloe(self) -> None:
@@ -112,7 +112,7 @@ class TestRazobratRublevoeChislo:
     def test_milliony_tochka(self) -> None:
         assert razobrat_rublevoe_chislo("1.234.567,89") == 1234567.89
 
-    def test_angliyskiy_format(self) -> None:
+    def test_angliyskiy_formatirovanie(self) -> None:
         assert razobrat_rublevoe_chislo("123.45") == 123.45
 
     def test_nekorrektnaya_stroka(self) -> None:

@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 from mcp_russia.data.rosvodresursy import tools as rosvodresursy_tools
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -13,35 +13,35 @@ def _mock_ctx():
 
 
 async def test_spisok_basseynovykh_okrugov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosvodresursy_tools.spisok_basseynovykh_okrugov(ctx)
     assert "Бассейновые округа" in result
     assert "Волжский" in result
 
 
 async def test_spisok_tipov_vodnykh_obektov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosvodresursy_tools.spisok_tipov_vodnykh_obektov(ctx)
     assert "водных объектов" in result
     assert "Река" in result
 
 
 async def test_spisok_vodokhranilishch():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosvodresursy_tools.spisok_vodokhranilishch(ctx)
     assert "водохранилищ" in result.lower()
     assert "Братское" in result
 
 
-async def test_poisk_vodnykh_obektov_empty():
-    ctx = _mock_ctx()
+async def test_poisk_vodnykh_obektov_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosvodresursy_tools.client, "poisk_vodnykh_obektov", return_value=[]):
         result = await rosvodresursy_tools.poisk_vodnykh_obektov(ctx, zapros="тест")
     assert "не найдены" in result
 
 
-async def test_poisk_vodnykh_obektov_found():
-    ctx = _mock_ctx()
+async def test_poisk_vodnykh_obektov_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {"nazvanie": "Река Волга", "tip": "Река", "basseyn": "Волжский", "subiekt": ""},
     ]
@@ -50,15 +50,15 @@ async def test_poisk_vodnykh_obektov_found():
     assert "Волга" in result
 
 
-async def test_info_vodnogo_obekta_not_found():
-    ctx = _mock_ctx()
+async def test_info_vodnogo_obekta_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(rosvodresursy_tools.client, "info_vodnogo_obekta", return_value=None):
-        result = await rosvodresursy_tools.info_vodnogo_obekta("nonexistent", ctx)
+        result = await rosvodresursy_tools.info_vodnogo_obekta("nesushchestvuyushchiy", ctx)
     assert "не найден" in result
 
 
-async def test_info_vodnogo_obekta_found():
-    ctx = _mock_ctx()
+async def test_info_vodnogo_obekta_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "nazvanie": "Река Волга",
         "tip": "Река",
@@ -72,15 +72,15 @@ async def test_info_vodnogo_obekta_found():
     assert "530" in result
 
 
-async def test_gidro_monitoring_no_data():
-    ctx = _mock_ctx()
+async def test_gidro_monitoring_net_dannykh():
+    ctx = _maket_konteksta()
     with patch.object(rosvodresursy_tools.client, "poluchit_gidro_dannye", return_value=[]):
         result = await rosvodresursy_tools.gidro_monitoring(ctx, identifikator_posta="test")
     assert "не получены" in result or "Мониторинг" in result
 
 
-async def test_gidro_monitoring_with_data():
-    ctx = _mock_ctx()
+async def test_gidro_monitoring_s_dannymi():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "post": "Нижний Новгород",
@@ -95,17 +95,17 @@ async def test_gidro_monitoring_with_data():
     assert "Нижний Новгород" in result
 
 
-async def test_info_vodokhranilishcha_not_found():
-    ctx = _mock_ctx()
+async def test_info_vodokhranilishcha_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(
         rosvodresursy_tools.client, "poluchit_dannye_vodokhranilishcha", return_value=None
     ):
-        result = await rosvodresursy_tools.info_vodokhranilishcha("nonexistent", ctx)
+        result = await rosvodresursy_tools.info_vodokhranilishcha("nesushchestvuyushchiy", ctx)
     assert "не найдено" in result
 
 
-async def test_info_vodokhranilishcha_static_fallback():
-    ctx = _mock_ctx()
+async def test_info_vodokhranilishcha_static_zapasnoy():
+    ctx = _maket_konteksta()
     with patch.object(
         rosvodresursy_tools.client, "poluchit_dannye_vodokhranilishcha", return_value=None
     ):
@@ -114,15 +114,15 @@ async def test_info_vodokhranilishcha_static_fallback():
     assert "169" in result
 
 
-async def test_vodopolzovanie_regionov_empty():
-    ctx = _mock_ctx()
+async def test_vodopolzovanie_regionov_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=[]):
         result = await rosvodresursy_tools.vodopolzovanie_regionov(ctx, subiekt="Тест")
     assert "недоступны" in result
 
 
-async def test_vodopolzovanie_regionov_with_data():
-    ctx = _mock_ctx()
+async def test_vodopolzovanie_regionov_s_dannymi():
+    ctx = _maket_konteksta()
     mock_data = [
         {"subiekt": "Москва", "god": "2024", "zabrano_vody_km3": 1.2, "ispolzovano_vody_km3": 0.9},
     ]

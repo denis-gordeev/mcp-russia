@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 from mcp_russia.data.sovfed import tools as sovfed_tools
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -13,14 +13,14 @@ def _mock_ctx():
 
 
 async def test_spisok_senatorov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "poisk_senatorov", return_value=[]):
         result = await sovfed_tools.spisok_senatorov(ctx)
     assert isinstance(result, str)
 
 
-async def test_spisok_senatorov_found():
-    ctx = _mock_ctx()
+async def test_spisok_senatorov_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "nomer": "1",
@@ -37,15 +37,15 @@ async def test_spisok_senatorov_found():
     assert "Матвиенко" in result
 
 
-async def test_info_senatora_not_found():
-    ctx = _mock_ctx()
+async def test_info_senatora_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "info_senatora", return_value=None):
-        result = await sovfed_tools.info_senatora("nonexistent", ctx)
+        result = await sovfed_tools.info_senatora("nesushchestvuyushchiy", ctx)
     assert "не найден" in result
 
 
-async def test_info_senatora_found():
-    ctx = _mock_ctx()
+async def test_info_senatora_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "nomer": "1",
         "familiya": "Матвиенко",
@@ -62,26 +62,26 @@ async def test_info_senatora_found():
 
 
 async def test_spisok_komitetov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await sovfed_tools.spisok_komitetov(ctx)
     assert "Комитет" in result
 
 
 async def test_spisok_komissiy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await sovfed_tools.spisok_komissiy(ctx)
     assert "Комиссия" in result or "комиссия" in result.lower()
 
 
-async def test_poisk_zakonoproektov_empty():
-    ctx = _mock_ctx()
+async def test_poisk_zakonoproektov_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "poisk_zakonoproektov", return_value=[]):
         result = await sovfed_tools.poisk_zakonoproektov(ctx)
     assert isinstance(result, str)
 
 
-async def test_poisk_zakonoproektov_found():
-    ctx = _mock_ctx()
+async def test_poisk_zakonoproektov_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "nomer": "СФ-001",
@@ -95,15 +95,15 @@ async def test_poisk_zakonoproektov_found():
     assert "федеральном бюджете" in result
 
 
-async def test_spisok_zasedaniy_empty():
-    ctx = _mock_ctx()
+async def test_spisok_zasedaniy_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(sovfed_tools.client, "spisok_zasedaniy", return_value=[]):
         result = await sovfed_tools.spisok_zasedaniy(ctx)
     assert isinstance(result, str)
 
 
-async def test_spisok_zasedaniy_found():
-    ctx = _mock_ctx()
+async def test_spisok_zasedaniy_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "nomer": "1",

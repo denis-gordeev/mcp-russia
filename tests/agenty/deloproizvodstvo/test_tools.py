@@ -114,7 +114,7 @@ class TestValidirovatDokument:
         assert "подпис" in result.lower()
 
     @pytest.mark.asyncio
-    async def test_prikaz_no_fecho_required(self) -> None:
+    async def test_prikaz_no_fecho_obyazatelen(self) -> None:
         tekst = "ПРИКАЗ № 1/2026\n\n15 марта 2026 г.\n\nПРИКАЗЫВАЮ:"
         result = await tools.validirovat_dokument(tekst, "приказ")
         assert "проблем" in result.lower() or "Обнаружено" not in result

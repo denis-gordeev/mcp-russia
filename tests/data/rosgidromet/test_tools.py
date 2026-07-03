@@ -13,7 +13,7 @@ from mcp_russia.data.rosgidromet.client import (
 from mcp_russia.data.rosgidromet.constants import STANCII_MONITORINGA
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -21,49 +21,49 @@ def _mock_ctx():
 
 
 async def test_spisok_stanciy():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosgidromet_tools.spisok_stanciy(ctx)
     assert "Станции мониторинга" in result
     assert "Москва" in result
 
 
 async def test_spisok_tipov_dannykh():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await rosgidromet_tools.spisok_tipov_dannykh(ctx)
     assert "метеорологических данных" in result
     assert "экологических данных" in result
 
 
-async def test_pogoda_seychas_unavailable():
-    ctx = _mock_ctx()
+async def test_pogoda_seychas_nedostupen():
+    ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_pogodu", return_value=None):
         result = await rosgidromet_tools.pogoda_seychas(stanciya="99", ctx=ctx)
     assert "недоступны" in result
 
 
-async def test_prognoz_pogody_unavailable():
-    ctx = _mock_ctx()
+async def test_prognoz_pogody_nedostupen():
+    ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_prognoz", return_value=[]):
         result = await rosgidromet_tools.prognoz_pogody(stanciya="99", ctx=ctx)
     assert "недоступен" in result
 
 
-async def test_ekologiya_regiona_empty():
-    ctx = _mock_ctx()
+async def test_ekologiya_regiona_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_ekologiyu", return_value=[]):
         result = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", ctx=ctx)
     assert "недоступны" in result
 
 
-async def test_preduprezhdeniya_empty():
-    ctx = _mock_ctx()
+async def test_preduprezhdeniya_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_preduprezhdeniya", return_value=[]):
         result = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", ctx=ctx)
     assert "отсутствуют" in result
 
 
-async def test_sputnik_monitoring_empty():
-    ctx = _mock_ctx()
+async def test_sputnik_monitoring_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_sputnik_dannye", return_value=[]):
         result = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", ctx=ctx)
     assert "недоступны" in result

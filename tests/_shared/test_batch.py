@@ -9,7 +9,7 @@ import pytest
 from mcp_russia._shared import batch
 
 
-def _mock_ctx() -> MagicMock:
+def _maket_konteksta() -> MagicMock:
     ctx = MagicMock()
     ctx.info = AsyncMock()
     return ctx
@@ -44,20 +44,20 @@ class TestPostroenieDispetcherizatsii:
 class TestVypolneniePaketa:
     @pytest.mark.asyncio
     async def test_pustoy_spisok(self) -> None:
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy([], ctx)
         assert "Нет запросов" in result
 
     @pytest.mark.asyncio
     async def test_prevyshaet_limit(self) -> None:
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         queries = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
         result = await batch.vypolnit_paket_vnutrenniy(queries, ctx)
         assert "Максимум 10" in result
 
     @pytest.mark.asyncio
     async def test_neizvestnyy_instrument(self) -> None:
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "nonexistent_tool", "argumenty": {}}], ctx
         )
@@ -72,7 +72,7 @@ class TestVypolneniePaketa:
         mock_fn = AsyncMock(spec=_spec, return_value="rezultat ok")
         batch._dispetcher["test_tool"] = mock_fn
 
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "test_tool", "argumenty": {"param": "value"}}], ctx
         )
@@ -88,7 +88,7 @@ class TestVypolneniePaketa:
 
         batch._dispetcher["greet"] = no_ctx_tool
 
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "greet", "argumenty": {"name": "world"}}], ctx
         )
@@ -106,7 +106,7 @@ class TestVypolneniePaketa:
 
         batch._dispetcher["counter"] = counting_tool
 
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "counter", "argumenty": {"n": 1}},
@@ -130,7 +130,7 @@ class TestVypolneniePaketa:
 
         batch._dispetcher["fail"] = failing_tool
 
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [{"instrument": "fail", "argumenty": {}}], ctx
         )
@@ -151,7 +151,7 @@ class TestVypolneniePaketa:
         batch._dispetcher["ok"] = ok_tool
         batch._dispetcher["bad"] = bad_tool
 
-        ctx = _mock_ctx()
+        ctx = _maket_konteksta()
         result = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "ok", "argumenty": {}},

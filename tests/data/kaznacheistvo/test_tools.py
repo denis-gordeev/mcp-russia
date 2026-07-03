@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 from mcp_russia.data.kaznacheistvo import tools as kaznacheistvo_tools
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -13,19 +13,19 @@ def _mock_ctx():
 
 
 async def test_spisok_vidov_byudzhetov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await kaznacheistvo_tools.spisok_vidov_byudzhetov(ctx)
     assert "бюджет" in result.lower()
 
 
 async def test_spisok_kategoriy_raskhodov():
-    ctx = _mock_ctx()
+    ctx = _maket_konteksta()
     result = await kaznacheistvo_tools.spisok_kategoriy_raskhodov(ctx)
     assert "Образование" in result or "Расходы" in result
 
 
-async def test_ispolnenie_byudzheta_unavailable():
-    ctx = _mock_ctx()
+async def test_ispolnenie_byudzheta_nedostupen():
+    ctx = _maket_konteksta()
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=None
     ):
@@ -33,8 +33,8 @@ async def test_ispolnenie_byudzheta_unavailable():
     assert isinstance(result, str)
 
 
-async def test_ispolnenie_byudzheta_found():
-    ctx = _mock_ctx()
+async def test_ispolnenie_byudzheta_nayden():
+    ctx = _maket_konteksta()
     mock_data = {
         "period": "2025",
         "tip": "Федеральный бюджет",
@@ -49,15 +49,15 @@ async def test_ispolnenie_byudzheta_found():
     assert "2025" in result
 
 
-async def test_poisk_uchastnikov_bp_empty():
-    ctx = _mock_ctx()
+async def test_poisk_uchastnikov_bp_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=[]):
         result = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx)
     assert isinstance(result, str)
 
 
-async def test_poisk_uchastnikov_bp_found():
-    ctx = _mock_ctx()
+async def test_poisk_uchastnikov_bp_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "inn": "7707083893",
@@ -71,15 +71,15 @@ async def test_poisk_uchastnikov_bp_found():
     assert "Минфин" in result
 
 
-async def test_poisk_uchrezhdeniy_empty():
-    ctx = _mock_ctx()
+async def test_poisk_uchrezhdeniy_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchrezhdeniy", return_value=[]):
         result = await kaznacheistvo_tools.poisk_uchrezhdeniy(ctx)
     assert isinstance(result, str)
 
 
-async def test_mezhbyudzhetnye_transferty_found():
-    ctx = _mock_ctx()
+async def test_mezhbyudzhetnye_transferty_nayden():
+    ctx = _maket_konteksta()
     mock_data = [
         {
             "vid": "Дотация",

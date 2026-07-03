@@ -32,7 +32,7 @@ class TestMetaFunktsii:
         assert meta.trebuet_autentifikatsii is True
         assert meta.peremennaya_avt_env == "ZAKUPKI_API_KEY"
 
-    def test_dostupna_li_autentifikatsiya_no_auth_required(self) -> None:
+    def test_dostupna_li_autentifikatsiya_no_auth_obyazatelen(self) -> None:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         assert meta.dostupna_li_autentifikatsiya() is True
 
@@ -133,7 +133,7 @@ class TestReyestrFunktsiy:
 
     def test_poluchit_funktsiyu_ne_naydena(self) -> None:
         registry = ReyestrFunktsiy()
-        assert registry.poluchit_funktsiyu("nonexistent") is None
+        assert registry.poluchit_funktsiyu("nesushchestvuyushchiy") is None
 
     def test_smontirovat_vse_pustoy(self) -> None:
         """Mount с пустым registry не вызывает исключение."""
@@ -194,8 +194,8 @@ class TestReyestrFunktsiy:
     def test_funktsii_vozvrashchaet_kopiyu(self) -> None:
         registry = ReyestrFunktsiy()
         features = registry.funktsii
-        features["fake"] = None  # type: ignore[assignment]
-        assert "fake" not in registry._features
+        features["poddelnyy"] = None  # type: ignore[assignment]
+        assert "poddelnyy" not in registry._features
 
 
 # ---------------------------------------------------------------------------

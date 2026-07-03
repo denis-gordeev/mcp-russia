@@ -6,7 +6,7 @@ from mcp_russia.data.rosreestr import tools as rre_tools
 from mcp_russia.data.rosreestr.schemas import KadastrovayaStoimost, KadastrovyyObekt
 
 
-def _mock_ctx():
+def _maket_konteksta():
     ctx = AsyncMock()
     ctx.info = AsyncMock()
     ctx.warning = AsyncMock()
@@ -44,8 +44,8 @@ def test_spisok_form_sobstvennosti():
     assert any(f["kod"] == "chastnaya" for f in result)
 
 
-async def test_info_obekta_success():
-    ctx = _mock_ctx()
+async def test_info_obekta_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_obekt",
@@ -66,15 +66,15 @@ async def test_info_obekta_success():
     assert "pkk.rosreestr.ru" in result
 
 
-async def test_info_obekta_not_found():
-    ctx = _mock_ctx()
+async def test_info_obekta_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_obekt", return_value=None):
         result = await rre_tools.info_obekta("00:00:0000000:000", ctx)
     assert "не найден" in result
 
 
-async def test_kadastrovaya_stoimost_success():
-    ctx = _mock_ctx()
+async def test_kadastrovaya_stoimost_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_kadastrovnuyu_stoimost",
@@ -92,15 +92,15 @@ async def test_kadastrovaya_stoimost_success():
     assert "pkk.rosreestr.ru" in result
 
 
-async def test_kadastrovaya_stoimost_not_found():
-    ctx = _mock_ctx()
+async def test_kadastrovaya_stoimost_ne_nayden():
+    ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_kadastrovnuyu_stoimost", return_value=None):
         result = await rre_tools.kadastrovaya_stoimost("00:00:0000000:000", ctx)
     assert "не найден" in result
 
 
-async def test_prava_na_obekt_success():
-    ctx = _mock_ctx()
+async def test_prava_na_obekt_uspekh():
+    ctx = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_prava",
@@ -118,8 +118,8 @@ async def test_prava_na_obekt_success():
     assert "Иванов" in result
 
 
-async def test_prava_na_obekt_empty():
-    ctx = _mock_ctx()
+async def test_prava_na_obekt_pustoy():
+    ctx = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_prava", return_value=[]):
         result = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
     assert "отсутствуют" in result or "ЕГРН" in result

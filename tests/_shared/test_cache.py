@@ -15,9 +15,9 @@ class TestKeshSVremenemZhizni:
 
     def test_poluchenie_otsutstvuyushchego_klyucha(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=60)
-        assert kesh.poluchit("missing") is None
+        assert kesh.poluchit("otsutstvuyushchiy") is None
 
-    def test_istekshaya_zapis_vozvrashchaet_none(self) -> None:
+    def test_istekshaya_zapis_vozvrashchaet_nichego(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=0.01)
         kesh.ustanovit("key", "value")
         time.sleep(0.02)
