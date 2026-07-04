@@ -46,7 +46,7 @@ def test_spisok_kategoriy_nalogoplatelshchikov():
 
 async def test_info_organizacii_nayden():
     ctx = _maket_konteksta()
-    mock_org = OrganizaciyaEGRUL(
+    maket_organizatsii = OrganizaciyaEGRUL(
         inn="7707083893",
         ogrn="1027700132195",
         nazvanie="ПАО Сбербанк",
@@ -55,7 +55,7 @@ async def test_info_organizacii_nayden():
         data_registracii="2002-08-22",
         sostoyanie="Действующая",
     )
-    with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=mock_org):
+    with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=maket_organizatsii):
         rezultat = await fns_tools.info_organizacii("7707083893", ctx=ctx)
     assert "7707083893" in rezultat
     assert "ПАО Сбербанк" in rezultat
@@ -71,14 +71,14 @@ async def test_info_organizacii_ne_nayden():
 
 async def test_info_ip_nayden():
     ctx = _maket_konteksta()
-    mock_ip = IPEGRIP(
+    maket_ip = IPEGRIP(
         inn="500100732259",
         ogrnip="304500116000157",
         fio="Иванов Иван Иванович",
         data_registracii="2004-04-27",
         sostoyanie="Действующая",
     )
-    with patch.object(fns_tools.client, "poluchit_ip", return_value=mock_ip):
+    with patch.object(fns_tools.client, "poluchit_ip", return_value=maket_ip):
         rezultat = await fns_tools.info_ip("500100732259", ctx=ctx)
     assert "500100732259" in rezultat
     assert "Иванов" in rezultat

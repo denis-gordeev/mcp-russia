@@ -21,7 +21,7 @@ async def test_spisok_senatorov():
 
 async def test_spisok_senatorov_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "1",
             "familiya": "Матвиенко",
@@ -32,7 +32,7 @@ async def test_spisok_senatorov_nayden():
             "komitet": "",
         },
     ]
-    with patch.object(sovfed_tools.client, "poisk_senatorov", return_value=mock_data):
+    with patch.object(sovfed_tools.client, "poisk_senatorov", return_value=maket_dannykh):
         rezultat = await sovfed_tools.spisok_senatorov(ctx)
     assert "Матвиенко" in rezultat
 
@@ -46,7 +46,7 @@ async def test_info_senatora_ne_nayden():
 
 async def test_info_senatora_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nomer": "1",
         "familiya": "Матвиенко",
         "imya": "Валентина",
@@ -56,7 +56,7 @@ async def test_info_senatora_nayden():
         "komitet": "",
         "data_naznacheniya": "2011",
     }
-    with patch.object(sovfed_tools.client, "info_senatora", return_value=mock_data):
+    with patch.object(sovfed_tools.client, "info_senatora", return_value=maket_dannykh):
         rezultat = await sovfed_tools.info_senatora("1", ctx)
     assert "Матвиенко" in rezultat
 
@@ -82,7 +82,7 @@ async def test_poisk_zakonoproektov_pustoy():
 
 async def test_poisk_zakonoproektov_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "СФ-001",
             "nazvanie": "О федеральном бюджете",
@@ -90,7 +90,7 @@ async def test_poisk_zakonoproektov_nayden():
             "data_rassmotreniya": "2026-01-15",
         },
     ]
-    with patch.object(sovfed_tools.client, "poisk_zakonoproektov", return_value=mock_data):
+    with patch.object(sovfed_tools.client, "poisk_zakonoproektov", return_value=maket_dannykh):
         rezultat = await sovfed_tools.poisk_zakonoproektov(ctx)
     assert "федеральном бюджете" in rezultat
 
@@ -104,7 +104,7 @@ async def test_spisok_zasedaniy_pustoy():
 
 async def test_spisok_zasedaniy_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "1",
             "data": "2026-01-15",
@@ -112,6 +112,6 @@ async def test_spisok_zasedaniy_nayden():
             "povestka": "О бюджете",
         },
     ]
-    with patch.object(sovfed_tools.client, "spisok_zasedaniy", return_value=mock_data):
+    with patch.object(sovfed_tools.client, "spisok_zasedaniy", return_value=maket_dannykh):
         rezultat = await sovfed_tools.spisok_zasedaniy(ctx, god=2026)
     assert "2026-01-15" in rezultat

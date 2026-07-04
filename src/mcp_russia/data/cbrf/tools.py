@@ -116,10 +116,10 @@ async def spisok_valyut(ctx: Context) -> str:
     """
     await ctx.info("Запрос списка валют ЦБ РФ...")
     rezultat = await client.poluchit_vse_valyuty()
-    valute_data = rezultat.get("Valute", {})
+    dannye_valyut = rezultat.get("Valute", {})
 
     stroki_tablitsy = []
-    for kod, zapis in sorted(valute_data.items()):
+    for kod, zapis in sorted(dannye_valyut.items()):
         nazvanie_valyuty = zapis.get("Name", kod)
         nominal_valyuty = zapis.get("Nominal", 1)
         znachenie_kursa = zapis.get("Value", 0)

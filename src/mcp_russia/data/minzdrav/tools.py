@@ -31,12 +31,12 @@ async def poisk_med_organizatsiy(
         Список медицинских организаций.
     """
     await ctx.info(f"Поиск медицинских организаций: {subiekt or 'все'}...")
-    orgs = await client.poisk_med_organizatsiy(
+    organizatsii = await client.poisk_med_organizatsiy(
         subiekt=subiekt,
         tip=tip,
         gorod=gorod,
     )
-    if not orgs:
+    if not organizatsii:
         return (
             "Медицинские организации не найдены.\n\n"
             "Данные доступны через:\n"
@@ -50,7 +50,7 @@ async def poisk_med_organizatsiy(
             o.get("subiekt", ""),
             o.get("gorod", ""),
         )
-        for o in orgs
+        for o in organizatsii
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Город"],

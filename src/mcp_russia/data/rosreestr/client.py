@@ -19,10 +19,10 @@ from mcp_russia._shared.http_client import http_poluchit
 from .constants import KATEGORII_ZEMEL_MAP, STATUSY_UCHE_TA_MAP
 from .schemas import KadastrovayaStoimost, KadastrovyyObekt
 
-PKK_API_BASE = "https://pkk.rosreestr.ru/api/features"
-PKK_SEARCH_URL = "https://pkk.rosreestr.ru/api/features/1"
+PKK_BAZA_API = "https://pkk.rosreestr.ru/api/features"
+PKK_URL_POISKA = "https://pkk.rosreestr.ru/api/features/1"
 
-TIPY_OBEKTA_CODE = {
+TIPY_OBEKTA_KOD = {
     "земельный участок": "zemelnyy_uchastok",
     "здание": "zdanie",
     "помещение": "pomeshchenie",
@@ -35,7 +35,7 @@ TIPY_OBEKTA_CODE = {
 def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> KadastrovyyObekt:
     """Разбор данных объекта недвижимости из ответа pkk.rosreestr.ru."""
     tip = dannye.get("type", "").lower()
-    kod_tipa = TIPY_OBEKTA_CODE.get(tip, "")
+    kod_tipa = TIPY_OBEKTA_KOD.get(tip, "")
 
     adres = ""
     if dannye.get("address"):
@@ -109,7 +109,7 @@ async def poluchit_obekt(kadastrovyy_nomer: str) -> KadastrovyyObekt | None:
         Данные объекта или None.
     """
     try:
-        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        adres_url = f"{PKK_BAZA_API}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         obekt_dannykh = rezultat.get("feature", rezultat)
         atributy = obekt_dannykh.get("attrs", obekt_dannykh)
@@ -128,7 +128,7 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
         Данные о кадастровой стоимости или None.
     """
     try:
-        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        adres_url = f"{PKK_BAZA_API}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         obekt_dannykh = rezultat.get("feature", rezultat)
         atributy = obekt_dannykh.get("attrs", obekt_dannykh)
@@ -174,7 +174,7 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
         Список зарегистрированных прав.
     """
     try:
-        adres_url = f"{PKK_API_BASE}/1/{kadastrovyy_nomer}"
+        adres_url = f"{PKK_BAZA_API}/1/{kadastrovyy_nomer}"
         rezultat = await http_poluchit(adres_url, zagolovki={"Accept": "application/json"})
         obekt_dannykh = rezultat.get("feature", rezultat)
         prava_spisok = obekt_dannykh.get("rights", [])
@@ -206,7 +206,7 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
         Список найденных объектов.
     """
     try:
-        adres_url = f"{PKK_SEARCH_URL}"
+        adres_url = f"{PKK_URL_POISKA}"
         rezultat = await http_poluchit(
             adres_url,
             parametry={"sqo": zapros},

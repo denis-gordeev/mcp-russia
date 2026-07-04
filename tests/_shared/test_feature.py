@@ -36,7 +36,7 @@ class TestMetaFunktsii:
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_dostupna_li_autentifikatsiya_missing_env_var(self) -> None:
+    def test_dostupna_li_autentifikatsiya_otsutstvuyushchaya_peremennaya(self) -> None:
         meta = MetaFunktsii(
             imya="t",
             opisanie="T",
@@ -72,7 +72,7 @@ class TestMetaFunktsii:
             os.environ.pop("FAKE_KEY_NOT_SET", None)
             assert meta.dostupna_li_autentifikatsiya() is True
 
-    def test_dostupna_li_autentifikatsiya_optional_auth_with_env(self) -> None:
+    def test_dostupna_li_autentifikatsiya_neobyazatelnaya_s_peremennoy(self) -> None:
         meta = MetaFunktsii(
             imya="t",
             opisanie="T",
@@ -103,99 +103,99 @@ class TestMetaFunktsii:
 
 class TestReyestrFunktsiy:
     def test_pustoy_reestr(self) -> None:
-        registry = ReyestrFunktsiy()
-        assert registry.funktsii == {}
-        assert registry.propushcheno == {}
+        reyestr = ReyestrFunktsiy()
+        assert reyestr.funktsii == {}
+        assert reyestr.propushcheno == {}
 
     def test_obnaruzhenie_vozvrashchaet_self_dlya_tsepochki(self) -> None:
         """obnaruzhit() возвращает self для цепочки вызовов."""
-        registry = ReyestrFunktsiy()
-        rezultat = registry.obnaruzhit("mcp_russia.data")
-        assert rezultat is registry
+        reyestr = ReyestrFunktsiy()
+        rezultat = reyestr.obnaruzhit("mcp_russia.data")
+        assert rezultat is reyestr
 
     def test_obnaruzhenie_nakhodit_cbrf(self) -> None:
         """Discovery находит feature cbrf в пакете data."""
-        registry = ReyestrFunktsiy()
-        registry.obnaruzhit("mcp_russia.data")
-        assert "cbrf" in registry.funktsii
+        reyestr = ReyestrFunktsiy()
+        reyestr.obnaruzhit("mcp_russia.data")
+        assert "cbrf" in reyestr.funktsii
 
     def test_obnaruzhenie_nakhodit_deloproizvodstvo(self) -> None:
         """Discovery находит feature deloproizvodstvo в пакете agenty."""
-        registry = ReyestrFunktsiy()
-        registry.obnaruzhit("mcp_russia.agenty")
-        assert "deloproizvodstvo" in registry.funktsii
+        reyestr = ReyestrFunktsiy()
+        reyestr.obnaruzhit("mcp_russia.agenty")
+        assert "deloproizvodstvo" in reyestr.funktsii
 
     def test_svodka_pustoy(self) -> None:
-        registry = ReyestrFunktsiy()
-        summary = registry.svodka()
-        assert "0 функция(й) активно" in summary
-        assert "0 пропущено" in summary
+        reyestr = ReyestrFunktsiy()
+        svodka_testa = reyestr.svodka()
+        assert "0 функция(й) активно" in svodka_testa
+        assert "0 пропущено" in svodka_testa
 
     def test_poluchit_funktsiyu_ne_naydena(self) -> None:
-        registry = ReyestrFunktsiy()
-        assert registry.poluchit_funktsiyu("nesushchestvuyushchiy") is None
+        reyestr = ReyestrFunktsiy()
+        assert reyestr.poluchit_funktsiyu("nesushchestvuyushchiy") is None
 
     def test_smontirovat_vse_pustoy(self) -> None:
         """Mount с пустым registry не вызывает исключение."""
-        registry = ReyestrFunktsiy()
-        root = FastMCP("test-root")
-        registry.smontirovat_vse(root)  # не должен вызывать исключение
+        reyestr = ReyestrFunktsiy()
+        koren = FastMCP("test-root")
+        reyestr.smontirovat_vse(koren)  # не должен вызывать исключение
 
     def test_zaregistrirovat_i_smontirovat_vruchnuyu(self) -> None:
         """Регистрирует feature вручную и монтирует в root."""
-        registry = ReyestrFunktsiy()
+        reyestr = ReyestrFunktsiy()
 
         meta = MetaFunktsii(imya="test_feat", opisanie="Тестовая функция")
-        sub_server = FastMCP("test-sub")
+        podserver = FastMCP("test-sub")
 
-        @sub_server.tool
-        def ping() -> str:
+        @podserver.tool
+        def ping_fn() -> str:
             """Инструмент проверки связи."""
             return "pong"
 
-        registry._features["test_feat"] = ZaregistrirovannayaFunktsiya(
+        reyestr._features["test_feat"] = ZaregistrirovannayaFunktsiya(
             metadannye=meta,
-            server_fn=sub_server,
+            server_fn=podserver,
             put_modulya="fake.module",
         )
 
-        root = FastMCP("test-root")
-        registry.smontirovat_vse(root)
+        koren = FastMCP("test-root")
+        reyestr.smontirovat_vse(koren)
 
-        assert registry.poluchit_funktsiyu("test_feat") is not None
-        assert "test_feat" in registry.svodka()
+        assert reyestr.poluchit_funktsiyu("test_feat") is not None
+        assert "test_feat" in reyestr.svodka()
 
     def test_svodka_s_funktsiyami(self) -> None:
-        registry = ReyestrFunktsiy()
+        reyestr = ReyestrFunktsiy()
         meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
-        sub = FastMCP("sub")
-        registry._features["cbrf"] = ZaregistrirovannayaFunktsiya(
-            metadannye=meta, server_fn=sub, put_modulya="m"
+        podmodul = FastMCP("sub")
+        reyestr._features["cbrf"] = ZaregistrirovannayaFunktsiya(
+            metadannye=meta, server_fn=podmodul, put_modulya="m"
         )
-        summary = registry.svodka()
-        assert "1 функция(й) активно" in summary
-        assert "cbrf" in summary
-        assert "ЦБ РФ данные" in summary
+        svodka_testa = reyestr.svodka()
+        assert "1 функция(й) активно" in svodka_testa
+        assert "cbrf" in svodka_testa
+        assert "ЦБ РФ данные" in svodka_testa
 
     def test_svodka_s_propushchennymi(self) -> None:
-        registry = ReyestrFunktsiy()
-        registry._skipped["broken"] = "отсутствует META_FUNKTSII"
-        summary = registry.svodka()
-        assert "1 пропущено" in summary
-        assert "broken" in summary
+        reyestr = ReyestrFunktsiy()
+        reyestr._skipped["broken"] = "отсутствует META_FUNKTSII"
+        svodka_testa = reyestr.svodka()
+        assert "1 пропущено" in svodka_testa
+        assert "broken" in svodka_testa
 
     def test_propushcheno_vozvrashchaet_kopiyu(self) -> None:
-        registry = ReyestrFunktsiy()
-        registry._skipped["x"] = "reason"
-        skipped = registry.propushcheno
-        skipped["y"] = "other"
-        assert "y" not in registry._skipped
+        reyestr = ReyestrFunktsiy()
+        reyestr._skipped["x"] = "reason"
+        propushcheno = reyestr.propushcheno
+        propushcheno["y"] = "other"
+        assert "y" not in reyestr._skipped
 
     def test_funktsii_vozvrashchaet_kopiyu(self) -> None:
-        registry = ReyestrFunktsiy()
-        features = registry.funktsii
-        features["poddelnyy"] = None  # type: ignore[assignment]
-        assert "poddelnyy" not in registry._features
+        reyestr = ReyestrFunktsiy()
+        funktsii = reyestr.funktsii
+        funktsii["poddelnyy"] = None  # type: ignore[assignment]
+        assert "poddelnyy" not in reyestr._features
 
 
 # ---------------------------------------------------------------------------
@@ -207,18 +207,18 @@ class TestIntegratsiyaReestra:
     @pytest.mark.asyncio
     async def test_smontirovannyy_instrument_vyzyvaemyy(self) -> None:
         """Инструмент, подключённый через registry, вызывается через Client."""
-        sub = FastMCP("sub")
+        podmodul = FastMCP("sub")
 
-        @sub.tool
-        def echo(msg: str) -> str:
+        @podmodul.tool
+        def ekho(soobshcheniye: str) -> str:
             """Вернуть сообщение."""
-            return f"echo: {msg}"
+            return f"echo: {soobshcheniye}"
 
-        root = FastMCP("root")
-        root.mount(sub, namespace="test")
+        koren = FastMCP("root")
+        koren.mount(podmodul, namespace="test")
 
-        async with Client(root) as client:
-            rezultat = await client.call_tool("test_echo", {"msg": "hello"})
+        async with Client(koren) as klient:
+            rezultat = await klient.call_tool("test_ekho", {"soobshcheniye": "hello"})
             assert rezultat.data == "echo: hello"
 
     @pytest.mark.asyncio
@@ -226,16 +226,16 @@ class TestIntegratsiyaReestra:
         """Root-сервер без подключённых features работает."""
         from mcp_russia.server import mcp
 
-        async with Client(mcp) as client:
-            tools = await client.list_tools()
-            tool_names = [t.name for t in tools]
-            assert "spisok_funktsiy" in tool_names
+        async with Client(mcp) as klient:
+            instrumenty = await klient.list_tools()
+            imena_instrumentov = [t.name for t in instrumenty]
+            assert "spisok_funktsiy" in imena_instrumentov
 
     @pytest.mark.asyncio
-    async def test_spisok_funktsiy_tool(self) -> None:
+    async def test_spisok_funktsiy_instrument(self) -> None:
         """Мета-инструмент spisok_funktsiy возвращает сводку."""
         from mcp_russia.server import mcp
 
-        async with Client(mcp) as client:
-            rezultat = await client.call_tool("spisok_funktsiy", {})
+        async with Client(mcp) as klient:
+            rezultat = await klient.call_tool("spisok_funktsiy", {})
             assert "mcp-russia" in rezultat.data

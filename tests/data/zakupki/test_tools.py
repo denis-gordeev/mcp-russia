@@ -18,7 +18,7 @@ def _maket_konteksta():
 # --- Тесты парсера ---
 
 
-def test_parse_zakupki_search():
+def test_razobrat_poisk_zakupok():
     dannye = {
         "results": [
             {
@@ -40,12 +40,12 @@ def test_parse_zakupki_search():
     assert rezultat[0].nachalnaya_tsena == 1500000.0
 
 
-def test_parse_zakupki_search_pustoy():
+def test_razobrat_poisk_zakupok_pustoy():
     assert zakupki_client._razobrat_poisk_zakupok(None) == []
     assert zakupki_client._razobrat_poisk_zakupok("not a list") == []
 
 
-def test_parse_kontrakty():
+def test_razobrat_kontrakty():
     dannye = {
         "results": [
             {
@@ -65,7 +65,7 @@ def test_parse_kontrakty():
     assert rezultat[0].tsena == 500000.0
 
 
-def test_determine_zakon():
+def test_opredelit_zakon():
     assert zakupki_client._opredelit_zakon({"fz": "44"}) == "44-ФЗ"
     assert zakupki_client._opredelit_zakon({"fz": "223"}) == "223-ФЗ"
     assert zakupki_client._opredelit_zakon({"fz": ""}) == ""
@@ -110,7 +110,7 @@ async def test_poisk_zakupok_s_dannymi():
     assert "44-ФЗ" in rezultat
 
 
-async def test_poisk_zakupok_with_filters():
+async def test_poisk_zakupok_s_filtrami():
     ctx = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
         rezultat = await zakupki_tools.poisk_zakupok(

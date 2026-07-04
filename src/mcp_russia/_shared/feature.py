@@ -130,11 +130,13 @@ class ReyestrFunktsiy:
         """
         paket = importlib.import_module(imya_paketa)
 
-        for _finder, imya, ispkg in pkgutil.iter_modules(paket.__path__, paket.__name__ + "."):
+        for _poiskovik, imya, eto_paket in pkgutil.iter_modules(
+            paket.__path__, paket.__name__ + "."
+        ):
             korotkoe_imya = imya.rsplit(".", 1)[-1]
 
             # Пропуск не-пакетов и приватных модулей
-            if not ispkg or korotkoe_imya.startswith("_"):
+            if not eto_paket or korotkoe_imya.startswith("_"):
                 continue
 
             try:
@@ -176,15 +178,15 @@ class ReyestrFunktsiy:
 
         # Шаг 5: Импорт server.py и получение объекта mcp
         modul_servera = importlib.import_module(f"{put_modulya}.server")
-        server_obj = getattr(modul_servera, "mcp", None)
+        obiekt_servera = getattr(modul_servera, "mcp", None)
 
-        if server_obj is None:
+        if obiekt_servera is None:
             raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
         self._features[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
             metadannye=meta,
-            server_fn=server_obj,
+            server_fn=obiekt_servera,
             put_modulya=put_modulya,
         )
         logger.info(

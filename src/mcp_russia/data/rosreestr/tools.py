@@ -175,9 +175,9 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
         Список зарегистрированных прав (собственность, аренда и т.д.).
     """
     await ctx.info(f"Запрос прав на объект {kadastrovyy_nomer}...")
-    rights = await client.poluchit_prava(kadastrovyy_nomer)
+    prava = await client.poluchit_prava(kadastrovyy_nomer)
 
-    if not rights:
+    if not prava:
         return (
             f"**Кадастровый номер:** {kadastrovyy_nomer}\n\n"
             "Сведения о правах отсутствуют или не опубликованы.\n"
@@ -186,7 +186,7 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
         )
 
     stroki_tablitsy = []
-    for r in rights:
+    for r in prava:
         stroki_tablitsy.append(
             (
                 r.get("tip_prava", ""),

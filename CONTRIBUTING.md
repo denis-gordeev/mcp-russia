@@ -22,7 +22,7 @@ src/mcp_russia/
 ├── data/               # Модули для внешних API
 │   ├── cbrf/           # Центральный банк РФ
 │   ├── rosstat/        # Росстат
-│   └── {novaya_feature}/ # Новый модуль данных
+│   └── {novyy_modul}/ # Новый модуль данных
 └── agenty/             # Модули для агентных сценариев
     └── deloproizvodstvo/        # Агент официальных документов
 ```
@@ -31,10 +31,10 @@ src/mcp_russia/
 
 ## Как добавить новый модуль
 
-1. Создайте каталог `src/mcp_russia/data/{feature}/` (API) или `src/mcp_russia/agenty/{feature}/` (агенты) с обязательными файлами:
+1. Создайте каталог `src/mcp_russia/data/{modul}/` (API) или `src/mcp_russia/agenty/{modul}/` (агенты) с обязательными файлами:
 
 ```
-src/mcp_russia/data/{feature}/      # или agenty/{feature}/
+src/mcp_russia/data/{modul}/      # или agenty/{modul}/
 ├── __init__.py     # META_FUNKTSII (обязательно для автообнаружения)
 ├── server.py       # mcp: FastMCP (обязательно)
 ├── tools.py        # Функции MCP-инструментов
@@ -63,15 +63,15 @@ META_FUNKTSII = MetaFunktsii(
 from fastmcp import FastMCP
 from .tools import primer_tool
 
-mcp = FastMCP("mcp-russia-primer-feature")
+mcp = FastMCP("mcp-russia-primer-modul")
 
 mcp.tool(primer_tool)
 ```
 
-4. Добавьте тесты в `tests/data/{feature}/` (или `tests/agenty/{feature}/`):
+4. Добавьте тесты в `tests/data/{modul}/` (или `tests/agenty/{modul}/`):
 
 ```
-tests/data/{feature}/         # или tests/agenty/{feature}/
+tests/data/{modul}/         # или tests/agenty/{modul}/
 ├── test_tools.py             # Mock client, проверяет логику
 ├── test_client.py            # respx mock HTTP
 └── test_integration.py       # fastmcp.Client e2e
@@ -99,8 +99,8 @@ server.py → tools.py → client.py → schemas.py
 | Область | Правило | Пример |
 |--------|-----------|---------|
 | Модули | snake_case | `client.py` |
-| Classes | PascalCase | `class Subjekt(BaseModel)` |
-| Функции/tools | snake_case, глагол | `poisk_mestopolozheniy()` |
+| Классы | PascalCase | `class Subjekt(BaseModel)` |
+| Функции/инструменты | snake_case, глагол | `poisk_mestopolozheniy()` |
 | Константы | UPPER_SNAKE | `ROSSTAT_API_BASE` |
 | Приватные элементы | `_prefiks` | `_shared/`, `_cache` |
 
@@ -150,13 +150,13 @@ make ci                   # lint + types + test
 ```python
 from unittest.mock import AsyncMock, patch
 import pytest
-from mcp_russia.data.{feature}.tools import poisk_{feature}
+from mcp_russia.data.{modul}.tools import poisk_{modul}
 
 @pytest.mark.asyncio
 async def test_poisk_vozvrashaet_otformatirovannoe():
-    with patch("mcp_russia.data.{feature}.tools.poisk_primera", new_callable=AsyncMock) as mock:
+    with patch("mcp_russia.data.{modul}.tools.poisk_primera", new_callable=AsyncMock) as mock:
         mock.return_value = [...]
-        rezultat = await poisk_{feature}("zapros")
+        rezultat = await poisk_{modul}("zapros")
         assert "ozhidaemoe" in rezultat
 ```
 
@@ -166,7 +166,7 @@ async def test_poisk_vozvrashaet_otformatirovannoe():
 import httpx
 import pytest
 import respx
-from mcp_russia.data.{feature}.client import poisk_primera
+from mcp_russia.data.{modul}.client import poisk_primera
 
 @pytest.mark.asyncio
 @respx.mock
@@ -183,12 +183,12 @@ async def test_poisk_uspeshen():
 ```python
 import pytest
 from fastmcp import Client
-from mcp_russia.data.{feature}.server import mcp
+from mcp_russia.data.{modul}.server import mcp
 
 @pytest.mark.asyncio
 async def test_tool_via_mcp_client():
     async with Client(mcp) as client:
-        result = await client.call_tool("poisk_{feature}", {"zapros": "test"})
+        result = await client.call_tool("poisk_{modul}", {"zapros": "test"})
         assert result is not None
 ```
 

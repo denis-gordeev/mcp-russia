@@ -8,8 +8,8 @@
 # 3. ФГИС ЕГРН: https://fgis.egrn.reestr.ru
 # 4. Справочная информация: https://rosreestr.gov.ru/wps/portal/p/cc_ib_portal_services
 
-ROSREESTR_API_BASE = "https://rosreestr.gov.ru/api"
-PKK_API_BASE = "https://pkk.rosreestr.ru/api/features"
+ROSREESTR_BAZA_API = "https://rosreestr.gov.ru/api"
+PKK_BAZA_API = "https://pkk.rosreestr.ru/api/features"
 
 TipyNedvizhimosti = [
     {"kod": "zemelnyy_uchastok", "nazvanie": "Земельный участок"},

@@ -168,7 +168,7 @@ async def test_prazdniki_rf():
     assert "2025" in rezultat
 
 
-async def test_prazdniki_rf_default_year():
+async def test_prazdniki_rf_god_po_umolchaniyu():
     ctx = _maket_konteksta()
     rezultat = await rosapi_tools.prazdniki_rf(ctx=ctx)
     assert "Новый год" in rezultat
@@ -183,7 +183,7 @@ async def test_nalogovye_stavki():
     assert "13%" in rezultat
 
 
-async def test_zagolovki_dadaty_raises_auth_error_without_key():
+async def test_zagolovki_dadaty_vyzyvaet_oshibku_bez_klyucha():
     with (
         patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", ""),
         pytest.raises(OshibkaAutentifikatsii, match="MCP_RUSSIA_DADATA_API_KEY"),
@@ -191,7 +191,7 @@ async def test_zagolovki_dadaty_raises_auth_error_without_key():
         _zagolovki_dadaty()
 
 
-async def test_zagolovki_dadaty_with_key():
+async def test_zagolovki_dadaty_s_klyuchom():
     with patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", "test-key"):
         headers = _zagolovki_dadaty()
         assert headers["Authorization"] == "Token test-key"

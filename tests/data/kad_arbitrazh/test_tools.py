@@ -14,7 +14,7 @@ def _maket_konteksta():
     return ctx
 
 
-class TestParserRezultatyPoiska:
+class TestRazborRezultatovPoiska:
     def test_razbor_spiska(self) -> None:
         dannye = [
             {
@@ -71,7 +71,7 @@ class TestParserRezultatyPoiska:
         assert kad_client._opredelit_kategoriyu("А40-12345/2024") == ""
 
 
-class TestParserKartochkaDela:
+class TestRazborKartochkiDela:
     def test_razbor_polnyy(self) -> None:
         dannye = {
             "CaseInfo": {
@@ -98,7 +98,7 @@ class TestParserKartochkaDela:
         assert kad_client._razobrat_kartochka_dela({}) is None
 
 
-class TestParserAkty:
+class TestRazborAktov:
     def test_razbor_dokumentov(self) -> None:
         dannye = {
             "Documents": [
@@ -124,7 +124,7 @@ class TestParserAkty:
         assert kad_client._razobrat_akty(None, "А40-1/2024") == []
 
 
-class TestParserStorony:
+class TestRazborStoron:
     def test_razbor_storon(self) -> None:
         dannye = {
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
@@ -154,7 +154,7 @@ async def test_poisk_del_pustoy():
     assert "не найдены" in rezultat
 
 
-async def test_poisk_del_with_rezultaty():
+async def test_poisk_del_s_rezultatami():
     ctx = _maket_konteksta()
     mock_dela = [
         SudebnoeDelo(
@@ -174,7 +174,7 @@ async def test_poisk_del_with_rezultaty():
     assert "1 000 000" in rezultat or "1000000" in rezultat or "₽" in rezultat
 
 
-async def test_poisk_del_with_filters():
+async def test_poisk_del_s_filtrami():
     ctx = _maket_konteksta()
     with patch.object(kad_tools.client, "poisk_del", return_value=[]):
         rezultat = await kad_tools.poisk_del(

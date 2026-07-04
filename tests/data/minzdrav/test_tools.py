@@ -21,7 +21,7 @@ async def test_poisk_med_organizatsiy_pustoy():
 
 async def test_poisk_med_organizatsiy_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nazvanie": "Городская больница №1",
             "tip": "Больница",
@@ -29,7 +29,7 @@ async def test_poisk_med_organizatsiy_nayden():
             "gorod": "Москва",
         },
     ]
-    with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=mock_data):
+    with patch.object(minzdrav_tools.client, "poisk_med_organizatsiy", return_value=maket_dannykh):
         rezultat = await minzdrav_tools.poisk_med_organizatsiy(
             subiekt="Москва", tip="больница", ctx=ctx
         )
@@ -45,7 +45,7 @@ async def test_info_med_organizatsii_ne_nayden():
 
 async def test_info_med_organizatsii_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nazvanie": "Городская больница №1",
         "tip": "Больница",
         "adres": "г. Москва, ул. Примерная, д.1",
@@ -56,7 +56,7 @@ async def test_info_med_organizatsii_nayden():
         "krovatey": 500,
         "vrachey": 200,
     }
-    with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=mock_data):
+    with patch.object(minzdrav_tools.client, "info_med_organizatsii", return_value=maket_dannykh):
         rezultat = await minzdrav_tools.info_med_organizatsii(ctx, "12345")
     assert "Городская больница" in rezultat
     assert "500" in rezultat
@@ -71,7 +71,7 @@ async def test_poisk_litsenziy_pustoy():
 
 async def test_poisk_litsenziy_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "Л041-01137",
             "organizaciya": "Городская больница №1",
@@ -80,7 +80,7 @@ async def test_poisk_litsenziy_nayden():
             "data_okonchaniya": "2030-01-01",
         },
     ]
-    with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=mock_data):
+    with patch.object(minzdrav_tools.client, "poisk_litsenziy", return_value=maket_dannykh):
         rezultat = await minzdrav_tools.poisk_litsenziy(ctx, inn="1234567890")
     assert "Л041" in rezultat
 
@@ -94,7 +94,7 @@ async def test_pokazateli_zdorovya_pustoy():
 
 async def test_pokazateli_zdorovya_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nazvanie": "Ожидаемая продолжительность жизни",
             "znachenie": 73.5,
@@ -103,7 +103,7 @@ async def test_pokazateli_zdorovya_nayden():
             "subiekt": "РФ",
         },
     ]
-    with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=mock_data):
+    with patch.object(minzdrav_tools.client, "pokazateli_zdorovya", return_value=maket_dannykh):
         rezultat = await minzdrav_tools.pokazateli_zdorovya(ctx, god=2024)
     assert "73.5" in rezultat
 
@@ -117,7 +117,7 @@ async def test_statistika_zabolevaniy_pustoy():
 
 async def test_statistika_zabolevaniy_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "kod_mkb": "I00-I99",
             "nazvanie": "Болезни системы кровообращения",
@@ -126,7 +126,7 @@ async def test_statistika_zabolevaniy_nayden():
             "god": 2024,
         },
     ]
-    with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=mock_data):
+    with patch.object(minzdrav_tools.client, "statistika_zabolevaniy", return_value=maket_dannykh):
         rezultat = await minzdrav_tools.statistika_zabolevaniy(ctx, kod_mkb="I00-I99")
     assert "кровообращения" in rezultat
 

@@ -9,7 +9,7 @@ from mcp_russia.agenty.deloproizvodstvo import tools
 
 class TestFormatirovatDataExtenso:
     @pytest.mark.asyncio
-    async def test_default_moskva(self) -> None:
+    async def test_moskva_po_umolchaniyu(self) -> None:
         rezultat = await tools.formatirovat_data_extenso()
         now = datetime.now()
         assert "г. Москва" in rezultat
@@ -32,7 +32,7 @@ class TestFormatirovatDataExtenso:
 
 class TestGenerirovatNumeraciyu:
     @pytest.mark.asyncio
-    async def test_pismo_with_otdel(self) -> None:
+    async def test_pismo_s_otdelom(self) -> None:
         rezultat = await tools.generirovat_numeraciyu("письмо", 42, 2026, "Д-15")
         assert rezultat == "ПИСЬМО № 42/2026/Д-15"
 

@@ -45,7 +45,7 @@ async def test_info_proverki_ne_nayden():
 
 async def test_info_proverki_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nomer": "12345",
         "tip_proverki": "Плановая",
         "obekt": "ООО Тест",
@@ -57,7 +57,7 @@ async def test_info_proverki_nayden():
         "rezultat": "Нарушения выявлены",
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
     }
-    with patch.object(rpn_tools.client, "info_proverki", return_value=mock_data):
+    with patch.object(rpn_tools.client, "info_proverki", return_value=maket_dannykh):
         rezultat = await rpn_tools.info_proverki(ctx, nomer_proverki="12345")
     assert "ООО Тест" in rezultat
     assert "Завершена" in rezultat
@@ -72,7 +72,7 @@ async def test_poisk_proverok_pustoy():
 
 async def test_poisk_proverok_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "12345",
             "tip_proverki": "Плановая",
@@ -82,7 +82,7 @@ async def test_poisk_proverok_nayden():
             "vyavleno_narusheniy": 0,
         }
     ]
-    with patch.object(rpn_tools.client, "poisk_proverok", return_value=mock_data):
+    with patch.object(rpn_tools.client, "poisk_proverok", return_value=maket_dannykh):
         rezultat = await rpn_tools.poisk_proverok(ctx, inn="7710563663")
     assert "ООО Тест" in rezultat
 
@@ -109,7 +109,7 @@ async def test_zhaloby_potrebiteley_pustoy():
 
 async def test_zhaloby_potrebiteley_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "tema": "Некачественный товар",
             "organizaciya": "ООО Тест",
@@ -118,7 +118,7 @@ async def test_zhaloby_potrebiteley_nayden():
             "rezultat": "",
         }
     ]
-    with patch.object(rpn_tools.client, "poisk_zhalob", return_value=mock_data):
+    with patch.object(rpn_tools.client, "poisk_zhalob", return_value=maket_dannykh):
         rezultat = await rpn_tools.zhaloby_potrebiteley(ctx, organizaciya="ООО Тест")
     assert "Некачественный товар" in rezultat
 

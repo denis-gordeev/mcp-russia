@@ -46,7 +46,7 @@ async def test_statistika_pojarov_zapasnoy():
 
 async def test_statistika_pojarov_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "П-2026-001",
             "data": "2026-01-15",
@@ -56,7 +56,7 @@ async def test_statistika_pojarov_s_dannymi():
             "postradavshikh": 5,
         },
     ]
-    with patch.object(mchs_tools.client, "statistika_pojarov", return_value=mock_data):
+    with patch.object(mchs_tools.client, "statistika_pojarov", return_value=maket_dannykh):
         rezultat = await mchs_tools.statistika_pojarov(ctx)
     assert "Московск" in rezultat
 
@@ -70,7 +70,7 @@ async def test_poisk_chs_pustoy():
 
 async def test_poisk_chs_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "ЧС-2026-001",
             "vid_chs": "Техногенная",
@@ -83,7 +83,7 @@ async def test_poisk_chs_nayden():
             "postradavshikh": 3,
         },
     ]
-    with patch.object(mchs_tools.client, "poisk_chs", return_value=mock_data):
+    with patch.object(mchs_tools.client, "poisk_chs", return_value=maket_dannykh):
         rezultat = await mchs_tools.poisk_chs(ctx)
     assert "Техногенн" in rezultat
 
@@ -97,7 +97,7 @@ async def test_radiatsionnyy_monitoring_pustoy():
 
 async def test_radiatsionnyy_monitoring_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "stantsiya": "Москва-1",
             "subiekt": "Москва",
@@ -107,7 +107,7 @@ async def test_radiatsionnyy_monitoring_s_dannymi():
             "norma": 0.30,
         },
     ]
-    with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=mock_data):
+    with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=maket_dannykh):
         rezultat = await mchs_tools.radiatsionnyy_monitoring(ctx)
     assert "Москва" in rezultat
 
@@ -121,7 +121,7 @@ async def test_gidrologicheskaya_obstanovka_pustoy():
 
 async def test_gidrologicheskaya_obstanovka_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "reka": "Амур",
             "punkt_nablyudeniya": "г. Хабаровск",
@@ -131,7 +131,9 @@ async def test_gidrologicheskaya_obstanovka_s_dannymi():
             "data_izmereniya": "2026-06-10",
         },
     ]
-    with patch.object(mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=mock_data):
+    with patch.object(
+        mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=maket_dannykh
+    ):
         rezultat = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
     assert "Амур" in rezultat
 
@@ -145,7 +147,7 @@ async def test_preduprezhdeniya_chs_pustoy():
 
 async def test_preduprezhdeniya_chs_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "ПРД-2026-001",
             "tip_opasnosti": "Гидрологическая опасность",
@@ -155,7 +157,7 @@ async def test_preduprezhdeniya_chs_s_dannymi():
             "data_okonchaniya": "2026-06-20",
         },
     ]
-    with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=mock_data):
+    with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=maket_dannykh):
         rezultat = await mchs_tools.preduprezhdeniya_chs(ctx)
     assert "гидролог" in rezultat.lower() or "Амур" in rezultat
 

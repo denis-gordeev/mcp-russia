@@ -112,14 +112,14 @@ async def test_sravnit_valyuty():
     assert "EUR" in rezultat
 
 
-async def test_sravnit_valyuty_default():
+async def test_sravnit_valyuty_po_umolchaniyu():
     ctx = _maket_konteksta()
     with patch.object(cbrf_tools.client, "poluchit_valyuty_spisok", return_value=[]):
         rezultat = await cbrf_tools.sravnit_valyuty(ctx=ctx)
     assert "Не удалось" in rezultat
 
 
-async def test_sravnit_valyuty_too_many():
+async def test_sravnit_valyuty_slishkom_mnogo():
     codes = [f"C{i}" for i in range(11)]
     rezultat = await cbrf_tools.sravnit_valyuty(codes)
     assert "не более 10" in rezultat

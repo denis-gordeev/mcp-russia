@@ -157,9 +157,11 @@ async def zakonoproekty(
     """
     if ctx:
         await ctx.info(f"Запрос законопроектов (статус: {sostoyanie or 'все'})...")
-    bills = await client.poluchit_zakonoproekty(sostoyanie=sostoyanie, ogranichenie=ogranichenie)
+    zakonoproekty = await client.poluchit_zakonoproekty(
+        sostoyanie=sostoyanie, ogranichenie=ogranichenie
+    )
 
-    if not bills:
+    if not zakonoproekty:
         status_label = sostoyanie or "все"
         return (
             f"**Законопроекты Государственной Думы**\n\n"
@@ -171,9 +173,11 @@ async def zakonoproekty(
             f"используйте API СОЗД."
         )
 
-    stroki_tablitsy = [(b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in bills]
+    stroki_tablitsy = [
+        (b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in zakonoproekty
+    ]
     zagolovok = "**Законопроекты Государственной Думы**\n\n"
-    zagolovok += f"Найдено: {len(bills)} законопроектов\n\n"
+    zagolovok += f"Найдено: {len(zakonoproekty)} законопроектов\n\n"
     return (
         zagolovok
         + tablitsa_v_markdown(["Номер", "Название", "Статус", "Дата внесения"], stroki_tablitsy)
@@ -197,9 +201,11 @@ async def golosovaniya(
     """
     if ctx:
         await ctx.info(f"Запрос голосований (созыв: {sozyv or 'текущий'})...")
-    votes = await client.poluchit_golosovaniya(sozyv=sozyv, ogranichenie=ogranichenie)
+    golosovaniya_spisok = await client.poluchit_golosovaniya(
+        sozyv=sozyv, ogranichenie=ogranichenie
+    )
 
-    if not votes:
+    if not golosovaniya_spisok:
         return (
             "**Голосования Государственной Думы**\n\n"
             "Не удалось получить данные через API Госдумы.\n\n"
@@ -211,10 +217,10 @@ async def golosovaniya(
 
     stroki_tablitsy = [
         (v.zakonoproekt_identifikator, v.nazvanie[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
-        for v in votes
+        for v in golosovaniya_spisok
     ]
     zagolovok = "**Голосования Государственной Думы**\n\n"
-    zagolovok += f"Найдено: {len(votes)} голосований\n\n"
+    zagolovok += f"Найдено: {len(golosovaniya_spisok)} голосований\n\n"
     return (
         zagolovok
         + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], stroki_tablitsy)

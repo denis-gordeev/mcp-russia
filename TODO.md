@@ -2,6 +2,81 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-04 (шестьдесят четвёртый проход — русификация инфраструктуры _shared/, констант data/, переменных tools.py, тестовых имён, документации)
+
+### Выполнено
+
+- **Русификация _shared/batch.py** (8 идентификаторов):
+  - `ToolFn` → `TipFunktsiiInstrumenta` (псевдоним типа)
+  - `registry` → `reyestr` (параметр `postroit_dispetcherizatsiyu`)
+  - `base` → `baza`, `pkg` → `paket` (локальные переменные)
+  - `sub_path` → `put_podmodulya`, `sub_name` → `imya_podmodulya`, `is_pkg` → `eto_paket` (цикловые переменные pkgutil.iter_modules)
+  - `mod` → `modul` (импортируемый модуль)
+  - `fn` → `funktsiya` (цикловая переменная и поиск в диспетчере)
+  - `sig` → `signatura` (локальная переменная inspect.signature)
+- **Русификация _shared/feature.py** (3 идентификатора):
+  - `_finder` → `_poiskovik`, `ispkg` → `eto_paket` (цикловые переменные pkgutil.iter_modules)
+  - `server_obj` → `obiekt_servera` (локальная переменная getattr)
+- **Русификация _shared/discovery.py** (1 идентификатор):
+  - `auth_info` → `svedeniya_ob_avtorizatsii` (локальная переменная)
+- **Русификация server.py** (1 идентификатор):
+  - `registry` → `reyestr` (модульная переменная + 5 ссылок: obnaruzhit, smontirovat_vse, svodka, postroit_katalog, postroit_dispetcherizatsiyu)
+- **Русификация констант data/ модулей** (8 констант):
+  - rosapi: `DADATA_SUGGEST_URL` → `DADATA_URL_PODSKAZOK`, `DADATA_FIND_URL` → `DADATA_URL_POISKA_PO_ID`
+  - rosreestr: `PKK_API_BASE` → `PKK_BAZA_API` (client.py + constants.py), `PKK_SEARCH_URL` → `PKK_URL_POISKA`, `TIPY_OBEKTA_CODE` → `TIPY_OBEKTA_KOD`, `ROSREESTR_API_BASE` → `ROSREESTR_BAZA_API` (constants.py)
+- **Русификация локальных переменных data/ модулей** (14 переменных):
+  - rosapi: `full_date` → `polnaya_data`, `banki_raw` → `banki_syranye`
+  - kad_arbitrazh: `istorcy_raw` → `istorcy_syranye`, `otvetchiki_raw` → `otvetchiki_syranye`, `summa_raw` → `summa_syraya`
+  - cekrf: `_in_td` → `_v_yacheyke_dannykh`, `_in_th` → `_v_yacheyke_zagolovka`, `_current_row` → `_tekushchaya_stroka`, `_current_cell` → `_tekushchaya_yacheyka`, `_in_title` → `_v_zagolovke`, `title_text` → `tekst_zagolovka`, `_in_stats` → `_v_statistike`, `stats_text` → `tekst_statistiki`, `region_num` → `nomer_regiona`
+  - gosduma: `bills` → `zakonoproekty`, `votes` → `golosovaniya_spisok`
+  - gibdd: `history` → `istoriya`, `restrict` → `ogranicheniya`
+  - minzdrav: `orgs` → `organizatsii`
+  - cbrf: `valute_data` → `dannye_valyut` (client.py + tools.py)
+  - rosreestr: `rights` → `prava`
+- **Русификация имён тестовых классов** (4 класса):
+  - kad_arbitrazh: `TestParserRezultatyPoiska` → `TestRazborRezultatovPoiska`, `TestParserKartochkaDela` → `TestRazborKartochkiDela`, `TestParserAkty` → `TestRazborAktov`, `TestParserStorony` → `TestRazborStoron`
+- **Русификация имён тестовых функций** (20 функций в 8 файлах):
+  - zakupki: `test_parse_zakupki_search` → `test_razobrat_poisk_zakupok`, `test_parse_kontrakty` → `test_razobrat_kontrakty`, `test_determine_zakon` → `test_opredelit_zakon`, `_with_filters` → `_s_filtrami`
+  - cbrf: `test_sravnit_valyuty_default` → `test_sravnit_valyuty_po_umolchaniyu`, `_too_many` → `_slishkom_mnogo`
+  - rosstat: `test_demografiya_with_region` → `test_demografiya_s_regionom`
+  - roskomnadzor: `_not_blocked` → `_ne_zablokirovan`, `_blocked` → `_zablokirovan`
+  - minobrnauki: `test_info_vuza_by_name` → `test_info_vuza_po_nazvaniyu`, `_by_inn` → `_po_inn`
+  - rosapi: `_default_year` → `_god_po_umolchaniyu`, `_raises_auth_error_without_key` → `_vyzyvaet_oshibku_bez_klyucha`, `_with_key` → `_s_klyuchom`
+  - deloproizvodstvo: `test_default_moskva` → `test_moskva_po_umolchaniyu`, `_with_otdel` → `_s_otdelom`
+  - test_feature: `_missing_env_var` → `_otsutstvuyushchaya_peremennaya`, `_optional_auth_with_env` → `_neobyazatelnaya_s_peremennoy`, `_tool` → `_instrument`
+- **Русификация тестовых переменных** (~150+ замен в 30+ файлах):
+  - Интеграционные тесты: `client` → `klient` (fixture в 22 файлах), `tools` → `instrumenty`, `tool_names` → `imena_instrumentov`, `resources` → `resursy`, `uris` → `adresa_uri`, `prompts` → `prompty`, `expected` → `ozhidayemyy`
+  - _shared/ тесты: `mock_fn` → `maket_funktsii`, `call_count` → `schetchik_vyzovov`, `first` → `pervyy`, `second` → `vtoroy`, `queries` → `zaprosy`, `val` → `znacheniye`, `gen` → `generator`, `context` → `kontekst`, `client` → `klient`, `route` → `marshrut`, `registry` → `reyestr`, `summary` → `svodka_testa`, `root` → `koren`, `sub_server` → `podserver`, `skipped` → `propushcheno`, `features` → `funktsii`, `sub` → `podmodul`, `tools` → `instrumenty`, `tool_names` → `imena_instrumentov`, `now` → `seychas`, `worker` → `rabotnik`
+  - test_discovery.py: `mock_anthropic` → `maket_anthropic`, `mock_block` → `maket_bloka`, `mock_response` → `maket_otveta`, `mock_client` → `maket_klienta`, `mock_registry` → `maket_reestra`, `server` → `server_fn`, `names` → `imena`, `child` → `docherniy`, `parent` → `roditelskiy`, `_VALID_PLAN_JSON` → `_KORREKTNYY_PLAN_JSON`, `plan` → `plan_dannye`, `md` → `markdown`
+  - test_root_server.py: `cbrf_tool` → `cbrf_instrument`
+  - Встроенные тестовые функции: `no_ctx_tool` → `instrument_bez_konteksta`, `counting_tool` → `schitayushchiy_instrument`, `failing_tool` → `neudachnyy_instrument`, `ok_tool` → `normanyy_instrument`, `bad_tool` → `plokhoy_instrument`, `hidden_tool` → `skrytyy_instrument`, `worker` → `rabotnik`, `echo` → `ekho`
+  - Константы в тестах: `mock_data` → `maket_dannykh` (12 файлов), `mock_org` → `maket_organizatsii`, `mock_ip` → `maket_ip`, `tool_list` → `spisok_instrumentov`
+- **Исправление ссылки test_public_namespace.py**: `registry` → `reyestr` (импорт и переменные)
+- **Русификация документации** (~30 замен в 4 файлах):
+  - `docs/reference/features.md`: `region_info` → `info_regiona`, `okrug_info` → `info_okruga`
+  - `docs/examples/analiz-zakonodatelstva.md`: 15 английских sovfed API → русская транслитерация (`search_bills` → `poisk_zakonoproektov`, `bill_details` → `podrobnosti_zakonoproekta`, `amendments` → `popravki`, `bill_progress` → `khod_rassmotreniya`, `bill_votes` → `golosovaniya_zakonoproekta`, `vote_details` → `podrobnosti_golosovaniya`, `agenda` → `povestka`, `bill_text` → `tekst_zakonoproekta`, `committee_composition` → `sostav_komiteta`)
+  - `docs/examples/zhurnalist-stati.md`: `cbr_credit_series` → `cbrf_ryady_kreditovaniya`, `"siberian_fd"` → `"sibirskiy_fo"`, `rosprirodnadzor_deforestation` → `rosprirodnadzor_obezlesenie`
+  - `CONTRIBUTING.md`: `{feature}` → `{modul}`, `{novaya_feature}` → `{novyy_modul}`, `primer_tool` → `primer_instrument`, `Classes` → `Классы`, `Функции/tools` → `Функции/инструменты`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 31 файл переформатирован, `pytest` — 547 unit-тестов пройдено (интеграционные HTTP-тесты пропущены), mypy — без новых ошибок
+
+### Ключевые архитектурные решения
+
+- **`registry` → `reyestr`**: модульная переменная в server.py и параметр в batch.py; слово «registry» было одним из последних крупных английских идентификаторов в инфраструктуре
+- **`ToolFn` → `TipFunktsiiInstrumenta`**: псевдоним типа TYPE_CHECKING переименован для согласованности
+- **`_raw` → `_syranye`/`_syraya`**: английский суффикс `_raw` в kad_arbitrazh заменён на русские `_syranye`/`_syraya` (сырые/сырая)
+- **Константы Dadata/Росреестр**: `DADATA_SUGGEST_URL` → `DADATA_URL_PODSKAZOK`, `PKK_API_BASE` → `PKK_BAZA_API` — устранены английские слова `SUGGEST`, `FIND`, `SEARCH`, `API_BASE` в именах констант
+- **HTML-парсер ЦИК РФ**: все 8 атрибутов экземпляра `_VyboryTableParser` русифицированы: `_in_td` → `_v_yacheyke_dannykh`, `_in_th` → `_v_yacheyke_zagolovka` и т.д.
+- **`bills` → `zakonoproekty`**: устранено английское имя переменной в gosduma/tools.py
+- **`valute_data` → `dannye_valyut`**: устранён английский суффикс `_data` в cbrf
+- **`client` → `klient` fixture**: переименована во всех 22+ файлах интеграционных тестов; самый массовый паттерн переименования в этом раунде
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP) и стандартные Python-идентификаторы; несколько единичных переменных (`server_fn` — dataclass-поле, требует обновления 5+ файлов)
+
 ## Статус раунда 2026-07-03 (шестьдесят третий проход — русификация `status`→`sostoyanie`, `result`→`rezultat`, `text`→`tekst`, `name`→`imya`/`nazvanie`, `key`→`klyuch`)
 
 ### Выполнено

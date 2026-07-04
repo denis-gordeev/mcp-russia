@@ -42,10 +42,12 @@ async def test_poisk_vodnykh_obektov_pustoy():
 
 async def test_poisk_vodnykh_obektov_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {"nazvanie": "Река Волга", "tip": "Река", "basseyn": "Волжский", "subiekt": ""},
     ]
-    with patch.object(rosvodresursy_tools.client, "poisk_vodnykh_obektov", return_value=mock_data):
+    with patch.object(
+        rosvodresursy_tools.client, "poisk_vodnykh_obektov", return_value=maket_dannykh
+    ):
         rezultat = await rosvodresursy_tools.poisk_vodnykh_obektov(ctx, zapros="Волга")
     assert "Волга" in rezultat
 
@@ -59,14 +61,16 @@ async def test_info_vodnogo_obekta_ne_nayden():
 
 async def test_info_vodnogo_obekta_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nazvanie": "Река Волга",
         "tip": "Река",
         "basseyn": "Волжский бассейновый округ",
         "dlinna_km": 3530,
         "subiekt": "Тверская область",
     }
-    with patch.object(rosvodresursy_tools.client, "info_vodnogo_obekta", return_value=mock_data):
+    with patch.object(
+        rosvodresursy_tools.client, "info_vodnogo_obekta", return_value=maket_dannykh
+    ):
         rezultat = await rosvodresursy_tools.info_vodnogo_obekta("volga", ctx)
     assert "Волга" in rezultat
     assert "530" in rezultat
@@ -81,7 +85,7 @@ async def test_gidro_monitoring_net_dannykh():
 
 async def test_gidro_monitoring_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "post": "Нижний Новгород",
             "vodnyy_obekt": "Река Волга",
@@ -90,7 +94,9 @@ async def test_gidro_monitoring_s_dannymi():
             "raskhod": 8500,
         },
     ]
-    with patch.object(rosvodresursy_tools.client, "poluchit_gidro_dannye", return_value=mock_data):
+    with patch.object(
+        rosvodresursy_tools.client, "poluchit_gidro_dannye", return_value=maket_dannykh
+    ):
         rezultat = await rosvodresursy_tools.gidro_monitoring(ctx, identifikator_posta="nn")
     assert "Нижний Новгород" in rezultat
 
@@ -123,11 +129,11 @@ async def test_vodopolzovanie_regionov_pustoy():
 
 async def test_vodopolzovanie_regionov_s_dannymi():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {"subiekt": "Москва", "god": "2024", "zabrano_vody_km3": 1.2, "ispolzovano_vody_km3": 0.9},
     ]
     with patch.object(
-        rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=mock_data
+        rosvodresursy_tools.client, "poluchit_vodopolzovanie", return_value=maket_dannykh
     ):
         rezultat = await rosvodresursy_tools.vodopolzovanie_regionov(ctx)
     assert "Москва" in rezultat

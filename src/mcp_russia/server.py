@@ -82,15 +82,15 @@ mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
 mcp.add_middleware(PosrednikLogirovaniyaZaprosov())
 
 # Автоматическое обнаружение и монтирование всех функций
-registry = ReyestrFunktsiy()
-registry.obnaruzhit("mcp_russia.data")
-registry.obnaruzhit("mcp_russia.agenty")
-registry.smontirovat_vse(mcp)
+reyestr = ReyestrFunktsiy()
+reyestr.obnaruzhit("mcp_russia.data")
+reyestr.obnaruzhit("mcp_russia.agenty")
+reyestr.smontirovat_vse(mcp)
 
-logger.info("\n%s", registry.svodka())
+logger.info("\n%s", reyestr.svodka())
 
 # Формирование таблицы диспетчеризации для vypolnit_paket
-postroit_dispetcherizatsiyu(registry)
+postroit_dispetcherizatsiyu(reyestr)
 
 
 # Мета-инструмент для интроспекции
@@ -104,7 +104,7 @@ def spisok_funktsiy() -> str:
     Возвращает:
         Сводка активных функций с описанием и статусом аутентификации.
     """
-    return registry.svodka()
+    return reyestr.svodka()
 
 
 @mcp.tool(tags={"meta", "discovery"})
@@ -121,7 +121,7 @@ async def rekomendovat_instrumenty(zapros: str, ctx: Context) -> str:
     from ._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 
     await ctx.info(f"Поиск рекомендаций для: {zapros}")
-    katalog = postroit_katalog(registry)
+    katalog = postroit_katalog(reyestr)
     return await rekomendovat_instrumenty_impl(zapros, katalog)
 
 
@@ -141,7 +141,7 @@ async def splanirovat_zapros(zapros: str, ctx: Context) -> str:
     from ._shared.planner import splanirovat_zapros_impl
 
     await ctx.info(f"Планирование запроса: {zapros}")
-    katalog = postroit_katalog(registry)
+    katalog = postroit_katalog(reyestr)
     return await splanirovat_zapros_impl(zapros, katalog)
 
 
@@ -225,7 +225,7 @@ elif POISK_INSTRUMENTOV == "code_mode":
 else:
     logger.info(
         "Поиск инструментов: отключён (все %d+ инструментов видны)",
-        len(registry.funktsii),
+        len(reyestr.funktsii),
     )
 
 

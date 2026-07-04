@@ -27,9 +27,9 @@ class TestRekomendovatInstrumenty:
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
-        mock_anthropic = MagicMock()
+        maket_anthropic = MagicMock()
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", ""),
         ):
             rezultat = await rekomendovat_instrumenty_impl(
@@ -39,20 +39,20 @@ class TestRekomendovatInstrumenty:
 
     @pytest.mark.asyncio
     async def test_uspeshnaya_rekomendatsiya(self) -> None:
-        mock_block = MagicMock()
-        mock_block.text = "Рекомендую: rosstat_poluchit_indikator"
+        maket_bloka = MagicMock()
+        maket_bloka.text = "Рекомендую: rosstat_poluchit_indikator"
 
-        mock_response = MagicMock()
-        mock_response.content = [mock_block]
+        maket_otveta = MagicMock()
+        maket_otveta.content = [maket_bloka]
 
-        mock_client = AsyncMock()
-        mock_client.messages.create = AsyncMock(return_value=mock_response)
+        maket_klienta = AsyncMock()
+        maket_klienta.messages.create = AsyncMock(return_value=maket_otveta)
 
-        mock_anthropic = MagicMock()
-        mock_anthropic.AsyncAnthropic = MagicMock(return_value=mock_client)
+        maket_anthropic = MagicMock()
+        maket_anthropic.AsyncAnthropic = MagicMock(return_value=maket_klienta)
 
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             rezultat = await rekomendovat_instrumenty_impl(
@@ -62,14 +62,14 @@ class TestRekomendovatInstrumenty:
 
     @pytest.mark.asyncio
     async def test_obrabotka_oshibki_api(self) -> None:
-        mock_client = AsyncMock()
-        mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
+        maket_klienta = AsyncMock()
+        maket_klienta.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
-        mock_anthropic = MagicMock()
-        mock_anthropic.AsyncAnthropic = MagicMock(return_value=mock_client)
+        maket_anthropic = MagicMock()
+        maket_anthropic.AsyncAnthropic = MagicMock(return_value=maket_klienta)
 
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.discovery.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             rezultat = await rekomendovat_instrumenty_impl(
@@ -86,20 +86,20 @@ class TestPostroenieKataloga:
         disc._kesh_kataloga = ""
 
     def test_postroit_katalog_s_pustym_reestrom(self) -> None:
-        mock_registry = MagicMock()
-        mock_registry.funktsii = {}
-        rezultat = postroit_katalog(mock_registry)
+        maket_reestra = MagicMock()
+        maket_reestra.funktsii = {}
+        rezultat = postroit_katalog(maket_reestra)
         assert rezultat == ""
 
     def test_postroit_katalog_keshiruet_rezultat(self) -> None:
         import mcp_russia._shared.discovery as disc
 
-        mock_registry = MagicMock()
-        mock_registry.funktsii = {}
-        postroit_katalog(mock_registry)
+        maket_reestra = MagicMock()
+        maket_reestra.funktsii = {}
+        postroit_katalog(maket_reestra)
 
         disc._kesh_kataloga = "cached"
-        rezultat = postroit_katalog(mock_registry)
+        rezultat = postroit_katalog(maket_reestra)
         assert rezultat == "cached"
 
 
@@ -108,47 +108,47 @@ class TestTransformatsiyaBM25:
     async def test_bm25_zamenyaet_spisok_instrumentov(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        @server.tool(tags={"search", "regions"})
+        @server_fn.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
             """Список всех регионов России."""
             return "Moscow, Tatarstan, Sverdlovsk"
 
-        @server.tool(tags={"query", "data"})
+        @server_fn.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных по коду."""
             return f"Data {kod}"
 
-        server.add_transform(BM25SearchTransform(max_results=5))
+        server_fn.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server) as c:
-            tools = await c.list_tools()
-            names = {t.name for t in tools}
-            assert "search_tools" in names
-            assert "call_tool" in names
-            assert "spisok_regionov" not in names
-            assert "zaprosit_dannye" not in names
+        async with Client(server_fn) as c:
+            instrumenty = await c.list_tools()
+            imena = {t.name for t in instrumenty}
+            assert "search_tools" in imena
+            assert "call_tool" in imena
+            assert "spisok_regionov" not in imena
+            assert "zaprosit_dannye" not in imena
 
     @pytest.mark.asyncio
     async def test_bm25_poisk_nakhodit_instrumenty(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        @server.tool(tags={"search", "regions"})
+        @server_fn.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
             """Список всех регионов России (spisok regionov)."""
             return "Moscow, Tatarstan"
 
-        @server.tool(tags={"query", "data"})
+        @server_fn.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных временных рядов из Росстата."""
             return f"Data {kod}"
 
-        server.add_transform(BM25SearchTransform(max_results=5))
+        server_fn.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server) as c:
+        async with Client(server_fn) as c:
             rezultat = await c.call_tool("search_tools", {"query": "spisok regionov"})
             tekst = str(rezultat.content)
             assert "spisok_regionov" in tekst
@@ -157,45 +157,45 @@ class TestTransformatsiyaBM25:
     async def test_bm25_vsegda_vidimye_zakrepleny(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        @server.tool(tags={"meta"})
+        @server_fn.tool(tags={"meta"})
         def spisok_funktsiy() -> str:
             """Список функций."""
             return "functions"
 
-        @server.tool(tags={"search"})
-        def hidden_tool() -> str:
+        @server_fn.tool(tags={"search"})
+        def skrytyy_instrument() -> str:
             """Скрытый инструмент."""
-            return "hidden"
+            return "skrytyy"
 
-        server.add_transform(
+        server_fn.add_transform(
             BM25SearchTransform(
                 max_results=5,
                 always_visible=["spisok_funktsiy"],
             )
         )
 
-        async with Client(server) as c:
-            tools = await c.list_tools()
-            names = {t.name for t in tools}
-            assert "spisok_funktsiy" in names
-            assert "hidden_tool" not in names
+        async with Client(server_fn) as c:
+            instrumenty = await c.list_tools()
+            imena = {t.name for t in instrumenty}
+            assert "spisok_funktsiy" in imena
+            assert "skrytyy_instrument" not in imena
 
     @pytest.mark.asyncio
     async def test_bm25_vyzov_instrumenta_vypolnyaetsya(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        @server.tool
+        @server_fn.tool
         def slozhit(a: int, b: int) -> int:
             """Сложение двух чисел."""
             return a + b
 
-        server.add_transform(BM25SearchTransform(max_results=5))
+        server_fn.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server) as c:
+        async with Client(server_fn) as c:
             rezultat = await c.call_tool(
                 "call_tool",
                 {"name": "slozhit", "arguments": {"a": 3, "b": 4}},
@@ -210,56 +210,58 @@ class TestKonfiguratsiyaPoiskaInstrumentov:
         from mcp_russia.server import mcp as root_mcp
 
         async with Client(root_mcp) as c:
-            tools = await c.list_tools()
-            names = {t.name for t in tools}
-            assert "spisok_funktsiy" in names
-            assert "rekomendovat_instrumenty" in names
-            assert "cbrf_tekushchie_kursy" in names
+            instrumenty = await c.list_tools()
+            imena = {t.name for t in instrumenty}
+            assert "spisok_funktsiy" in imena
+            assert "rekomendovat_instrumenty" in imena
+            assert "cbrf_tekushchie_kursy" in imena
 
 
 class TestRasprostranenieTegov:
     @pytest.mark.asyncio
     async def test_tegi_sokhranyayutsya_posle_montirovaniya(self) -> None:
-        child = FastMCP("child")
+        docherniy = FastMCP("child")
 
-        @child.tool(tags={"search", "regions"})
+        @docherniy.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
             """Список регионов."""
             return "Moscow"
 
-        parent = FastMCP("parent")
-        parent.mount(child, namespace="rosstat")
+        roditelskiy = FastMCP("parent")
+        roditelskiy.mount(docherniy, namespace="rosstat")
 
-        async with Client(parent) as c:
-            tools = await c.list_tools()
-            rosstat_tool = next((t for t in tools if t.name == "rosstat_spisok_regionov"), None)
-            assert rosstat_tool is not None
+        async with Client(roditelskiy) as c:
+            instrumenty = await c.list_tools()
+            rosstat_instrument = next(
+                (t for t in instrumenty if t.name == "rosstat_spisok_regionov"), None
+            )
+            assert rosstat_instrument is not None
 
     @pytest.mark.asyncio
     async def test_poisk_nakhodit_po_opisaniyu(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        @server.tool(tags={"environmental", "fires"})
+        @server_fn.tool(tags={"environmental", "fires"})
         def nayti_ochagi() -> str:
             """Поиск очагов пожаров, обнаруженных спутником в России."""
             return "hotspots"
 
-        @server.tool(tags={"financial", "banks"})
+        @server_fn.tool(tags={"financial", "banks"})
         def spisok_bankov() -> str:
             """Список всех банков России, зарегистрированных в Центральном банке."""
             return "banks"
 
-        server.add_transform(BM25SearchTransform(max_results=5))
+        server_fn.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server) as c:
+        async with Client(server_fn) as c:
             rezultat = await c.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
             tekst = str(rezultat.content)
             assert "nayti_ochagi" in tekst
 
 
-_VALID_PLAN_JSON = json.dumps(
+_KORREKTNYY_PLAN_JSON = json.dumps(
     {
         "zapros": "расходы депутата X",
         "slozhnost": "umerennyy",
@@ -296,9 +298,9 @@ class TestSplanirovatZapros:
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
-        mock_anthropic = MagicMock()
+        maket_anthropic = MagicMock()
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", ""),
         ):
             rezultat = await splanirovat_zapros_impl("расходы правительства", "tekst_kataloga")
@@ -306,20 +308,20 @@ class TestSplanirovatZapros:
 
     @pytest.mark.asyncio
     async def test_uspeshnyy_plan(self) -> None:
-        mock_block = MagicMock()
-        mock_block.text = _VALID_PLAN_JSON
+        maket_bloka = MagicMock()
+        maket_bloka.text = _KORREKTNYY_PLAN_JSON
 
-        mock_response = MagicMock()
-        mock_response.content = [mock_block]
+        maket_otveta = MagicMock()
+        maket_otveta.content = [maket_bloka]
 
-        mock_client = AsyncMock()
-        mock_client.messages.create = AsyncMock(return_value=mock_response)
+        maket_klienta = AsyncMock()
+        maket_klienta.messages.create = AsyncMock(return_value=maket_otveta)
 
-        mock_anthropic = MagicMock()
-        mock_anthropic.AsyncAnthropic = MagicMock(return_value=mock_client)
+        maket_anthropic = MagicMock()
+        maket_anthropic.AsyncAnthropic = MagicMock(return_value=maket_klienta)
 
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             rezultat = await splanirovat_zapros_impl("расходы депутата X", "catalog")
@@ -331,20 +333,20 @@ class TestSplanirovatZapros:
 
     @pytest.mark.asyncio
     async def test_rezervnyy_variant_pri_nekorrektnom_json(self) -> None:
-        mock_block = MagicMock()
-        mock_block.text = "Не удалось построить структурированный план."
+        maket_bloka = MagicMock()
+        maket_bloka.text = "Не удалось построить структурированный план."
 
-        mock_response = MagicMock()
-        mock_response.content = [mock_block]
+        maket_otveta = MagicMock()
+        maket_otveta.content = [maket_bloka]
 
-        mock_client = AsyncMock()
-        mock_client.messages.create = AsyncMock(return_value=mock_response)
+        maket_klienta = AsyncMock()
+        maket_klienta.messages.create = AsyncMock(return_value=maket_otveta)
 
-        mock_anthropic = MagicMock()
-        mock_anthropic.AsyncAnthropic = MagicMock(return_value=mock_client)
+        maket_anthropic = MagicMock()
+        maket_anthropic.AsyncAnthropic = MagicMock(return_value=maket_klienta)
 
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
@@ -352,14 +354,14 @@ class TestSplanirovatZapros:
 
     @pytest.mark.asyncio
     async def test_obrabotka_oshibki_api(self) -> None:
-        mock_client = AsyncMock()
-        mock_client.messages.create = AsyncMock(side_effect=Exception("API timeout"))
+        maket_klienta = AsyncMock()
+        maket_klienta.messages.create = AsyncMock(side_effect=Exception("API timeout"))
 
-        mock_anthropic = MagicMock()
-        mock_anthropic.AsyncAnthropic = MagicMock(return_value=mock_client)
+        maket_anthropic = MagicMock()
+        maket_anthropic.AsyncAnthropic = MagicMock(return_value=maket_klienta)
 
         with (
-            patch.dict("sys.modules", {"anthropic": mock_anthropic}),
+            patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "test-key"),
         ):
             rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
@@ -369,18 +371,18 @@ class TestSplanirovatZapros:
 
 class TestPlanZaprosaVMarkdown:
     def test_v_markdown_otobrazhaet_etapy(self) -> None:
-        plan = PlanZaprosa.model_validate(json.loads(_VALID_PLAN_JSON))
-        md = plan.v_markdown()
-        assert "## План запроса" in md
-        assert "**Сложность:** umerennyy" in md
-        assert "### Этап 1:" in md
-        assert "### Этап 2:" in md
-        assert "`gosduma_poluchit_deputatov`" in md
-        assert "Зависит от:** (нет)" in md
-        assert "Зависит от:** Этап 1" in md
+        plan_dannye = PlanZaprosa.model_validate(json.loads(_KORREKTNYY_PLAN_JSON))
+        markdown = plan_dannye.v_markdown()
+        assert "## План запроса" in markdown
+        assert "**Сложность:** umerennyy" in markdown
+        assert "### Этап 1:" in markdown
+        assert "### Этап 2:" in markdown
+        assert "`gosduma_poluchit_deputatov`" in markdown
+        assert "Зависит от:** (нет)" in markdown
+        assert "Зависит от:** Этап 1" in markdown
 
     def test_v_markdown_s_primechaniyami(self) -> None:
-        plan = PlanZaprosa(
+        plan_dannye = PlanZaprosa(
             zapros="тест",
             slozhnost="prostoy",
             svodka="Простой план",
@@ -396,6 +398,6 @@ class TestPlanZaprosaVMarkdown:
             ],
             primechaniya="Требуется авторизация на портале Росстата.",
         )
-        md = plan.v_markdown()
-        assert "**Примечания:**" in md
-        assert "Росстата" in md
+        markdown = plan_dannye.v_markdown()
+        assert "**Примечания:**" in markdown
+        assert "Росстата" in markdown

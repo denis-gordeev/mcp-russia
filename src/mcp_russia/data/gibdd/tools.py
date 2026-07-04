@@ -88,14 +88,14 @@ async def info_ts(ctx: Context, vin: str) -> str:
     Возвращает:
         Сведения о ТС: история регистраций, розыск, ограничения, ДТП.
     """
-    history, dtp, razyskivaemye, restrict = await _polnaya_proverka_ts(vin)
+    istoriya, dtp, razyskivaemye, ogranicheniya = await _polnaya_proverka_ts(vin)
 
     stroki = [f"**Транспортное средство** (VIN: {vin})"]
 
-    if history:
-        stroki.append(f"\n**История регистраций** ({len(history)} записей)")
+    if istoriya:
+        stroki.append(f"\n**История регистраций** ({len(istoriya)} записей)")
         stroki_tablitsy = [
-            (r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in history
+            (r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in istoriya
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
@@ -126,11 +126,11 @@ async def info_ts(ctx: Context, vin: str) -> str:
     else:
         stroki.append("\nРозыск: не числится.")
 
-    if restrict:
-        stroki.append(f"\n**⚠ Ограничения** ({len(restrict)} записей)")
+    if ogranicheniya:
+        stroki.append(f"\n**⚠ Ограничения** ({len(ogranicheniya)} записей)")
         stroki_tablitsy = [
             (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["subiekt"], r["initsiator"])
-            for r in restrict
+            for r in ogranicheniya
         ]
         stroki.append(
             tablitsa_v_markdown(

@@ -7,64 +7,66 @@ from mcp_russia.data.cbrf.server import mcp
 
 
 @pytest.fixture
-def client():
+def klient():
     return Client(mcp)
 
 
-async def test_instrumenty_zaregistrirovany(client):
-    async with client:
-        tools = await client.list_tools()
-    tool_names = {t.name for t in tools}
+async def test_instrumenty_zaregistrirovany(klient):
+    async with klient:
+        instrumenty = await klient.list_tools()
+    imena_instrumentov = {t.name for t in instrumenty}
 
-    expected = {
+    ozhidayemyy = {
         "tekushchie_kursy",
         "uznat_kurs_valyuty",
         "spisok_valyut",
         "konvertirovat_valyutu",
         "kursy_po_stranam",
     }
-    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
+    assert ozhidayemyy.issubset(imena_instrumentov), (
+        f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"
+    )
 
 
-async def test_resursy_zaregistrirovany(client):
-    async with client:
-        resources = await client.list_resources()
-    uris = {str(r.uri) for r in resources}
+async def test_resursy_zaregistrirovany(klient):
+    async with klient:
+        resursy = await klient.list_resources()
+    adresa_uri = {str(r.uri) for r in resursy}
 
-    expected = {
+    ozhidayemyy = {
         "data://valyuty",
         "data://osnovnye",
         "data://spravochnik",
     }
-    assert expected.issubset(uris), f"Отсутствуют ресурсы: {expected - uris}"
+    assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют ресурсы: {ozhidayemyy - adresa_uri}"
 
 
-async def test_prompty_zaregistrirovany(client):
-    async with client:
-        prompts = await client.list_prompts()
-    prompt_names = {p.name for p in prompts}
+async def test_prompty_zaregistrirovany(klient):
+    async with klient:
+        prompty = await klient.list_prompts()
+    prompt_names = {p.name for p in prompty}
 
-    expected = {"analiz_valyut", "obzor_ekonomiki"}
-    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
+    ozhidayemyy = {"analiz_valyut", "obzor_ekonomiki"}
+    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
 
 
-async def test_spisok_valyut(client):
-    async with client:
-        rezultat = await client.call_tool("spisok_valyut", {})
+async def test_spisok_valyut(klient):
+    async with klient:
+        rezultat = await klient.call_tool("spisok_valyut", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "USD" in tekst or "валют" in tekst
 
 
-async def test_uznat_kurs_valyuty(client):
-    async with client:
-        rezultat = await client.call_tool("uznat_kurs_valyuty", {"kod": "USD"})
+async def test_uznat_kurs_valyuty(klient):
+    async with klient:
+        rezultat = await klient.call_tool("uznat_kurs_valyuty", {"kod": "USD"})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "USD" in tekst or "ЦБ РФ" in tekst or "не найдена" in tekst
 
 
-async def test_kursy_po_stranam(client):
-    async with client:
-        rezultat = await client.call_tool("kursy_po_stranam", {})
+async def test_kursy_po_stranam(klient):
+    async with klient:
+        rezultat = await klient.call_tool("kursy_po_stranam", {})
     assert rezultat is not None

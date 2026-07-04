@@ -70,11 +70,11 @@ async def poluchit_valyutu(kod: str, data: str | None = None) -> ZnachenieValyut
         Данные о валюте или None если не найдена.
     """
     rezultat = await poluchit_vse_valyuty(data)
-    valute_data = rezultat.get("Valute", {})
+    dannye_valyut = rezultat.get("Valute", {})
     stroka_daty = rezultat.get("Date", "")
 
-    if kod in valute_data:
-        return _razobrat_valyutu(kod, valute_data, stroka_daty)
+    if kod in dannye_valyut:
+        return _razobrat_valyutu(kod, dannye_valyut, stroka_daty)
     return None
 
 
@@ -88,10 +88,10 @@ async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
         Список данных о валютах.
     """
     rezultat = await poluchit_vse_valyuty()
-    valute_data = rezultat.get("Valute", {})
+    dannye_valyut = rezultat.get("Valute", {})
     stroka_daty = rezultat.get("Date", "")
 
-    return [_razobrat_valyutu(c, valute_data, stroka_daty) for c in kody if c in valute_data]
+    return [_razobrat_valyutu(c, dannye_valyut, stroka_daty) for c in kody if c in dannye_valyut]
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:

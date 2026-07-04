@@ -62,27 +62,27 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
         if not nazvanie_suda:
             nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-        istorcy_raw = dannye_dela.get("Plaintiffs", element.get("plaintiffs", ""))
-        if isinstance(istorcy_raw, str):
-            istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
-        elif isinstance(istorcy_raw, list):
-            istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_raw]
+        istorcy_syranye = dannye_dela.get("Plaintiffs", element.get("plaintiffs", ""))
+        if isinstance(istorcy_syranye, str):
+            istorcy = [s.strip() for s in istorcy_syranye.split(",") if s.strip()]
+        elif isinstance(istorcy_syranye, list):
+            istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_syranye]
         else:
             istorcy = []
 
-        otvetchiki_raw = dannye_dela.get("Defendants", element.get("defendants", ""))
-        if isinstance(otvetchiki_raw, str):
-            otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
-        elif isinstance(otvetchiki_raw, list):
-            otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_raw]
+        otvetchiki_syranye = dannye_dela.get("Defendants", element.get("defendants", ""))
+        if isinstance(otvetchiki_syranye, str):
+            otvetchiki = [s.strip() for s in otvetchiki_syranye.split(",") if s.strip()]
+        elif isinstance(otvetchiki_syranye, list):
+            otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_syranye]
         else:
             otvetchiki = []
 
         summa = 0.0
-        summa_raw = dannye_dela.get("ClaimSum", element.get("claimSum"))
-        if summa_raw:
+        summa_syraya = dannye_dela.get("ClaimSum", element.get("claimSum"))
+        if summa_syraya:
             with contextlib.suppress(ValueError, TypeError):
-                summa = float(summa_raw)
+                summa = float(summa_syraya)
 
         rezultaty.append(
             SudebnoeDelo(
@@ -122,27 +122,27 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     if not nazvanie_suda:
         nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-    istorcy_raw = dannye_dela.get("Plaintiffs", dannye.get("plaintiffs", ""))
-    if isinstance(istorcy_raw, str):
-        istorcy = [s.strip() for s in istorcy_raw.split(",") if s.strip()]
-    elif isinstance(istorcy_raw, list):
-        istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_raw]
+    istorcy_syranye = dannye_dela.get("Plaintiffs", dannye.get("plaintiffs", ""))
+    if isinstance(istorcy_syranye, str):
+        istorcy = [s.strip() for s in istorcy_syranye.split(",") if s.strip()]
+    elif isinstance(istorcy_syranye, list):
+        istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_syranye]
     else:
         istorcy = []
 
-    otvetchiki_raw = dannye_dela.get("Defendants", dannye.get("defendants", ""))
-    if isinstance(otvetchiki_raw, str):
-        otvetchiki = [s.strip() for s in otvetchiki_raw.split(",") if s.strip()]
-    elif isinstance(otvetchiki_raw, list):
-        otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_raw]
+    otvetchiki_syranye = dannye_dela.get("Defendants", dannye.get("defendants", ""))
+    if isinstance(otvetchiki_syranye, str):
+        otvetchiki = [s.strip() for s in otvetchiki_syranye.split(",") if s.strip()]
+    elif isinstance(otvetchiki_syranye, list):
+        otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_syranye]
     else:
         otvetchiki = []
 
     summa = 0.0
-    summa_raw = dannye_dela.get("ClaimSum", dannye.get("claimSum"))
-    if summa_raw:
+    summa_syraya = dannye_dela.get("ClaimSum", dannye.get("claimSum"))
+    if summa_syraya:
         with contextlib.suppress(ValueError, TypeError):
-            summa = float(summa_raw)
+            summa = float(summa_syraya)
 
     return SudebnoeDelo(
         nomer=nomer,

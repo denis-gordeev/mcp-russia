@@ -15,39 +15,39 @@ class TestHttpZhiznennyyTsikl:
         """Lifespan должен вернуть http_client и закрыть его при выходе."""
         from fastmcp import FastMCP
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
         # Имитируем генератор жизненного цикла
-        gen = http_zhiznennyy_tsikl._fn(server)
-        context = await gen.__anext__()
+        generator = http_zhiznennyy_tsikl._fn(server_fn)
+        kontekst = await generator.__anext__()
 
-        assert context is not None
-        assert "http_klient" in context
+        assert kontekst is not None
+        assert "http_klient" in kontekst
 
-        client = context["http_klient"]
-        assert not client.is_closed
+        klient = kontekst["http_klient"]
+        assert not klient.is_closed
 
         # Очистка
         with contextlib.suppress(StopAsyncIteration):
-            await gen.__anext__()
+            await generator.__anext__()
 
-        assert client.is_closed
+        assert klient.is_closed
 
     @pytest.mark.asyncio
     async def test_klient_imeet_pravilnye_zagolovki(self) -> None:
         """HTTP-клиент должен иметь заголовки User-Agent и Accept."""
         from fastmcp import FastMCP
 
-        server = FastMCP("test")
+        server_fn = FastMCP("test")
 
-        gen = http_zhiznennyy_tsikl._fn(server)
-        context = await gen.__anext__()
+        generator = http_zhiznennyy_tsikl._fn(server_fn)
+        kontekst = await generator.__anext__()
 
-        assert context is not None
-        client = context["http_klient"]
-        assert "User-Agent" in client.headers
-        assert client.headers["Accept"] == "application/json"
+        assert kontekst is not None
+        klient = kontekst["http_klient"]
+        assert "User-Agent" in klient.headers
+        assert klient.headers["Accept"] == "application/json"
 
         # Очистка
         with contextlib.suppress(StopAsyncIteration):
-            await gen.__anext__()
+            await generator.__anext__()

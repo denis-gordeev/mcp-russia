@@ -35,7 +35,7 @@ async def test_ispolnenie_byudzheta_nedostupen():
 
 async def test_ispolnenie_byudzheta_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "period": "2025",
         "tip": "Федеральный бюджет",
         "dohody": 28000.5,
@@ -43,7 +43,7 @@ async def test_ispolnenie_byudzheta_nayden():
         "defitsit": -2999.7,
     }
     with patch.object(
-        kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=mock_data
+        kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=maket_dannykh
     ):
         rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx, god=2025)
     assert "2025" in rezultat
@@ -58,7 +58,7 @@ async def test_poisk_uchastnikov_bp_pustoy():
 
 async def test_poisk_uchastnikov_bp_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "inn": "7707083893",
             "nazvanie": "Минфин России",
@@ -66,7 +66,9 @@ async def test_poisk_uchastnikov_bp_nayden():
             "byudzhet": "Федеральный",
         },
     ]
-    with patch.object(kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=mock_data):
+    with patch.object(
+        kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=maket_dannykh
+    ):
         rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx, inn="7707083893")
     assert "Минфин" in rezultat
 
@@ -80,7 +82,7 @@ async def test_poisk_uchrezhdeniy_pustoy():
 
 async def test_mezhbyudzhetnye_transferty_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "vid": "Дотация",
             "otpravitel": "Федеральный центр",
@@ -90,7 +92,7 @@ async def test_mezhbyudzhetnye_transferty_nayden():
         },
     ]
     with patch.object(
-        kaznacheistvo_tools.client, "poluchit_mezhbyudzhetnye", return_value=mock_data
+        kaznacheistvo_tools.client, "poluchit_mezhbyudzhetnye", return_value=maket_dannykh
     ):
         rezultat = await kaznacheistvo_tools.mezhbyudzhetnye_transferty(ctx, god=2025)
     assert "Татарстан" in rezultat

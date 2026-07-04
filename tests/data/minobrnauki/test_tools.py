@@ -54,9 +54,9 @@ async def test_spisok_federalnyh_okrugov():
     assert "Центральный" in rezultat
 
 
-async def test_info_vuza_by_name():
+async def test_info_vuza_po_nazvaniyu():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nazvanie": "МГУ имени М.В. Ломоносова",
         "inn": "7710563663",
         "tip": "университет",
@@ -71,22 +71,22 @@ async def test_info_vuza_by_name():
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }
     with patch.object(
-        minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[mock_data]
+        minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[maket_dannykh]
     ):
         rezultat = await minobrnauki_tools.info_vuza(ctx=ctx, nazvanie="МГУ")
     assert "МГУ" in rezultat
     assert "Действует" in rezultat
 
 
-async def test_info_vuza_by_inn():
+async def test_info_vuza_po_inn():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nazvanie": "МФТИ",
         "inn": "5032003607",
         "tip": "университет",
         "status_akkreditatsii": "Действует",
     }
-    with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=mock_data):
+    with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=maket_dannykh):
         rezultat = await minobrnauki_tools.info_vuza(ctx=ctx, inn="5032003607")
     assert "МФТИ" in rezultat
 
@@ -136,7 +136,7 @@ async def test_poisk_licenziy_pustoy():
 
 async def test_poisk_licenziy_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer_licenzii": "1234",
             "nazvanie": "МГУ",
@@ -144,7 +144,7 @@ async def test_poisk_licenziy_nayden():
             "srok_deystviya": "2026-01-01",
         }
     ]
-    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=mock_data):
+    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=maket_dannykh):
         rezultat = await minobrnauki_tools.poisk_licenziy(ctx=ctx, inn="7710563663")
     assert "МГУ" in rezultat
     assert "1234" in rezultat

@@ -7,17 +7,17 @@ from mcp_russia.data.cekrf.server import mcp
 
 
 @pytest.fixture
-def client():
+def klient():
     return Client(mcp)
 
 
-async def test_instrumenty_zaregistrirovany(client):
+async def test_instrumenty_zaregistrirovany(klient):
     """Проверка регистрации инструментов."""
-    async with client:
-        tools = await client.list_tools()
-    tool_names = {t.name for t in tools}
+    async with klient:
+        instrumenty = await klient.list_tools()
+    imena_instrumentov = {t.name for t in instrumenty}
 
-    expected = {
+    ozhidayemyy = {
         "tipy_vyborov",
         "subyekty_rf",
         "dolzhnosti_federal",
@@ -28,65 +28,67 @@ async def test_instrumenty_zaregistrirovany(client):
         "rezultaty_vyborov",
         "yavka_i_itogi",
     }
-    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
+    assert ozhidayemyy.issubset(imena_instrumentov), (
+        f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"
+    )
 
 
-async def test_resursy_zaregistrirovany(client):
+async def test_resursy_zaregistrirovany(klient):
     """Проверка регистрации ресурсов."""
-    async with client:
-        resources = await client.list_resources()
-    uris = {str(r.uri) for r in resources}
+    async with klient:
+        resursy = await klient.list_resources()
+    adresa_uri = {str(r.uri) for r in resursy}
 
-    expected = {
+    ozhidayemyy = {
         "data://tipy-vyborov",
         "data://subyekty-rf",
         "data://partii-rf",
         "data://info-api",
     }
-    assert expected.issubset(uris), f"Отсутствуют ресурсы: {expected - uris}"
+    assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют ресурсы: {ozhidayemyy - adresa_uri}"
 
 
-async def test_prompty_zaregistrirovany(client):
+async def test_prompty_zaregistrirovany(klient):
     """Проверка регистрации промптов."""
-    async with client:
-        prompts = await client.list_prompts()
-    prompt_names = {p.name for p in prompts}
+    async with klient:
+        prompty = await klient.list_prompts()
+    prompt_names = {p.name for p in prompty}
 
-    expected = {"analiz_kandidata", "sravnenie_partiy"}
-    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
+    ozhidayemyy = {"analiz_kandidata", "sravnenie_partiy"}
+    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
 
 
-async def test_tipy_vyborov(client):
+async def test_tipy_vyborov(klient):
     """Проверка работы инструмента tipy_vyborov."""
-    async with client:
-        rezultat = await client.call_tool("tipy_vyborov", {})
+    async with klient:
+        rezultat = await klient.call_tool("tipy_vyborov", {})
     assert rezultat is not None
     tekst = str(rezultat.content) if hasattr(rezultat, "content") else str(rezultat)
     assert "Президент" in tekst or "Государственная" in tekst
 
 
-async def test_subyekty_rf(client):
+async def test_subyekty_rf(klient):
     """Проверка работы инструмента subyekty_rf."""
-    async with client:
-        rezultat = await client.call_tool("subyekty_rf", {})
+    async with klient:
+        rezultat = await klient.call_tool("subyekty_rf", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Москва" in tekst or "Санкт-Петербург" in tekst
 
 
-async def test_partii_rf(client):
+async def test_partii_rf(klient):
     """Проверка работы инструмента partii_rf."""
-    async with client:
-        rezultat = await client.call_tool("partii_rf", {})
+    async with klient:
+        rezultat = await klient.call_tool("partii_rf", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Единая Россия" in tekst
 
 
-async def test_gody_vyborov(client):
+async def test_gody_vyborov(klient):
     """Проверка работы инструмента gody_vyborov."""
-    async with client:
-        rezultat = await client.call_tool("gody_vyborov", {})
+    async with klient:
+        rezultat = await klient.call_tool("gody_vyborov", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "2024" in tekst or "2021" in tekst

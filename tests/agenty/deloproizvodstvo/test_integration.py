@@ -10,32 +10,32 @@ class TestInstrumentyZaregistrirovany:
     @pytest.mark.asyncio
     async def test_vse_5_instrumentov_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
-            tool_list = await c.list_tools()
-            names = {t.name for t in tool_list}
-            expected = {
+            spisok_instrumentov = await c.list_tools()
+            imena = {t.name for t in spisok_instrumentov}
+            ozhidayemyy = {
                 "formatirovat_data_extenso",
                 "generirovat_numeraciyu",
                 "konsulitirovat_obrashchenie",
                 "validirovat_dokument",
                 "spisok_tipov_dokumentov",
             }
-            assert expected.issubset(names), f"Missing: {expected - names}"
+            assert ozhidayemyy.issubset(imena), f"Missing: {ozhidayemyy - imena}"
 
     @pytest.mark.asyncio
     async def test_instrumenty_imeyut_docstringi(self) -> None:
         async with Client(mcp) as c:
-            tool_list = await c.list_tools()
-            for tool in tool_list:
-                assert tool.description, f"Tool {tool.name} has no description"
+            spisok_instrumentov = await c.list_tools()
+            for instrument in spisok_instrumentov:
+                assert instrument.description, f"Tool {instrument.name} has no description"
 
 
 class TestResursyZaregistrirovany:
     @pytest.mark.asyncio
     async def test_vse_resursy_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
-            resources = await c.list_resources()
-            uris = {str(r.uri) for r in resources}
-            expected = {
+            resursy = await c.list_resources()
+            adresa_uri = {str(r.uri) for r in resursy}
+            ozhidayemyy = {
                 "template://pismo",
                 "template://prikaz",
                 "template://rasporyazhenie",
@@ -47,16 +47,16 @@ class TestResursyZaregistrirovany:
                 "normas://obrashcheniya",
                 "normas://zaklyuchitelnye",
             }
-            assert expected.issubset(uris), f"Missing: {expected - uris}"
+            assert ozhidayemyy.issubset(adresa_uri), f"Missing: {ozhidayemyy - adresa_uri}"
 
 
 class TestPromptyZaregistrirovany:
     @pytest.mark.asyncio
     async def test_vse_prompty_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
-            prompts = await c.list_prompts()
-            names = {p.name for p in prompts}
-            expected = {
+            prompty = await c.list_prompts()
+            names = {p.name for p in prompty}
+            ozhidayemyy = {
                 "redaktor_pismo",
                 "redaktor_prikaz",
                 "redaktor_rasporyazhenie",
@@ -65,7 +65,7 @@ class TestPromptyZaregistrirovany:
                 "redaktor_protokol",
                 "redaktor_dokladnaya_zapiska",
             }
-            assert expected.issubset(names), f"Missing: {expected - names}"
+            assert ozhidayemyy.issubset(names), f"Missing: {ozhidayemyy - names}"
 
 
 class TestVypolnenieInstrumentov:

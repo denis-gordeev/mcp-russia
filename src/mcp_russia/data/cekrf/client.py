@@ -52,14 +52,14 @@ class _VyboryTableParser(HTMLParser):
     def __init__(self) -> None:
         """Инициализация парсера HTML-таблиц."""
         super().__init__()
-        self._in_td = False
-        self._in_th = False
-        self._current_row: list[str] = []
+        self._v_yacheyke_dannykh = False
+        self._v_yacheyke_zagolovka = False
+        self._tekushchaya_stroka: list[str] = []
         self.stroki_tablitsy: list[list[str]] = []
-        self._in_title = False
-        self.title_text = ""
-        self._in_stats = False
-        self.stats_text = ""
+        self._v_zagolovke = False
+        self.tekst_zagolovka = ""
+        self._v_statistike = False
+        self.tekst_statistiki = ""
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         """Обработка открывающего HTML-тега."""
@@ -67,56 +67,56 @@ class _VyboryTableParser(HTMLParser):
         teg_nizhniy = tag.lower()
 
         if teg_nizhniy == "td":
-            self._in_td = True
-            self._current_cell = ""
+            self._v_yacheyke_dannykh = True
+            self._tekushchaya_yacheyka = ""
         elif teg_nizhniy == "th":
-            self._in_th = True
-            self._current_cell = ""
+            self._v_yacheyke_zagolovka = True
+            self._tekushchaya_yacheyka = ""
         elif teg_nizhniy == "tr":
-            self._current_row = []
+            self._tekushchaya_stroka = []
         elif teg_nizhniy in ("h1", "h2", "h3"):
             cls = slovar_atributov.get("class", "") or ""
             if "title" in cls.lower() or teg_nizhniy == "h1":
-                self._in_title = True
-                self.title_text = ""
+                self._v_zagolovke = True
+                self.tekst_zagolovka = ""
         elif teg_nizhniy in ("div", "span"):
             cls = slovar_atributov.get("class", "") or ""
             if any(k in cls.lower() for k in ("stats", "itog", "total")):
-                self._in_stats = True
-                self.stats_text = ""
+                self._v_statistike = True
+                self.tekst_statistiki = ""
 
     def handle_endtag(self, tag: str) -> None:
         """Обработка закрывающего HTML-тега."""
         teg_nizhniy = tag.lower()
-        if teg_nizhniy == "td" and self._in_td:
-            self._in_td = False
-            yacheyka = getattr(self, "_current_cell", "").strip()
-            self._current_row.append(yacheyka)
-        elif teg_nizhniy == "th" and self._in_th:
-            self._in_th = False
-            yacheyka = getattr(self, "_current_cell", "").strip()
-            self._current_row.append(yacheyka)
+        if teg_nizhniy == "td" and self._v_yacheyke_dannykh:
+            self._v_yacheyke_dannykh = False
+            yacheyka = getattr(self, "_tekushchaya_yacheyka", "").strip()
+            self._tekushchaya_stroka.append(yacheyka)
+        elif teg_nizhniy == "th" and self._v_yacheyke_zagolovka:
+            self._v_yacheyke_zagolovka = False
+            yacheyka = getattr(self, "_tekushchaya_yacheyka", "").strip()
+            self._tekushchaya_stroka.append(yacheyka)
         elif teg_nizhniy == "tr":
-            if self._current_row:
-                self.stroki_tablitsy.append(self._current_row)
-            self._current_row = []
-        elif teg_nizhniy in ("h1", "h2", "h3") and self._in_title:
-            self._in_title = False
-        elif teg_nizhniy in ("div", "span") and self._in_stats:
-            self._in_stats = False
+            if self._tekushchaya_stroka:
+                self.stroki_tablitsy.append(self._tekushchaya_stroka)
+            self._tekushchaya_stroka = []
+        elif teg_nizhniy in ("h1", "h2", "h3") and self._v_zagolovke:
+            self._v_zagolovke = False
+        elif teg_nizhniy in ("div", "span") and self._v_statistike:
+            self._v_statistike = False
 
     def handle_data(self, data: str) -> None:
         """Обработка текстового содержимого HTML."""
         tekst = data.strip()
         if not tekst:
             return
-        if self._in_td or self._in_th:
-            current = getattr(self, "_current_cell", "")
-            self._current_cell = current + " " + tekst if current else tekst
-        if self._in_title:
-            self.title_text += tekst + " "
-        if self._in_stats:
-            self.stats_text += tekst + " "
+        if self._v_yacheyke_dannykh or self._v_yacheyke_zagolovka:
+            current = getattr(self, "_tekushchaya_yacheyka", "")
+            self._tekushchaya_yacheyka = current + " " + tekst if current else tekst
+        if self._v_zagolovke:
+            self.tekst_zagolovka += tekst + " "
+        if self._v_statistike:
+            self.tekst_statistiki += tekst + " "
 
 
 def _razobrat_chislo(tekst: str) -> int:
@@ -463,7 +463,7 @@ async def poisk_kandidata(
         Список найденных кандидатов.
     """
     adres_url_poiska = f"{VYBORY_API}/izbirkom"
-    region_num = IZBIRATELNYY_KOD_REGIONA.get(subiekt, 0) if subiekt else 0
+    nomer_regiona = IZBIRATELNYY_KOD_REGIONA.get(subiekt, 0) if subiekt else 0
 
     vybory_info = None
     if god is not None:
@@ -475,7 +475,7 @@ async def poisk_kandidata(
     parametry: dict[str, Any] = {
         "action": "show",
         "root": 1,
-        "region": region_num,
+        "region": nomer_regiona,
         "sub_region": 0,
     }
     if vybory_info:
@@ -614,14 +614,14 @@ async def rezultaty_vyborov(
     vybory_info = _nayti_vybory_po_godu_tipu(god, tip)
 
     if vybory_info:
-        region_num = 0
+        nomer_regiona = 0
         if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
-            region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
+            nomer_regiona = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
         html_tekst = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
-            subiekt=region_num,
+            subiekt=nomer_regiona,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html_tekst:
@@ -673,14 +673,14 @@ async def yavka_i_itogi(
     vybory_info = _nayti_vybory_po_godu_tipu(god, tip)
 
     if vybory_info:
-        region_num = 0
+        nomer_regiona = 0
         if subiekt and subiekt in IZBIRATELNYY_KOD_REGIONA:
-            region_num = IZBIRATELNYY_KOD_REGIONA[subiekt]
+            nomer_regiona = IZBIRATELNYY_KOD_REGIONA[subiekt]
 
         html_tekst = await _zaprosit_html_vyborov(
             tvd=str(vybory_info["tvd"]),
             vrn=str(vybory_info["vrn"]),
-            subiekt=region_num,
+            subiekt=nomer_regiona,
             tip_golosovaniya=int(str(vybory_info.get("tip", 242))),
         )
         if html_tekst:

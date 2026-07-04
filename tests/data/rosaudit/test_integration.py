@@ -7,17 +7,17 @@ from mcp_russia.data.rosaudit.server import mcp
 
 
 @pytest.fixture
-def client():
+def klient():
     return Client(mcp)
 
 
-async def test_instrumenty_zaregistrirovany(client):
+async def test_instrumenty_zaregistrirovany(klient):
     """Проверка регистрации инструментов."""
-    async with client:
-        tools = await client.list_tools()
-    tool_names = {t.name for t in tools}
+    async with klient:
+        instrumenty = await klient.list_tools()
+    imena_instrumentov = {t.name for t in instrumenty}
 
-    expected = {
+    ozhidayemyy = {
         "spisok_napravleniy",
         "spisok_tipov_meropriyatiy",
         "spisok_subiektov_audita",
@@ -27,55 +27,57 @@ async def test_instrumenty_zaregistrirovany(client):
         "ispolnenie_byudzheta",
         "poisk_narusheniy",
     }
-    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
+    assert ozhidayemyy.issubset(imena_instrumentov), (
+        f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"
+    )
 
 
-async def test_resursy_zaregistrirovany(client):
+async def test_resursy_zaregistrirovany(klient):
     """Проверка регистрации ресурсов."""
-    async with client:
-        resources = await client.list_resources()
-    uris = {str(r.uri) for r in resources}
+    async with klient:
+        resursy = await klient.list_resources()
+    adresa_uri = {str(r.uri) for r in resursy}
 
-    expected = {
+    ozhidayemyy = {
         "data://istochniki",
         "data://zakonodatelstvo",
         "data://struktura",
     }
-    assert expected.issubset(uris), f"Отсутствуют ресурсы: {expected - uris}"
+    assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют ресурсы: {ozhidayemyy - adresa_uri}"
 
 
-async def test_prompty_zaregistrirovany(client):
+async def test_prompty_zaregistrirovany(klient):
     """Проверка регистрации промптов."""
-    async with client:
-        prompts = await client.list_prompts()
-    prompt_names = {p.name for p in prompts}
+    async with klient:
+        prompty = await klient.list_prompts()
+    prompt_names = {p.name for p in prompty}
 
-    expected = {"analiz_auditorskogo_zaklyucheniya", "obzor_ispolneniya_byudzheta"}
-    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
+    ozhidayemyy = {"analiz_auditorskogo_zaklyucheniya", "obzor_ispolneniya_byudzheta"}
+    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
 
 
-async def test_spisok_napravleniy(client):
+async def test_spisok_napravleniy(klient):
     """Проверка работы инструмента spisok_napravleniy."""
-    async with client:
-        rezultat = await client.call_tool("spisok_napravleniy", {})
+    async with klient:
+        rezultat = await klient.call_tool("spisok_napravleniy", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "бюджет" in tekst.lower() or "Контроль" in tekst
 
 
-async def test_spisok_tipov_meropriyatiy(client):
+async def test_spisok_tipov_meropriyatiy(klient):
     """Проверка работы инструмента spisok_tipov_meropriyatiy."""
-    async with client:
-        rezultat = await client.call_tool("spisok_tipov_meropriyatiy", {})
+    async with klient:
+        rezultat = await klient.call_tool("spisok_tipov_meropriyatiy", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Проверка" in tekst or "Экспертиза" in tekst
 
 
-async def test_spisok_subiektov_audita(client):
+async def test_spisok_subiektov_audita(klient):
     """Проверка работы инструмента spisok_subiektov_audita."""
-    async with client:
-        rezultat = await client.call_tool("spisok_subiektov_audita", {})
+    async with klient:
+        rezultat = await klient.call_tool("spisok_subiektov_audita", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Федеральные" in tekst or "Государственные" in tekst

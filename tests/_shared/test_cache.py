@@ -56,48 +56,48 @@ class TestKeshSVremenemZhizni:
 class TestDekoratorKeshaSVremenemZhizni:
     @pytest.mark.asyncio
     async def test_keshiruet_rezultat(self) -> None:
-        call_count = 0
+        schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit_dannye(klyuch: str) -> str:
-            nonlocal call_count
-            call_count += 1
+            nonlocal schetchik_vyzovov
+            schetchik_vyzovov += 1
             return f"rezultat-{klyuch}"
 
         rezultat1 = await poluchit_dannye("a")
         rezultat2 = await poluchit_dannye("a")
         assert rezultat1 == "rezultat-a"
         assert rezultat2 == "rezultat-a"
-        assert call_count == 1  # второй вызов был из кэша
+        assert schetchik_vyzovov == 1  # второй вызов был из кэша
 
     @pytest.mark.asyncio
     async def test_raznye_argumenty_raznyy_kesh(self) -> None:
-        call_count = 0
+        schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit(klyuch: str) -> str:
-            nonlocal call_count
-            call_count += 1
+            nonlocal schetchik_vyzovov
+            schetchik_vyzovov += 1
             return f"rezultat-{klyuch}"
 
         await poluchit("a")
         await poluchit("b")
-        assert call_count == 2
+        assert schetchik_vyzovov == 2
 
     @pytest.mark.asyncio
     async def test_istekshiy_kesh_perezaprashivaet(self) -> None:
-        call_count = 0
+        schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=0.01)
         async def poluchit() -> str:
-            nonlocal call_count
-            call_count += 1
+            nonlocal schetchik_vyzovov
+            schetchik_vyzovov += 1
             return "dannye"
 
         await poluchit()
         time.sleep(0.02)
         await poluchit()
-        assert call_count == 2
+        assert schetchik_vyzovov == 2
 
     @pytest.mark.asyncio
     async def test_atribut_kesha_dostupen(self) -> None:
@@ -110,30 +110,30 @@ class TestDekoratorKeshaSVremenemZhizni:
 
     @pytest.mark.asyncio
     async def test_ochistka_kesha(self) -> None:
-        call_count = 0
+        schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit() -> str:
-            nonlocal call_count
-            call_count += 1
+            nonlocal schetchik_vyzovov
+            schetchik_vyzovov += 1
             return "dannye"
 
         await poluchit()
         poluchit.kesh.ochistit()
         await poluchit()
-        assert call_count == 2
+        assert schetchik_vyzovov == 2
 
     @pytest.mark.asyncio
     async def test_imenovannye_argumenty_v_klyuche_kesha(self) -> None:
-        call_count = 0
+        schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit(uf: str = "SP") -> str:
-            nonlocal call_count
-            call_count += 1
+            nonlocal schetchik_vyzovov
+            schetchik_vyzovov += 1
             return f"dannye-{uf}"
 
         await poluchit(uf="SP")
         await poluchit(uf="RJ")
         await poluchit(uf="SP")  # из кэша
-        assert call_count == 2
+        assert schetchik_vyzovov == 2

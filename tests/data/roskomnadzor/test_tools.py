@@ -58,7 +58,7 @@ async def test_info_licenzii_ne_nayden():
 
 async def test_info_licenzii_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "LIC-001",
             "organizaciya": "ООО Тест",
@@ -70,7 +70,7 @@ async def test_info_licenzii_nayden():
             "istochnik": "Реестр лицензий (rkn.gov.ru)",
         }
     ]
-    with patch.object(rkn_tools.client, "poisk_licenziy", return_value=mock_data):
+    with patch.object(rkn_tools.client, "poisk_licenziy", return_value=maket_dannykh):
         rezultat = await rkn_tools.info_licenzii(ctx, nomer_licenzii="LIC-001")
     assert "LIC-001" in rezultat
     assert "ООО Тест" in rezultat
@@ -92,7 +92,7 @@ async def test_info_operatora_pd_pustoy():
 
 async def test_info_operatora_pd_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "naimenovanie": "ООО Тест",
             "inn": "7710563663",
@@ -101,12 +101,12 @@ async def test_info_operatora_pd_nayden():
             "sostoyanie": "Зарегистрирован",
         }
     ]
-    with patch.object(rkn_tools.client, "poisk_operatora_pd", return_value=mock_data):
+    with patch.object(rkn_tools.client, "poisk_operatora_pd", return_value=maket_dannykh):
         rezultat = await rkn_tools.info_operatora_pd(ctx, inn="7710563663")
     assert "ООО Тест" in rezultat
 
 
-async def test_proverka_blokirovki_not_blocked():
+async def test_proverka_blokirovki_ne_zablokirovan():
     ctx = _maket_konteksta()
     with patch.object(
         rkn_tools.client,
@@ -117,7 +117,7 @@ async def test_proverka_blokirovki_not_blocked():
     assert "НЕ найден" in rezultat
 
 
-async def test_proverka_blokirovki_blocked():
+async def test_proverka_blokirovki_zablokirovan():
     ctx = _maket_konteksta()
     with patch.object(
         rkn_tools.client,

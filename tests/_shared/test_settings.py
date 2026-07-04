@@ -22,5 +22,5 @@ class TestNastroyki:
     def test_pereopredelenie_taimauta_cherez_env(self) -> None:
         """Настройки можно переопределить через переменные окружения (при импорте)."""
         with patch.dict(os.environ, {"MCP_RUSSIA_HTTP_TIMEOUT": "10.0"}):
-            val = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
-            assert val == 10.0
+            znacheniye = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
+            assert znacheniye == 10.0

@@ -21,8 +21,8 @@ from mcp_russia.settings import KLYUCH_DADATA_API
 from .constants import PRAZDNIKI_RF
 from .schemas import AdresRF, BankRF, Organizatsiya
 
-DADATA_SUGGEST_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest"
-DADATA_FIND_URL = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
+DADATA_URL_PODSKAZOK = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest"
+DADATA_URL_POISKA_PO_ID = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
 
 
 def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
@@ -101,7 +101,7 @@ async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str,
     telo = {"query": zapros, "count": 10}
     try:
         return await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/address",
+            f"{DADATA_URL_PODSKAZOK}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -114,7 +114,7 @@ async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> 
     telo = {"query": identifikator_fias}
     try:
         return await http_otpravit(
-            f"{DADATA_FIND_URL}/address",
+            f"{DADATA_URL_POISKA_PO_ID}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -127,7 +127,7 @@ async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[
     telo = {"query": indeks, "count": 1}
     try:
         return await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/address",
+            f"{DADATA_URL_PODSKAZOK}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -140,7 +140,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> di
     telo = {"query": inn}
     try:
         return await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/party",
+            f"{DADATA_URL_PODSKAZOK}/party",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -160,7 +160,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> 
     telo = {"query": ogrn}
     try:
         return await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/party",
+            f"{DADATA_URL_PODSKAZOK}/party",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -176,7 +176,7 @@ async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
     telo = {"query": "", "count": 100}
     try:
         rezultat = await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/bank",
+            f"{DADATA_URL_PODSKAZOK}/bank",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -190,7 +190,7 @@ async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, A
     telo = {"query": bik}
     try:
         return await http_otpravit(
-            f"{DADATA_SUGGEST_URL}/bank",
+            f"{DADATA_URL_PODSKAZOK}/bank",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -202,10 +202,10 @@ def poluchit_prazdniki(god: int) -> list[dict[str, str]]:
     """Вернуть список государственных праздников РФ на указанный год."""
     prazdniki = []
     for stroka_daty, nazvanie in PRAZDNIKI_RF.items():
-        full_date = f"{god}-{stroka_daty}"
+        polnaya_data = f"{god}-{stroka_daty}"
         prazdniki.append(
             {
-                "data": full_date,
+                "data": polnaya_data,
                 "nazvanie": nazvanie,
                 "tip": "natsionalnyy"
                 if stroka_daty
@@ -352,9 +352,9 @@ async def nayti_organizatsiyu_po_ogrn(ogrn: str) -> Organizatsiya | dict[str, st
 
 async def spisok_bankov_publichnyy() -> list[BankRF]:
     """Получить список банков из справочника ЦБ РФ через Dadata."""
-    banki_raw = await _spisok_bankov()
+    banki_syranye = await _spisok_bankov()
     banki = []
-    for b in banki_raw:
+    for b in banki_syranye:
         dannye = b.get("data", {})
         razobrannye = _razobrat_dannye_banka(dannye, b.get("value", ""))
         banki.append(

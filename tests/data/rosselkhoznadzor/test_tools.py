@@ -81,7 +81,7 @@ class TestInstrumenty:
     @pytest.mark.asyncio
     async def test_poisk_proverok_s_dannymi(self) -> None:
         ctx = AsyncMock()
-        mock_data = [
+        maket_dannykh = [
             {
                 "nomer": "123",
                 "vid_nadzora": "Ветеринарный",
@@ -91,7 +91,7 @@ class TestInstrumenty:
                 "narusheniya": 3,
             }
         ]
-        with patch.object(client, "poisk_proverok", return_value=mock_data):
+        with patch.object(client, "poisk_proverok", return_value=maket_dannykh):
             rezultat = await tools.poisk_proverok(ctx)
         assert "123" in rezultat
         assert "Ветеринарный" in rezultat
@@ -106,7 +106,7 @@ class TestInstrumenty:
     @pytest.mark.asyncio
     async def test_poisk_karantinnykh_obektov_s_dannymi(self) -> None:
         ctx = AsyncMock()
-        mock_data = [
+        maket_dannykh = [
             {
                 "nazvanie": "Калифорнийская щитовка",
                 "tip": "Вредитель",
@@ -115,7 +115,7 @@ class TestInstrumenty:
                 "data_vvedeniya": "2023-06-01",
             }
         ]
-        with patch.object(client, "poisk_karantinnykh_obektov", return_value=mock_data):
+        with patch.object(client, "poisk_karantinnykh_obektov", return_value=maket_dannykh):
             rezultat = await tools.poisk_karantinnykh_obektov(ctx)
         assert "Калифорнийская" in rezultat
 

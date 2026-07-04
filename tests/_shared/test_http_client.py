@@ -11,31 +11,31 @@ from mcp_russia.exceptions import OshibkaHttpClienta
 
 
 class TestSozdatKlienta:
-    def test_vozvrashchaet_asinkhronnyy_klient(self) -> None:
-        client = sozdat_klienta()
-        assert isinstance(client, httpx.AsyncClient)
+    def test_vozvrashchaet_asinkhronnyy_klienta(self) -> None:
+        klient = sozdat_klienta()
+        assert isinstance(klient, httpx.AsyncClient)
 
     def test_ustanavlivaet_zagolovki_po_umolchaniyu(self) -> None:
-        client = sozdat_klienta()
-        assert "mcp-russia" in client.headers["user-agent"]
-        assert client.headers["accept"] == "application/json"
+        klient = sozdat_klienta()
+        assert "mcp-russia" in klient.headers["user-agent"]
+        assert klient.headers["accept"] == "application/json"
 
     def test_polzovatelskiy_bazovyy_url(self) -> None:
-        client = sozdat_klienta(bazovyy_adres_url="https://www.cbr.ru")
-        assert str(client.base_url) == "https://www.cbr.ru"
+        klient = sozdat_klienta(bazovyy_adres_url="https://www.cbr.ru")
+        assert str(klient.base_url) == "https://www.cbr.ru"
 
     def test_polzovatelskiy_taimaut(self) -> None:
-        client = sozdat_klienta(taimaut=5.0)
-        assert client.timeout.connect == 5.0
+        klient = sozdat_klienta(taimaut=5.0)
+        assert klient.timeout.connect == 5.0
 
     def test_polzovatelskie_zagolovki_obedineny(self) -> None:
-        client = sozdat_klienta(zagolovki={"X-Api-Key": "secret"})
-        assert client.headers["x-api-key"] == "secret"
-        assert "mcp-russia" in client.headers["user-agent"]
+        klient = sozdat_klienta(zagolovki={"X-Api-Key": "secret"})
+        assert klient.headers["x-api-key"] == "secret"
+        assert "mcp-russia" in klient.headers["user-agent"]
 
     def test_perenapravleniya_vklucheny(self) -> None:
-        client = sozdat_klienta()
-        assert client.follow_redirects is True
+        klient = sozdat_klienta()
+        assert klient.follow_redirects is True
 
 
 class TestHttpPoluchit:
@@ -71,8 +71,8 @@ class TestHttpPoluchit:
     @respx.mock
     async def test_500_povtoryaet_zatem_uspekh(self) -> None:
         """Ошибка сервера при первой попытке, успех при второй."""
-        route = respx.get("https://api.example.com/flaky")
-        route.side_effect = [
+        marshrut = respx.get("https://api.example.com/flaky")
+        marshrut.side_effect = [
             httpx.Response(500, text="Internal Server Error"),
             httpx.Response(200, json={"recovered": True}),
         ]
@@ -84,8 +84,8 @@ class TestHttpPoluchit:
     @respx.mock
     async def test_429_povtoryaet(self) -> None:
         """Запросы с ограничением скорости должны повторяться."""
-        route = respx.get("https://api.example.com/limited")
-        route.side_effect = [
+        marshrut = respx.get("https://api.example.com/limited")
+        marshrut.side_effect = [
             httpx.Response(429, text="Too Many Requests"),
             httpx.Response(200, json={"ok": True}),
         ]
@@ -110,8 +110,8 @@ class TestHttpPoluchit:
     @respx.mock
     async def test_taimaut_povtoryaet(self) -> None:
         """Ошибки таймаута должны повторяться."""
-        route = respx.get("https://api.example.com/slow")
-        route.side_effect = [
+        marshrut = respx.get("https://api.example.com/slow")
+        marshrut.side_effect = [
             httpx.ReadTimeout("timeout"),
             httpx.Response(200, json={"ok": True}),
         ]

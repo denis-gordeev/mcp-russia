@@ -138,7 +138,7 @@ APIs: cbrf_sravnit_valyuty(codes=[key_rate, cpi], last=60)
 > Промпт: «Какова стоимость ипотеки на ₽ 10 млн при текущей ключевой ставке по сравнению со ставкой 2 года назад?»
 
 ```
-API: cbr_credit_series *(планируемый — ряды по кредитованию)*
+API: cbrf_ryady_kreditovaniya *(планируемый — ряды по кредитованию)*
 ```
 
 **3. Международное сравнение**
@@ -178,7 +178,7 @@ LLM рассчитывает: ключевая ставка (21,00 %) − инф
 > Промпт: «Сколько очагов природных пожаров зарегистрировано в Сибирском федеральном округе в 2024 году? Сравни с предыдущими 5 годами»
 
 ```
-API: rosgidromet_preduprezhdeniya(region="siberian_fd", year=2024)
+API: rosgidromet_preduprezhdeniya(region="sibirskiy_fo", year=2024)
 ```
 
 **2. Вырубка лесов**
@@ -186,7 +186,7 @@ API: rosgidromet_preduprezhdeniya(region="siberian_fd", year=2024)
 > Промпт: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_deforestation(region="siberian_fd") *(планируемый модуль «Росприроднадзор»)*
+API: rosprirodnadzor_obezlesenie(region="sibirskiy_fo") *(планируемый модуль «Росприроднадзор»)*
 ```
 
 **3. Водные ресурсы**

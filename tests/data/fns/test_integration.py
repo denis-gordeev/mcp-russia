@@ -7,16 +7,16 @@ from mcp_russia.data.fns.server import mcp
 
 
 @pytest.fixture
-def client():
+def klient():
     return Client(mcp)
 
 
-async def test_instrumenty_zaregistrirovany(client):
-    async with client:
-        tools = await client.list_tools()
-    tool_names = {t.name for t in tools}
+async def test_instrumenty_zaregistrirovany(klient):
+    async with klient:
+        instrumenty = await klient.list_tools()
+    imena_instrumentov = {t.name for t in instrumenty}
 
-    expected = {
+    ozhidayemyy = {
         "spisok_nalogovyh_rezhimov",
         "spisok_vidov_nalogov",
         "spisok_tipov_proverok",
@@ -27,42 +27,44 @@ async def test_instrumenty_zaregistrirovany(client):
         "proverki_organizacii",
         "nalogovye_nachisleniya",
     }
-    assert expected.issubset(tool_names), f"Отсутствуют инструменты: {expected - tool_names}"
+    assert ozhidayemyy.issubset(imena_instrumentov), (
+        f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"
+    )
 
 
-async def test_resursy_zaregistrirovany(client):
-    async with client:
-        resources = await client.list_resources()
-    uris = {str(r.uri) for r in resources}
+async def test_resursy_zaregistrirovany(klient):
+    async with klient:
+        resursy = await klient.list_resources()
+    adresa_uri = {str(r.uri) for r in resursy}
 
-    expected = {
+    ozhidayemyy = {
         "data://istochniki",
         "data://zakonodatelstvo",
         "data://struktura",
     }
-    assert expected.issubset(uris), f"Отсутствуют ресурсы: {expected - uris}"
+    assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют ресурсы: {ozhidayemyy - adresa_uri}"
 
 
-async def test_prompty_zaregistrirovany(client):
-    async with client:
-        prompts = await client.list_prompts()
-    prompt_names = {p.name for p in prompts}
+async def test_prompty_zaregistrirovany(klient):
+    async with klient:
+        prompty = await klient.list_prompts()
+    prompt_names = {p.name for p in prompty}
 
-    expected = {"analiz_nalogoplatelshchika", "obzor_rezhimov_nalogooblozheniya"}
-    assert expected.issubset(prompt_names), f"Отсутствуют промпты: {expected - prompt_names}"
+    ozhidayemyy = {"analiz_nalogoplatelshchika", "obzor_rezhimov_nalogooblozheniya"}
+    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
 
 
-async def test_spisok_nalogovyh_rezhimov(client):
-    async with client:
-        rezultat = await client.call_tool("spisok_nalogovyh_rezhimov", {})
+async def test_spisok_nalogovyh_rezhimov(klient):
+    async with klient:
+        rezultat = await klient.call_tool("spisok_nalogovyh_rezhimov", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "ОСНО" in tekst
 
 
-async def test_spisok_vidov_nalogov(client):
-    async with client:
-        rezultat = await client.call_tool("spisok_vidov_nalogov", {})
+async def test_spisok_vidov_nalogov(klient):
+    async with klient:
+        rezultat = await klient.call_tool("spisok_vidov_nalogov", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "НДС" in tekst

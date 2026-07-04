@@ -39,7 +39,7 @@ async def test_poisk_proverok_pustoy():
 
 async def test_poisk_proverok_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "ПР-2026-001",
             "organizaciya": "ООО «Промышленник»",
@@ -50,7 +50,7 @@ async def test_poisk_proverok_nayden():
             "vyavleno_narusheniy": 3,
         },
     ]
-    with patch.object(rpn_tools.client, "poisk_proverok", return_value=mock_data):
+    with patch.object(rpn_tools.client, "poisk_proverok", return_value=maket_dannykh):
         rezultat = await rpn_tools.poisk_proverok(ctx)
     assert "Промышленник" in rezultat
 
@@ -64,7 +64,7 @@ async def test_info_proverki_ne_nayden():
 
 async def test_info_proverki_nayden():
     ctx = _maket_konteksta()
-    mock_data = {
+    maket_dannykh = {
         "nomer": "ПР-2026-001",
         "organizaciya": "ООО «Промышленник»",
         "vid_nadzora": "Государственный экологический надзор",
@@ -73,7 +73,7 @@ async def test_info_proverki_nayden():
         "sostoyanie": "Завершено",
         "vyavleno_narusheniy": 3,
     }
-    with patch.object(rpn_tools.client, "info_proverki", return_value=mock_data):
+    with patch.object(rpn_tools.client, "info_proverki", return_value=maket_dannykh):
         rezultat = await rpn_tools.info_proverki("ПР-2026-001", ctx)
     assert "Промышленник" in rezultat
 
@@ -87,7 +87,7 @@ async def test_poisk_obektov_negativnogo_pustoy():
 
 async def test_poisk_obektov_negativnogo_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "ОНВ-001",
             "nazvanie": "Завод «Химпром»",
@@ -96,7 +96,7 @@ async def test_poisk_obektov_negativnogo_nayden():
             "vid_deyatelnosti": "Химическое производство",
         },
     ]
-    with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=mock_data):
+    with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=maket_dannykh):
         rezultat = await rpn_tools.poisk_obektov_negativnogo(ctx)
     assert "Химпром" in rezultat
 
@@ -110,7 +110,7 @@ async def test_poisk_litsenziy_nedra_pustoy():
 
 async def test_poisk_litsenziy_nedra_nayden():
     ctx = _maket_konteksta()
-    mock_data = [
+    maket_dannykh = [
         {
             "nomer": "ЛЦ-001",
             "vid_litsenzii": "Добыча полезных ископаемых",
@@ -119,6 +119,6 @@ async def test_poisk_litsenziy_nedra_nayden():
             "derzhatel": "ПАО «Газпром»",
         },
     ]
-    with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=mock_data):
+    with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=maket_dannykh):
         rezultat = await rpn_tools.poisk_litsenziy_nedra(ctx)
     assert "Газпром" in rezultat

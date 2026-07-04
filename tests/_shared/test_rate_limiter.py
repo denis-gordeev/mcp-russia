@@ -51,10 +51,10 @@ class TestOgranichitelChastoty:
     @pytest.mark.asyncio
     async def test_ochistka_udalyaet_starye_metki(self) -> None:
         limiter = OgranichitelChastoty(maks_zaprosov=2, period=0.05)
-        now = time.monotonic()
+        seychas = time.monotonic()
         # Имитируем старые метки времени
-        limiter._timestamps.append(now - 1.0)
-        limiter._timestamps.append(now - 1.0)
+        limiter._timestamps.append(seychas - 1.0)
+        limiter._timestamps.append(seychas - 1.0)
         # Очистка должна удалить их, разрешив новые запросы
         async with limiter:
             pass
@@ -65,9 +65,9 @@ class TestOgranichitelChastoty:
         limiter = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
         rezultaty: list[int] = []
 
-        async def worker(i: int) -> None:
+        async def rabotnik(i: int) -> None:
             async with limiter:
                 rezultaty.append(i)
 
-        await asyncio.gather(worker(0), worker(1), worker(2))
+        await asyncio.gather(rabotnik(0), rabotnik(1), rabotnik(2))
         assert sorted(rezultaty) == [0, 1, 2]

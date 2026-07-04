@@ -68,7 +68,7 @@ def postroit_katalog(reyestr: object) -> str:
     funktsii = getattr(reyestr, "funktsii", {})
     for funktsiya in funktsii.values():
         metadannye = funktsiya.metadannye
-        auth_info = (
+        svedeniya_ob_avtorizatsii = (
             f"Требуется аутентификация ({metadannye.peremennaya_avt_env})"
             if metadannye.trebuet_autentifikatsii
             else (
@@ -78,7 +78,7 @@ def postroit_katalog(reyestr: object) -> str:
             )
         )
         stroki.append(f"\n## {metadannye.imya}: {metadannye.opisanie}")
-        stroki.append(f"Авторизация: {auth_info}")
+        stroki.append(f"Авторизация: {svedeniya_ob_avtorizatsii}")
 
         server_fn = funktsiya.server_fn
         if hasattr(server_fn, "_tool_manager") and hasattr(server_fn._tool_manager, "_tools"):
