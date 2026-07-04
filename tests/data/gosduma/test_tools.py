@@ -59,7 +59,7 @@ def test_razobrat_deputatov_dict():
 
 def test_razobrat_deputatov_pustoy():
     assert gosduma_client._razobrat_deputatov(None) == []
-    assert gosduma_client._razobrat_deputatov("not a list") == []
+    assert gosduma_client._razobrat_deputatov("ne spisok") == []
 
 
 def test_razobrat_zakonoproekty():

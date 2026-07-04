@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_auditorskogo_zaklyucheniya(context: str, ctx: Context) -> str:
+async def analiz_auditorskogo_zaklyucheniya(kontekst: str, ctx: Context) -> str:
     """Анализ аудиторского заключения Счётной палаты.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ заключения № 123").
+        kontekst: Контекст запроса (например, "анализ заключения № 123").
 
     Возвращает:
         Шаблон промпта для анализа аудиторского заключения.
     """
     return (
         f"Выполни анализ аудиторского заключения Счётной палаты РФ.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи аудиторское заключение через info_auditorskogo_zaklyucheniya()\n"
         f"2. Проанализируй выявленные нарушения и их сумму\n"

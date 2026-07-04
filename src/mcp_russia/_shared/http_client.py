@@ -7,8 +7,8 @@
     from mcp_russia._shared.http_client import sozdat_klienta, http_poluchit
 
     # Вариант 1: фабрика клиентов (для нескольких запросов в клиенте модуля)
-    async with sozdat_klienta(bazovyy_adres_url="https://api.example.com") as client:
-        otvet = await client.get("/endpoint")
+    async with sozdat_klienta(bazovyy_adres_url="https://api.example.com") as klient:
+        otvet = await klient.get("/endpoint")
 
     # Вариант 2: разовый запрос с автоматическими повторными попытками
     dannye = await http_poluchit("https://api.example.com/endpoint")
@@ -95,10 +95,10 @@ async def http_poluchit(
     povtory = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
     poslednyaya_oshibka: Exception | None = None
 
-    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as client:
+    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as klient:
         for popytka in range(povtory + 1):
             try:
-                otvet = await client.get(adres_url, params=parametry)
+                otvet = await klient.get(adres_url, params=parametry)
 
                 if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if popytka < povtory:
@@ -176,10 +176,10 @@ async def http_otpravit(
     povtory = maks_povtorov if maks_povtorov is not None else MAKS_POVTOROV_HTTP
     poslednyaya_oshibka: Exception | None = None
 
-    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as client:
+    async with sozdat_klienta(taimaut=taimaut, zagolovki=zagolovki) as klient:
         for popytka in range(povtory + 1):
             try:
-                otvet = await client.post(adres_url, json=telo_json, params=parametry)
+                otvet = await klient.post(adres_url, json=telo_json, params=parametry)
 
                 if otvet.status_code in _KODY_STATUSOV_DLYA_POVTORA:
                     if popytka < povtory:

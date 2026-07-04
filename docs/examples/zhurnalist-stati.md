@@ -218,7 +218,7 @@ API: publikatsii_poisk_aktov(term="режим ЧС природные пожар
 > Промпт: «Выведи кандидатов на пост губернатора Московской области с зарегистрированными финансовыми отчётами в ЦИК»
 
 ```
-APIs: cekrf_poisk_kandidata(position="governor", region="Moscow_oblast", year=2026)
+APIs: cekrf_poisk_kandidata(fio="...", god=2026)
       cekrf_kandidat_podrobno (для каждого кандидата)
       cekrf_kandidat_podrobno (для каждого кандидата)
 ```
@@ -246,9 +246,9 @@ API: cekrf_poisk_kandidata + cekrf_kandidat_podrobno (пакетно)
 
 ```json
 [
-  {"tool": "rosstat_spisok_regionov", "args": {"region": "Moscow_oblast"}},
-  {"tool": "rosstat_spisok_regionov", "args": {"region": "Leningrad_oblast"}},
-  {"tool": "rosstat_spisok_regionov", "args": {"region": "Tatarstan"}}
+  {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
+  {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
+  {"instrument": "rosstat_spisok_regionov", "argumenty": {}}
 ]
 ```
 

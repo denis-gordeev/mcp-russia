@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_ekologicheskoy_proverki(context: str, ctx: Context) -> str:
+async def analiz_ekologicheskoy_proverki(kontekst: str, ctx: Context) -> str:
     """Анализ экологической проверки Росприроднадзора.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ проверки № 123").
+        kontekst: Контекст запроса (например, "анализ проверки № 123").
 
     Возвращает:
         Шаблон промпта для анализа экологической проверки.
     """
     return (
         f"Выполни анализ экологической проверки Росприроднадзора.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи данные о проверке через info_proverki()\n"
         f"2. Проанализируй вид надзора и выявленные нарушения\n"

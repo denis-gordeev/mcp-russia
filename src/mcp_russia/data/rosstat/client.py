@@ -135,13 +135,13 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
             if isinstance(elementy, list):
                 return [
                     {
-                        "period": element.get("date", element.get("period", "")),
-                        "ipcz_mesyac": element.get("monthlyRate") or element.get("value"),
-                        "ipcz_nakoplenny": element.get("cumulativeRate"),
-                        "ipcz_god": element.get("yearlyRate"),
+                        "period": zapis.get("date", zapis.get("period", "")),
+                        "ipcz_mesyac": zapis.get("monthlyRate") or zapis.get("value"),
+                        "ipcz_nakoplenny": zapis.get("cumulativeRate"),
+                        "ipcz_god": zapis.get("yearlyRate"),
                     }
-                    for element in elementy
-                    if isinstance(element, dict)
+                    for zapis in elementy
+                    if isinstance(zapis, dict)
                 ]
         return []
     except Exception:
@@ -170,14 +170,14 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
             if isinstance(elementy, list):
                 return [
                     {
-                        "period": element.get("date", element.get("period", "")),
-                        "naselenie": element.get("population") or element.get("value"),
-                        "rozhdaemost": element.get("birthRate"),
-                        "smertnost": element.get("deathRate"),
-                        "estestvenny_prirost": element.get("naturalGrowth"),
+                        "period": zapis.get("date", zapis.get("period", "")),
+                        "naselenie": zapis.get("population") or zapis.get("value"),
+                        "rozhdaemost": zapis.get("birthRate"),
+                        "smertnost": zapis.get("deathRate"),
+                        "estestvenny_prirost": zapis.get("naturalGrowth"),
                     }
-                    for element in elementy
-                    if isinstance(element, dict)
+                    for zapis in elementy
+                    if isinstance(zapis, dict)
                 ]
         return []
     except Exception:
@@ -208,21 +208,21 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
                 rezultaty = []
-                for element in elementy:
-                    if not isinstance(element, dict):
+                for zapis in elementy:
+                    if not isinstance(zapis, dict):
                         continue
                     nazvanie_subiekta = ""
-                    kod_reg = element.get("region", subiekt)
+                    kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                         if ri:
                             nazvanie_subiekta = ri["nazvanie"]
                     rezultaty.append(
                         VRPDannye(
-                            period=element.get("date", element.get("period", "")),
+                            period=zapis.get("date", zapis.get("period", "")),
                             subiekt=nazvanie_subiekta,
-                            vrp=element.get("value"),
-                            vrp_na_dushu=element.get("perCapita"),
+                            vrp=zapis.get("value"),
+                            vrp_na_dushu=zapis.get("perCapita"),
                         )
                     )
                 return rezultaty
@@ -255,21 +255,21 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
                 rezultaty = []
-                for element in elementy:
-                    if not isinstance(element, dict):
+                for zapis in elementy:
+                    if not isinstance(zapis, dict):
                         continue
                     nazvanie_subiekta = ""
-                    kod_reg = element.get("region", subiekt)
+                    kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                         if ri:
                             nazvanie_subiekta = ri["nazvanie"]
                     rezultaty.append(
                         DannyeZarplaty(
-                            period=element.get("date", element.get("period", "")),
+                            period=zapis.get("date", zapis.get("period", "")),
                             subiekt=nazvanie_subiekta,
-                            nominalnaya_zp=element.get("value"),
-                            realnaya_zp_izmenenie=element.get("realChange"),
+                            nominalnaya_zp=zapis.get("value"),
+                            realnaya_zp_izmenenie=zapis.get("realChange"),
                         )
                     )
                 return rezultaty
@@ -298,11 +298,11 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
                 rezultaty = []
-                for element in elementy:
-                    if not isinstance(element, dict):
+                for zapis in elementy:
+                    if not isinstance(zapis, dict):
                         continue
-                    kod_subiekta = str(element.get("region", element.get("okato", "")))
-                    nazvanie_subiekta = element.get("regionName", "")
+                    kod_subiekta = str(zapis.get("region", zapis.get("okato", "")))
+                    nazvanie_subiekta = zapis.get("regionName", "")
                     if not nazvanie_subiekta:
                         ri = next((r for r in SUBIEKTY_RF if r["kod"] == kod_subiekta), None)
                         if ri:
@@ -311,8 +311,8 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                         {
                             "subiekt": nazvanie_subiekta,
                             "kod": kod_subiekta,
-                            "znachenie": element.get("value"),
-                            "period": element.get("date", element.get("period", "")),
+                            "znachenie": zapis.get("value"),
+                            "period": zapis.get("date", zapis.get("period", "")),
                         }
                     )
                 return rezultaty
@@ -356,11 +356,11 @@ async def poluchit_indikator_dannye(
         if not isinstance(elementy, list):
             return []
         rezultaty = []
-        for element in elementy:
-            if not isinstance(element, dict):
+        for zapis in elementy:
+            if not isinstance(zapis, dict):
                 continue
             nazvanie_subiekta = ""
-            kod_reg = element.get("region", subiekt)
+            kod_reg = zapis.get("region", subiekt)
             if kod_reg:
                 ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
                 if ri:
@@ -368,10 +368,10 @@ async def poluchit_indikator_dannye(
             rezultaty.append(
                 IndikatorDannye(
                     kod_emiss=kod_emiss,
-                    nazvanie=imya_indikatora or element.get("name", kod),
-                    period=element.get("date", element.get("period", "")),
-                    znachenie=element.get("value"),
-                    edinitsa=element.get("unit", ""),
+                    nazvanie=imya_indikatora or zapis.get("name", kod),
+                    period=zapis.get("date", zapis.get("period", "")),
+                    znachenie=zapis.get("value"),
+                    edinitsa=zapis.get("unit", ""),
                     subiekt=nazvanie_subiekta,
                 )
             )
@@ -391,17 +391,17 @@ def _razobrat_otvet_indikatora(dannye: Any, kod: str) -> list[PokazatelRosstata]
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         try:
             rezultaty.append(
                 PokazatelRosstata(
                     kod=kod,
-                    nazvanie=element.get("name", kod),
-                    znachenie=float(element.get("value", 0)),
-                    edinitsa=element.get("unit", ""),
-                    data=element.get("date", ""),
+                    nazvanie=zapis.get("name", kod),
+                    znachenie=float(zapis.get("value", 0)),
+                    edinitsa=zapis.get("unit", ""),
+                    data=zapis.get("date", ""),
                 )
             )
         except (ValueError, TypeError):
@@ -452,22 +452,22 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             if ri:
                 nazvanie_subiekta = ri["nazvanie"]
         rezultaty = []
-        for element in elementy:
-            if not isinstance(element, dict):
+        for zapis in elementy:
+            if not isinstance(zapis, dict):
                 continue
-            znachenie_okved = element.get("znachenie_okved", element.get("code", ""))
+            znachenie_okved = zapis.get("znachenie_okved", zapis.get("code", ""))
             otrasl = next(
                 (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == znachenie_okved),
-                element.get("name", znachenie_okved),
+                zapis.get("name", znachenie_okved),
             )
             rezultaty.append(
                 OtraslevayaStrukturaVRP(
-                    subiekt=nazvanie_subiekta or element.get("regionName", ""),
-                    period=element.get("date", element.get("period", god or "")),
+                    subiekt=nazvanie_subiekta or zapis.get("regionName", ""),
+                    period=zapis.get("date", zapis.get("period", god or "")),
                     otrasl=otrasl,
                     kod_znachenie_okved=znachenie_okved,
-                    dolya_vvp=element.get("share") or element.get("dolya"),
-                    vrp=element.get("value"),
+                    dolya_vvp=zapis.get("share") or zapis.get("dolya"),
+                    vrp=zapis.get("value"),
                 )
             )
         return rezultaty
@@ -535,26 +535,26 @@ async def poluchit_investitsii_po_vidam(
             if ri:
                 nazvanie_subiekta = ri["nazvanie"]
         rezultaty = []
-        for element in elementy:
-            if not isinstance(element, dict):
+        for zapis in elementy:
+            if not isinstance(zapis, dict):
                 continue
-            znachenie_okved = element.get("znachenie_okved", element.get("activityCode", ""))
+            znachenie_okved = zapis.get("znachenie_okved", zapis.get("activityCode", ""))
             vid = next(
                 (
                     v["nazvanie"]
                     for v in VIDY_DEYATELNOSTI_INVESTITSII
                     if v["kod"] == znachenie_okved
                 ),
-                element.get("activityName", element.get("name", znachenie_okved)),
+                zapis.get("activityName", zapis.get("name", znachenie_okved)),
             )
             rezultaty.append(
                 InvestitsiiPoVidam(
-                    subiekt=nazvanie_subiekta or element.get("regionName", ""),
-                    period=element.get("date", element.get("period", god or "")),
+                    subiekt=nazvanie_subiekta or zapis.get("regionName", ""),
+                    period=zapis.get("date", zapis.get("period", god or "")),
                     vid_deyatelnosti=vid,
                     kod_znachenie_okved=znachenie_okved,
-                    investitsii=element.get("value"),
-                    dolya=element.get("share") or element.get("dolya"),
+                    investitsii=zapis.get("value"),
+                    dolya=zapis.get("share") or zapis.get("dolya"),
                 )
             )
         return rezultaty

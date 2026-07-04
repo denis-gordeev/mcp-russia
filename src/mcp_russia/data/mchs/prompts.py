@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_chrezvychaynoy_situatsii(context: str, ctx: Context) -> str:
+async def analiz_chrezvychaynoy_situatsii(kontekst: str, ctx: Context) -> str:
     """Анализ чрезвычайной ситуации.
 
     Аргументы:
-        context: Контекст запроса (например, «анализ ЧС в регионе»).
+        kontekst: Контекст запроса (например, «анализ ЧС в регионе»).
 
     Возвращает:
         Шаблон промпта для анализа чрезвычайной ситуации.
     """
     return (
         f"Выполни анализ чрезвычайной ситуации.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи данные о ЧС через poisk_chs()\n"
         f"2. Определи вид и класс ЧС\n"

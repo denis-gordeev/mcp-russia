@@ -213,59 +213,59 @@ def _izvlech_spisok(dannye: Any) -> list[Any]:
     return []
 
 
-def _razobrat_med_organizatsiyu(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_med_organizatsiyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных медицинской организации."""
     return {
-        "identifikator": element.get("id", "") or element.get("ogrn", ""),
-        "nazvanie": element.get("name", "") or element.get("fullName", ""),
-        "tip": element.get("type", "") or element.get("tip", ""),
-        "subiekt": element.get("region", "") or element.get("subject", ""),
-        "gorod": element.get("city", "") or element.get("settlement", ""),
-        "adres": element.get("address", "") or element.get("adres", ""),
-        "telefon": element.get("phone", "") or element.get("telefon", ""),
-        "litsenzia": element.get("license", "") or element.get("litsenzia", ""),
-        "krovatey": element.get("beds", 0) or element.get("krovatey", 0),
-        "vrachey": element.get("doctors", 0) or element.get("vrachey", 0),
+        "identifikator": zapis.get("id", "") or zapis.get("ogrn", ""),
+        "nazvanie": zapis.get("name", "") or zapis.get("fullName", ""),
+        "tip": zapis.get("type", "") or zapis.get("tip", ""),
+        "subiekt": zapis.get("region", "") or zapis.get("subject", ""),
+        "gorod": zapis.get("city", "") or zapis.get("settlement", ""),
+        "adres": zapis.get("address", "") or zapis.get("adres", ""),
+        "telefon": zapis.get("phone", "") or zapis.get("telefon", ""),
+        "litsenzia": zapis.get("license", "") or zapis.get("litsenzia", ""),
+        "krovatey": zapis.get("beds", 0) or zapis.get("krovatey", 0),
+        "vrachey": zapis.get("doctors", 0) or zapis.get("vrachey", 0),
         "istochnik": "ФРМО (frrr.rosminzdrav.ru)",
     }
 
 
-def _razobrat_litsenziyu(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии."""
     return {
-        "nomer": element.get("number", "") or element.get("nomer", ""),
-        "organizaciya": element.get("organizationName", "") or element.get("name", ""),
-        "inn": element.get("inn", ""),
-        "vid_deyatelnosti": element.get("activityType", "") or element.get("vid", ""),
-        "data_vydachi": element.get("issueDate", "") or element.get("data_vydachi", ""),
-        "data_okonchaniya": element.get("endDate", "") or element.get("data_okonchaniya", ""),
-        "sostoyanie": element.get("status", ""),
-        "adres": element.get("address", "") or element.get("adres", ""),
+        "nomer": zapis.get("number", "") or zapis.get("nomer", ""),
+        "organizaciya": zapis.get("organizationName", "") or zapis.get("name", ""),
+        "inn": zapis.get("inn", ""),
+        "vid_deyatelnosti": zapis.get("activityType", "") or zapis.get("vid", ""),
+        "data_vydachi": zapis.get("issueDate", "") or zapis.get("data_vydachi", ""),
+        "data_okonchaniya": zapis.get("endDate", "") or zapis.get("data_okonchaniya", ""),
+        "sostoyanie": zapis.get("status", ""),
+        "adres": zapis.get("address", "") or zapis.get("adres", ""),
         "istochnik": "Росздравнадзор (roszdravnadzor.gov.ru)",
     }
 
 
-def _razobrat_pokazatel(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_pokazatel(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных показателя здоровья."""
     return {
-        "kod": element.get("code", "") or element.get("kod", ""),
-        "nazvanie": element.get("name", ""),
-        "znachenie": element.get("value") or element.get("znachenie", 0),
-        "ed_izm": element.get("unit", "") or element.get("ed_izm", ""),
-        "god": element.get("year") or element.get("god", 0),
-        "subiekt": element.get("region", ""),
-        "istochnik": element.get("source", "Открытые данные Минздрава"),
+        "kod": zapis.get("code", "") or zapis.get("kod", ""),
+        "nazvanie": zapis.get("name", ""),
+        "znachenie": zapis.get("value") or zapis.get("znachenie", 0),
+        "ed_izm": zapis.get("unit", "") or zapis.get("ed_izm", ""),
+        "god": zapis.get("year") or zapis.get("god", 0),
+        "subiekt": zapis.get("region", ""),
+        "istochnik": zapis.get("source", "Открытые данные Минздрава"),
     }
 
 
-def _razobrat_zabolevanie(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zabolevanie(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных о заболевании."""
     return {
-        "kod_mkb": element.get("mkbCode", "") or element.get("mkb_code", ""),
-        "nazvanie": element.get("name", "") or element.get("diseaseName", ""),
-        "chelovek_zabolelo": element.get("cases") or element.get("chelovek_zabolelo", 0),
-        "chelovek_vylechilos": element.get("recovered") or element.get("chelovek_vylechilos", 0),
-        "letalnykh_sluchaev": element.get("deaths") or element.get("letalnykh_sluchaev", 0),
-        "god": element.get("year") or element.get("god", 0),
-        "subiekt": element.get("region", ""),
+        "kod_mkb": zapis.get("mkbCode", "") or zapis.get("mkb_code", ""),
+        "nazvanie": zapis.get("name", "") or zapis.get("diseaseName", ""),
+        "chelovek_zabolelo": zapis.get("cases") or zapis.get("chelovek_zabolelo", 0),
+        "chelovek_vylechilos": zapis.get("recovered") or zapis.get("chelovek_vylechilos", 0),
+        "letalnykh_sluchaev": zapis.get("deaths") or zapis.get("letalnykh_sluchaev", 0),
+        "god": zapis.get("year") or zapis.get("god", 0),
+        "subiekt": zapis.get("region", ""),
     }

@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_zdorovya_regiona(context: str, ctx: Context) -> str:
+async def analiz_zdorovya_regiona(kontekst: str, ctx: Context) -> str:
     """Анализ здоровья населения региона.
 
     Аргументы:
-        context: Контекст запроса (регион или тема).
+        kontekst: Контекст запроса (регион или тема).
 
     Возвращает:
         Шаблон промпта для анализа здоровья региона.
     """
     return (
         f"Выполни анализ здоровья населения региона.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи показатели здоровья через pokazateli_zdorovya()\n"
         f"2. Оцени ожидаемую продолжительность жизни\n"
@@ -27,18 +27,18 @@ async def analiz_zdorovya_regiona(context: str, ctx: Context) -> str:
     )
 
 
-async def obzor_med_organizatsiy(context: str, ctx: Context) -> str:
+async def obzor_med_organizatsiy(kontekst: str, ctx: Context) -> str:
     """Обзор медицинских организаций в регионе.
 
     Аргументы:
-        context: Контекст запроса (регион, город или тип МО).
+        kontekst: Контекст запроса (регион, город или тип МО).
 
     Возвращает:
         Шаблон промпта для обзора медицинских организаций.
     """
     return (
         f"Подготовь обзор медицинских организаций.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи параметры поиска (регион, тип МО, город)\n"
         f"2. Получи список организаций через poisk_med_organizatsiy()\n"

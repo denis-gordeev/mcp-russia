@@ -156,16 +156,16 @@ def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
         return []
 
     zapisi = []
-    for element in istoriya.get("records", []) or []:
-        if not isinstance(element, dict):
+    for zapis in istoriya.get("records", []) or []:
+        if not isinstance(zapis, dict):
             continue
         zapisi.append(
             RegistracionnoeDeystvie(
                 vin=vin,
-                gos_nomer=element.get("regNumber", ""),
-                tip_deystviya=element.get("regAction", ""),
-                data_deystviya=element.get("regDate", ""),
-                subiekt=element.get("regRegion", ""),
+                gos_nomer=zapis.get("regNumber", ""),
+                tip_deystviya=zapis.get("regAction", ""),
+                data_deystviya=zapis.get("regDate", ""),
+                subiekt=zapis.get("regRegion", ""),
             )
         )
     return zapisi
@@ -178,17 +178,17 @@ def _razobrat_dtp(dannye: Any) -> list[dict[str, Any]]:
         return []
 
     zapisi = []
-    for element in dtp_dannye.get("records", []) or []:
-        if not isinstance(element, dict):
+    for zapis in dtp_dannye.get("records", []) or []:
+        if not isinstance(zapis, dict):
             continue
         zapisi.append(
             {
-                "data_dtp": element.get("accidentDate", ""),
-                "tip_dtp": element.get("accidentType", ""),
-                "subiekt_dtp": element.get("regionName", ""),
-                "model_ts": element.get("vehicleModel", ""),
-                "god_vypuska": element.get("vehicleYear", ""),
-                "status_ts": element.get("damageState", ""),
+                "data_dtp": zapis.get("accidentDate", ""),
+                "tip_dtp": zapis.get("accidentType", ""),
+                "subiekt_dtp": zapis.get("regionName", ""),
+                "model_ts": zapis.get("vehicleModel", ""),
+                "god_vypuska": zapis.get("vehicleYear", ""),
+                "status_ts": zapis.get("damageState", ""),
             }
         )
     return zapisi
@@ -201,17 +201,17 @@ def _razobrat_rozysk(dannye: Any) -> list[dict[str, Any]]:
         return []
 
     zapisi = []
-    for element in razyskivaemye.get("records", []) or []:
-        if not isinstance(element, dict):
+    for zapis in razyskivaemye.get("records", []) or []:
+        if not isinstance(zapis, dict):
             continue
         zapisi.append(
             {
-                "data_rozyska": element.get("wantedDate", ""),
-                "subiekt": element.get("wantedRegion", ""),
-                "initsiator": element.get("wantedInitiator", ""),
-                "model_ts": element.get("vehicleModel", ""),
-                "god_vypuska": element.get("vehicleYear", ""),
-                "nomer_dela": element.get("wantedNumpkio", ""),
+                "data_rozyska": zapis.get("wantedDate", ""),
+                "subiekt": zapis.get("wantedRegion", ""),
+                "initsiator": zapis.get("wantedInitiator", ""),
+                "model_ts": zapis.get("vehicleModel", ""),
+                "god_vypuska": zapis.get("vehicleYear", ""),
+                "nomer_dela": zapis.get("wantedNumpkio", ""),
             }
         )
     return zapisi
@@ -224,17 +224,17 @@ def _razobrat_ogranichenie(dannye: Any) -> list[dict[str, Any]]:
         return []
 
     zapisi = []
-    for element in ogranicheniya_dannye.get("records", []) or []:
-        if not isinstance(element, dict):
+    for zapis in ogranicheniya_dannye.get("records", []) or []:
+        if not isinstance(zapis, dict):
             continue
         zapisi.append(
             {
-                "data_ogranicheniya": element.get("dateadd", ""),
-                "subiekt": element.get("regname", ""),
-                "tip_ogranicheniya": element.get("restrictType", ""),
-                "osnovanie": element.get("restrictBasis", ""),
-                "initsiator": element.get("restrictInitiator", ""),
-                "nomer_dela": element.get("restrictNumber", ""),
+                "data_ogranicheniya": zapis.get("dateadd", ""),
+                "subiekt": zapis.get("regname", ""),
+                "tip_ogranicheniya": zapis.get("restrictType", ""),
+                "osnovanie": zapis.get("restrictBasis", ""),
+                "initsiator": zapis.get("restrictInitiator", ""),
+                "nomer_dela": zapis.get("restrictNumber", ""),
             }
         )
     return zapisi

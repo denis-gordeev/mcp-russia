@@ -80,9 +80,11 @@ def postroit_katalog(reyestr: object) -> str:
         stroki.append(f"\n## {metadannye.imya}: {metadannye.opisanie}")
         stroki.append(f"Авторизация: {svedeniya_ob_avtorizatsii}")
 
-        server_fn = funktsiya.server_fn
-        if hasattr(server_fn, "_tool_manager") and hasattr(server_fn._tool_manager, "_tools"):
-            for imya_instrumenta, instrument in server_fn._tool_manager._tools.items():
+        server_funktsiya = funktsiya.server_funktsiya
+        if hasattr(server_funktsiya, "_tool_manager") and hasattr(
+            server_funktsiya._tool_manager, "_tools"
+        ):
+            for imya_instrumenta, instrument in server_funktsiya._tool_manager._tools.items():
                 stroki.append(
                     _formatirovat_signaturu_instrumenta(
                         metadannye.imya, imya_instrumenta, instrument

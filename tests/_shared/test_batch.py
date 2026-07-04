@@ -24,18 +24,18 @@ def _sbrosit_dispetchera() -> None:
 class TestPostroenieDispetcherizatsii:
     def test_stroitsya_iz_reestra(self) -> None:
         """Должен обнаруживать инструменты из модулей features."""
-        rezultat = batch.postroit_dispetcherizatsiyu(_real_registry())
+        rezultat = batch.postroit_dispetcherizatsiyu(_realnyy_reyestr())
         assert any(k.startswith("cbrf_") for k in rezultat)
 
     def test_nakhodit_vlozhennye_moduli(self) -> None:
         """Должен обнаруживать инструменты в подпакетах."""
-        rezultat = batch.postroit_dispetcherizatsiyu(_real_registry())
+        rezultat = batch.postroit_dispetcherizatsiyu(_realnyy_reyestr())
         assert any(k.startswith("sovfed_") for k in rezultat)
         assert any(k.startswith("kaznacheistvo_") for k in rezultat)
 
     def test_keshiruet_rezultat(self) -> None:
         """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
-        reg = _real_registry()
+        reg = _realnyy_reyestr()
         pervyy = batch.postroit_dispetcherizatsiyu(reg)
         vtoroy = batch.postroit_dispetcherizatsiyu(reg)
         assert pervyy is vtoroy
@@ -67,14 +67,14 @@ class TestVypolneniePaketa:
     async def test_vyzyvaet_instrument_s_kontekstom(self) -> None:
         """Должен передавать ctx инструментам, которые его принимают."""
 
-        async def _spec(ctx: object, param: str) -> str: ...
+        async def _spets(ctx: object, param: str) -> str: ...
 
-        maket_funktsii = AsyncMock(spec=_spec, return_value="rezultat ok")
-        batch._dispetcher["test_tool"] = maket_funktsii
+        maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat ok")
+        batch._dispetcher["test_instrument"] = maket_funktsii
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "test_tool", "argumenty": {"param": "value"}}], ctx
+            [{"instrument": "test_instrument", "argumenty": {"param": "znachenie"}}], ctx
         )
         assert "rezultat ok" in rezultat
         maket_funktsii.assert_called_once()
@@ -86,13 +86,13 @@ class TestVypolneniePaketa:
         async def instrument_bez_konteksta(imya: str) -> str:
             return f"privet {imya}"
 
-        batch._dispetcher["greet"] = instrument_bez_konteksta
+        batch._dispetcher["privetstvie"] = instrument_bez_konteksta
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "greet", "argumenty": {"imya": "world"}}], ctx
+            [{"instrument": "privetstvie", "argumenty": {"imya": "mir"}}], ctx
         )
-        assert "privet world" in rezultat
+        assert "privet mir" in rezultat
 
     @pytest.mark.asyncio
     async def test_parallelnoe_vypolnenie(self) -> None:
@@ -104,14 +104,14 @@ class TestVypolneniePaketa:
             schetchik_vyzovov += 1
             return f"rezultat-{n}"
 
-        batch._dispetcher["counter"] = schitayushchiy_instrument
+        batch._dispetcher["schetchik"] = schitayushchiy_instrument
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"instrument": "counter", "argumenty": {"n": 1}},
-                {"instrument": "counter", "argumenty": {"n": 2}},
-                {"instrument": "counter", "argumenty": {"n": 3}},
+                {"instrument": "schetchik", "argumenty": {"n": 1}},
+                {"instrument": "schetchik", "argumenty": {"n": 2}},
+                {"instrument": "schetchik", "argumenty": {"n": 3}},
             ],
             ctx,
         )
@@ -128,11 +128,11 @@ class TestVypolneniePaketa:
             msg = "API timeout"
             raise TimeoutError(msg)
 
-        batch._dispetcher["fail"] = neudachnyy_instrument
+        batch._dispetcher["neudacha"] = neudachnyy_instrument
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "fail", "argumenty": {}}], ctx
+            [{"instrument": "neudacha", "argumenty": {}}], ctx
         )
         assert "Ошибка" in rezultat
         assert "timeout" in rezultat.lower()
@@ -142,28 +142,28 @@ class TestVypolneniePaketa:
         """Должен возвращать частичные результаты при ошибках части инструментов."""
 
         async def normanyy_instrument() -> str:
-            return "success"
+            return "uspekh"
 
         async def plokhoy_instrument() -> str:
-            msg = "oops"
+            msg = "oy"
             raise ValueError(msg)
 
-        batch._dispetcher["ok"] = normanyy_instrument
-        batch._dispetcher["bad"] = plokhoy_instrument
+        batch._dispetcher["norm"] = normanyy_instrument
+        batch._dispetcher["plokho"] = plokhoy_instrument
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"instrument": "ok", "argumenty": {}},
-                {"instrument": "bad", "argumenty": {}},
+                {"instrument": "norm", "argumenty": {}},
+                {"instrument": "plokho", "argumenty": {}},
             ],
             ctx,
         )
-        assert "success" in rezultat
+        assert "uspekh" in rezultat
         assert "Ошибка" in rezultat
 
 
-def _real_registry() -> batch.ReyestrFunktsiy:
+def _realnyy_reyestr() -> batch.ReyestrFunktsiy:
     """Собирает реальный registry проекта для интеграционного тестирования."""
     from mcp_russia._shared.feature import ReyestrFunktsiy
 

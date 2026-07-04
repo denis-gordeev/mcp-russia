@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_pogody_regiona(context: str, ctx: Context) -> str:
+async def analiz_pogody_regiona(kontekst: str, ctx: Context) -> str:
     """Анализ погодных условий в регионе.
 
     Аргументы:
-        context: Контекст запроса (например, "погода в Москве").
+        kontekst: Контекст запроса (например, "погода в Москве").
 
     Возвращает:
         Шаблон промпта для анализа погоды.
     """
     return (
         f"Выполни анализ погодных условий в регионе.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи код станции через spisok_stanciy()\n"
         f"2. Получи текущую погоду через pogoda_seychas()\n"

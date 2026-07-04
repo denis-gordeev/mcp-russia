@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_ispolneniya_byudzheta(context: str, ctx: Context) -> str:
+async def analiz_ispolneniya_byudzheta(kontekst: str, ctx: Context) -> str:
     """Анализ исполнения бюджета по данным Федерального казначейства.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ исполнения федерального бюджета за 2025 год").
+        kontekst: Контекст запроса (например, "анализ исполнения федерального бюджета за 2025 год").
 
     Возвращает:
         Шаблон промпта для анализа исполнения бюджета.
     """
     return (
         f"Выполни анализ исполнения бюджета по данным Федерального казначейства.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи данные об исполнении бюджета через ispolnenie_byudzheta()\n"
         f"2. Проанализируй доходы, расходы и дефицит\n"

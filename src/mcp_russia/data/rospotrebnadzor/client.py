@@ -143,31 +143,31 @@ async def poisk_zhalob(
         return []
 
 
-def _razobrat_proverku(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_proverku(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о проверке из реестра."""
     return {
-        "nomer": element.get("id", "") or element.get("number", ""),
-        "tip_proverki": element.get("type", "") or element.get("kind", ""),
-        "organ": element.get("controlOrgan", "") or element.get("organ", ""),
-        "obekt": element.get("targetName", "") or element.get("target", ""),
-        "inn": element.get("targetInn", ""),
-        "data_nachala": element.get("startDate", "") or element.get("dateStart", ""),
-        "data_okonchaniya": element.get("endDate", "") or element.get("dateEnd", ""),
-        "sostoyanie": element.get("status", ""),
-        "vyavleno_narusheniy": element.get("violationsCount", 0),
-        "rezultat": element.get("result", ""),
+        "nomer": zapis.get("id", "") or zapis.get("number", ""),
+        "tip_proverki": zapis.get("type", "") or zapis.get("kind", ""),
+        "organ": zapis.get("controlOrgan", "") or zapis.get("organ", ""),
+        "obekt": zapis.get("targetName", "") or zapis.get("target", ""),
+        "inn": zapis.get("targetInn", ""),
+        "data_nachala": zapis.get("startDate", "") or zapis.get("dateStart", ""),
+        "data_okonchaniya": zapis.get("endDate", "") or zapis.get("dateEnd", ""),
+        "sostoyanie": zapis.get("status", ""),
+        "vyavleno_narusheniy": zapis.get("violationsCount", 0),
+        "rezultat": zapis.get("result", ""),
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
     }
 
 
-def _razobrat_zhalobu(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_zhalobu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи о жалобе потребителя."""
     return {
-        "tema": element.get("subject", "") or element.get("topic", ""),
-        "data_podachi": element.get("date", "") or element.get("created", ""),
-        "status_rassmotreniya": element.get("status", ""),
-        "rezultat": element.get("result", ""),
-        "organizaciya": element.get("organizationName", ""),
-        "inn": element.get("inn", ""),
+        "tema": zapis.get("subject", "") or zapis.get("topic", ""),
+        "data_podachi": zapis.get("date", "") or zapis.get("created", ""),
+        "status_rassmotreniya": zapis.get("status", ""),
+        "rezultat": zapis.get("result", ""),
+        "organizaciya": zapis.get("organizationName", ""),
+        "inn": zapis.get("inn", ""),
         "istochnik": "ЗПП (zpp.rospotrebnadzor.ru)",
     }

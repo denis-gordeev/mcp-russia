@@ -193,5 +193,5 @@ async def test_zagolovki_dadaty_vyzyvaet_oshibku_bez_klyucha():
 
 async def test_zagolovki_dadaty_s_klyuchom():
     with patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", "test-key"):
-        headers = _zagolovki_dadaty()
-        assert headers["Authorization"] == "Token test-key"
+        zagolovki = _zagolovki_dadaty()
+        assert zagolovki["Authorization"] == "Token test-key"

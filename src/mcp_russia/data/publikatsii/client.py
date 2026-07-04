@@ -206,19 +206,19 @@ def _razobrat_publikatsii(dannye: Any) -> list[OficialnayaPublikatsiya]:
     if not isinstance(elementy, list):
         return []
     rezultaty = []
-    for element in elementy:
-        kod_tipa = str(element.get("type", element.get("tip_dokumenta", "")))
+    for zapis in elementy:
+        kod_tipa = str(zapis.get("type", zapis.get("tip_dokumenta", "")))
         nazvanie_tipa = TIPY_DOKUMENTOV_PRAVO.get(kod_tipa, kod_tipa)
         rezultaty.append(
             OficialnayaPublikatsiya(
-                nazvanie=element.get("title", element.get("nazvanie", "")),
+                nazvanie=zapis.get("title", zapis.get("nazvanie", "")),
                 tip_dokumenta=nazvanie_tipa,
-                data_publikatsii=element.get("publishDate", element.get("data_publikatsii", "")),
-                nomer_vypuska=element.get("issueNumber", element.get("nomer_vypuska", "")),
-                istochnik=element.get("source", element.get("istochnik", "pravo.gov.ru")),
-                rubrika=element.get("rubric", element.get("rubrika", "")),
-                annotaciya=element.get("annotation", element.get("annotaciya", "")),
-                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
+                data_publikatsii=zapis.get("publishDate", zapis.get("data_publikatsii", "")),
+                nomer_vypuska=zapis.get("issueNumber", zapis.get("nomer_vypuska", "")),
+                istochnik=zapis.get("source", zapis.get("istochnik", "pravo.gov.ru")),
+                rubrika=zapis.get("rubric", zapis.get("rubrika", "")),
+                annotaciya=zapis.get("annotation", zapis.get("annotaciya", "")),
+                tekst_ssylka=zapis.get("url", zapis.get("tekst_ssylka", "")),
             )
         )
     return rezultaty
@@ -232,20 +232,20 @@ def _razobrat_izmeneniya(dannye: Any) -> list[IzmenenieAkta]:
     if not isinstance(elementy, list):
         return []
     rezultaty = []
-    for element in elementy:
+    for zapis in elementy:
         rezultaty.append(
             IzmenenieAkta(
-                akt_nomer=element.get("actNumber", element.get("akt_nomer", "")),
-                akt_nazvanie=element.get("actTitle", element.get("akt_nazvanie", "")),
-                izmenenie_nomer=element.get("amendmentNumber", element.get("izmenenie_nomer", "")),
-                izmenenie_data=element.get("amendmentDate", element.get("izmenenie_data", "")),
-                izmenenie_opisanie=element.get(
-                    "amendmentDescription", element.get("izmenenie_opisanie", "")
+                akt_nomer=zapis.get("actNumber", zapis.get("akt_nomer", "")),
+                akt_nazvanie=zapis.get("actTitle", zapis.get("akt_nazvanie", "")),
+                izmenenie_nomer=zapis.get("amendmentNumber", zapis.get("izmenenie_nomer", "")),
+                izmenenie_data=zapis.get("amendmentDate", zapis.get("izmenenie_data", "")),
+                izmenenie_opisanie=zapis.get(
+                    "amendmentDescription", zapis.get("izmenenie_opisanie", "")
                 ),
-                data_vstupleniya_v_silu=element.get(
-                    "effectiveDate", element.get("data_vstupleniya_v_silu", "")
+                data_vstupleniya_v_silu=zapis.get(
+                    "effectiveDate", zapis.get("data_vstupleniya_v_silu", "")
                 ),
-                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
+                tekst_ssylka=zapis.get("url", zapis.get("tekst_ssylka", "")),
             )
         )
     return rezultaty
@@ -259,19 +259,19 @@ def _rezultaty_poiska(dannye: Any) -> list[NormativnyyAkt]:
     if not isinstance(elementy, list):
         return []
     rezultaty = []
-    for element in elementy:
-        kod_tipa = str(element.get("type", element.get("tip", "")))
+    for zapis in elementy:
+        kod_tipa = str(zapis.get("type", zapis.get("tip", "")))
         nazvanie_tipa = TIPY_DOKUMENTOV_PRAVO.get(kod_tipa, kod_tipa)
         rezultaty.append(
             NormativnyyAkt(
-                nomer=element.get("number", element.get("nomer", "")),
-                nazvanie=element.get("title", element.get("nazvanie", "")),
+                nomer=zapis.get("number", zapis.get("nomer", "")),
+                nazvanie=zapis.get("title", zapis.get("nazvanie", "")),
                 tip=nazvanie_tipa,
-                data_prinyatiya=element.get("date", element.get("data_prinyatiya", "")),
-                sostoyanie=element.get("status", ""),
-                otrysl=element.get("branch", element.get("otrysl", "")),
-                kratkoe_opisanie=element.get("description", element.get("kratkoe_opisanie", "")),
-                tekst_ssylka=element.get("url", element.get("tekst_ssylka", "")),
+                data_prinyatiya=zapis.get("date", zapis.get("data_prinyatiya", "")),
+                sostoyanie=zapis.get("status", ""),
+                otrysl=zapis.get("branch", zapis.get("otrysl", "")),
+                kratkoe_opisanie=zapis.get("description", zapis.get("kratkoe_opisanie", "")),
+                tekst_ssylka=zapis.get("url", zapis.get("tekst_ssylka", "")),
             )
         )
     return rezultaty

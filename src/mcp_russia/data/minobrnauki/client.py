@@ -42,16 +42,16 @@ async def poisk_akreditovannyh_vuzov(
         if not isinstance(dannye, list):
             return []
         rezultaty = []
-        for element in dannye:
-            if not isinstance(element, dict):
+        for zapis in dannye:
+            if not isinstance(zapis, dict):
                 continue
-            if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
+            if nazvanie and nazvanie.lower() not in zapis.get("fullName", "").lower():
                 continue
-            if inn and inn != element.get("inn", ""):
+            if inn and inn != zapis.get("inn", ""):
                 continue
-            if subiekt and subiekt.lower() not in element.get("subjectRF", "").lower():
+            if subiekt and subiekt.lower() not in zapis.get("subjectRF", "").lower():
                 continue
-            rezultaty.append(_razobrat_akkreditatsiyu(element))
+            rezultaty.append(_razobrat_akkreditatsiyu(zapis))
         return rezultaty
     except Exception:
         logger.exception("Ошибка при поиске аккредитованных вузов")
@@ -71,11 +71,11 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         dannye = await http_poluchit(OBRNADZOR_ACCRED_URL, taimaut=30.0)
         if not isinstance(dannye, list):
             return None
-        for element in dannye:
-            if not isinstance(element, dict):
+        for zapis in dannye:
+            if not isinstance(zapis, dict):
                 continue
-            if element.get("inn") == inn:
-                return _razobrat_akkreditatsiyu(element)
+            if zapis.get("inn") == inn:
+                return _razobrat_akkreditatsiyu(zapis)
         return None
     except Exception:
         logger.exception("Ошибка при получении информации об аккредитации")
@@ -100,14 +100,14 @@ async def poisk_licenziy(
         if not isinstance(dannye, list):
             return []
         rezultaty = []
-        for element in dannye:
-            if not isinstance(element, dict):
+        for zapis in dannye:
+            if not isinstance(zapis, dict):
                 continue
-            if nazvanie and nazvanie.lower() not in element.get("fullName", "").lower():
+            if nazvanie and nazvanie.lower() not in zapis.get("fullName", "").lower():
                 continue
-            if inn and inn != element.get("inn", ""):
+            if inn and inn != zapis.get("inn", ""):
                 continue
-            rezultaty.append(_razobrat_litsenziyu(element))
+            rezultaty.append(_razobrat_litsenziyu(zapis))
         return rezultaty
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
@@ -192,35 +192,35 @@ def _granty_rezervnye(organizatsiya: str = "") -> list[dict[str, Any]]:
     ]
 
 
-def _razobrat_akkreditatsiyu(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_akkreditatsiyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи аккредитации из открытых данных Рособрнадзора."""
     return {
-        "inn": element.get("inn", ""),
-        "nazvanie": element.get("fullName", "") or element.get("shortName", ""),
-        "tip": element.get("type", ""),
-        "gorod": element.get("city", ""),
-        "subiekt": element.get("subjectRF", ""),
-        "status_akkreditatsii": element.get("accreditationStatus", ""),
-        "data_akkreditatsii": element.get("accreditationDate", ""),
-        "srok_deystviya": element.get("validUntil", ""),
-        "nomer_svidetelstva": element.get("certificateNumber", ""),
-        "adres": element.get("address", ""),
-        "sayt": element.get("website", ""),
+        "inn": zapis.get("inn", ""),
+        "nazvanie": zapis.get("fullName", "") or zapis.get("shortName", ""),
+        "tip": zapis.get("type", ""),
+        "gorod": zapis.get("city", ""),
+        "subiekt": zapis.get("subjectRF", ""),
+        "status_akkreditatsii": zapis.get("accreditationStatus", ""),
+        "data_akkreditatsii": zapis.get("accreditationDate", ""),
+        "srok_deystviya": zapis.get("validUntil", ""),
+        "nomer_svidetelstva": zapis.get("certificateNumber", ""),
+        "adres": zapis.get("address", ""),
+        "sayt": zapis.get("website", ""),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }
 
 
-def _razobrat_litsenziyu(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии из открытых данных Рособрнадзора."""
     return {
-        "inn": element.get("inn", ""),
-        "nazvanie": element.get("fullName", "") or element.get("shortName", ""),
-        "tip": element.get("type", ""),
-        "gorod": element.get("city", ""),
-        "subiekt": element.get("subjectRF", ""),
-        "status_licenzii": element.get("licenseStatus", ""),
-        "data_licenzii": element.get("licenseDate", ""),
-        "nomer_licenzii": element.get("licenseNumber", ""),
-        "srok_deystviya": element.get("validUntil", ""),
+        "inn": zapis.get("inn", ""),
+        "nazvanie": zapis.get("fullName", "") or zapis.get("shortName", ""),
+        "tip": zapis.get("type", ""),
+        "gorod": zapis.get("city", ""),
+        "subiekt": zapis.get("subjectRF", ""),
+        "status_licenzii": zapis.get("licenseStatus", ""),
+        "data_licenzii": zapis.get("licenseDate", ""),
+        "nomer_licenzii": zapis.get("licenseNumber", ""),
+        "srok_deystviya": zapis.get("validUntil", ""),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }

@@ -29,7 +29,7 @@
 
 Инструменты:
 - `gosduma_spisok_deputatov(fio="...")` → ID
-- `gosduma_info_deputata(id=...)` → полный профиль
+- `gosduma_info_deputata(identifikator_deputata=...)` → полный профиль
 
 ```
 ═══════════════════════════════════════════
@@ -84,7 +84,7 @@
 > Промпт: "Как голосовал депутат [ФИО] по основным законопроектам 2024 года? Сравни с позицией фракции и правительства"
 
 Инструменты:
-- `gosduma_golosovaniya(id=..., god=2024)`
+- `gosduma_golosovaniya(sozyv=..., ogranichenie=...)`
 
 ```
 ═══════════════════════════════════════════
@@ -279,12 +279,12 @@
 
 ```json
 [
-  {"tool": "gosduma_info_deputata", "args": {"id": 204554}},
-  {"tool": "gosduma_info_deputata", "args": {"id": 204555}},
-  {"tool": "gosduma_info_deputata", "args": {"id": 204556}},
-  {"tool": "gosduma_raskhody_deputata", "args": {"deputat_id": 204554, "god": 2024}},
-  {"tool": "gosduma_raskhody_deputata", "args": {"deputat_id": 204555, "god": 2024}},
-  {"tool": "gosduma_raskhody_deputata", "args": {"deputat_id": 204556, "god": 2024}}
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204554}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204555}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204556}},
+  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204554, "god": 2024}},
+  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204555, "god": 2024}},
+  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204556, "god": 2024}}
 ]
 ```
 

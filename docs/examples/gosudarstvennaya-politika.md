@@ -36,7 +36,7 @@
 
 ```
 API: minzdrav_poisk_med_organizatsiy(region="16", tip="polyclinika")
-     rosstat_region_info(region="16") → chislennost_naseleniya
+     rosstat_informatsiya_o_regionye(region="16") → chislennost_naseleniya
 ```
 
 **2. Расходы на первичное звено здравоохранения**
@@ -104,7 +104,7 @@ API: budget_spetsperechisleniya(god=2024) *(планируемый модуль 
 > Промпт: "Сопоставьте объём специальных перечислений на душу населения с индексом человеческого развития (ИЧР) муниципалитетов"
 
 ```
-API: budget_spetsperechisleniya *(планируемый)* + rosstat_region_info + rosstat_pokazateli_rosstata
+API: budget_spetsperechisleniya *(планируемый)* + rosstat_informatsiya_o_regionye + rosstat_pokazateli_rosstata
 ```
 
 **3. Проверка целевого использования ресурсов**
@@ -224,7 +224,7 @@ API: budget_dokhody_subekta(period="3y") *(планируемый модуль �
 > Промпт: "Каков ВРП и ВРП на душу населения каждого субъекта?"
 
 ```
-API: rosstat_region_info(region="all", pokazatel="vrp_na_dushu")
+API: rosstat_informatsiya_o_regionye(region="all", pokazatel="vrp_na_dushu")
 ```
 
 **3. Законодательное оформление**
@@ -232,7 +232,7 @@ API: rosstat_region_info(region="all", pokazatel="vrp_na_dushu")
 > Промпт: "Как голосовали депутаты Государственной Думы по законопроекту о налоговой реформе? Как проголосовала каждая региональная делегация?"
 
 ```
-API: gosduma_golosovaniya(zakonoproekt="nalogovaya_reforma")
+API: gosduma_golosovaniya(sozyv=..., ogranichenie=...)
 ```
 
 **4. Публикации нормативных актов**

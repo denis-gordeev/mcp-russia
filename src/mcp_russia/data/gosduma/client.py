@@ -59,21 +59,21 @@ def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
         return []
 
     rezultaty = []
-    for d in elementy:
-        if not isinstance(d, dict):
+    for deputat in elementy:
+        if not isinstance(deputat, dict):
             continue
-        frakciya_syraya = d.get("factionName", d.get("faction", ""))
+        frakciya_syraya = deputat.get("factionName", deputat.get("faction", ""))
         rezultaty.append(
             Deputat(
-                identifikator=d.get("id", 0),
-                фамилия=d.get("surname", d.get("lastName", "")),
-                имя=d.get("name", d.get("firstName", "")),
-                отчество=d.get("patronymic", d.get("middleName", "")),
+                identifikator=deputat.get("id", 0),
+                фамилия=deputat.get("surname", deputat.get("lastName", "")),
+                имя=deputat.get("name", deputat.get("firstName", "")),
+                отчество=deputat.get("patronymic", deputat.get("middleName", "")),
                 фракция=frakciya_syraya,
-                комитет=d.get("committeeName", d.get("committee", "")),
-                регион=d.get("districtName", d.get("region", "")),
-                созыв=str(d.get("convocation", d.get("sozyv", ""))),
-                foto_ssylka=d.get("photoUrl", d.get("photo", "")),
+                комитет=deputat.get("committeeName", deputat.get("committee", "")),
+                регион=deputat.get("districtName", deputat.get("region", "")),
+                созыв=str(deputat.get("convocation", deputat.get("sozyv", ""))),
+                foto_ssylka=deputat.get("photoUrl", deputat.get("photo", "")),
             )
         )
     return rezultaty
@@ -102,9 +102,9 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
         pass
 
     deputats = await poluchit_deputatov()
-    for d in deputats:
-        if d.identifikator == identifikator:
-            return d
+    for deputat in deputats:
+        if deputat.identifikator == identifikator:
+            return deputat
     return None
 
 
@@ -165,20 +165,18 @@ def _razobrat_zakonoproekty(dannye: Any) -> list[Zakonoproekt]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Zakonoproekt(
-                identifikator=str(element.get("id", "")),
-                nomer=element.get("number", ""),
-                nazvanie=element.get("name", element.get("title", "")),
-                sostoyanie=element.get("statusName", element.get("status", "")),
-                data_vneseniya=element.get(
-                    "dateIntroduction", element.get("introductionDate", "")
-                ),
-                avtor=element.get("subjectName", element.get("author", "")),
-                chteniya=element.get("readingsCount", element.get("readings", 0)),
+                identifikator=str(zapis.get("id", "")),
+                nomer=zapis.get("number", ""),
+                nazvanie=zapis.get("name", zapis.get("title", "")),
+                sostoyanie=zapis.get("statusName", zapis.get("status", "")),
+                data_vneseniya=zapis.get("dateIntroduction", zapis.get("introductionDate", "")),
+                avtor=zapis.get("subjectName", zapis.get("author", "")),
+                chteniya=zapis.get("readingsCount", zapis.get("readings", 0)),
             )
         )
     return rezultaty
@@ -224,18 +222,18 @@ def _razobrat_golosovaniya(dannye: Any) -> list[Golosovanie]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Golosovanie(
-                zakonoproekt_identifikator=str(element.get("billId", element.get("id", ""))),
-                nazvanie=element.get("subject", element.get("title", "")),
-                data=element.get("date", element.get("voteDate", "")),
-                za=element.get("totalFor", element.get("for", 0)),
-                protiv=element.get("totalAgainst", element.get("against", 0)),
-                vozhderzhalsya=element.get("totalAbstain", element.get("abstain", 0)),
-                ne_golosoval=element.get("totalNotVoting", element.get("notVoting", 0)),
+                zakonoproekt_identifikator=str(zapis.get("billId", zapis.get("id", ""))),
+                nazvanie=zapis.get("subject", zapis.get("title", "")),
+                data=zapis.get("date", zapis.get("voteDate", "")),
+                za=zapis.get("totalFor", zapis.get("for", 0)),
+                protiv=zapis.get("totalAgainst", zapis.get("against", 0)),
+                vozhderzhalsya=zapis.get("totalAbstain", zapis.get("abstain", 0)),
+                ne_golosoval=zapis.get("totalNotVoting", zapis.get("notVoting", 0)),
             )
         )
     return rezultaty

@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_senatora(context: str, ctx: Context) -> str:
+async def analiz_senatora(kontekst: str, ctx: Context) -> str:
     """Анализ деятельности сенатора Совета Федерации.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ сенатора Иванова от Москвы").
+        kontekst: Контекст запроса (например, "анализ сенатора Иванова от Москвы").
 
     Возвращает:
         Шаблон промпта для анализа сенатора.
     """
     return (
         f"Выполни анализ деятельности сенатора Совета Федерации РФ.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи информацию о сенаторе через info_senatora()\n"
         f"2. Определи регион представления и должность\n"

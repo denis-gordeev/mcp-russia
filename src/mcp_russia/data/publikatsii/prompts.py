@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_normativnogo_akta(context: str, ctx: Context) -> str:
+async def analiz_normativnogo_akta(kontekst: str, ctx: Context) -> str:
     """Анализ нормативного правового акта.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ ФЗ № 44").
+        kontekst: Контекст запроса (например, "анализ ФЗ № 44").
 
     Возвращает:
         Шаблон промпта для анализа нормативного акта.
     """
     return (
         f"Выполни анализ нормативного правового акта.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи номер и тип акта\n"
         f"2. Получи информацию об акте через info_normativnogo_akta()\n"

@@ -50,19 +50,19 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
-        dannye_dela = element.get("CaseInfo", element)
-        nomer = dannye_dela.get("CaseNumber", element.get("caseNumber", ""))
+        dannye_dela = zapis.get("CaseInfo", zapis)
+        nomer = dannye_dela.get("CaseNumber", zapis.get("caseNumber", ""))
         kategoriya = _opredelit_kategoriyu(nomer) or dannye_dela.get(
-            "Category", element.get("category", "")
+            "Category", zapis.get("category", "")
         )
-        nazvanie_suda = dannye_dela.get("Court", element.get("courtName", ""))
+        nazvanie_suda = dannye_dela.get("Court", zapis.get("courtName", ""))
         if not nazvanie_suda:
             nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-        istorcy_syranye = dannye_dela.get("Plaintiffs", element.get("plaintiffs", ""))
+        istorcy_syranye = dannye_dela.get("Plaintiffs", zapis.get("plaintiffs", ""))
         if isinstance(istorcy_syranye, str):
             istorcy = [s.strip() for s in istorcy_syranye.split(",") if s.strip()]
         elif isinstance(istorcy_syranye, list):
@@ -70,7 +70,7 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
         else:
             istorcy = []
 
-        otvetchiki_syranye = dannye_dela.get("Defendants", element.get("defendants", ""))
+        otvetchiki_syranye = dannye_dela.get("Defendants", zapis.get("defendants", ""))
         if isinstance(otvetchiki_syranye, str):
             otvetchiki = [s.strip() for s in otvetchiki_syranye.split(",") if s.strip()]
         elif isinstance(otvetchiki_syranye, list):
@@ -79,7 +79,7 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
             otvetchiki = []
 
         summa = 0.0
-        summa_syraya = dannye_dela.get("ClaimSum", element.get("claimSum"))
+        summa_syraya = dannye_dela.get("ClaimSum", zapis.get("claimSum"))
         if summa_syraya:
             with contextlib.suppress(ValueError, TypeError):
                 summa = float(summa_syraya)
@@ -88,14 +88,14 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
             SudebnoeDelo(
                 nomer=nomer,
                 kategoriya=kategoriya,
-                sostoyanie=dannye_dela.get("Status", element.get("status", "")),
-                sudya=dannye_dela.get("Judge", element.get("judge", "")),
+                sostoyanie=dannye_dela.get("Status", zapis.get("status", "")),
+                sudya=dannye_dela.get("Judge", zapis.get("judge", "")),
                 nazvanie_suda=nazvanie_suda,
                 data_vozbuzhdeniya=dannye_dela.get(
-                    "RegistrationDate", element.get("registrationDate", "")
+                    "RegistrationDate", zapis.get("registrationDate", "")
                 ),
                 data_poslednego_akta=dannye_dela.get(
-                    "LastDocumentDate", element.get("lastDocumentDate", "")
+                    "LastDocumentDate", zapis.get("lastDocumentDate", "")
                 ),
                 istorcy=istorcy,
                 otvetchiki=otvetchiki,
@@ -170,10 +170,10 @@ def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
-        dokument = element.get("Document", element)
+        dokument = zapis.get("Document", zapis)
         rezultaty.append(
             SudebnyyAkt(
                 identifikator=str(dokument.get("Id", dokument.get("id", ""))),
@@ -369,19 +369,19 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
             return []
 
         rezultaty = []
-        for element in elementy:
-            if not isinstance(element, dict):
+        for zapis in elementy:
+            if not isinstance(zapis, dict):
                 continue
             rezultaty.append(
                 SudebnoeZasedanie(
-                    identifikator=str(element.get("Id", "")),
+                    identifikator=str(zapis.get("Id", "")),
                     delo_nomer=nomer,
-                    data_zasedaniya=element.get("Date", ""),
-                    vremya=element.get("Time", ""),
-                    sudya=element.get("Judge", ""),
-                    zala=element.get("Hall", ""),
-                    sostoyanie=element.get("Status", ""),
-                    rezultaty=element.get("Result", ""),
+                    data_zasedaniya=zapis.get("Date", ""),
+                    vremya=zapis.get("Time", ""),
+                    sudya=zapis.get("Judge", ""),
+                    zala=zapis.get("Hall", ""),
+                    sostoyanie=zapis.get("Status", ""),
+                    rezultaty=zapis.get("Result", ""),
                 )
             )
         return rezultaty

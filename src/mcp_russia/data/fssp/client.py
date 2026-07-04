@@ -40,26 +40,26 @@ def _razobrat_proizvodstva(dannye: Any) -> list[dict[str, Any]]:
     if not isinstance(rezultat, list):
         return []
     zapisi = []
-    for element in rezultat:
-        if not isinstance(element, dict):
+    for zapis in rezultat:
+        if not isinstance(zapis, dict):
             continue
-        zapisi.append(_normalizovat_proizvodstvo(element))
+        zapisi.append(_normalizovat_proizvodstvo(zapis))
     return zapisi
 
 
-def _normalizovat_proizvodstvo(element: dict[str, Any]) -> dict[str, Any]:
+def _normalizovat_proizvodstvo(zapis: dict[str, Any]) -> dict[str, Any]:
     """Нормализация записи исполнительного производства."""
     return {
-        "nomer": element.get("number", element.get("номер", "")),
-        "dolzhnik": element.get("name", element.get("должник", element.get("nameRaw", ""))),
-        "data_vozbuzhdeniya": element.get("date", element.get("дата_возбуждения", "")),
-        "subiekt": element.get("subject", element.get("предмет", "")),
-        "summa": element.get("sum", element.get("сумма", "")),
-        "otdel_pristavov": element.get("department", element.get("отдел", "")),
-        "pristav": element.get("bailiff", element.get("пристав", "")),
-        "okonchanie_ip": element.get("ip_end", element.get("окончание", "")),
-        "osnovanie": element.get("basis", element.get("основание", "")),
-        "subiekt_rf": element.get("region", element.get("регион", "")),
+        "nomer": zapis.get("number", zapis.get("номер", "")),
+        "dolzhnik": zapis.get("name", zapis.get("должник", zapis.get("nameRaw", ""))),
+        "data_vozbuzhdeniya": zapis.get("date", zapis.get("дата_возбуждения", "")),
+        "subiekt": zapis.get("subject", zapis.get("предмет", "")),
+        "summa": zapis.get("sum", zapis.get("сумма", "")),
+        "otdel_pristavov": zapis.get("department", zapis.get("отдел", "")),
+        "pristav": zapis.get("bailiff", zapis.get("пристав", "")),
+        "okonchanie_ip": zapis.get("ip_end", zapis.get("окончание", "")),
+        "osnovanie": zapis.get("basis", zapis.get("основание", "")),
+        "subiekt_rf": zapis.get("region", zapis.get("регион", "")),
     }
 
 

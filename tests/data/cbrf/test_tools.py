@@ -13,7 +13,7 @@ def _maket_konteksta():
     return ctx
 
 
-def _mock_valyuta(
+def _maket_valyuty(
     kod="USD",
     nazvanie="Доллар США",
     nominal=1,
@@ -34,8 +34,8 @@ def _mock_valyuta(
 async def test_tekushchie_kursy():
     ctx = _maket_konteksta()
     valyuty = [
-        _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0),
-        _mock_valyuta("EUR", "Евро", 1, 98.0, 97.5),
+        _maket_valyuty("USD", "Доллар США", 1, 90.0, 89.0),
+        _maket_valyuty("EUR", "Евро", 1, 98.0, 97.5),
     ]
     with patch.object(cbrf_tools.client, "poluchit_osnovnye_valyuty", return_value=valyuty):
         rezultat = await cbrf_tools.tekushchie_kursy(ctx)
@@ -53,7 +53,7 @@ async def test_tekushchie_kursy_pustoy():
 
 async def test_uznat_kurs_valyuty():
     ctx = _maket_konteksta()
-    valyuta = _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0)
+    valyuta = _maket_valyuty("USD", "Доллар США", 1, 90.0, 89.0)
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=valyuta):
         rezultat = await cbrf_tools.uznat_kurs_valyuty("USD", ctx)
     assert "Доллар США" in rezultat
@@ -85,7 +85,7 @@ async def test_spisok_valyut():
 
 async def test_konvertirovat_valyutu():
     ctx = _maket_konteksta()
-    valyuta = _mock_valyuta("USD", "Доллар США", 1, 90.0)
+    valyuta = _maket_valyuty("USD", "Доллар США", 1, 90.0)
     with patch.object(cbrf_tools.client, "poluchit_valyutu", return_value=valyuta):
         rezultat = await cbrf_tools.konvertirovat_valyutu("USD", 100, ctx)
     assert "9.000" in rezultat or "9 000" in rezultat or "9000" in rezultat
@@ -102,8 +102,8 @@ async def test_konvertirovat_valyutu_ne_nayden():
 async def test_sravnit_valyuty():
     ctx = _maket_konteksta()
     valyuty = [
-        _mock_valyuta("USD", "Доллар США", 1, 90.0, 89.0),
-        _mock_valyuta("EUR", "Евро", 1, 98.0, 97.0),
+        _maket_valyuty("USD", "Доллар США", 1, 90.0, 89.0),
+        _maket_valyuty("EUR", "Евро", 1, 98.0, 97.0),
     ]
     with patch.object(cbrf_tools.client, "poluchit_valyuty_spisok", return_value=valyuty):
         rezultat = await cbrf_tools.sravnit_valyuty(["USD", "EUR"], ctx)
@@ -128,8 +128,8 @@ async def test_sravnit_valyuty_slishkom_mnogo():
 async def test_kursy_po_stranam():
     ctx = _maket_konteksta()
     valyuty = [
-        _mock_valyuta("USD", "Доллар США", 1, 90.0),
-        _mock_valyuta("CNY", "Китайский юань", 1, 12.5),
+        _maket_valyuty("USD", "Доллар США", 1, 90.0),
+        _maket_valyuty("CNY", "Китайский юань", 1, 12.5),
     ]
     with patch.object(cbrf_tools.client, "poluchit_valyuty_spisok", return_value=valyuty):
         rezultat = await cbrf_tools.kursy_po_stranam(ctx)

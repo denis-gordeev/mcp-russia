@@ -202,62 +202,61 @@ def _izvlech_spisok(dannye: Any) -> list[Any]:
     return []
 
 
-def _razobrat_vodnyy_obekt(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodnyy_obekt(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водного объекта."""
     return {
-        "kod": element.get("code", "") or element.get("id", ""),
-        "nazvanie": element.get("name", "") or element.get("title", ""),
-        "tip": element.get("type", "") or element.get("tip", ""),
-        "basseyn": element.get("basin", "") or element.get("basseyn", ""),
-        "dlinna_km": element.get("length") or element.get("dlinna_km"),
-        "ploshchad_km2": element.get("area") or element.get("ploshchad_km2"),
-        "subiekt": element.get("region", ""),
-        "opisaniye": element.get("description", "") or element.get("opisaniye", ""),
+        "kod": zapis.get("code", "") or zapis.get("id", ""),
+        "nazvanie": zapis.get("name", "") or zapis.get("title", ""),
+        "tip": zapis.get("type", "") or zapis.get("tip", ""),
+        "basseyn": zapis.get("basin", "") or zapis.get("basseyn", ""),
+        "dlinna_km": zapis.get("length") or zapis.get("dlinna_km"),
+        "ploshchad_km2": zapis.get("area") or zapis.get("ploshchad_km2"),
+        "subiekt": zapis.get("region", ""),
+        "opisaniye": zapis.get("description", "") or zapis.get("opisaniye", ""),
         "istochnik": "Государственный водный реестр (text.water.ru)",
     }
 
 
-def _razobrat_gidro_zapis(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_gidro_zapis(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор записи гидрологических данных."""
     return {
-        "post": element.get("post", "") or element.get("postName", ""),
-        "post_id": element.get("postId", "") or element.get("post_id", ""),
-        "vodnyy_obekt": element.get("waterObject", "") or element.get("vodnyy_obekt", ""),
-        "data_izmereniya": element.get("date", "") or element.get("data_izmereniya", ""),
-        "uroven": element.get("level") or element.get("uroven"),
-        "raskhod": element.get("discharge") or element.get("raskhod"),
-        "temperatura": element.get("temperature") or element.get("temperatura"),
-        "ledovaya_obstanovka": element.get("iceCondition", "")
-        or element.get("ledovaya_obstanovka", ""),
-        "preduprezhdenie": element.get("warning", "") or element.get("preduprezhdenie", ""),
+        "post": zapis.get("post", "") or zapis.get("postName", ""),
+        "post_id": zapis.get("postId", "") or zapis.get("post_id", ""),
+        "vodnyy_obekt": zapis.get("waterObject", "") or zapis.get("vodnyy_obekt", ""),
+        "data_izmereniya": zapis.get("date", "") or zapis.get("data_izmereniya", ""),
+        "uroven": zapis.get("level") or zapis.get("uroven"),
+        "raskhod": zapis.get("discharge") or zapis.get("raskhod"),
+        "temperatura": zapis.get("temperature") or zapis.get("temperatura"),
+        "ledovaya_obstanovka": zapis.get("iceCondition", "")
+        or zapis.get("ledovaya_obstanovka", ""),
+        "preduprezhdenie": zapis.get("warning", "") or zapis.get("preduprezhdenie", ""),
         "istochnik": "ГМВО (gmvo.skniigkh.ru)",
     }
 
 
-def _razobrat_vodokhranilishche(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodokhranilishche(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных водохранилища."""
     return {
-        "kod": element.get("code", "") or element.get("id", ""),
-        "nazvanie": element.get("name", "") or element.get("title", ""),
-        "subiekt": element.get("region", ""),
-        "obiem_km3": element.get("volume") or element.get("obiem_km3"),
-        "ploshchad_km2": element.get("area") or element.get("ploshchad_km2"),
-        "uroven_m": element.get("level") or element.get("uroven_m"),
-        "priznak_napolneniya": element.get("fillStatus", "")
-        or element.get("priznak_napolneniya", ""),
-        "data_izmereniya": element.get("date", "") or element.get("data_izmereniya", ""),
+        "kod": zapis.get("code", "") or zapis.get("id", ""),
+        "nazvanie": zapis.get("name", "") or zapis.get("title", ""),
+        "subiekt": zapis.get("region", ""),
+        "obiem_km3": zapis.get("volume") or zapis.get("obiem_km3"),
+        "ploshchad_km2": zapis.get("area") or zapis.get("ploshchad_km2"),
+        "uroven_m": zapis.get("level") or zapis.get("uroven_m"),
+        "priznak_napolneniya": zapis.get("fillStatus", "") or zapis.get("priznak_napolneniya", ""),
+        "data_izmereniya": zapis.get("date", "") or zapis.get("data_izmereniya", ""),
         "istochnik": "ГМВО (gmvo.skniigkh.ru)",
     }
 
 
-def _razobrat_vodopolzovanie_zapis(element: dict[str, Any]) -> dict[str, Any]:
+def _razobrat_vodopolzovanie_zapis(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор записи о водопользовании."""
     return {
-        "subiekt": element.get("region", ""),
-        "god": str(element.get("year", element.get("god", ""))),
-        "zabrano_vody_km3": element.get("withdrawn") or element.get("zabrano_vody_km3"),
-        "ispolzovano_vody_km3": element.get("used") or element.get("ispolzovano_vody_km3"),
-        "sbrosheno_stokov_km3": element.get("discharged") or element.get("sbrosheno_stokov_km3"),
-        "istochnik": element.get("source", "") or element.get("istochnik", ""),
-        "naznachenie": element.get("purpose", "") or element.get("naznachenie", ""),
+        "subiekt": zapis.get("region", ""),
+        "god": str(zapis.get("year", zapis.get("god", ""))),
+        "zabrano_vody_km3": zapis.get("withdrawn") or zapis.get("zabrano_vody_km3"),
+        "ispolzovano_vody_km3": zapis.get("used") or zapis.get("ispolzovano_vody_km3"),
+        "sbrosheno_stokov_km3": zapis.get("discharged") or zapis.get("sbrosheno_stokov_km3"),
+        "istochnik": zapis.get("source", "") or zapis.get("istochnik", ""),
+        "naznachenie": zapis.get("purpose", "") or zapis.get("naznachenie", ""),
     }

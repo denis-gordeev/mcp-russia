@@ -65,13 +65,13 @@ class KeshSVremenemZhizni:
     def _ischislit(self) -> None:
         """Удаление просроченных записей; если кэш полон — удаление самой старой."""
         seychas = time.monotonic()
-        istekshie = [k for k, (exp, _) in self._store.items() if seychas > exp]
-        for k in istekshie:
-            del self._store[k]
+        istekshie = [klyuch for klyuch, (istekaet, _) in self._store.items() if seychas > istekaet]
+        for klyuch in istekshie:
+            del self._store[klyuch]
 
         # Всё ещё полон? Удаляем запись с ближайшим истечением
         if len(self._store) >= self._maks_razmer:
-            samyy_staryy_klyuch = min(self._store, key=lambda k: self._store[k][0])
+            samyy_staryy_klyuch = min(self._store, key=lambda klyuch: self._store[klyuch][0])
             del self._store[samyy_staryy_klyuch]
 
 
@@ -96,17 +96,17 @@ def kesh_s_vremenem_zhizni(
     """
     kesh = KeshSVremenemZhizni(vremya_zhizni=vremya_zhizni, maks_razmer=maks_razmer)
 
-    def dekorator(func: F) -> F:
+    def dekorator(funktsiya: F) -> F:
         """Обёртка функции с привязкой к кэшу."""
 
-        @functools.wraps(func)
+        @functools.wraps(funktsiya)
         async def obertka(*args: Any, **kwargs: Any) -> Any:
             """Асинхронное выполнение с проверкой кэша перед вызовом."""
-            klyuch = f"{func.__qualname__}:{args!r}:{kwargs!r}"
+            klyuch = f"{funktsiya.__qualname__}:{args!r}:{kwargs!r}"
             zakeshirovano = kesh.poluchit(klyuch)
             if zakeshirovano is not None:
                 return zakeshirovano
-            rezultat = await func(*args, **kwargs)
+            rezultat = await funktsiya(*args, **kwargs)
             kesh.ustanovit(klyuch, rezultat)
             return rezultat
 

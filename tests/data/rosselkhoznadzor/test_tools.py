@@ -145,19 +145,19 @@ class TestIntegratsiya:
     @pytest.mark.asyncio
     async def test_server_imeet_instrumenty(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
-            tool_names = [t.name for t in await c.list_tools()]
-        assert "spisok_vidov_nadzora" in tool_names
-        assert "poisk_proverok" in tool_names
-        assert "poisk_karantinnykh_obektov" in tool_names
+            imena_instrumentov = [t.name for t in await c.list_tools()]
+        assert "spisok_vidov_nadzora" in imena_instrumentov
+        assert "poisk_proverok" in imena_instrumentov
+        assert "poisk_karantinnykh_obektov" in imena_instrumentov
 
     @pytest.mark.asyncio
     async def test_server_imeet_resursy(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
-            resources = await c.list_resources()
-        assert len(resources) >= 3
+            resursy = await c.list_resources()
+        assert len(resursy) >= 3
 
     @pytest.mark.asyncio
     async def test_server_imeet_prompty(self) -> None:
         async with Client(rosselkhoznadzor_server) as c:
-            prompts = await c.list_prompts()
-        assert len(prompts) >= 2
+            prompty = await c.list_prompts()
+        assert len(prompty) >= 2

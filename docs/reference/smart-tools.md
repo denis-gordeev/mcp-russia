@@ -83,9 +83,9 @@ class PlanZaprosa(BaseModel):
 
 ```text
 → vypolnit_paket([
-    {"tool": "cbrf_tekushchie_kursy", "params": {}},
-    {"tool": "rosstat_spisok_regionov", "params": {}},
-    {"tool": "gosduma_spisok_deputatov", "params": {}}
+    {"instrument": "cbrf_tekushchie_kursy", "argumenty": {}},
+    {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
+    {"instrument": "gosduma_spisok_deputatov", "argumenty": {}}
   ])
 ← [результат1, результат2, результат3]
 ```

@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_veterinarnoy_proverki(context: str, ctx: Context) -> str:
+async def analiz_veterinarnoy_proverki(kontekst: str, ctx: Context) -> str:
     """Анализ ветеринарной проверки.
 
     Аргументы:
-        context: Контекст запроса (например, «анализ проверок в регионе»).
+        kontekst: Контекст запроса (например, «анализ проверок в регионе»).
 
     Возвращает:
         Шаблон промпта для анализа ветеринарной проверки.
     """
     return (
         f"Выполни анализ ветеринарной проверки.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи данные о проверках через poisk_proverok()\n"
         f"2. Определи вид надзора и тип проверки\n"

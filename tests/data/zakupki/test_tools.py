@@ -42,7 +42,7 @@ def test_razobrat_poisk_zakupok():
 
 def test_razobrat_poisk_zakupok_pustoy():
     assert zakupki_client._razobrat_poisk_zakupok(None) == []
-    assert zakupki_client._razobrat_poisk_zakupok("not a list") == []
+    assert zakupki_client._razobrat_poisk_zakupok("ne spisok") == []
 
 
 def test_razobrat_kontrakty():

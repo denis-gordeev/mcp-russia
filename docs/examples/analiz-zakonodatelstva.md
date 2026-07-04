@@ -59,8 +59,8 @@
 > Промпт: «Как прошло голосование по законопроекту об ИИ в Госдуме? Какой результат по фракциям?»
 
 Инструменты:
-- `gosduma_golosovaniya(id=...)` — результат голосования
-- `gosduma_golosovaniya(vote_id=...)` — голос каждого депутата
+- `gosduma_golosovaniya(sozyv=..., ogranichenie=...)` — результат голосования
+- `gosduma_golosovaniya(sozyv=..., ogranichenie=...)` — голос каждого депутата
 
 Ожидаемый результат:
 
@@ -157,14 +157,14 @@
 > Промпт: «Депутаты, голосовавшие против закона об ИИ, получали пожертвования от IT-компаний?»
 
 Инструменты:
-- `gosduma_golosovaniya(vote_id=...)` — список голосовавших «Против»
+- `gosduma_golosovaniya(sozyv=..., ogranichenie=...)` — список голосовавших «Против»
 - `vypolnit_paket` для поиска финансирования каждого в ЦИК:
 
 ```json
 [
-  {"tool": "cekrf_poisk_kandidata", "args": {"name": "Депутат 1", "year": 2021}},
-  {"tool": "cekrf_poisk_kandidata", "args": {"name": "Депутат 2", "year": 2021}},
-  {"tool": "cekrf_poisk_kandidata", "args": {"name": "Депутат 3", "year": 2021}}
+  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 1", "god": 2021}},
+  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 2", "god": 2021}},
+  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 3", "god": 2021}}
 ]
 ```
 
@@ -207,7 +207,7 @@
 
 Инструменты:
 - `sovfed_povestka` *(планируемый)* — повестка Совета Федерации
-- `gosduma_zakonoproekty(status="На голосовании")` — повестка Госдумы
+- `gosduma_zakonoproekty(sostoyanie="На голосовании")` — повестка Госдумы
 
 ---
 
@@ -260,7 +260,7 @@ LLM может сопоставить:
 ═══════════════════
 
 Этап 1 — Идентификация:
-  ├── gosduma_zakonoproekty(number=12345, convocation=8)
+  ├── gosduma_zakonoproekty(number=12345, sozyv="8")
   └── sovfed_poisk_zakonoproektov(number=12345, convocation=8) *(планируемый)*
 
 Этап 2 — Детализация (параллельно):
@@ -270,7 +270,7 @@ LLM может сопоставить:
   └── sovfed_khod_rassmotreniya(code=...) *(планируемый)*
 
 Этап 3 — Голосования (параллельно):
-  ├── gosduma_golosovaniya(id=...)
+  ├── gosduma_golosovaniya(sozyv=..., ogranichenie=...)
   └── sovfed_golosovaniya_zakonoproekta(code=...) *(планируемый)*
 
 Этап 4 — Финансирование (параллельно, пакетно):

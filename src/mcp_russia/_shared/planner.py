@@ -72,12 +72,14 @@ class PlanZaprosa(BaseModel):
             stroki.append(f"- **Инструмент:** `{etap.instrument}`")
 
             if etap.parametry:
-                parametry_str = ", ".join(f'{k}="{v}"' for k, v in etap.parametry.items())
+                parametry_str = ", ".join(
+                    f'{klyuch}="{znachenie}"' for klyuch, znachenie in etap.parametry.items()
+                )
                 stroki.append(f"- **Параметры:** {parametry_str}")
 
             if etap.zavisit_ot:
-                deps = ", ".join(f"Этап {d}" for d in etap.zavisit_ot)
-                stroki.append(f"- **Зависит от:** {deps}")
+                zavisimosti = ", ".join(f"Этап {d}" for d in etap.zavisit_ot)
+                stroki.append(f"- **Зависит от:** {zavisimosti}")
             else:
                 stroki.append("- **Зависит от:** (нет)")
 
@@ -260,8 +262,8 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
         syrovoy_tekst = str(getattr(blok, "text", ""))
 
         try:
-            plan = PlanZaprosa.model_validate(json.loads(syrovoy_tekst))
-            return plan.v_markdown()
+            plan_zaprosa = PlanZaprosa.model_validate(json.loads(syrovoy_tekst))
+            return plan_zaprosa.v_markdown()
         except (json.JSONDecodeError, Exception):
             logger.warning("Не удалось разобрать JSON плана; возврат сырого текста")
             return syrovoy_tekst

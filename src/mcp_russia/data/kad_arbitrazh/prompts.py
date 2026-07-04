@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_dela(context: str, ctx: Context) -> str:
+async def analiz_dela(kontekst: str, ctx: Context) -> str:
     """Анализ арбитражного дела.
 
     Аргументы:
-        context: Контекст запроса (номер дела или участники).
+        kontekst: Контекст запроса (номер дела или участники).
 
     Возвращает:
         Шаблон промпта для анализа дела.
     """
     return (
         f"Выполни анализ арбитражного дела.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Найди дело через poisk_del() или info_dela()\n"
         f"2. Определи категорию, статус, сумму иска\n"
@@ -27,18 +27,18 @@ async def analiz_dela(context: str, ctx: Context) -> str:
     )
 
 
-async def analiz_uchastnika(context: str, ctx: Context) -> str:
+async def analiz_uchastnika(kontekst: str, ctx: Context) -> str:
     """Анализ судебного участника (компании или ИП).
 
     Аргументы:
-        context: Контекст запроса (название или ИНН организации).
+        kontekst: Контекст запроса (название или ИНН организации).
 
     Возвращает:
         Шаблон промпта для анализа участника.
     """
     return (
         f"Подготовь анализ участника арбитражных дел.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Найди дела участника через poisk_del() по ИНН или названию\n"
         f"2. Оцени количество и категории дел\n"

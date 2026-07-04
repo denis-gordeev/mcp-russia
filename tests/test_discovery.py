@@ -81,9 +81,9 @@ class TestRekomendovatInstrumenty:
 
 class TestPostroenieKataloga:
     def setup_method(self) -> None:
-        import mcp_russia._shared.discovery as disc
+        import mcp_russia._shared.discovery as disk_modul
 
-        disc._kesh_kataloga = ""
+        disk_modul._kesh_kataloga = ""
 
     def test_postroit_katalog_s_pustym_reestrom(self) -> None:
         maket_reestra = MagicMock()
@@ -92,13 +92,13 @@ class TestPostroenieKataloga:
         assert rezultat == ""
 
     def test_postroit_katalog_keshiruet_rezultat(self) -> None:
-        import mcp_russia._shared.discovery as disc
+        import mcp_russia._shared.discovery as disk_modul
 
         maket_reestra = MagicMock()
         maket_reestra.funktsii = {}
         postroit_katalog(maket_reestra)
 
-        disc._kesh_kataloga = "cached"
+        disk_modul._kesh_kataloga = "cached"
         rezultat = postroit_katalog(maket_reestra)
         assert rezultat == "cached"
 
@@ -108,21 +108,21 @@ class TestTransformatsiyaBM25:
     async def test_bm25_zamenyaet_spisok_instrumentov(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server_fn = FastMCP("test")
+        server_funktsiya = FastMCP("test")
 
-        @server_fn.tool(tags={"search", "regions"})
+        @server_funktsiya.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
             """Список всех регионов России."""
             return "Moscow, Tatarstan, Sverdlovsk"
 
-        @server_fn.tool(tags={"query", "data"})
+        @server_funktsiya.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных по коду."""
             return f"Data {kod}"
 
-        server_fn.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server_fn) as c:
+        async with Client(server_funktsiya) as c:
             instrumenty = await c.list_tools()
             imena = {t.name for t in instrumenty}
             assert "search_tools" in imena
@@ -134,21 +134,21 @@ class TestTransformatsiyaBM25:
     async def test_bm25_poisk_nakhodit_instrumenty(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server_fn = FastMCP("test")
+        server_funktsiya = FastMCP("test")
 
-        @server_fn.tool(tags={"search", "regions"})
+        @server_funktsiya.tool(tags={"search", "regions"})
         def spisok_regionov() -> str:
             """Список всех регионов России (spisok regionov)."""
             return "Moscow, Tatarstan"
 
-        @server_fn.tool(tags={"query", "data"})
+        @server_funktsiya.tool(tags={"query", "data"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных временных рядов из Росстата."""
             return f"Data {kod}"
 
-        server_fn.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server_fn) as c:
+        async with Client(server_funktsiya) as c:
             rezultat = await c.call_tool("search_tools", {"query": "spisok regionov"})
             tekst = str(rezultat.content)
             assert "spisok_regionov" in tekst
@@ -157,26 +157,26 @@ class TestTransformatsiyaBM25:
     async def test_bm25_vsegda_vidimye_zakrepleny(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server_fn = FastMCP("test")
+        server_funktsiya = FastMCP("test")
 
-        @server_fn.tool(tags={"meta"})
+        @server_funktsiya.tool(tags={"meta"})
         def spisok_funktsiy() -> str:
             """Список функций."""
             return "functions"
 
-        @server_fn.tool(tags={"search"})
+        @server_funktsiya.tool(tags={"search"})
         def skrytyy_instrument() -> str:
             """Скрытый инструмент."""
             return "skrytyy"
 
-        server_fn.add_transform(
+        server_funktsiya.add_transform(
             BM25SearchTransform(
                 max_results=5,
                 always_visible=["spisok_funktsiy"],
             )
         )
 
-        async with Client(server_fn) as c:
+        async with Client(server_funktsiya) as c:
             instrumenty = await c.list_tools()
             imena = {t.name for t in instrumenty}
             assert "spisok_funktsiy" in imena
@@ -186,16 +186,16 @@ class TestTransformatsiyaBM25:
     async def test_bm25_vyzov_instrumenta_vypolnyaetsya(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server_fn = FastMCP("test")
+        server_funktsiya = FastMCP("test")
 
-        @server_fn.tool
+        @server_funktsiya.tool
         def slozhit(a: int, b: int) -> int:
             """Сложение двух чисел."""
             return a + b
 
-        server_fn.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server_fn) as c:
+        async with Client(server_funktsiya) as c:
             rezultat = await c.call_tool(
                 "call_tool",
                 {"name": "slozhit", "arguments": {"a": 3, "b": 4}},
@@ -241,21 +241,21 @@ class TestRasprostranenieTegov:
     async def test_poisk_nakhodit_po_opisaniyu(self) -> None:
         from fastmcp.server.transforms.search import BM25SearchTransform
 
-        server_fn = FastMCP("test")
+        server_funktsiya = FastMCP("test")
 
-        @server_fn.tool(tags={"environmental", "fires"})
+        @server_funktsiya.tool(tags={"environmental", "fires"})
         def nayti_ochagi() -> str:
             """Поиск очагов пожаров, обнаруженных спутником в России."""
             return "hotspots"
 
-        @server_fn.tool(tags={"financial", "banks"})
+        @server_funktsiya.tool(tags={"financial", "banks"})
         def spisok_bankov() -> str:
             """Список всех банков России, зарегистрированных в Центральном банке."""
             return "banks"
 
-        server_fn.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
 
-        async with Client(server_fn) as c:
+        async with Client(server_funktsiya) as c:
             rezultat = await c.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
             tekst = str(rezultat.content)
             assert "nayti_ochagi" in tekst

@@ -33,12 +33,12 @@ async def tekushchie_kursy(ctx: Context) -> str:
         return "Не удалось получить курсы валют ЦБ РФ."
 
     stroki_tablitsy = []
-    for m in valyuty:
+    for valyuta in valyuty:
         izmenenie = ""
-        if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
-            raznitsa = m.znachenie - m.predydushchee_znachenie
+        if valyuta.predydushchee_znachenie is not None and valyuta.predydushchee_znachenie > 0:
+            raznitsa = valyuta.znachenie - valyuta.predydushchee_znachenie
             znak = "+" if raznitsa >= 0 else ""
-            protsent = (raznitsa / m.predydushchee_znachenie) * 100
+            protsent = (raznitsa / valyuta.predydushchee_znachenie) * 100
             izmenenie = (
                 f"{znak}{formatirovat_chislo_ru(raznitsa, 4)}"
                 f" ({znak}{formatirovat_chislo_ru(protsent, 2)}%)"
@@ -48,10 +48,10 @@ async def tekushchie_kursy(ctx: Context) -> str:
 
         stroki_tablitsy.append(
             (
-                m.kod,
-                m.nazvanie,
-                str(m.nominal),
-                formatirovat_chislo_ru(m.znachenie, 4),
+                valyuta.kod,
+                valyuta.nazvanie,
+                str(valyuta.nominal),
+                formatirovat_chislo_ru(valyuta.znachenie, 4),
                 izmenenie,
             )
         )
@@ -202,15 +202,20 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
         return "Не удалось получить данные для указанных валют."
 
     stroki_tablitsy = []
-    for m in sorted(valyuty, key=lambda x: x.kod):
+    for valyuta in sorted(valyuty, key=lambda x: x.kod):
         izmenenie = "—"
-        if m.predydushchee_znachenie is not None and m.predydushchee_znachenie > 0:
-            raznitsa = m.znachenie - m.predydushchee_znachenie
-            protsent = (raznitsa / m.predydushchee_znachenie) * 100
+        if valyuta.predydushchee_znachenie is not None and valyuta.predydushchee_znachenie > 0:
+            raznitsa = valyuta.znachenie - valyuta.predydushchee_znachenie
+            protsent = (raznitsa / valyuta.predydushchee_znachenie) * 100
             znak = "+" if protsent >= 0 else ""
             izmenenie = f"{znak}{formatirovat_chislo_ru(protsent, 2)}%"
         stroki_tablitsy.append(
-            (m.kod, m.nazvanie, formatirovat_chislo_ru(m.znachenie, 4), izmenenie)
+            (
+                valyuta.kod,
+                valyuta.nazvanie,
+                formatirovat_chislo_ru(valyuta.znachenie, 4),
+                izmenenie,
+            )
         )
 
     zagolovok = "**Сравнение курсов валют ЦБ РФ**\n\n"
@@ -233,9 +238,9 @@ async def kursy_po_stranam(ctx: Context) -> str:
         return "Не удалось получить данные."
 
     stroki_tablitsy = []
-    for m in sorted(valyuty, key=lambda x: x.kod):
-        strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == m.kod), m.kod)
-        stroki_tablitsy.append((strana, m.kod, formatirovat_chislo_ru(m.znachenie, 4)))
+    for valyuta in sorted(valyuty, key=lambda x: x.kod):
+        strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == valyuta.kod), valyuta.kod)
+        stroki_tablitsy.append((strana, valyuta.kod, formatirovat_chislo_ru(valyuta.znachenie, 4)))
 
     zagolovok = "**Курсы валют основных стран-партнёров России**\n\n"
     return zagolovok + tablitsa_v_markdown(

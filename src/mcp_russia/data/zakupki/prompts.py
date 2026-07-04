@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_zakupki(context: str, ctx: Context) -> str:
+async def analiz_zakupki(kontekst: str, ctx: Context) -> str:
     """Анализ конкретной закупки в ЕИС.
 
     Аргументы:
-        context: Контекст запроса (номер закупки или описание).
+        kontekst: Контекст запроса (номер закупки или описание).
 
     Возвращает:
         Шаблон промпта для анализа закупки.
     """
     return (
         f"Выполни анализ закупки в ЕИС.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Найди закупку через poisk_zakupok() или info_zakupki()\n"
         f"2. Определи закон (44-ФЗ или 223-ФЗ), способ определения поставщика\n"
@@ -27,18 +27,18 @@ async def analiz_zakupki(context: str, ctx: Context) -> str:
     )
 
 
-async def obzor_zakupok(context: str, ctx: Context) -> str:
+async def obzor_zakupok(kontekst: str, ctx: Context) -> str:
     """Обзор закупочной активности организации.
 
     Аргументы:
-        context: Контекст запроса (ИНН или название организации).
+        kontekst: Контекст запроса (ИНН или название организации).
 
     Возвращает:
         Шаблон промпта для обзора закупок.
     """
     return (
         f"Подготовь обзор закупочной активности организации.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи организацию как заказчика или поставщика (по ИНН)\n"
         f"2. Получи info_zakazchika() или info_postavshchika()\n"

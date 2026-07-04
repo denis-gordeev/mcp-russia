@@ -79,7 +79,7 @@ class ZaregistrirovannayaFunktsiya:
     """Обнаруженная, провалидированная и зарегистрированная функция."""
 
     metadannye: MetaFunktsii
-    server_fn: FastMCP
+    server_funktsiya: FastMCP
     put_modulya: str
 
 
@@ -154,25 +154,27 @@ class ReyestrFunktsiy:
         importiruyemyy_modul = importlib.import_module(put_modulya)
 
         # Шаг 2: Проверка наличия и корректности META_FUNKTSII
-        meta = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
-        if meta is None:
+        metadannye_ekz = getattr(importiruyemyy_modul, "META_FUNKTSII", None)
+        if metadannye_ekz is None:
             raise ValueError(f"Нет META_FUNKTSII в {put_modulya}")
-        if not isinstance(meta, MetaFunktsii):
+        if not isinstance(metadannye_ekz, MetaFunktsii):
             raise TypeError(f"META_FUNKTSII в {put_modulya} не является экземпляром MetaFunktsii")
 
         # Шаг 3: Проверка активности функции
-        if not meta.vklyuchena:
+        if not metadannye_ekz.vklyuchena:
             self._skipped[korotkoe_imya] = "отключена (vklyuchena=False)"
             logger.info("Функция '%s' отключена, пропуск.", korotkoe_imya)
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
-        if not meta.dostupna_li_autentifikatsiya():
-            self._skipped[korotkoe_imya] = f"отсутствует переменная {meta.peremennaya_avt_env}"
+        if not metadannye_ekz.dostupna_li_autentifikatsiya():
+            self._skipped[korotkoe_imya] = (
+                f"отсутствует переменная {metadannye_ekz.peremennaya_avt_env}"
+            )
             logger.warning(
                 "Функция '%s' требует %s (не задано), пропуск.",
                 korotkoe_imya,
-                meta.peremennaya_avt_env,
+                metadannye_ekz.peremennaya_avt_env,
             )
             return
 
@@ -185,14 +187,14 @@ class ReyestrFunktsiy:
 
         # Шаг 6: Регистрация
         self._features[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
-            metadannye=meta,
-            server_fn=obiekt_servera,
+            metadannye=metadannye_ekz,
+            server_funktsiya=obiekt_servera,
             put_modulya=put_modulya,
         )
         logger.info(
             "Зарегистрирована функция '%s' v%s",
-            meta.imya,
-            meta.versiya,
+            metadannye_ekz.imya,
+            metadannye_ekz.versiya,
         )
 
     def smontirovat_vse(self, kornevoy_server: FastMCP) -> None:
@@ -205,7 +207,7 @@ class ReyestrFunktsiy:
             kornevoy_server: Корневой FastMCP-сервер для монтирования функций.
         """
         for imya, modul in sorted(self._features.items()):
-            kornevoy_server.mount(modul.server_fn, namespace=imya)
+            kornevoy_server.mount(modul.server_funktsiya, namespace=imya)
             logger.info("Смонтирована '%s' — %s", imya, modul.metadannye.opisanie)
 
     def svodka(self) -> str:

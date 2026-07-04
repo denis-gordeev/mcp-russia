@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_valyut(context: str, ctx: Context) -> str:
+async def analiz_valyut(kontekst: str, ctx: Context) -> str:
     """Анализ динамики валютных курсов на основе данных ЦБ РФ.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ рубля к доллару").
+        kontekst: Контекст запроса (например, "анализ рубля к доллару").
 
     Возвращает:
         Шаблон промпта для анализа валют.
     """
     return (
         f"Выполни анализ валютных курсов на основе данных ЦБ РФ.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Получи текущие курсы relevant валют через курсы валют ЦБ РФ\n"
         f"2. Проанализируй динамику изменений\n"

@@ -41,12 +41,14 @@ def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
     return zagolovki
 
 
-def _vlozhennoe_poluchenie(dannye: dict, *keys: str, default: Any = None) -> Any:
+def _vlozhennoe_poluchenie(
+    dannye: dict, *klyuchi: str, znacheniye_po_umolchaniyu: Any = None
+) -> Any:
     """Безопасное извлечение вложенного значения из словаря."""
-    for klyuch in keys:
+    for klyuch in klyuchi:
         if not isinstance(dannye, dict):
-            return default
-        dannye = dannye.get(klyuch, default)
+            return znacheniye_po_umolchaniyu
+        dannye = dannye.get(klyuch, znacheniye_po_umolchaniyu)
     return dannye
 
 

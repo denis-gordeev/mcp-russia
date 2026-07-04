@@ -72,7 +72,7 @@ cbrf_uznat_kurs_valyuty(kod="USD")
 
 ```text
 rosstat_spisok_regionov()
-rosstat_region_info(kod="77")
+rosstat_informatsiya_o_regionye(kod="77")
 rosstat_pokazateli_rosstata()
 ```
 

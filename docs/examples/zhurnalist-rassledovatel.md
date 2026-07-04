@@ -31,7 +31,7 @@
 > Промпт: "Покажи все трансферты и депутатские средства, связанные с [ФИО/регион] в 2024 году, с суммами и муниципалитетами назначения"
 
 ```
-Источники: zakupki_poisk_zakupok + rosstat_region_info
+Источники: zakupki_poisk_zakupok + rosstat_informatsiya_o_regionye
 ```
 
 **2. Определить конечных получателей**
@@ -47,7 +47,7 @@
 > Промпт: "Есть ли у этих компаний или их владельцев связи с депутатами или пересечения с публичными реестрами?"
 
 ```
-Источники: gosduma_poluchit_deputatov + rosapi_poisk_org_po_inn
+Источники: gosduma_spisok_deputatov + rosapi_poisk_org_po_inn
 ```
 
 **4. Проверить историю нарушений**
@@ -55,7 +55,7 @@
 > Промпт: "Есть ли у этих компаний санкции, претензии контрольных органов или судебные дела?"
 
 ```
-Источники: rospotrebnadzor_proverki_organizaciy + kad_arbitrazh_poisk_del
+Источники: rospotrebnadzor_poisk_proverok + kad_arbitrazh_poisk_del
 ```
 
 ### Что получает журналист
@@ -96,7 +96,7 @@
 > Промпт: "Покажи сотрудников или исполнителей [ведомства] с наибольшими выплатами в 2024 году"
 
 ```
-Источник: rosstat_region_info(kod="...")
+Источник: rosstat_informatsiya_o_regionye(kod="...")
 ```
 
 **2. Сопоставить с другими назначениями**
@@ -104,7 +104,7 @@
 > Промпт: "Есть ли у этих людей параллельные назначения, контракты или связи с депутатами?"
 
 ```
-Источники: gosduma_poluchit_deputatov + rosapi_poisk_org_po_inn
+Источники: gosduma_spisok_deputatov + rosapi_poisk_org_po_inn
 ```
 
 **3. Проверить наличие судебных дел**
@@ -198,7 +198,7 @@ LLM автоматически группирует победителей и п
 > Промпт: "Сколько местный бюджет потратил на здравоохранение в 2024 году и выполнены ли нормативы?"
 
 ```
-Источники: rosstat_region_info(kod="...") + zakupki_poisk_zakupok(otrasl="Здравоохранение")
+Источники: rosstat_informatsiya_o_regionye(kod="...") + zakupki_poisk_zakupok(otrasl="Здравоохранение")
 ```
 
 **3. Федеральные трансферты**
@@ -214,7 +214,7 @@ LLM автоматически группирует победителей и п
 > Промпт: "Сравни расходы на здравоохранение на душу населения в [муниципалитете] и пяти соседних муниципальных образованиях"
 
 ```
-Источники: rosstat_spisok_regionov + rosstat_region_info (пакетно через vypolnit_paket)
+Источники: rosstat_spisok_regionov + rosstat_informatsiya_o_regionye (пакетно через vypolnit_paket)
 ```
 
 **5. Проверить показатели смертности**
@@ -240,7 +240,7 @@ LLM автоматически группирует победителей и п
 ═══════════════════════════════════════════════
 
 1. БЮДЖЕТНАЯ КАРТИНА
-   ├── rosstat_region_info → показатели региона
+   ├── rosstat_informatsiya_o_regionye → показатели региона
    ├── zakupki_poisk_zakupok → закупочные процедуры
    └── Цель: проверить бюджетные лимиты и аномалии
 
@@ -251,7 +251,7 @@ LLM автоматически группирует победителей и п
 
 3. КОНТРОЛЬНЫЕ ОРГАНЫ
    ├── rosaudit_poisk_narusheniy → нарушения
-   ├── rospotrebnadzor_proverki_organizaciy → проверки
+   ├── rospotrebnadzor_poisk_proverok → проверки
    └── Цель: проверить предысторию нарушений
 
 4. СУДЕБНЫЕ ДЕЛА
@@ -266,10 +266,10 @@ LLM автоматически группирует победителей и п
 
 ```json
 [
-  {"tool": "rosstat_region_info", "args": {"kod": "77"}},
-  {"tool": "zakupki_poisk_zakupok", "args": {"zakazchik": "Правительство Москвы"}},
-  {"tool": "kad_arbitrazh_poisk_del", "args": {"istorcz": "Правительство Москвы"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"tema": "закупки"}}
+  {"instrument": "rosstat_informatsiya_o_regionye", "argumenty": {"kod": "77"}},
+  {"instrument": "zakupki_poisk_zakupok", "argumenty": {"zakazchik": "Правительство Москвы"}},
+  {"instrument": "kad_arbitrazh_poisk_del", "argumenty": {"istorcz": "Правительство Москвы"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"tema": "закупки"}}
 ]
 ```
 

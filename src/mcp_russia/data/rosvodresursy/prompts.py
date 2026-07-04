@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_vodnogo_obekta(context: str, ctx: Context) -> str:
+async def analiz_vodnogo_obekta(kontekst: str, ctx: Context) -> str:
     """Анализ водного объекта.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ реки Волга").
+        kontekst: Контекст запроса (например, "анализ реки Волга").
 
     Возвращает:
         Шаблон промпта для анализа водного объекта.
     """
     return (
         f"Выполни анализ водного объекта.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи код водного объекта через Государственный водный реестр\n"
         f"2. Получи информацию об объекте через info_vodnogo_obekta()\n"

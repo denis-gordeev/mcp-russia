@@ -35,8 +35,8 @@ def postroit_dispetcherizatsiyu(reyestr: ReyestrFunktsiy) -> dict[str, Any]:
     if _dispetcher:
         return _dispetcher
 
-    for imya, feat in reyestr.funktsii.items():
-        baza = feat.put_modulya
+    for imya, funktsiya_iz_reyestra in reyestr.funktsii.items():
+        baza = funktsiya_iz_reyestra.put_modulya
         _skanirovat_modul_instrumentov(baza, imya)
 
         # Подпакеты (напр., модуль данных с подфункциями)
@@ -56,7 +56,7 @@ def postroit_dispetcherizatsiyu(reyestr: ReyestrFunktsiy) -> dict[str, Any]:
     return _dispetcher
 
 
-def _skanirovat_modul_instrumentov(put_modulya: str, namespace: str) -> None:
+def _skanirovat_modul_instrumentov(put_modulya: str, prostranstvo_imen: str) -> None:
     """Импорт модуля инструментов и регистрация его асинхронных функций."""
     try:
         modul = importlib.import_module(f"{put_modulya}.tools")
@@ -65,49 +65,49 @@ def _skanirovat_modul_instrumentov(put_modulya: str, namespace: str) -> None:
 
     for imya_fn, funktsiya in inspect.getmembers(modul, inspect.iscoroutinefunction):
         if not imya_fn.startswith("_"):
-            klyuch = f"{namespace}_{imya_fn}"
+            klyuch = f"{prostranstvo_imen}_{imya_fn}"
             _dispetcher[klyuch] = funktsiya
 
 
 async def vypolnit_paket_vnutrenniy(
-    queries: list[dict[str, Any]],
+    zaprosy: list[dict[str, Any]],
     ctx: Any,
 ) -> str:
     """Параллельное выполнение нескольких вызовов инструментов.
 
     Аргументы:
-        queries: Список словарей {"instrument": "имя", "argumenty": {}}.
+        zaprosy: Список словарей {"instrument": "имя", "argumenty": {}}.
         ctx: Контекст FastMCP для передачи в инструменты, которые его принимают.
 
     Возвращает:
         Отформатированный markdown со всеми результатами.
     """
-    if not queries:
+    if not zaprosy:
         return "Нет запросов для выполнения."
 
-    if len(queries) > 10:
+    if len(zaprosy) > 10:
         return "Максимум 10 запросов на пакет. Уменьшите список."
 
-    async def _vypolnit_odin(q: dict[str, Any]) -> tuple[str, str]:
+    async def _vypolnit_odin(zapros: dict[str, Any]) -> tuple[str, str]:
         """Выполнение одного инструмента из пакета."""
-        imya_instrumenta = q.get("instrument", "")
-        args = q.get("argumenty", {})
-        fn = _dispetcher.get(imya_instrumenta)
+        imya_instrumenta = zapros.get("instrument", "")
+        argumenty = zapros.get("argumenty", {})
+        funktsiya = _dispetcher.get(imya_instrumenta)
 
-        if fn is None:
+        if funktsiya is None:
             return imya_instrumenta, f"Инструмент '{imya_instrumenta}' не найден."
 
         try:
-            signatura = inspect.signature(fn)
+            signatura = inspect.signature(funktsiya)
             if "ctx" in signatura.parameters:
-                rezultat = await fn(ctx=ctx, **args)
+                rezultat = await funktsiya(ctx=ctx, **argumenty)
             else:
-                rezultat = await fn(**args)
+                rezultat = await funktsiya(**argumenty)
             return imya_instrumenta, rezultat
         except Exception as exc:
             return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {exc}"
 
-    rezultaty = await asyncio.gather(*[_vypolnit_odin(q) for q in queries])
+    rezultaty = await asyncio.gather(*[_vypolnit_odin(zapros) for zapros in zaprosy])
 
     chasti: list[str] = []
     for imya_instrumenta, vyvod in rezultaty:

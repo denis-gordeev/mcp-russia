@@ -109,7 +109,7 @@ cbrf_konvertirovat_valyutu(valyuta="USD", kolichestvo=10000)
 
 ```text
 rosstat_spisok_regionov()
-rosstat_region_info(kod="77")
+rosstat_informatsiya_o_regionye(kod="77")
 rosstat_pokazateli_rosstata()
 ```
 

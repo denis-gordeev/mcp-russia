@@ -23,10 +23,10 @@
 | **Контрольно-счётный орган (Ростовская обл.)** | `rosaudit_poisk_narusheniy` *(планируемый региональный модуль)* | Подконтрольные органы, закупки, контракты |
 | **Контрольно-счётный орган (Татарстан)** | `rosaudit_poisk_narusheniy` *(планируемый региональный модуль)* | Местные администрации, расходы, доходы |
 | **Контрольно-счётный орган (Свердловская обл.)** | `rosaudit_poisk_narusheniy` *(планируемый региональный модуль)* | Процессы, повестки заседаний |
-| **Росстат** | `rosstat_region_info` | Демографические данные и трансферты муниципалитетам *(планируемый источник данных о трансфертах)* |
+| **Росстат** | `rosstat_informatsiya_o_regionye` | Демографические данные и трансферты муниципалитетам *(планируемый источник данных о трансфертах)* |
 | **ЕИС (zakupki.gov.ru)** | `zakupki_poisk_kontraktov` | Закупки и государственные контракты |
 | **Федеральное казначейство** | *(планируемый модуль «Федеральное казначейство»)* | Исполнение бюджетов |
-| **Росстат** | `rosstat_region_info` | Население муниципальных образований, демографические данные |
+| **Росстат** | `rosstat_informatsiya_o_regionye` | Население муниципальных образований, демографические данные |
 | **Реестр контрактов** | `zakupki_poisk_kontraktov` | Контракты и протоколы рассмотрения цен |
 
 ---
@@ -44,8 +44,8 @@
 > Промпт: "Какое население у городских округов Мытищи и Люберцы в Московской области?"
 
 Инструменты:
-- `rosstat_spisok_regionov(region="МО")` — список муниципальных образований
-- `rosstat_region_info(...)` — демографические данные
+- `rosstat_spisok_regionov()` — список муниципальных образований
+- `rosstat_informatsiya_o_regionye(...)` — демографические данные
 
 **2. Найти расходы на образование в обоих муниципальных образованиях**
 
@@ -59,10 +59,10 @@
 
 ```json
 [
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
 ]
 ```
 
@@ -81,7 +81,7 @@
 > Промпт: "Какие федеральные трансферты получили Мытищи и Люберцы на образование в 2024 году?"
 
 Инструменты:
-- `rosstat_region_info` — трансферты по муниципалитетам *(планируемый источник данных о трансфертах)*
+- `rosstat_informatsiya_o_regionye` — трансферты по муниципалитетам *(планируемый источник данных о трансфертах)*
 - *(планируемый модуль «Федеральное казначейство»)* — депутатские средства
 
 ---
@@ -183,7 +183,7 @@ LLM группирует результаты и выявляет законом
 > Промпт: "Рассчитай объём целевых трансфертов на душу населения для каждого муниципального образования Московской области"
 
 Инструменты:
-- `rosstat_spisok_regionov(region="МО")` — население
+- `rosstat_spisok_regionov()` — население
 - Сопоставление с данными Федерального казначейства
 
 **3. Определить, кто направил средства**
@@ -191,7 +191,7 @@ LLM группирует результаты и выявляет законом
 > Промпт: "Какие депутаты направили средства в [муниципалитет]?"
 
 Инструменты:
-- `rosstat_region_info(munitsipalitet="...")` *(планируемый источник данных о трансфертах)*
+- `rosstat_informatsiya_o_regionye(munitsipalitet="...")` *(планируемый источник данных о трансфертах)*
 
 **4. Проверить расходы муниципального образования**
 
@@ -228,15 +228,15 @@ LLM группирует результаты и выявляет законом
 
 ```json
 [
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "МО", "munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Москва", "munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Свердловская область", "munitsipalitet": "Екатеринбург"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Нижегородская область", "munitsipalitet": "Нижний Новгород"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Ростовская область", "munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Красноярский край", "munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Татарстан", "munitsipalitet": "Казань"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "СПб", "munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
-  {"tool": "rosaudit_poisk_narusheniy", "args": {"region": "Красноярский край", "munitsipalitet": "Красноярск"}}
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Москва", "munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Свердловская область", "munitsipalitet": "Екатеринбург"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Нижегородская область", "munitsipalitet": "Нижний Новгород"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Ростовская область", "munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Татарстан", "munitsipalitet": "Казань"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "СПб", "munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
+  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Красноярск"}}
 ]
 ```
 

@@ -15,29 +15,29 @@ from mcp_russia._shared.feature import MetaFunktsii, ReyestrFunktsiy, Zaregistri
 
 class TestMetaFunktsii:
     def test_sozdat_minimalnyy(self) -> None:
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ API")
-        assert meta.imya == "cbrf"
-        assert meta.opisanie == "ЦБ РФ API"
-        assert meta.versiya == "0.1.0"
-        assert meta.vklyuchena is True
-        assert meta.trebuet_autentifikatsii is False
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ API")
+        assert metadannye_ekz.imya == "cbrf"
+        assert metadannye_ekz.opisanie == "ЦБ РФ API"
+        assert metadannye_ekz.versiya == "0.1.0"
+        assert metadannye_ekz.vklyuchena is True
+        assert metadannye_ekz.trebuet_autentifikatsii is False
 
     def test_sozdat_s_autentifikatsiey(self) -> None:
-        meta = MetaFunktsii(
+        metadannye_ekz = MetaFunktsii(
             imya="zakupki",
             opisanie="ЕИС Закупки",
             trebuet_autentifikatsii=True,
             peremennaya_avt_env="ZAKUPKI_API_KEY",
         )
-        assert meta.trebuet_autentifikatsii is True
-        assert meta.peremennaya_avt_env == "ZAKUPKI_API_KEY"
+        assert metadannye_ekz.trebuet_autentifikatsii is True
+        assert metadannye_ekz.peremennaya_avt_env == "ZAKUPKI_API_KEY"
 
     def test_dostupna_li_autentifikatsiya_no_auth_obyazatelen(self) -> None:
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
-        assert meta.dostupna_li_autentifikatsiya() is True
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
+        assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_otsutstvuyushchaya_peremennaya(self) -> None:
-        meta = MetaFunktsii(
+        metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=True,
@@ -45,24 +45,24 @@ class TestMetaFunktsii:
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
-            assert meta.dostupna_li_autentifikatsiya() is False
+            assert metadannye_ekz.dostupna_li_autentifikatsiya() is False
 
     def test_dostupna_li_autentifikatsiya_env_var_set(self) -> None:
-        meta = MetaFunktsii(
+        metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=True,
             peremennaya_avt_env="TEST_MCP_KEY",
         )
         with patch.dict(os.environ, {"TEST_MCP_KEY": "secret"}):
-            assert meta.dostupna_li_autentifikatsiya() is True
+            assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
-        meta = MetaFunktsii(imya="t", opisanie="T", trebuet_autentifikatsii=True)
-        assert meta.dostupna_li_autentifikatsiya() is False
+        metadannye_ekz = MetaFunktsii(imya="t", opisanie="T", trebuet_autentifikatsii=True)
+        assert metadannye_ekz.dostupna_li_autentifikatsiya() is False
 
     def test_dostupna_li_autentifikatsiya_optional_auth_no_env(self) -> None:
-        meta = MetaFunktsii(
+        metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=False,
@@ -70,30 +70,30 @@ class TestMetaFunktsii:
         )
         with patch.dict(os.environ, {}, clear=False):
             os.environ.pop("FAKE_KEY_NOT_SET", None)
-            assert meta.dostupna_li_autentifikatsiya() is True
+            assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_neobyazatelnaya_s_peremennoy(self) -> None:
-        meta = MetaFunktsii(
+        metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=False,
             peremennaya_avt_env="TEST_OPT_KEY",
         )
         with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
-            assert meta.dostupna_li_autentifikatsiya() is True
+            assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_zamorozhennyy(self) -> None:
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
         with pytest.raises(AttributeError):
-            meta.imya = "other"  # type: ignore[misc]
+            metadannye_ekz.imya = "drugoy"  # type: ignore[misc]
 
     def test_tegi_po_umolchaniyu_pustye(self) -> None:
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
-        assert meta.tegi == []
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ")
+        assert metadannye_ekz.tegi == []
 
     def test_tegi_polzovatelskie(self) -> None:
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ", tegi=["валюта", "курсы"])
-        assert meta.tegi == ["валюта", "курсы"]
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ", tegi=["валюта", "курсы"])
+        assert metadannye_ekz.tegi == ["валюта", "курсы"]
 
 
 # ---------------------------------------------------------------------------
@@ -145,32 +145,32 @@ class TestReyestrFunktsiy:
         """Регистрирует feature вручную и монтирует в root."""
         reyestr = ReyestrFunktsiy()
 
-        meta = MetaFunktsii(imya="test_feat", opisanie="Тестовая функция")
+        metadannye_ekz = MetaFunktsii(imya="test_funktsiya", opisanie="Тестовая функция")
         podserver = FastMCP("test-sub")
 
         @podserver.tool
-        def ping_fn() -> str:
+        def proverka_svyazi_fn() -> str:
             """Инструмент проверки связи."""
             return "pong"
 
-        reyestr._features["test_feat"] = ZaregistrirovannayaFunktsiya(
-            metadannye=meta,
-            server_fn=podserver,
+        reyestr._features["test_funktsiya"] = ZaregistrirovannayaFunktsiya(
+            metadannye=metadannye_ekz,
+            server_funktsiya=podserver,
             put_modulya="fake.module",
         )
 
         koren = FastMCP("test-root")
         reyestr.smontirovat_vse(koren)
 
-        assert reyestr.poluchit_funktsiyu("test_feat") is not None
-        assert "test_feat" in reyestr.svodka()
+        assert reyestr.poluchit_funktsiyu("test_funktsiya") is not None
+        assert "test_funktsiya" in reyestr.svodka()
 
     def test_svodka_s_funktsiyami(self) -> None:
         reyestr = ReyestrFunktsiy()
-        meta = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
+        metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
         podmodul = FastMCP("sub")
         reyestr._features["cbrf"] = ZaregistrirovannayaFunktsiya(
-            metadannye=meta, server_fn=podmodul, put_modulya="m"
+            metadannye=metadannye_ekz, server_funktsiya=podmodul, put_modulya="m"
         )
         svodka_testa = reyestr.svodka()
         assert "1 функция(й) активно" in svodka_testa
@@ -188,7 +188,7 @@ class TestReyestrFunktsiy:
         reyestr = ReyestrFunktsiy()
         reyestr._skipped["x"] = "reason"
         propushcheno = reyestr.propushcheno
-        propushcheno["y"] = "other"
+        propushcheno["y"] = "drugoy"
         assert "y" not in reyestr._skipped
 
     def test_funktsii_vozvrashchaet_kopiyu(self) -> None:

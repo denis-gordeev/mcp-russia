@@ -10,14 +10,14 @@ from fastmcp import Client
 try:
     from mcp_russia.data.rosapi.server import mcp
 
-    _IMPORT_OK = True
+    _IMPORT_NORMALNO = True
 except ImportError:
-    _IMPORT_OK = False
+    _IMPORT_NORMALNO = False
 
 
 @pytest.fixture
 def klient():
-    if not _IMPORT_OK:
+    if not _IMPORT_NORMALNO:
         pytest.skip("rosapi server import fails (UserMessage not available)")
     return Client(mcp)
 
@@ -57,10 +57,12 @@ async def test_resursy_zaregistrirovany(klient):
 async def test_prompty_zaregistrirovany(klient):
     async with klient:
         prompty = await klient.list_prompts()
-    prompt_names = {p.name for p in prompty}
+    imena_promtov = {p.name for p in prompty}
 
     ozhidayemyy = {"analiz_organizacii", "poisk_adresa_prompt"}
-    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
+    assert ozhidayemyy.issubset(imena_promtov), (
+        f"Отсутствуют промпты: {ozhidayemyy - imena_promtov}"
+    )
 
 
 async def test_spisok_bankov(klient):

@@ -35,17 +35,17 @@
 > Запрос: «Перечисли все поимённые голосования в Государственной Думе в 2024 году с индивидуальными голосами каждого депутата»
 
 ```
-APIs: gosduma_poluchit_zakonoproekty(sozyv=8)
-      gosduma_poluchit_deputata(id=...) → для каждого депутата
+APIs: gosduma_zakonoproekty(sozyv="8")
+      gosduma_info_deputata(identifikator_deputata=...) → для каждого депутата
 ```
 
 Используем `vypolnit_paket` для параллельного сбора:
 
 ```json
 [
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 1}},
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 2}},
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 3}}
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
 ]
 ```
 
@@ -114,7 +114,7 @@ LLM структурирует данные в формате депутат × 
 > Запрос: «В каждом поимённом голосовании 2024 года какая была позиция фракции большинства? Сравни с итогом»
 
 ```
-API: gosduma_poluchit_zakonoproekty → включает позицию большинства
+API: gosduma_zakonoproekty → включает позицию большинства
 ```
 
 **2. Рассчитать индекс поддержки правительства по фракциям**
@@ -178,7 +178,7 @@ APIs: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
 > Запрос: «Для каждого депутата, направившего поправки, определи фракцию и статус (большинство или оппозиция)»
 
 ```
-APIs: gosduma_poluchit_deputatov → фракция и статус
+APIs: gosduma_spisok_deputatov → фракция и статус
 ```
 
 **3. Сопоставить с социальными показателями муниципальных образований**
@@ -186,7 +186,7 @@ APIs: gosduma_poluchit_deputatov → фракция и статус
 > Запрос: «Для каждого муниципального образования, получившего поправки, определи индекс человеческого развития, уровень бедности и население»
 
 ```
-APIs: rosstat_spisok_regionov + rosstat_region_info
+APIs: rosstat_spisok_regionov + rosstat_informatsiya_o_regionye
 ```
 
 **4. Распределительная модель**
@@ -253,7 +253,7 @@ APIs: zakupki_poisk_zakupok
 > Запрос: «Сколько федеральных законов было принято в 2023–2024 годах?»
 
 ```
-APIs: gosduma_poluchit_zakonoproekty(tip="ФЗ", status="Принят")
+APIs: gosduma_zakonoproekty(tip="ФЗ", sostoyanie="Принят")
 ```
 
 **2. Найти оспоренные законы**
@@ -312,7 +312,7 @@ APIs: kad_arbitrazh_akty_po_delu(nomer_dela=...)
 > Запрос: «Какие законопроекты были вынесены на голосование в Госдуме каждую неделю 2024 года?»
 
 ```
-API: gosduma_poluchit_zakonoproekty(sozyv=8, god=2024)
+API: gosduma_zakonoproekty(sozyv=8, god=2024)
 ```
 
 **2. Классифицировать по источнику и приоритету**
@@ -320,7 +320,7 @@ API: gosduma_poluchit_zakonoproekty(sozyv=8, god=2024)
 > Запрос: «Для каждого рассмотренного законопроекта определи: кто внёс, какая комиссия подготовила заключение, является ли срочным»
 
 ```
-APIs: gosduma_poluchit_zakonoproekty → детали законопроекта
+APIs: gosduma_zakonoproekty → детали законопроекта
 ```
 
 **3. Анализировать сроки прохождения**
@@ -440,9 +440,9 @@ APIs: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москв
 
 ```json
 [
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 1}},
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 2}},
-  {"tool": "gosduma_poluchit_deputata", "args": {"id": 3}}
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
+  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
 ]
 ```
 
@@ -462,15 +462,15 @@ APIs: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москв
 
 | Переменная | Источник | Инструмент |
 |----------|-------|------|
-| Поимённый голос (за/против/воздержался) | Госдума | `gosduma_poluchit_deputata` |
-| Внесённые законопроекты | Госдума | `gosduma_poluchit_zakonoproekty` |
-| Фракция депутата | Госдума | `gosduma_poluchit_frakcii` |
+| Поимённый голос (за/против/воздержался) | Госдума | `gosduma_info_deputata` |
+| Внесённые законопроекты | Госдума | `gosduma_zakonoproekty` |
+| Фракция депутата | Госдума | `gosduma_spisok_frakcii` |
 
 ### Независимые переменные — политические
 
 | Переменная | Источник | Инструмент |
 |----------|-------|------|
-| Партия и фракция | Госдума | `gosduma_poluchit_deputata` |
+| Партия и фракция | Госдума | `gosduma_info_deputata` |
 | Поступления в кампанию | ЦИК РФ | `cekrf_kandidat_podrobno` |
 | Полученные голоса | ЦИК РФ | `cekrf_rezultaty_vyborov` |
 | Направленные поправки | ЕИС закупки | `zakupki_poisk_zakupok` |
@@ -480,9 +480,9 @@ APIs: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москв
 
 | Переменная | Источник | Инструмент |
 |----------|-------|------|
-| ИЧР муниципалитета | Росстат | `rosstat_region_info` |
+| ИЧР муниципалитета | Росстат | `rosstat_informatsiya_o_regionye` |
 | Население | Росстат | `rosstat_spisok_regionov` |
-| ВРП на душу | Росстат | `rosstat_region_info` |
+| ВРП на душу | Росстат | `rosstat_informatsiya_o_regionye` |
 | Экономические показатели | ЦБ РФ | `cbrf_tekushchie_kursy` |
 | Судебные процессы | КАД | `kad_arbitrazh_poisk_del` |
 
@@ -490,7 +490,7 @@ APIs: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москв
 
 | Переменная | Источник | Инструмент |
 |----------|-------|------|
-| Расходы муниципалитетов по направлениям | Росстат | `rosstat_region_info` |
+| Расходы муниципалитетов по направлениям | Росстат | `rosstat_informatsiya_o_regionye` |
 | Заключённые контракты | ЕИС закупки | `zakupki_poisk_zakupok` |
 | Инфраструктура здравоохранения | Минздрав | `minzdrav_poisk_med_organizatsiy` |
 | Нарушения | Счётная палата | `rosaudit_poisk_narusheniy` |

@@ -24,7 +24,9 @@ logger = logging.getLogger(__name__)
 
 
 @lifespan
-async def http_zhiznennyy_tsikl(server_fn: FastMCP[Any]) -> AsyncIterator[dict[str, Any] | None]:
+async def http_zhiznennyy_tsikl(
+    server_funktsiya: FastMCP[Any],
+) -> AsyncIterator[dict[str, Any] | None]:
     """Создание общего httpx.AsyncClient при запуске, закрытие при завершении."""
     logger.info("Запуск общего HTTP-клиента")
     klient = httpx.AsyncClient(

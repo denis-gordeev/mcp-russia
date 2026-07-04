@@ -2,7 +2,68 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-04 (шестьдесят четвёртый проход — русификация инфраструктуры _shared/, констант data/, переменных tools.py, тестовых имён, документации)
+## Статус раунда 2026-07-04 (шестьдесят пятый проход — исправление документации, русификация server_fn, _shared/ переменных, element/context в data/, тестов)
+
+### Выполнено
+
+- **Исправление критических ошибок в документации** (P0, ~70 замен в 13 файлах):
+  - Неправильные имена инструментов: `rosstat_region_info` → `rosstat_informatsiya_o_regionye` (6 файлов), `gosduma_poluchit_deputatov` → `gosduma_spisok_deputatov`, `gosduma_poluchit_deputata` → `gosduma_info_deputata`, `gosduma_poluchit_zakonoproekty` → `gosduma_zakonoproekty`, `gosduma_poluchit_frakcii` → `gosduma_spisok_frakcii`, `rospotrebnadzor_proverki_organizaciy` → `rospotrebnadzor_poisk_proverok`
+  - Неправильные ключи JSON в `vypolnit_paket`: `"tool"` → `"instrument"`, `"args"`/`"params"` → `"argumenty"` (7 файлов)
+  - Неправильные параметры в примерах: `id=` → `identifikator_deputata=`, `name=` → `fio=`, `year=` → `god=`, `region=` → `kod=`, `status=` → `sostoyanie=` и др.
+  - Неправильные имена в справочнике: `info_regiona` → `informatsiya_o_regionye`, `info_okruga` → `informatsiya_ob_okruge`
+  - Добавлен отсутствующий инструмент `poisk_kontraktov` в features.md
+  - Исправлено количество модулей 22 → 24 в docs/index.md и docs/guide/development.md
+- **Русификация `server_fn` → `server_funktsiya`** (dataclass-поле + параметр + локальная переменная, 7 замен в 4 файлах + 6 файлов тестов):
+  - `ZaregistrirovannayaFunktsiya.server_fn` → `server_funktsiya` (feature.py)
+  - `funktsiya.server_fn` → `funktsiya.server_funktsiya` (discovery.py)
+  - `http_zhiznennyy_tsikl(server_fn)` → `http_zhiznennyy_tsikl(server_funktsiya)` (lifespan.py)
+  - Все ссылки в test_discovery.py, test_feature.py, test_lifespan.py
+- **Русификация переменных _shared/batch.py** (6 идентификаторов):
+  - `namespace` → `prostranstvo_imen`, `queries` → `zaprosy`, `q` → `zapros`, `args` → `argumenty`, `fn` → `funktsiya`, `feat` → `funktsiya_iz_reyestra`
+- **Русификация переменных _shared/cache.py** (3 идентификатора):
+  - `func` → `funktsiya` (параметр декоратора), `k` → `klyuch` (цикловая переменная), `exp` → `istekaet` (распаковка кортежа)
+- **Русификация переменных _shared/planner.py** (3 идентификатора):
+  - `deps` → `zavisimosti`, `plan` → `plan_zaprosa`, `k` → `klyuch` / `v` → `znachenie` (цикл parametry.items())
+- **Русификация переменных _shared/formatting.py** (1 идентификатор):
+  - `v` → `znachenie_yacheyki` (цикловая переменная в генераторе списка)
+- **Русификация переменных _shared/feature.py** (1 идентификатор):
+  - `meta` → `metadannye_ekz` (локальная переменная — псевдоним экземпляра MetaFunktsii)
+- **Русификация переменных _shared/http_client.py** (1 идентификатор):
+  - `client` → `klient` (переменная контекстного менеджера async with)
+- **Русификация `element` → `zapis` в data/** (~350+ замен в ~30 файлах):
+  - Параметр в 19 функциях `_razobrat_*`/`_normalizovat_*` (roskomnadzor, rospotrebnadzor, rosvodresursy, minzdrav, minobrnauki, fssp, zakupki)
+  - Цикловая переменная в ~32 сайтах (rosstat, roskomnadzor, kad_arbitrazh, gibdd, publikatsii, fssp, gosduma, minobrnauki, zakupki, cekrf)
+- **Русификация `context` → `kontekst` в prompts.py** (~36 замен в 18 файлах):
+  - Параметр и использование во всех 18+ промпт-функциях (cbrf, gosduma, kad_arbitrazh, kaznacheistvo, mchs, minzdrav, publikatsii, rosaudit, rosgidromet, rosprirodnadzor, rosreestr, rosselkhoznadzor, rosstat, rosvodresursy, sovfed, zakupki)
+- **Русификация прочих переменных data/** (11 идентификаторов):
+  - cekrf: `row` → `stroka_tablitsy`, `digits` → `tsifry_stroka`, `current` → `tekushchaya_yacheyka_tekst`, `cls` → `klass_css`, `path` → `put_api`, `k` → `klyuch`, `v` → `znachenie`
+  - rosapi: `keys` → `klyuchi`, `default` → `znacheniye_po_umolchaniyu`
+  - cbrf: `m` → `valyuta`
+  - gosduma: `d` → `deputat`
+- **Русификация тестовых переменных** (~50+ замен):
+  - cbrf: `_mock_valyuta` → `_maket_valyuty`
+  - rosselkhoznadzor: `tool_names` → `imena_instrumentov`, `resources` → `resursy`, `prompts` → `prompty`
+  - rosapi: `headers` → `zagolovki`, `_IMPORT_OK` → `_IMPORT_NORMALNO`
+  - gosduma/zakupki: `"not a list"` → `"ne spisok"`
+  - test_batch: `_real_registry` → `_realnyy_reyestr`, `_spec` → `_spets`, диспетчерские ключи и строки
+  - test_feature: `meta` → `metadannye_ekz`, `ping_fn` → `proverka_svyazi_fn`, `"other"` → `"drugoy"`, `"test_feat"` → `"test_funktsiya"`
+  - test_discovery: `disc` → `disk_modul`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 6 файлов переформатированы, `pytest` — 547 unit-тестов пройдено (интеграционные HTTP-тесты пропущены), mypy — 183 ошибки (без изменений)
+
+### Ключевые архитектурные решения
+
+- **`server_fn` → `server_funktsiya`**: устранён последний крупный английский dataclass-поле; `namespace=imya` в feature.py оставлен без изменений (API внешней библиотеки FastMCP)
+- **`element` → `zapis`**: слово «элемент» совпадает в русском и английском (`element`/`element`), но выбрано `zapis` (запись) для однозначного отличия от английского слова и соответствия семантике (запись из API-ответа)
+- **`context` → `kontekst`**: параметр промпт-функций русифицирован; это user-facing параметр, но он уже описан в docstrings на русском
+- **`meta` → `metadannye_ekz`**: локальная переменная-псевдоним в feature.py переименована чтобы избежать конфликта с dataclass-полем `metadannye`
+- **Исправление документации**: ~70 замен в 13 файлах — устранены неправильные имена инструментов, параметров и ключей JSON, которые привели бы к ошибкам при использовании
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser) и короткие однобуквенные переменные в незначимых контекстах
 
 ### Выполнено
 

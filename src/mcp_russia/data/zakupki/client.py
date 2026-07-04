@@ -88,40 +88,38 @@ def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Zakupka(
-                identifikator=str(element.get("id", element.get("regNumber", ""))),
-                nomer=element.get("regNumber", element.get("number", "")),
-                nazvanie=element.get("name", element.get("title", element.get("objectInfo", ""))),
-                zakon=_opredelit_zakon(element),
-                sposob=element.get("purchaseMethod", element.get("method", "")),
-                sostoyanie=element.get("status", element.get("commonStatus", "")),
+                identifikator=str(zapis.get("id", zapis.get("regNumber", ""))),
+                nomer=zapis.get("regNumber", zapis.get("number", "")),
+                nazvanie=zapis.get("name", zapis.get("title", zapis.get("objectInfo", ""))),
+                zakon=_opredelit_zakon(zapis),
+                sposob=zapis.get("purchaseMethod", zapis.get("method", "")),
+                sostoyanie=zapis.get("status", zapis.get("commonStatus", "")),
                 nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
-                    element.get("price", element.get("maxPrice", 0))
+                    zapis.get("price", zapis.get("maxPrice", 0))
                 ),
-                valyuta=element.get("currency", "RUB"),
-                data_publikatsii=element.get("publishDate", element.get("docPublishDate", "")),
-                srok_podachi=element.get("endDate", element.get("bidEndDate", "")),
-                nazvanie_organizatora=element.get(
-                    "customerName", element.get("organizerName", "")
-                ),
-                organizator_inn=element.get("customerInn", element.get("organizerInn", "")),
+                valyuta=zapis.get("currency", "RUB"),
+                data_publikatsii=zapis.get("publishDate", zapis.get("docPublishDate", "")),
+                srok_podachi=zapis.get("endDate", zapis.get("bidEndDate", "")),
+                nazvanie_organizatora=zapis.get("customerName", zapis.get("organizerName", "")),
+                organizator_inn=zapis.get("customerInn", zapis.get("organizerInn", "")),
             )
         )
     return rezultaty
 
 
-def _opredelit_zakon(element: dict[str, Any]) -> str:
+def _opredelit_zakon(zapis: dict[str, Any]) -> str:
     """Определение применяемого закона (44-ФЗ или 223-ФЗ)."""
-    fz = element.get("fz", element.get("law", ""))
+    fz = zapis.get("fz", zapis.get("law", ""))
     if isinstance(fz, (int, float)):
         fz = str(int(fz))
-    if "44" in fz or "44" in str(element.get("purchaseCode", "")):
+    if "44" in fz or "44" in str(zapis.get("purchaseCode", "")):
         return "44-ФЗ"
-    if "223" in fz or "223" in str(element.get("purchaseCode", "")):
+    if "223" in fz or "223" in str(zapis.get("purchaseCode", "")):
         return "223-ФЗ"
     return ""
 
@@ -207,25 +205,23 @@ def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Kontrakt(
-                identifikator=str(element.get("id", "")),
-                nomer=element.get("regNum", element.get("contractNumber", "")),
-                zakupka_nomer=element.get("purchaseNumber", ""),
-                nazvanie_podryadchika=element.get(
-                    "supplierName", element.get("contractorName", "")
-                ),
-                podryadchik_inn=element.get("supplierInn", element.get("contractorInn", "")),
+                identifikator=str(zapis.get("id", "")),
+                nomer=zapis.get("regNum", zapis.get("contractNumber", "")),
+                zakupka_nomer=zapis.get("purchaseNumber", ""),
+                nazvanie_podryadchika=zapis.get("supplierName", zapis.get("contractorName", "")),
+                podryadchik_inn=zapis.get("supplierInn", zapis.get("contractorInn", "")),
                 tsena=_bezopasnoe_veshchestvennoe(
-                    element.get("price", element.get("contractPrice", 0))
+                    zapis.get("price", zapis.get("contractPrice", 0))
                 ),
-                valyuta=element.get("currency", "RUB"),
-                data_podpisaniya=element.get("signDate", element.get("contractDate", "")),
-                sostoyanie=element.get("status", element.get("contractStatus", "")),
-                srok_ispolneniya=element.get("executionDate", element.get("endDate", "")),
+                valyuta=zapis.get("currency", "RUB"),
+                data_podpisaniya=zapis.get("signDate", zapis.get("contractDate", "")),
+                sostoyanie=zapis.get("status", zapis.get("contractStatus", "")),
+                srok_ispolneniya=zapis.get("executionDate", zapis.get("endDate", "")),
             )
         )
     return rezultaty
@@ -345,19 +341,19 @@ def _razobrat_plany(dannye: Any) -> list[PlanZakupki]:
         return []
 
     rezultaty = []
-    for element in elementy:
-        if not isinstance(element, dict):
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             PlanZakupki(
-                identifikator=str(element.get("id", "")),
-                god=element.get("year", 0),
-                nazvanie_organizatora=element.get("customerName", ""),
-                organizator_inn=element.get("customerInn", ""),
-                kolichestvo_pozitsiy=element.get("positionsCount", 0),
-                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(element.get("totalSum", 0)),
-                data_sozdaniya=element.get("createDate", ""),
-                data_obnovleniya=element.get("updateDate", ""),
+                identifikator=str(zapis.get("id", "")),
+                god=zapis.get("year", 0),
+                nazvanie_organizatora=zapis.get("customerName", ""),
+                organizator_inn=zapis.get("customerInn", ""),
+                kolichestvo_pozitsiy=zapis.get("positionsCount", 0),
+                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(zapis.get("totalSum", 0)),
+                data_sozdaniya=zapis.get("createDate", ""),
+                data_obnovleniya=zapis.get("updateDate", ""),
             )
         )
     return rezultaty

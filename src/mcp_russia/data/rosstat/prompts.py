@@ -5,18 +5,18 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_regiona(context: str, ctx: Context) -> str:
+async def analiz_regiona(kontekst: str, ctx: Context) -> str:
     """Анализ социально-экономического положения региона.
 
     Аргументы:
-        context: Контекст запроса (например, "анализ Москвы").
+        kontekst: Контекст запроса (например, "анализ Москвы").
 
     Возвращает:
         Шаблон промпта для анализа региона.
     """
     return (
         f"Выполни анализ социально-экономического положения региона.\n\n"
-        f"Контекст: {context}\n\n"
+        f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
         f"1. Определи код региона через spisok_regionov()\n"
         f"2. Получи данные о населении, ВРП, средней зарплате\n"

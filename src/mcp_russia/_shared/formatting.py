@@ -25,7 +25,10 @@ def tablitsa_v_markdown(zagolovki: Sequence[str], stroki_tablitsy: Sequence[Sequ
 
     stroka_zagolovka = "| " + " | ".join(str(h) for h in zagolovki) + " |"
     razdelitel = "| " + " | ".join("---" for _ in zagolovki) + " |"
-    stroki_tela = ["| " + " | ".join(str(v) for v in stroka) + " |" for stroka in stroki_tablitsy]
+    stroki_tela = [
+        "| " + " | ".join(str(znachenie_yacheyki) for znachenie_yacheyki in stroka) + " |"
+        for stroka in stroki_tablitsy
+    ]
 
     return "\n".join([stroka_zagolovka, razdelitel, *stroki_tela])
 
