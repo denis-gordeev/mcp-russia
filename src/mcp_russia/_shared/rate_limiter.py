@@ -2,9 +2,9 @@
 
 Использование::
 
-    limiter = OgranichitelChastoty(maks_zaprosov=80, period=60.0)
+    ogranichitel = OgranichitelChastoty(maks_zaprosov=80, period=60.0)
 
-    async with limiter:
+    async with ogranichitel:
         await do_request()
 """
 
@@ -27,26 +27,26 @@ class OgranichitelChastoty:
         """Инициализация ограничителя с заданными параметрами окна."""
         self._maks_zaprosov = maks_zaprosov
         self._period = period
-        self._timestamps: deque[float] = deque()
-        self._lock = asyncio.Lock()
+        self._metki_vremeni: deque[float] = deque()
+        self._zamok = asyncio.Lock()
 
     def _ochistit(self, seychas: float) -> None:
         """Удаление меток времени за пределами текущего окна."""
         porog = seychas - self._period
-        while self._timestamps and self._timestamps[0] <= porog:
-            self._timestamps.popleft()
+        while self._metki_vremeni and self._metki_vremeni[0] <= porog:
+            self._metki_vremeni.popleft()
 
     async def zakhvatit(self) -> None:
         """Ожидание доступного слота запроса и его резервирование."""
         while True:
-            async with self._lock:
+            async with self._zamok:
                 seychas = time.monotonic()
                 self._ochistit(seychas)
-                if len(self._timestamps) < self._maks_zaprosov:
-                    self._timestamps.append(seychas)
+                if len(self._metki_vremeni) < self._maks_zaprosov:
+                    self._metki_vremeni.append(seychas)
                     return
                 # Расчёт времени ожидания до истечения самой старой записи
-                ozhidanie = self._timestamps[0] + self._period - seychas
+                ozhidanie = self._metki_vremeni[0] + self._period - seychas
             await asyncio.sleep(max(ozhidanie, 0.01))
 
     async def __aenter__(self) -> OgranichitelChastoty:

@@ -15,7 +15,7 @@ class NormativnyyAkt(BaseModel):
     data_publikatsii: str = ""
     istochnik: str = ""  # pravo.gov.ru, rg.ru и т.д.
     sostoyanie: str = ""  # действующий, утратил силу и т.д.
-    otrysl: str = ""
+    otrasl: str = ""
     kratkoe_opisanie: str = ""
     tekst_ssylka: str = ""
     izmeneniya: list[str] = []

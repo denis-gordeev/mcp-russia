@@ -109,7 +109,7 @@ async def info_normativnogo_akta(
         f"- Тип: {dannye.tip}",
         f"- Дата принятия: {dannye.data_prinyatiya}",
         f"- Статус: {dannye.sostoyanie}",
-        f"- Отрасль: {dannye.otrysl}",
+        f"- Отрасль: {dannye.otrasl}",
     ]
     if dannye.kratkoe_opisanie:
         stroki.append(f"- Описание: {dannye.kratkoe_opisanie}")
@@ -196,18 +196,18 @@ async def poisk_aktov(
 
 async def publikatsii_po_datam(
     tip: str = "",
-    otrysl: str = "",
-    data_from: str = "",
-    data_to: str = "",
+    otrasl: str = "",
+    data_s: str = "",
+    data_po: str = "",
     ctx: Context | None = None,
 ) -> str:
     """Получить публикации за период.
 
     Аргументы:
         tip: Тип документа (необязательно).
-        otrysl: Отрасль законодательства (необязательно).
-        data_from: Дата начала периода.
-        data_to: Дата окончания периода.
+        otrasl: Отрасль законодательства (необязательно).
+        data_s: Дата начала периода.
+        data_po: Дата окончания периода.
 
     Возвращает:
         Список публикаций.
@@ -215,19 +215,19 @@ async def publikatsii_po_datam(
     if ctx:
         await ctx.info("Запрос публикаций за период...")
     dannye = await client.poluchit_publikatsii(
-        tip=tip, otrysl=otrysl, data_from=data_from, data_to=data_to
+        tip=tip, otrasl=otrasl, data_s=data_s, data_po=data_po
     )
 
     if not dannye:
         filtry = []
         if tip:
             filtry.append(f"тип: {tip}")
-        if otrysl:
-            filtry.append(f"отрасль: {otrysl}")
-        if data_from:
-            filtry.append(f"с {data_from}")
-        if data_to:
-            filtry.append(f"по {data_to}")
+        if otrasl:
+            filtry.append(f"отрасль: {otrasl}")
+        if data_s:
+            filtry.append(f"с {data_s}")
+        if data_po:
+            filtry.append(f"по {data_po}")
         tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
         return (
             f"Публикации{tekst_filtra} не найдены.\n\n"

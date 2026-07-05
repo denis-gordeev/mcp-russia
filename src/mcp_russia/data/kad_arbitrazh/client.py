@@ -160,7 +160,7 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     )
 
 
-def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
+def _razobrat_akty(dannye: Any, delo_nomer: str) -> list[SudebnyyAkt]:
     """Разбор судебных актов из ответа API КАД."""
     if isinstance(dannye, dict):
         elementy = dannye.get("Documents", dannye.get("Result", []))
@@ -177,7 +177,7 @@ def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
         rezultaty.append(
             SudebnyyAkt(
                 identifikator=str(dokument.get("Id", dokument.get("id", ""))),
-                delo_nomer=delo_number,
+                delo_nomer=delo_nomer,
                 tip_akta=dokument.get("DocumentType", dokument.get("type", "")),
                 data_akta=dokument.get("DocumentDate", dokument.get("date", "")),
                 sud=dokument.get("CourtName", dokument.get("court", "")),
@@ -190,7 +190,7 @@ def _razobrat_akty(dannye: Any, delo_number: str) -> list[SudebnyyAkt]:
     return rezultaty
 
 
-def _razobrat_storony(dannye: Any, delo_number: str) -> list[StoronaDela]:
+def _razobrat_storony(dannye: Any, delo_nomer: str) -> list[StoronaDela]:
     """Разбор сторон судебного дела из ответа API КАД."""
     if not isinstance(dannye, dict):
         return []

@@ -153,7 +153,7 @@ class TestReyestrFunktsiy:
             """Инструмент проверки связи."""
             return "pong"
 
-        reyestr._features["test_funktsiya"] = ZaregistrirovannayaFunktsiya(
+        reyestr._funktsii["test_funktsiya"] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz,
             server_funktsiya=podserver,
             put_modulya="fake.module",
@@ -169,7 +169,7 @@ class TestReyestrFunktsiy:
         reyestr = ReyestrFunktsiy()
         metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
         podmodul = FastMCP("sub")
-        reyestr._features["cbrf"] = ZaregistrirovannayaFunktsiya(
+        reyestr._funktsii["cbrf"] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz, server_funktsiya=podmodul, put_modulya="m"
         )
         svodka_testa = reyestr.svodka()
@@ -179,23 +179,23 @@ class TestReyestrFunktsiy:
 
     def test_svodka_s_propushchennymi(self) -> None:
         reyestr = ReyestrFunktsiy()
-        reyestr._skipped["broken"] = "отсутствует META_FUNKTSII"
+        reyestr._propushcheno["broken"] = "отсутствует META_FUNKTSII"
         svodka_testa = reyestr.svodka()
         assert "1 пропущено" in svodka_testa
         assert "broken" in svodka_testa
 
     def test_propushcheno_vozvrashchaet_kopiyu(self) -> None:
         reyestr = ReyestrFunktsiy()
-        reyestr._skipped["x"] = "reason"
+        reyestr._propushcheno["x"] = "reason"
         propushcheno = reyestr.propushcheno
         propushcheno["y"] = "drugoy"
-        assert "y" not in reyestr._skipped
+        assert "y" not in reyestr._propushcheno
 
     def test_funktsii_vozvrashchaet_kopiyu(self) -> None:
         reyestr = ReyestrFunktsiy()
         funktsii = reyestr.funktsii
         funktsii["poddelnyy"] = None  # type: ignore[assignment]
-        assert "poddelnyy" not in reyestr._features
+        assert "poddelnyy" not in reyestr._funktsii
 
 
 # ---------------------------------------------------------------------------

@@ -66,13 +66,13 @@ def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
         rezultaty.append(
             Deputat(
                 identifikator=deputat.get("id", 0),
-                фамилия=deputat.get("surname", deputat.get("lastName", "")),
-                имя=deputat.get("name", deputat.get("firstName", "")),
-                отчество=deputat.get("patronymic", deputat.get("middleName", "")),
-                фракция=frakciya_syraya,
-                комитет=deputat.get("committeeName", deputat.get("committee", "")),
-                регион=deputat.get("districtName", deputat.get("region", "")),
-                созыв=str(deputat.get("convocation", deputat.get("sozyv", ""))),
+                familiya=deputat.get("surname", deputat.get("lastName", "")),
+                imya=deputat.get("name", deputat.get("firstName", "")),
+                otchestvo=deputat.get("patronymic", deputat.get("middleName", "")),
+                frakciya=frakciya_syraya,
+                komitet=deputat.get("committeeName", deputat.get("committee", "")),
+                subiekt=deputat.get("districtName", deputat.get("region", "")),
+                sozyv=str(deputat.get("convocation", deputat.get("sozyv", ""))),
                 foto_ssylka=deputat.get("photoUrl", deputat.get("photo", "")),
             )
         )
@@ -114,13 +114,13 @@ def _razobrat_odnogo_deputata(dannye: dict[str, Any]) -> Deputat | None:
         return None
     return Deputat(
         identifikator=dannye.get("id", 0),
-        фамилия=dannye.get("surname", dannye.get("lastName", "")),
-        имя=dannye.get("name", dannye.get("firstName", "")),
-        отчество=dannye.get("patronymic", dannye.get("middleName", "")),
-        фракция=dannye.get("factionName", dannye.get("faction", "")),
-        комитет=dannye.get("committeeName", dannye.get("committee", "")),
-        регион=dannye.get("districtName", dannye.get("region", "")),
-        созыв=str(dannye.get("convocation", dannye.get("sozyv", ""))),
+        familiya=dannye.get("surname", dannye.get("lastName", "")),
+        imya=dannye.get("name", dannye.get("firstName", "")),
+        otchestvo=dannye.get("patronymic", dannye.get("middleName", "")),
+        frakciya=dannye.get("factionName", dannye.get("faction", "")),
+        komitet=dannye.get("committeeName", dannye.get("committee", "")),
+        subiekt=dannye.get("districtName", dannye.get("region", "")),
+        sozyv=str(dannye.get("convocation", dannye.get("sozyv", ""))),
         foto_ssylka=dannye.get("photoUrl", dannye.get("photo", "")),
     )
 

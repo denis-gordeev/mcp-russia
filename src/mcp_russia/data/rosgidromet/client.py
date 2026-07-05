@@ -363,7 +363,7 @@ def _gpa_v_mmrtst(hpa: float | None) -> float | None:
     return round(hpa * 0.750062, 1)
 
 
-def _gradusy_v_napravlenie(deg: float) -> str:
+def _gradusy_v_napravlenie(gradusy: float) -> str:
     """Преобразование градусов направления ветра в российское компасное направление."""
     napravleniya = [
         "С",
@@ -383,5 +383,5 @@ def _gradusy_v_napravlenie(deg: float) -> str:
         "СЗ",
         "ССЗ",
     ]
-    indeks = round(deg / 22.5) % 16
+    indeks = round(gradusy / 22.5) % 16
     return napravleniya[indeks]

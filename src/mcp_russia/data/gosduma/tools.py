@@ -48,7 +48,12 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
         )
 
     stroki_tablitsy = [
-        (str(d.identifikator), f"{d.фамилия} {d.имя} {d.отчество}".strip(), d.фракция, d.комитет)
+        (
+            str(d.identifikator),
+            f"{d.familiya} {d.imya} {d.otchestvo}".strip(),
+            d.frakciya,
+            d.komitet,
+        )
         for d in deputats[:50]
     ]
     zagolovok = f"**Депутаты Государственной Думы (созыв {sozyv or 'текущий'})**\n\n"
@@ -82,17 +87,17 @@ async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
         )
 
     stroki = [
-        f"**{deputat.фамилия} {deputat.имя} {deputat.отчество}**",
+        f"**{deputat.familiya} {deputat.imya} {deputat.otchestvo}**",
         f"- ID: {deputat.identifikator}",
     ]
-    if deputat.фракция:
-        stroki.append(f"- Фракция: {deputat.фракция}")
-    if deputat.комитет:
-        stroki.append(f"- Комитет: {deputat.комитет}")
-    if deputat.регион:
-        stroki.append(f"- Регион: {deputat.регион}")
-    if deputat.созыв:
-        stroki.append(f"- Созыв: {deputat.созыв}")
+    if deputat.frakciya:
+        stroki.append(f"- Фракция: {deputat.frakciya}")
+    if deputat.komitet:
+        stroki.append(f"- Комитет: {deputat.komitet}")
+    if deputat.subiekt:
+        stroki.append(f"- Регион: {deputat.subiekt}")
+    if deputat.sozyv:
+        stroki.append(f"- Созыв: {deputat.sozyv}")
 
     stroki.append("\nИсточник: api.duma.gov.ru / Госдума ФС РФ")
 

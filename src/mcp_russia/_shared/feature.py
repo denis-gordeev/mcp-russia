@@ -102,18 +102,18 @@ class ReyestrFunktsiy:
 
     def __init__(self) -> None:
         """Инициализация пустого реестра функций."""
-        self._features: dict[str, ZaregistrirovannayaFunktsiya] = {}
-        self._skipped: dict[str, str] = {}
+        self._funktsii: dict[str, ZaregistrirovannayaFunktsiya] = {}
+        self._propushcheno: dict[str, str] = {}
 
     @property
     def funktsii(self) -> dict[str, ZaregistrirovannayaFunktsiya]:
         """Все обнаруженные и зарегистрированные функции."""
-        return dict(self._features)
+        return dict(self._funktsii)
 
     @property
     def propushcheno(self) -> dict[str, str]:
         """Пропущенные функции с причинами."""
-        return dict(self._skipped)
+        return dict(self._propushcheno)
 
     def obnaruzhit(self, imya_paketa: str = "mcp_russia") -> ReyestrFunktsiy:
         """Обнаружение всех функций в пакете.
@@ -143,7 +143,7 @@ class ReyestrFunktsiy:
                 self._poprovat_zaregistrirovat(imya, korotkoe_imya)
             except Exception as exc:
                 prichina = str(exc)
-                self._skipped[korotkoe_imya] = prichina
+                self._propushcheno[korotkoe_imya] = prichina
                 logger.warning("Функция '%s' пропущена: %s", korotkoe_imya, prichina)
 
         return self
@@ -162,13 +162,13 @@ class ReyestrFunktsiy:
 
         # Шаг 3: Проверка активности функции
         if not metadannye_ekz.vklyuchena:
-            self._skipped[korotkoe_imya] = "отключена (vklyuchena=False)"
+            self._propushcheno[korotkoe_imya] = "отключена (vklyuchena=False)"
             logger.info("Функция '%s' отключена, пропуск.", korotkoe_imya)
             return
 
         # Шаг 4: Проверка аутентификации при необходимости
         if not metadannye_ekz.dostupna_li_autentifikatsiya():
-            self._skipped[korotkoe_imya] = (
+            self._propushcheno[korotkoe_imya] = (
                 f"отсутствует переменная {metadannye_ekz.peremennaya_avt_env}"
             )
             logger.warning(
@@ -186,7 +186,7 @@ class ReyestrFunktsiy:
             raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
-        self._features[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
+        self._funktsii[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz,
             server_funktsiya=obiekt_servera,
             put_modulya=put_modulya,
@@ -206,7 +206,7 @@ class ReyestrFunktsiy:
         Аргументы:
             kornevoy_server: Корневой FastMCP-сервер для монтирования функций.
         """
-        for imya, modul in sorted(self._features.items()):
+        for imya, modul in sorted(self._funktsii.items()):
             kornevoy_server.mount(modul.server_funktsiya, namespace=imya)
             logger.info("Смонтирована '%s' — %s", imya, modul.metadannye.opisanie)
 
@@ -216,13 +216,13 @@ class ReyestrFunktsiy:
         Полезно для логирования при запуске и генерации документации.
         """
         stroki = [
-            f"mcp-russia — {len(self._features)} функция(й) активно, "
-            f"{len(self._skipped)} пропущено\n"
+            f"mcp-russia — {len(self._funktsii)} функция(й) активно, "
+            f"{len(self._propushcheno)} пропущено\n"
         ]
 
-        if self._features:
+        if self._funktsii:
             stroki.append("Активные:")
-            for imya, funktsiya in sorted(self._features.items()):
+            for imya, funktsiya in sorted(self._funktsii.items()):
                 ikona_avt = (
                     "🔑"
                     if funktsiya.metadannye.trebuet_autentifikatsii
@@ -230,13 +230,13 @@ class ReyestrFunktsiy:
                 )
                 stroki.append(f"  /{imya:<20} {ikona_avt} {funktsiya.metadannye.opisanie}")
 
-        if self._skipped:
+        if self._propushcheno:
             stroki.append("\nПропущенные:")
-            for imya, prichina in sorted(self._skipped.items()):
+            for imya, prichina in sorted(self._propushcheno.items()):
                 stroki.append(f"  {imya:<20} ⏭️  {prichina}")
 
         return "\n".join(stroki)
 
     def poluchit_funktsiyu(self, imya: str) -> ZaregistrirovannayaFunktsiya | None:
         """Получение зарегистрированной функции по имени."""
-        return self._features.get(imya)
+        return self._funktsii.get(imya)

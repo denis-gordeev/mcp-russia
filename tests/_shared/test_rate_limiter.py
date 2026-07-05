@@ -13,60 +13,60 @@ from mcp_russia._shared.rate_limiter import OgranichitelChastoty
 class TestOgranichitelChastoty:
     @pytest.mark.asyncio
     async def test_propuskaet_v_predelakh_limita(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=5, period=60.0)
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=5, period=60.0)
         for _ in range(5):
-            async with limiter:
+            async with ogranichitel:
                 pass
         # Все 5 должны пройти без блокировки
 
     @pytest.mark.asyncio
     async def test_blokiruet_pri_ischerpanii(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=2, period=60.0)
-        async with limiter:
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=2, period=60.0)
+        async with ogranichitel:
             pass
-        async with limiter:
+        async with ogranichitel:
             pass
 
         # Третий запрос должен блокироваться; проверяем с коротким таймаутом
         with pytest.raises(asyncio.TimeoutError):
-            await asyncio.wait_for(limiter.zakhvatit(), timeout=0.05)
+            await asyncio.wait_for(ogranichitel.zakhvatit(), timeout=0.05)
 
     @pytest.mark.asyncio
     async def test_propuskaet_posle_istecheniya_okna(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=1, period=0.05)
-        async with limiter:
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=1, period=0.05)
+        async with ogranichitel:
             pass
         # Ждём истечения окна
         await asyncio.sleep(0.06)
         # Теперь должен быть разрешён
-        async with limiter:
+        async with ogranichitel:
             pass
 
     @pytest.mark.asyncio
     async def test_protokol_menedzhera_konteksta(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=10, period=60.0)
-        async with limiter as ctx:
-            assert ctx is limiter
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=10, period=60.0)
+        async with ogranichitel as ctx:
+            assert ctx is ogranichitel
 
     @pytest.mark.asyncio
     async def test_ochistka_udalyaet_starye_metki(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=2, period=0.05)
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=2, period=0.05)
         seychas = time.monotonic()
         # Имитируем старые метки времени
-        limiter._timestamps.append(seychas - 1.0)
-        limiter._timestamps.append(seychas - 1.0)
+        ogranichitel._metki_vremeni.append(seychas - 1.0)
+        ogranichitel._metki_vremeni.append(seychas - 1.0)
         # Очистка должна удалить их, разрешив новые запросы
-        async with limiter:
+        async with ogranichitel:
             pass
-        assert len(limiter._timestamps) == 1
+        assert len(ogranichitel._metki_vremeni) == 1
 
     @pytest.mark.asyncio
     async def test_parallelnyy_dostup(self) -> None:
-        limiter = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
+        ogranichitel = OgranichitelChastoty(maks_zaprosov=3, period=60.0)
         rezultaty: list[int] = []
 
         async def rabotnik(i: int) -> None:
-            async with limiter:
+            async with ogranichitel:
                 rezultaty.append(i)
 
         await asyncio.gather(rabotnik(0), rabotnik(1), rabotnik(2))

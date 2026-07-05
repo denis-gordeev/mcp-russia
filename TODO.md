@@ -2,6 +2,56 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-05 (шестьдесят шестой проход — русификация private-атрибутов _shared/, кириллических полей schemas, смешанных идентификаторов, исправление опечаток)
+
+### Выполнено
+
+- **Исправление опечатки `otrysl` → `otrasl`** (отрасль) в publikatsii/ (5 файлов):
+  - schemas.py: поле Pydantic `otrysl` → `otrasl`
+  - client.py: параметр `otrysl` → `otrasl`, строковый ключ `.get("otrysl")` → `.get("otrasl")`
+  - tools.py: параметр `otrysl` → `otrasl`, все ссылки и f-строки
+- **Русификация смешанных английских/русских идентификаторов** (6 идентификаторов):
+  - kad_arbitrazh/client.py: параметр `delo_number` → `delo_nomer` (2 функции: `_razobrat_akty`, `_razobrat_storony`)
+  - publikatsii/client.py + tools.py: параметры `data_from` → `data_s`, `data_to` → `data_po`
+  - rosgidromet/client.py: параметр `deg` → `gradusy` в `_gradusy_v_napravlenie`
+  - cekrf/client.py: локальная переменная `region` → `subiekt_str` в `_razobrat_kandidatov_iz_html`
+- **Русификация private-атрибутов `_shared/feature.py`** (2 атрибута, ~16 ссылок):
+  - `self._features` → `self._funktsii` (атрибут-словарь зарегистрированных функций)
+  - `self._skipped` → `self._propushcheno` (атрибут-словарь пропущенных функций)
+- **Русификация private-атрибута `_shared/cache.py`** (1 атрибут, ~12 ссылок):
+  - `self._store` → `self._khranilishche` (атрибут-словарь хранения кэша)
+- **Русификация private-атрибутов `_shared/rate_limiter.py`** (2 атрибута, ~8 ссылок):
+  - `self._timestamps` → `self._metki_vremeni` (deque меток времени)
+  - `self._lock` → `self._zamok` (asyncio.Lock)
+  - Пример в docstring: `limiter` → `ogranichitel`
+- **Русификация кириллических полей `Deputat` в gosduma/schemas.py** (7 полей → латинская транслитерация):
+  - `фамилия` → `familiya`, `имя` → `imya`, `отчество` → `otchestvo`
+  - `фракция` → `frakciya`, `комитет` → `komitet`, `регион` → `subiekt`, `созыв` → `sozyv`
+  - Обновлены все ссылки: gosduma/client.py (2 конструктора), gosduma/tools.py (5 ссылок), test_tools.py (6 конструкторов/ассертов)
+- **Русификация тестовых переменных** (3 файла):
+  - test_feature.py: `reyestr._features` → `reyestr._funktsii`, `reyestr._skipped` → `reyestr._propushcheno`
+  - test_rate_limiter.py: `limiter` → `ogranichitel`, `limiter._timestamps` → `ogranichitel._metki_vremeni`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 файл переформатирован, `pytest` — 651 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`otrysl` → `otrasl`**: исправлена опечатка — «отрасль» транслитерируется как `otrasl` (в rosstat уже использовалось `otrasl`)
+- **`data_from`/`data_to` → `data_s`/`data_po`**: английские предлоги `from`/`to` заменены на русские `с`/`по`; `data` = «дата» (русское слово)
+- **`delo_number` → `delo_nomer`**: смешанный идентификатор; schema уже использует `delo_nomer`
+- **`_features`/`_skipped` → `_funktsii`/`_propushcheno`**: последние английские private-атрибуты в ReyestrFunktsiy; публичные property уже были русскими (`funktsii`, `propushcheno`)
+- **`_store` → `_khranilishche`**: устранён последний английский private-атрибут в кэше
+- **`_timestamps`/`_lock` → `_metki_vremeni`/`_zamok`**: устранены последние английские private-атрибуты в rate_limiter
+- **Кириллические поля Deputat → транслитерация**: 7 полей `фамилия`, `имя`, `отчество`, `фракция`, `комитет`, `регион`, `созыв` → `familiya`, `imya`, `otchestvo`, `frakciya`, `komitet`, `subiekt`, `sozyv`; устранено единственное нарушение конвенции латинской транслитерации в кодовой базе
+- **`region` → `subiekt_str`**: в cekrf/client.py; `subiekt` — устоявшаяся конвенция для «субъект РФ» в кодовой базе; суффикс `_str` добавлен чтобы избежать конфликта с одноимённым параметром
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser),_loanwords идентичные русским (`data` = «дата», `period` = «период», `post` = «пост»), короткие однобуквенные переменные в незначимых контекстах, и `logger` (стандартная конвенция Python)
+- **Английские переменные в scripts/generate_diagrams.py**: локальные переменные `api`, `server`, `tools`, `client`, `schemas`, `constants`, `shared`, `start`, `iter_mod`, `bm25` — диаграммный скрипт с низким приоритетом
+
 ## Статус раунда 2026-07-04 (шестьдесят пятый проход — исправление документации, русификация server_fn, _shared/ переменных, element/context в data/, тестов)
 
 ### Выполнено

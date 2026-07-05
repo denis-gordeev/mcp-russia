@@ -32,8 +32,8 @@ def test_razobrat_deputatov_list():
     ]
     rezultat = gosduma_client._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
-    assert rezultat[0].фамилия == "Иванов"
-    assert rezultat[0].фракция == "Единая Россия"
+    assert rezultat[0].familiya == "Иванов"
+    assert rezultat[0].frakciya == "Единая Россия"
 
 
 def test_razobrat_deputatov_dict():
@@ -53,8 +53,8 @@ def test_razobrat_deputatov_dict():
     }
     rezultat = gosduma_client._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
-    assert rezultat[0].фамилия == "Петров"
-    assert rezultat[0].фракция == "КПРФ"
+    assert rezultat[0].familiya == "Петров"
+    assert rezultat[0].frakciya == "КПРФ"
 
 
 def test_razobrat_deputatov_pustoy():
@@ -112,7 +112,7 @@ def test_razobrat_odnogo_deputata():
     }
     rezultat = gosduma_client._razobrat_odnogo_deputata(dannye)
     assert rezultat is not None
-    assert rezultat.фамилия == "Сидоров"
+    assert rezultat.familiya == "Сидоров"
 
 
 def test_razobrat_odnogo_deputata_nichego():
@@ -133,23 +133,23 @@ async def test_spisok_deputatov_s_dannymi():
     deputats = [
         Deputat(
             identifikator=1,
-            фамилия="Иванов",
-            имя="Иван",
-            отчество="Иванович",
-            фракция="Единая Россия",
-            комитет="Бюджет",
-            регион="Москва",
-            созыв="8",
+            familiya="Иванов",
+            imya="Иван",
+            otchestvo="Иванович",
+            frakciya="Единая Россия",
+            komitet="Бюджет",
+            subiekt="Москва",
+            sozyv="8",
         ),
         Deputat(
             identifikator=2,
-            фамилия="Петров",
-            имя="Пётр",
-            отчество="Петрович",
-            фракция="КПРФ",
-            комитет="Оборона",
-            регион="Краснодар",
-            созыв="8",
+            familiya="Петров",
+            imya="Пётр",
+            otchestvo="Петрович",
+            frakciya="КПРФ",
+            komitet="Оборона",
+            subiekt="Краснодар",
+            sozyv="8",
         ),
     ]
     with patch.object(gosduma_tools.client, "poluchit_deputatov", return_value=deputats):
@@ -169,13 +169,13 @@ async def test_info_deputata_nayden():
     ctx = _maket_konteksta()
     deputat = Deputat(
         identifikator=1,
-        фамилия="Иванов",
-        имя="Иван",
-        отчество="Иванович",
-        фракция="Единая Россия",
-        комитет="Бюджет",
-        регион="Москва",
-        созыв="8",
+        familiya="Иванов",
+        imya="Иван",
+        otchestvo="Иванович",
+        frakciya="Единая Россия",
+        komitet="Бюджет",
+        subiekt="Москва",
+        sozyv="8",
     )
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=deputat):
         rezultat = await gosduma_tools.info_deputata(1, ctx)

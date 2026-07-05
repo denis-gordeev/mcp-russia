@@ -67,17 +67,17 @@ async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
 
 async def poluchit_publikatsii(
     tip: str = "",
-    otrysl: str = "",
-    data_from: str = "",
-    data_to: str = "",
+    otrasl: str = "",
+    data_s: str = "",
+    data_po: str = "",
 ) -> list[OficialnayaPublikatsiya]:
     """Поиск официальных публикаций через открытые данные pravo.gov.ru.
 
     Аргументы:
         tip: Фильтр по типу документа (код типа pravo.gov.ru).
-        otrysl: Фильтр по отрасли права.
-        data_from: Фильтр по начальной дате (ГГГГ-ММ-ДД).
-        data_to: Фильтр по конечной дате (ГГГГ-ММ-ДД).
+        otrasl: Фильтр по отрасли права.
+        data_s: Фильтр по начальной дате (ГГГГ-ММ-ДД).
+        data_po: Фильтр по конечной дате (ГГГГ-ММ-ДД).
 
     Возвращает:
         Список публикаций.
@@ -86,12 +86,12 @@ async def poluchit_publikatsii(
     parametry: dict[str, str] = {}
     if tip:
         parametry["type"] = tip
-    if otrysl:
-        parametry["branch"] = otrysl
-    if data_from:
-        parametry["dateFrom"] = data_from
-    if data_to:
-        parametry["dateTo"] = data_to
+    if otrasl:
+        parametry["branch"] = otrasl
+    if data_s:
+        parametry["dateFrom"] = data_s
+    if data_po:
+        parametry["dateTo"] = data_po
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_publikatsii(dannye)
@@ -174,7 +174,7 @@ def _razobrat_normativnyy_akt(dannye: Any) -> NormativnyyAkt | None:
         data_publikatsii=dannye.get("publishDate", dannye.get("data_publikatsii", "")) or "",
         istochnik=dannye.get("source", dannye.get("istochnik", "pravo.gov.ru")) or "",
         sostoyanie=dannye.get("status", "") or "",
-        otrysl=dannye.get("branch", dannye.get("otrysl", "")) or "",
+        otrasl=dannye.get("branch", dannye.get("otrasl", "")) or "",
         kratkoe_opisanie=dannye.get("description", dannye.get("kratkoe_opisanie", "")) or "",
         tekst_ssylka=dannye.get("url", dannye.get("tekst_ssylka", "")) or "",
         izmeneniya=dannye.get("amendments", dannye.get("izmeneniya", [])) or [],
@@ -269,7 +269,7 @@ def _rezultaty_poiska(dannye: Any) -> list[NormativnyyAkt]:
                 tip=nazvanie_tipa,
                 data_prinyatiya=zapis.get("date", zapis.get("data_prinyatiya", "")),
                 sostoyanie=zapis.get("status", ""),
-                otrysl=zapis.get("branch", zapis.get("otrysl", "")),
+                otrasl=zapis.get("branch", zapis.get("otrasl", "")),
                 kratkoe_opisanie=zapis.get("description", zapis.get("kratkoe_opisanie", "")),
                 tekst_ssylka=zapis.get("url", zapis.get("tekst_ssylka", "")),
             )

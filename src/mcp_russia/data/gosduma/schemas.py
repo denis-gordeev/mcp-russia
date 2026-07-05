@@ -9,13 +9,13 @@ class Deputat(BaseModel):
     """Депутат Государственной Думы."""
 
     identifikator: int
-    фамилия: str
-    имя: str
-    отчество: str
-    фракция: str = ""
-    комитет: str = ""
-    регион: str = ""
-    созыв: str = ""
+    familiya: str
+    imya: str
+    otchestvo: str
+    frakciya: str = ""
+    komitet: str = ""
+    subiekt: str = ""
+    sozyv: str = ""
     foto_ssylka: str = ""
 
 

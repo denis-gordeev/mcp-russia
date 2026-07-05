@@ -34,45 +34,50 @@ class KeshSVremenemZhizni:
         """Инициализация кэша с заданным TTL и максимальным размером."""
         self._vremya_zhizni = vremya_zhizni
         self._maks_razmer = maks_razmer
-        self._store: dict[str, tuple[float, Any]] = {}
+        self._khranilishche: dict[str, tuple[float, Any]] = {}
 
     @property
     def razmer(self) -> int:
         """Количество записей в кэше (включая просроченные)."""
-        return len(self._store)
+        return len(self._khranilishche)
 
     def poluchit(self, klyuch: str) -> Any | None:
         """Получение значения, если оно существует и не истекло."""
-        zapis = self._store.get(klyuch)
+        zapis = self._khranilishche.get(klyuch)
         if zapis is None:
             return None
         istekaet_v, znachenie = zapis
         if time.monotonic() > istekaet_v:
-            del self._store[klyuch]
+            del self._khranilishche[klyuch]
             return None
         return znachenie
 
     def ustanovit(self, klyuch: str, znachenie: Any) -> None:
         """Сохранение значения с TTL-истечением."""
-        if len(self._store) >= self._maks_razmer:
+        if len(self._khranilishche) >= self._maks_razmer:
             self._ischislit()
-        self._store[klyuch] = (time.monotonic() + self._vremya_zhizni, znachenie)
+        self._khranilishche[klyuch] = (time.monotonic() + self._vremya_zhizni, znachenie)
 
     def ochistit(self) -> None:
         """Удаление всех записей."""
-        self._store.clear()
+        self._khranilishche.clear()
 
     def _ischislit(self) -> None:
         """Удаление просроченных записей; если кэш полон — удаление самой старой."""
         seychas = time.monotonic()
-        istekshie = [klyuch for klyuch, (istekaet, _) in self._store.items() if seychas > istekaet]
+        istekshie = [
+            klyuch for klyuch, (istekaet, _) in self._khranilishche.items() if seychas > istekaet
+        ]
         for klyuch in istekshie:
-            del self._store[klyuch]
+            del self._khranilishche[klyuch]
 
         # Всё ещё полон? Удаляем запись с ближайшим истечением
-        if len(self._store) >= self._maks_razmer:
-            samyy_staryy_klyuch = min(self._store, key=lambda klyuch: self._store[klyuch][0])
-            del self._store[samyy_staryy_klyuch]
+        if len(self._khranilishche) >= self._maks_razmer:
+            samyy_staryy_klyuch = min(
+                self._khranilishche,
+                key=lambda klyuch: self._khranilishche[klyuch][0],
+            )
+            del self._khranilishche[samyy_staryy_klyuch]
 
 
 def kesh_s_vremenem_zhizni(

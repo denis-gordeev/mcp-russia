@@ -300,7 +300,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         partia = ""
         sostoyanie = ""
         dolzhnost = ""
-        region = ""
+        subiekt_str = ""
         kandidat_id = ""
 
         for i, yacheyka in enumerate(stroka_tablitsy):
@@ -324,7 +324,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
                     fio=fio,
                     partia=partia,
                     dolzhnost=dolzhnost,
-                    subiekt=region,
+                    subiekt=subiekt_str,
                     sostoyanie=sostoyanie,
                 )
             )
