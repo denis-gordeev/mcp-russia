@@ -83,8 +83,8 @@ def test_razobrat_openmeteo_pogodu():
             "time": "2026-06-01T12:00",
         }
     }
-    info = STANCII_MONITORINGA[0]
-    rezultat = _razobrat_openmeteo_pogodu(dannye, info)
+    stantsiya = STANCII_MONITORINGA[0]
+    rezultat = _razobrat_openmeteo_pogodu(dannye, stantsiya)
     assert rezultat.gorod == "Москва"
     assert rezultat.temperatura == 5.3
     assert rezultat.oshchushchaetsya_kak == 2.1
@@ -104,8 +104,8 @@ def test_razobrat_openmeteo_prognoz():
             "weather_code": [1, 0],
         }
     }
-    info = STANCII_MONITORINGA[0]
-    rezultat = _razobrat_openmeteo_prognoz(dannye, info)
+    stantsiya = STANCII_MONITORINGA[0]
+    rezultat = _razobrat_openmeteo_prognoz(dannye, stantsiya)
     assert len(rezultat) == 2
     assert rezultat[0].gorod == "Москва"
     assert rezultat[0].temperatura_dnem == 22.0
@@ -126,8 +126,8 @@ def test_razobrat_openmeteo_ekologiyu():
             "time": "2026-06-01T12:00",
         }
     }
-    info = STANCII_MONITORINGA[0]
-    rezultat = _razobrat_openmeteo_ekologiyu(dannye, info)
+    stantsiya = STANCII_MONITORINGA[0]
+    rezultat = _razobrat_openmeteo_ekologiyu(dannye, stantsiya)
     assert len(rezultat) == 6
     assert rezultat[0].pokazatel == "PM2.5"
     assert rezultat[0].znachenie == 12.5
@@ -149,8 +149,8 @@ def test_razobrat_openmeteo_ekologiyu_prevyshenie():
             "time": "2026-06-01T12:00",
         }
     }
-    info = STANCII_MONITORINGA[0]
-    rezultat = _razobrat_openmeteo_ekologiyu(dannye, info)
+    stantsiya = STANCII_MONITORINGA[0]
+    rezultat = _razobrat_openmeteo_ekologiyu(dannye, stantsiya)
     assert rezultat[0].prevyshenie is True
     assert rezultat[1].prevyshenie is True
     assert rezultat[3].prevyshenie is True

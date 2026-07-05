@@ -108,29 +108,29 @@ class TestVypolnenieResursov:
     @pytest.mark.asyncio
     async def test_chtenie_shablona_pismo(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("template://pismo")
-            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            soderzhimoe = await c.read_resource("template://pismo")
+            tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ПИСЬМО" in tekst or "ОФИЦИАЛЬНОЕ ПИСЬМО" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_shablona_prikaz(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("template://prikaz")
-            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            soderzhimoe = await c.read_resource("template://prikaz")
+            tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ПРИКАЗ" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_manual(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("normas://manual")
-            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            soderzhimoe = await c.read_resource("normas://manual")
+            tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ГОСТ" in tekst or "единообразие" in tekst.lower()
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_obrashcheniya(self) -> None:
         async with Client(mcp) as c:
-            content = await c.read_resource("normas://obrashcheniya")
-            tekst = content[0].text if hasattr(content[0], "text") else str(content[0])
+            soderzhimoe = await c.read_resource("normas://obrashcheniya")
+            tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "Президент" in tekst or "Уважаемый" in tekst
 
 

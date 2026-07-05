@@ -47,9 +47,11 @@ def obzor_sistemy() -> None:
         with Cluster("Корневой сервер mcp-russia"):
             koren = FastAPI("FastMCP\nserver.py")
             reyestr = Python("ReyestrFunktsiy")
-            meta = Python("Мета-инструменты\n(spisok, rekomendovat,\nsplanirovat, paket)")
+            meta_instrumenty = Python(
+                "Мета-инструменты\n(spisok, rekomendovat,\nsplanirovat, paket)"
+            )
             koren - reyestr
-            koren - meta
+            koren - meta_instrumenty
 
         klient >> koren
 
@@ -95,16 +97,16 @@ def obzor_sistemy() -> None:
         reyestr >> Edge(style="dashed") >> deloproizvodstvo
         reyestr >> Edge(style="dashed") >> rosapi
 
-        api = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")
+        gos_api = Server("Государственные API\n(gosuslugi.ru, rosstat.gov.ru,\ncbr.ru, ...)")
 
-        cbrf >> api
-        rosstat >> api
-        gosduma >> api
-        kad_arbitrazh >> api
-        cekrf >> api
-        rosaudit >> api
-        rosgidromet >> api
-        zakupki >> api
+        cbrf >> gos_api
+        rosstat >> gos_api
+        gosduma >> gos_api
+        kad_arbitrazh >> gos_api
+        cekrf >> gos_api
+        rosaudit >> gos_api
+        rosgidromet >> gos_api
+        zakupki >> gos_api
 
 
 def anatomiya_modulya() -> None:
@@ -119,23 +121,23 @@ def anatomiya_modulya() -> None:
         edge_attr=ATRIBUBY_REBRA,
     ):
         with Cluster("data/rosstat/"):
-            init = Python("__init__.py\nMETA_FUNKTSII")
-            server = FastAPI("server.py\nmcp: FastMCP")
-            tools = Python("tools.py\nspisok_regionov()\npoluchit_indikator()")
-            client = Python("client.py\nhttp_poluchit() async")
-            schemas = Python("schemas.py\nBaseModel")
-            constants = Python("constants.py\nROSSTAT_API_BASE")
+            init_uzel = Python("__init__.py\nMETA_FUNKTSII")
+            server_uzel = FastAPI("server.py\nmcp: FastMCP")
+            instrumenty = Python("tools.py\nspisok_regionov()\npoluchit_indikator()")
+            klient = Python("client.py\nhttp_poluchit() async")
+            skhemy = Python("schemas.py\nBaseModel")
+            konstanty = Python("constants.py\nROSSTAT_API_BASE")
 
-            server >> Edge(label="регистрирует") >> tools
-            tools >> Edge(label="делегирует HTTP") >> client
-            client >> Edge(label="возвращает") >> schemas
+            server_uzel >> Edge(label="регистрирует") >> instrumenty
+            instrumenty >> Edge(label="делегирует HTTP") >> klient
+            klient >> Edge(label="возвращает") >> skhemy
 
-        shared = Python("_shared/\nhttp_klient\nkesh\nformatirovanie")
-        api = Server("API Росстата\nrosstat.gov.ru")
+        obshchiy = Python("_shared/\nhttp_klient\nkesh\nformatirovanie")
+        gos_api = Server("API Росстата\nrosstat.gov.ru")
 
-        tools >> Edge(style="dashed", label="использует") >> shared
-        client >> Edge(style="dashed", label="использует") >> shared
-        client >> api
+        instrumenty >> Edge(style="dashed", label="использует") >> obshchiy
+        klient >> Edge(style="dashed", label="использует") >> obshchiy
+        klient >> gos_api
 
 
 def potok_avtoobnaruzheniya() -> None:
@@ -149,8 +151,8 @@ def potok_avtoobnaruzheniya() -> None:
         node_attr=ATRIBUBY_UZLA,
         edge_attr=ATRIBUBY_REBRA,
     ):
-        start = StartEnd("obnaruzhit(paket)")
-        iter_mod = Action("iteratsiya_moduley(paket)")
+        nachalo = StartEnd("obnaruzhit(paket)")
+        iteratsiya = Action("iteratsiya_moduley(paket)")
         proverka_imeni = Decision("имя начинается\nс '_'?")
         propusk = Action("пропустить")
         import_init = Action("zagruzit __init__.py")
@@ -159,16 +161,16 @@ def potok_avtoobnaruzheniya() -> None:
         proverka_auth = Decision("trebuet_autentifikatsii\nи переменная окружения задана?")
         propusk3 = Action("пропустить\n(молча)")
         import_server = Action("zagruzit server.py")
-        mount = Action("smontirovat(mcp,\nprostranstvo_imen=imya)")
-        end = StartEnd("следующий модуль\nили конец")
+        montirovanie = Action("smontirovat(mcp,\nprostranstvo_imen=imya)")
+        konets = StartEnd("следующий модуль\nили конец")
 
-        start >> iter_mod >> proverka_imeni
-        proverka_imeni >> Edge(label="да") >> propusk >> end
+        nachalo >> iteratsiya >> proverka_imeni
+        proverka_imeni >> Edge(label="да") >> propusk >> konets
         proverka_imeni >> Edge(label="нет") >> import_init >> proverka_meta
-        proverka_meta >> Edge(label="нет") >> propusk2 >> end
+        proverka_meta >> Edge(label="нет") >> propusk2 >> konets
         proverka_meta >> Edge(label="да") >> proverka_auth
-        proverka_auth >> Edge(label="нет") >> propusk3 >> end
-        proverka_auth >> Edge(label="да") >> import_server >> mount >> end
+        proverka_auth >> Edge(label="нет") >> propusk3 >> konets
+        proverka_auth >> Edge(label="да") >> import_server >> montirovanie >> konets
 
 
 def potok_dannykh() -> None:
@@ -184,25 +186,25 @@ def potok_dannykh() -> None:
     ):
         polzovatel = Client("Пользователь")
         mcp_klient = Client("MCP-клиент")
-        bm25 = Python("Фильтр BM25\n(top-10 инструментов)")
+        filtr_bm25 = Python("Фильтр BM25\n(top-10 инструментов)")
 
         with Cluster("mcp-russia"):
-            tools = Python("tools.py\nоркестрирует")
-            client = Python("client.py\nhttpx асинхр.")
+            instrumenty = Python("tools.py\nоркестрирует")
+            klient = Python("client.py\nhttpx асинхр.")
             ogranichitel = Python("Ограничитель частоты\nскользящее окно")
 
-        api = Server("Гос. API\n(JSON)")
+        gos_api = Server("Гос. API\n(JSON)")
 
         # Путь запроса
         polzovatel >> Edge(label="вопрос") >> mcp_klient
-        mcp_klient >> Edge(label="вызов инструмента") >> bm25
-        bm25 >> Edge(label="диспетчеризация") >> tools
-        tools >> client >> ogranichitel >> api
+        mcp_klient >> Edge(label="вызов инструмента") >> filtr_bm25
+        filtr_bm25 >> Edge(label="диспетчеризация") >> instrumenty
+        instrumenty >> klient >> ogranichitel >> gos_api
 
         # Путь ответа (обратные метки)
-        api >> Edge(label="JSON", style="dashed", color="darkgreen") >> client
-        client >> Edge(label="Pydantic", style="dashed", color="darkgreen") >> tools
-        tools >> Edge(label="Markdown", style="dashed", color="darkgreen") >> mcp_klient
+        gos_api >> Edge(label="JSON", style="dashed", color="darkgreen") >> klient
+        klient >> Edge(label="Pydantic", style="dashed", color="darkgreen") >> instrumenty
+        instrumenty >> Edge(label="Markdown", style="dashed", color="darkgreen") >> mcp_klient
         mcp_klient >> Edge(label="ответ", style="dashed", color="darkgreen") >> polzovatel
 
         # Аннотация повторных попыток
@@ -210,7 +212,7 @@ def potok_dannykh() -> None:
         ogranichitel >> Edge(label="повтор 429/5xx", style="dotted", color="red") >> ogranichitel
 
 
-def main() -> None:
+def glavnaya() -> None:
     KATALOG_VYVODA.mkdir(parents=True, exist_ok=True)
     # библиотека diagrams использует cwd для временных файлов
     iskhodnyy_cwd = os.getcwd()
@@ -230,4 +232,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    glavnaya()

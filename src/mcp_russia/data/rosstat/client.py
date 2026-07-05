@@ -214,9 +214,11 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
                     nazvanie_subiekta = ""
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
-                        if ri:
-                            nazvanie_subiekta = ri["nazvanie"]
+                        info_subiekta = next(
+                            (r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None
+                        )
+                        if info_subiekta:
+                            nazvanie_subiekta = info_subiekta["nazvanie"]
                     rezultaty.append(
                         VRPDannye(
                             period=zapis.get("date", zapis.get("period", "")),
@@ -261,9 +263,11 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
                     nazvanie_subiekta = ""
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
-                        if ri:
-                            nazvanie_subiekta = ri["nazvanie"]
+                        info_subiekta = next(
+                            (r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None
+                        )
+                        if info_subiekta:
+                            nazvanie_subiekta = info_subiekta["nazvanie"]
                     rezultaty.append(
                         DannyeZarplaty(
                             period=zapis.get("date", zapis.get("period", "")),
@@ -304,9 +308,11 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                     kod_subiekta = str(zapis.get("region", zapis.get("okato", "")))
                     nazvanie_subiekta = zapis.get("regionName", "")
                     if not nazvanie_subiekta:
-                        ri = next((r for r in SUBIEKTY_RF if r["kod"] == kod_subiekta), None)
-                        if ri:
-                            nazvanie_subiekta = ri["nazvanie"]
+                        info_subiekta = next(
+                            (r for r in SUBIEKTY_RF if r["kod"] == kod_subiekta), None
+                        )
+                        if info_subiekta:
+                            nazvanie_subiekta = info_subiekta["nazvanie"]
                     rezultaty.append(
                         {
                             "subiekt": nazvanie_subiekta,
@@ -362,9 +368,9 @@ async def poluchit_indikator_dannye(
             nazvanie_subiekta = ""
             kod_reg = zapis.get("region", subiekt)
             if kod_reg:
-                ri = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
-                if ri:
-                    nazvanie_subiekta = ri["nazvanie"]
+                info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
+                if info_subiekta:
+                    nazvanie_subiekta = info_subiekta["nazvanie"]
             rezultaty.append(
                 IndikatorDannye(
                     kod_emiss=kod_emiss,
@@ -448,9 +454,9 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             return _rezerv_otraslevaya_struktura(subiekt, god)
         nazvanie_subiekta = ""
         if subiekt:
-            ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
-            if ri:
-                nazvanie_subiekta = ri["nazvanie"]
+            info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+            if info_subiekta:
+                nazvanie_subiekta = info_subiekta["nazvanie"]
         rezultaty = []
         for zapis in elementy:
             if not isinstance(zapis, dict):
@@ -486,9 +492,9 @@ def _rezerv_otraslevaya_struktura(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
-        if ri:
-            nazvanie_subiekta = ri["nazvanie"]
+        info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+        if info_subiekta:
+            nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
         OtraslevayaStrukturaVRP(
             subiekt=nazvanie_subiekta,
@@ -531,9 +537,9 @@ async def poluchit_investitsii_po_vidam(
             return _rezerv_investitsii_po_vidam(subiekt, god)
         nazvanie_subiekta = ""
         if subiekt:
-            ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
-            if ri:
-                nazvanie_subiekta = ri["nazvanie"]
+            info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+            if info_subiekta:
+                nazvanie_subiekta = info_subiekta["nazvanie"]
         rezultaty = []
         for zapis in elementy:
             if not isinstance(zapis, dict):
@@ -573,9 +579,9 @@ def _rezerv_investitsii_po_vidam(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        ri = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
-        if ri:
-            nazvanie_subiekta = ri["nazvanie"]
+        info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+        if info_subiekta:
+            nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
         InvestitsiiPoVidam(
             subiekt=nazvanie_subiekta,

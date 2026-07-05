@@ -2,6 +2,47 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-05 (шестьдесят седьмой проход — русификация оставшихся английских переменных, docstring-примеров, тестовых переменных и docstrings, скрипта диаграмм, документации)
+
+### Выполнено
+
+- **Русификация `parser` → `razobratchik`** в cekrf/client.py (2 функции: `_razobrat_rezultaty_iz_html`, `_razobrat_kandidatov_iz_html`)
+- **Русификация `ri` → `info_subiekta`** в rosstat/client.py (8 вхождений в 6 функциях: `poluchit_vrp`, `poluchit_zarplatu`, `poluchit_sravnenie_regionov`, `poluchit_indikator_dannye`, `poluchit_otraslevuyu_strukturu_vrp`, `_rezerv_otraslevaya_struktura`, `_rezerv_investitsii_po_vidam`)
+- **Русификация docstring-примеров** (3 файла):
+  - cache.py: `cache = kesh_s_vremenem_zhizni(ttl=300)` → `kesh = kesh_s_vremenem_zhizni(vremya_zhizni=300)`, `@cache` → `@kesh`
+  - feature.py: `registry = ReyestrFunktsiy()` → `reyestr = ReyestrFunktsiy()`, `registry.obnaruzhit()` → `reyestr.obnaruzhit()`, `registry.smontirovat_vse(mcp)` → `reyestr.smontirovat_vse(mcp)`, `registry.obnaruzhit()` в Returns → `reyestr.obnaruzhit()`
+  - rate_limiter.py: `await do_request()` → `await vypolnit_zapros()`, `token bucket` → `ведро токенов`
+  - http_client.py: `transient-ошибок` → `временных ошибок`
+- **Русификация тестовых переменных** (5 файлов):
+  - rosstat/test_tools.py: `region` → `subiekt`
+  - gosduma/test_tools.py: `bills` → `zakonoproekty`, `votes` → `golosovaniya`
+  - rosgidromet/test_tools.py: `info` → `stantsiya` (4 вхождения)
+  - deloproizvodstvo/test_integration.py: `content` → `soderzhimoe` (4 вхождения)
+- **Русификация тестовых docstrings** (2 файла):
+  - test_feature.py: `Discovery находит feature` → `Обнаружение находит функцию`, `Mount с пустым registry` → `Монтирование с пустым реестром`, `Регистрирует feature вручную и монтирует в root` → `Регистрирует функцию вручную и монтирует в корень`, `через registry` → `через реестр`, `Root-сервер без подключённых features` → `Корневой сервер без подключённых функций`
+  - test_lifespan.py: `Lifespan должен вернуть http_client` → `Жизненный цикл должен вернуть HTTP-клиент`
+- **Русификация документации** (2 файла):
+  - docs/reference/configuration.md: `limiter` → `ogranichitel` в примере кода
+  - CONTRIBUTING.md: `client` → `klient`, `result` → `rezultat` в примере кода
+- **Русификация scripts/generate_diagrams.py** (16 переменных):
+  - `meta` → `meta_instrumenty`, `api` → `gos_api` (2 функции), `server` → `server_uzel`, `tools` → `instrumenty` (2 функции), `client` → `klient` (2 функции), `schemas` → `skhemy`, `constants` → `konstanty`, `shared` → `obshchiy`, `start` → `nachalo`, `iter_mod` → `iteratsiya`, `mount` → `montirovanie`, `end` → `konets`, `bm25` → `filtr_bm25`, `init` → `init_uzel`, `main` → `glavnaya`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 файл переформатирован, `pytest` — 680 unit-тестов пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`parser` → `razobratchik`**: устранён последний крупный английский идентификатор в cekrf/client.py; «разборщик» — русское слово для HTML-парсера
+- **`ri` → `info_subiekta`**: устранена краткая английская аббревиатура `ri` (region info); выбрано `info_subiekta` для согласованности с `nazvanie_subiekta` и `kod_subiekta`
+- **Docstring-примеры синхронизированы**: `cache`/`registry`/`limiter`/`do_request`/`token bucket`/`transient` в docstrings заменены на русские эквиваленты, соответствующие реальному коду
+- **Тестовые переменные русифицированы**: `region`/`bills`/`votes`/`info`/`content` — последние английские переменные в тестах данных
+- **Диаграммный скрипт полностью русифицирован**: 16 английских переменных заменены; скрипт больше не содержит английских идентификаторов
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Финальная дочистка кодовой базы**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период», `post` = «пост»), короткие однобуквенные переменные в незначимых контекстах (`c` в async with Client), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-05 (шестьдесят шестой проход — русификация private-атрибутов _shared/, кириллических полей schemas, смешанных идентификаторов, исправление опечаток)
 
 ### Выполнено

@@ -212,7 +212,7 @@ async def test_zakonoproekty_pustoy():
 
 
 async def test_zakonoproekty_s_dannymi():
-    bills = [
+    zakonoproekty = [
         Zakonoproekt(
             identifikator="1",
             nomer="12345-8",
@@ -223,7 +223,7 @@ async def test_zakonoproekty_s_dannymi():
             chteniya=1,
         )
     ]
-    with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=bills):
+    with patch.object(gosduma_tools.client, "poluchit_zakonoproekty", return_value=zakonoproekty):
         rezultat = await gosduma_tools.zakonoproekty(sostoyanie="рассматривается")
     assert "12345-8" in rezultat
     assert "Рассматривается" in rezultat
@@ -236,7 +236,7 @@ async def test_golosovaniya_pustoy():
 
 
 async def test_golosovaniya_s_dannymi():
-    votes = [
+    golosovaniya = [
         Golosovanie(
             zakonoproekt_identifikator="1",
             nazvanie="О бюджете",
@@ -247,7 +247,7 @@ async def test_golosovaniya_s_dannymi():
             ne_golosoval=90,
         )
     ]
-    with patch.object(gosduma_tools.client, "poluchit_golosovaniya", return_value=votes):
+    with patch.object(gosduma_tools.client, "poluchit_golosovaniya", return_value=golosovaniya):
         rezultat = await gosduma_tools.golosovaniya(sozyv="8")
     assert "О бюджете" in rezultat
     assert "300" in rezultat

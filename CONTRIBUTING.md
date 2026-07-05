@@ -187,9 +187,9 @@ from mcp_russia.data.{modul}.server import mcp
 
 @pytest.mark.asyncio
 async def test_tool_via_mcp_client():
-    async with Client(mcp) as client:
-        result = await client.call_tool("poisk_{modul}", {"zapros": "test"})
-        assert result is not None
+    async with Client(mcp) as klient:
+        rezultat = await klient.call_tool("poisk_{modul}", {"zapros": "test"})
+        assert rezultat is not None
 ```
 
 ## Коммиты

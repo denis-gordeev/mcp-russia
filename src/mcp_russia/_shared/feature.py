@@ -15,9 +15,9 @@ pytest plugin discovery, FastAPI router auto-include.
     from mcp_russia._shared.feature import ReyestrFunktsiy
 
     mcp = FastMCP("mcp-russia")
-    registry = ReyestrFunktsiy()
-    registry.obnaruzhit()
-    registry.smontirovat_vse(mcp)
+    reyestr = ReyestrFunktsiy()
+    reyestr.obnaruzhit()
+    reyestr.smontirovat_vse(mcp)
 """
 
 from __future__ import annotations
@@ -126,7 +126,7 @@ class ReyestrFunktsiy:
             imya_paketa: Базовый пакет для сканирования. По умолчанию: «mcp_russia».
 
         Возвращает:
-            self для цепочки вызовов: registry.obnaruzhit().smontirovat_vse(mcp)
+            self для цепочки вызовов: reyestr.obnaruzhit().smontirovat_vse(mcp)
         """
         paket = importlib.import_module(imya_paketa)
 

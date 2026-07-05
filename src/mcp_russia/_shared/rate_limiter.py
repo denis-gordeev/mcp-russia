@@ -5,7 +5,7 @@
     ogranichitel = OgranichitelChastoty(maks_zaprosov=80, period=60.0)
 
     async with ogranichitel:
-        await do_request()
+        await vypolnit_zapros()
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from collections import deque
 
 
 class OgranichitelChastoty:
-    """Ограничитель частоты запросов по принципу token bucket со скользящим окном.
+    """Ограничитель частоты запросов по принципу ведра токенов со скользящим окном.
 
     Аргументы:
         maks_zaprosov: Максимальное число запросов в окне.

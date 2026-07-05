@@ -112,8 +112,8 @@ ANTHROPIC_API_KEY=xxx \
 Отдельные модули могут использовать общий `OgranichitelChastoty` из `src/mcp_russia/_shared/rate_limiter.py`:
 
 ```python
-limiter = OgranichitelChastoty(maks_zaprosov=5, period=1.0)
+ogranichitel = OgranichitelChastoty(maks_zaprosov=5, period=1.0)
 
-async with limiter:
+async with ogranichitel:
     dannye = await http_poluchit(adres_url)
 ```

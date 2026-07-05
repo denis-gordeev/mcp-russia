@@ -43,10 +43,10 @@ async def test_spisok_okrugov():
 
 async def test_informatsiya_o_regionye():
     ctx = _maket_konteksta()
-    region = DannyeRegiona(
+    subiekt = DannyeRegiona(
         kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000
     )
-    with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=region):
+    with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=subiekt):
         rezultat = await rosstat_tools.informatsiya_o_regionye("77", ctx)
     assert "Москва" in rezultat
     assert "13" in rezultat

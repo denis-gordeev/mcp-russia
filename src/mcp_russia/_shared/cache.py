@@ -6,9 +6,9 @@
 Использование:
     from mcp_russia._shared.cache import kesh_s_vremenem_zhizni
 
-    cache = kesh_s_vremenem_zhizni(ttl=300)  # 5 минут
+    kesh = kesh_s_vremenem_zhizni(vremya_zhizni=300)  # 5 минут
 
-    @cache
+    @kesh
     async def spisok_regionov() -> list[Region]:
         ...  # HTTP-запрос выполняется только при промахе кэша или истечении срока
 """

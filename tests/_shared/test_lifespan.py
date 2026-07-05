@@ -12,7 +12,7 @@ class TestHttpZhiznennyyTsikl:
 
     @pytest.mark.asyncio
     async def test_zhiznennyy_tsikl_sozdaet_i_zakryvaet_klienta(self) -> None:
-        """Lifespan должен вернуть http_client и закрыть его при выходе."""
+        """Жизненный цикл должен вернуть HTTP-клиент и закрыть его при выходе."""
         from fastmcp import FastMCP
 
         server_funktsiya = FastMCP("test")

@@ -192,15 +192,15 @@ def _nayti_vybory_po_godu_tipu(god: int, tip: int | None = None) -> dict[str, An
 
 def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
     """Извлечь результаты кандидатов из HTML ГАС «Выборы»."""
-    parser = _VyboryTableParser()
+    razobratchik = _VyboryTableParser()
     try:
-        parser.feed(html)
+        razobratchik.feed(html)
     except Exception as exc:
         logger.warning("Ошибка парсинга HTML: %s", exc)
         return []
 
     rezultaty: list[ResultatKandidata] = []
-    for stroka_tablitsy in parser.stroki_tablitsy:
+    for stroka_tablitsy in razobratchik.stroki_tablitsy:
         if len(stroka_tablitsy) < 4:
             continue
         fio = ""
@@ -285,15 +285,15 @@ def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
 
 def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
     """Извлечь список кандидатов из HTML ГАС «Выборы»."""
-    parser = _VyboryTableParser()
+    razobratchik = _VyboryTableParser()
     try:
-        parser.feed(html)
+        razobratchik.feed(html)
     except Exception as exc:
         logger.warning("Ошибка парсинга HTML кандидатов: %s", exc)
         return []
 
     kandidaty: list[KandidatKratko] = []
-    for stroka_tablitsy in parser.stroki_tablitsy:
+    for stroka_tablitsy in razobratchik.stroki_tablitsy:
         if len(stroka_tablitsy) < 3:
             continue
         fio = ""

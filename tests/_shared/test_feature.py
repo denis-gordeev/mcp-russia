@@ -114,13 +114,13 @@ class TestReyestrFunktsiy:
         assert rezultat is reyestr
 
     def test_obnaruzhenie_nakhodit_cbrf(self) -> None:
-        """Discovery находит feature cbrf в пакете data."""
+        """Обнаружение находит функцию cbrf в пакете data."""
         reyestr = ReyestrFunktsiy()
         reyestr.obnaruzhit("mcp_russia.data")
         assert "cbrf" in reyestr.funktsii
 
     def test_obnaruzhenie_nakhodit_deloproizvodstvo(self) -> None:
-        """Discovery находит feature deloproizvodstvo в пакете agenty."""
+        """Обнаружение находит функцию deloproizvodstvo в пакете agenty."""
         reyestr = ReyestrFunktsiy()
         reyestr.obnaruzhit("mcp_russia.agenty")
         assert "deloproizvodstvo" in reyestr.funktsii
@@ -136,13 +136,13 @@ class TestReyestrFunktsiy:
         assert reyestr.poluchit_funktsiyu("nesushchestvuyushchiy") is None
 
     def test_smontirovat_vse_pustoy(self) -> None:
-        """Mount с пустым registry не вызывает исключение."""
+        """Монтирование с пустым реестром не вызывает исключение."""
         reyestr = ReyestrFunktsiy()
         koren = FastMCP("test-root")
         reyestr.smontirovat_vse(koren)  # не должен вызывать исключение
 
     def test_zaregistrirovat_i_smontirovat_vruchnuyu(self) -> None:
-        """Регистрирует feature вручную и монтирует в root."""
+        """Регистрирует функцию вручную и монтирует в корень."""
         reyestr = ReyestrFunktsiy()
 
         metadannye_ekz = MetaFunktsii(imya="test_funktsiya", opisanie="Тестовая функция")
@@ -206,7 +206,7 @@ class TestReyestrFunktsiy:
 class TestIntegratsiyaReestra:
     @pytest.mark.asyncio
     async def test_smontirovannyy_instrument_vyzyvaemyy(self) -> None:
-        """Инструмент, подключённый через registry, вызывается через Client."""
+        """Инструмент, подключённый через реестр, вызывается через Client."""
         podmodul = FastMCP("sub")
 
         @podmodul.tool
@@ -223,7 +223,7 @@ class TestIntegratsiyaReestra:
 
     @pytest.mark.asyncio
     async def test_kornevoy_server_zapuskaetsya_pustym(self) -> None:
-        """Root-сервер без подключённых features работает."""
+        """Корневой сервер без подключённых функций работает."""
         from mcp_russia.server import mcp
 
         async with Client(mcp) as klient:
