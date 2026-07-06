@@ -56,8 +56,8 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
         call_next: CallNext[mt.ReadResourceRequestParams, ResourceResult],
     ) -> ResourceResult:
         """Логирование чтения ресурса."""
-        uri = context.message.uri
-        logger.info("Чтение ресурса: %s", uri)
+        adres_uri = context.message.uri
+        logger.info("Чтение ресурса: %s", adres_uri)
         return await call_next(context)
 
     async def pri_zaprose_prompta(

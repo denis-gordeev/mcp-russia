@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import re
 
-_DIGITS_RE = re.compile(r"\D")
+_RE_TSIFR = re.compile(r"\D")
 
 
 def _tolko_tsifry(stroka: str) -> str:
     """Удаление всех нецифровых символов."""
-    return _DIGITS_RE.sub("", stroka)
+    return _RE_TSIFR.sub("", stroka)
 
 
 # ---------------------------------------------------------------------------
