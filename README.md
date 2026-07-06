@@ -26,7 +26,7 @@ Python-пакет `mcp_russia` является единой точкой вхо
 - Переменные окружения унифицированы: `MCP_RUSSIA_*` (fallback на `MCP_BRASIL_*` удалён).
 - Корневой сервер автообнаруживает модули из `mcp_russia.data` и `mcp_russia.agenty`.
 - Мета-инструменты сервера на русском: `spisok_funktsiy`, `rekomendovat_instrumenty`, `splanirovat_zapros`, `vypolnit_paket`.
-- Базовый класс исключений: `McpRussiaError` (устаревший `McpBrasilError` удалён).
+- Базовый класс исключений: `OshibkaMcpRussia` (устаревшие `McpRussiaError` и `McpBrasilError` удалены).
 - 24 российских модуля данных, подключённых к реальным API-интеграциям.
 - Все 27 legacy-модулей с бразильскими данными удалены из кодовой базы.
 - Устранены deprecated-алиасы: `format_brl`, `format_number_br`, `parse_brl_number` удалены.

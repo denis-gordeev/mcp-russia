@@ -42,7 +42,7 @@ serve: ## Запустить MCP-сервер (HTTP :8000)
 	uv run python -c "from mcp_russia.server import mcp; mcp.run(transport='streamable-http', host='0.0.0.0', port=8000)"
 
 inspect: ## Показать инструменты/ресурсы/промпты MCP-сервера
-	uv run python -c "from mcp_russia.server import mcp, registry; print(registry.summary())"
+	uv run python -c "from mcp_russia.server import mcp, reyestr; print(reyestr.svodka())"
 
 ## —— Релиз ——
 

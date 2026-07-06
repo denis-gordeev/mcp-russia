@@ -15,7 +15,7 @@ make ci         # Запустить lint + mypy + тесты
 
 ```
 src/mcp_russia/
-├── server.py           # Корневой сервер (auto-registry, вручную обычно не правится)
+├── server.py           # Корневой сервер (автообнаружение, вручную обычно не правится)
 ├── settings.py         # Конфигурация через env vars
 ├── exceptions.py       # Общие исключения проекта
 ├── _shared/            # Общий код (http_client, formatting, cache, rate_limiter)
@@ -106,7 +106,7 @@ server.py → tools.py → client.py → schemas.py
 
 ### Инварианты
 
-1. Корневой `server.py` не правится без крайней необходимости — auto-registry делает остальное
+1. Корневой `server.py` не правится без крайней необходимости — автообнаружение делает остальное
 2. `tools.py` не делает HTTP-запросы — делегирует в `client.py`
 3. `client.py` не форматирует ответы для LLM — возвращает модели Pydantic
 4. `schemas.py` без бизнес-логики — только модели
