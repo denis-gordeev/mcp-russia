@@ -16,7 +16,7 @@ _kesh_kataloga: str = ""
 
 
 def _formatirovat_signaturu_instrumenta(
-    imya_modulya: str, imya_instrumenta: str, instrument: object
+    imya_modulya: str, imya_instrumenta: str, obiekt_instrumenta: object
 ) -> str:
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
@@ -26,9 +26,9 @@ def _formatirovat_signaturu_instrumenta(
     Аргументы:
         imya_modulya: Имя модуля (префикс инструмента).
         imya_instrumenta: Имя инструмента.
-        instrument: Объект инструмента.
+        obiekt_instrumenta: Объект инструмента.
     """
-    parametry = getattr(instrument, "parameters", {})
+    parametry = getattr(obiekt_instrumenta, "parameters", {})
     svoystva: dict[str, dict[str, object]] = parametry.get("properties", {})
     obyazatelnye: list[str] = parametry.get("required", [])
 
@@ -43,7 +43,7 @@ def _formatirovat_signaturu_instrumenta(
     signatura = ", ".join(chasti_parametra)
     polnoe_imya = f"{imya_modulya}_{imya_instrumenta}"
 
-    opisanie_kratkoe = (getattr(instrument, "description", "") or "").split("\n")[0]
+    opisanie_kratkoe = (getattr(obiekt_instrumenta, "description", "") or "").split("\n")[0]
 
     return f"- `{polnoe_imya}({signatura})` — {opisanie_kratkoe}"
 
@@ -84,10 +84,13 @@ def postroit_katalog(reyestr: object) -> str:
         if hasattr(server_funktsiya, "_tool_manager") and hasattr(
             server_funktsiya._tool_manager, "_tools"
         ):
-            for imya_instrumenta, instrument in server_funktsiya._tool_manager._tools.items():
+            for (
+                imya_instrumenta,
+                obiekt_instrumenta,
+            ) in server_funktsiya._tool_manager._tools.items():
                 stroki.append(
                     _formatirovat_signaturu_instrumenta(
-                        metadannye.imya, imya_instrumenta, instrument
+                        metadannye.imya, imya_instrumenta, obiekt_instrumenta
                     )
                 )
 

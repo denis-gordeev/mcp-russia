@@ -159,7 +159,7 @@ API: budget_spetsperechisleniya *(планируемый)* + rosstat_pokazateli_
 > Промпт: "Каков объём вырубки лесов по субъектам РФ в Сибирском федеральном округе за последние 5 лет?"
 
 ```
-API: rosprirodnadzor_lesnaya_okhrana(region="sibir", period="5y") *(планируемый модуль «Росприроднадзор»)*
+API: rosprirodnadzor_lesnaya_okhrana(region="sibir", period="5y") *(инструмент недоступен)*
 ```
 
 **2. Штрафы и санкции**
@@ -316,7 +316,7 @@ API: zakupki_gov_ru_rnp(uchastniki="postavshchiki_federalnykh") *(планиру
 ## Следующие шаги
 
 - привязать примеры к конкретным кейсам по программам лекарственного обеспечения, национального проекта «Здравоохранение» и экологического мониторинга;
-- реализовать планируемые модули: «Бюджетная система» (budget_rashody_subekta, budget_transformacii, budget_spetsperechisleniya, budget_dokhody_subekta), «Росприроднадзор» (rosprirodnadzor_lesnaya_okhrana), функционал РНП в модуле «Закупки».
+- добавить недостающие инструменты: «Бюджетная система» (budget_rashody_subekta, budget_transformacii, budget_spetsperechisleniya, budget_dokhody_subekta), `rosprirodnadzor_lesnaya_okhrana`, функционал РНП в модуле «Закупки».
 
 ### Автоматизация Через `splanirovat_zapros`
 

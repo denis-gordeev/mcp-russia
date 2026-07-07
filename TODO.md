@@ -2,7 +2,77 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-06 (шестьдесят девятый проход — исправление устаревших ссылок: Makefile registry→reyestr, README McpRussiaError→OshibkaMcpRussia, CONTRIBUTING auto-registry→автообнаружение)
+## Статус раунда 2026-07-07 (семидесятый проход — русификация гибридных английских суффиксов классов, поля EtapPlana, параметра discovery, исправление документации)
+
+### Выполнено
+
+- **Русификация гибридных английских суффиксов Pydantic-классов** (5 классов):
+  - cekrf/schemas.py: `PartiaInfo` → `InformatsiyaPartii` (1 определение + 3 ссылки в client.py)
+  - sovfed/schemas.py: `KomitetInfo` → `InformatsiyaKomiteta` (1 определение, нет ссылок)
+  - sovfed/schemas.py: `ZasedanieInfo` → `InformatsiyaZasedaniya` (1 определение, нет ссылок)
+  - rosgidromet/schemas.py: `SputnikMonitoring` → `SputnikovyyMonitoring` (1 определение + 2 ссылки в client.py)
+  - mchs/schemas.py: `RadiatsionnyyMonitoring` — оставлен без изменений («мониторинг» — устоявшийся русский loanword)
+- **Русификация поля EtapPlana.instrument → imya_instrumenta** (7 замен в planner.py + 3 замены в test_discovery.py):
+  - Поле Pydantic-модели `instrument: str` → `imya_instrumenta: str`
+  - JSON-схема в `_SISTEMNYY_PROMPT`: `"instrument"` → `"imya_instrumenta"` (5 примеров)
+  - Доступ `etap.instrument` → `etap.imya_instrumenta` в `v_markdown()`
+  - Обновлены тестовые данные `_KORREKTNYY_PLAN_JSON` и конструктор `PlanZaprosa` в test_discovery.py
+- **Русификация параметра `instrument` → `obiekt_instrumenta` в discovery.py** (4 замены):
+  - Параметр функции `_formatirovat_signaturu_instrumenta`
+  - Цикловая переменная в `postroit_katalog`
+  - Все `getattr(instrument, ...)` → `getattr(obiekt_instrumenta, ...)`
+- **Исправление docstring `prompts` → `промпты`** в agenty/deloproizvodstvo/server.py
+- **Исправление английских слов в документации** (7 замен в 4 файлах):
+  - configuration.md: `discovery` → `обнаружение` (3), `client` → `клиент` (1), `retry` → `повторные попытки` (1)
+  - adding-features.md: `orchestration` → `оркестрация` (1)
+  - development.md: `orchestration` → `оркестрация` (1)
+  - architecture.md: `retry` → `повторные попытки` (1)
+- **Исправление «Росавдит» → «Счётная палата»** (3 замены в 2 файлах):
+  - analiz-zakonodatelstva.md: 2 вхождения
+  - municipalnyy-kontrol.md: 1 вхождение
+- **Обновление устаревших «планируемый модуль» меток** (~30 замен в 5 файлах):
+  - analiz-zakonodatelstva.md: `sovfed *(планируемый)*` → реализованный модуль; `*(планируемый)*` → `*(инструмент недоступен)*` для нереализованных инструментов
+  - parlamentskiy-otchet.md: `sovfed` отмечен как реализованный (6 инструментов); `kaznacheistvo` отмечен как реализованный
+  - gosudarstvennaya-politika.md: «планируемый модуль Росприроднадзор» → «инструмент недоступен»
+  - zhurnalist-stati.md: «планируемый модуль Росприроднадзор» → «инструмент недоступен»
+  - municipalnyy-kontrol.md: «планируемый модуль Федеральное казначейство» → реализованный модуль
+- **Исправление неточностей в features.md** (6 изменений):
+  - Общий подсчёт: 203 → 212 инструментов, 71 → 70 ресурсов
+  - gosduma: 6 → 7 инструментов (добавлен `golosovaniya`)
+  - minzdrav: 7 → 8 инструментов (добавлен `poisk_litsenziy`)
+  - rosaudit: 7 → 8 инструментов (добавлен `poisk_kontrolnyh_meropriyatiy`)
+  - rosvodresursy: 7 → 8 инструментов (добавлен `poisk_vodnykh_obektov`)
+  - fssp: 10 → 9 инструментов (удалён `spisok_regionov` — не зарегистрирован в server.py)
+- **Прочие исправления документации**:
+  - smart-tools.md: `instrument: str` → `imya_instrumenta: str` в модели данных; «27 активных модулей» → «25»; `discovery` → `обнаружение`
+  - architecture.md: добавлен `validators.py` в таблицу общей инфраструктуры
+  - ofitsialnyy-redaktor.md: 9 ресурсов → 10, 5 промптов → 7
+  - analiz-zakonodatelstva.md: опечатка «газате» → «газете»
+  - zhurnalist-stati.md: удалён дублирующий `cekrf_kandidat_podrobno`
+- **Добавление отсутствующих модулей в generate_diagrams.py** (5 модулей):
+  - sovfed в кластер «Законодательство и выборы»
+  - kaznacheistvo в кластер «Экономика и финансы»
+  - mchs, rosprirodnadzor, rosselkhoznadzor в кластер «Экология и здравоохранение»
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` — 547 unit-тестов пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`PartiaInfo` → `InformatsiyaPartii`**: устранён гибридный английский суффикс `-Info`; выбрано `InformatsiyaPartii` по устоявшемуся паттерну `InformatsiyaPochtovogoIndeksa` в rosapi
+- **`KomitetInfo` → `InformatsiyaKomiteta`**, **`ZasedanieInfo` → `InformatsiyaZasedaniya`**: аналогичная русификация в sovfed
+- **`SputnikMonitoring` → `SputnikovyyMonitoring`**: «мониторинг» оставлен (loanword), но «спутник» → прилагательное «спутниковый»
+- **`EtapPlana.instrument` → `imya_instrumenta`**: устранён последний английский идентификатор в Pydantic-поле; JSON-схема в промпте и тесты обновлены синхронно
+- **`instrument` → `obiekt_instrumenta`**: параметр функции и цикловая переменная в discovery.py; выбрано `obiekt_instrumenta` чтобы избежать конфликта с `imya_instrumenta`
+- **«Росавдит» → «Счётная палата»**: «Росавдит» — вымышленный термин (возможно, адаптация португальского «Tribunal de Contas da União»), заменён на реальное название «Счётная палата»
+- **«планируемый модуль» → «инструмент недоступен»**: sovfed, kaznacheistvo, rosprirodnadzor — реализованные модули; метки обновлены чтобы отличать нереализованные инструменты от нереализованных модулей
+- **fssp `spisok_regionov` не зарегистрирован**: функция существует в tools.py, но не подключена в server.py; убрана из документации чтобы избежать путаницы
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Регистрация fssp `spisok_regionov`**: функция существует в tools.py, но не подключена в server.py
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
 
 ### Выполнено
 

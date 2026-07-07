@@ -35,9 +35,9 @@ from .constants import (
 )
 from .schemas import (
     Dolzhnost,
+    InformatsiyaPartii,
     Kandidat,
     KandidatKratko,
-    PartiaInfo,
     ResultatKandidata,
     SubyektRF,
     TipVyborov,
@@ -364,10 +364,10 @@ async def dolzhnosti_federal() -> list[Dolzhnost]:
     return rezultaty
 
 
-async def partii_rf() -> list[PartiaInfo]:
+async def partii_rf() -> list[InformatsiyaPartii]:
     """Получить справочник политических партий РФ."""
     return [
-        PartiaInfo(
+        InformatsiyaPartii(
             nazvanie=p["nazvanie"], kratkoe_nazvanie=p["korotkoe_nazvanie"], tsvet=p["tsvet"]
         )
         for p in PARTII_RF

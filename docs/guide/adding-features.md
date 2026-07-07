@@ -158,7 +158,7 @@ tests/data/{modul}/
 
 Проверяйте три слоя:
 
-- форматирование и orchestration в `test_tools.py`;
+- форматирование и оркестрацию в `test_tools.py`;
 - HTTP-адаптер в `test_client.py`;
 - MCP-регистрацию и вызов через `fastmcp.Client` в `test_integration.py`.
 

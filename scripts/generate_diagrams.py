@@ -60,11 +60,13 @@ def obzor_sistemy() -> None:
             rosstat = Python("rosstat")
             zakupki = Python("zakupki")
             fns = Python("fns")
+            kaznacheistvo = Python("kaznacheistvo")
 
         with Cluster("Законодательство и выборы"):
             gosduma = Python("gosduma")
             cekrf = Python("cekrf")
             publikatsii = Python("publikatsii")
+            sovfed = Python("sovfed")
 
         with Cluster("Судебная система и надзор"):
             kad_arbitrazh = Python("kad_arbitrazh")
@@ -77,6 +79,9 @@ def obzor_sistemy() -> None:
             rosgidromet = Python("rosgidromet")
             rosvodresursy = Python("rosvodresursy")
             minzdrav = Python("minzdrav")
+            mchs = Python("mchs")
+            rosprirodnadzor = Python("rosprirodnadzor")
+            rosselkhoznadzor = Python("rosselkhoznadzor")
 
         with Cluster("Реестры и справочники"):
             rosapi = Python("rosapi")

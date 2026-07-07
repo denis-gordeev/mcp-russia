@@ -84,7 +84,7 @@ class ItogiVYborov(BaseModel):
     nedeystvitelnykh_byulleteney: int = Field(description="Недействительных бюллетеней", default=0)
 
 
-class PartiaInfo(BaseModel):
+class InformatsiyaPartii(BaseModel):
     """Информация о политической партии."""
 
     nazvanie: str = Field(description="Полное наименование партии")

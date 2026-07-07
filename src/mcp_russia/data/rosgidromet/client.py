@@ -28,7 +28,7 @@ from .schemas import (
     PogodaDannye,
     Preduprezhdenie,
     PrognozDannye,
-    SputnikMonitoring,
+    SputnikovyyMonitoring,
 )
 
 
@@ -226,7 +226,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
 async def poluchit_sputnik_dannye(
     subiekt: str = "",
     tip: str = "",
-) -> list[SputnikMonitoring]:
+) -> list[SputnikovyyMonitoring]:
     """Заглушка данных спутникового мониторинга.
 
     Open-Meteo не предоставляет спутниковые снимки. Остаётся заглушкой.

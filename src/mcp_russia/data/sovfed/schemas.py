@@ -17,14 +17,14 @@ class SenatorRezyume(BaseModel):
     data_naznacheniya: str = ""
 
 
-class KomitetInfo(BaseModel):
+class InformatsiyaKomiteta(BaseModel):
     nazvanie: str
     predsedatel: str = ""
     kolichestvo_chlenov: int = 0
     napravlenie: str = ""
 
 
-class ZasedanieInfo(BaseModel):
+class InformatsiyaZasedaniya(BaseModel):
     nomer: str
     data: str = ""
     sostoyanie: str = ""

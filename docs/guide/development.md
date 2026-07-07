@@ -56,7 +56,7 @@ tests/
 
 Типовой расклад внутри модуля:
 
-- `test_tools.py` проверяет orchestration и форматирование;
+- `test_tools.py` проверяет оркестрацию и форматирование;
 - `test_client.py` проверяет HTTP-слой с моками;
 - `test_integration.py` проверяет регистрацию и вызов через `fastmcp.Client`.
 

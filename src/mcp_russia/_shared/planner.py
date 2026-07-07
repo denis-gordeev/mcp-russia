@@ -26,7 +26,7 @@ class EtapPlana(BaseModel):
     opisanie: str
     """Описание действия шага."""
 
-    instrument: str
+    imya_instrumenta: str
     """Имя инструмента (с префиксом модуля, напр. gosduma_poluchit_deputatov)."""
 
     parametry: dict[str, str]
@@ -69,7 +69,7 @@ class PlanZaprosa(BaseModel):
 
         for etap in self.etapy:
             stroki.append(f"### Этап {etap.etap}: {etap.opisanie}")
-            stroki.append(f"- **Инструмент:** `{etap.instrument}`")
+            stroki.append(f"- **Инструмент:** `{etap.imya_instrumenta}`")
 
             if etap.parametry:
                 parametry_str = ", ".join(
@@ -145,7 +145,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "что делает этот этап",
-      "instrument": "modul_imya_instrumenta",
+      "imya_instrumenta": "modul_imya_instrumenta",
       "parametry": {{"param": "znachenie"}},
       "zavisit_ot": [],
       "obosnovanie": "почему этот этап необходим"
@@ -168,7 +168,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "Найти депутата по фамилии",
-      "instrument": "gosduma_poluchit_deputatov",
+      "imya_instrumenta": "gosduma_poluchit_deputatov",
       "parametry": {{"familiya": "Иванов"}},
       "zavisit_ot": [],
       "obosnovanie": "Нужен ID депутата для запроса расходов"
@@ -176,7 +176,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 2,
       "opisanie": "Запросить расходы депутата за 2024 год",
-      "instrument": "gosduma_raskhody_deputata",
+      "imya_instrumenta": "gosduma_raskhody_deputata",
       "parametry": {{"id": "{{etap_1.id}}", "god": "2024"}},
       "zavisit_ot": [1],
       "obosnovanie": "Получить расходы используя ID из предыдущего этапа"
@@ -197,7 +197,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 1,
       "opisanie": "Запросить расходы на здравоохранение в Татарстане",
-      "instrument": "rosstat_poluchit_indikator",
+      "imya_instrumenta": "rosstat_poluchit_indikator",
       "parametry": {{"indikator": "zdravookhranenie", "region": "16", "god": "2024"}},
       "zavisit_ot": [],
       "obosnovanie": "Получить общую сумму расходов на здравоохранение в регионе"
@@ -205,7 +205,7 @@ _SISTEMNYY_PROMPT = """\
     {{
       "etap": 2,
       "opisanie": "Запросить численность населения Татарстана",
-      "instrument": "rosstat_poluchit_dannye_regiona",
+      "imya_instrumenta": "rosstat_poluchit_dannye_regiona",
       "parametry": {{"region": "16"}},
       "zavisit_ot": [],
       "obosnovanie": "Получить население для расчёта на душу населения"

@@ -76,10 +76,11 @@ src/mcp_russia/data/{modul}/
 | Модуль | Назначение |
 |--------|------------|
 | `feature.py` | обнаружение и реестр пакетов модулей |
-| `http_client.py` | общий async HTTP-клиент с retry |
+| `http_client.py` | общий async HTTP-клиент с повторными попытками |
 | `cache.py` | TTL-cache и decorator для кеширования |
 | `formatting.py` | табличное и числовое форматирование |
 | `rate_limiter.py` | rate limiting для внешних API |
+| `validators.py` | валидация ИНН, КПП, СНИЛС, ОГРН |
 | `batch.py` | выполнение нескольких вызовов инструментов за один запрос |
 | `discovery.py` | каталог и рекомендация инструментов |
 | `planner.py` | построение плана запроса |

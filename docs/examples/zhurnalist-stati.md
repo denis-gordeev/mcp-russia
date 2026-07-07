@@ -186,7 +186,7 @@ API: rosgidromet_preduprezhdeniya(region="sibirskiy_fo", year=2024)
 > Промпт: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_obezlesenie(region="sibirskiy_fo") *(планируемый модуль «Росприроднадзор»)*
+API: rosprirodnadzor_obezlesenie(region="sibirskiy_fo") *(инструмент недоступен)*
 ```
 
 **3. Водные ресурсы**
@@ -219,7 +219,6 @@ API: publikatsii_poisk_aktov(term="режим ЧС природные пожар
 
 ```
 APIs: cekrf_poisk_kandidata(fio="...", god=2026)
-      cekrf_kandidat_podrobno (для каждого кандидата)
       cekrf_kandidat_podrobno (для каждого кандидата)
 ```
 

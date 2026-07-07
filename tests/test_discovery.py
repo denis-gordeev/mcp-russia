@@ -270,7 +270,7 @@ _KORREKTNYY_PLAN_JSON = json.dumps(
             {
                 "etap": 1,
                 "opisanie": "Найти депутата по фамилии",
-                "instrument": "gosduma_poluchit_deputatov",
+                "imya_instrumenta": "gosduma_poluchit_deputatov",
                 "parametry": {"familiya": "X"},
                 "zavisit_ot": [],
                 "obosnovanie": "Нужен ID депутата",
@@ -278,7 +278,7 @@ _KORREKTNYY_PLAN_JSON = json.dumps(
             {
                 "etap": 2,
                 "opisanie": "Запросить расходы депутата",
-                "instrument": "gosduma_raskhody_deputata",
+                "imya_instrumenta": "gosduma_raskhody_deputata",
                 "parametry": {"id": "{etap_1.id}"},
                 "zavisit_ot": [1],
                 "obosnovanie": "Получить расходы используя ID",
@@ -390,7 +390,7 @@ class TestPlanZaprosaVMarkdown:
                 {
                     "etap": 1,
                     "opisanie": "Единственный шаг",
-                    "instrument": "rosstat_poluchit_indikator",
+                    "imya_instrumenta": "rosstat_poluchit_indikator",
                     "parametry": {},
                     "zavisit_ot": [],
                     "obosnovanie": "Необходимо",

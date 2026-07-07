@@ -8,7 +8,7 @@
 
 ```text
 → spisok_funktsiy()
-← 27 активных модулей:
+← 25 активных модулей:
    cbrf (6 инструментов) ✓
    rosstat (7 инструментов) ✓
    gosduma (6 инструментов) ✓
@@ -55,7 +55,7 @@
 class EtapPlana(BaseModel):
     etap: int
     opisanie: str
-    instrument: str
+    imya_instrumenta: str
     parametry: dict[str, str]
     zavisit_ot: list[int]
     obosnovanie: str
@@ -131,4 +131,4 @@ class PlanZaprosa(BaseModel):
 |----------|-----------|
 | `bm25` | Показать только релевантные инструменты |
 | `none` | Показать весь каталог |
-| `code_mode` | Экспериментальный программный discovery |
+| `code_mode` | Экспериментальный программный обнаружение |

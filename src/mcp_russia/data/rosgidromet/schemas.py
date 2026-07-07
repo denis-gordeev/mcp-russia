@@ -61,7 +61,7 @@ class Preduprezhdenie(BaseModel):
     uroven_opasnosti: str = ""  # низкий, средний, высокий, экстремальный
 
 
-class SputnikMonitoring(BaseModel):
+class SputnikovyyMonitoring(BaseModel):
     """Данные спутникового мониторинга."""
 
     sputnik: str = ""
