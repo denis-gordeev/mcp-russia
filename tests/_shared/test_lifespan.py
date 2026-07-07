@@ -18,8 +18,8 @@ class TestHttpZhiznennyyTsikl:
         server_funktsiya = FastMCP("test")
 
         # Имитируем генератор жизненного цикла
-        generator = http_zhiznennyy_tsikl._fn(server_funktsiya)
-        kontekst = await generator.__anext__()
+        generator_tsikla = http_zhiznennyy_tsikl._fn(server_funktsiya)
+        kontekst = await generator_tsikla.__anext__()
 
         assert kontekst is not None
         assert "http_klient" in kontekst
@@ -27,9 +27,8 @@ class TestHttpZhiznennyyTsikl:
         klient = kontekst["http_klient"]
         assert not klient.is_closed
 
-        # Очистка
         with contextlib.suppress(StopAsyncIteration):
-            await generator.__anext__()
+            await generator_tsikla.__anext__()
 
         assert klient.is_closed
 
@@ -40,14 +39,13 @@ class TestHttpZhiznennyyTsikl:
 
         server_funktsiya = FastMCP("test")
 
-        generator = http_zhiznennyy_tsikl._fn(server_funktsiya)
-        kontekst = await generator.__anext__()
+        generator_tsikla = http_zhiznennyy_tsikl._fn(server_funktsiya)
+        kontekst = await generator_tsikla.__anext__()
 
         assert kontekst is not None
         klient = kontekst["http_klient"]
         assert "User-Agent" in klient.headers
         assert klient.headers["Accept"] == "application/json"
 
-        # Очистка
         with contextlib.suppress(StopAsyncIteration):
-            await generator.__anext__()
+            await generator_tsikla.__anext__()

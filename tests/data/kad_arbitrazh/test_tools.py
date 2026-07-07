@@ -156,7 +156,7 @@ async def test_poisk_del_pustoy():
 
 async def test_poisk_del_s_rezultatami():
     ctx = _maket_konteksta()
-    mock_dela = [
+    maket_dela = [
         SudebnoeDelo(
             nomer="А40-12345/2024",
             kategoriya="Банкротство",
@@ -168,7 +168,7 @@ async def test_poisk_del_s_rezultatami():
             otvetchiki=["ООО Бета"],
         )
     ]
-    with patch.object(kad_tools.client, "poisk_del", return_value=mock_dela):
+    with patch.object(kad_tools.client, "poisk_del", return_value=maket_dela):
         rezultat = await kad_tools.poisk_del(nomer="А40-12345/2024", ctx=ctx)
     assert "А40-12345/2024" in rezultat
     assert "1 000 000" in rezultat or "1000000" in rezultat or "₽" in rezultat
@@ -193,7 +193,7 @@ async def test_info_dela_ne_nayden():
 
 async def test_info_dela_nayden():
     ctx = _maket_konteksta()
-    mock_delo = SudebnoeDelo(
+    maket_delo = SudebnoeDelo(
         nomer="А40-12345/2024",
         kategoriya="Банкротство",
         sostoyanie="На рассмотрении",
@@ -204,7 +204,7 @@ async def test_info_dela_nayden():
         otvetchiki=["ООО Бета"],
         summa_iska=500000,
     )
-    with patch.object(kad_tools.client, "info_dela", return_value=mock_delo):
+    with patch.object(kad_tools.client, "info_dela", return_value=maket_delo):
         rezultat = await kad_tools.info_dela("А40-12345/2024", ctx)
     assert "А40-12345/2024" in rezultat
     assert "Банкротство" in rezultat

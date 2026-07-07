@@ -21,9 +21,9 @@ from mcp_russia.data.rosselkhoznadzor.server import mcp as rosselkhoznadzor_serv
 class TestKonstanty:
     def test_vidy_nadzora(self) -> None:
         assert len(VIDY_NADZORA) == 6
-        codes = [v["kod"] for v in VIDY_NADZORA]
-        assert "veterinarnyy" in codes
-        assert "fitosanitarnyy" in codes
+        kody = [v["kod"] for v in VIDY_NADZORA]
+        assert "veterinarnyy" in kody
+        assert "fitosanitarnyy" in kody
 
     def test_kategorii_proverok(self) -> None:
         assert len(KATEGORII_PROVEROK) == 4

@@ -15,6 +15,7 @@ from .tools import (
     spisok_kategoriy_dolzhnikov,
     spisok_ogranicheniy,
     spisok_osnovaniy_vozbuzhdeniya,
+    spisok_regionov,
     spisok_statusov_proizvodstva,
     spisok_vidov_proizvodstv,
 )
@@ -26,6 +27,7 @@ mcp.tool(spisok_statusov_proizvodstva, tags={"статус", "справочни
 mcp.tool(spisok_ogranicheniy, tags={"ограничения", "справочник"})
 mcp.tool(spisok_kategoriy_dolzhnikov, tags={"категории", "справочник"})
 mcp.tool(spisok_osnovaniy_vozbuzhdeniya, tags={"основания", "справочник"})
+mcp.tool(spisok_regionov, tags={"регионы", "справочник"})
 mcp.tool(info_proizvodstva, tags={"производство", "информация"})
 mcp.tool(poisk_dolzhnika, tags={"должник", "поиск"})
 mcp.tool(ogranicheniya_dolzhnika, tags={"ограничения", "информация"})

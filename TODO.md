@@ -2,6 +2,59 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-07 (семидесятый первый проход — регистрация fssp spisok_regionov, русификация тестовых переменных и документации)
+
+### Выполнено
+
+- **Регистрация `spisok_regionov` в ФССП** (3 файла):
+  - fssp/server.py: добавлен импорт `spisok_regionov` и `mcp.tool(spisok_regionov, tags={"регионы", "справочник"})`
+  - fssp/test_tools.py: добавлен тест `test_spisok_regionov` (проверяет наличие «Москва»)
+  - fssp/test_integration.py: добавлен `"spisok_regionov"` в `ozhidayemyy`
+- **Русификация `prompt_names` → `imena_promtov`** (17 файлов интеграционных тестов):
+  - Все 17 файлов data/*/test_integration.py с тестами промптов
+- **Русификация `mock_` → `maket_`** (3 замены в 2 файлах):
+  - cekrf/test_tools.py: `mock_yavka` → `maket_yavka`
+  - kad_arbitrazh/test_tools.py: `mock_dela` → `maket_dela`, `mock_delo` → `maket_delo`
+- **Русификация тестовых переменных** (8 файлов):
+  - test_public_namespace.py: `legacy_mcp` → `prezhnyaya_mcp`, `legacy_reyestr` → `prezhniy_reyestr`
+  - cbrf/test_tools.py: `raw` → `syryye_dannye`, `codes` → `kody`
+  - rosselkhoznadzor/test_tools.py: `codes` → `kody`
+  - rosstat/test_tools.py: `indicator_codes` → `kody_indikatorov`, `code` → `kod` (цикловая), `codes` → `kody` (3 места), `dups` → `dublikaty`
+  - test_batch.py: `reg` → `reyestr`, `"nonexistent_tool"` → `"nesushchestvuyushchiy_instrument"`, `"test_instrument"` → `"proverochnyy_instrument"`, `"norm"` → `"norma"`, `registry` → `реестр` в docstring
+  - test_lifespan.py: `generator` → `generator_tsikla`
+  - deloproizvodstvo/test_integration.py: `names` → `imena`, `messages` → `soobshcheniya`
+- **Русификация английских assertion-сообщений и комментариев** (6 замен в 3 файлах):
+  - deloproizvodstvo/test_integration.py: `f"Missing: ..."` → `f"Отсутствуют: ..."`, `f"Tool ... has no description"` → `f"Инструмент ... не имеет описания"`
+  - rosstat/test_tools.py: `f"KLYUCHEVYE_INDIKATORY code '...' missing from ..."` → `f"KLYUCHEVYE_INDIKATORY код '...' отсутствует в ..."`
+  - rosapi/test_integration.py: английский docstring-комментарий → русский
+- **Исправление документации** (~15 замен в 10 файлах):
+  - features.md: 212 → 213 инструментов, fssp 9 → 10 инструментов (добавлен `spisok_regionov`)
+  - architecture.md: `reestr` → `reyestr` в примере кода, `shared-инфраструктура` → `общая инфраструктура`, `TTL-cache и decorator` → `TTL-кеш и декоратор`, `rate limiting` → `ограничение частоты запросов`, `lifecycle` → `жизненный цикл`
+  - smart-tools.md: `Экспериментальный программный обнаружение` → `Экспериментальное программное обнаружение`
+  - configuration.md: `backoff` → `откат` (3 вхождения), `1s -> 2s -> 4s` → `1с -> 2с -> 4с`
+  - index.md: `data-модуля` → `модуля данных`
+  - development.md: `auto-fix` → `автоисправление`
+  - zhurnalist-stati.md: `bus.kaznacheystvo.ru` → `bus.gov.ru`
+  - municipalnyy-kontrol.md: `kaznacheistvo_dannye` → `kaznacheistvo_ispolnenie_byudzheta`, `kaznacheistvo_emendy` → `kaznacheistvo_ispolnenie_byudzheta` *(инструмент недоступен)*, `kaznacheistvo.ru` → `roskazna.gov.ru`
+  - ekonomicheskaya-panorama.md: `summary` → `сводок`
+  - README.md: 22 → 24 российских модуля
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 18 файлов переформатировано, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`spisok_regionov` зарегистрирован**: функция существовала в tools.py с раунда 1, но не была подключена в server.py; теперь ФССП экспонирует 10 инструментов вместо 9
+- **`prompt_names` → `imena_promtov`**: устранён последний массовый английский идентификатор в тестах; `imena_promtov` уже использовался в rosapi/test_integration.py
+- **`mock_` → `maket_`**: устранена несовместимость с конвенцией проекта — все остальные тесты используют `maket_` (maket_konteksta, maket_dannykh, etc.)
+- **`legacy_mcp` → `prezhnyaya_mcp`**: устранён английский префикс `legacy` в тестовых переменных
+- **Исправление документации**: устранены английские термины (backoff, lifecycle, rate limiting, TTL-cache, decorator, auto-fix, summary), исправлены неверные URL и имена несуществующих инструментов
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-07 (семидесятый проход — русификация гибридных английских суффиксов классов, поля EtapPlana, параметра discovery, исправление документации)
 
 ### Выполнено

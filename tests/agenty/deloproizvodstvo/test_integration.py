@@ -19,14 +19,14 @@ class TestInstrumentyZaregistrirovany:
                 "validirovat_dokument",
                 "spisok_tipov_dokumentov",
             }
-            assert ozhidayemyy.issubset(imena), f"Missing: {ozhidayemyy - imena}"
+            assert ozhidayemyy.issubset(imena), f"Отсутствуют: {ozhidayemyy - imena}"
 
     @pytest.mark.asyncio
     async def test_instrumenty_imeyut_docstringi(self) -> None:
         async with Client(mcp) as c:
             spisok_instrumentov = await c.list_tools()
             for instrument in spisok_instrumentov:
-                assert instrument.description, f"Tool {instrument.name} has no description"
+                assert instrument.description, f"Инструмент {instrument.name} не имеет описания"
 
 
 class TestResursyZaregistrirovany:
@@ -47,7 +47,7 @@ class TestResursyZaregistrirovany:
                 "normas://obrashcheniya",
                 "normas://zaklyuchitelnye",
             }
-            assert ozhidayemyy.issubset(adresa_uri), f"Missing: {ozhidayemyy - adresa_uri}"
+            assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют: {ozhidayemyy - adresa_uri}"
 
 
 class TestPromptyZaregistrirovany:
@@ -55,7 +55,7 @@ class TestPromptyZaregistrirovany:
     async def test_vse_prompty_zaregistrirovany(self) -> None:
         async with Client(mcp) as c:
             prompty = await c.list_prompts()
-            names = {p.name for p in prompty}
+            imena = {p.name for p in prompty}
             ozhidayemyy = {
                 "redaktor_pismo",
                 "redaktor_prikaz",
@@ -65,7 +65,7 @@ class TestPromptyZaregistrirovany:
                 "redaktor_protokol",
                 "redaktor_dokladnaya_zapiska",
             }
-            assert ozhidayemyy.issubset(names), f"Missing: {ozhidayemyy - names}"
+            assert ozhidayemyy.issubset(imena), f"Отсутствуют: {ozhidayemyy - imena}"
 
 
 class TestVypolnenieInstrumentov:
@@ -146,10 +146,10 @@ class TestVypolneniePromtov:
                     "tema": "Согласование проекта",
                 },
             )
-            messages = rezultat.messages
-            assert len(messages) == 2
-            assert "ПИСЬМО" in messages[0].content.text
-            assert "Согласование проекта" in messages[0].content.text
+            soobshcheniya = rezultat.messages
+            assert len(soobshcheniya) == 2
+            assert "ПИСЬМО" in soobshcheniya[0].content.text
+            assert "Согласование проекта" in soobshcheniya[0].content.text
 
     @pytest.mark.asyncio
     async def test_prompt_prikaz(self) -> None:
@@ -158,7 +158,7 @@ class TestVypolneniePromtov:
                 "redaktor_prikaz",
                 arguments={"tema": "О проведении инвентаризации"},
             )
-            messages = rezultat.messages
-            assert len(messages) == 2
-            assert "ПРИКАЗ" in messages[0].content.text
-            assert "инвентаризации" in messages[0].content.text
+            soobshcheniya = rezultat.messages
+            assert len(soobshcheniya) == 2
+            assert "ПРИКАЗ" in soobshcheniya[0].content.text
+            assert "инвентаризации" in soobshcheniya[0].content.text

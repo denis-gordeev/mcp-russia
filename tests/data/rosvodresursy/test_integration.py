@@ -50,10 +50,12 @@ async def test_prompty_zaregistrirovany(klient):
     """Проверка регистрации промптов."""
     async with klient:
         prompty = await klient.list_prompts()
-    prompt_names = {p.name for p in prompty}
+    imena_promtov = {p.name for p in prompty}
 
     ozhidayemyy = {"analiz_vodnogo_obekta", "obzor_vodokhranilishch"}
-    assert ozhidayemyy.issubset(prompt_names), f"Отсутствуют промпты: {ozhidayemyy - prompt_names}"
+    assert ozhidayemyy.issubset(imena_promtov), (
+        f"Отсутствуют промпты: {ozhidayemyy - imena_promtov}"
+    )
 
 
 async def test_spisok_basseynovykh_okrugov(klient):

@@ -24,7 +24,7 @@ src/
 
 ## Что пока считается внутренним слоем
 
-- shared-инфраструктура и дерево модулей внутри `mcp_russia`;
+- общая инфраструктура и дерево модулей внутри `mcp_russia`;
 - значительная часть схем, инструментов, ресурсов и промптов.
 
 ## Корневой сервер
@@ -35,10 +35,10 @@ src/
 
 ```python
 mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
-reestr = ReyestrFunktsiy()
-reestr.obnaruzhit("mcp_russia.data")
-reestr.obnaruzhit("mcp_russia.agenty")
-reestr.smontirovat_vse(mcp)
+reyestr = ReyestrFunktsiy()
+reyestr.obnaruzhit("mcp_russia.data")
+reyestr.obnaruzhit("mcp_russia.agenty")
+reyestr.smontirovat_vse(mcp)
 ```
 
 Следствие простое:
@@ -77,14 +77,14 @@ src/mcp_russia/data/{modul}/
 |--------|------------|
 | `feature.py` | обнаружение и реестр пакетов модулей |
 | `http_client.py` | общий async HTTP-клиент с повторными попытками |
-| `cache.py` | TTL-cache и decorator для кеширования |
+| `cache.py` | TTL-кеш и декоратор для кеширования |
 | `formatting.py` | табличное и числовое форматирование |
-| `rate_limiter.py` | rate limiting для внешних API |
+| `rate_limiter.py` | ограничение частоты запросов для внешних API |
 | `validators.py` | валидация ИНН, КПП, СНИЛС, ОГРН |
 | `batch.py` | выполнение нескольких вызовов инструментов за один запрос |
 | `discovery.py` | каталог и рекомендация инструментов |
 | `planner.py` | построение плана запроса |
-| `lifespan.py` | общий lifecycle для HTTP-клиента |
+| `lifespan.py` | общий жизненный цикл для HTTP-клиента |
 
 ## Мета-инструменты корневого сервера
 

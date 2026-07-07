@@ -149,10 +149,10 @@ async def test_constants_emiss_kody():
 async def test_constants_emiss_kody_complete():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY
 
-    indicator_codes = {p["kod"] for p in KLYUCHEVYE_INDIKATORY}
-    for code in indicator_codes:
-        assert code in EMISS_KODY_POKAZATELEY, (
-            f"KLYUCHEVYE_INDIKATORY code '{code}' missing from EMISS_KODY_POKAZATELEY"
+    kody_indikatorov = {p["kod"] for p in KLYUCHEVYE_INDIKATORY}
+    for kod in kody_indikatorov:
+        assert kod in EMISS_KODY_POKAZATELEY, (
+            f"KLYUCHEVYE_INDIKATORY код '{kod}' отсутствует в EMISS_KODY_POKAZATELEY"
         )
 
 
@@ -308,9 +308,9 @@ async def test_indikator_dannye_emiss_code_direct():
 async def test_constants_subiekty_no_duplicates():
     from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
 
-    codes = [r["kod"] for r in SUBIEKTY_RF]
-    dups = [c for c in codes if codes.count(c) > 1]
-    assert len(codes) == len(set(codes)), f"Дубликаты кодов: {dups}"
+    kody = [r["kod"] for r in SUBIEKTY_RF]
+    dublikaty = [k for k in kody if kody.count(k) > 1]
+    assert len(kody) == len(set(kody)), f"Дубликаты кодов: {dublikaty}"
 
 
 async def test_otraslevaya_struktura_vrp_zapasnoy():
@@ -377,19 +377,19 @@ async def test_constants_otraslevaya_struktura():
     from mcp_russia.data.rosstat.constants import OTRASLEVAYA_STRUKTURA_VRP
 
     assert len(OTRASLEVAYA_STRUKTURA_VRP) >= 19
-    codes = [o["kod"] for o in OTRASLEVAYA_STRUKTURA_VRP]
-    assert "A" in codes
-    assert "F" in codes
-    assert "S" in codes
+    kody = [o["kod"] for o in OTRASLEVAYA_STRUKTURA_VRP]
+    assert "A" in kody
+    assert "F" in kody
+    assert "S" in kody
 
 
 async def test_constants_vidy_deyatelnosti_investitsii():
     from mcp_russia.data.rosstat.constants import VIDY_DEYATELNOSTI_INVESTITSII
 
     assert len(VIDY_DEYATELNOSTI_INVESTITSII) >= 19
-    codes = [v["kod"] for v in VIDY_DEYATELNOSTI_INVESTITSII]
-    assert "A" in codes
-    assert "F" in codes
+    kody = [v["kod"] for v in VIDY_DEYATELNOSTI_INVESTITSII]
+    assert "A" in kody
+    assert "F" in kody
 
 
 async def test_constants_new_emiss_kody():

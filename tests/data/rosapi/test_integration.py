@@ -1,7 +1,7 @@
 """Интеграционные тесты для модуля RosAPI.
 
-Note: rosapi/prompty.py imports UserMessage which may not exist in this
-version of FastMCP. If server import fails, tests are skipped.
+Примечание: rosapi/prompty.py импортирует UserMessage, который может не существовать
+в этой версии FastMCP. Если импорт сервера не удаётся, тесты пропускаются.
 """
 
 import pytest

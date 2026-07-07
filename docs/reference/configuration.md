@@ -17,7 +17,7 @@
 | `MCP_RUSSIA_TOOL_SEARCH` | `bm25` | Режим обнаружения и публикации инструментов для LLM |
 | `MCP_RUSSIA_HTTP_TIMEOUT` | `30.0` | HTTP timeout в секундах |
 | `MCP_RUSSIA_HTTP_MAX_RETRIES` | `3` | Максимальное число повторных попыток |
-| `MCP_RUSSIA_HTTP_BACKOFF_BASE` | `1.0` | Базовая задержка для экспоненциального backoff |
+| `MCP_RUSSIA_HTTP_BACKOFF_BASE` | `1.0` | Базовая задержка для экспоненциального отката |
 | `MCP_RUSSIA_USER_AGENT` | `mcp-russia/<version>` | Значение `User-Agent` для исходящих HTTP-запросов |
 
 ## `MCP_RUSSIA_TOOL_SEARCH`
@@ -94,7 +94,7 @@ ANTHROPIC_API_KEY=xxx \
 
 ## HTTP-клиент
 
-Общий `httpx` клиент поддерживает повторные попытки, backoff и единые настройки таймаута.
+Общий `httpx` клиент поддерживает повторные попытки, экспоненциальный откат и единые настройки таймаута.
 
 ### Повторные попытки с экспоненциальной задержкой
 
@@ -105,7 +105,7 @@ ANTHROPIC_API_KEY=xxx \
 - timeout, если API отвечает дольше `MCP_RUSSIA_HTTP_TIMEOUT`
 - сетевых ошибках соединения или DNS
 
-Базовая схема backoff: `1s -> 2s -> 4s`, с опорой на `MCP_RUSSIA_HTTP_BACKOFF_BASE` и ограничением `MCP_RUSSIA_HTTP_MAX_RETRIES`.
+Базовая схема отката: `1с -> 2с -> 4с`, с опорой на `MCP_RUSSIA_HTTP_BACKOFF_BASE` и ограничением `MCP_RUSSIA_HTTP_MAX_RETRIES`.
 
 ### Ограничение частоты запросов
 

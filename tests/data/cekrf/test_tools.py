@@ -77,8 +77,8 @@ async def test_rezultaty_vyborov_pustoy():
 async def test_yavka_i_itogi():
     """Проверка yavka_i_itogi."""
     ctx = _maket_konteksta()
-    with patch.object(cekrf_tools.client, "yavka_i_itogi") as mock_yavka:
-        mock_yavka.return_value = {
+    with patch.object(cekrf_tools.client, "yavka_i_itogi") as maket_yavka:
+        maket_yavka.return_value = {
             "god": 2024,
             "vseh_izbirateley": 1000000,
             "progalosovalo": 650000,

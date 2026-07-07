@@ -70,13 +70,13 @@ async def test_uznat_kurs_valyuty_ne_nayden():
 
 async def test_spisok_valyut():
     ctx = _maket_konteksta()
-    raw = {
+    syryye_dannye = {
         "Valute": {
             "USD": {"Name": "Доллар США", "Nominal": 1, "Value": 90.0},
             "EUR": {"Name": "Евро", "Nominal": 1, "Value": 98.0},
         }
     }
-    with patch.object(cbrf_tools.client, "poluchit_vse_valyuty", return_value=raw):
+    with patch.object(cbrf_tools.client, "poluchit_vse_valyuty", return_value=syryye_dannye):
         rezultat = await cbrf_tools.spisok_valyut(ctx)
     assert "2 валют" in rezultat
     assert "USD" in rezultat
@@ -120,8 +120,8 @@ async def test_sravnit_valyuty_po_umolchaniyu():
 
 
 async def test_sravnit_valyuty_slishkom_mnogo():
-    codes = [f"C{i}" for i in range(11)]
-    rezultat = await cbrf_tools.sravnit_valyuty(codes)
+    kody = [f"C{i}" for i in range(11)]
+    rezultat = await cbrf_tools.sravnit_valyuty(kody)
     assert "не более 10" in rezultat
 
 

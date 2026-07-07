@@ -42,6 +42,12 @@ async def test_spisok_osnovaniy_vozbuzhdeniya():
     assert "Судебный акт" in rezultat
 
 
+async def test_spisok_regionov():
+    ctx = _maket_konteksta()
+    rezultat = await fssp_tools.spisok_regionov(ctx)
+    assert "Москва" in rezultat
+
+
 async def test_info_proizvodstva_ne_nayden():
     ctx = _maket_konteksta()
     with patch.object(fssp_tools.client, "info_proizvodstva", return_value=None):

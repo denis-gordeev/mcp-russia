@@ -35,9 +35,9 @@ class TestPostroenieDispetcherizatsii:
 
     def test_keshiruet_rezultat(self) -> None:
         """Повторный вызов должен возвращать кэшированную таблицу диспетчеризации."""
-        reg = _realnyy_reyestr()
-        pervyy = batch.postroit_dispetcherizatsiyu(reg)
-        vtoroy = batch.postroit_dispetcherizatsiyu(reg)
+        reyestr = _realnyy_reyestr()
+        pervyy = batch.postroit_dispetcherizatsiyu(reyestr)
+        vtoroy = batch.postroit_dispetcherizatsiyu(reyestr)
         assert pervyy is vtoroy
 
 
@@ -59,7 +59,7 @@ class TestVypolneniePaketa:
     async def test_neizvestnyy_instrument(self) -> None:
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "nonexistent_tool", "argumenty": {}}], ctx
+            [{"instrument": "nesushchestvuyushchiy_instrument", "argumenty": {}}], ctx
         )
         assert "не найден" in rezultat
 
@@ -70,11 +70,11 @@ class TestVypolneniePaketa:
         async def _spets(ctx: object, param: str) -> str: ...
 
         maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat ok")
-        batch._dispetcher["test_instrument"] = maket_funktsii
+        batch._dispetcher["proverochnyy_instrument"] = maket_funktsii
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "test_instrument", "argumenty": {"param": "znachenie"}}], ctx
+            [{"instrument": "proverochnyy_instrument", "argumenty": {"param": "znachenie"}}], ctx
         )
         assert "rezultat ok" in rezultat
         maket_funktsii.assert_called_once()
@@ -148,13 +148,13 @@ class TestVypolneniePaketa:
             msg = "oy"
             raise ValueError(msg)
 
-        batch._dispetcher["norm"] = normanyy_instrument
+        batch._dispetcher["norma"] = normanyy_instrument
         batch._dispetcher["plokho"] = plokhoy_instrument
 
         ctx = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"instrument": "norm", "argumenty": {}},
+                {"instrument": "norma", "argumenty": {}},
                 {"instrument": "plokho", "argumenty": {}},
             ],
             ctx,
@@ -164,10 +164,10 @@ class TestVypolneniePaketa:
 
 
 def _realnyy_reyestr() -> batch.ReyestrFunktsiy:
-    """Собирает реальный registry проекта для интеграционного тестирования."""
+    """Собирает реальный реестр проекта для интеграционного тестирования."""
     from mcp_russia._shared.feature import ReyestrFunktsiy
 
-    reg = ReyestrFunktsiy()
-    reg.obnaruzhit("mcp_russia.data")
-    reg.obnaruzhit("mcp_russia.agenty")
-    return reg
+    reyestr = ReyestrFunktsiy()
+    reyestr.obnaruzhit("mcp_russia.data")
+    reyestr.obnaruzhit("mcp_russia.agenty")
+    return reyestr
