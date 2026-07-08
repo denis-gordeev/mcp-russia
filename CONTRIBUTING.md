@@ -197,11 +197,11 @@ async def test_tool_via_mcp_client():
 Используйте **Conventional Commits** (на русском или английском):
 
 ```
-feat(cbrf): add tool poluchit_dinamiku_kursa
-fix(fns): handle empty response from EGRUL
-test(zakupki): add edge-case tests for client
+feat(cbrf): добавить инструмент poluchit_dinamiku_kursa
+fix(fns): обработать пустой ответ ЕГРЮЛ
+test(zakupki): добавить граничные тесты для клиента
 docs: обновить README с новым модулем
-refactor(gosduma): simplify pagination logic
+refactor(gosduma): упростить логику пагинации
 ```
 
 - Перед коммитом убедитесь, что `make ci` проходит
@@ -216,8 +216,8 @@ refactor(gosduma): simplify pagination logic
 
 | Ситуация | Bump | Пример |
 |----------|------|---------|
-| Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): add 5 tools` |
-| Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): handle timeout` |
+| Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): добавить 5 инструментов` |
+| Исправление бага, корректировка endpoint | **patch** | `fix(cbrf): обработать таймаут` |
 | Критическое изменение (переименование инструментов, изменение API) | **major** | refactor, ломающий клиентов |
 | Только docs, тесты, внутренний refactor | **нет** | Релиз не обязателен |
 

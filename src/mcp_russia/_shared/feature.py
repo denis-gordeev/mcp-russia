@@ -5,8 +5,8 @@
 server.py с объектом `mcp`, будет автоматически обнаружен,
 провалидирован и смонтирован на корневой сервер.
 
-Подход вдохновлён: Flask blueprints, Django app registry,
-pytest plugin discovery, FastAPI router auto-include.
+Подход вдохновлён: чертежами Flask, реестром приложений Django,
+обнаружением плагинов pytest, автоподключением маршрутов FastAPI.
 
 Полное обоснование — см. ADR-002.
 

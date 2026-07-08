@@ -25,7 +25,7 @@ class Organizatsiya(BaseModel):
     nazvanie_polnoe: str | None = None
     nazvanie_kratkoe: str | None = None
     sostoyanie: str | None = Field(
-        default=None, description="Состояние: DEYSTVUYUSHCHAYA, LIKVIDIROVANA и т.д."
+        default=None, description="Состояние: ДЕЙСТВУЮЩАЯ, ЛИКВИДИРОВАНА и т.д."
     )
     adres: str | None = None
     rukovoditel: str | None = None
