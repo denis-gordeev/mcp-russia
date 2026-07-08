@@ -22,7 +22,7 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit, sozdat_klienta
 
 from .constants import (
-    CIK_API_BASE,
+    CIK_BAZA_API,
     DOLZHNOSTI_FEDERAL,
     GODY_VYBOROV,
     IZBIRATELNYY_KOD_REGIONA,
@@ -31,7 +31,7 @@ from .constants import (
     SUBYEKTY_RF,
     TIPOVY_VYBORY,
     VYBORY_API,
-    VYBORY_API_BASE,
+    VYBORY_BAZA_API,
 )
 from .schemas import (
     Dolzhnost,
@@ -160,7 +160,7 @@ async def _zaprosit_html_vyborov(
     adres_url = f"{VYBORY_API}/izbirkom"
     try:
         async with sozdat_klienta(
-            bazovyy_adres_url=VYBORY_API_BASE,
+            bazovyy_adres_url=VYBORY_BAZA_API,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=30.0,
         ) as c:
@@ -174,7 +174,7 @@ async def _zaprosit_html_vyborov(
 
 async def _zaprosit_json_tsik(put_api: str, parametry: dict[str, Any] | None = None) -> Any:
     """Получить JSON данные из API cikrf.ru."""
-    adres_url = f"{CIK_API_BASE}{put_api}"
+    adres_url = f"{CIK_BAZA_API}{put_api}"
     try:
         return await http_poluchit(adres_url, parametry=parametry, taimaut=15.0, maks_povtorov=1)
     except Exception as exc:
@@ -419,7 +419,7 @@ async def spisok_vyborov(
         }
         try:
             async with sozdat_klienta(
-                bazovyy_adres_url=VYBORY_API_BASE,
+                bazovyy_adres_url=VYBORY_BAZA_API,
                 zagolovki={"Accept": "text/html,application/xhtml+xml"},
                 taimaut=20.0,
             ) as c:
@@ -488,7 +488,7 @@ async def poisk_kandidata(
 
     try:
         async with sozdat_klienta(
-            bazovyy_adres_url=VYBORY_API_BASE,
+            bazovyy_adres_url=VYBORY_BAZA_API,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=20.0,
         ) as c:
@@ -700,7 +700,7 @@ async def yavka_i_itogi(
                     "nazvanie": str(vybory_info["nazvanie"]),
                     "data": str(vybory_info["data"]),
                     **yavka,
-                    "istochnik": f"ГАС «Выборы» ({VYBORY_API_BASE})",
+                    "istochnik": f"ГАС «Выборы» ({VYBORY_BAZA_API})",
                 }
 
     cik_data = await _zaprosit_json_tsik(
@@ -719,7 +719,7 @@ async def yavka_i_itogi(
             "progalosovalo": cik_data.get("voted", cik_data.get("progalosovalo", 0)),
             "deystvitelnykh_byulleteney": cik_data.get("validBallots", 0),
             "nedeystvitelnykh_byulleteney": cik_data.get("invalidBallots", 0),
-            "istochnik": f"ЦИК РФ ({CIK_API_BASE})",
+            "istochnik": f"ЦИК РФ ({CIK_BAZA_API})",
         }
 
     return {
@@ -733,5 +733,5 @@ async def yavka_i_itogi(
         "progalosovalo": 0,
         "deystvitelnykh_byulleteney": 0,
         "nedeystvitelnykh_byulleteney": 0,
-        "istochnik": f"ЦИК РФ / ГАС «Выборы» ({CIK_API_BASE}, {VYBORY_API_BASE})",
+        "istochnik": f"ЦИК РФ / ГАС «Выборы» ({CIK_BAZA_API}, {VYBORY_BAZA_API})",
     }

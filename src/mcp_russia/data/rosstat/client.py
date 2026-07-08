@@ -13,7 +13,7 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    EMISS_API_BASE,
+    EMISS_BAZA_API,
     EMISS_KODY_POKAZATELEY,
     FEDERALNYE_OKRUGA,
     KLYUCHEVYE_INDIKATORY,
@@ -47,7 +47,7 @@ async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[Pokazatel
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if diapazon_dat:
             parametry["date"] = diapazon_dat
@@ -71,7 +71,7 @@ async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
     if not info_o_regionye:
         return None
     try:
-        adres_url = f"{EMISS_API_BASE}/region/{kod}"
+        adres_url = f"{EMISS_BAZA_API}/region/{kod}"
         dannye = await http_poluchit(adres_url, taimaut=20.0)
         if isinstance(dannye, dict):
             return DannyeRegiona(
@@ -125,7 +125,7 @@ async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
     """
     try:
         kod_emiss = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if god:
             parametry["year"] = god
@@ -160,7 +160,7 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
     """
     try:
         kod_emiss = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -197,7 +197,7 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -246,7 +246,7 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -296,7 +296,7 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
     if not kod_emiss:
         return []
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         dannye = await http_poluchit(adres_url, parametry={"groupByRegion": "true"}, taimaut=20.0)
         if isinstance(dannye, dict):
             elementy = dannye.get("data", [])
@@ -349,7 +349,7 @@ async def poluchit_indikator_dannye(
         "",
     )
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -440,7 +440,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -523,7 +523,7 @@ async def poluchit_investitsii_po_vidam(
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
     try:
-        adres_url = f"{EMISS_API_BASE}/data/{kod_emiss}"
+        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {"groupByActivity": "true"}
         if subiekt:
             parametry["region"] = subiekt

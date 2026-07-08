@@ -1,9 +1,9 @@
 """Константы для модуля ЦИК РФ."""
 
-VYBORY_API_BASE = "https://vybory.izbirkom.ru"
-CIK_API_BASE = "https://cikrf.ru"
-VYBORY_API = f"{VYBORY_API_BASE}/region/region"
-CIK_VOTER_API = f"{CIK_API_BASE}/services/cik/voter"
+VYBORY_BAZA_API = "https://vybory.izbirkom.ru"
+CIK_BAZA_API = "https://cikrf.ru"
+VYBORY_API = f"{VYBORY_BAZA_API}/region/region"
+CIK_API_IZBIRATELYA = f"{CIK_BAZA_API}/services/cik/voter"
 
 IZVESTNYE_VYBORY = {
     "prezident_2024": {

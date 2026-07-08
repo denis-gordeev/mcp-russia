@@ -9,10 +9,10 @@
 # 5. Законопроекты: https://sovfed.ru/bills
 # 6. Заседания: https://sovfed.ru/sessions
 
-SOVFED_API_BASE = "https://sovfed.ru/api"
-SOVFED_BASE = "https://sovfed.ru"
+SOVFED_BAZA_API = "https://sovfed.ru/api"
+SOVFED_BAZA = "https://sovfed.ru"
 DATA_GOV_RU_SOVFED = "https://data.gov.ru/api/dataset"
-DATA_GOV_RU_BASE = "https://data.gov.ru"
+DATA_GOV_RU_BAZA = "https://data.gov.ru"
 
 KOMITETY_SOVFEDA = [
     {

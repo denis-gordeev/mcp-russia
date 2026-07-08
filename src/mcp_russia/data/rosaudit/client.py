@@ -13,8 +13,8 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    ACH_API_BASE,
-    BUDGET_GOV_RU_BASE,
+    ACH_BAZA_API,
+    BUDGET_GOV_RU_BAZA,
     NAPRAVLENIYA_KONTROLYA,
     SUBIEKTY_AUDITA,
     TIPY_MEROPRIYATIY,
@@ -41,7 +41,7 @@ async def poisk_kontrolnyh_meropriyatiy(
         Список контрольных мероприятий.
     """
     try:
-        adres_url = f"{ACH_API_BASE}/controls"
+        adres_url = f"{ACH_BAZA_API}/controls"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if napravlenie:
             parametry["direction"] = napravlenie
@@ -67,7 +67,7 @@ async def poluchit_kontrolnoe_meropriyatie(nomer: str) -> dict[str, Any] | None:
         Данные о мероприятии или None.
     """
     try:
-        adres_url = f"{ACH_API_BASE}/controls/{nomer}"
+        adres_url = f"{ACH_BAZA_API}/controls/{nomer}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_kontrolnoe_meropriyatie(dannye)
@@ -87,7 +87,7 @@ async def poluchit_auditorskoe_zaklyuchenie(nomer: str) -> dict[str, Any] | None
         Данные о заключении или None.
     """
     try:
-        adres_url = f"{ACH_API_BASE}/conclusions/{nomer}"
+        adres_url = f"{ACH_BAZA_API}/conclusions/{nomer}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_auditorskoe_zaklyuchenie(dannye)
@@ -109,7 +109,7 @@ async def poluchit_byudzhet_ispolnenie(
         Данные об исполнении бюджета или None.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BASE}/execution"
+        adres_url = f"{BUDGET_GOV_RU_BAZA}/execution"
         parametry: dict[str, str] = {}
         if period:
             parametry["period"] = period
@@ -138,7 +138,7 @@ async def poisk_narusheniy(
         Список нарушений.
     """
     try:
-        adres_url = f"{ACH_API_BASE}/violations"
+        adres_url = f"{ACH_BAZA_API}/violations"
         parametry: dict[str, Any] = {}
         if organizaciya:
             parametry["organization"] = organizaciya

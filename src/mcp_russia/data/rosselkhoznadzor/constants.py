@@ -1,8 +1,8 @@
 """Константы модуля Россельхознадзор."""
 
-FSVPS_API_BASE = "https://fsvps.gov.ru/api"
-FSVPS_BASE = "https://fsvps.gov.ru"
-FSVPS_OPENDATA_BASE = "https://data.fsvps.gov.ru/opendata"
+FSVPS_BAZA_API = "https://fsvps.gov.ru/api"
+FSVPS_BAZA = "https://fsvps.gov.ru"
+FSVPS_BAZA_OTKRYTYKH_DANNYKH = "https://data.fsvps.gov.ru/opendata"
 DATA_GOV_RU_FSVPS = "https://data.gov.ru/opendata/7710746433-fsvps"
 
 VIDY_NADZORA = [

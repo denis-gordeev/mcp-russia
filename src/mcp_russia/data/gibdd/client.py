@@ -13,7 +13,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
 
-from .constants import GIBDD_CHECK_BASE, GIBDD_STAT_BASE
+from .constants import GIBDD_BAZA_PROVEROK, GIBDD_BAZA_STATISTIKI
 from .schemas import (
     RegistracionnoeDeystvie,
     StatistikaDTP,
@@ -32,7 +32,7 @@ async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
     Возвращает:
         Список регистрационных действий.
     """
-    adres_url = f"{GIBDD_CHECK_BASE}/auto/history/{vin}"
+    adres_url = f"{GIBDD_BAZA_PROVEROK}/auto/history/{vin}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_istoriyu(dannye, vin)
@@ -50,7 +50,7 @@ async def proverka_dtp_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей о ДТП.
     """
-    adres_url = f"{GIBDD_CHECK_BASE}/auto/dtp/{vin}"
+    adres_url = f"{GIBDD_BAZA_PROVEROK}/auto/dtp/{vin}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_dtp(dannye)
@@ -68,7 +68,7 @@ async def proverka_rozysk_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей о розыске.
     """
-    adres_url = f"{GIBDD_CHECK_BASE}/auto/wanted/{vin}"
+    adres_url = f"{GIBDD_BAZA_PROVEROK}/auto/wanted/{vin}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_rozysk(dannye)
@@ -86,7 +86,7 @@ async def proverka_ogranicheniy_ts(vin: str) -> list[dict[str, Any]]:
     Возвращает:
         Список записей об ограничениях.
     """
-    adres_url = f"{GIBDD_CHECK_BASE}/auto/restrict/{vin}"
+    adres_url = f"{GIBDD_BAZA_PROVEROK}/auto/restrict/{vin}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_ogranichenie(dannye)
@@ -104,7 +104,7 @@ async def proverka_vu(nomer_vu: str) -> VoditelskoeUdostoverenie | None:
     Возвращает:
         Данные ВУ или None.
     """
-    adres_url = f"{GIBDD_CHECK_BASE}/driver/{nomer_vu}"
+    adres_url = f"{GIBDD_BAZA_PROVEROK}/driver/{nomer_vu}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_voditelya(dannye, nomer_vu)
@@ -123,7 +123,7 @@ async def statistika_dtp_region(subiekt: str, god: int) -> StatistikaDTP | None:
     Возвращает:
         Статистика ДТП или None.
     """
-    adres_url = f"{GIBDD_STAT_BASE}/map/dtp"
+    adres_url = f"{GIBDD_BAZA_STATISTIKI}/map/dtp"
     parametry = {"region": subiekt, "year": str(god)}
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)

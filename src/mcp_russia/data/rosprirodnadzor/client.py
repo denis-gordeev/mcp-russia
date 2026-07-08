@@ -15,11 +15,11 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    GOSUSLUGI_EKO_BASE,
+    GOSUSLUGI_EKO_BAZA,
     KATEGORII_OBNV,
-    ONV_REGISTER_BASE,
-    ROSPRIRODNADZOR_API_BASE,
-    ROSPRIRODNADZOR_OPENDATA_BASE,
+    ONV_REESTR_BAZA,
+    ROSPRIRODNADZOR_BAZA_API,
+    ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH,
     VIDY_LITSENZIY_NEDRA,
     VIDY_NADZORA,
 )
@@ -45,7 +45,7 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/inspections"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/inspections"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             parametry["organization"] = organizaciya
@@ -61,7 +61,7 @@ async def poisk_proverok(
         logger.debug("rpn.gov.ru API недоступен")
 
     try:
-        adres_url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/inspections"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH}/inspections"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             parametry["organization"] = organizaciya
@@ -87,7 +87,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         Данные проверки или None.
     """
     try:
-        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/inspections/{nomer}"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/inspections/{nomer}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_proverku(dannye)
@@ -112,7 +112,7 @@ async def poisk_obektov_negativnogo(
         Список объектов ОНВ.
     """
     try:
-        adres_url = f"{ONV_REGISTER_BASE}/search"
+        adres_url = f"{ONV_REESTR_BAZA}/search"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             parametry["name"] = organizaciya
@@ -126,7 +126,7 @@ async def poisk_obektov_negativnogo(
         logger.debug("ONV реестр недоступен")
 
     try:
-        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/onv"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/onv"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if organizaciya:
             parametry["organization"] = organizaciya
@@ -158,7 +158,7 @@ async def poisk_litsenziy_nedra(
         Список лицензий.
     """
     try:
-        adres_url = f"{ROSPRIRODNADZOR_OPENDATA_BASE}/licenses"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH}/licenses"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if territoriya:
             parametry["territory"] = territoriya
@@ -172,7 +172,7 @@ async def poisk_litsenziy_nedra(
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
     try:
-        adres_url = f"{ROSPRIRODNADZOR_API_BASE}/licenses"
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/licenses"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if territoriya:
             parametry["territory"] = territoriya
@@ -200,7 +200,7 @@ async def poluchit_ekologicheskie_platezhi(
         Список экологических платежей.
     """
     try:
-        adres_url = f"{GOSUSLUGI_EKO_BASE}/payments"
+        adres_url = f"{GOSUSLUGI_EKO_BAZA}/payments"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god

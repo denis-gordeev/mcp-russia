@@ -15,8 +15,8 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    OPEN_METEO_AIR_QUALITY_BASE,
-    OPEN_METEO_BASE,
+    OPEN_METEO_BAZA,
+    OPEN_METEO_BAZA_KACHESTVA_VOZDUKHA,
     STANCII_MONITORINGA,
     TIPY_EKODANNYKH,
     TIPY_METEODANNYKH,
@@ -60,7 +60,7 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaDannye | None:
         "timezone": "Europe/Moscow",
     }
     try:
-        dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+        dannye = await http_poluchit(OPEN_METEO_BAZA, parametry=parametry)
         return _razobrat_openmeteo_pogodu(dannye, svedeniya)
     except Exception:
         return None
@@ -91,7 +91,7 @@ async def poluchit_prognoz(
         "forecast_days": min(max(dni, 1), 16),
     }
     try:
-        dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+        dannye = await http_poluchit(OPEN_METEO_BAZA, parametry=parametry)
         return _razobrat_openmeteo_prognoz(dannye, svedeniya)
     except Exception:
         return []
@@ -125,7 +125,7 @@ async def poluchit_ekologiyu(
             "timezone": "Europe/Moscow",
         }
         try:
-            dannye = await http_poluchit(OPEN_METEO_AIR_QUALITY_BASE, parametry=parametry)
+            dannye = await http_poluchit(OPEN_METEO_BAZA_KACHESTVA_VOZDUKHA, parametry=parametry)
             razobrannye = _razobrat_openmeteo_ekologiyu(dannye, stantsiya)
             rezultaty.extend(razobrannye)
         except Exception:
@@ -169,7 +169,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
             "timezone": "Europe/Moscow",
         }
         try:
-            dannye = await http_poluchit(OPEN_METEO_BASE, parametry=parametry)
+            dannye = await http_poluchit(OPEN_METEO_BAZA, parametry=parametry)
             tekushchie = dannye.get("current", {})
             temperatura = tekushchie.get("temperature_2m")
             skorost_vetra = tekushchie.get("wind_speed_10m")

@@ -8,7 +8,7 @@ from __future__ import annotations
 from pathlib import Path
 
 DIREKTORIYA_SHABLONOV = Path(__file__).parent / "templates"
-DIREKTORIYA_NORM = Path(__file__).parent / "normas"
+DIREKTORIYA_NORM = Path(__file__).parent / "normy"
 
 
 def _zagruzit_fayl(direktoriya: Path, imya_fayla: str) -> str:

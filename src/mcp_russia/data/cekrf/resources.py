@@ -3,12 +3,12 @@
 import json
 
 from .constants import (
-    CIK_API_BASE,
+    CIK_BAZA_API,
     IZVESTNYE_VYBORY,
     PARTII_RF,
     SUBYEKTY_RF,
     TIPOVY_VYBORY,
-    VYBORY_API_BASE,
+    VYBORY_BAZA_API,
 )
 
 
@@ -53,8 +53,8 @@ def info_api() -> str:
     return json.dumps(
         {
             "nazvanie": "ЦИК РФ / ГАС «Выборы»",
-            "bazovyy_url": CIK_API_BASE,
-            "vybory_url": VYBORY_API_BASE,
+            "bazovyy_url": CIK_BAZA_API,
+            "vybory_url": VYBORY_BAZA_API,
             "trebuet_avtentifikatsii": False,
             "format": "HTML / REST (частично документирован)",
             "pokrytie": "Федеральные и региональные выборы РФ",

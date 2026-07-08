@@ -1,10 +1,10 @@
 """Константы модуля Росприроднадзора."""
 
-ROSPRIRODNADZOR_API_BASE = "https://rpn.gov.ru/api"
-ROSPRIRODNADZOR_BASE = "https://rpn.gov.ru"
-ROSPRIRODNADZOR_OPENDATA_BASE = "https://rpn.gov.ru/opendata"
-ONV_REGISTER_BASE = "https://onv.register.rpn.gov.ru/api"
-GOSUSLUGI_EKO_BASE = "https://gosuslugi.ru/api/eco"
+ROSPRIRODNADZOR_BAZA_API = "https://rpn.gov.ru/api"
+ROSPRIRODNADZOR_BAZA = "https://rpn.gov.ru"
+ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH = "https://rpn.gov.ru/opendata"
+ONV_REESTR_BAZA = "https://onv.register.rpn.gov.ru/api"
+GOSUSLUGI_EKO_BAZA = "https://gosuslugi.ru/api/eco"
 
 VIDY_NADZORA = [
     {

@@ -11,7 +11,7 @@ from .constants import (
     KATEGORII_NARUSHENIY,
     KATEGORII_PD_OPERATOROV,
     NAPRAVLENIYA_DEYATELNOSTI,
-    REGISTRY_RKN,
+    REESTR_RKN,
     TIPY_LICENZIY_SVYAZI,
     TIPY_SMI,
 )
@@ -53,7 +53,7 @@ async def spisok_reestrov(ctx: Context) -> str:
     Возвращает:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
-    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in REGISTRY_RKN]
+    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in REESTR_RKN]
     return tablitsa_v_markdown(["Код", "Реестр"], stroki_tablitsy)
 
 
@@ -261,7 +261,7 @@ async def zapisi_reestra(ctx: Context, kod_reestra: str, identifikator_zapisi: s
     Возвращает:
         Описание реестра и ссылка на источник.
     """
-    reestr = next((r for r in REGISTRY_RKN if r["kod"] == kod_reestra), None)
+    reestr = next((r for r in REESTR_RKN if r["kod"] == kod_reestra), None)
     if not reestr:
         return f"Реестр «{kod_reestra}» не найден. Используйте spisok_reestrov()."
     stroki = [

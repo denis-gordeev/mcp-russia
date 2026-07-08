@@ -14,10 +14,10 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    BUDGET_GOV_RU_BASE,
+    BUDGET_GOV_RU_BAZA,
     KATEGORII_RASKHODOV,
-    KAZNACHEISTVO_API_BASE,
-    ROSKAZNA_OPENDATA_BASE,
+    KAZNACHEISTVO_BAZA_API,
+    ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH,
     VIDY_BUDZHETOV,
 )
 
@@ -38,7 +38,7 @@ async def poluchit_ispolnenie_byudzheta(
         Данные об исполнении бюджета или None.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BASE}/v1/execution"
+        adres_url = f"{BUDGET_GOV_RU_BAZA}/v1/execution"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god
@@ -51,7 +51,7 @@ async def poluchit_ispolnenie_byudzheta(
         logger.debug("budget.gov.ru API недоступен")
 
     try:
-        adres_url = f"{KAZNACHEISTVO_API_BASE}/execution"
+        adres_url = f"{KAZNACHEISTVO_BAZA_API}/execution"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god
@@ -80,7 +80,7 @@ async def poisk_uchastnikov_bp(
         Список участников бюджетного процесса.
     """
     try:
-        adres_url = f"{ROSKAZNA_OPENDATA_BASE}/participants"
+        adres_url = f"{ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH}/participants"
         parametry: dict[str, str] = {}
         if inn:
             parametry["inn"] = inn
@@ -110,7 +110,7 @@ async def poisk_uchrezhdeniy(
         Список учреждений.
     """
     try:
-        adres_url = f"{ROSKAZNA_OPENDATA_BASE}/institutions"
+        adres_url = f"{ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH}/institutions"
         parametry: dict[str, str] = {}
         if inn:
             parametry["inn"] = inn
@@ -140,7 +140,7 @@ async def poluchit_mezhbyudzhetnye(
         Список межбюджетных трансфертов.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BASE}/v1/interbudget"
+        adres_url = f"{BUDGET_GOV_RU_BAZA}/v1/interbudget"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god
@@ -164,7 +164,7 @@ async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
         Данные бюджетной сметы или None.
     """
     try:
-        adres_url = f"{KAZNACHEISTVO_API_BASE}/estimates/{nomer}"
+        adres_url = f"{KAZNACHEISTVO_BAZA_API}/estimates/{nomer}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_byudzhetnuyu_smetu(dannye)

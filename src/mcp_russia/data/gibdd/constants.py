@@ -7,9 +7,9 @@
 # 3. Проверка ТС: https://гибдд.рф/check/auto
 # 4. Проверка ВУ: https://гибдд.рф/check/driver
 
-GIBDD_API_BASE = "https://гибдд.рф"
-GIBDD_CHECK_BASE = "https://гибдд.рф/proxy/check"
-GIBDD_STAT_BASE = "https://stat.gibdd.ru"
+GIBDD_BAZA_API = "https://гибдд.рф"
+GIBDD_BAZA_PROVEROK = "https://гибдд.рф/proxy/check"
+GIBDD_BAZA_STATISTIKI = "https://stat.gibdd.ru"
 
 TipyTransportnykhSredstv = [
     {"kod": "legkovoy", "nazvanie": "Легковой автомобиль"},

@@ -15,11 +15,11 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     BASSEYNOVYE_OKRUGA,
-    GMVO_API_BASE,
+    GMVO_BAZA_API,
     KRUPNYE_VODOKHRANILISHCHA,
     TIPY_GIDRO_DANNYKH,
     TIPY_VODNYKH_OBIEKTOV,
-    VODNYY_REESTR_BASE,
+    VODNYY_REESTR_BAZA,
 )
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ async def poisk_vodnykh_obektov(
         Список водных объектов.
     """
     try:
-        adres_url = f"{VODNYY_REESTR_BASE}/api/objects"
+        adres_url = f"{VODNYY_REESTR_BAZA}/api/objects"
         parametry: dict[str, Any] = {}
         if zapros:
             parametry["query"] = zapros
@@ -74,7 +74,7 @@ async def info_vodnogo_obekta(kod: str) -> dict[str, Any] | None:
         Данные о водном объекте или None.
     """
     try:
-        adres_url = f"{VODNYY_REESTR_BASE}/api/objects/{kod}"
+        adres_url = f"{VODNYY_REESTR_BAZA}/api/objects/{kod}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_vodnyy_obekt(dannye)
@@ -100,7 +100,7 @@ async def poluchit_gidro_dannye(
         Список гидрологических данных.
     """
     try:
-        adres_url = f"{GMVO_API_BASE}/api/data"
+        adres_url = f"{GMVO_BAZA_API}/api/data"
         parametry: dict[str, Any] = {"type": tip_dannykh}
         if identifikator_posta:
             parametry["post"] = identifikator_posta
@@ -124,7 +124,7 @@ async def poluchit_dannye_vodokhranilishcha(kod: str) -> dict[str, Any] | None:
         Данные о водохранилище или None.
     """
     try:
-        adres_url = f"{GMVO_API_BASE}/api/reservoirs/{kod}"
+        adres_url = f"{GMVO_BAZA_API}/api/reservoirs/{kod}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_vodokhranilishche(dannye)
@@ -148,7 +148,7 @@ async def poluchit_vodopolzovanie(
         Список данных о водопользовании.
     """
     try:
-        adres_url = f"{VODNYY_REESTR_BASE}/api/water-use"
+        adres_url = f"{VODNYY_REESTR_BAZA}/api/water-use"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt

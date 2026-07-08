@@ -1,9 +1,9 @@
 """Константы модуля МЧС России."""
 
-MCHS_API_BASE = "https://mchs.gov.ru/api"
-MCHS_BASE = "https://mchs.gov.ru"
-MCHS_OPENDATA_BASE = "https://data.mchs.gov.ru/opendata"
-FIRES_STAT_BASE = "https://fires.ru/api"
+MCHS_BAZA_API = "https://mchs.gov.ru/api"
+MCHS_BAZA = "https://mchs.gov.ru"
+MCHS_BAZA_OTKRYTYKH_DANNYKH = "https://data.mchs.gov.ru/opendata"
+FIRES_BAZA_STATISTIKI = "https://fires.ru/api"
 DATA_GOV_RU_MCHS = "https://data.gov.ru/opendata/7719484243-mchs"
 
 VIDY_CHS = [

@@ -11,7 +11,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit, http_poluchit
 
-from .constants import FSSP_IP_BASE, FSSP_SEARCH_API
+from .constants import FSSP_API_POISKA, FSSP_IP_BAZA
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ async def poisk_proizvodstv(
     if subiekt:
         telo["is"]["region"] = subiekt
     try:
-        dannye = await http_otpravit(FSSP_SEARCH_API, json_body=telo)
+        dannye = await http_otpravit(FSSP_API_POISKA, json_body=telo)
         return _razobrat_proizvodstva(dannye)
     except Exception:
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
@@ -101,7 +101,7 @@ async def poisk_proizvodstv(
                 parametry["is[date]"] = data_rozhdeniya
             if subiekt:
                 parametry["is[region]"] = subiekt
-            dannye = await http_poluchit(FSSP_IP_BASE, parametry=parametry)
+            dannye = await http_poluchit(FSSP_IP_BAZA, parametry=parametry)
             return _razobrat_proizvodstva(dannye)
         except Exception:
             logger.exception("Ошибка при резервном поиске производств по ФИО «%s»", fio)
@@ -118,7 +118,7 @@ async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
         Данные производства или None.
     """
     try:
-        dannye = await http_poluchit(f"{FSSP_IP_BASE}", parametry={"number": nomer})
+        dannye = await http_poluchit(f"{FSSP_IP_BAZA}", parametry={"number": nomer})
         zapisi = _razobrat_proizvodstva(dannye)
         for r in zapisi:
             if r.get("nomer") == nomer:

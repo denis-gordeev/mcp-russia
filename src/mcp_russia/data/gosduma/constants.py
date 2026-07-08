@@ -1,11 +1,11 @@
 """Константы модуля Госдумы."""
 
 # API Государственной Думы (открытые данные)
-DUMA_API_BASE = "https://api.duma.gov.ru/api/v1"
-DUMA_DEPUTATS = "https://api.duma.gov.ru/api/v1/deputies"
-DUMA_LAWS = "https://sozd.duma.gov.ru/api/open-api"
-DUMA_VOTES = "https://api.duma.gov.ru/api/v1/votes"
-DUMA_TRANSCRIPTS = "https://api.duma.gov.ru/api/v1/transcripts"
+DUMA_BAZA_API = "https://api.duma.gov.ru/api/v1"
+DUMA_DEPUTATY = "https://api.duma.gov.ru/api/v1/deputies"
+DUMA_ZAKONOPROEKTY = "https://sozd.duma.gov.ru/api/open-api"
+DUMA_GOLOSOVANIYA = "https://api.duma.gov.ru/api/v1/votes"
+DUMA_STENOGRAMMY = "https://api.duma.gov.ru/api/v1/transcripts"
 
 # Ключевые показатели
 KLYUCHEVYE_INDIKATORY = [
@@ -65,7 +65,7 @@ STATUSY_ZAKONOPROEKTOV = [
 ]
 
 # Фракции — маппинг кодов API → русские названия
-FRAKCIYA_API_MAP = {
+FRAKCIYA_SLOVAR_API = {
     "ЕР": "Единая Россия",
     "НЛ": "Новые люди",
     "Единая Россия": "Единая Россия",

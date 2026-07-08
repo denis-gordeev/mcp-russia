@@ -13,8 +13,8 @@ from mcp_russia._shared.http_client import http_poluchit
 from .constants import (
     ISTOCHNIKI_PUBLIKATSIY,
     OTRASLI_ZAKONODATELSTVA,
-    PRAVO_DOCUMENT_URL,
-    PRAVO_SEARCH_URL,
+    PRAVO_URL_DOKUMENTA,
+    PRAVO_URL_POISKA,
     STATUSY_DOKUMENTOV,
     TIPY_DOKUMENTOV_PRAVO,
     TIPY_NORMATIVNYKH_AKTOV,
@@ -37,7 +37,7 @@ async def poluchit_normativnyy_akt(nomer: str, tip: str = "") -> NormativnyyAkt 
     Возвращает:
         Данные акта или None.
     """
-    adres_url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
+    adres_url = f"{PRAVO_URL_DOKUMENTA}/{nomer}"
     parametry: dict[str, str] = {}
     if tip:
         parametry["tip"] = tip
@@ -57,7 +57,7 @@ async def poluchit_zakon_proekt(nomer: str) -> ZakonProekt | None:
     Возвращает:
         Данные законопроекта или None.
     """
-    adres_url = f"{PRAVO_DOCUMENT_URL}/{nomer}"
+    adres_url = f"{PRAVO_URL_DOKUMENTA}/{nomer}"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_zakon_proekt(dannye)
@@ -82,7 +82,7 @@ async def poluchit_publikatsii(
     Возвращает:
         Список публикаций.
     """
-    adres_url = PRAVO_SEARCH_URL
+    adres_url = PRAVO_URL_POISKA
     parametry: dict[str, str] = {}
     if tip:
         parametry["type"] = tip
@@ -108,7 +108,7 @@ async def poluchit_izmeneniya_akta(akt_nomer: str) -> list[IzmenenieAkta]:
     Возвращает:
         Список поправок.
     """
-    adres_url = f"{PRAVO_DOCUMENT_URL}/{akt_nomer}/amendments"
+    adres_url = f"{PRAVO_URL_DOKUMENTA}/{akt_nomer}/amendments"
     try:
         dannye = await http_poluchit(adres_url)
         return _razobrat_izmeneniya(dannye)
@@ -126,7 +126,7 @@ async def poluchit_poisku(tekst: str, tip: str = "") -> list[NormativnyyAkt]:
     Возвращает:
         Список найденных актов.
     """
-    adres_url = PRAVO_SEARCH_URL
+    adres_url = PRAVO_URL_POISKA
     parametry: dict[str, str] = {"q": tekst}
     if tip:
         parametry["type"] = tip

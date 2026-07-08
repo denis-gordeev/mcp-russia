@@ -1,9 +1,9 @@
 """Константы модуля Федерального казначейства."""
 
-KAZNACHEISTVO_API_BASE = "https://roskazna.gov.ru/api"
-KAZNACHEISTVO_BASE = "https://roskazna.gov.ru"
-ROSKAZNA_OPENDATA_BASE = "https://roskazna.gov.ru/opendata"
-BUDGET_GOV_RU_BASE = "https://budget.gov.ru/api"
+KAZNACHEISTVO_BAZA_API = "https://roskazna.gov.ru/api"
+KAZNACHEISTVO_BAZA = "https://roskazna.gov.ru"
+ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH = "https://roskazna.gov.ru/opendata"
+BUDGET_GOV_RU_BAZA = "https://budget.gov.ru/api"
 
 VIDY_BUDZHETOV = [
     {"kod": "federalnyy", "nazvanie": "Федеральный бюджет"},

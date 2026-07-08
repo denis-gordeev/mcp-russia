@@ -18,7 +18,7 @@ from .constants import (
     KOMISSII_SOVFEDA,
     KOMITETY_SOVFEDA,
     SENATORY_SPRAVOCHNIK,
-    SOVFED_API_BASE,
+    SOVFED_BAZA_API,
 )
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ async def poisk_senatorov(
         Список сенаторов.
     """
     try:
-        adres_url = f"{SOVFED_API_BASE}/senators"
+        adres_url = f"{SOVFED_BAZA_API}/senators"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -82,7 +82,7 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
         Данные сенатора или None.
     """
     try:
-        adres_url = f"{SOVFED_API_BASE}/senators/{identifikator_senatora}"
+        adres_url = f"{SOVFED_BAZA_API}/senators/{identifikator_senatora}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_senator(dannye)
@@ -98,7 +98,7 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
 async def spisok_komitetov() -> list[dict[str, Any]]:
     """Получить список комитетов Совета Федерации из API sovfed.ru."""
     try:
-        adres_url = f"{SOVFED_API_BASE}/committees"
+        adres_url = f"{SOVFED_BAZA_API}/committees"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
@@ -112,7 +112,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
 async def spisok_komissiy() -> list[dict[str, Any]]:
     """Получить список комиссий Совета Федерации из API sovfed.ru."""
     try:
-        adres_url = f"{SOVFED_API_BASE}/commissions"
+        adres_url = f"{SOVFED_BAZA_API}/commissions"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
@@ -137,7 +137,7 @@ async def poisk_zakonoproektov(
         Список законопроектов.
     """
     try:
-        adres_url = f"{SOVFED_API_BASE}/bills"
+        adres_url = f"{SOVFED_BAZA_API}/bills"
         parametry: dict[str, Any] = {}
         if sostoyanie:
             parametry["status"] = sostoyanie
@@ -161,7 +161,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         Список заседаний.
     """
     try:
-        adres_url = f"{SOVFED_API_BASE}/sessions"
+        adres_url = f"{SOVFED_BAZA_API}/sessions"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god

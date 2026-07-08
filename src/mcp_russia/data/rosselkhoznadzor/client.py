@@ -15,8 +15,8 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA_RSKHN,
-    FSVPS_API_BASE,
-    FSVPS_OPENDATA_BASE,
+    FSVPS_BAZA_API,
+    FSVPS_BAZA_OTKRYTYKH_DANNYKH,
     KARANTINNYE_OBYEKTY,
     KATEGORII_PROVEROK,
     STATISTIKA_RSKHN_2023,
@@ -46,7 +46,7 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        adres_url = f"{FSVPS_API_BASE}/inspections"
+        adres_url = f"{FSVPS_BAZA_API}/inspections"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -62,7 +62,7 @@ async def poisk_proverok(
         logger.debug("fsvps.gov.ru API недоступен для проверок")
 
     try:
-        adres_url = f"{FSVPS_OPENDATA_BASE}/inspections"
+        adres_url = f"{FSVPS_BAZA_OTKRYTYKH_DANNYKH}/inspections"
         parametry = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -90,7 +90,7 @@ async def poisk_karantinnykh_obektov(
         Список карантинных объектов.
     """
     try:
-        adres_url = f"{FSVPS_API_BASE}/quarantine"
+        adres_url = f"{FSVPS_BAZA_API}/quarantine"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -122,7 +122,7 @@ async def poisk_registratsiy_produktsii(
         Список зарегистрированной продукции.
     """
     try:
-        adres_url = f"{FSVPS_API_BASE}/registrations"
+        adres_url = f"{FSVPS_BAZA_API}/registrations"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if tip_produktsii:
             parametry["productType"] = tip_produktsii
@@ -154,7 +154,7 @@ async def veterinarsnye_sertifikaty(
         Список ветеринарных сертификатов.
     """
     try:
-        adres_url = f"{FSVPS_API_BASE}/certificates"
+        adres_url = f"{FSVPS_BAZA_API}/certificates"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -182,7 +182,7 @@ async def preduprezhdeniya_karantina(
         Список предупреждений.
     """
     try:
-        adres_url = f"{FSVPS_API_BASE}/warnings"
+        adres_url = f"{FSVPS_BAZA_API}/warnings"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt

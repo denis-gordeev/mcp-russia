@@ -1,8 +1,8 @@
 """Константы модуля ФССП."""
 
-FSSP_API_BASE = "https://fssp.gov.ru/api"
-FSSP_SEARCH_API = "https://fssp.gov.ru/iss/search"
-FSSP_IP_BASE = "https://fssp.gov.ru/iss/ip"
+FSSP_BAZA_API = "https://fssp.gov.ru/api"
+FSSP_API_POISKA = "https://fssp.gov.ru/iss/search"
+FSSP_IP_BAZA = "https://fssp.gov.ru/iss/ip"
 
 KODY_REGIONOV_FSSP: dict[str, int] = {
     "Все регионы": 0,

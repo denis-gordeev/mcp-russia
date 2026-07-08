@@ -9,11 +9,11 @@
 # 4. Реестр организаторов распространения информации: https://rkn.gov.ru/registry-ori
 # 5. Открытые данные: https://rkn.gov.ru/it/opendata
 
-RKN_API_BASE = "https://rkn.gov.ru"
-RKN_OPENDATA_BASE = "https://rkn.gov.ru/it/opendata"
-EAIS_API_BASE = "https://eais.rkn.gov.ru"
-PDN_REGISTRY_URL = "https://rkn.gov.ru/pdn"
-ORI_REGISTRY_URL = "https://rkn.gov.ru/registry-ori"
+RKN_BAZA_API = "https://rkn.gov.ru"
+RKN_BAZA_OTKRYTYKH_DANNYKH = "https://rkn.gov.ru/it/opendata"
+EAIS_BAZA_API = "https://eais.rkn.gov.ru"
+PDN_REESTR_URL = "https://rkn.gov.ru/pdn"
+ORI_REESTR_URL = "https://rkn.gov.ru/registry-ori"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [
@@ -55,7 +55,7 @@ KATEGORII_NARUSHENIY = [
 ]
 
 # Реестры Роскомнадзора
-REGISTRY_RKN = [
+REESTR_RKN = [
     {
         "kod": "zapreshchennye_sayty",
         "nazvanie": "Единый реестр запрещённых сайтов",

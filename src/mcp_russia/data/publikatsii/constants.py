@@ -7,10 +7,10 @@
 # 3. Российская газета: https://rg.ru
 # 4. Собрание законодательства РФ
 
-PRAVO_API_BASE = "https://pravo.gov.ru/opendata/7700748144-prfgi"
-PRAVO_SEARCH_URL = "https://pravo.gov.ru/opendata/7700748144-prfgi/search"
-PRAVO_DOCUMENT_URL = "https://pravo.gov.ru/opendata/7700748144-prfgi/document"
-CONSULTANT_API_BASE = "https://api.consultant.ru/v1"  # платный сервис
+PRAVO_BAZA_API = "https://pravo.gov.ru/opendata/7700748144-prfgi"
+PRAVO_URL_POISKA = "https://pravo.gov.ru/opendata/7700748144-prfgi/search"
+PRAVO_URL_DOKUMENTA = "https://pravo.gov.ru/opendata/7700748144-prfgi/document"
+CONSULTANT_BAZA_API = "https://api.consultant.ru/v1"  # платный сервис
 
 # Типы документов pravo.gov.ru (коды портала)
 TIPY_DOKUMENTOV_PRAVO = {

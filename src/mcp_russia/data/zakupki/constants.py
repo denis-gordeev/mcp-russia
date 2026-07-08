@@ -1,9 +1,9 @@
 """Константы модуля ЕИС Закупок."""
 
 # API ЕИС (открытые данные)
-ZAKUPKI_API_BASE = "https://zakupki.gov.ru"
-ZAKUPKI_OPEN_DATA = "https://data.zakupki.gov.ru"
-ZAKUPKI_API_DOCS = "https://zakupki.gov.ru/epz/order/quicksearch/search.html"
+ZAKUPKI_BAZA_API = "https://zakupki.gov.ru"
+ZAKUPKI_OTKRYTYE_DANNYE = "https://data.zakupki.gov.ru"
+ZAKUPKI_API_DOKUMENTY = "https://zakupki.gov.ru/epz/order/quicksearch/search.html"
 
 # Законы о закупках
 ZAKON_44_FZ = "44-ФЗ (Федеральный закон о контрактной системе)"

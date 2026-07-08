@@ -7,8 +7,8 @@
 # 3. ЕГРЮЛ/ЕГРИП: https://egrul.nalog.ru
 # 4. Прозрачный бизнес: https://pb.nalog.ru
 
-FNS_API_BASE = "https://api.nalog.ru"
-EGRUL_API_BASE = "https://egrul.nalog.ru"
+FNS_BAZA_API = "https://api.nalog.ru"
+EGRUL_BAZA_API = "https://egrul.nalog.ru"
 
 NalogovyeRezhimy = [
     {"kod": "osno", "nazvanie": "ОСНО — общая система налогообложения"},

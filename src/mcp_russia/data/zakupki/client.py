@@ -21,7 +21,7 @@ from .constants import (
     SPOSOBY_ZAKUPOK,
     STATUSY_ZAKUPOK,
     TIPLY_DANNYKH,
-    ZAKUPKI_API_BASE,
+    ZAKUPKI_BAZA_API,
 )
 from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
 
@@ -70,7 +70,7 @@ async def poisk_zakupok(
     if zheton:
         parametry["token"] = zheton
 
-    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/search"
+    adres_url = f"{ZAKUPKI_BAZA_API}/api/nsi/search"
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_poisk_zakupok(dannye)
@@ -148,7 +148,7 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
     if zheton:
         parametry["token"] = zheton
 
-    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/card/{identifikator_zakupki}"
+    adres_url = f"{ZAKUPKI_BAZA_API}/api/nsi/card/{identifikator_zakupki}"
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)
         if isinstance(dannye, dict):
@@ -187,7 +187,7 @@ async def poisk_kontraktov(
     if zheton:
         parametry["token"] = zheton
 
-    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/contracts"
+    adres_url = f"{ZAKUPKI_BAZA_API}/api/nsi/contracts"
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_kontrakty(dannye)
@@ -323,7 +323,7 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
     if zheton:
         parametry["token"] = zheton
 
-    adres_url = f"{ZAKUPKI_API_BASE}/api/nsi/plans"
+    adres_url = f"{ZAKUPKI_BAZA_API}/api/nsi/plans"
     try:
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_plany(dannye)

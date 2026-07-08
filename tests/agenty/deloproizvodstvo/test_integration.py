@@ -36,16 +36,16 @@ class TestResursyZaregistrirovany:
             resursy = await c.list_resources()
             adresa_uri = {str(r.uri) for r in resursy}
             ozhidayemyy = {
-                "template://pismo",
-                "template://prikaz",
-                "template://rasporyazhenie",
-                "template://akt",
-                "template://spravka",
-                "template://protokol",
-                "template://dokladnaya_zapiska",
-                "normas://manual",
-                "normas://obrashcheniya",
-                "normas://zaklyuchitelnye",
+                "shablon://pismo",
+                "shablon://prikaz",
+                "shablon://rasporyazhenie",
+                "shablon://akt",
+                "shablon://spravka",
+                "shablon://protokol",
+                "shablon://dokladnaya_zapiska",
+                "normy://manual",
+                "normy://obrashcheniya",
+                "normy://zaklyuchitelnye",
             }
             assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют: {ozhidayemyy - adresa_uri}"
 
@@ -108,28 +108,28 @@ class TestVypolnenieResursov:
     @pytest.mark.asyncio
     async def test_chtenie_shablona_pismo(self) -> None:
         async with Client(mcp) as c:
-            soderzhimoe = await c.read_resource("template://pismo")
+            soderzhimoe = await c.read_resource("shablon://pismo")
             tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ПИСЬМО" in tekst or "ОФИЦИАЛЬНОЕ ПИСЬМО" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_shablona_prikaz(self) -> None:
         async with Client(mcp) as c:
-            soderzhimoe = await c.read_resource("template://prikaz")
+            soderzhimoe = await c.read_resource("shablon://prikaz")
             tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ПРИКАЗ" in tekst
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_manual(self) -> None:
         async with Client(mcp) as c:
-            soderzhimoe = await c.read_resource("normas://manual")
+            soderzhimoe = await c.read_resource("normy://manual")
             tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "ГОСТ" in tekst or "единообразие" in tekst.lower()
 
     @pytest.mark.asyncio
     async def test_chtenie_normas_obrashcheniya(self) -> None:
         async with Client(mcp) as c:
-            soderzhimoe = await c.read_resource("normas://obrashcheniya")
+            soderzhimoe = await c.read_resource("normy://obrashcheniya")
             tekst = soderzhimoe[0].text if hasattr(soderzhimoe[0], "text") else str(soderzhimoe[0])
             assert "Президент" in tekst or "Уважаемый" in tekst
 

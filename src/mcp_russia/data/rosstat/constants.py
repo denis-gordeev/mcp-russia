@@ -10,8 +10,8 @@
 # — API Единой межведомственной информационно-статистической системы (ЕМИСС)
 # — Парсинг опубликованных данных Росстата
 
-EMISS_API_BASE = "https://fedstat.ru/api"
-ROSSTAT_BASE = "https://rosstat.gov.ru"
+EMISS_BAZA_API = "https://fedstat.ru/api"
+ROSSTAT_BAZA = "https://rosstat.gov.ru"
 
 # Статус верификации ЕМИСС-кодов (проверка 2026-06-12):
 #   ✅ подтверждён — код существует и соответствует показателю

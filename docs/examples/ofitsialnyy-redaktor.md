@@ -216,16 +216,16 @@
 
 | Ресурс | Содержимое |
 |----------|------------|
-| `template://pismo` | Шаблон официального письма |
-| `template://prikaz` | Шаблон приказа |
-| `template://rasporyazhenie` | Шаблон распоряжения |
-| `template://akt` | Шаблон акта |
-| `template://spravka` | Шаблон справки |
-| `template://protokol` | Шаблон протокола |
-| `template://dokladnaya_zapiska` | Шаблон докладной записки |
-| `normas://manual` | Правила оформления документов (ГОСТ Р 7.0.97-2016) |
-| `normas://obrashcheniya` | Формы обращения к должностным лицам |
-| `normas://zaklyuchitelnye` | Заключительные формулы в документах |
+| `shablon://pismo` | Шаблон официального письма |
+| `shablon://prikaz` | Шаблон приказа |
+| `shablon://rasporyazhenie` | Шаблон распоряжения |
+| `shablon://akt` | Шаблон акта |
+| `shablon://spravka` | Шаблон справки |
+| `shablon://protokol` | Шаблон протокола |
+| `shablon://dokladnaya_zapiska` | Шаблон докладной записки |
+| `normy://manual` | Правила оформления документов (ГОСТ Р 7.0.97-2016) |
+| `normy://obrashcheniya` | Формы обращения к должностным лицам |
+| `normy://zaklyuchitelnye` | Заключительные формулы в документах |
 
 LLM автоматически обращается к соответствующему ресурсу перед генерацией документа.
 

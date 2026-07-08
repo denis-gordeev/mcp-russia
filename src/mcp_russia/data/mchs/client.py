@@ -16,10 +16,10 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA_MCHS,
-    FIRES_STAT_BASE,
+    FIRES_BAZA_STATISTIKI,
     KLASSY_CHS,
-    MCHS_API_BASE,
-    MCHS_OPENDATA_BASE,
+    MCHS_BAZA_API,
+    MCHS_BAZA_OTKRYTYKH_DANNYKH,
     STATISTIKA_POZHAROV_2023,
     TIPY_OPASNOSTI,
     VIDY_CHS,
@@ -45,7 +45,7 @@ async def statistika_pojarov(
         Список данных о пожарах.
     """
     try:
-        adres_url = f"{FIRES_STAT_BASE}/statistics"
+        adres_url = f"{FIRES_BAZA_STATISTIKI}/statistics"
         parametry: dict[str, Any] = {"limit": 50}
         if subiekt:
             parametry["region"] = subiekt
@@ -61,7 +61,7 @@ async def statistika_pojarov(
         logger.debug("fires.ru API недоступен")
 
     try:
-        adres_url = f"{MCHS_API_BASE}/fires/statistics"
+        adres_url = f"{MCHS_BAZA_API}/fires/statistics"
         parametry = {"limit": 50}
         if subiekt:
             parametry["region"] = subiekt
@@ -95,7 +95,7 @@ async def poisk_chs(
         Список чрезвычайных ситуаций.
     """
     try:
-        adres_url = f"{MCHS_API_BASE}/emergencies"
+        adres_url = f"{MCHS_BAZA_API}/emergencies"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -111,7 +111,7 @@ async def poisk_chs(
         logger.debug("mchs.gov.ru API недоступен для ЧС")
 
     try:
-        adres_url = f"{MCHS_OPENDATA_BASE}/emergencies"
+        adres_url = f"{MCHS_BAZA_OTKRYTYKH_DANNYKH}/emergencies"
         parametry = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -139,7 +139,7 @@ async def radiatsionnyy_monitoring(
         Список данных радиационного мониторинга.
     """
     try:
-        adres_url = f"{MCHS_API_BASE}/radiation"
+        adres_url = f"{MCHS_BAZA_API}/radiation"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -165,7 +165,7 @@ async def gidrologicheskaya_obstanovka(
         Список данных гидрологической обстановки.
     """
     try:
-        adres_url = f"{MCHS_API_BASE}/hydrology"
+        adres_url = f"{MCHS_BAZA_API}/hydrology"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -193,7 +193,7 @@ async def preduprezhdeniya_chs(
         Список предупреждений.
     """
     try:
-        adres_url = f"{MCHS_API_BASE}/warnings"
+        adres_url = f"{MCHS_BAZA_API}/warnings"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt

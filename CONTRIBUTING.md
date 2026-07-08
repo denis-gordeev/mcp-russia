@@ -27,7 +27,7 @@ src/mcp_russia/
     └── deloproizvodstvo/        # Агент официальных документов
 ```
 
-Рабочий namespace для запуска и импорта: `mcp_russia`.
+Рабочее пространство имён для запуска и импорта: `mcp_russia`.
 
 ## Как добавить новый модуль
 
@@ -101,7 +101,7 @@ server.py → tools.py → client.py → schemas.py
 | Модули | snake_case | `client.py` |
 | Классы | PascalCase | `class Subjekt(BaseModel)` |
 | Функции/инструменты | snake_case, глагол | `poisk_mestopolozheniy()` |
-| Константы | UPPER_SNAKE | `ROSSTAT_API_BASE` |
+| Константы | UPPER_SNAKE | `ROSSTAT_BAZA_API` |
 | Приватные элементы | `_prefiks` | `_shared/`, `_cache` |
 
 ### Инварианты

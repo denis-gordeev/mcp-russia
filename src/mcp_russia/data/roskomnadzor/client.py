@@ -15,8 +15,8 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    EAIS_API_BASE,
-    RKN_API_BASE,
+    EAIS_BAZA_API,
+    RKN_BAZA_API,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
         Список операторов ПД.
     """
     try:
-        adres_url = f"{RKN_API_BASE}/pdn/search"
+        adres_url = f"{RKN_BAZA_API}/pdn/search"
         parametry: dict[str, Any] = {}
         if inn:
             parametry["inn"] = inn
@@ -63,7 +63,7 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
         Список организаторов ОРИ.
     """
     try:
-        adres_url = f"{RKN_API_BASE}/registry-ori/search"
+        adres_url = f"{RKN_BAZA_API}/registry-ori/search"
         parametry: dict[str, Any] = {}
         if nazvanie:
             parametry["name"] = nazvanie
@@ -94,7 +94,7 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
     if not domen:
         return {"blokirovka": False, "osnovanie": ""}
     try:
-        adres_url = f"{EAIS_API_BASE}/api/check"
+        adres_url = f"{EAIS_BAZA_API}/api/check"
         parametry = {"domain": domen}
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
@@ -121,7 +121,7 @@ async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]
         Список лицензий.
     """
     try:
-        adres_url = f"{RKN_API_BASE}/licenses/search"
+        adres_url = f"{RKN_BAZA_API}/licenses/search"
         parametry: dict[str, Any] = {}
         if nomer:
             parametry["number"] = nomer
@@ -153,7 +153,7 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
         Список СМИ.
     """
     try:
-        adres_url = f"{RKN_API_BASE}/mass-media/search"
+        adres_url = f"{RKN_BAZA_API}/mass-media/search"
         parametry: dict[str, Any] = {}
         if registracionnyy_nomer:
             parametry["regNumber"] = registracionnyy_nomer

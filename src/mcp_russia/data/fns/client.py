@@ -15,7 +15,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit, http_poluchit
 
-from .constants import EGRUL_API_BASE
+from .constants import EGRUL_BAZA_API
 from .schemas import (
     IPEGRIP,
     NalogovayaProverka,
@@ -134,8 +134,8 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     Возвращает:
         Данные результата поиска или None.
     """
-    adres_poiska = EGRUL_API_BASE
-    adres_rezultata = f"{EGRUL_API_BASE}/search-result/"
+    adres_poiska = EGRUL_BAZA_API
+    adres_rezultata = f"{EGRUL_BAZA_API}/search-result/"
 
     dannye_zadachi = await http_otpravit(
         adres_poiska,

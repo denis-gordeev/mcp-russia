@@ -2,6 +2,61 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-08 (семидесятый третий проход — русификация констант: _API_BASE→_BAZA_API, _OPENDATA_BASE→_BAZA_OTKRYTYKH_DANNYKH, _BASE→_BAZA; переименование португальского каталога normas→normy; русификация resource URI template://→shablon://, normas://→normy://)
+
+### Выполнено
+
+- **Переименование португальского каталога `normas/` → `normy/`** (1 каталог, 3 файла .md внутри):
+  - `src/mcp_russia/agenty/deloproizvodstvo/normas/` → `normy/`
+  - `resources.py`: `DIREKTORIYA_NORM = Path(__file__).parent / "normas"` → `"normy"`
+- **Русификация resource URI `template://` → `shablon://`** (7 в server.py + 7 в prompts.py + 7 в test_integration.py + 7 в docs):
+  - Все 7 шаблонных URI: `template://pismo`, `template://prikaz`, `template://rasporyazhenie`, `template://akt`, `template://spravka`, `template://protokol`, `template://dokladnaya_zapiska` → `shablon://...`
+- **Русификация resource URI `normas://` → `normy://`** (3 в server.py + 1 в prompts.py + 3 в test_integration.py + 3 в docs):
+  - `normas://manual`, `normas://obrashcheniya`, `normas://zaklyuchitelnye` → `normy://...`
+- **Русификация констант `_API_BASE` → `_BAZA_API`** (21 константа в 14 модулях, ~96 ссылок в client.py):
+  - `FSVPS_API_BASE` → `FSVPS_BAZA_API`, `ROSGIDROMET_API_BASE` → `ROSGIDROMET_BAZA_API`, `ACH_API_BASE` → `ACH_BAZA_API`, `DUMA_API_BASE` → `DUMA_BAZA_API`, `FSSP_API_BASE` → `FSSP_BAZA_API`, `RKN_API_BASE` → `RKN_BAZA_API`, `EAIS_API_BASE` → `EAIS_BAZA_API`, `VYBORY_API_BASE` → `VYBORY_BAZA_API`, `CIK_API_BASE` → `CIK_BAZA_API`, `PRAVO_API_BASE` → `PRAVO_BAZA_API`, `CONSULTANT_API_BASE` → `CONSULTANT_BAZA_API`, `KAD_ARBITR_API_BASE` → `KAD_ARBITR_BAZA_API`, `ROSPRIRODNADZOR_API_BASE` → `ROSPRIRODNADZOR_BAZA_API`, `MCHS_API_BASE` → `MCHS_BAZA_API`, `ZAKUPKI_API_BASE` → `ZAKUPKI_BAZA_API`, `FNS_API_BASE` → `FNS_BAZA_API`, `EGRUL_API_BASE` → `EGRUL_BAZA_API`, `GMVO_API_BASE` → `GMVO_BAZA_API`, `EMISS_API_BASE` → `EMISS_BAZA_API`, `GIBDD_API_BASE` → `GIBDD_BAZA_API`, `SOVFED_API_BASE` → `SOVFED_BAZA_API`, `KAZNACHEISTVO_API_BASE` → `KAZNACHEISTVO_BAZA_API`
+- **Русификация констант `_OPENDATA_BASE` → `_BAZA_OTKRYTYKH_DANNYKH`** (5 констант):
+  - `FSVPS_OPENDATA_BASE` → `FSVPS_BAZA_OTKRYTYKH_DANNYKH`, `RKN_OPENDATA_BASE` → `RKN_BAZA_OTKRYTYKH_DANNYKH`, `ROSPRIRODNADZOR_OPENDATA_BASE` → `ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH`, `MCHS_OPENDATA_BASE` → `MCHS_BAZA_OTKRYTYKH_DANNYKH`, `ROSKAZNA_OPENDATA_BASE` → `ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH`
+- **Русификация констант `_BASE` → `_BAZA`** (8 констант):
+  - `ROSSTAT_BASE` → `ROSSTAT_BAZA`, `SOVFED_BASE` → `SOVFED_BAZA`, `DATA_GOV_RU_BASE` → `DATA_GOV_RU_BAZA` (2 модуля), `VODNYY_REESTR_BASE` → `VODNYY_REESTR_BAZA`, `BUDGET_GOV_RU_BASE` → `BUDGET_GOV_RU_BAZA` (2 модуля), `ROSPRIRODNADZOR_BASE` → `ROSPRIRODNADZOR_BAZA`, `FSVPS_BASE` → `FSVPS_BAZA`, `MCHS_BASE` → `MCHS_BAZA`, `KAZNACHEISTVO_BASE` → `KAZNACHEISTVO_BAZA`
+- **Русификация специализированных констант** (~15 констант):
+  - `GIBDD_CHECK_BASE` → `GIBDD_BAZA_PROVEROK`, `GIBDD_STAT_BASE` → `GIBDD_BAZA_STATISTIKI`
+  - `FIRES_STAT_BASE` → `FIRES_BAZA_STATISTIKI`
+  - `PDN_REGISTRY_URL` → `PDN_REESTR_URL`, `ORI_REGISTRY_URL` → `ORI_REESTR_URL`, `REGISTRY_RKN` → `REESTR_RKN`
+  - `PRAVO_SEARCH_URL` → `PRAVO_URL_POISKA`, `PRAVO_DOCUMENT_URL` → `PRAVO_URL_DOKUMENTA`, `KAD_SEARCH_URL` → `KAD_URL_POISKA`, `KAD_INSTANCE_URL` → `KAD_URL_INSTANTSIY`
+  - `CIK_VOTER_API` → `CIK_API_IZBIRATELYA`
+  - `FRAKCIYA_API_MAP` → `FRAKCIYA_SLOVAR_API`
+  - `ONV_REGISTER_BASE` → `ONV_REESTR_BAZA`
+  - `GOSUSLUGI_EKO_BASE` → `GOSUSLUGI_EKO_BAZA`
+  - `FSSP_SEARCH_API` → `FSSP_API_POISKA`, `FSSP_IP_BASE` → `FSSP_IP_BAZA`
+  - `OPEN_METEO_BASE` → `OPEN_METEO_BAZA`, `OPEN_METEO_AIR_QUALITY_BASE` → `OPEN_METEO_BAZA_KACHESTVA_VOZDUKHA`
+  - `DUMA_DEPUTATS` → `DUMA_DEPUTATY`, `DUMA_LAWS` → `DUMA_ZAKONOPROEKTY`, `DUMA_VOTES` → `DUMA_GOLOSOVANIYA`, `DUMA_TRANSCRIPTS` → `DUMA_STENOGRAMMY`
+  - `ZAKUPKI_OPEN_DATA` → `ZAKUPKI_OTKRYTYE_DANNYE`, `ZAKUPKI_API_DOCS` → `ZAKUPKI_API_DOKUMENTY`
+- **Русификация CONTRIBUTING.md**: `namespace` → `пространство имён`
+- **Русификация документации** (3 файла):
+  - CONTRIBUTING.md: `ROSSTAT_API_BASE` → `ROSSTAT_BAZA_API` в таблице
+  - docs/examples/ofitsialnyy-redaktor.md: `template://` → `shablon://`, `normas://` → `normy://`
+  - docs/guide/adding-features.md: `PRIMER_API_BASE` → `PRIMER_BAZA_API`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — all formatted, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`normas/` → `normy/`**: устранён последний португальский артефакт в файловой структуре; «normas» — португальское слово («нормы»), заменено на русскую транслитерацию
+- **`template://` → `shablon://`**: устранён английский resource URI scheme; «шаблон» — точный русский эквивалент
+- **`normas://` → `normy://`**: синхронизировано с переименованием каталога
+- **`_API_BASE` → `_BAZA_API`**: устранён массовый английский суффикс `_BASE`; `BAZA` = «база», `API` — заимствование; порядок слов изменён на русский (существительное + определение)
+- **`_OPENDATA_BASE` → `_BAZA_OTKRYTYKH_DANNYKH`**: полный перевод; «открытые данные» — устоявшийся русский термин
+- **`REGISTRY` → `REESTR`**, **`SEARCH` → `POISK`**, **`DOCUMENT` → `DOKUMENT`**, **`VOTER` → `IZBIRATEL`**, **`CHECK` → `PROVERKA`**, **`MAP` → `SLOVAR`**, **`REGISTER` → `REESTR`**: точные русские эквиваленты
+- **`DEPUTATS` → `DEPUTATY`**, **`LAWS` → `ZAKONOPROEKTY`**, **`VOTES` → `GOLOSOVANIYA`**, **`TRANSCRIPTS` → `STENOGRAMMY`**: русификация английских множественных чисел
+- **`OPEN_DATA` → `OTKRYTYE_DANNYE`**, **`API_DOCS` → `API_DOKUMENTY`**: полный перевод
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-08 (семидесятый второй проход — русификация документации и описаний: английские термины в docs/, CONTRIBUTING.md, README.md, transliteration→кириллица в schemas)
 
 ### Выполнено
