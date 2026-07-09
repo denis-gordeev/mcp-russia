@@ -173,8 +173,10 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
     await ctx.info("Запрос списка заседаний...")
     zasedaniya = await client.spisok_zasedaniy(god=god)
     if not zasedaniya:
-        god_text = f" за {god} год" if god else ""
-        return f"Заседания{god_text} не найдены.\n\nДанные доступны на: https://sovfed.ru/sessions"
+        god_tekst = f" за {god} год" if god else ""
+        return (
+            f"Заседания{god_tekst} не найдены.\n\nДанные доступны на: https://sovfed.ru/sessions"
+        )
     stroki_tablitsy = [
         (
             z.get("nomer", ""),

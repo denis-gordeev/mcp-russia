@@ -238,7 +238,7 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
         if fio:
             rezultaty.append(
                 ResultatKandidata(
-                    kandidat_id="",
+                    kandidat_identifikator="",
                     fio=fio,
                     partia=partia,
                     golosov=golosov,
@@ -301,11 +301,11 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         sostoyanie = ""
         dolzhnost = ""
         subiekt_str = ""
-        kandidat_id = ""
+        kandidat_identifikator = ""
 
         for i, yacheyka in enumerate(stroka_tablitsy):
             if i == 0 and re.match(r"^\d+$", yacheyka.strip()):
-                kandidat_id = yacheyka.strip()
+                kandidat_identifikator = yacheyka.strip()
             elif i == 1 and len(yacheyka) > 2:
                 fio = yacheyka.strip()
             elif i == 2 and len(yacheyka) > 1:
@@ -320,7 +320,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         if fio:
             kandidaty.append(
                 KandidatKratko(
-                    identifikator=kandidat_id or fio,
+                    identifikator=kandidat_identifikator or fio,
                     fio=fio,
                     partia=partia,
                     dolzhnost=dolzhnost,
@@ -509,13 +509,13 @@ async def poisk_kandidata(
     except Exception as exc:
         logger.warning("Поиск кандидата '%s' не удался: %s", fio, exc)
 
-    cik_data = await _zaprosit_json_tsik(
+    cik_dannye = await _zaprosit_json_tsik(
         "/api/elections/candidates",
         {"fio": fio, "year": god, "region": subiekt},
     )
-    if isinstance(cik_data, list):
+    if isinstance(cik_dannye, list):
         rezultaty = []
-        for zapis in cik_data:
+        for zapis in cik_dannye:
             if not isinstance(zapis, dict):
                 continue
             rezultaty.append(
@@ -534,40 +534,44 @@ async def poisk_kandidata(
 
 
 async def kandidat_podrobno(
-    kandidat_id: str,
+    kandidat_identifikator: str,
     god: int | None = None,
 ) -> Kandidat | None:
     """Получить подробную информацию о кандидате из ГАС «Выборы».
 
     Аргументы:
-        kandidat_id: ID кандидата или ФИО.
+        kandidat_identifikator: ID кандидата или ФИО.
         god: Год выборов (необязательно).
 
     Возвращает:
         Подробная информация о кандидате или None.
     """
-    cik_data = await _zaprosit_json_tsik(
-        f"/api/elections/candidates/{kandidat_id}",
+    cik_dannye = await _zaprosit_json_tsik(
+        f"/api/elections/candidates/{kandidat_identifikator}",
         {"year": god},
     )
-    if isinstance(cik_data, dict):
+    if isinstance(cik_dannye, dict):
         return Kandidat(
-            identifikator=str(cik_data.get("id", kandidat_id)),
-            fio=str(cik_data.get("fio", cik_data.get("name", ""))),
-            data_rozhdeniya=str(cik_data.get("birthDate", cik_data.get("data_rozhdeniya", ""))),
-            mesto_rozhdeniya=str(cik_data.get("birthPlace", cik_data.get("mesto_rozhdeniya", ""))),
-            partia=str(cik_data.get("party", cik_data.get("partia", ""))),
-            dolzhnost=str(cik_data.get("position", cik_data.get("dolzhnost", ""))),
-            subiekt=str(cik_data.get("region", "")),
-            obrazovanie=str(cik_data.get("education", cik_data.get("obrazovanie", ""))),
-            mesto_raboty=str(cik_data.get("workPlace", cik_data.get("mesto_raboty", ""))),
-            dolzhnost_rabota=str(
-                cik_data.get("workPosition", cik_data.get("dolzhnost_rabota", ""))
+            identifikator=str(cik_dannye.get("id", kandidat_identifikator)),
+            fio=str(cik_dannye.get("fio", cik_dannye.get("name", ""))),
+            data_rozhdeniya=str(
+                cik_dannye.get("birthDate", cik_dannye.get("data_rozhdeniya", ""))
             ),
-            dokhod=str(cik_data.get("income", cik_data.get("dokhod", ""))),
-            scheta=str(cik_data.get("bankAccounts", cik_data.get("scheta", ""))),
-            nedvizhimost=str(cik_data.get("realEstate", cik_data.get("nedvizhimost", ""))),
-            transport=str(cik_data.get("vehicles", cik_data.get("transport", ""))),
+            mesto_rozhdeniya=str(
+                cik_dannye.get("birthPlace", cik_dannye.get("mesto_rozhdeniya", ""))
+            ),
+            partia=str(cik_dannye.get("party", cik_dannye.get("partia", ""))),
+            dolzhnost=str(cik_dannye.get("position", cik_dannye.get("dolzhnost", ""))),
+            subiekt=str(cik_dannye.get("region", "")),
+            obrazovanie=str(cik_dannye.get("education", cik_dannye.get("obrazovanie", ""))),
+            mesto_raboty=str(cik_dannye.get("workPlace", cik_dannye.get("mesto_raboty", ""))),
+            dolzhnost_rabota=str(
+                cik_dannye.get("workPosition", cik_dannye.get("dolzhnost_rabota", ""))
+            ),
+            dokhod=str(cik_dannye.get("income", cik_dannye.get("dokhod", ""))),
+            scheta=str(cik_dannye.get("bankAccounts", cik_dannye.get("scheta", ""))),
+            nedvizhimost=str(cik_dannye.get("realEstate", cik_dannye.get("nedvizhimost", ""))),
+            transport=str(cik_dannye.get("vehicles", cik_dannye.get("transport", ""))),
         )
 
     vybory_info = None
@@ -588,8 +592,8 @@ async def kandidat_podrobno(
             kandidaty = _razobrat_kandidatov_iz_html(html_tekst)
             for klyuch in kandidaty:
                 if (
-                    klyuch.identifikator == kandidat_id
-                    or kandidat_id.lower() in klyuch.fio.lower()
+                    klyuch.identifikator == kandidat_identifikator
+                    or kandidat_identifikator.lower() in klyuch.fio.lower()
                 ):
                     return Kandidat(
                         identifikator=klyuch.identifikator,
@@ -636,12 +640,12 @@ async def rezultaty_vyborov(
             if rezultaty:
                 return rezultaty
 
-    cik_data = await _zaprosit_json_tsik(
+    cik_dannye = await _zaprosit_json_tsik(
         "/api/elections/results",
         {"year": god, "type": tip, "region": subiekt},
     )
-    if isinstance(cik_data, dict):
-        elementy = cik_data.get("results", cik_data.get("candidates", []))
+    if isinstance(cik_dannye, dict):
+        elementy = cik_dannye.get("results", cik_dannye.get("candidates", []))
         if isinstance(elementy, list):
             rezultaty = []
             for zapis in elementy:
@@ -649,7 +653,7 @@ async def rezultaty_vyborov(
                     continue
                 rezultaty.append(
                     ResultatKandidata(
-                        kandidat_id=str(zapis.get("id", "")),
+                        kandidat_identifikator=str(zapis.get("id", "")),
                         fio=str(zapis.get("fio", zapis.get("name", ""))),
                         partia=str(zapis.get("party", zapis.get("partia", ""))),
                         golosov=int(str(zapis.get("votes", zapis.get("golosov", 0)))),
@@ -703,22 +707,24 @@ async def yavka_i_itogi(
                     "istochnik": f"ГАС «Выборы» ({VYBORY_BAZA_API})",
                 }
 
-    cik_data = await _zaprosit_json_tsik(
+    cik_dannye = await _zaprosit_json_tsik(
         "/api/elections/turnout",
         {"year": god, "type": tip, "region": subiekt},
     )
-    if isinstance(cik_data, dict):
+    if isinstance(cik_dannye, dict):
         return {
             "god": god,
             "tip": tip,
             "subiekt": subiekt,
-            "nazvanie": cik_data.get("name", ""),
-            "data": cik_data.get("date", ""),
-            "yavka_procent": cik_data.get("turnout", cik_data.get("yavka_procent", 0.0)),
-            "vseh_izbirateley": cik_data.get("totalVoters", cik_data.get("vseh_izbirateley", 0)),
-            "progalosovalo": cik_data.get("voted", cik_data.get("progalosovalo", 0)),
-            "deystvitelnykh_byulleteney": cik_data.get("validBallots", 0),
-            "nedeystvitelnykh_byulleteney": cik_data.get("invalidBallots", 0),
+            "nazvanie": cik_dannye.get("name", ""),
+            "data": cik_dannye.get("date", ""),
+            "yavka_procent": cik_dannye.get("turnout", cik_dannye.get("yavka_procent", 0.0)),
+            "vseh_izbirateley": cik_dannye.get(
+                "totalVoters", cik_dannye.get("vseh_izbirateley", 0)
+            ),
+            "progalosovalo": cik_dannye.get("voted", cik_dannye.get("progalosovalo", 0)),
+            "deystvitelnykh_byulleteney": cik_dannye.get("validBallots", 0),
+            "nedeystvitelnykh_byulleteney": cik_dannye.get("invalidBallots", 0),
             "istochnik": f"ЦИК РФ ({CIK_BAZA_API})",
         }
 

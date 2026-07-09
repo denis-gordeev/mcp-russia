@@ -186,9 +186,9 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
     dannye = await client.poluchit_nachisleniya(inn, period)
 
     if not dannye:
-        period_text = f" за период {period}" if period else ""
+        period_tekst = f" за период {period}" if period else ""
         return (
-            f"Данные о налоговых начислениях для ИНН '{inn}'{period_text} недоступны.\n\n"
+            f"Данные о налоговых начислениях для ИНН '{inn}'{period_tekst} недоступны.\n\n"
             f"Начисления доступны через Личный кабинет налогоплательщика: lkfl2.nalog.ru"
         )
 

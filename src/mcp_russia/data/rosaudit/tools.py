@@ -167,9 +167,9 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
     await ctx.info("Запрос данных об исполнении бюджета...")
     dannye = await client.poluchit_byudzhet_ispolnenie(period)
     if not dannye:
-        period_text = f" за период {period}" if period else ""
+        period_tekst = f" за период {period}" if period else ""
         return (
-            f"Данные об исполнении федерального бюджета{period_text} недоступны.\n\n"
+            f"Данные об исполнении федерального бюджета{period_tekst} недоступны.\n\n"
             f"Данные доступны на:\n"
             f"- Счётная палата: ach.gov.ru/controls/budget\n"
             f"- Портал бюджетных данных: budget.gov.ru"

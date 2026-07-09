@@ -27,7 +27,7 @@ async def analiz_kandidata(
         f"на выборах {god} года в РФ.\n\n"
         "Шаги анализа:\n"
         "1. Используйте poisk_kandidata(fio, god) для поиска кандидата\n"
-        "2. Используйте kandidat_podrobno(kandidat_id, god) для получения:\n"
+        "2. Используйте kandidat_podrobno(kandidat_identifikator, god) для получения:\n"
         "   - Биографических данных (дата/место рождения, образование)\n"
         "   - Места работы и должности\n"
         "   - Декларации о доходае и имуществе\n"

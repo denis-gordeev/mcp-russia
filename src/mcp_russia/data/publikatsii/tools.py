@@ -173,9 +173,9 @@ async def poisk_aktov(
     rezultaty = await client.poluchit_poisku(tekst, tip)
 
     if not rezultaty:
-        tip_text = f" (тип: {tip})" if tip else ""
+        tip_tekst = f" (тип: {tip})" if tip else ""
         return (
-            f"Нормативные акты по запросу '{tekst}'{tip_text} не найдены.\n\n"
+            f"Нормативные акты по запросу '{tekst}'{tip_tekst} не найдены.\n\n"
             f"Попробуйте изменить запрос или используйте https://pravo.gov.ru/opendata/7700748144-prfgi"
         )
 

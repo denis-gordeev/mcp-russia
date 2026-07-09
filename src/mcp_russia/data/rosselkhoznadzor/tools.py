@@ -73,19 +73,19 @@ async def poisk_proverok(
         tip_proverki=tip_proverki,
     )
     if not proverki:
-        static = client.poluchit_statistiku_rskhn_staticheskie()
-        if static:
+        statika = client.poluchit_statistiku_rskhn_staticheskie()
+        if statika:
             stroki = [
                 "**Статистика проверок Россельхознадзора (2023, резервные данные)**\n",
-                f"- Всего проверок: {static['vsego_proverok']:,}",
-                f"- Выявлено нарушений: {static['narusheniy_vyyavleno']:,}",
-                f"- Наложено штрафов: {static['shtrafov_nalozheno']:,}",
-                f"- Сумма штрафов: {static['summa_shtrafov_mlrd_rub']} млрд руб.\n",
+                f"- Всего проверок: {statika['vsego_proverok']:,}",
+                f"- Выявлено нарушений: {statika['narusheniy_vyyavleno']:,}",
+                f"- Наложено штрафов: {statika['shtrafov_nalozheno']:,}",
+                f"- Сумма штрафов: {statika['summa_shtrafov_mlrd_rub']} млрд руб.\n",
                 "| Вид надзора | Проверок | Нарушений |",
                 "|-------------|----------|-----------|",
             ]
-            for vid, dannye in static["po_vidam"].items():
-                vid_name = (
+            for vid, dannye in statika["po_vidam"].items():
+                vid_nazvanie = (
                     vid.replace("veterinarnyy", "Ветеринарный")
                     .replace("fitosanitarnyy", "Фитосанитарный")
                     .replace("zemelnyy", "Земельный")
@@ -93,7 +93,7 @@ async def poisk_proverok(
                     .replace("pestitsidy", "Пестициды")
                 )
                 stroki.append(
-                    f"| {vid_name} | {dannye['proverok']:,} | {dannye['narusheniy']:,} |"
+                    f"| {vid_nazvanie} | {dannye['proverok']:,} | {dannye['narusheniy']:,} |"
                 )
             stroki.append("\nАктуальные данные доступны на: https://fsvps.gov.ru/inspections")
             return "\n".join(stroki)

@@ -67,26 +67,26 @@ async def statistika_pojarov(
         Статистика пожаров.
     """
     await ctx.info("Запрос статистики пожаров...")
-    pojarov_data = await client.statistika_pojarov(
+    pojarov_dannye = await client.statistika_pojarov(
         subiekt=subiekt,
         god=god,
         vid_pozhara=vid_pozhara,
     )
-    if not pojarov_data:
-        static = client.poluchit_statistiku_pozharov_staticheskie()
-        if static:
+    if not pojarov_dannye:
+        statika = client.poluchit_statistiku_pozharov_staticheskie()
+        if statika:
             stroki = [
                 "**Статистика пожаров в РФ (2023, резервные данные)**\n",
-                f"- Всего пожаров: {static['vsego_pojarov']:,}",
-                f"- Погибших: {static['pogibshikh']:,}",
-                f"- Пострадавших: {static['postradavshikh']:,}",
-                f"- Ущерб: {static['usherb_mlrd_rub']} млрд руб.\n",
+                f"- Всего пожаров: {statika['vsego_pojarov']:,}",
+                f"- Погибших: {statika['pogibshikh']:,}",
+                f"- Пострадавших: {statika['postradavshikh']:,}",
+                f"- Ущерб: {statika['usherb_mlrd_rub']} млрд руб.\n",
                 "| ФО | Пожаров | Погибших |",
                 "|----|---------|----------|",
             ]
-            for fo_code, fo_data in static["po_fo"].items():
-                fo_name = (
-                    fo_code.replace("tcentralnyy", "Центральный")
+            for fo_kod, fo_dannye in statika["po_fo"].items():
+                fo_nazvanie = (
+                    fo_kod.replace("tcentralnyy", "Центральный")
                     .replace("severo-zapadnyy", "Северо-Западный")
                     .replace("yuzhnyy", "Южный")
                     .replace("privolzhskiy", "Приволжский")
@@ -95,7 +95,7 @@ async def statistika_pojarov(
                     .replace("dalnevostochnyy", "Дальневосточный")
                 )
                 stroki.append(
-                    f"| {fo_name} | {fo_data['pojarov']:,} | {fo_data['pogibshikh']:,} |"
+                    f"| {fo_nazvanie} | {fo_dannye['pojarov']:,} | {fo_dannye['pogibshikh']:,} |"
                 )
             stroki.append("\nАктуальные данные доступны на: https://mchs.gov.ru/monitoring")
             return "\n".join(stroki)
@@ -113,9 +113,9 @@ async def statistika_pojarov(
             str(p.get("pogibshikh", "")),
             str(p.get("postradavshikh", "")),
         )
-        for p in pojarov_data
+        for p in pojarov_dannye
     ]
-    zagolovok = f"**Статистика пожаров** — найдено: {len(pojarov_data)}\n\n"
+    zagolovok = f"**Статистика пожаров** — найдено: {len(pojarov_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["№", "Дата", "Регион", "Вид", "Погибших", "Пострадавших"],
         stroki_tablitsy,
@@ -139,12 +139,12 @@ async def poisk_chs(
         Список чрезвычайных ситуаций.
     """
     await ctx.info("Поиск чрезвычайных ситуаций...")
-    chs_data = await client.poisk_chs(
+    chs_dannye = await client.poisk_chs(
         subiekt=subiekt,
         vid_chs=vid_chs,
         klass_chs=klass_chs,
     )
-    if not chs_data:
+    if not chs_dannye:
         filtry = []
         if subiekt:
             filtry.append(f"регион: {subiekt}")
@@ -167,9 +167,9 @@ async def poisk_chs(
             str(c.get("pogibshikh", "")),
             str(c.get("postradavshikh", "")),
         )
-        for c in chs_data
+        for c in chs_dannye
     ]
-    zagolovok = f"**Чрезвычайные ситуации** — найдено: {len(chs_data)}\n\n"
+    zagolovok = f"**Чрезвычайные ситуации** — найдено: {len(chs_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["№", "Вид", "Класс", "Дата", "Регион", "Погибших", "Пострадавших"],
         stroki_tablitsy,
@@ -189,8 +189,8 @@ async def radiatsionnyy_monitoring(
         Данные радиационного мониторинга.
     """
     await ctx.info("Запрос данных радиационного мониторинга...")
-    monitoring_data = await client.radiatsionnyy_monitoring(subiekt=subiekt)
-    if not monitoring_data:
+    monitoring_dannye = await client.radiatsionnyy_monitoring(subiekt=subiekt)
+    if not monitoring_dannye:
         return (
             "Данные радиационного мониторинга не найдены.\n\n"
             "Актуальные данные доступны на: https://mchs.gov.ru/monitoring/radiation"
@@ -204,9 +204,9 @@ async def radiatsionnyy_monitoring(
             str(m.get("norma", "")),
             m.get("data_izmereniya", ""),
         )
-        for m in monitoring_data
+        for m in monitoring_dannye
     ]
-    zagolovok = f"**Радиационный мониторинг** — станций: {len(monitoring_data)}\n\n"
+    zagolovok = f"**Радиационный мониторинг** — станций: {len(monitoring_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Станция", "Регион", "Уровень", "Ед.", "Норма", "Дата"],
         stroki_tablitsy,
@@ -226,8 +226,8 @@ async def gidrologicheskaya_obstanovka(
         Данные гидрологической обстановки.
     """
     await ctx.info("Запрос данных гидрологической обстановки...")
-    gidro_data = await client.gidrologicheskaya_obstanovka(subiekt=subiekt)
-    if not gidro_data:
+    gidro_dannye = await client.gidrologicheskaya_obstanovka(subiekt=subiekt)
+    if not gidro_dannye:
         return (
             "Данные гидрологической обстановки не найдены.\n\n"
             "Актуальные данные доступны на: https://mchs.gov.ru/monitoring/hydro"
@@ -241,9 +241,9 @@ async def gidrologicheskaya_obstanovka(
             g.get("tendentsiya", ""),
             g.get("data_izmereniya", ""),
         )
-        for g in gidro_data
+        for g in gidro_dannye
     ]
-    zagolovok = f"**Гидрологическая обстановка** — пунктов: {len(gidro_data)}\n\n"
+    zagolovok = f"**Гидрологическая обстановка** — пунктов: {len(gidro_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Река", "Пункт", "Уровень (см)", "Опасный (см)", "Тенденция", "Дата"],
         stroki_tablitsy,

@@ -49,10 +49,10 @@ async def ispolnenie_byudzheta(
     await ctx.info("Запрос данных об исполнении бюджета...")
     dannye = await client.poluchit_ispolnenie_byudzheta(god=god, tip=tip)
     if not dannye:
-        tip_text = f" ({tip})" if tip else ""
-        god_text = f" за {god} год" if god else ""
+        tip_tekst = f" ({tip})" if tip else ""
+        god_tekst = f" за {god} год" if god else ""
         return (
-            f"Данные об исполнении бюджета{tip_text}{god_text} недоступны.\n\n"
+            f"Данные об исполнении бюджета{tip_tekst}{god_tekst} недоступны.\n\n"
             f"Данные доступны на:\n"
             f"- Федеральное казначейство: roskazna.gov.ru\n"
             f"- Портал бюджетных данных: budget.gov.ru"
@@ -179,10 +179,10 @@ async def mezhbyudzhetnye_transferty(
     await ctx.info("Запрос данных о межбюджетных трансфертах...")
     transferty = await client.poluchit_mezhbyudzhetnye(god=god, subiekt=subiekt)
     if not transferty:
-        god_text = f" за {god} год" if god else ""
+        god_tekst = f" за {god} год" if god else ""
         tekst_regiona = f", регион: {subiekt}" if subiekt else ""
         return (
-            f"Межбюджетные трансферты{god_text}{tekst_regiona} не найдены.\n\n"
+            f"Межбюджетные трансферты{god_tekst}{tekst_regiona} не найдены.\n\n"
             f"Данные доступны на: budget.gov.ru"
         )
     stroki_tablitsy = [

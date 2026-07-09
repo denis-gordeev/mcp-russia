@@ -17,7 +17,7 @@ def _maket_konteksta():
 # --- Тесты парсера ---
 
 
-def test_razobrat_deputatov_list():
+def test_razobrat_deputatov_spisok():
     dannye = [
         {
             "id": 1,

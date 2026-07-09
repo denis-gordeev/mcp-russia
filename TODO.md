@@ -2,6 +2,58 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-09 (семидесятый четвёртый проход — русификация локальных переменных: _data→_dannye, _name→_nazvanie, _text→_tekst, _code→_kod, static→statika, _list→_spisok; унификация _id→_identifikator в Pydantic-полях; исправление бага теста)
+
+### Выполнено
+
+- **Русификация `_data` → `_dannye`** (5 переменных в 2 модулях):
+  - mchs/tools.py: `pojarov_data` → `pojarov_dannye`, `chs_data` → `chs_dannye`, `monitoring_data` → `monitoring_dannye`, `gidro_data` → `gidro_dannye`
+  - cekrf/client.py: `cik_data` → `cik_dannye` (4 вхождения: в `poisk_kandidata`, `kandidat_podrobno`, `rezultaty_vyborov`, `yavka_i_itogi`)
+- **Русификация `_name` → `_nazvanie`** (3 переменных в 3 модулях):
+  - rosselkhoznadzor/tools.py: `vid_name` → `vid_nazvanie`
+  - mchs/tools.py: `fo_name` → `fo_nazvanie`
+  - rosvodresursy/tools.py: `nap_name` → `nap_nazvanie`
+- **Русификация `_text` → `_tekst`** (7 переменных в 6 модулях):
+  - fns/tools.py: `period_text` → `period_tekst`
+  - kaznacheistvo/tools.py: `tip_text` → `tip_tekst`, `god_text` → `god_tekst` (2 вхождения)
+  - sovfed/tools.py: `god_text` → `god_tekst`
+  - rosprirodnadzor/tools.py: `god_text` → `god_tekst`
+  - rosaudit/tools.py: `period_text` → `period_tekst`
+  - publikatsii/tools.py: `tip_text` → `tip_tekst`
+- **Русификация `_code` → `_kod`** (1 переменная):
+  - mchs/tools.py: `fo_code` → `fo_kod`
+- **Русификация `static` → `statika`** (3 переменных в 3 модулях):
+  - mchs/tools.py: `static` → `statika` (2 вхождения: присвоение и использование)
+  - rosselkhoznadzor/tools.py: `static` → `statika`
+  - rosvodresursy/tools.py: `static` → `statika`
+- **Русификация `_list` → `_spisok`** (1 переменная):
+  - rosvodresursy/tools.py: `vodokhr_list` → `vodokhr_spisok`
+- **Унификация `_id` → `_identifikator` в Pydantic-полях** (3 поля в 3 модулях):
+  - cekrf/schemas.py: `kandidat_id` → `kandidat_identifikator` в `ResultatKandidata` + 4 ссылки в client.py + 5 ссылок в tools.py + 1 ссылка в prompts.py
+  - roskomnadzor/schemas.py: `zapisi_id` → `zapisi_identifikator` в `ZapisReestra`
+  - minzdrav/schemas.py: `organizatsia_id` → `organizatsia_identifikator` в `VrachebnyyKadr`
+- **Исправление бага теста** `sud_name` → `nazvanie_suda` (kad_arbitrazh/test_tools.py: поле `sud_name` не существует в `SudebnoeDelo`, заменено на `nazvanie_suda`)
+- **Русификация имени тестовой функции**: `test_razobrat_deputatov_list` → `test_razobrat_deputatov_spisok`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 3 файла переформатировано, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`_data` → `_dannye`**: устранён английский суффикс «data» в значении «данные» (не «дата»); `dannye` — точный русский эквивалент
+- **`_name` → `_nazvanie`**: устранён английский суффикс «name»; `nazvanie` = «название»
+- **`_text` → `_tekst`**: устранён английский суффикс «text»; `tekst` = «текст»
+- **`_code` → `_kod`**: устранён английский суффикс «code»; `kod` = «код»
+- **`static` → `statika`**: устранено английское слово «static» (статические/резервные данные); `statika` = «статика»
+- **`_list` → `_spisok`**: устранён английский суффикс «list»; `spisok` = «список»
+- **`_id` → `_identifikator`**: унификация с устоявшейся конвенцией проекта — все остальные модели используют `identifikator` (KandidatKratko.identifikator, Kandidat.identifikator, Deputat.identifikator)
+- **Баг `sud_name` → `nazvanie_suda`**: поле `sud_name` не существует в `SudebnoeDelo` (правильное имя `nazvanie_suda`); тест не ловил ошибку из-за динамической природы Pydantic
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-08 (семидесятый третий проход — русификация констант: _API_BASE→_BAZA_API, _OPENDATA_BASE→_BAZA_OTKRYTYKH_DANNYKH, _BASE→_BAZA; переименование португальского каталога normas→normy; русификация resource URI template://→shablon://, normas://→normy://)
 
 ### Выполнено

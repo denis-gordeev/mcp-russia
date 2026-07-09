@@ -57,7 +57,7 @@ class ZapisReestra(BaseModel):
     """Запись из реестра Роскомнадзора."""
 
     kod_reestra: str  # код реестра
-    zapisi_id: str
+    zapisi_identifikator: str
     osnovanie: str = ""
     data_vneseniya: str = ""
     sostoyanie: str = ""

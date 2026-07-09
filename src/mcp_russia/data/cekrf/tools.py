@@ -156,25 +156,27 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     )
 
 
-async def kandidat_podrobno(kandidat_id: str, ctx: Context, god: int | None = None) -> str:
+async def kandidat_podrobno(
+    kandidat_identifikator: str, ctx: Context, god: int | None = None
+) -> str:
     """Получить подробную информацию о кандидате.
 
     Включает: биографические данные, партийность,
     место работы, декларации о доходах и имуществе.
 
     Аргументы:
-        kandidat_id: ID кандидата в базе ЦИК.
+        kandidat_identifikator: ID кандидата в базе ЦИК.
         god: Год выборов (необязательно).
 
     Возвращает:
         Подробная карточка кандидата.
     """
-    await ctx.info(f"Запрос подробной информации о кандидате {kandidat_id}...")
-    kandidat = await client.kandidat_podrobno(kandidat_id, god=god)
+    await ctx.info(f"Запрос подробной информации о кандидате {kandidat_identifikator}...")
+    kandidat = await client.kandidat_podrobno(kandidat_identifikator, god=god)
 
     if not kandidat:
         return (
-            f"Кандидат с ID '{kandidat_id}' не найден.\n\n"
+            f"Кандидат с ID '{kandidat_identifikator}' не найден.\n\n"
             "Используйте poisk_kandidata() для поиска по ФИО."
         )
 

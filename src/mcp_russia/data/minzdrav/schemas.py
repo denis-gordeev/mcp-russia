@@ -30,7 +30,7 @@ class VrachebnyyKadr(BaseModel):
     spetsialnost: str = ""
     kategoriya: str = ""  # высшая, первая, без категории
     stazh_let: int = 0
-    organizatsia_id: str = ""
+    organizatsia_identifikator: str = ""
 
 
 class PokazatelZdorovya(BaseModel):

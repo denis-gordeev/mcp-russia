@@ -62,7 +62,7 @@ class Kandidat(BaseModel):
 class ResultatKandidata(BaseModel):
     """Результат кандидата по итогам голосования."""
 
-    kandidat_id: str = Field(description="ID кандидата")
+    kandidat_identifikator: str = Field(description="ID кандидата")
     fio: str = Field(description="ФИО")
     partia: str = Field(description="Партия", default="")
     golosov: int = Field(description="Число голосов", default=0)

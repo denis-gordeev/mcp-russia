@@ -207,15 +207,15 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
     dannye = await client.poluchit_dannye_vodokhranilishcha(kod)
 
     if not dannye:
-        vodokhr_list = client.poluchit_vodokhranilishche_podrobno()
-        static = next((v for v in vodokhr_list if v["kod"] == kod), None)
-        if static:
-            stroki = [f"**{static['nazvanie']}** ({static['subiekt']})"]
-            if static.get("obiem_km3"):
-                stroki.append(f"- Объём: {formatirovat_chislo_ru(static['obiem_km3'], 2)} км³")
-            if static.get("ploshchad_km2"):
+        vodokhr_spisok = client.poluchit_vodokhranilishche_podrobno()
+        statika = next((v for v in vodokhr_spisok if v["kod"] == kod), None)
+        if statika:
+            stroki = [f"**{statika['nazvanie']}** ({statika['subiekt']})"]
+            if statika.get("obiem_km3"):
+                stroki.append(f"- Объём: {formatirovat_chislo_ru(statika['obiem_km3'], 2)} км³")
+            if statika.get("ploshchad_km2"):
                 stroki.append(
-                    f"- Площадь: {formatirovat_chislo_ru(static['ploshchad_km2'], 1)} км²"
+                    f"- Площадь: {formatirovat_chislo_ru(statika['ploshchad_km2'], 1)} км²"
                 )
             stroki.append("- Источник: Справочник Росводресурсов")
             return "\n".join(stroki)
@@ -235,8 +235,8 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
         stroki.append(f"- Уровень: {formatirovat_chislo_ru(dannye['uroven_m'], 2)} м")
     nap = dannye.get("priznak_napolneniya", "")
     if nap:
-        nap_name = PRIZNAKI_NAPOLNENIYA.get(nap, nap)
-        stroki.append(f"- Наполнение: {nap_name}")
+        nap_nazvanie = PRIZNAKI_NAPOLNENIYA.get(nap, nap)
+        stroki.append(f"- Наполнение: {nap_nazvanie}")
     if dannye.get("data_izmereniya"):
         stroki.append(f"- Дата измерения: {dannye['data_izmereniya']}")
     stroki.append(f"- Источник: {dannye.get('istochnik', 'ГМВО')}")

@@ -198,7 +198,7 @@ async def test_info_dela_nayden():
         kategoriya="Банкротство",
         sostoyanie="На рассмотрении",
         sudya="Иванов И.И.",
-        sud_name="АС г. Москвы",
+        nazvanie_suda="АС г. Москвы",
         data_vozbuzhdeniya="2024-01-15",
         istorcy=["ООО Альфа"],
         otvetchiki=["ООО Бета"],

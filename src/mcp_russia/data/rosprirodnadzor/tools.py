@@ -230,9 +230,9 @@ async def ekologicheskie_platezhi(
         tip_platezha=tip_platezha,
     )
     if not platezhi:
-        god_text = f" за {god} год" if god else ""
+        god_tekst = f" за {god} год" if god else ""
         return (
-            f"Экологические платежи{god_text} не найдены.\n\n"
+            f"Экологические платежи{god_tekst} не найдены.\n\n"
             f"Данные доступны на Госуслугах: gosuslugi.ru"
         )
     stroki_tablitsy = [
