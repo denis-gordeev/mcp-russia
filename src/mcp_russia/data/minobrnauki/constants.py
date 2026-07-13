@@ -9,10 +9,14 @@
 # 5. Гранты РНФ: https://rscf.ru
 # 6. ЕГИСУ науки: https://esu.minobrnauki.gov.ru
 
-OBRNADZOR_API_BASE = "https://obrnadzor.gov.ru"
-OBRNADZOR_ACCRED_URL = f"{OBRNADZOR_API_BASE}/opendata/7710542907-FS_ACCRED/data-20240901.json"
-OBRNADZOR_LICENSE_URL = f"{OBRNADZOR_API_BASE}/opendata/7710542907-FS_LICENSE/data-20240901.json"
-VUZ_RATING_URL = "https://vuz.minobrnauki.gov.ru"
+OBRNADZOR_API_BAZA = "https://obrnadzor.gov.ru"
+OBRNADZOR_AKKREDITATSIYA_ADRES = (
+    f"{OBRNADZOR_API_BAZA}/opendata/7710542907-FS_ACCRED/data-20240901.json"
+)
+OBRNADZOR_LITSENZIYA_ADRES = (
+    f"{OBRNADZOR_API_BAZA}/opendata/7710542907-FS_LICENSE/data-20240901.json"
+)
+VUZ_REYTING_ADRES = "https://vuz.minobrnauki.gov.ru"
 
 TIPY_VUZOV = [
     {"kod": "universitet", "nazvanie": "Университет"},

@@ -16,10 +16,10 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA_MCHS,
-    FIRES_BAZA_STATISTIKI,
     KLASSY_CHS,
     MCHS_BAZA_API,
     MCHS_BAZA_OTKRYTYKH_DANNYKH,
+    POZHARY_BAZA_STATISTIKI,
     STATISTIKA_POZHAROV_2023,
     TIPY_OPASNOSTI,
     VIDY_CHS,
@@ -45,7 +45,7 @@ async def statistika_pojarov(
         Список данных о пожарах.
     """
     try:
-        adres_url = f"{FIRES_BAZA_STATISTIKI}/statistics"
+        adres_url = f"{POZHARY_BAZA_STATISTIKI}/statistics"
         parametry: dict[str, Any] = {"limit": 50}
         if subiekt:
             parametry["region"] = subiekt

@@ -3,8 +3,8 @@
 MCHS_BAZA_API = "https://mchs.gov.ru/api"
 MCHS_BAZA = "https://mchs.gov.ru"
 MCHS_BAZA_OTKRYTYKH_DANNYKH = "https://data.mchs.gov.ru/opendata"
-FIRES_BAZA_STATISTIKI = "https://fires.ru/api"
-DATA_GOV_RU_MCHS = "https://data.gov.ru/opendata/7719484243-mchs"
+POZHARY_BAZA_STATISTIKI = "https://fires.ru/api"
+DANNYE_GOV_RU_MCHS = "https://data.gov.ru/opendata/7719484243-mchs"
 
 VIDY_CHS = [
     {"kod": "tekhogennyy", "nazvanie": "Техногенная чрезвычайная ситуация"},

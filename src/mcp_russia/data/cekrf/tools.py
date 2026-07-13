@@ -16,7 +16,7 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 
 from . import client
 
-_ATTRIBUTION = "ЦИК РФ / ГАС «Выборы» (vybory.izbirkom.ru)"
+_ISTOCHNIK = "ЦИК РФ / ГАС «Выборы» (vybory.izbirkom.ru)"
 
 
 async def tipy_vyborov(ctx: Context) -> str:
@@ -144,7 +144,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     kandidaty = await client.poisk_kandidata(fio, god=god)
 
     if not kandidaty:
-        return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ATTRIBUTION}"
+        return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ISTOCHNIK}"
 
     stroki_tablitsy = [
         (k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty
@@ -200,7 +200,7 @@ async def kandidat_podrobno(
     if kandidat.dokhod:
         stroki.append(f"- Доход: {kandidat.dokhod}")
 
-    stroki.append(f"- Источник: {_ATTRIBUTION}")
+    stroki.append(f"- Источник: {_ISTOCHNIK}")
     return "\n".join(stroki)
 
 
@@ -224,7 +224,7 @@ async def rezultaty_vyborov(
     rezultaty = await client.rezultaty_vyborov(god, tip=tip, subiekt=subiekt)
 
     if not rezultaty:
-        return f"Результаты выборов {god} года недоступны.\n\nИсточник: {_ATTRIBUTION}"
+        return f"Результаты выборов {god} года недоступны.\n\nИсточник: {_ISTOCHNIK}"
 
     stroki_tablitsy = [
         (
@@ -277,7 +277,7 @@ async def yavka_i_itogi(
             f"- Явка: {formatirovat_chislo_ru(itogi.get('yavka_procent', 0), 2)}%",
             f"- Действительных бюллетеней: {formatirovat_chislo_ru(itogi.get('deystvitelnykh_byulleteney', 0), 0)}",
             f"- Недействительных бюллетеней: {formatirovat_chislo_ru(itogi.get('nedeystvitelnykh_byulleteney', 0), 0)}",
-            f"- Источник: {_ATTRIBUTION}",
+            f"- Источник: {_ISTOCHNIK}",
         ]
     )
     return "\n".join(stroki)

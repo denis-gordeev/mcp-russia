@@ -14,9 +14,9 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    OBRNADZOR_ACCRED_URL,
-    OBRNADZOR_LICENSE_URL,
-    VUZ_RATING_URL,
+    OBRNADZOR_AKKREDITATSIYA_ADRES,
+    OBRNADZOR_LITSENZIYA_ADRES,
+    VUZ_REYTING_ADRES,
 )
 
 logger = logging.getLogger(__name__)
@@ -38,7 +38,7 @@ async def poisk_akreditovannyh_vuzov(
         Список аккредитованных учреждений.
     """
     try:
-        dannye = await http_poluchit(OBRNADZOR_ACCRED_URL, taimaut=30.0)
+        dannye = await http_poluchit(OBRNADZOR_AKKREDITATSIYA_ADRES, taimaut=30.0)
         if not isinstance(dannye, list):
             return []
         rezultaty = []
@@ -68,7 +68,7 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         Данные об аккредитации или None.
     """
     try:
-        dannye = await http_poluchit(OBRNADZOR_ACCRED_URL, taimaut=30.0)
+        dannye = await http_poluchit(OBRNADZOR_AKKREDITATSIYA_ADRES, taimaut=30.0)
         if not isinstance(dannye, list):
             return None
         for zapis in dannye:
@@ -96,7 +96,7 @@ async def poisk_licenziy(
         Список лицензированных учреждений.
     """
     try:
-        dannye = await http_poluchit(OBRNADZOR_LICENSE_URL, taimaut=30.0)
+        dannye = await http_poluchit(OBRNADZOR_LITSENZIYA_ADRES, taimaut=30.0)
         if not isinstance(dannye, list):
             return []
         rezultaty = []
@@ -125,7 +125,7 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
         Список рейтинговых данных.
     """
     try:
-        adres_url = f"{VUZ_RATING_URL}/api/rating"
+        adres_url = f"{VUZ_REYTING_ADRES}/api/rating"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god

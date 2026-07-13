@@ -14,7 +14,7 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    BUDGET_GOV_RU_BAZA,
+    BYUDZHET_GOV_RU_BAZA,
     KATEGORII_RASKHODOV,
     KAZNACHEISTVO_BAZA_API,
     ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH,
@@ -38,7 +38,7 @@ async def poluchit_ispolnenie_byudzheta(
         Данные об исполнении бюджета или None.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BAZA}/v1/execution"
+        adres_url = f"{BYUDZHET_GOV_RU_BAZA}/v1/execution"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god
@@ -140,7 +140,7 @@ async def poluchit_mezhbyudzhetnye(
         Список межбюджетных трансфертов.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BAZA}/v1/interbudget"
+        adres_url = f"{BYUDZHET_GOV_RU_BAZA}/v1/interbudget"
         parametry: dict[str, Any] = {}
         if god:
             parametry["year"] = god

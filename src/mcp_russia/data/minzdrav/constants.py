@@ -7,9 +7,9 @@
 # 3. ФРМО (Федеральный реестр медицинских организаций)
 # 4. Официальный сайт: https://minzdrav.gov.ru
 
-MINZDRAV_OPEN_DATA = "https://data.minzdrav.gov.ru/api/v1"
+MINZDRAV_OTKRYTYE_DANNYE = "https://data.minzdrav.gov.ru/api/v1"
 ROSZDRAVNADZOR_API = "https://roszdravnadzor.gov.ru/api"
-FRMO_API_BASE = "https://frrr.rosminzdrav.ru/api"
+FRMO_API_BAZA = "https://frrr.rosminzdrav.ru/api"
 
 # Основные показатели здоровья
 POKAZATELI_ZDOROVYA = [
@@ -57,7 +57,7 @@ SPETSIALNOSTI_VRACHEY = [
 ]
 
 # Классы МКБ-10 (основные)
-MKB10_CLASSES = [
+MKB10_KLASSY = [
     {"kod": "A00-B99", "nazvanie": "Инфекционные и паразитарные болезни"},
     {"kod": "C00-D48", "nazvanie": "Новообразования"},
     {"kod": "E00-E90", "nazvanie": "Болезни эндокринной системы"},

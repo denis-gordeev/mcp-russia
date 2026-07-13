@@ -11,8 +11,8 @@
 
 SOVFED_BAZA_API = "https://sovfed.ru/api"
 SOVFED_BAZA = "https://sovfed.ru"
-DATA_GOV_RU_SOVFED = "https://data.gov.ru/api/dataset"
-DATA_GOV_RU_BAZA = "https://data.gov.ru"
+DANNYE_GOV_RU_SOVFED = "https://data.gov.ru/api/dataset"
+DANNYE_GOV_RU_BAZA = "https://data.gov.ru"
 
 KOMITETY_SOVFEDA = [
     {

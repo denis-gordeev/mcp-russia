@@ -12,8 +12,8 @@
 RKN_BAZA_API = "https://rkn.gov.ru"
 RKN_BAZA_OTKRYTYKH_DANNYKH = "https://rkn.gov.ru/it/opendata"
 EAIS_BAZA_API = "https://eais.rkn.gov.ru"
-PDN_REESTR_URL = "https://rkn.gov.ru/pdn"
-ORI_REESTR_URL = "https://rkn.gov.ru/registry-ori"
+PDN_REESTR_ADRES = "https://rkn.gov.ru/pdn"
+ORI_REESTR_ADRES = "https://rkn.gov.ru/registry-ori"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [

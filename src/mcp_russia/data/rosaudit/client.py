@@ -14,7 +14,7 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     ACH_BAZA_API,
-    BUDGET_GOV_RU_BAZA,
+    BYUDZHET_GOV_RU_BAZA,
     NAPRAVLENIYA_KONTROLYA,
     SUBIEKTY_AUDITA,
     TIPY_MEROPRIYATIY,
@@ -109,7 +109,7 @@ async def poluchit_byudzhet_ispolnenie(
         Данные об исполнении бюджета или None.
     """
     try:
-        adres_url = f"{BUDGET_GOV_RU_BAZA}/execution"
+        adres_url = f"{BYUDZHET_GOV_RU_BAZA}/execution"
         parametry: dict[str, str] = {}
         if period:
             parametry["period"] = period

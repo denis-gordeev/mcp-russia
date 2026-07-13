@@ -21,8 +21,8 @@ from mcp_russia.settings import KLYUCH_DADATA_API
 from .constants import PRAZDNIKI_RF
 from .schemas import AdresRF, BankRF, Organizatsiya
 
-DADATA_URL_PODSKAZOK = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest"
-DADATA_URL_POISKA_PO_ID = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
+DADATA_ADRES_PODSKAZOK = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/suggest"
+DADATA_ADRES_POISKA_PO_ID = "https://suggestions.dadata.ru/suggestions/api/4_1/rs/findById"
 
 
 def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
@@ -103,7 +103,7 @@ async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str,
     telo = {"query": zapros, "count": 10}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/address",
+            f"{DADATA_ADRES_PODSKAZOK}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -116,7 +116,7 @@ async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> 
     telo = {"query": identifikator_fias}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_POISKA_PO_ID}/address",
+            f"{DADATA_ADRES_POISKA_PO_ID}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -129,7 +129,7 @@ async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[
     telo = {"query": indeks, "count": 1}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/address",
+            f"{DADATA_ADRES_PODSKAZOK}/address",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -142,7 +142,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> di
     telo = {"query": inn}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/party",
+            f"{DADATA_ADRES_PODSKAZOK}/party",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -162,7 +162,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> 
     telo = {"query": ogrn}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/party",
+            f"{DADATA_ADRES_PODSKAZOK}/party",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -178,7 +178,7 @@ async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
     telo = {"query": "", "count": 100}
     try:
         rezultat = await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/bank",
+            f"{DADATA_ADRES_PODSKAZOK}/bank",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
@@ -192,7 +192,7 @@ async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, A
     telo = {"query": bik}
     try:
         return await http_otpravit(
-            f"{DADATA_URL_PODSKAZOK}/bank",
+            f"{DADATA_ADRES_PODSKAZOK}/bank",
             json_body=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )

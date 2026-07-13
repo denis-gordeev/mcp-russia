@@ -8,7 +8,7 @@
 # 4. Контрольные мероприятия: https://ach.gov.ru/controls
 
 ACH_BAZA_API = "https://ach.gov.ru/api"
-BUDGET_GOV_RU_BAZA = "https://budget.gov.ru/api"
+BYUDZHET_GOV_RU_BAZA = "https://budget.gov.ru/api"
 
 # Направления контрольной деятельности
 NAPRAVLENIYA_KONTROLYA = [

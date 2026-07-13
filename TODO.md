@@ -2,6 +2,63 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-13 (семидесятый пятый проход — русификация _ATTRIBUTION→_ISTOCHNIK, констант: FIRES→POZHARY, MKB10_CLASSES→MKB10_KLASSY, CBR_DAILY_JSON/CBR_KEY_RATE_XML, *_API_BASE→*_API_BAZA, *_URL→*_ADRES, DATA_GOV_RU→DANNYE_GOV_RU, BUDGET_GOV_RU→BYUDZHET_GOV_RU, OPEN_METEO→OTKRYTYY_METEO, CONSULTANT→KONSULTANT, MINZDRAV_OPEN_DATA→MINZDRAV_OTKRYTYE_DANNYE, FRMO_API_BASE→FRMO_API_BAZA, DADATA_URL→DADATA_ADRES; исправление бага region_dtp→subiekt_dtp)
+
+### Выполнено
+
+- **Русификация `_ATTRIBUTION` → `_ISTOCHNIK`** (4 модуля):
+  - gibdd/tools.py: `_ATTRIBUTION` → `_ISTOCHNIK` (9 ссылок)
+  - fssp/tools.py: `_ATTRIBUTION` → `_ISTOCHNIK` (15 ссылок)
+  - cekrf/tools.py: `_ATTRIBUTION` → `_ISTOCHNIK` (5 ссылок)
+  - publikatsii/tools.py: `_PRAVO_ATTRIBUTION` → `_ISTOCHNIK_PRAVO` (11 ссылок)
+- **Русификация `FIRES_BAZA_STATISTIKI` → `POZHARY_BAZA_STATISTIKI`** (3 вхождения: constants.py + client.py)
+- **Русификация `MKB10_CLASSES` → `MKB10_KLASSY`** (2 вхождения: constants.py + client.py)
+- **Русификация `CBR_DAILY_JSON` → `CBR_EZHEDNEVNYY_JSON`** (2 вхождения: constants.py + client.py)
+- **Русификация `CBR_KEY_RATE_XML` → `CBR_KLYUCHEVAYA_STAVKA_XML`** (1 вхождение: constants.py)
+- **Русификация `MINZDRAV_OPEN_DATA` → `MINZDRAV_OTKRYTYE_DANNYE`** (4 вхождения: constants.py + client.py)
+- **Русификация `FRMO_API_BASE` → `FRMO_API_BAZA`** (4 вхождения: constants.py + client.py)
+- **Русификация оставшихся `*_API_BASE` → `*_API_BAZA`** (5 констант в 2 модулях):
+  - rospotrebnadzor/constants.py: `ROSPOTREBNADZOR_API_BASE`, `PROVERKI_API_BASE`, `ZPP_API_BASE` → `*_API_BAZA`
+  - minobrnauki/constants.py: `OBRNADZOR_API_BASE` → `OBRNADZOR_API_BAZA`
+- **Русификация `*_URL` → `*_ADRES`** (6 констант в 4 модулях):
+  - minobrnauki/constants.py: `OBRNADZOR_ACCRED_URL` → `OBRNADZOR_AKKREDITATSIYA_ADRES`, `OBRNADZOR_LICENSE_URL` → `OBRNADZOR_LITSENZIYA_ADRES`, `VUZ_RATING_URL` → `VUZ_REYTING_ADRES`
+  - roskomnadzor/constants.py: `PDN_REESTR_URL` → `PDN_REESTR_ADRES`, `ORI_REESTR_URL` → `ORI_REESTR_ADRES`
+  - publikatsii/constants.py: `PRAVO_URL_POISKA` → `PRAVO_ADRES_POISKA`, `PRAVO_URL_DOKUMENTA` → `PRAVO_ADRES_DOKUMENTA`
+  - rosapi/client.py: `DADATA_URL_PODSKAZOK` → `DADATA_ADRES_PODSKAZOK`, `DADATA_URL_POISKA_PO_ID` → `DADATA_ADRES_POISKA_PO_ID`
+- **Русификация `DATA_GOV_RU_*` → `DANNYE_GOV_RU_*`** (5 констант в 4 модулях):
+  - rosselkhoznadzor/constants.py: `DATA_GOV_RU_FSVPS` → `DANNYE_GOV_RU_FSVPS`
+  - mchs/constants.py: `DATA_GOV_RU_MCHS` → `DANNYE_GOV_RU_MCHS`
+  - rosvodresursy/constants.py: `DATA_GOV_RU_BAZA` → `DANNYE_GOV_RU_BAZA`
+  - sovfed/constants.py: `DATA_GOV_RU_SOVFED` → `DANNYE_GOV_RU_SOVFED`, `DATA_GOV_RU_BAZA` → `DANNYE_GOV_RU_BAZA`
+- **Русификация `BUDGET_GOV_RU_BAZA` → `BYUDZHET_GOV_RU_BAZA`** (2 константы в 2 модулях):
+  - rosaudit/constants.py, kaznacheistvo/constants.py + client.py в обоих
+- **Русификация `OPEN_METEO_*` → `OTKRYTYY_METEO_*`** (2 константы):
+  - rosgidromet/constants.py + client.py
+- **Русификация `CONSULTANT_BAZA_API` → `KONSULTANT_BAZA_API`** (1 константа в publikatsii/constants.py)
+- **Исправление бага `d["region_dtp"]` → `d["subiekt_dtp"]`** в gibdd/tools.py:109 — client.py формирует словарь с ключом `subiekt_dtp`, а tools.py читал `region_dtp` (пустое значение)
+- **Русификация имени тестовой функции**: `test_constants_subiekty_count` → `test_constants_subiekty_kolichestvo`
+- **Прогнаны все проверки**: `ruff check` — 1 исправлено, `ruff format` — 3 файла переформатировано, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`_ATTRIBUTION` → `_ISTOCHNIK`**: устранён последний массовый английский идентификатор в tools.py; «источник» — точный русский эквивалент «attribution» в контексте указания источника данных
+- **`FIRES` → `POZHARY`**: устранено английское слово «fires» (пожары); «пожары» — точный перевод
+- **`MKB10_CLASSES` → `MKB10_KLASSY`**: устранён английский суффикс `_CLASSES`; «классы» — точный перевод
+- **`CBR_DAILY_JSON` → `CBR_EZHEDNEVNYY_JSON`**: устранены английские слова `DAILY` и `KEY_RATE`; «ежедневный» и «ключевая ставка» — точные переводы
+- **`*_URL` → `*_ADRES`**: завершена русификация суффикса `_URL` начатая в раунде 73; `ADRES` = «адрес»
+- **`DATA_GOV_RU` → `DANNYE_GOV_RU`**: устранён английский префикс `DATA`; `DANNYE` = «данные»
+- **`BUDGET_GOV_RU` → `BYUDZHET_GOV_RU`**: устранён английский префикс `BUDGET`; `BYUDZHET` = «бюджет»
+- **`OPEN_METEO` → `OTKRYTYY_METEO`**: устранён английский префикс `OPEN`; `OTKRYTYY` = «открытый»
+- **`CONSULTANT` → `KONSULTANT`**: русификация названия сервиса «КонсультантПлюс»; `KONSULTANT` = «консультант»
+- **Баг `region_dtp` → `subiekt_dtp`**: client.py формирует словарь с ключом `subiekt_dtp` (строка 188), а tools.py читал `region_dtp` (строка 109) — приводило к пустым значениям в таблице ДТП
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-09 (семидесятый четвёртый проход — русификация локальных переменных: _data→_dannye, _name→_nazvanie, _text→_tekst, _code→_kod, static→statika, _list→_spisok; унификация _id→_identifikator в Pydantic-полях; исправление бага теста)
 
 ### Выполнено

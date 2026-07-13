@@ -9,7 +9,7 @@
 
 VODNYY_REESTR_BAZA = "https://text.water.ru"
 GMVO_BAZA_API = "https://gmvo.skniigkh.ru"
-DATA_GOV_RU_BAZA = "https://data.gov.ru/api/v1"
+DANNYE_GOV_RU_BAZA = "https://data.gov.ru/api/v1"
 
 # Бассейновые округа РФ
 BASSEYNOVYE_OKRUGA = [

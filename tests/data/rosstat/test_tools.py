@@ -129,7 +129,7 @@ async def test_demografiya_s_regionom():
     assert "77" in rezultat
 
 
-async def test_constants_subiekty_count():
+async def test_constants_subiekty_kolichestvo():
     from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
 
     assert len(SUBIEKTY_RF) >= 85

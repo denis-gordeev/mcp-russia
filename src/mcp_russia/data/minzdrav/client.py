@@ -15,9 +15,9 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     FEDERALNYE_OKRUGA,
-    FRMO_API_BASE,
-    MINZDRAV_OPEN_DATA,
-    MKB10_CLASSES,
+    FRMO_API_BAZA,
+    MINZDRAV_OTKRYTYE_DANNYE,
+    MKB10_KLASSY,
     POKAZATELI_ZDOROVYA,
     ROSZDRAVNADZOR_API,
     SPETSIALNOSTI_VRACHEY,
@@ -45,7 +45,7 @@ async def poisk_med_organizatsiy(
         Список медицинских организаций.
     """
     try:
-        adres_url = f"{FRMO_API_BASE}/organizations"
+        adres_url = f"{FRMO_API_BAZA}/organizations"
         parametry: dict[str, Any] = {"limit": ogranichenie}
         if subiekt:
             parametry["region"] = subiekt
@@ -70,7 +70,7 @@ async def info_med_organizatsii(identifikator_mo: str) -> dict[str, Any] | None:
         Данные организации или None.
     """
     try:
-        adres_url = f"{FRMO_API_BASE}/organizations/{identifikator_mo}"
+        adres_url = f"{FRMO_API_BAZA}/organizations/{identifikator_mo}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_med_organizatsiyu(dannye)
@@ -128,7 +128,7 @@ async def pokazateli_zdorovya(
         Список показателей здоровья.
     """
     try:
-        adres_url = f"{MINZDRAV_OPEN_DATA}/indicators"
+        adres_url = f"{MINZDRAV_OTKRYTYE_DANNYE}/indicators"
         parametry: dict[str, Any] = {}
         if subiekt:
             parametry["region"] = subiekt
@@ -160,7 +160,7 @@ async def statistika_zabolevaniy(
         Статистика заболеваний.
     """
     try:
-        adres_url = f"{MINZDRAV_OPEN_DATA}/morbidity"
+        adres_url = f"{MINZDRAV_OTKRYTYE_DANNYE}/morbidity"
         parametry: dict[str, Any] = {}
         if kod_mkb:
             parametry["mkb"] = kod_mkb
@@ -188,7 +188,7 @@ def poluchit_spetsialnosti() -> list[dict[str, str]]:
 
 def poluchit_klassy_mkb10() -> list[dict[str, str]]:
     """Вернуть справочник классов МКБ-10."""
-    return MKB10_CLASSES
+    return MKB10_KLASSY
 
 
 def poluchit_federalnyye_okruga() -> list[dict[str, str]]:

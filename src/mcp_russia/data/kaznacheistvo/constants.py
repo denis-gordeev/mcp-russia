@@ -3,7 +3,7 @@
 KAZNACHEISTVO_BAZA_API = "https://roskazna.gov.ru/api"
 KAZNACHEISTVO_BAZA = "https://roskazna.gov.ru"
 ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH = "https://roskazna.gov.ru/opendata"
-BUDGET_GOV_RU_BAZA = "https://budget.gov.ru/api"
+BYUDZHET_GOV_RU_BAZA = "https://budget.gov.ru/api"
 
 VIDY_BUDZHETOV = [
     {"kod": "federalnyy", "nazvanie": "Федеральный бюджет"},

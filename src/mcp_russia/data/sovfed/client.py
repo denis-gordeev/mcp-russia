@@ -14,7 +14,7 @@ from typing import Any
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
-    DATA_GOV_RU_SOVFED,
+    DANNYE_GOV_RU_SOVFED,
     KOMISSII_SOVFEDA,
     KOMITETY_SOVFEDA,
     SENATORY_SPRAVOCHNIK,
@@ -52,7 +52,7 @@ async def poisk_senatorov(
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
 
     try:
-        adres_url = f"{DATA_GOV_RU_SOVFED}"
+        adres_url = f"{DANNYE_GOV_RU_SOVFED}"
         parametry: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)

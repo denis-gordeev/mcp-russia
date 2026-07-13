@@ -16,7 +16,7 @@ from .constants import (
     VidyNarusheniy,
 )
 
-_ATTRIBUTION = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
+_ISTOCHNIK = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
 
 
 async def spisok_tipov_ts(ctx: Context) -> str:
@@ -106,7 +106,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
     if dtp:
         stroki.append(f"\n**ДТП** ({len(dtp)} записей)")
         stroki_tablitsy = [
-            (d["data_dtp"], d["tip_dtp"], d["region_dtp"], d["model_ts"]) for d in dtp
+            (d["data_dtp"], d["tip_dtp"], d["subiekt_dtp"], d["model_ts"]) for d in dtp
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата ДТП", "Тип", "Регион", "Модель ТС"], stroki_tablitsy)
@@ -140,7 +140,7 @@ async def info_ts(ctx: Context, vin: str) -> str:
     else:
         stroki.append("\nОграничения: не найдены.")
 
-    return "\n".join(stroki) + _ATTRIBUTION
+    return "\n".join(stroki) + _ISTOCHNIK
 
 
 async def _polnaya_proverka_ts(vin: str) -> tuple:
@@ -167,7 +167,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
     """
     vu = await client.proverka_vu(nomer_vu)
     if not vu:
-        return f"Информация по ВУ {nomer_vu} не найдена." + _ATTRIBUTION
+        return f"Информация по ВУ {nomer_vu} не найдена." + _ISTOCHNIK
 
     stroki = [
         f"**Водительское удостоверение** (№ {nomer_vu})",
@@ -180,7 +180,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
         f"- Ограничения: {vu.ograniceniya or 'нет'}",
         f"- Особые отметки: {vu.osoboie_otmetki or 'нет'}",
     ]
-    return "\n".join(stroki) + _ATTRIBUTION
+    return "\n".join(stroki) + _ISTOCHNIK
 
 
 async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
@@ -199,7 +199,7 @@ async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
         f"через Госуслуги: https://www.gosuslugi.ru/10001/1\n\n"
         f"Публичный API ГИБДД не предоставляет данные о штрафах без "
         f"авторизации. Используйте сайт Госуслуг или портал ГИБДД."
-    ) + _ATTRIBUTION
+    ) + _ISTOCHNIK
 
 
 async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
@@ -218,7 +218,7 @@ async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
         f"через Госуслуги: https://www.gosuslugi.ru/10001/1\n\n"
         f"Публичный API ГИБДД не предоставляет данные о штрафах без "
         f"авторизации. Используйте сайт Госуслуг или портал ГИБДД."
-    ) + _ATTRIBUTION
+    ) + _ISTOCHNIK
 
 
 async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
@@ -233,7 +233,7 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
     """
     dannye = await client.statistika_dtp_region(subiekt, god)
     if not dannye:
-        return f"Статистика ДТП по региону «{subiekt}» за {god} год не найдена." + _ATTRIBUTION
+        return f"Статистика ДТП по региону «{subiekt}» за {god} год не найдена." + _ISTOCHNIK
 
     stroki = [
         f"**Статистика ДТП** — {dannye.subiekt}, {dannye.god} г.",
@@ -244,7 +244,7 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
         f"- ДТП с участием детей: {formatirovat_chislo_ru(dannye.dtp_s_detmi, 0)}",
         f"- ДТП по вине нетрезвых: {formatirovat_chislo_ru(dannye.alco_gibdd, 0)}",
     ]
-    return "\n".join(stroki) + _ATTRIBUTION
+    return "\n".join(stroki) + _ISTOCHNIK
 
 
 async def istoriya_registraciy(ctx: Context, vin: str) -> str:
@@ -258,10 +258,10 @@ async def istoriya_registraciy(ctx: Context, vin: str) -> str:
     """
     zapisi = await client.proverka_istorii_ts(vin)
     if not zapisi:
-        return f"История регистраций по VIN {vin} не найдена." + _ATTRIBUTION
+        return f"История регистраций по VIN {vin} не найдена." + _ISTOCHNIK
 
     stroki_tablitsy = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in zapisi]
     return (
         tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
-        + _ATTRIBUTION
+        + _ISTOCHNIK
     )

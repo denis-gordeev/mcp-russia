@@ -12,8 +12,8 @@
 # - Качество воздуха: https://air-quality-api.open-meteo.com/v1/air-quality
 
 ROSGIDROMET_BAZA_API = "https://api.meteorf.ru/v1"
-OPEN_METEO_BAZA = "https://api.open-meteo.com/v1/forecast"
-OPEN_METEO_BAZA_KACHESTVA_VOZDUKHA = "https://air-quality-api.open-meteo.com/v1/air-quality"
+OTKRYTYY_METEO_BAZA = "https://api.open-meteo.com/v1/forecast"
+OTKRYTYY_METEO_BAZA_KACHESTVA_VOZDUKHA = "https://air-quality-api.open-meteo.com/v1/air-quality"
 
 # Код направления ветра → русское название
 VETER_NAPRAVLENIYA = {

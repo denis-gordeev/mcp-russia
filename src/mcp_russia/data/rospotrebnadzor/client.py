@@ -13,7 +13,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
 
-from .constants import PROVERKI_API_BASE, ZPP_API_BASE
+from .constants import PROVERKI_API_BAZA, ZPP_API_BAZA
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ async def poisk_proverok(
         Список проверок.
     """
     try:
-        adres_url = f"{PROVERKI_API_BASE}/api/procedure"
+        adres_url = f"{PROVERKI_API_BAZA}/api/procedure"
         parametry: dict[str, Any] = {}
         if inn_tseli:
             parametry["targetInn"] = inn_tseli
@@ -65,7 +65,7 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
         Данные о проверке или None.
     """
     try:
-        adres_url = f"{PROVERKI_API_BASE}/api/procedure/{nomer}"
+        adres_url = f"{PROVERKI_API_BAZA}/api/procedure/{nomer}"
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_proverku(dannye)
@@ -91,7 +91,7 @@ async def plan_proverok(
         Список запланированных проверок.
     """
     try:
-        adres_url = f"{PROVERKI_API_BASE}/api/plan"
+        adres_url = f"{PROVERKI_API_BAZA}/api/plan"
         parametry: dict[str, Any] = {"organ": organ}
         if god:
             parametry["year"] = god
@@ -124,7 +124,7 @@ async def poisk_zhalob(
         Список жалоб.
     """
     try:
-        adres_url = f"{ZPP_API_BASE}/api/complaints"
+        adres_url = f"{ZPP_API_BAZA}/api/complaints"
         parametry: dict[str, Any] = {}
         if organizaciya:
             parametry["organizationName"] = organizaciya

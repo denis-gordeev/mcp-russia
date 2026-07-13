@@ -8,9 +8,9 @@
 # 4. Собрание законодательства РФ
 
 PRAVO_BAZA_API = "https://pravo.gov.ru/opendata/7700748144-prfgi"
-PRAVO_URL_POISKA = "https://pravo.gov.ru/opendata/7700748144-prfgi/search"
-PRAVO_URL_DOKUMENTA = "https://pravo.gov.ru/opendata/7700748144-prfgi/document"
-CONSULTANT_BAZA_API = "https://api.consultant.ru/v1"  # платный сервис
+PRAVO_ADRES_POISKA = "https://pravo.gov.ru/opendata/7700748144-prfgi/search"
+PRAVO_ADRES_DOKUMENTA = "https://pravo.gov.ru/opendata/7700748144-prfgi/document"
+KONSULTANT_BAZA_API = "https://api.consultant.ru/v1"  # платный сервис
 
 # Типы документов pravo.gov.ru (коды портала)
 TIPY_DOKUMENTOV_PRAVO = {

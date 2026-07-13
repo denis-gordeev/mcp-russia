@@ -16,7 +16,7 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 
-_PRAVO_ATTRIBUTION = "\n\n_Источник: Официальный портал правовой информации (pravo.gov.ru)_"
+_ISTOCHNIK_PRAVO = "\n\n_Источник: Официальный портал правовой информации (pravo.gov.ru)_"
 
 
 async def spisok_tipov_aktov(ctx: Context) -> str:
@@ -30,7 +30,7 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
 
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     zagolovok = "**Типы нормативных актов РФ**\n\n"
-    return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
 async def spisok_otrasley(ctx: Context) -> str:
@@ -44,9 +44,7 @@ async def spisok_otrasley(ctx: Context) -> str:
 
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in otrsli]
     zagolovok = "**Отрасли законодательства РФ**\n\n"
-    return (
-        zagolovok + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
-    )
+    return zagolovok + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
 async def spisok_istochnikov(ctx: Context) -> str:
@@ -60,9 +58,7 @@ async def spisok_istochnikov(ctx: Context) -> str:
 
     stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in istochniki]
     zagolovok = "**Источники официальных публикаций**\n\n"
-    return (
-        zagolovok + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
-    )
+    return zagolovok + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
 async def spisok_statusov(ctx: Context) -> str:
@@ -76,7 +72,7 @@ async def spisok_statusov(ctx: Context) -> str:
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
     zagolovok = "**Статусы документов**\n\n"
-    return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _PRAVO_ATTRIBUTION
+    return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
 async def info_normativnogo_akta(
@@ -118,7 +114,7 @@ async def info_normativnogo_akta(
     if dannye.tekst_ssylka:
         stroki.append(f"- Текст: {dannye.tekst_ssylka}")
     stroki.append(f"- Источник: {dannye.istochnik}")
-    stroki.append(_PRAVO_ATTRIBUTION.strip())
+    stroki.append(_ISTOCHNIK_PRAVO.strip())
     return "\n".join(stroki)
 
 
@@ -150,7 +146,7 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
         stroki.append(f"- Чтений: {len(dannye.chteniya)}")
     if dannye.tekst_ssylka:
         stroki.append(f"- Текст: {dannye.tekst_ssylka}")
-    stroki.append(_PRAVO_ATTRIBUTION.strip())
+    stroki.append(_ISTOCHNIK_PRAVO.strip())
     return "\n".join(stroki)
 
 
@@ -190,7 +186,7 @@ async def poisk_aktov(
     if len(rezultaty) > 10:
         stroki.append(f"\n... и ещё {len(rezultaty) - 10} результатов")
 
-    stroki.append(_PRAVO_ATTRIBUTION.strip())
+    stroki.append(_ISTOCHNIK_PRAVO.strip())
     return "\n".join(stroki)
 
 
@@ -245,7 +241,7 @@ async def publikatsii_po_datam(
     if len(dannye) > 10:
         stroki.append(f"\n... и ещё {len(dannye) - 10} публикаций")
 
-    stroki.append(_PRAVO_ATTRIBUTION.strip())
+    stroki.append(_ISTOCHNIK_PRAVO.strip())
     return "\n".join(stroki)
 
 
@@ -276,5 +272,5 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
             stroki.append(f"  Вступил в силу: {izm.data_vstupleniya_v_silu}")
         stroki.append("")
 
-    stroki.append(_PRAVO_ATTRIBUTION.strip())
+    stroki.append(_ISTOCHNIK_PRAVO.strip())
     return "\n".join(stroki)

@@ -11,7 +11,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
 
-from .constants import CBR_DAILY_JSON
+from .constants import CBR_EZHEDNEVNYY_JSON
 from .schemas import ZnachenieValyuty
 
 
@@ -55,7 +55,7 @@ async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
     Возвращает:
         Сырой JSON-ответ от API ЦБ РФ.
     """
-    adres_url = CBR_DAILY_JSON
+    adres_url = CBR_EZHEDNEVNYY_JSON
     return await http_poluchit(adres_url)
 
 

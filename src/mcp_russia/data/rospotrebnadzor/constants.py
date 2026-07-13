@@ -8,9 +8,9 @@
 # 3. Реестр проверок: https://proverki.rospotrebnadzor.ru
 # 4. Защита прав потребителей: https://zpp.rospotrebnadzor.ru
 
-ROSPOTREBNADZOR_API_BASE = "https://rospotrebnadzor.ru/api"
-PROVERKI_API_BASE = "https://proverki.rospotrebnadzor.ru"
-ZPP_API_BASE = "https://zpp.rospotrebnadzor.ru"
+ROSPOTREBNADZOR_API_BAZA = "https://rospotrebnadzor.ru/api"
+PROVERKI_API_BAZA = "https://proverki.rospotrebnadzor.ru"
+ZPP_API_BAZA = "https://zpp.rospotrebnadzor.ru"
 
 # Направления деятельности
 NAPRAVLENIYA_DEYATELNOSTI = [

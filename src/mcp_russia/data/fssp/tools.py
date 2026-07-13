@@ -16,7 +16,7 @@ from .constants import (
     VidyIspolnitelnyhProizvodstv,
 )
 
-_ATTRIBUTION = "\n\n_Источник: ФССП России (fssp.gov.ru)_"
+_ISTOCHNIK = "\n\n_Источник: ФССП России (fssp.gov.ru)_"
 
 
 async def spisok_vidov_proizvodstv(ctx: Context) -> str:
@@ -26,7 +26,7 @@ async def spisok_vidov_proizvodstv(ctx: Context) -> str:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in VidyIspolnitelnyhProizvodstv]
-    return tablitsa_v_markdown(["Код", "Вид производства"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Вид производства"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def spisok_statusov_proizvodstva(ctx: Context) -> str:
@@ -36,7 +36,7 @@ async def spisok_statusov_proizvodstva(ctx: Context) -> str:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in StatusyProizvodstva]
-    return tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def spisok_ogranicheniy(ctx: Context) -> str:
@@ -46,7 +46,7 @@ async def spisok_ogranicheniy(ctx: Context) -> str:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in Ogranicheniya]
-    return tablitsa_v_markdown(["Код", "Ограничение"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Ограничение"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
@@ -56,7 +56,7 @@ async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
         Список категорий (физлицо, юрлицо, ИП).
     """
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KategoriiDolzhnikov]
-    return tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
@@ -66,7 +66,7 @@ async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in OsnovaniyaVozbuzhdeniya]
-    return tablitsa_v_markdown(["Код", "Основание"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Основание"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def spisok_regionov(ctx: Context) -> str:
@@ -79,7 +79,7 @@ async def spisok_regionov(ctx: Context) -> str:
         (str(kod), nazvanie)
         for nazvanie, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
     ]
-    return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ATTRIBUTION
+    return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ISTOCHNIK
 
 
 async def info_proizvodstva(ctx: Context, nomer: str) -> str:
@@ -94,7 +94,7 @@ async def info_proizvodstva(ctx: Context, nomer: str) -> str:
     """
     rezultat = await client.info_proizvodstva(nomer)
     if not rezultat:
-        return f"Исполнительное производство № {nomer} не найдено." + _ATTRIBUTION
+        return f"Исполнительное производство № {nomer} не найдено." + _ISTOCHNIK
 
     stroki = [
         f"**Исполнительное производство** № {rezultat.get('nomer', nomer)}",
@@ -108,7 +108,7 @@ async def info_proizvodstva(ctx: Context, nomer: str) -> str:
         f"- Основание: {rezultat.get('osnovanie', '')}",
         f"- Регион: {rezultat.get('subiekt_rf', '')}",
     ]
-    return "\n".join(stroki) + _ATTRIBUTION
+    return "\n".join(stroki) + _ISTOCHNIK
 
 
 async def poisk_dolzhnika(
@@ -129,7 +129,7 @@ async def poisk_dolzhnika(
     """
     rezultaty = await client.poisk_proizvodstv(fio, data_rozhdeniya, subiekt)
     if not rezultaty:
-        return f"Исполнительные производства по «{fio}» не найдены." + _ATTRIBUTION
+        return f"Исполнительные производства по «{fio}» не найдены." + _ISTOCHNIK
 
     stroki_tablitsy = [
         (
@@ -147,7 +147,7 @@ async def poisk_dolzhnika(
             ["Номер", "Должник", "Предмет", "Сумма", "Отдел", "Статус"],
             stroki_tablitsy,
         )
-        + _ATTRIBUTION
+        + _ISTOCHNIK
     )
 
 
@@ -167,7 +167,7 @@ async def ogranicheniya_dolzhnika(
     """
     rezultaty = await client.ogranicheniya_dolzhnika(fio, data_rozhdeniya)
     if not rezultaty:
-        return f"Ограничения по «{fio}» не найдены." + _ATTRIBUTION
+        return f"Ограничения по «{fio}» не найдены." + _ISTOCHNIK
 
     stroki_tablitsy = [
         (
@@ -183,7 +183,7 @@ async def ogranicheniya_dolzhnika(
             ["Номер ИП", "Должник", "Ограничение", "Статус"],
             stroki_tablitsy,
         )
-        + _ATTRIBUTION
+        + _ISTOCHNIK
     )
 
 
@@ -198,7 +198,7 @@ async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
     """
     rezultaty = await client.rozysk_dolzhnika(fio)
     if not rezultaty:
-        return f"Сведения о розыске по «{fio}» не найдены." + _ATTRIBUTION
+        return f"Сведения о розыске по «{fio}» не найдены." + _ISTOCHNIK
 
     stroki_tablitsy = [
         (
@@ -214,5 +214,5 @@ async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
             ["Номер ИП", "Должник", "Предмет розыска", "Отдел"],
             stroki_tablitsy,
         )
-        + _ATTRIBUTION
+        + _ISTOCHNIK
     )

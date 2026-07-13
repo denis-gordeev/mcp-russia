@@ -1,7 +1,7 @@
 """Константы модуля ЦБ РФ."""
 
-CBR_DAILY_JSON = "https://www.cbr-xml-daily.ru/daily_json.js"
-CBR_KEY_RATE_XML = "https://www.cbr-xml-daily.ru/daily_json.js"
+CBR_EZHEDNEVNYY_JSON = "https://www.cbr-xml-daily.ru/daily_json.js"
+CBR_KLYUCHEVAYA_STAVKA_XML = "https://www.cbr-xml-daily.ru/daily_json.js"
 
 KLYUCHEVYE_INDIKATORY = [
     {"kod": "klyuchevaya_stavka", "nazvanie": "Ключевая ставка ЦБ РФ"},
