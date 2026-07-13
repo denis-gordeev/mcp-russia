@@ -14,27 +14,27 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 from . import client
 
 
-async def spisok_napravleniy(ctx: Context) -> str:
+async def spisok_napravleniy(kontekst: Context) -> str:
     """Получить список направлений контрольной деятельности Счётной палаты."""
-    await ctx.info("Запрос списка направлений контроля...")
+    await kontekst.info("Запрос списка направлений контроля...")
     napravleniya = client.poluchit_spisok_napravleniy()
     stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in napravleniya]
     zagolovok = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
-async def spisok_tipov_meropriyatiy(ctx: Context) -> str:
+async def spisok_tipov_meropriyatiy(kontekst: Context) -> str:
     """Получить список типов контрольных мероприятий."""
-    await ctx.info("Запрос списка типов мероприятий...")
+    await kontekst.info("Запрос списка типов мероприятий...")
     tipy = client.poluchit_spisok_tipov_meropriyatiy()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     zagolovok = "**Типы контрольных мероприятий**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy)
 
 
-async def spisok_subiektov_audita(ctx: Context) -> str:
+async def spisok_subiektov_audita(kontekst: Context) -> str:
     """Получить список субъектов внешнего государственного аудита."""
-    await ctx.info("Запрос списка субъектов аудита...")
+    await kontekst.info("Запрос списка субъектов аудита...")
     subiekty = client.poluchit_spisok_subiektov_audita()
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in subiekty]
     zagolovok = "**Субъекты внешнего государственного аудита**\n\n"
@@ -42,7 +42,7 @@ async def spisok_subiektov_audita(ctx: Context) -> str:
 
 
 async def poisk_kontrolnyh_meropriyatiy(
-    ctx: Context,
+    kontekst: Context,
     napravlenie: str = "",
     sostoyanie: str = "",
     god: int = 0,
@@ -57,7 +57,7 @@ async def poisk_kontrolnyh_meropriyatiy(
     Возвращает:
         Список контрольных мероприятий.
     """
-    await ctx.info("Поиск контрольных мероприятий...")
+    await kontekst.info("Поиск контрольных мероприятий...")
     meropriyatiya = await client.poisk_kontrolnyh_meropriyatiy(
         napravlenie=napravlenie,
         sostoyanie=sostoyanie,
@@ -84,7 +84,7 @@ async def poisk_kontrolnyh_meropriyatiy(
     )
 
 
-async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
+async def info_kontrolnogo_meropriyatiya(nomer: str, kontekst: Context) -> str:
     """Получить информацию о контрольном мероприятии по номеру.
 
     Аргументы:
@@ -93,7 +93,7 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
     Возвращает:
         Информация о мероприятии.
     """
-    await ctx.info(f"Запрос информации о контрольном мероприятии {nomer}...")
+    await kontekst.info(f"Запрос информации о контрольном мероприятии {nomer}...")
     dannye = await client.poluchit_kontrolnoe_meropriyatie(nomer)
     if not dannye:
         return (
@@ -119,7 +119,7 @@ async def info_kontrolnogo_meropriyatiya(nomer: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
+async def info_auditorskogo_zaklyucheniya(nomer: str, kontekst: Context) -> str:
     """Получить аудиторское заключение по номеру.
 
     Аргументы:
@@ -128,7 +128,7 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
     Возвращает:
         Информация о заключении.
     """
-    await ctx.info(f"Запрос аудиторского заключения {nomer}...")
+    await kontekst.info(f"Запрос аудиторского заключения {nomer}...")
     dannye = await client.poluchit_auditorskoe_zaklyuchenie(nomer)
     if not dannye:
         return (
@@ -155,7 +155,7 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
+async def ispolnenie_byudzheta(kontekst: Context, period: str = "") -> str:
     """Получить данные об исполнении федерального бюджета.
 
     Аргументы:
@@ -164,7 +164,7 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
     Возвращает:
         Данные об исполнении бюджета.
     """
-    await ctx.info("Запрос данных об исполнении бюджета...")
+    await kontekst.info("Запрос данных об исполнении бюджета...")
     dannye = await client.poluchit_byudzhet_ispolnenie(period)
     if not dannye:
         period_tekst = f" за период {period}" if period else ""
@@ -186,7 +186,7 @@ async def ispolnenie_byudzheta(ctx: Context, period: str = "") -> str:
 
 
 async def poisk_narusheniy(
-    ctx: Context,
+    kontekst: Context,
     organizaciya: str = "",
     tip: str = "",
     god: int = 0,
@@ -201,7 +201,7 @@ async def poisk_narusheniy(
     Возвращает:
         Список выявленных нарушений.
     """
-    await ctx.info("Поиск нарушений...")
+    await kontekst.info("Поиск нарушений...")
     narusheniya = await client.poisk_narusheniy(
         organizaciya=organizaciya,
         tip=tip,

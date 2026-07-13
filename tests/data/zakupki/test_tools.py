@@ -9,10 +9,10 @@ from mcp_russia.data.zakupki.schemas import Kontrakt, Zakupka
 
 def _maket_konteksta():
     """Создать мок контекста."""
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 # --- Тесты парсера ---
@@ -82,14 +82,14 @@ def test_bezopasnoe_veshchestvennoe():
 
 
 async def test_poisk_zakupok_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
-        rezultat = await zakupki_tools.poisk_zakupok(ctx=ctx)
+        rezultat = await zakupki_tools.poisk_zakupok(kontekst=kontekst)
     assert "ЕИС" in rezultat or "zakupki.gov.ru" in rezultat
 
 
 async def test_poisk_zakupok_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     zakupki = [
         Zakupka(
             identifikator="1",
@@ -105,16 +105,16 @@ async def test_poisk_zakupok_s_dannymi():
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=zakupki):
-        rezultat = await zakupki_tools.poisk_zakupok(zapros="компьютеры", ctx=ctx)
+        rezultat = await zakupki_tools.poisk_zakupok(zapros="компьютеры", kontekst=kontekst)
     assert "0123400000125000001" in rezultat
     assert "44-ФЗ" in rezultat
 
 
 async def test_poisk_zakupok_s_filtrami():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_zakupok", return_value=[]):
         rezultat = await zakupki_tools.poisk_zakupok(
-            zapros="компьютеры", zakon="44-ФЗ", subiekt="Москва", ctx=ctx
+            zapros="компьютеры", zakon="44-ФЗ", subiekt="Москва", kontekst=kontekst
         )
     assert "компьютеры" in rezultat
     assert "44-ФЗ" in rezultat
@@ -122,14 +122,14 @@ async def test_poisk_zakupok_s_filtrami():
 
 
 async def test_info_zakupki_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=None):
-        rezultat = await zakupki_tools.info_zakupki("0000000001", ctx)
+        rezultat = await zakupki_tools.info_zakupki("0000000001", kontekst)
     assert "не найдена" in rezultat
 
 
 async def test_info_zakupki_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     zakupka = Zakupka(
         identifikator="1",
         nomer="0123400000125000001",
@@ -144,21 +144,21 @@ async def test_info_zakupki_nayden():
         organizator_inn="7700000000",
     )
     with patch.object(zakupki_tools.client, "poluchit_zakupku", return_value=zakupka):
-        rezultat = await zakupki_tools.info_zakupki("0123400000125000001", ctx)
+        rezultat = await zakupki_tools.info_zakupki("0123400000125000001", kontekst)
     assert "0123400000125000001" in rezultat
     assert "44-ФЗ" in rezultat
     assert "Срок подачи" in rezultat
 
 
 async def test_poisk_kontraktov_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=[]):
-        rezultat = await zakupki_tools.poisk_kontraktov(ctx=ctx)
+        rezultat = await zakupki_tools.poisk_kontraktov(kontekst=kontekst)
     assert "контракт" in rezultat.lower() or "ЕИС" in rezultat
 
 
 async def test_poisk_kontraktov_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     kontrakty = [
         Kontrakt(
             identifikator="1",
@@ -172,42 +172,44 @@ async def test_poisk_kontraktov_s_dannymi():
         )
     ]
     with patch.object(zakupki_tools.client, "poisk_kontraktov", return_value=kontrakty):
-        rezultat = await zakupki_tools.poisk_kontraktov(inn_postavshchika="7700000001", ctx=ctx)
+        rezultat = await zakupki_tools.poisk_kontraktov(
+            inn_postavshchika="7700000001", kontekst=kontekst
+        )
     assert "ООО Ромашка" in rezultat
 
 
 async def test_info_zakazchika_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_zakazchika", return_value=None):
-        rezultat = await zakupki_tools.info_zakazchika("0000000000", ctx)
+        rezultat = await zakupki_tools.info_zakazchika("0000000000", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_info_postavshchika_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "info_postavshchika", return_value=None):
-        rezultat = await zakupki_tools.info_postavshchika("0000000000", ctx)
+        rezultat = await zakupki_tools.info_postavshchika("0000000000", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_statusy_zakupok():
-    ctx = _maket_konteksta()
-    rezultat = await zakupki_tools.statusy_zakupok(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await zakupki_tools.statusy_zakupok(kontekst)
     assert "Статусы" in rezultat
     assert "Планирование" in rezultat
 
 
 async def test_sposoby_zakupok():
-    ctx = _maket_konteksta()
-    rezultat = await zakupki_tools.sposoby_zakupok(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await zakupki_tools.sposoby_zakupok(kontekst)
     assert "Способы" in rezultat
     assert "Электронный аукцион" in rezultat
 
 
 async def test_plany_zakupok_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(zakupki_tools.client, "plany_zakupok", return_value=[]):
-        rezultat = await zakupki_tools.plany_zakupok(god=2025, ctx=ctx)
+        rezultat = await zakupki_tools.plany_zakupok(god=2025, kontekst=kontekst)
     assert "2025" in rezultat
     assert "Планы-графики" in rezultat
 
@@ -218,5 +220,5 @@ async def test_zametka_ob_aut_bez_tokena():
 
 
 async def test_zametka_ob_aut_s_tokenom():
-    with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value="secret"):
+    with patch.object(zakupki_tools.client, "_poluchit_api_token", return_value="taynyy_klyuch"):
         assert zakupki_tools._zametka_ob_avtorizatsii() == ""

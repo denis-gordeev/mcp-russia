@@ -19,7 +19,7 @@ from .constants import (
 _ISTOCHNIK = "\n\n_Источник: ФССП России (fssp.gov.ru)_"
 
 
-async def spisok_vidov_proizvodstv(ctx: Context) -> str:
+async def spisok_vidov_proizvodstv(kontekst: Context) -> str:
     """Список видов исполнительных производств.
 
     Возвращает:
@@ -29,7 +29,7 @@ async def spisok_vidov_proizvodstv(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Вид производства"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def spisok_statusov_proizvodstva(ctx: Context) -> str:
+async def spisok_statusov_proizvodstva(kontekst: Context) -> str:
     """Список статусов исполнительного производства.
 
     Возвращает:
@@ -39,7 +39,7 @@ async def spisok_statusov_proizvodstva(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def spisok_ogranicheniy(ctx: Context) -> str:
+async def spisok_ogranicheniy(kontekst: Context) -> str:
     """Список видов ограничений, налагаемых судебными приставами.
 
     Возвращает:
@@ -49,7 +49,7 @@ async def spisok_ogranicheniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Ограничение"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
+async def spisok_kategoriy_dolzhnikov(kontekst: Context) -> str:
     """Список категорий должников.
 
     Возвращает:
@@ -59,7 +59,7 @@ async def spisok_kategoriy_dolzhnikov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
+async def spisok_osnovaniy_vozbuzhdeniya(kontekst: Context) -> str:
     """Список оснований возбуждения исполнительного производства.
 
     Возвращает:
@@ -69,7 +69,7 @@ async def spisok_osnovaniy_vozbuzhdeniya(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Основание"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def spisok_regionov(ctx: Context) -> str:
+async def spisok_regionov(kontekst: Context) -> str:
     """Список кодов регионов для поиска в Банке данных ФССП.
 
     Возвращает:
@@ -82,7 +82,7 @@ async def spisok_regionov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ISTOCHNIK
 
 
-async def info_proizvodstva(ctx: Context, nomer: str) -> str:
+async def info_proizvodstva(kontekst: Context, nomer: str) -> str:
     """Подробная информация об исполнительном производстве.
 
     Аргументы:
@@ -112,7 +112,7 @@ async def info_proizvodstva(ctx: Context, nomer: str) -> str:
 
 
 async def poisk_dolzhnika(
-    ctx: Context,
+    kontekst: Context,
     fio: str,
     data_rozhdeniya: str = "",
     subiekt: str = "",
@@ -152,7 +152,7 @@ async def poisk_dolzhnika(
 
 
 async def ogranicheniya_dolzhnika(
-    ctx: Context,
+    kontekst: Context,
     fio: str,
     data_rozhdeniya: str = "",
 ) -> str:
@@ -187,7 +187,7 @@ async def ogranicheniya_dolzhnika(
     )
 
 
-async def rozysk_dolzhnika(ctx: Context, fio: str) -> str:
+async def rozysk_dolzhnika(kontekst: Context, fio: str) -> str:
     """Сведения о розыске должника или имущества.
 
     Аргументы:

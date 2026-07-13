@@ -25,7 +25,7 @@ from . import client
 from .constants import NALOGOVYE_STAVKI, OSNOVNYE_BANKI
 
 
-async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
+async def konsul_adres_po_indeksu(indeks: str, kontekst: Context) -> str:
     """Найти адрес по почтовому индексу РФ.
 
     Аргументы:
@@ -34,7 +34,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
     Возвращает:
         Адресная информация или сообщение об ошибке.
     """
-    await ctx.info(f"Поиск адреса по индексу {indeks}...")
+    await kontekst.info(f"Поиск адреса по индексу {indeks}...")
     rezultat = await client.konsultirovat_adres_po_pochtovomu(indeks)
 
     if isinstance(rezultat, dict) and "oshibka" in rezultat:
@@ -62,7 +62,7 @@ async def konsul_adres_po_indeksu(indeks: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def poisk_adresa(zapros: str, ctx: Context) -> str:
+async def poisk_adresa(zapros: str, kontekst: Context) -> str:
     """Найти адрес по свободному запросу через ФИАС.
 
     Аргументы:
@@ -71,7 +71,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
     Возвращает:
         Список найденных адресов.
     """
-    await ctx.info(f"Поиск адреса: {zapros}...")
+    await kontekst.info(f"Поиск адреса: {zapros}...")
     rezultaty = await client.poisk_adresa(zapros)
 
     if not rezultaty:
@@ -95,7 +95,7 @@ async def poisk_adresa(zapros: str, ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
 
 
-async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
+async def poisk_org_po_inn(inn: str, kontekst: Context) -> str:
     """Найти организацию по ИНН.
 
     Аргументы:
@@ -104,7 +104,7 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
     Возвращает:
         Данные организации.
     """
-    await ctx.info(f"Поиск организации по ИНН {inn}...")
+    await kontekst.info(f"Поиск организации по ИНН {inn}...")
     rezultat = await client.nayti_organizatsiyu_po_inn(inn)
 
     if isinstance(rezultat, dict) and "oshibka" in rezultat:
@@ -142,7 +142,7 @@ async def poisk_org_po_inn(inn: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
+async def poisk_org_po_ogrn(ogrn: str, kontekst: Context) -> str:
     """Найти организацию по ОГРН.
 
     Аргументы:
@@ -151,7 +151,7 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     Возвращает:
         Данные организации.
     """
-    await ctx.info(f"Поиск организации по ОГРН {ogrn}...")
+    await kontekst.info(f"Поиск организации по ОГРН {ogrn}...")
     rezultat = await client.nayti_organizatsiyu_po_ogrn(ogrn)
 
     if isinstance(rezultat, dict) and "oshibka" in rezultat:
@@ -172,13 +172,13 @@ async def poisk_org_po_ogrn(ogrn: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_bankov(ctx: Context) -> str:
+async def spisok_bankov(kontekst: Context) -> str:
     """Получить справочник банков России.
 
     Возвращает:
         Список банков с БИК и названиями.
     """
-    await ctx.info("Запрос справочника банков...")
+    await kontekst.info("Запрос справочника банков...")
 
     stroki_tablitsy = []
     for bank in OSNOVNYE_BANKI:
@@ -197,7 +197,7 @@ async def spisok_bankov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["БИК", "Название"], stroki_tablitsy)
 
 
-async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
+async def konsul_bank_po_bik(bik: str, kontekst: Context) -> str:
     """Получить информацию о банке по БИК.
 
     Аргументы:
@@ -206,7 +206,7 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     Возвращает:
         Данные банка.
     """
-    await ctx.info(f"Поиск банка по БИК {bik}...")
+    await kontekst.info(f"Поиск банка по БИК {bik}...")
 
     rezultat = await client.nayti_bank_po_bik(bik)
 
@@ -245,7 +245,7 @@ async def konsul_bank_po_bik(bik: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> str:
+async def prazdniki_rf(god: int | None = None, kontekst: Context | None = None) -> str:
     """Получить список национальных праздников РФ.
 
     Аргументы:
@@ -257,7 +257,7 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
     if god is None:
         god = datetime.now().year
 
-    await ctx.info(f"Запрос праздников на {god} год...")
+    await kontekst.info(f"Запрос праздников на {god} год...")
     prazdniki = client.poluchit_prazdniki(god)
 
     stroki_tablitsy = []
@@ -269,13 +269,13 @@ async def prazdniki_rf(god: int | None = None, ctx: Context | None = None) -> st
     return zagolovok + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)
 
 
-async def nalogovye_stavki(ctx: Context) -> str:
+async def nalogovye_stavki(kontekst: Context) -> str:
     """Получить основные налоговые ставки РФ.
 
     Возвращает:
         Справочная информация о налогах.
     """
-    await ctx.info("Запрос налоговых ставок...")
+    await kontekst.info("Запрос налоговых ставок...")
 
     stavki_info = {
         "NDS": "20% (базовая), 10% (льготная), 0% (экспорт)",

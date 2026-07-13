@@ -108,7 +108,7 @@ def spisok_funktsiy() -> str:
 
 
 @mcp.tool(tags={"meta", "discovery"})
-async def rekomendovat_instrumenty(zapros: str, ctx: Context) -> str:
+async def rekomendovat_instrumenty(zapros: str, kontekst: Context) -> str:
     """Рекомендует релевантные инструменты по запросу на естественном языке.
 
     Использует ИИ для понимания намерения и подбора наиболее подходящих
@@ -120,13 +120,13 @@ async def rekomendovat_instrumenty(zapros: str, ctx: Context) -> str:
     """
     from ._shared.discovery import postroit_katalog, rekomendovat_instrumenty_impl
 
-    await ctx.info(f"Поиск рекомендаций для: {zapros}")
+    await kontekst.info(f"Поиск рекомендаций для: {zapros}")
     katalog = postroit_katalog(reyestr)
     return await rekomendovat_instrumenty_impl(zapros, katalog)
 
 
 @mcp.tool(tags={"meta", "discovery", "планирование"})
-async def splanirovat_zapros(zapros: str, ctx: Context) -> str:
+async def splanirovat_zapros(zapros: str, kontekst: Context) -> str:
     """Создаёт план выполнения для сложных запросов.
 
     Анализирует вопрос, определяет, какие инструменты использовать,
@@ -140,13 +140,13 @@ async def splanirovat_zapros(zapros: str, ctx: Context) -> str:
     from ._shared.discovery import postroit_katalog
     from ._shared.planner import splanirovat_zapros_impl
 
-    await ctx.info(f"Планирование запроса: {zapros}")
+    await kontekst.info(f"Планирование запроса: {zapros}")
     katalog = postroit_katalog(reyestr)
     return await splanirovat_zapros_impl(zapros, katalog)
 
 
 @mcp.tool(tags={"meta", "batch"})
-async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
+async def vypolnit_paket(zaprosy: list[dict[str, object]], kontekst: Context) -> str:
     """Выполняет несколько инструментов за один вызов, параллельно.
 
     Используйте для ускорения, когда нужны данные из нескольких источников
@@ -167,8 +167,8 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], ctx: Context) -> str:
                     "argumenty": {}}
                  ]
     """
-    await ctx.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
-    return await vypolnit_paket_vnutrenniy(zaprosy, ctx)
+    await kontekst.info(f"Выполнение пакета из {len(zaprosy)} запрос(ов)...")
+    return await vypolnit_paket_vnutrenniy(zaprosy, kontekst)
 
 
 # ---------------------------------------------------------------------------

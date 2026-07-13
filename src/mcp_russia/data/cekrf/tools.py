@@ -19,7 +19,7 @@ from . import client
 _ISTOCHNIK = "ЦИК РФ / ГАС «Выборы» (vybory.izbirkom.ru)"
 
 
-async def tipy_vyborov(ctx: Context) -> str:
+async def tipy_vyborov(kontekst: Context) -> str:
     """Получить список типов выборов в РФ.
 
     Включает: выборы Президента, Госдумы, губернаторов,
@@ -28,7 +28,7 @@ async def tipy_vyborov(ctx: Context) -> str:
     Возвращает:
         Таблица с типами выборов.
     """
-    await ctx.info("Запрос типов выборов ЦИК РФ...")
+    await kontekst.info("Запрос типов выборов ЦИК РФ...")
     tipy = await client.tipy_vyborov()
 
     stroki_tablitsy = [(str(t.kod), t.nazvanie) for t in tipy]
@@ -36,7 +36,7 @@ async def tipy_vyborov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
 
 
-async def subyekty_rf(ctx: Context) -> str:
+async def subyekty_rf(kontekst: Context) -> str:
     """Получить справочник субъектов Российской Федерации.
 
     Включает все 89 субъектов РФ (85 + 4 новых).
@@ -44,7 +44,7 @@ async def subyekty_rf(ctx: Context) -> str:
     Возвращает:
         Таблица с субъектами РФ.
     """
-    await ctx.info("Запрос справочника субъектов РФ...")
+    await kontekst.info("Запрос справочника субъектов РФ...")
     subyekty = await client.subyekty_rf()
 
     stroki_tablitsy = [(s.kod, s.nazvanie) for s in subyekty]
@@ -52,7 +52,7 @@ async def subyekty_rf(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 
 
-async def dolzhnosti_federal(ctx: Context) -> str:
+async def dolzhnosti_federal(kontekst: Context) -> str:
     """Получить список федеральных избирательных должностей.
 
     Включает: Президент РФ, депутат Госдумы (фед. округ),
@@ -61,7 +61,7 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     Возвращает:
         Таблица с должностями.
     """
-    await ctx.info("Запрос федеральных избирательных должностей...")
+    await kontekst.info("Запрос федеральных избирательных должностей...")
     dolzhnosti = await client.dolzhnosti_federal()
 
     stroki_tablitsy = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
@@ -69,13 +69,13 @@ async def dolzhnosti_federal(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Должность", "Уровень"], stroki_tablitsy)
 
 
-async def partii_rf(ctx: Context) -> str:
+async def partii_rf(kontekst: Context) -> str:
     """Получить справочник основных политических партий РФ.
 
     Возвращает:
         Таблица с партиями.
     """
-    await ctx.info("Запрос справочника партий РФ...")
+    await kontekst.info("Запрос справочника партий РФ...")
     partii = await client.partii_rf()
 
     stroki_tablitsy = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
@@ -83,13 +83,13 @@ async def partii_rf(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], stroki_tablitsy)
 
 
-async def gody_vyborov(ctx: Context) -> str:
+async def gody_vyborov(kontekst: Context) -> str:
     """Получить список годов основных федеральных выборов.
 
     Возвращает:
         Список годов выборов.
     """
-    await ctx.info("Запрос годов выборов...")
+    await kontekst.info("Запрос годов выборов...")
     gody = await client.gody_vyborov()
 
     stroki = ["**Годы федеральных выборов в РФ**\n"]
@@ -99,7 +99,7 @@ async def gody_vyborov(ctx: Context) -> str:
 
 
 async def spisok_vyborov(
-    ctx: Context,
+    kontekst: Context,
     god: int | None = None,
     tip: int | None = None,
     subiekt: int | None = None,
@@ -114,7 +114,7 @@ async def spisok_vyborov(
     Возвращает:
         Таблица с выборами.
     """
-    await ctx.info("Запрос списка выборов...")
+    await kontekst.info("Запрос списка выборов...")
     vybory = await client.spisok_vyborov(god=god, tip=tip, subiekt=subiekt)
 
     if not vybory:
@@ -130,7 +130,7 @@ async def spisok_vyborov(
     )
 
 
-async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str:
+async def poisk_kandidata(fio: str, kontekst: Context, god: int | None = None) -> str:
     """Поиск кандидата по ФИО в базе ЦИК РФ.
 
     Аргументы:
@@ -140,7 +140,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
     Возвращает:
         Результаты поиска.
     """
-    await ctx.info(f"Поиск кандидата: '{fio}'...")
+    await kontekst.info(f"Поиск кандидата: '{fio}'...")
     kandidaty = await client.poisk_kandidata(fio, god=god)
 
     if not kandidaty:
@@ -157,7 +157,7 @@ async def poisk_kandidata(fio: str, ctx: Context, god: int | None = None) -> str
 
 
 async def kandidat_podrobno(
-    kandidat_identifikator: str, ctx: Context, god: int | None = None
+    kandidat_identifikator: str, kontekst: Context, god: int | None = None
 ) -> str:
     """Получить подробную информацию о кандидате.
 
@@ -171,7 +171,7 @@ async def kandidat_podrobno(
     Возвращает:
         Подробная карточка кандидата.
     """
-    await ctx.info(f"Запрос подробной информации о кандидате {kandidat_identifikator}...")
+    await kontekst.info(f"Запрос подробной информации о кандидате {kandidat_identifikator}...")
     kandidat = await client.kandidat_podrobno(kandidat_identifikator, god=god)
 
     if not kandidat:
@@ -205,7 +205,7 @@ async def kandidat_podrobno(
 
 
 async def rezultaty_vyborov(
-    ctx: Context,
+    kontekst: Context,
     god: int,
     tip: int | None = None,
     subiekt: str | None = None,
@@ -220,7 +220,7 @@ async def rezultaty_vyborov(
     Возвращает:
         Таблица с результатами кандидатов.
     """
-    await ctx.info(f"Запрос результатов выборов {god}...")
+    await kontekst.info(f"Запрос результатов выборов {god}...")
     rezultaty = await client.rezultaty_vyborov(god, tip=tip, subiekt=subiekt)
 
     if not rezultaty:
@@ -244,7 +244,7 @@ async def rezultaty_vyborov(
 
 
 async def yavka_i_itogi(
-    ctx: Context,
+    kontekst: Context,
     god: int,
     tip: int | None = None,
     subiekt: str | None = None,
@@ -259,7 +259,7 @@ async def yavka_i_itogi(
     Возвращает:
         Сводка по явке и итогам.
     """
-    await ctx.info(f"Запрос явки и итогов выборов {god}...")
+    await kontekst.info(f"Запрос явки и итогов выборов {god}...")
     itogi = await client.yavka_i_itogi(god, tip=tip, subiekt=subiekt)
 
     stroki = [

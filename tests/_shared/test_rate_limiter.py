@@ -45,8 +45,8 @@ class TestOgranichitelChastoty:
     @pytest.mark.asyncio
     async def test_protokol_menedzhera_konteksta(self) -> None:
         ogranichitel = OgranichitelChastoty(maks_zaprosov=10, period=60.0)
-        async with ogranichitel as ctx:
-            assert ctx is ogranichitel
+        async with ogranichitel as kontekst:
+            assert kontekst is ogranichitel
 
     @pytest.mark.asyncio
     async def test_ochistka_udalyaet_starye_metki(self) -> None:

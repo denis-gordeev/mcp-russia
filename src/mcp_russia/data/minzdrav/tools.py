@@ -15,7 +15,7 @@ from . import client
 
 
 async def poisk_med_organizatsiy(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     tip: str = "",
     gorod: str = "",
@@ -30,7 +30,7 @@ async def poisk_med_organizatsiy(
     Возвращает:
         Список медицинских организаций.
     """
-    await ctx.info(f"Поиск медицинских организаций: {subiekt or 'все'}...")
+    await kontekst.info(f"Поиск медицинских организаций: {subiekt or 'все'}...")
     organizatsii = await client.poisk_med_organizatsiy(
         subiekt=subiekt,
         tip=tip,
@@ -59,7 +59,7 @@ async def poisk_med_organizatsiy(
 
 
 async def info_med_organizatsii(
-    ctx: Context,
+    kontekst: Context,
     identifikator_mo: str,
 ) -> str:
     """Получить информацию о конкретной медицинской организации.
@@ -70,7 +70,7 @@ async def info_med_organizatsii(
     Возвращает:
         Подробная информация о медицинской организации.
     """
-    await ctx.info(f"Запрос информации о МО {identifikator_mo}...")
+    await kontekst.info(f"Запрос информации о МО {identifikator_mo}...")
     mo = await client.info_med_organizatsii(identifikator_mo)
 
     if not mo:
@@ -95,7 +95,7 @@ async def info_med_organizatsii(
 
 
 async def poisk_litsenziy(
-    ctx: Context,
+    kontekst: Context,
     inn: str = "",
     vid: str = "",
     sostoyanie: str = "",
@@ -110,7 +110,7 @@ async def poisk_litsenziy(
     Возвращает:
         Список лицензий.
     """
-    await ctx.info("Поиск лицензий Росздравнадзора...")
+    await kontekst.info("Поиск лицензий Росздравнадзора...")
     litsenzii = await client.poisk_litsenziy(inn=inn, vid=vid, sostoyanie=sostoyanie)
     if not litsenzii:
         return (
@@ -134,7 +134,7 @@ async def poisk_litsenziy(
 
 
 async def pokazateli_zdorovya(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     god: int = 0,
 ) -> str:
@@ -147,7 +147,7 @@ async def pokazateli_zdorovya(
     Возвращает:
         Показатели здоровья населения.
     """
-    await ctx.info(f"Запрос показателей здоровья: {subiekt or 'РФ'}, {god or 'последние'}...")
+    await kontekst.info(f"Запрос показателей здоровья: {subiekt or 'РФ'}, {god or 'последние'}...")
     dannye = await client.pokazateli_zdorovya(subiekt=subiekt, god=god)
     if not dannye:
         return (
@@ -173,7 +173,7 @@ async def pokazateli_zdorovya(
 
 
 async def statistika_zabolevaniy(
-    ctx: Context,
+    kontekst: Context,
     kod_mkb: str = "",
     subiekt: str = "",
     god: int = 0,
@@ -188,7 +188,9 @@ async def statistika_zabolevaniy(
     Возвращает:
         Статистика заболеваний.
     """
-    await ctx.info(f"Запрос статистики заболеваний: {kod_mkb or 'все'}, {god or 'последние'}...")
+    await kontekst.info(
+        f"Запрос статистики заболеваний: {kod_mkb or 'все'}, {god or 'последние'}..."
+    )
     dannye = await client.statistika_zabolevaniy(kod_mkb=kod_mkb, subiekt=subiekt, god=god)
     if not dannye:
         zagolovok = "**Статистика заболеваний**\n\n"
@@ -217,39 +219,39 @@ async def statistika_zabolevaniy(
     )
 
 
-async def spravochnik_mo(ctx: Context) -> str:
+async def spravochnik_mo(kontekst: Context) -> str:
     """Получить справочник типов медицинских организаций.
 
     Возвращает:
         Справочник типов МО.
     """
-    await ctx.info("Запрос справочника типов медицинских организаций...")
+    await kontekst.info("Запрос справочника типов медицинских организаций...")
     tipy = client.poluchit_tipy_mo()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     zagolovok = "**Типы медицинских организаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип организации"], stroki_tablitsy)
 
 
-async def spravochnik_spetsialnostey(ctx: Context) -> str:
+async def spravochnik_spetsialnostey(kontekst: Context) -> str:
     """Получить справочник врачебных специальностей.
 
     Возвращает:
         Справочник специальностей.
     """
-    await ctx.info("Запрос справочника врачебных специальностей...")
+    await kontekst.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.poluchit_spetsialnosti()
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
     zagolovok = "**Врачебные специальности**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Специальность"], stroki_tablitsy)
 
 
-async def spravochnik_mkb10(ctx: Context) -> str:
+async def spravochnik_mkb10(kontekst: Context) -> str:
     """Получить основные классы МКБ-10.
 
     Возвращает:
         Классы МКБ-10.
     """
-    await ctx.info("Запрос справочника МКБ-10...")
+    await kontekst.info("Запрос справочника МКБ-10...")
     mkb_classes = client.poluchit_klassy_mkb10()
     stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
     zagolovok = "**Классы МКБ-10**\n\n"

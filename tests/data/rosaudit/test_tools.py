@@ -6,42 +6,42 @@ from mcp_russia.data.rosaudit import tools as rosaudit_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_napravleniy():
-    ctx = _maket_konteksta()
-    rezultat = await rosaudit_tools.spisok_napravleniy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosaudit_tools.spisok_napravleniy(kontekst)
     assert "Направления контрольной деятельности" in rezultat
     assert "бюджет" in rezultat.lower()
 
 
 async def test_spisok_tipov_meropriyatiy():
-    ctx = _maket_konteksta()
-    rezultat = await rosaudit_tools.spisok_tipov_meropriyatiy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosaudit_tools.spisok_tipov_meropriyatiy(kontekst)
     assert "Типы контрольных мероприятий" in rezultat
     assert "Проверка" in rezultat
 
 
 async def test_spisok_subiektov_audita():
-    ctx = _maket_konteksta()
-    rezultat = await rosaudit_tools.spisok_subiektov_audita(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosaudit_tools.spisok_subiektov_audita(kontekst)
     assert "Субъекты" in rezultat
     assert "Федеральные" in rezultat
 
 
 async def test_poisk_kontrolnyh_meropriyatiy_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_kontrolnyh_meropriyatiy", return_value=[]):
-        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx)
+        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(kontekst)
     assert "не найдены" in rezultat
 
 
 async def test_poisk_kontrolnyh_meropriyatiy_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "КМ-2026-001",
@@ -54,23 +54,23 @@ async def test_poisk_kontrolnyh_meropriyatiy_nayden():
     with patch.object(
         rosaudit_tools.client, "poisk_kontrolnyh_meropriyatiy", return_value=maket_dannykh
     ):
-        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(ctx, god=2026)
+        rezultat = await rosaudit_tools.poisk_kontrolnyh_meropriyatiy(kontekst, god=2026)
     assert "КМ-2026-001" in rezultat
 
 
 async def test_info_kontrolnogo_meropriyatiya_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=None
     ):
         rezultat = await rosaudit_tools.info_kontrolnogo_meropriyatiya(
-            "nesushchestvuyushchiy", ctx
+            "nesushchestvuyushchiy", kontekst
         )
     assert "не найдено" in rezultat
 
 
 async def test_info_kontrolnogo_meropriyatiya_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "nomer": "КМ-2026-001",
         "nazvanie": "Проверка исполнения бюджета",
@@ -84,24 +84,24 @@ async def test_info_kontrolnogo_meropriyatiya_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_kontrolnoe_meropriyatie", return_value=maket_dannykh
     ):
-        rezultat = await rosaudit_tools.info_kontrolnogo_meropriyatiya("КМ-2026-001", ctx)
+        rezultat = await rosaudit_tools.info_kontrolnogo_meropriyatiya("КМ-2026-001", kontekst)
     assert "Проверка исполнения бюджета" in rezultat
     assert "2026-01-15" in rezultat
 
 
 async def test_info_auditorskogo_zaklyucheniya_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=None
     ):
         rezultat = await rosaudit_tools.info_auditorskogo_zaklyucheniya(
-            "nesushchestvuyushchiy", ctx
+            "nesushchestvuyushchiy", kontekst
         )
     assert "не найдено" in rezultat
 
 
 async def test_info_auditorskogo_zaklyucheniya_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "nomer": "АЗ-2026-001",
         "nazvanie": "Заключение по проверке Минфина",
@@ -114,20 +114,20 @@ async def test_info_auditorskogo_zaklyucheniya_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_auditorskoe_zaklyuchenie", return_value=maket_dannykh
     ):
-        rezultat = await rosaudit_tools.info_auditorskogo_zaklyucheniya("АЗ-2026-001", ctx)
+        rezultat = await rosaudit_tools.info_auditorskogo_zaklyucheniya("АЗ-2026-001", kontekst)
     assert "Заключение" in rezultat
     assert "Минфин" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nedostupen():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=None):
-        rezultat = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2024")
+        rezultat = await rosaudit_tools.ispolnenie_byudzheta(kontekst, period="2024")
     assert "недоступны" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "period": "2025",
         "dohody": 28000.5,
@@ -137,20 +137,20 @@ async def test_ispolnenie_byudzheta_nayden():
     with patch.object(
         rosaudit_tools.client, "poluchit_byudzhet_ispolnenie", return_value=maket_dannykh
     ):
-        rezultat = await rosaudit_tools.ispolnenie_byudzheta(ctx, period="2025")
+        rezultat = await rosaudit_tools.ispolnenie_byudzheta(kontekst, period="2025")
     assert "2025" in rezultat
     assert "Доходы" in rezultat
 
 
 async def test_poisk_narusheniy_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=[]):
-        rezultat = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Тест")
+        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizaciya="Тест")
     assert "не найдены" in rezultat
 
 
 async def test_poisk_narusheniy_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "organizaciya": "Минобороны",
@@ -160,5 +160,5 @@ async def test_poisk_narusheniy_nayden():
         },
     ]
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=maket_dannykh):
-        rezultat = await rosaudit_tools.poisk_narusheniy(ctx, organizaciya="Минобороны")
+        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizaciya="Минобороны")
     assert "Минобороны" in rezultat

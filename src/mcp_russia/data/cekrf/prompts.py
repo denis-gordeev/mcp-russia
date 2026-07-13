@@ -6,7 +6,7 @@ from fastmcp import Context
 async def analiz_kandidata(
     fio: str,
     god: int,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Промпт для комплексного анализа кандидата.
 
@@ -17,7 +17,7 @@ async def analiz_kandidata(
     Аргументы:
         fio: ФИО кандидата.
         god: Год выборов.
-        ctx: Контекст MCP.
+        kontekst: Контекст MCP.
 
     Возвращает:
         Инструкции по анализу кандидата.
@@ -44,13 +44,13 @@ async def analiz_kandidata(
 
 async def sravnenie_partiy(
     god: int,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Промпт для сравнения результатов партий на выборах.
 
     Аргументы:
         god: Год выборов.
-        ctx: Контекст MCP.
+        kontekst: Контекст MCP.
 
     Возвращает:
         Инструкции по сравнению партий.

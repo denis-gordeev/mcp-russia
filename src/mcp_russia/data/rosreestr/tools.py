@@ -73,7 +73,7 @@ def spisok_form_sobstvennosti() -> list[dict]:
     return FormySobstvennosti
 
 
-async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
+async def info_obekta(kadastrovyy_nomer: str, kontekst: Context) -> str:
     """Подробная информация об объекте недвижимости по кадастровому номеру.
 
     Аргументы:
@@ -83,7 +83,7 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
     Возвращает:
         Сведения об объекте (тип, адрес, площадь, кадастровая стоимость, статус).
     """
-    await ctx.info(f"Запрос объекта {kadastrovyy_nomer}...")
+    await kontekst.info(f"Запрос объекта {kadastrovyy_nomer}...")
     obekt = await client.poluchit_obekt(kadastrovyy_nomer)
 
     if obekt is None:
@@ -128,7 +128,7 @@ async def info_obekta(kadastrovyy_nomer: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
+async def kadastrovaya_stoimost(kadastrovyy_nomer: str, kontekst: Context) -> str:
     """Кадастровая стоимость объекта недвижимости.
 
     Аргументы:
@@ -137,7 +137,7 @@ async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
     Возвращает:
         Кадастровая стоимость, дата определения, основание.
     """
-    await ctx.info(f"Запрос кадастровой стоимости {kadastrovyy_nomer}...")
+    await kontekst.info(f"Запрос кадастровой стоимости {kadastrovyy_nomer}...")
     rezultat = await client.poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer)
 
     if rezultat is None:
@@ -165,7 +165,7 @@ async def kadastrovaya_stoimost(kadastrovyy_nomer: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
+async def prava_na_obekt(kadastrovyy_nomer: str, kontekst: Context) -> str:
     """Сведения о зарегистрированных правах на объект.
 
     Аргументы:
@@ -174,7 +174,7 @@ async def prava_na_obekt(kadastrovyy_nomer: str, ctx: Context) -> str:
     Возвращает:
         Список зарегистрированных прав (собственность, аренда и т.д.).
     """
-    await ctx.info(f"Запрос прав на объект {kadastrovyy_nomer}...")
+    await kontekst.info(f"Запрос прав на объект {kadastrovyy_nomer}...")
     prava = await client.poluchit_prava(kadastrovyy_nomer)
 
     if not prava:

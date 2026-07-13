@@ -6,35 +6,35 @@ from mcp_russia.data.kaznacheistvo import tools as kaznacheistvo_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_vidov_byudzhetov():
-    ctx = _maket_konteksta()
-    rezultat = await kaznacheistvo_tools.spisok_vidov_byudzhetov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kaznacheistvo_tools.spisok_vidov_byudzhetov(kontekst)
     assert "бюджет" in rezultat.lower()
 
 
 async def test_spisok_kategoriy_raskhodov():
-    ctx = _maket_konteksta()
-    rezultat = await kaznacheistvo_tools.spisok_kategoriy_raskhodov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kaznacheistvo_tools.spisok_kategoriy_raskhodov(kontekst)
     assert "Образование" in rezultat or "Расходы" in rezultat
 
 
 async def test_ispolnenie_byudzheta_nedostupen():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=None
     ):
-        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx)
+        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_ispolnenie_byudzheta_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "period": "2025",
         "tip": "Федеральный бюджет",
@@ -45,19 +45,19 @@ async def test_ispolnenie_byudzheta_nayden():
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_ispolnenie_byudzheta", return_value=maket_dannykh
     ):
-        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(ctx, god=2025)
+        rezultat = await kaznacheistvo_tools.ispolnenie_byudzheta(kontekst, god=2025)
     assert "2025" in rezultat
 
 
 async def test_poisk_uchastnikov_bp_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=[]):
-        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx)
+        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_poisk_uchastnikov_bp_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "inn": "7707083893",
@@ -69,19 +69,19 @@ async def test_poisk_uchastnikov_bp_nayden():
     with patch.object(
         kaznacheistvo_tools.client, "poisk_uchastnikov_bp", return_value=maket_dannykh
     ):
-        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(ctx, inn="7707083893")
+        rezultat = await kaznacheistvo_tools.poisk_uchastnikov_bp(kontekst, inn="7707083893")
     assert "Минфин" in rezultat
 
 
 async def test_poisk_uchrezhdeniy_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kaznacheistvo_tools.client, "poisk_uchrezhdeniy", return_value=[]):
-        rezultat = await kaznacheistvo_tools.poisk_uchrezhdeniy(ctx)
+        rezultat = await kaznacheistvo_tools.poisk_uchrezhdeniy(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_mezhbyudzhetnye_transferty_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "vid": "Дотация",
@@ -94,5 +94,5 @@ async def test_mezhbyudzhetnye_transferty_nayden():
     with patch.object(
         kaznacheistvo_tools.client, "poluchit_mezhbyudzhetnye", return_value=maket_dannykh
     ):
-        rezultat = await kaznacheistvo_tools.mezhbyudzhetnye_transferty(ctx, god=2025)
+        rezultat = await kaznacheistvo_tools.mezhbyudzhetnye_transferty(kontekst, god=2025)
     assert "Татарстан" in rezultat

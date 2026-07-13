@@ -7,45 +7,45 @@ from mcp_russia.data.mchs import tools as mchs_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_vidov_chs():
-    ctx = _maket_konteksta()
-    rezultat = await mchs_tools.spisok_vidov_chs(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await mchs_tools.spisok_vidov_chs(kontekst)
     assert "техногенн" in rezultat.lower() or "природн" in rezultat.lower()
 
 
 async def test_spisok_klassov_chs():
-    ctx = _maket_konteksta()
-    rezultat = await mchs_tools.spisok_klassov_chs(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await mchs_tools.spisok_klassov_chs(kontekst)
     assert "локальн" in rezultat.lower() or "федеральн" in rezultat.lower()
 
 
 async def test_spisok_vidov_pojarov():
-    ctx = _maket_konteksta()
-    rezultat = await mchs_tools.spisok_vidov_pojarov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await mchs_tools.spisok_vidov_pojarov(kontekst)
     assert "пожар" in rezultat.lower()
 
 
 async def test_spisok_tipov_opasnosti():
-    ctx = _maket_konteksta()
-    rezultat = await mchs_tools.spisok_tipov_opasnosti(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await mchs_tools.spisok_tipov_opasnosti(kontekst)
     assert "радиац" in rezultat.lower() or "опасн" in rezultat.lower()
 
 
 async def test_statistika_pojarov_zapasnoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(mchs_tools.client, "statistika_pojarov", return_value=[]):
-        rezultat = await mchs_tools.statistika_pojarov(ctx)
+        rezultat = await mchs_tools.statistika_pojarov(kontekst)
     assert "356" in rezultat or "2023" in rezultat or "резервные данные" in rezultat
 
 
 async def test_statistika_pojarov_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "П-2026-001",
@@ -57,19 +57,19 @@ async def test_statistika_pojarov_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "statistika_pojarov", return_value=maket_dannykh):
-        rezultat = await mchs_tools.statistika_pojarov(ctx)
+        rezultat = await mchs_tools.statistika_pojarov(kontekst)
     assert "Московск" in rezultat
 
 
 async def test_poisk_chs_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(mchs_tools.client, "poisk_chs", return_value=[]):
-        rezultat = await mchs_tools.poisk_chs(ctx)
+        rezultat = await mchs_tools.poisk_chs(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_poisk_chs_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "ЧС-2026-001",
@@ -84,19 +84,19 @@ async def test_poisk_chs_nayden():
         },
     ]
     with patch.object(mchs_tools.client, "poisk_chs", return_value=maket_dannykh):
-        rezultat = await mchs_tools.poisk_chs(ctx)
+        rezultat = await mchs_tools.poisk_chs(kontekst)
     assert "Техногенн" in rezultat
 
 
 async def test_radiatsionnyy_monitoring_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=[]):
-        rezultat = await mchs_tools.radiatsionnyy_monitoring(ctx)
+        rezultat = await mchs_tools.radiatsionnyy_monitoring(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_radiatsionnyy_monitoring_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "stantsiya": "Москва-1",
@@ -108,19 +108,19 @@ async def test_radiatsionnyy_monitoring_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "radiatsionnyy_monitoring", return_value=maket_dannykh):
-        rezultat = await mchs_tools.radiatsionnyy_monitoring(ctx)
+        rezultat = await mchs_tools.radiatsionnyy_monitoring(kontekst)
     assert "Москва" in rezultat
 
 
 async def test_gidrologicheskaya_obstanovka_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=[]):
-        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
+        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_gidrologicheskaya_obstanovka_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "reka": "Амур",
@@ -134,19 +134,19 @@ async def test_gidrologicheskaya_obstanovka_s_dannymi():
     with patch.object(
         mchs_tools.client, "gidrologicheskaya_obstanovka", return_value=maket_dannykh
     ):
-        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(ctx)
+        rezultat = await mchs_tools.gidrologicheskaya_obstanovka(kontekst)
     assert "Амур" in rezultat
 
 
 async def test_preduprezhdeniya_chs_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=[]):
-        rezultat = await mchs_tools.preduprezhdeniya_chs(ctx)
+        rezultat = await mchs_tools.preduprezhdeniya_chs(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_preduprezhdeniya_chs_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "ПРД-2026-001",
@@ -158,7 +158,7 @@ async def test_preduprezhdeniya_chs_s_dannymi():
         },
     ]
     with patch.object(mchs_tools.client, "preduprezhdeniya_chs", return_value=maket_dannykh):
-        rezultat = await mchs_tools.preduprezhdeniya_chs(ctx)
+        rezultat = await mchs_tools.preduprezhdeniya_chs(kontekst)
     assert "гидролог" in rezultat.lower() or "Амур" in rezultat
 
 

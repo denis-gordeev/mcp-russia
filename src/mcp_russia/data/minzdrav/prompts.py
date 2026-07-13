@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_zdorovya_regiona(kontekst: str, ctx: Context) -> str:
+async def analiz_zdorovya_regiona(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ здоровья населения региона.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_zdorovya_regiona(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_med_organizatsiy(kontekst: str, ctx: Context) -> str:
+async def obzor_med_organizatsiy(kontekst: str, kontekst_mcp: Context) -> str:
     """Обзор медицинских организаций в регионе.
 
     Аргументы:

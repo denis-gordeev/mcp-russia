@@ -34,7 +34,7 @@ def _formatirovat_signaturu_instrumenta(
 
     chasti_parametra: list[str] = []
     for imya_param, skhema_param in svoystva.items():
-        if imya_param == "ctx":
+        if imya_param == "kontekst":
             continue
         tip_param = skhema_param.get("type", "any")
         neobyazatelen = "" if imya_param in obyazatelnye else "?"

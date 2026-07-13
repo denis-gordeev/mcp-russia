@@ -10,15 +10,15 @@ from fastmcp import Client
 try:
     from mcp_russia.data.rosapi.server import mcp
 
-    _IMPORT_NORMALNO = True
+    _IMPORT_NORMALNYY = True
 except ImportError:
-    _IMPORT_NORMALNO = False
+    _IMPORT_NORMALNYY = False
 
 
 @pytest.fixture
 def klient():
-    if not _IMPORT_NORMALNO:
-        pytest.skip("rosapi server import fails (UserMessage not available)")
+    if not _IMPORT_NORMALNYY:
+        pytest.skip("Импорт сервера rosapi не удался (UserMessage недоступен)")
     return Client(mcp)
 
 

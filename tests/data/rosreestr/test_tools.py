@@ -7,10 +7,10 @@ from mcp_russia.data.rosreestr.schemas import KadastrovayaStoimost, KadastrovyyO
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 def test_spisok_tipov_nedvizhimosti():
@@ -45,7 +45,7 @@ def test_spisok_form_sobstvennosti():
 
 
 async def test_info_obekta_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_obekt",
@@ -60,21 +60,21 @@ async def test_info_obekta_uspekh():
             kategoriya_zemel="Земли населённых пунктов",
         ),
     ):
-        rezultat = await rre_tools.info_obekta("77:01:0001001:1001", ctx)
+        rezultat = await rre_tools.info_obekta("77:01:0001001:1001", kontekst)
     assert "77:01:0001001:1001" in rezultat
     assert "Земельный участок" in rezultat
     assert "pkk.rosreestr.ru" in rezultat
 
 
 async def test_info_obekta_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_obekt", return_value=None):
-        rezultat = await rre_tools.info_obekta("00:00:0000000:000", ctx)
+        rezultat = await rre_tools.info_obekta("00:00:0000000:000", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_kadastrovaya_stoimost_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_kadastrovnuyu_stoimost",
@@ -86,21 +86,21 @@ async def test_kadastrovaya_stoimost_uspekh():
             osnovanie="Определена в порядке массовой оценки",
         ),
     ):
-        rezultat = await rre_tools.kadastrovaya_stoimost("77:01:0001001:1001", ctx)
+        rezultat = await rre_tools.kadastrovaya_stoimost("77:01:0001001:1001", kontekst)
     assert "77:01:0001001:1001" in rezultat
     assert "5" in rezultat
     assert "pkk.rosreestr.ru" in rezultat
 
 
 async def test_kadastrovaya_stoimost_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_kadastrovnuyu_stoimost", return_value=None):
-        rezultat = await rre_tools.kadastrovaya_stoimost("00:00:0000000:000", ctx)
+        rezultat = await rre_tools.kadastrovaya_stoimost("00:00:0000000:000", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_prava_na_obekt_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rre_tools.client,
         "poluchit_prava",
@@ -113,13 +113,13 @@ async def test_prava_na_obekt_uspekh():
             }
         ],
     ):
-        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
+        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", kontekst)
     assert "Собственность" in rezultat
     assert "Иванов" in rezultat
 
 
 async def test_prava_na_obekt_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rre_tools.client, "poluchit_prava", return_value=[]):
-        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", ctx)
+        rezultat = await rre_tools.prava_na_obekt("77:01:0001001:1001", kontekst)
     assert "отсутствуют" in rezultat or "ЕГРН" in rezultat

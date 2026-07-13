@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_dela(kontekst: str, ctx: Context) -> str:
+async def analiz_dela(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ арбитражного дела.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_dela(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def analiz_uchastnika(kontekst: str, ctx: Context) -> str:
+async def analiz_uchastnika(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ судебного участника (компании или ИП).
 
     Аргументы:

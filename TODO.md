@@ -2,6 +2,54 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-13 (семидесятый шестой проход — русификация ctx→kontekst, c→klient, исправление бага cekrf status→sostoyanie, русификация тестовых данных и документации)
+
+### Выполнено
+
+- **Исправление критического бага `status=` → `sostoyanie=`** в cekrf/client.py:528 — `KandidatKratko` имеет поле `sostoyanie`, а клиент передавал `status=` (Pydantic присваивал пустое значение по умолчанию)
+- **Русификация `ctx` → `kontekst`** (~1069 вхождений в 70+ файлах):
+  - Все `ctx: Context` параметры в `tools.py` (44 модуля)
+  - Все `ctx: Context` параметры в `prompts.py` (18 функций, где нет конфликта с `kontekst: str`)
+  - Все `ctx: Context` параметры в `prompts.py` → `kontekst_mcp: Context` (18 функций, где `kontekst: str` уже занят)
+  - Все `ctx` переменные в `_maket_konteksta()` и локальных переменных в тестах (26 файлов)
+  - Все `await ctx.info()`, `await ctx.warning()` → `await kontekst.info()`, `await kontekst.warning()`
+  - Все `ctx: Context` в `_shared/` модулях (lifespan.py, batch.py, discovery.py, server.py)
+- **Русификация `c` → `klient`** в тестовых Client-контекстах (41 вхождение в 4 файлах):
+  - `async with Client(...) as c:` → `as klient:`
+  - Все `c.call_tool()`, `c.list_tools()`, `c.list_resources()` → `klient.*`
+- **Русификация тестовых данных и заглушек**:
+  - `FastMCP("test")` → `FastMCP("proverka")`, `FastMCP("child")` → `FastMCP("docherniy")`, `FastMCP("parent")` → `FastMCP("roditelskiy")`, `FastMCP("root")` → `FastMCP("koren")`, `FastMCP("sub")` → `FastMCP("podmodul")`
+  - `"Moscow, Tatarstan, Sverdlovsk"` → `"Москва, Татарстан, Свердловск"`, `"Moscow"` → `"Москва"`
+  - `"functions"` → `"funktsii"`, `"hotspots"` → `"ochagi"`, `"banks"` → `"banki"`
+  - `"echo: ..."` → `"эхо: ..."`, `"hello"` → `"privet"`
+  - `"cached"` → `"zakeshirovano"`, `"API timeout"` → `"Таймаут API"`
+  - `"test-key"` → `"proverochnyy-klyuch"`, `"secret"` → `"taynyy_klyuch"`
+  - `"Not Found"` → `"Не найдено"`, `"Internal Server Error"` → `"Внутренняя ошибка сервера"`, `"Too Many Requests"` → `"Слишком много запросов"`, `"Service Unavailable"` → `"Сервис недоступен"`, `"Error"` → `"Ошибка"`
+  - `{"ok": True}` → `{"uspekh": True}`, `{"recovered": True}` → `{"vosstanovleno": True}`
+  - `"key"/"value"` → `"klyuch"/"znachenie"` в test_cache.py
+  - `_IMPORT_NORMALNO` → `_IMPORT_NORMALNYY` в rosapi/test_integration.py
+  - Английский pytest.skip message → русский
+- **Русификация документации**:
+  - README.md: `fallback` → `запасной вариант`, `pull request` → `запрос на слияние (pull request)`, `Legacy-модули` → `Устаревшие модули`
+  - CONTRIBUTING.md: `env vars` → `переменные окружения`, `docstring` → `строка документации`, `endpoint` → `конечная точка`, `refactor` → `рефакторинг`, `Bump minor/major` → `Повысить minor/major`, `Semantic Versioning` → `семантическое версионирование`, `Conventional Commits` → `Конвенциональные коммиты`
+  - features.md: `Legacy-модули` → `устаревшие модули`
+  - adding-features.md: убрано избыточное английское `(docstring)`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 9 файлов переформатировано, `pytest` — 675 unit-тестов пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`ctx` → `kontekst`**: устранён самый массовый английский идентификатор в кодовой базе; `kontekst` = «контекст»; FastMCP определяет Context по типу аннотации, а не по имени параметра (подтверждено документацией FastMCP: «The context parameter name can be anything as long as it's annotated with Context»)
+- **`kontekst_mcp`**: в prompts.py где `kontekst: str` уже занят (пользовательский контекст промпта), MCP Context переименован в `kontekst_mcp` для избежания дублирования
+- **Баг `status` → `sostoyanie`**: `KandidatKratko` имеет поле `sostoyanie` (строка 39 schemas.py), но client.py:528 передавал `status=` — Pydantic молча присваивал пустое значение; правильное присвоение `sostoyanie=` уже было на строке 328
+- **`c` → `klient`**: устранена однобуквенная английская переменная в Client-контекстах тестов; `klient` уже использовался как имя в других местах проекта
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python)
+
 ## Статус раунда 2026-07-13 (семидесятый пятый проход — русификация _ATTRIBUTION→_ISTOCHNIK, констант: FIRES→POZHARY, MKB10_CLASSES→MKB10_KLASSY, CBR_DAILY_JSON/CBR_KEY_RATE_XML, *_API_BASE→*_API_BAZA, *_URL→*_ADRES, DATA_GOV_RU→DANNYE_GOV_RU, BUDGET_GOV_RU→BYUDZHET_GOV_RU, OPEN_METEO→OTKRYTYY_METEO, CONSULTANT→KONSULTANT, MINZDRAV_OPEN_DATA→MINZDRAV_OTKRYTYE_DANNYE, FRMO_API_BASE→FRMO_API_BAZA, DADATA_URL→DADATA_ADRES; исправление бага region_dtp→subiekt_dtp)
 
 ### Выполнено

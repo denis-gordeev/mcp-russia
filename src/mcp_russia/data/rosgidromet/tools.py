@@ -16,13 +16,13 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 from . import client
 
 
-async def spisok_stanciy(ctx: Context) -> str:
+async def spisok_stanciy(kontekst: Context) -> str:
     """Получить список станций мониторинга Росгидромета.
 
     Возвращает:
         Список станций с кодами.
     """
-    await ctx.info("Запрос списка станций мониторинга...")
+    await kontekst.info("Запрос списка станций мониторинга...")
     stancii = client.poluchit_spisok_stantsiy()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
@@ -30,13 +30,13 @@ async def spisok_stanciy(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
 
 
-async def spisok_tipov_dannykh(ctx: Context) -> str:
+async def spisok_tipov_dannykh(kontekst: Context) -> str:
     """Получить список типов метеорологических и экологических данных.
 
     Возвращает:
         Список типов данных.
     """
-    await ctx.info("Запрос списка типов данных...")
+    await kontekst.info("Запрос списка типов данных...")
     meteo = client.poluchit_spisok_tipov_meteo()
     eko = client.poluchit_spisok_tipov_eko()
 
@@ -51,7 +51,7 @@ async def spisok_tipov_dannykh(ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> str:
+async def pogoda_seychas(stanciya: str = "77", kontekst: Context | None = None) -> str:
     """Получить текущую погоду на станции.
 
     Аргументы:
@@ -60,7 +60,7 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
     Возвращает:
         Текущие погодные данные.
     """
-    await ctx.info(f"Запрос текущей погоды на станции {stanciya}...")
+    await kontekst.info(f"Запрос текущей погоды на станции {stanciya}...")
     dannye = await client.poluchit_pogodu(stanciya)
 
     if not dannye:
@@ -97,7 +97,7 @@ async def pogoda_seychas(stanciya: str = "77", ctx: Context | None = None) -> st
 async def prognoz_pogody(
     stanciya: str = "77",
     dni: int = 3,
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить прогноз погоды на несколько дней.
 
@@ -108,7 +108,7 @@ async def prognoz_pogody(
     Возвращает:
         Прогноз погоды.
     """
-    await ctx.info(f"Запрос прогноза на {dni} дней для станции {stanciya}...")
+    await kontekst.info(f"Запрос прогноза на {dni} дней для станции {stanciya}...")
     prognoz = await client.poluchit_prognoz(stanciya, dni)
 
     if not prognoz:
@@ -137,7 +137,7 @@ async def prognoz_pogody(
 async def ekologiya_regiona(
     gorod: str = "",
     tip: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить данные об экологической обстановке.
 
@@ -148,7 +148,7 @@ async def ekologiya_regiona(
     Возвращает:
         Данные об экологической обстановке.
     """
-    await ctx.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
+    await kontekst.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
     dannye = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
 
     if not dannye:
@@ -179,7 +179,7 @@ async def ekologiya_regiona(
     return "\n".join(stroki)
 
 
-async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str:
+async def preduprezhdeniya(subiekt: str = "", kontekst: Context | None = None) -> str:
     """Получить активные предупреждения об опасных явлении.
 
     Аргументы:
@@ -188,7 +188,7 @@ async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str
     Возвращает:
         Активные предупреждения.
     """
-    await ctx.info(f"Запрос предупреждений для региона {subiekt}...")
+    await kontekst.info(f"Запрос предупреждений для региона {subiekt}...")
     dannye = await client.poluchit_preduprezhdeniya(subiekt)
 
     if not dannye:
@@ -216,7 +216,7 @@ async def preduprezhdeniya(subiekt: str = "", ctx: Context | None = None) -> str
 async def sputnik_monitoring(
     subiekt: str = "",
     tip: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить данные спутникового мониторинга.
 
@@ -227,7 +227,7 @@ async def sputnik_monitoring(
     Возвращает:
         Данные спутникового мониторинга.
     """
-    await ctx.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
+    await kontekst.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
     dannye = await client.poluchit_sputnik_dannye(subiekt, tip)
 
     if not dannye:

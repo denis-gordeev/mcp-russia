@@ -6,45 +6,45 @@ from mcp_russia.data.rospotrebnadzor import tools as rpn_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_napravleniy():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_napravleniy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_napravleniy(kontekst)
     assert "Санитарно-эпидемиологический надзор" in rezultat
 
 
 async def test_spisok_tipov_proverok():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_tipov_proverok(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_tipov_proverok(kontekst)
     assert "Плановая проверка" in rezultat
 
 
 async def test_spisok_kategoriy_obiektov():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_kategoriy_obiektov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_kategoriy_obiektov(kontekst)
     assert "Предприятия пищевой промышленности" in rezultat
 
 
 async def test_spisok_regionalnyh_upravleniy():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_regionalnyh_upravleniy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_regionalnyh_upravleniy(kontekst)
     assert "Центральному федеральному округу" in rezultat
 
 
 async def test_info_proverki_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "info_proverki", return_value=None):
-        rezultat = await rpn_tools.info_proverki(ctx, nomer_proverki="12345")
+        rezultat = await rpn_tools.info_proverki(kontekst, nomer_proverki="12345")
     assert "не найдена" in rezultat
 
 
 async def test_info_proverki_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "nomer": "12345",
         "tip_proverki": "Плановая",
@@ -58,20 +58,20 @@ async def test_info_proverki_nayden():
         "istochnik": "Реестр проверок (proverki.rospotrebnadzor.ru)",
     }
     with patch.object(rpn_tools.client, "info_proverki", return_value=maket_dannykh):
-        rezultat = await rpn_tools.info_proverki(ctx, nomer_proverki="12345")
+        rezultat = await rpn_tools.info_proverki(kontekst, nomer_proverki="12345")
     assert "ООО Тест" in rezultat
     assert "Завершена" in rezultat
 
 
 async def test_poisk_proverok_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=[]):
-        rezultat = await rpn_tools.poisk_proverok(ctx, inn="7710563663")
+        rezultat = await rpn_tools.poisk_proverok(kontekst, inn="7710563663")
     assert "не найдены" in rezultat
 
 
 async def test_poisk_proverok_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "12345",
@@ -83,32 +83,32 @@ async def test_poisk_proverok_nayden():
         }
     ]
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=maket_dannykh):
-        rezultat = await rpn_tools.poisk_proverok(ctx, inn="7710563663")
+        rezultat = await rpn_tools.poisk_proverok(kontekst, inn="7710563663")
     assert "ООО Тест" in rezultat
 
 
 async def test_plan_proverok_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "plan_proverok", return_value=[]):
-        rezultat = await rpn_tools.plan_proverok(ctx, god=2024)
+        rezultat = await rpn_tools.plan_proverok(kontekst, god=2024)
     assert "не получен" in rezultat
 
 
 async def test_spisok_sanpinov():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_sanpinov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_sanpinov(kontekst)
     assert "2.1.3684-21" in rezultat
 
 
 async def test_zhaloby_potrebiteley_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_zhalob", return_value=[]):
-        rezultat = await rpn_tools.zhaloby_potrebiteley(ctx)
+        rezultat = await rpn_tools.zhaloby_potrebiteley(kontekst)
     assert "не найдены" in rezultat
 
 
 async def test_zhaloby_potrebiteley_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "tema": "Некачественный товар",
@@ -119,11 +119,11 @@ async def test_zhaloby_potrebiteley_nayden():
         }
     ]
     with patch.object(rpn_tools.client, "poisk_zhalob", return_value=maket_dannykh):
-        rezultat = await rpn_tools.zhaloby_potrebiteley(ctx, organizaciya="ООО Тест")
+        rezultat = await rpn_tools.zhaloby_potrebiteley(kontekst, organizaciya="ООО Тест")
     assert "Некачественный товар" in rezultat
 
 
 async def test_pokazateli_bezopasnosti():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.pokazateli_bezopasnosti(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.pokazateli_bezopasnosti(kontekst)
     assert "ЕМИСС" in rezultat or "rospotrebnadzor" in rezultat

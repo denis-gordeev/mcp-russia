@@ -14,9 +14,9 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 from . import client
 
 
-async def spisok_senatorov(ctx: Context) -> str:
+async def spisok_senatorov(kontekst: Context) -> str:
     """Получить список сенаторов Совета Федерации."""
-    await ctx.info("Запрос списка сенаторов...")
+    await kontekst.info("Запрос списка сенаторов...")
     senatory = await client.poisk_senatorov()
     if not senatory:
         return "Сенаторы не найдены.\n\nАктуальные данные доступны на: https://sovfed.ru/senators"
@@ -37,7 +37,7 @@ async def spisok_senatorov(ctx: Context) -> str:
     )
 
 
-async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
+async def info_senatora(identifikator_senatora: str, kontekst: Context) -> str:
     """Получить информацию о сенаторе Совета Федерации.
 
     Аргументы:
@@ -46,7 +46,7 @@ async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
     Возвращает:
         Информация о сенаторе.
     """
-    await ctx.info(f"Запрос информации о сенаторе {identifikator_senatora}...")
+    await kontekst.info(f"Запрос информации о сенаторе {identifikator_senatora}...")
     dannye = await client.info_senatora(identifikator_senatora)
     if not dannye:
         return (
@@ -69,9 +69,9 @@ async def info_senatora(identifikator_senatora: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_komitetov(ctx: Context) -> str:
+async def spisok_komitetov(kontekst: Context) -> str:
     """Получить список комитетов Совета Федерации."""
-    await ctx.info("Запрос списка комитетов...")
+    await kontekst.info("Запрос списка комитетов...")
     komitety_api = await client.spisok_komitetov()
     if komitety_api:
         stroki_tablitsy = [
@@ -92,9 +92,9 @@ async def spisok_komitetov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
 
-async def spisok_komissiy(ctx: Context) -> str:
+async def spisok_komissiy(kontekst: Context) -> str:
     """Получить список комиссий Совета Федерации."""
-    await ctx.info("Запрос списка комиссий...")
+    await kontekst.info("Запрос списка комиссий...")
     komissii_api = await client.spisok_komissiy()
     if komissii_api:
         stroki_tablitsy = [
@@ -116,7 +116,7 @@ async def spisok_komissiy(ctx: Context) -> str:
 
 
 async def poisk_zakonoproektov(
-    ctx: Context,
+    kontekst: Context,
     sostoyanie: str = "",
     god: int = 0,
 ) -> str:
@@ -129,7 +129,7 @@ async def poisk_zakonoproektov(
     Возвращает:
         Список законопроектов.
     """
-    await ctx.info("Поиск законопроектов...")
+    await kontekst.info("Поиск законопроектов...")
     zakonoproekty = await client.poisk_zakonoproektov(
         sostoyanie=sostoyanie,
         god=god,
@@ -161,7 +161,7 @@ async def poisk_zakonoproektov(
     )
 
 
-async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
+async def spisok_zasedaniy(kontekst: Context, god: int = 0) -> str:
     """Получить список заседаний Совета Федерации.
 
     Аргументы:
@@ -170,7 +170,7 @@ async def spisok_zasedaniy(ctx: Context, god: int = 0) -> str:
     Возвращает:
         Список заседаний.
     """
-    await ctx.info("Запрос списка заседаний...")
+    await kontekst.info("Запрос списка заседаний...")
     zasedaniya = await client.spisok_zasedaniy(god=god)
     if not zasedaniya:
         god_tekst = f" за {god} год" if god else ""

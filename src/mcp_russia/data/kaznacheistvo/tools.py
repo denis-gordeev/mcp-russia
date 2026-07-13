@@ -14,18 +14,18 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 from . import client
 
 
-async def spisok_vidov_byudzhetov(ctx: Context) -> str:
+async def spisok_vidov_byudzhetov(kontekst: Context) -> str:
     """Получить список видов бюджетов бюджетной системы РФ."""
-    await ctx.info("Запрос списка видов бюджетов...")
+    await kontekst.info("Запрос списка видов бюджетов...")
     vidy = client.poluchit_spisok_vidov_byudzhetov()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды бюджетов бюджетной системы РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид бюджета"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
+async def spisok_kategoriy_raskhodov(kontekst: Context) -> str:
     """Получить список категорий расходов бюджета."""
-    await ctx.info("Запрос списка категорий расходов...")
+    await kontekst.info("Запрос списка категорий расходов...")
     kategorii = client.poluchit_spisok_kategoriy_raskhodov()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
     zagolovok = "**Категории расходов бюджета**\n\n"
@@ -33,7 +33,7 @@ async def spisok_kategoriy_raskhodov(ctx: Context) -> str:
 
 
 async def ispolnenie_byudzheta(
-    ctx: Context,
+    kontekst: Context,
     god: int = 0,
     tip: str = "",
 ) -> str:
@@ -46,7 +46,7 @@ async def ispolnenie_byudzheta(
     Возвращает:
         Данные об исполнении бюджета.
     """
-    await ctx.info("Запрос данных об исполнении бюджета...")
+    await kontekst.info("Запрос данных об исполнении бюджета...")
     dannye = await client.poluchit_ispolnenie_byudzheta(god=god, tip=tip)
     if not dannye:
         tip_tekst = f" ({tip})" if tip else ""
@@ -73,7 +73,7 @@ async def ispolnenie_byudzheta(
 
 
 async def poisk_uchastnikov_bp(
-    ctx: Context,
+    kontekst: Context,
     inn: str = "",
     nazvanie: str = "",
 ) -> str:
@@ -86,7 +86,7 @@ async def poisk_uchastnikov_bp(
     Возвращает:
         Список участников бюджетного процесса.
     """
-    await ctx.info("Поиск участников бюджетного процесса...")
+    await kontekst.info("Поиск участников бюджетного процесса...")
     uchastniki = await client.poisk_uchastnikov_bp(inn=inn, nazvanie=nazvanie)
     if not uchastniki:
         filtry = []
@@ -116,7 +116,7 @@ async def poisk_uchastnikov_bp(
 
 
 async def poisk_uchrezhdeniy(
-    ctx: Context,
+    kontekst: Context,
     inn: str = "",
     nazvanie: str = "",
     tip: str = "",
@@ -131,7 +131,7 @@ async def poisk_uchrezhdeniy(
     Возвращает:
         Список учреждений.
     """
-    await ctx.info("Поиск учреждений...")
+    await kontekst.info("Поиск учреждений...")
     uchrezhdeniya = await client.poisk_uchrezhdeniy(inn=inn, nazvanie=nazvanie, tip=tip)
     if not uchrezhdeniya:
         filtry = []
@@ -163,7 +163,7 @@ async def poisk_uchrezhdeniy(
 
 
 async def mezhbyudzhetnye_transferty(
-    ctx: Context,
+    kontekst: Context,
     god: int = 0,
     subiekt: str = "",
 ) -> str:
@@ -176,7 +176,7 @@ async def mezhbyudzhetnye_transferty(
     Возвращает:
         Данные о межбюджетных трансфертах.
     """
-    await ctx.info("Запрос данных о межбюджетных трансфертах...")
+    await kontekst.info("Запрос данных о межбюджетных трансфертах...")
     transferty = await client.poluchit_mezhbyudzhetnye(god=god, subiekt=subiekt)
     if not transferty:
         god_tekst = f" за {god} год" if god else ""

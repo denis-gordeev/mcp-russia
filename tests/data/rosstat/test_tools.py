@@ -14,53 +14,53 @@ from mcp_russia.data.rosstat.schemas import (
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_regionov():
-    ctx = _maket_konteksta()
-    rezultat = await rosstat_tools.spisok_regionov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.spisok_regionov(kontekst)
     assert "Субъект" in rezultat
     assert "Москва" in rezultat
 
 
 async def test_spisok_regionov_has_many():
-    ctx = _maket_konteksta()
-    rezultat = await rosstat_tools.spisok_regionov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.spisok_regionov(kontekst)
     assert "Татарстан" in rezultat
     assert "Краснодар" in rezultat
 
 
 async def test_spisok_okrugov():
-    ctx = _maket_konteksta()
-    rezultat = await rosstat_tools.spisok_okrugov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.spisok_okrugov(kontekst)
     assert "Федеральн" in rezultat
     assert "Центральн" in rezultat
 
 
 async def test_informatsiya_o_regionye():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     subiekt = DannyeRegiona(
         kod="77", nazvanie="г. Москва", federalny_okrug="ЦФО", naselenie=13000000
     )
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=subiekt):
-        rezultat = await rosstat_tools.informatsiya_o_regionye("77", ctx)
+        rezultat = await rosstat_tools.informatsiya_o_regionye("77", kontekst)
     assert "Москва" in rezultat
     assert "13" in rezultat
 
 
 async def test_informatsiya_o_regionye_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosstat_tools.client, "poluchit_dannye_regiona", return_value=None):
-        rezultat = await rosstat_tools.informatsiya_o_regionye("999", ctx)
+        rezultat = await rosstat_tools.informatsiya_o_regionye("999", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_informatsiya_ob_okruge():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosstat_tools.client,
         "poluchit_federalny_okrug",
@@ -71,25 +71,25 @@ async def test_informatsiya_ob_okruge():
             "subiekty": ["г. Москва", "Московская область"],
         },
     ):
-        rezultat = await rosstat_tools.informatsiya_ob_okruge("CFO", ctx)
+        rezultat = await rosstat_tools.informatsiya_ob_okruge("CFO", kontekst)
     assert "Центральн" in rezultat
     assert "18" in rezultat
 
 
 async def test_informatsiya_ob_okruge_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosstat_tools.client,
         "poluchit_federalny_okrug",
         return_value={"oshibka": "не найден"},
     ):
-        rezultat = await rosstat_tools.informatsiya_ob_okruge("ZZZ", ctx)
+        rezultat = await rosstat_tools.informatsiya_ob_okruge("ZZZ", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_pokazateli_rosstata():
-    ctx = _maket_konteksta()
-    rezultat = await rosstat_tools.pokazateli_rosstata(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.pokazateli_rosstata(kontekst)
     assert "показател" in rezultat.lower()
     assert "населени" in rezultat or "naselenie" in rezultat
 
@@ -212,13 +212,13 @@ async def test_zarplata_dannye_pustoy():
 
 
 async def test_sravnenie_regionov_invalid_pokazatel():
-    ctx = _maket_konteksta()
-    rezultat = await rosstat_tools.sravnenie_regionov("invalid_code", ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.sravnenie_regionov("invalid_code", kontekst)
     assert "не поддерживается" in rezultat
 
 
 async def test_sravnenie_regionov_s_dannymi():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {"subiekt": "г. Москва", "kod": "77", "znachenie": 25400.5, "period": "2023"},
         {"subiekt": "Тюменская область", "kod": "72", "znachenie": 8900.3, "period": "2023"},
@@ -226,16 +226,16 @@ async def test_sravnenie_regionov_s_dannymi():
     with patch.object(
         rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=maket_dannykh
     ):
-        rezultat = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+        rezultat = await rosstat_tools.sravnenie_regionov("vrp", kontekst)
     assert "Москва" in rezultat
     assert "Тюмен" in rezultat
     assert "Рейтинг" in rezultat
 
 
 async def test_sravnenie_regionov_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
-        rezultat = await rosstat_tools.sravnenie_regionov("vrp", ctx)
+        rezultat = await rosstat_tools.sravnenie_regionov("vrp", kontekst)
     assert "недоступны" in rezultat or "ВРП" in rezultat
 
 

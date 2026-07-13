@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_vodnogo_obekta(kontekst: str, ctx: Context) -> str:
+async def analiz_vodnogo_obekta(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ водного объекта.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_vodnogo_obekta(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_vodokhranilishch(ctx: Context) -> str:
+async def obzor_vodokhranilishch(kontekst_mcp: Context) -> str:
     """Обзор состояния крупных водохранилищ РФ.
 
     Возвращает:

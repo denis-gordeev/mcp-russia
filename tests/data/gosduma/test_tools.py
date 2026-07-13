@@ -8,10 +8,10 @@ from mcp_russia.data.gosduma.schemas import Deputat, Golosovanie, Zakonoproekt
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 # --- Тесты парсера ---
@@ -159,14 +159,14 @@ async def test_spisok_deputatov_s_dannymi():
 
 
 async def test_info_deputata_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=None):
-        rezultat = await gosduma_tools.info_deputata(99999, ctx)
+        rezultat = await gosduma_tools.info_deputata(99999, kontekst)
     assert "не найден" in rezultat
 
 
 async def test_info_deputata_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     deputat = Deputat(
         identifikator=1,
         familiya="Иванов",
@@ -178,29 +178,29 @@ async def test_info_deputata_nayden():
         sozyv="8",
     )
     with patch.object(gosduma_tools.client, "poluchit_deputata", return_value=deputat):
-        rezultat = await gosduma_tools.info_deputata(1, ctx)
+        rezultat = await gosduma_tools.info_deputata(1, kontekst)
     assert "Иванов" in rezultat
     assert "Единая Россия" in rezultat
 
 
 async def test_spisok_frakcii():
-    ctx = _maket_konteksta()
-    rezultat = await gosduma_tools.spisok_frakcii(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gosduma_tools.spisok_frakcii(kontekst)
     assert "Единая Россия" in rezultat
     assert "КПРФ" in rezultat
     assert "ЛДПР" in rezultat
 
 
 async def test_spisok_komitetov():
-    ctx = _maket_konteksta()
-    rezultat = await gosduma_tools.spisok_komitetov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gosduma_tools.spisok_komitetov(kontekst)
     assert "Комитет" in rezultat
     assert "бюджет" in rezultat.lower() or "обороне" in rezultat.lower()
 
 
 async def test_spisok_sozyvov():
-    ctx = _maket_konteksta()
-    rezultat = await gosduma_tools.spisok_sozyvov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gosduma_tools.spisok_sozyvov(kontekst)
     assert "Созыв" in rezultat
     assert "VIII" in rezultat or "1993" in rezultat
 
@@ -259,5 +259,5 @@ async def test_zametka_ob_aut_bez_tokena():
 
 
 async def test_zametka_ob_aut_s_tokenom():
-    with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value="secret"):
+    with patch.object(gosduma_tools.client, "_poluchit_api_token", return_value="taynyy_klyuch"):
         assert gosduma_tools._zametka_ob_avtorizatsii() == ""

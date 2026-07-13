@@ -71,13 +71,13 @@ def _skanirovat_modul_instrumentov(put_modulya: str, prostranstvo_imen: str) -> 
 
 async def vypolnit_paket_vnutrenniy(
     zaprosy: list[dict[str, Any]],
-    ctx: Any,
+    kontekst: Any,
 ) -> str:
     """Параллельное выполнение нескольких вызовов инструментов.
 
     Аргументы:
         zaprosy: Список словарей {"instrument": "имя", "argumenty": {}}.
-        ctx: Контекст FastMCP для передачи в инструменты, которые его принимают.
+        kontekst: Контекст FastMCP для передачи в инструменты, которые его принимают.
 
     Возвращает:
         Отформатированный markdown со всеми результатами.
@@ -99,8 +99,8 @@ async def vypolnit_paket_vnutrenniy(
 
         try:
             signatura = inspect.signature(funktsiya)
-            if "ctx" in signatura.parameters:
-                rezultat = await funktsiya(ctx=ctx, **argumenty)
+            if "kontekst" in signatura.parameters:
+                rezultat = await funktsiya(kontekst=kontekst, **argumenty)
             else:
                 rezultat = await funktsiya(**argumenty)
             return imya_instrumenta, rezultat

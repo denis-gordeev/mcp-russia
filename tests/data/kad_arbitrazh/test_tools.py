@@ -8,10 +8,10 @@ from mcp_russia.data.kad_arbitrazh.schemas import SudebnoeDelo
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 class TestRazborRezultatovPoiska:
@@ -147,15 +147,15 @@ class TestRazborStoron:
 
 
 async def test_poisk_del_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kad_tools.client, "poisk_del", return_value=[]):
-        rezultat = await kad_tools.poisk_del(ctx=ctx)
+        rezultat = await kad_tools.poisk_del(kontekst=kontekst)
     assert "Картотека арбитражных дел" in rezultat
     assert "не найдены" in rezultat
 
 
 async def test_poisk_del_s_rezultatami():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dela = [
         SudebnoeDelo(
             nomer="А40-12345/2024",
@@ -169,30 +169,30 @@ async def test_poisk_del_s_rezultatami():
         )
     ]
     with patch.object(kad_tools.client, "poisk_del", return_value=maket_dela):
-        rezultat = await kad_tools.poisk_del(nomer="А40-12345/2024", ctx=ctx)
+        rezultat = await kad_tools.poisk_del(nomer="А40-12345/2024", kontekst=kontekst)
     assert "А40-12345/2024" in rezultat
     assert "1 000 000" in rezultat or "1000000" in rezultat or "₽" in rezultat
 
 
 async def test_poisk_del_s_filtrami():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kad_tools.client, "poisk_del", return_value=[]):
         rezultat = await kad_tools.poisk_del(
-            nomer="А40-12345/2024", istorcz="ООО Ромашка", ctx=ctx
+            nomer="А40-12345/2024", istorcz="ООО Ромашка", kontekst=kontekst
         )
     assert "А40-12345/2024" in rezultat
     assert "Ромашка" in rezultat
 
 
 async def test_info_dela_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kad_tools.client, "info_dela", return_value=None):
-        rezultat = await kad_tools.info_dela("А40-00000/2024", ctx)
+        rezultat = await kad_tools.info_dela("А40-00000/2024", kontekst)
     assert "не найдено" in rezultat
 
 
 async def test_info_dela_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_delo = SudebnoeDelo(
         nomer="А40-12345/2024",
         kategoriya="Банкротство",
@@ -205,48 +205,48 @@ async def test_info_dela_nayden():
         summa_iska=500000,
     )
     with patch.object(kad_tools.client, "info_dela", return_value=maket_delo):
-        rezultat = await kad_tools.info_dela("А40-12345/2024", ctx)
+        rezultat = await kad_tools.info_dela("А40-12345/2024", kontekst)
     assert "А40-12345/2024" in rezultat
     assert "Банкротство" in rezultat
 
 
 async def test_akty_po_delu_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kad_tools.client, "akty_po_delu", return_value=[]):
-        rezultat = await kad_tools.akty_po_delu("А40-00000/2024", ctx)
+        rezultat = await kad_tools.akty_po_delu("А40-00000/2024", kontekst)
     assert "не найдены" in rezultat
 
 
 async def test_storony_dela_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(kad_tools.client, "storony_dela", return_value=[]):
-        rezultat = await kad_tools.storony_dela("А40-00000/2024", ctx)
+        rezultat = await kad_tools.storony_dela("А40-00000/2024", kontekst)
     assert "не найдены" in rezultat
 
 
 async def test_spravochnik_kategoriy():
-    ctx = _maket_konteksta()
-    rezultat = await kad_tools.spravochnik_kategoriy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kad_tools.spravochnik_kategoriy(kontekst)
     assert "Категории" in rezultat
     assert "Банкротство" in rezultat
 
 
 async def test_spravochnik_instantsiy():
-    ctx = _maket_konteksta()
-    rezultat = await kad_tools.spravochnik_instantsiy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kad_tools.spravochnik_instantsiy(kontekst)
     assert "Инстанции" in rezultat
     assert "первая инстанция" in rezultat
 
 
 async def test_spravochnik_statusov():
-    ctx = _maket_konteksta()
-    rezultat = await kad_tools.spravochnik_statusov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kad_tools.spravochnik_statusov(kontekst)
     assert "Статусы" in rezultat
     assert "Новое" in rezultat
 
 
 async def test_spravochnik_aktov():
-    ctx = _maket_konteksta()
-    rezultat = await kad_tools.spravochnik_aktov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await kad_tools.spravochnik_aktov(kontekst)
     assert "Типы судебных актов" in rezultat
     assert "Решение" in rezultat

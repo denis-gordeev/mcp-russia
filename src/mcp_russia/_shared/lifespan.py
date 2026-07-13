@@ -1,6 +1,6 @@
 """Общий lifespan для mcp-russia — создаёт/закрывает httpx.AsyncClient.
 
-HTTP-клиент доступен в инструментах через ctx.lifespan_context["http_klient"].
+HTTP-клиент доступен в инструментах через kontekst.lifespan_context["http_klient"].
 
 Использование:
     from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl

@@ -15,7 +15,7 @@ class TestHttpZhiznennyyTsikl:
         """Жизненный цикл должен вернуть HTTP-клиент и закрыть его при выходе."""
         from fastmcp import FastMCP
 
-        server_funktsiya = FastMCP("test")
+        server_funktsiya = FastMCP("proverka")
 
         # Имитируем генератор жизненного цикла
         generator_tsikla = http_zhiznennyy_tsikl._fn(server_funktsiya)
@@ -37,7 +37,7 @@ class TestHttpZhiznennyyTsikl:
         """HTTP-клиент должен иметь заголовки User-Agent и Accept."""
         from fastmcp import FastMCP
 
-        server_funktsiya = FastMCP("test")
+        server_funktsiya = FastMCP("proverka")
 
         generator_tsikla = http_zhiznennyy_tsikl._fn(server_funktsiya)
         kontekst = await generator_tsikla.__anext__()

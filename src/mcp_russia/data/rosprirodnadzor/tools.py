@@ -14,27 +14,27 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 from . import client
 
 
-async def spisok_vidov_nadzora(ctx: Context) -> str:
+async def spisok_vidov_nadzora(kontekst: Context) -> str:
     """Получить список видов государственного надзора Росприроднадзора."""
-    await ctx.info("Запрос списка видов надзора...")
+    await kontekst.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды государственного надзора Росприроднадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_obnv(ctx: Context) -> str:
+async def spisok_kategoriy_obnv(kontekst: Context) -> str:
     """Получить список категорий объектов негативного воздействия."""
-    await ctx.info("Запрос списка категорий ОНВ...")
+    await kontekst.info("Запрос списка категорий ОНВ...")
     kategorii = client.poluchit_spisok_kategoriy_obnv()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
     zagolovok = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
     return zagolovok + tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
 
-async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
+async def spisok_vidov_litsenziy_nedra(kontekst: Context) -> str:
     """Получить список видов лицензий на пользование недрами."""
-    await ctx.info("Запрос списка видов лицензий...")
+    await kontekst.info("Запрос списка видов лицензий...")
     vidy = client.poluchit_spisok_vidov_litsenziy_nedra()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды лицензий на пользование недрами**\n\n"
@@ -42,7 +42,7 @@ async def spisok_vidov_litsenziy_nedra(ctx: Context) -> str:
 
 
 async def poisk_proverok(
-    ctx: Context,
+    kontekst: Context,
     organizaciya: str = "",
     vid_nadzora: str = "",
     god: int = 0,
@@ -57,7 +57,7 @@ async def poisk_proverok(
     Возвращает:
         Список проверок.
     """
-    await ctx.info("Поиск экологических проверок...")
+    await kontekst.info("Поиск экологических проверок...")
     proverki = await client.poisk_proverok(
         organizaciya=organizaciya,
         vid_nadzora=vid_nadzora,
@@ -84,7 +84,7 @@ async def poisk_proverok(
     )
 
 
-async def info_proverki(nomer: str, ctx: Context) -> str:
+async def info_proverki(nomer: str, kontekst: Context) -> str:
     """Получить информацию о проверке по номеру.
 
     Аргументы:
@@ -93,7 +93,7 @@ async def info_proverki(nomer: str, ctx: Context) -> str:
     Возвращает:
         Информация о проверке.
     """
-    await ctx.info(f"Запрос информации о проверке {nomer}...")
+    await kontekst.info(f"Запрос информации о проверке {nomer}...")
     dannye = await client.info_proverki(nomer)
     if not dannye:
         return (
@@ -118,7 +118,7 @@ async def info_proverki(nomer: str, ctx: Context) -> str:
 
 
 async def poisk_obektov_negativnogo(
-    ctx: Context,
+    kontekst: Context,
     organizaciya: str = "",
     kategoriya: str = "",
 ) -> str:
@@ -131,7 +131,7 @@ async def poisk_obektov_negativnogo(
     Возвращает:
         Список объектов ОНВ.
     """
-    await ctx.info("Поиск объектов негативного воздействия...")
+    await kontekst.info("Поиск объектов негативного воздействия...")
     obekty = await client.poisk_obektov_negativnogo(
         organizaciya=organizaciya,
         kategoriya=kategoriya,
@@ -164,7 +164,7 @@ async def poisk_obektov_negativnogo(
 
 
 async def poisk_litsenziy_nedra(
-    ctx: Context,
+    kontekst: Context,
     territoriya: str = "",
     vid_litsenzii: str = "",
 ) -> str:
@@ -177,7 +177,7 @@ async def poisk_litsenziy_nedra(
     Возвращает:
         Список лицензий.
     """
-    await ctx.info("Поиск лицензий на недропользование...")
+    await kontekst.info("Поиск лицензий на недропользование...")
     litsenzii = await client.poisk_litsenziy_nedra(
         territoriya=territoriya,
         vid_litsenzii=vid_litsenzii,
@@ -211,7 +211,7 @@ async def poisk_litsenziy_nedra(
 
 
 async def ekologicheskie_platezhi(
-    ctx: Context,
+    kontekst: Context,
     god: int = 0,
     tip_platezha: str = "",
 ) -> str:
@@ -224,7 +224,7 @@ async def ekologicheskie_platezhi(
     Возвращает:
         Список экологических платежей.
     """
-    await ctx.info("Запрос экологических платежей...")
+    await kontekst.info("Запрос экологических платежей...")
     platezhi = await client.poluchit_ekologicheskie_platezhi(
         god=god,
         tip_platezha=tip_platezha,

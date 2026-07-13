@@ -95,7 +95,7 @@ async def spisok_zapisey(stranitsa: int = 1) -> list[PrimerZapisi]:
 
 - вызывает `client.py`;
 - собирает итоговый текст или таблицу;
-- содержит понятные строки документации (docstring) для LLM и разработчиков.
+- содержит понятные строки документации для LLM и разработчиков.
 
 ```python
 from . import client

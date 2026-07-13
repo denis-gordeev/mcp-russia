@@ -23,13 +23,13 @@ from .constants import (
 )
 
 
-async def spisok_regionov(ctx: Context) -> str:
+async def spisok_regionov(kontekst: Context) -> str:
     """Получить список субъектов Российской Федерации.
 
     Возвращает:
         Список субъектов РФ с кодами.
     """
-    await ctx.info("Запрос списка субъектов РФ...")
+    await kontekst.info("Запрос списка субъектов РФ...")
     regiony = client.poluchit_spisok_subiektov()
 
     stroki_tablitsy = [(r["kod"], r["nazvanie"], r.get("okrug", "")) for r in regiony]
@@ -37,13 +37,13 @@ async def spisok_regionov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Регион", "ФО"], stroki_tablitsy)
 
 
-async def spisok_okrugov(ctx: Context) -> str:
+async def spisok_okrugov(kontekst: Context) -> str:
     """Получить список федеральных округов РФ.
 
     Возвращает:
         Список федеральных округов.
     """
-    await ctx.info("Запрос списка федеральных округов...")
+    await kontekst.info("Запрос списка федеральных округов...")
     okruga = client.poluchit_spisok_federalnykh_okrugov()
 
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
@@ -51,7 +51,7 @@ async def spisok_okrugov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Округ"], stroki_tablitsy)
 
 
-async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
+async def informatsiya_o_regionye(kod: str, kontekst: Context) -> str:
     """Получить информацию о субъекте РФ по коду.
 
     Аргументы:
@@ -60,7 +60,7 @@ async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
     Возвращает:
         Информация о регионе.
     """
-    await ctx.info(f"Запрос информации о регионе {kod}...")
+    await kontekst.info(f"Запрос информации о регионе {kod}...")
     dannye = await client.poluchit_dannye_regiona(kod)
 
     if not dannye:
@@ -85,7 +85,7 @@ async def informatsiya_o_regionye(kod: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
+async def informatsiya_ob_okruge(kod: str, kontekst: Context) -> str:
     """Получить информацию о федеральном округе.
 
     Аргументы:
@@ -94,7 +94,7 @@ async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
     Возвращает:
         Информация о федеральном округе.
     """
-    await ctx.info(f"Запрос информации о федеральном округе {kod}...")
+    await kontekst.info(f"Запрос информации о федеральном округе {kod}...")
     dannye = await client.poluchit_federalny_okrug(kod)
 
     if "oshibka" in dannye:
@@ -113,20 +113,20 @@ async def informatsiya_ob_okruge(kod: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def pokazateli_rosstata(ctx: Context) -> str:
+async def pokazateli_rosstata(kontekst: Context) -> str:
     """Получить список основных показателей Росстата.
 
     Возвращает:
         Список доступных показателей.
     """
-    await ctx.info("Запрос списка показателей Росстата...")
+    await kontekst.info("Запрос списка показателей Росстата...")
 
     stroki_tablitsy = [(p["kod"], p["nazvanie"]) for p in KLYUCHEVYE_INDIKATORY]
     zagolovok = "**Основные показатели Росстата**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Показатель"], stroki_tablitsy)
 
 
-async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
+async def inflyaciya(god: str = "", kontekst: Context | None = None) -> str:
     """Получить данные об инфляции (ИПЦ) в России.
 
     Аргументы:
@@ -135,8 +135,8 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
     Возвращает:
         Данные об инфляции.
     """
-    if ctx:
-        await ctx.info("Запрос данных об инфляции...")
+    if kontekst:
+        await kontekst.info("Запрос данных об инфляции...")
     dannye = await client.poluchit_inflyaciyu(god)
     if not dannye:
         return (
@@ -161,7 +161,7 @@ async def inflyaciya(god: str = "", ctx: Context | None = None) -> str:
     )
 
 
-async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
+async def demografiya(subiekt: str = "", kontekst: Context | None = None) -> str:
     """Получить демографические данные по России или региону.
 
     Аргументы:
@@ -170,8 +170,8 @@ async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
     Возвращает:
         Демографические данные.
     """
-    if ctx:
-        await ctx.info("Запрос демографических данных...")
+    if kontekst:
+        await kontekst.info("Запрос демографических данных...")
     dannye = await client.poluchit_demografiyu(subiekt=subiekt)
     tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
@@ -197,7 +197,7 @@ async def demografiya(subiekt: str = "", ctx: Context | None = None) -> str:
     )
 
 
-async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = None) -> str:
+async def vrp_dannye(subiekt: str = "", god: str = "", kontekst: Context | None = None) -> str:
     """Получить данные о валовом региональном продукте (ВРП).
 
     Аргументы:
@@ -207,8 +207,8 @@ async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = Non
     Возвращает:
         Данные о ВРП по России или региону.
     """
-    if ctx:
-        await ctx.info("Запрос данных о ВРП...")
+    if kontekst:
+        await kontekst.info("Запрос данных о ВРП...")
     dannye = await client.poluchit_vrp(subiekt=subiekt, god=god)
     tekst_filtra = f" по региону {subiekt}" if subiekt else ""
     if not dannye:
@@ -233,7 +233,9 @@ async def vrp_dannye(subiekt: str = "", god: str = "", ctx: Context | None = Non
     )
 
 
-async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None = None) -> str:
+async def zarplata_dannye(
+    subiekt: str = "", god: str = "", kontekst: Context | None = None
+) -> str:
     """Получить данные о средней заработной плате.
 
     Аргументы:
@@ -243,8 +245,8 @@ async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None 
     Возвращает:
         Данные о заработной плате.
     """
-    if ctx:
-        await ctx.info("Запрос данных о заработной плате...")
+    if kontekst:
+        await kontekst.info("Запрос данных о заработной плате...")
     dannye = await client.poluchit_zarplatu(subiekt=subiekt, god=god)
     tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
@@ -269,7 +271,7 @@ async def zarplata_dannye(subiekt: str = "", god: str = "", ctx: Context | None 
     )
 
 
-async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
+async def sravnenie_regionov(pokazatel: str, kontekst: Context) -> str:
     """Сравнить регионы по выбранному показателю.
 
     Аргументы:
@@ -278,7 +280,7 @@ async def sravnenie_regionov(pokazatel: str, ctx: Context) -> str:
     Возвращает:
         Рейтинг регионов по показателю.
     """
-    await ctx.info(f"Запрос сравнения регионов по показателю '{pokazatel}'...")
+    await kontekst.info(f"Запрос сравнения регионов по показателю '{pokazatel}'...")
     if pokazatel not in REGIONALNYE_POKAZATELI:
         dostupnye = ", ".join(sorted(REGIONALNYE_POKAZATELI.keys()))
         return (
@@ -316,7 +318,7 @@ async def indikator_dannye(
     kod: str,
     subiekt: str = "",
     god: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить данные произвольного показателя Росстата по коду ЕМИСС.
 
@@ -331,8 +333,8 @@ async def indikator_dannye(
     Возвращает:
         Данные показателя.
     """
-    if ctx:
-        await ctx.info(f"Запрос данных показателя '{kod}'...")
+    if kontekst:
+        await kontekst.info(f"Запрос данных показателя '{kod}'...")
     kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     imya_indikatora = next(
         (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
@@ -373,7 +375,7 @@ async def indikator_dannye(
 async def otraslevaya_struktura_vrp(
     subiekt: str = "",
     god: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить отраслевую структуру ВРП по видам экономической деятельности (ОКВЭД).
 
@@ -384,8 +386,8 @@ async def otraslevaya_struktura_vrp(
     Возвращает:
         Отраслевая структура ВРП.
     """
-    if ctx:
-        await ctx.info("Запрос отраслевой структуры ВРП...")
+    if kontekst:
+        await kontekst.info("Запрос отраслевой структуры ВРП...")
     dannye = await client.poluchit_otraslevuyu_strukturu_vrp(subiekt=subiekt, god=god)
     tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:
@@ -413,7 +415,7 @@ async def otraslevaya_struktura_vrp(
 async def investitsii_po_vidam(
     subiekt: str = "",
     god: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить инвестиции в основной капитал по видам экономической деятельности.
 
@@ -424,8 +426,8 @@ async def investitsii_po_vidam(
     Возвращает:
         Инвестиции по видам деятельности.
     """
-    if ctx:
-        await ctx.info("Запрос инвестиций по видам деятельности...")
+    if kontekst:
+        await kontekst.info("Запрос инвестиций по видам деятельности...")
     dannye = await client.poluchit_investitsii_po_vidam(subiekt=subiekt, god=god)
     tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
     if not dannye:

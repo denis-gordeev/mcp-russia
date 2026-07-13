@@ -6,83 +6,85 @@ from mcp_russia.data.gibdd import tools as gibdd_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_tipov_ts():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_tipov_ts(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_tipov_ts(kontekst=kontekst)
     assert "Легковой" in rezultat
 
 
 async def test_spisok_kategoriyy_vu():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_kategoriyy_vu(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_kategoriyy_vu(kontekst=kontekst)
     assert "B" in rezultat
 
 
 async def test_spisok_vidov_narusheniy():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_vidov_narusheniy(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_vidov_narusheniy(kontekst=kontekst)
     assert "скорост" in rezultat.lower()
 
 
 async def test_spisok_statusov_shtrafov():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_statusov_shtrafov(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_statusov_shtrafov(kontekst=kontekst)
     assert "Оплачен" in rezultat
 
 
 async def test_spisok_tipov_dtp():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_tipov_dtp(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_tipov_dtp(kontekst=kontekst)
     assert "Столкновение" in rezultat
 
 
 async def test_spisok_regionov_registratsii():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.spisok_regionov_registratsii(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.spisok_regionov_registratsii(kontekst=kontekst)
     assert "Москва" in rezultat
 
 
 async def test_info_ts_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(gibdd_tools, "_polnaya_proverka_ts", return_value=([], [], [], [])):
-        rezultat = await gibdd_tools.info_ts(ctx=ctx, vin="XTA21140052XXXXXX")
+        rezultat = await gibdd_tools.info_ts(kontekst=kontekst, vin="XTA21140052XXXXXX")
     assert "не найден" in rezultat
 
 
 async def test_info_vu_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(gibdd_tools.client, "proverka_vu", return_value=None):
-        rezultat = await gibdd_tools.info_vu(ctx=ctx, nomer_vu="7700000000")
+        rezultat = await gibdd_tools.info_vu(kontekst=kontekst, nomer_vu="7700000000")
     assert "не найдена" in rezultat
 
 
 async def test_shtrafy_po_ts():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.shtrafy_po_ts(ctx=ctx, gos_nomer="А123АА77")
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.shtrafy_po_ts(kontekst=kontekst, gos_nomer="А123АА77")
     assert "Госуслуги" in rezultat
 
 
 async def test_shtrafy_po_vu():
-    ctx = _maket_konteksta()
-    rezultat = await gibdd_tools.shtrafy_po_vu(ctx=ctx, nomer_vu="7700000000")
+    kontekst = _maket_konteksta()
+    rezultat = await gibdd_tools.shtrafy_po_vu(kontekst=kontekst, nomer_vu="7700000000")
     assert "Госуслуги" in rezultat
 
 
 async def test_statistika_dtp_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(gibdd_tools.client, "statistika_dtp_region", return_value=None):
-        rezultat = await gibdd_tools.statistika_dtp(ctx=ctx, subiekt="Москва", god=2024)
+        rezultat = await gibdd_tools.statistika_dtp(kontekst=kontekst, subiekt="Москва", god=2024)
     assert "не найдена" in rezultat
 
 
 async def test_istoriya_registraciy_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(gibdd_tools.client, "proverka_istorii_ts", return_value=[]):
-        rezultat = await gibdd_tools.istoriya_registraciy(ctx=ctx, vin="XTA21140052XXXXXX")
+        rezultat = await gibdd_tools.istoriya_registraciy(
+            kontekst=kontekst, vin="XTA21140052XXXXXX"
+        )
     assert "не найдена" in rezultat

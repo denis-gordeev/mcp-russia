@@ -17,7 +17,7 @@ from .constants import (
 )
 
 
-async def spisok_napravleniy(ctx: Context) -> str:
+async def spisok_napravleniy(kontekst: Context) -> str:
     """Список направлений деятельности Роскомнадзора.
 
     Возвращает:
@@ -27,7 +27,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
-async def spisok_tipov_licenziy(ctx: Context) -> str:
+async def spisok_tipov_licenziy(kontekst: Context) -> str:
     """Список типов лицензий связи.
 
     Возвращает:
@@ -37,7 +37,7 @@ async def spisok_tipov_licenziy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип лицензии"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
+async def spisok_kategoriy_narusheniy(kontekst: Context) -> str:
     """Список категорий нарушений.
 
     Возвращает:
@@ -47,7 +47,7 @@ async def spisok_kategoriy_narusheniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Категория нарушения"], stroki_tablitsy)
 
 
-async def spisok_reestrov(ctx: Context) -> str:
+async def spisok_reestrov(kontekst: Context) -> str:
     """Список реестров Роскомнадзора.
 
     Возвращает:
@@ -57,7 +57,7 @@ async def spisok_reestrov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Реестр"], stroki_tablitsy)
 
 
-async def spisok_tipov_smi(ctx: Context) -> str:
+async def spisok_tipov_smi(kontekst: Context) -> str:
     """Список типов СМИ.
 
     Возвращает:
@@ -67,7 +67,7 @@ async def spisok_tipov_smi(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип СМИ"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
+async def spisok_kategoriy_pd_operatorov(kontekst: Context) -> str:
     """Список категорий операторов персональных данных.
 
     Возвращает:
@@ -77,7 +77,7 @@ async def spisok_kategoriy_pd_operatorov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Категория оператора"], stroki_tablitsy)
 
 
-async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -> str:
+async def info_licenzii(kontekst: Context, nomer_licenzii: str = "", inn: str = "") -> str:
     """Информация о лицензии связи.
 
     Аргументы:
@@ -87,7 +87,7 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
     Возвращает:
         Информация о лицензии (тип, организация, даты, статус, территория).
     """
-    await ctx.info("Запрос информации о лицензии связи...")
+    await kontekst.info("Запрос информации о лицензии связи...")
     licenzii = await client.poisk_licenziy(nomer=nomer_licenzii, inn=inn)
     if not licenzii:
         return "Лицензия не найдена.\n\nРеестр лицензий связи: https://rkn.gov.ru/licenses"
@@ -105,7 +105,7 @@ async def info_licenzii(ctx: Context, nomer_licenzii: str = "", inn: str = "") -
     return "\n".join(stroki)
 
 
-async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
+async def poisk_smi(kontekst: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
     """Поиск СМИ по регистрационному номеру или названию.
 
     Аргументы:
@@ -115,7 +115,7 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
     Возвращает:
         Список СМИ с информацией о типе, учредителе, языке.
     """
-    await ctx.info("Поиск СМИ в реестре Роскомнадзора...")
+    await kontekst.info("Поиск СМИ в реестре Роскомнадзора...")
     smi = await client.poisk_smi(
         registracionnyy_nomer=registracionnyy_nomer,
         nazvanie=nazvanie,
@@ -138,7 +138,7 @@ async def poisk_smi(ctx: Context, registracionnyy_nomer: str = "", nazvanie: str
     )
 
 
-async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> str:
+async def info_operatora_pd(kontekst: Context, inn: str = "", nazvanie: str = "") -> str:
     """Информация об операторе персональных данных.
 
     Аргументы:
@@ -148,7 +148,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
     Возвращает:
         Список операторов ПД с типом, целями обработки, статусом.
     """
-    await ctx.info("Поиск оператора ПД в реестре Роскомнадзора...")
+    await kontekst.info("Поиск оператора ПД в реестре Роскомнадзора...")
     operatory = await client.poisk_operatora_pd(inn=inn, nazvanie=nazvanie)
     if not operatory:
         return (
@@ -171,7 +171,7 @@ async def info_operatora_pd(ctx: Context, inn: str = "", nazvanie: str = "") -> 
     )
 
 
-async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
+async def poisk_narusheniy(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
     """Поиск нарушений в сфере связи/ИТ.
 
     Аргументы:
@@ -191,7 +191,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     )
 
 
-async def proverka_blokirovki(ctx: Context, domen: str) -> str:
+async def proverka_blokirovki(kontekst: Context, domen: str) -> str:
     """Проверка наличия сайта в реестре запрещённых сайтов.
 
     Аргументы:
@@ -200,7 +200,7 @@ async def proverka_blokirovki(ctx: Context, domen: str) -> str:
     Возвращает:
         Информация о наличии сайта в реестре блокировок.
     """
-    await ctx.info(f"Проверка блокировки {domen}...")
+    await kontekst.info(f"Проверка блокировки {domen}...")
     dannye = await client.proverka_blokirovki(domen)
     if dannye.get("blokirovka"):
         stroki = [
@@ -218,7 +218,7 @@ async def proverka_blokirovki(ctx: Context, domen: str) -> str:
     return "\n".join(stroki)
 
 
-async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+async def poisk_ori(kontekst: Context, nazvanie: str = "", inn: str = "") -> str:
     """Поиск организаторов распространения информации (ОРИ).
 
     Аргументы:
@@ -228,7 +228,7 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     Возвращает:
         Список ОРИ с типом, статусом, основанием включения.
     """
-    await ctx.info("Поиск ОРИ в реестре Роскомнадзора...")
+    await kontekst.info("Поиск ОРИ в реестре Роскомнадзора...")
     ori = await client.poisk_ori(nazvanie=nazvanie, inn=inn)
     if not ori:
         return (
@@ -251,7 +251,9 @@ async def poisk_ori(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     )
 
 
-async def zapisi_reestra(ctx: Context, kod_reestra: str, identifikator_zapisi: str = "") -> str:
+async def zapisi_reestra(
+    kontekst: Context, kod_reestra: str, identifikator_zapisi: str = ""
+) -> str:
     """Информация о реестре Роскомнадзора.
 
     Аргументы:

@@ -14,58 +14,58 @@ from mcp_russia.data.rosgidromet.constants import STANCII_MONITORINGA
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_stanciy():
-    ctx = _maket_konteksta()
-    rezultat = await rosgidromet_tools.spisok_stanciy(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosgidromet_tools.spisok_stanciy(kontekst)
     assert "Станции мониторинга" in rezultat
     assert "Москва" in rezultat
 
 
 async def test_spisok_tipov_dannykh():
-    ctx = _maket_konteksta()
-    rezultat = await rosgidromet_tools.spisok_tipov_dannykh(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosgidromet_tools.spisok_tipov_dannykh(kontekst)
     assert "метеорологических данных" in rezultat
     assert "экологических данных" in rezultat
 
 
 async def test_pogoda_seychas_nedostupen():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_pogodu", return_value=None):
-        rezultat = await rosgidromet_tools.pogoda_seychas(stanciya="99", ctx=ctx)
+        rezultat = await rosgidromet_tools.pogoda_seychas(stanciya="99", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 
 async def test_prognoz_pogody_nedostupen():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_prognoz", return_value=[]):
-        rezultat = await rosgidromet_tools.prognoz_pogody(stanciya="99", ctx=ctx)
+        rezultat = await rosgidromet_tools.prognoz_pogody(stanciya="99", kontekst=kontekst)
     assert "недоступен" in rezultat
 
 
 async def test_ekologiya_regiona_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_ekologiyu", return_value=[]):
-        rezultat = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", ctx=ctx)
+        rezultat = await rosgidromet_tools.ekologiya_regiona(gorod="Тест", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 
 async def test_preduprezhdeniya_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_preduprezhdeniya", return_value=[]):
-        rezultat = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", ctx=ctx)
+        rezultat = await rosgidromet_tools.preduprezhdeniya(subiekt="Тест", kontekst=kontekst)
     assert "отсутствуют" in rezultat
 
 
 async def test_sputnik_monitoring_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_sputnik_dannye", return_value=[]):
-        rezultat = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", ctx=ctx)
+        rezultat = await rosgidromet_tools.sputnik_monitoring(subiekt="Тест", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 

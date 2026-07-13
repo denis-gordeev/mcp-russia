@@ -14,36 +14,36 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 from . import client
 
 
-async def spisok_vidov_nadzora(ctx: Context) -> str:
+async def spisok_vidov_nadzora(kontekst: Context) -> str:
     """Получить список видов надзора Россельхознадзора."""
-    await ctx.info("Запрос списка видов надзора...")
+    await kontekst.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды надзора Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_proverok(ctx: Context) -> str:
+async def spisok_kategoriy_proverok(kontekst: Context) -> str:
     """Получить список категорий проверок."""
-    await ctx.info("Запрос списка категорий проверок...")
+    await kontekst.info("Запрос списка категорий проверок...")
     kategorii = client.poluchit_spisok_kategoriy_proverok()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
     zagolovok = "**Категории проверок Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
-async def spisok_vidov_narusheniy(ctx: Context) -> str:
+async def spisok_vidov_narusheniy(kontekst: Context) -> str:
     """Получить список видов нарушений."""
-    await ctx.info("Запрос списка видов нарушений...")
+    await kontekst.info("Запрос списка видов нарушений...")
     vidy = client.poluchit_spisok_vidov_narusheniy()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды нарушений Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид нарушений"], stroki_tablitsy)
 
 
-async def spisok_tipov_produktsii(ctx: Context) -> str:
+async def spisok_tipov_produktsii(kontekst: Context) -> str:
     """Получить список типов поднадзорной продукции."""
-    await ctx.info("Запрос списка типов продукции...")
+    await kontekst.info("Запрос списка типов продукции...")
     tipy = client.poluchit_spisok_tipov_produktsii()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     zagolovok = "**Типы поднадзорной продукции**\n\n"
@@ -51,7 +51,7 @@ async def spisok_tipov_produktsii(ctx: Context) -> str:
 
 
 async def poisk_proverok(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     vid_nadzora: str = "",
     tip_proverki: str = "",
@@ -66,7 +66,7 @@ async def poisk_proverok(
     Возвращает:
         Список проверок.
     """
-    await ctx.info("Поиск проверок Россельхознадзора...")
+    await kontekst.info("Поиск проверок Россельхознадзора...")
     proverki = await client.poisk_proverok(
         subiekt=subiekt,
         vid_nadzora=vid_nadzora,
@@ -118,7 +118,7 @@ async def poisk_proverok(
 
 
 async def poisk_karantinnykh_obektov(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     tip: str = "",
 ) -> str:
@@ -131,7 +131,7 @@ async def poisk_karantinnykh_obektov(
     Возвращает:
         Список карантинных объектов.
     """
-    await ctx.info("Поиск карантинных объектов...")
+    await kontekst.info("Поиск карантинных объектов...")
     obekty = await client.poisk_karantinnykh_obektov(subiekt=subiekt, tip=tip)
     if not obekty:
         return (
@@ -156,7 +156,7 @@ async def poisk_karantinnykh_obektov(
 
 
 async def poisk_registratsiy_produktsii(
-    ctx: Context,
+    kontekst: Context,
     tip_produktsii: str = "",
     proizvoditel: str = "",
 ) -> str:
@@ -169,7 +169,7 @@ async def poisk_registratsiy_produktsii(
     Возвращает:
         Список зарегистрированной продукции.
     """
-    await ctx.info("Поиск зарегистрированной продукции...")
+    await kontekst.info("Поиск зарегистрированной продукции...")
     registratsii = await client.poisk_registratsiy_produktsii(
         tip_produktsii=tip_produktsii,
         proizvoditel=proizvoditel,
@@ -197,7 +197,7 @@ async def poisk_registratsiy_produktsii(
 
 
 async def veterinarsnye_sertifikaty(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     tip_produktsii: str = "",
 ) -> str:
@@ -210,7 +210,7 @@ async def veterinarsnye_sertifikaty(
     Возвращает:
         Список ветеринарных сертификатов.
     """
-    await ctx.info("Поиск ветеринарных сертификатов...")
+    await kontekst.info("Поиск ветеринарных сертификатов...")
     sertifikaty = await client.veterinarsnye_sertifikaty(
         subiekt=subiekt,
         tip_produktsii=tip_produktsii,
@@ -238,7 +238,7 @@ async def veterinarsnye_sertifikaty(
 
 
 async def preduprezhdeniya_karantina(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
 ) -> str:
     """Предупреждения о карантинных ограничениях.
@@ -249,7 +249,7 @@ async def preduprezhdeniya_karantina(
     Возвращает:
         Список предупреждений.
     """
-    await ctx.info("Запрос предупреждений о карантине...")
+    await kontekst.info("Запрос предупреждений о карантине...")
     preduprezhdeniya = await client.preduprezhdeniya_karantina(subiekt=subiekt)
     if not preduprezhdeniya:
         return (

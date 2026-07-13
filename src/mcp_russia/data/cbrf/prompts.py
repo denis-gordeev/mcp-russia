@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_valyut(kontekst: str, ctx: Context) -> str:
+async def analiz_valyut(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ динамики валютных курсов на основе данных ЦБ РФ.
 
     Аргументы:
@@ -26,7 +26,7 @@ async def analiz_valyut(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_ekonomiki(ctx: Context) -> str:
+async def obzor_ekonomiki(kontekst_mcp: Context) -> str:
     """Обзор ключевых экономических показателей РФ.
 
     Возвращает:

@@ -6,39 +6,39 @@ from mcp_russia.data.rosprirodnadzor import tools as rpn_tools
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_spisok_vidov_nadzora():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_vidov_nadzora(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_vidov_nadzora(kontekst)
     assert "надзор" in rezultat.lower() or "экологический" in rezultat.lower()
 
 
 async def test_spisok_kategoriy_obnv():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_kategoriy_obnv(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_kategoriy_obnv(kontekst)
     assert "категория" in rezultat.lower() or "значительн" in rezultat.lower()
 
 
 async def test_spisok_vidov_litsenziy_nedra():
-    ctx = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_vidov_litsenziy_nedra(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rpn_tools.spisok_vidov_litsenziy_nedra(kontekst)
     assert "лицензий" in rezultat.lower() or "недр" in rezultat.lower()
 
 
 async def test_poisk_proverok_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=[]):
-        rezultat = await rpn_tools.poisk_proverok(ctx)
+        rezultat = await rpn_tools.poisk_proverok(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_poisk_proverok_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "ПР-2026-001",
@@ -51,19 +51,19 @@ async def test_poisk_proverok_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_proverok", return_value=maket_dannykh):
-        rezultat = await rpn_tools.poisk_proverok(ctx)
+        rezultat = await rpn_tools.poisk_proverok(kontekst)
     assert "Промышленник" in rezultat
 
 
 async def test_info_proverki_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "info_proverki", return_value=None):
-        rezultat = await rpn_tools.info_proverki("nesushchestvuyushchiy", ctx)
+        rezultat = await rpn_tools.info_proverki("nesushchestvuyushchiy", kontekst)
     assert "не найдена" in rezultat
 
 
 async def test_info_proverki_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = {
         "nomer": "ПР-2026-001",
         "organizaciya": "ООО «Промышленник»",
@@ -74,19 +74,19 @@ async def test_info_proverki_nayden():
         "vyavleno_narusheniy": 3,
     }
     with patch.object(rpn_tools.client, "info_proverki", return_value=maket_dannykh):
-        rezultat = await rpn_tools.info_proverki("ПР-2026-001", ctx)
+        rezultat = await rpn_tools.info_proverki("ПР-2026-001", kontekst)
     assert "Промышленник" in rezultat
 
 
 async def test_poisk_obektov_negativnogo_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=[]):
-        rezultat = await rpn_tools.poisk_obektov_negativnogo(ctx)
+        rezultat = await rpn_tools.poisk_obektov_negativnogo(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_poisk_obektov_negativnogo_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "ОНВ-001",
@@ -97,19 +97,19 @@ async def test_poisk_obektov_negativnogo_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_obektov_negativnogo", return_value=maket_dannykh):
-        rezultat = await rpn_tools.poisk_obektov_negativnogo(ctx)
+        rezultat = await rpn_tools.poisk_obektov_negativnogo(kontekst)
     assert "Химпром" in rezultat
 
 
 async def test_poisk_litsenziy_nedra_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=[]):
-        rezultat = await rpn_tools.poisk_litsenziy_nedra(ctx)
+        rezultat = await rpn_tools.poisk_litsenziy_nedra(kontekst)
     assert isinstance(rezultat, str)
 
 
 async def test_poisk_litsenziy_nedra_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "ЛЦ-001",
@@ -120,5 +120,5 @@ async def test_poisk_litsenziy_nedra_nayden():
         },
     ]
     with patch.object(rpn_tools.client, "poisk_litsenziy_nedra", return_value=maket_dannykh):
-        rezultat = await rpn_tools.poisk_litsenziy_nedra(ctx)
+        rezultat = await rpn_tools.poisk_litsenziy_nedra(kontekst)
     assert "Газпром" in rezultat

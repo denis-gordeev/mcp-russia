@@ -54,7 +54,7 @@ class TestMetaFunktsii:
             trebuet_autentifikatsii=True,
             peremennaya_avt_env="TEST_MCP_KEY",
         )
-        with patch.dict(os.environ, {"TEST_MCP_KEY": "secret"}):
+        with patch.dict(os.environ, {"TEST_MCP_KEY": "taynyy_klyuch"}):
             assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
@@ -138,7 +138,7 @@ class TestReyestrFunktsiy:
     def test_smontirovat_vse_pustoy(self) -> None:
         """Монтирование с пустым реестром не вызывает исключение."""
         reyestr = ReyestrFunktsiy()
-        koren = FastMCP("test-root")
+        koren = FastMCP("koren-proverka")
         reyestr.smontirovat_vse(koren)  # не должен вызывать исключение
 
     def test_zaregistrirovat_i_smontirovat_vruchnuyu(self) -> None:
@@ -146,7 +146,7 @@ class TestReyestrFunktsiy:
         reyestr = ReyestrFunktsiy()
 
         metadannye_ekz = MetaFunktsii(imya="test_funktsiya", opisanie="Тестовая функция")
-        podserver = FastMCP("test-sub")
+        podserver = FastMCP("podserver-proverka")
 
         @podserver.tool
         def proverka_svyazi_fn() -> str:
@@ -159,7 +159,7 @@ class TestReyestrFunktsiy:
             put_modulya="fake.module",
         )
 
-        koren = FastMCP("test-root")
+        koren = FastMCP("koren-proverka")
         reyestr.smontirovat_vse(koren)
 
         assert reyestr.poluchit_funktsiyu("test_funktsiya") is not None
@@ -168,7 +168,7 @@ class TestReyestrFunktsiy:
     def test_svodka_s_funktsiyami(self) -> None:
         reyestr = ReyestrFunktsiy()
         metadannye_ekz = MetaFunktsii(imya="cbrf", opisanie="ЦБ РФ данные")
-        podmodul = FastMCP("sub")
+        podmodul = FastMCP("podmodul")
         reyestr._funktsii["cbrf"] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz, server_funktsiya=podmodul, put_modulya="m"
         )
@@ -207,19 +207,19 @@ class TestIntegratsiyaReestra:
     @pytest.mark.asyncio
     async def test_smontirovannyy_instrument_vyzyvaemyy(self) -> None:
         """Инструмент, подключённый через реестр, вызывается через Client."""
-        podmodul = FastMCP("sub")
+        podmodul = FastMCP("podmodul")
 
         @podmodul.tool
         def ekho(soobshcheniye: str) -> str:
             """Вернуть сообщение."""
-            return f"echo: {soobshcheniye}"
+            return f"эхо: {soobshcheniye}"
 
-        koren = FastMCP("root")
+        koren = FastMCP("koren")
         koren.mount(podmodul, namespace="test")
 
         async with Client(koren) as klient:
-            rezultat = await klient.call_tool("test_ekho", {"soobshcheniye": "hello"})
-            assert rezultat.data == "echo: hello"
+            rezultat = await klient.call_tool("test_ekho", {"soobshcheniye": "privet"})
+            assert rezultat.data == "эхо: privet"
 
     @pytest.mark.asyncio
     async def test_kornevoy_server_zapuskaetsya_pustym(self) -> None:

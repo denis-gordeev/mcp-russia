@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_veterinarnoy_proverki(kontekst: str, ctx: Context) -> str:
+async def analiz_veterinarnoy_proverki(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ ветеринарной проверки.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_veterinarnoy_proverki(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_karantinnoy_obstanovki(ctx: Context) -> str:
+async def obzor_karantinnoy_obstanovki(kontekst_mcp: Context) -> str:
     """Обзор карантинной обстановки.
 
     Возвращает:

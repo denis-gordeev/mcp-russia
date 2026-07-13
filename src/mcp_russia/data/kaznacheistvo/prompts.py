@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_ispolneniya_byudzheta(kontekst: str, ctx: Context) -> str:
+async def analiz_ispolneniya_byudzheta(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ исполнения бюджета по данным Федерального казначейства.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_ispolneniya_byudzheta(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_byudzhetnoy_sistemy(ctx: Context) -> str:
+async def obzor_byudzhetnoy_sistemy(kontekst_mcp: Context) -> str:
     """Обзор бюджетной системы Российской Федерации.
 
     Возвращает:

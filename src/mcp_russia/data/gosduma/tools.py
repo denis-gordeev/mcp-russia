@@ -23,7 +23,7 @@ def _zametka_ob_avtorizatsii() -> str:
     return ""
 
 
-async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
+async def spisok_deputatov(sozyv: str = "", kontekst: Context | None = None) -> str:
     """Получить список депутатов Государственной Думы.
 
     Аргументы:
@@ -32,8 +32,8 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     Возвращает:
         Список депутатов.
     """
-    if ctx:
-        await ctx.info(f"Запрос депутатов Госдумы (созыв: {sozyv or 'текущий'})...")
+    if kontekst:
+        await kontekst.info(f"Запрос депутатов Госдумы (созыв: {sozyv or 'текущий'})...")
     deputats = await client.poluchit_deputatov(sozyv)
 
     if not deputats:
@@ -68,7 +68,7 @@ async def spisok_deputatov(sozyv: str = "", ctx: Context | None = None) -> str:
     )
 
 
-async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
+async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
     """Получить информацию о конкретном депутате Госдумы.
 
     Аргументы:
@@ -77,7 +77,7 @@ async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
     Возвращает:
         Подробная информация о депутате.
     """
-    await ctx.info(f"Запрос информации о депутате {identifikator_deputata}...")
+    await kontekst.info(f"Запрос информации о депутате {identifikator_deputata}...")
     deputat = await client.poluchit_deputata(identifikator_deputata)
 
     if not deputat:
@@ -104,13 +104,13 @@ async def info_deputata(identifikator_deputata: int, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_frakcii(ctx: Context) -> str:
+async def spisok_frakcii(kontekst: Context) -> str:
     """Получить список фракций Государственной Думы.
 
     Возвращает:
         Список фракций.
     """
-    await ctx.info("Запрос списка фракций Госдумы...")
+    await kontekst.info("Запрос списка фракций Госдумы...")
     frakcii = client.poluchit_fraktsii()
 
     stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in frakcii]
@@ -118,13 +118,13 @@ async def spisok_frakcii(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Фракция"], stroki_tablitsy)
 
 
-async def spisok_komitetov(ctx: Context) -> str:
+async def spisok_komitetov(kontekst: Context) -> str:
     """Получить список комитетов Государственной Думы.
 
     Возвращает:
         Список комитетов.
     """
-    await ctx.info("Запрос списка комитетов Госдумы...")
+    await kontekst.info("Запрос списка комитетов Госдумы...")
     komitety = client.poluchit_komitety()
 
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
@@ -132,13 +132,13 @@ async def spisok_komitetov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
 
-async def spisok_sozyvov(ctx: Context) -> str:
+async def spisok_sozyvov(kontekst: Context) -> str:
     """Получить список созывов Государственной Думы.
 
     Возвращает:
         Список созывов.
     """
-    await ctx.info("Запрос списка созывов Госдумы...")
+    await kontekst.info("Запрос списка созывов Госдумы...")
     sozyvy = client.poluchit_sozyvy()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sozyvy]
@@ -149,7 +149,7 @@ async def spisok_sozyvov(ctx: Context) -> str:
 async def zakonoproekty(
     sostoyanie: str = "",
     ogranichenie: int = 20,
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить список законопроектов Государственной Думы.
 
@@ -160,8 +160,8 @@ async def zakonoproekty(
     Возвращает:
         Список законопроектов.
     """
-    if ctx:
-        await ctx.info(f"Запрос законопроектов (статус: {sostoyanie or 'все'})...")
+    if kontekst:
+        await kontekst.info(f"Запрос законопроектов (статус: {sostoyanie or 'все'})...")
     zakonoproekty = await client.poluchit_zakonoproekty(
         sostoyanie=sostoyanie, ogranichenie=ogranichenie
     )
@@ -193,7 +193,7 @@ async def zakonoproekty(
 async def golosovaniya(
     sozyv: str = "",
     ogranichenie: int = 20,
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить результаты голосований Государственной Думы.
 
@@ -204,8 +204,8 @@ async def golosovaniya(
     Возвращает:
         Результаты голосований.
     """
-    if ctx:
-        await ctx.info(f"Запрос голосований (созыв: {sozyv or 'текущий'})...")
+    if kontekst:
+        await kontekst.info(f"Запрос голосований (созыв: {sozyv or 'текущий'})...")
     golosovaniya_spisok = await client.poluchit_golosovaniya(
         sozyv=sozyv, ogranichenie=ogranichenie
     )

@@ -10,8 +10,8 @@ from mcp_russia._shared.cache import KeshSVremenemZhizni, kesh_s_vremenem_zhizni
 class TestKeshSVremenemZhizni:
     def test_ustanovka_i_poluchenie(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=60)
-        kesh.ustanovit("key", "value")
-        assert kesh.poluchit("key") == "value"
+        kesh.ustanovit("klyuch", "znachenie")
+        assert kesh.poluchit("klyuch") == "znachenie"
 
     def test_poluchenie_otsutstvuyushchego_klyucha(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=60)
@@ -19,9 +19,9 @@ class TestKeshSVremenemZhizni:
 
     def test_istekshaya_zapis_vozvrashchaet_nichego(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=0.01)
-        kesh.ustanovit("key", "value")
+        kesh.ustanovit("klyuch", "znachenie")
         time.sleep(0.02)
-        assert kesh.poluchit("key") is None
+        assert kesh.poluchit("klyuch") is None
 
     def test_ochistka(self) -> None:
         kesh = KeshSVremenemZhizni(vremya_zhizni=60)

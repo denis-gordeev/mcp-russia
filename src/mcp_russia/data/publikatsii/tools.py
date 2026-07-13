@@ -19,13 +19,13 @@ from . import client
 _ISTOCHNIK_PRAVO = "\n\n_Источник: Официальный портал правовой информации (pravo.gov.ru)_"
 
 
-async def spisok_tipov_aktov(ctx: Context) -> str:
+async def spisok_tipov_aktov(kontekst: Context) -> str:
     """Получить список типов нормативных актов.
 
     Возвращает:
         Список типов актов.
     """
-    await ctx.info("Запрос списка типов актов...")
+    await kontekst.info("Запрос списка типов актов...")
     tipy = client.poluchit_spisok_tipov_aktov()
 
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
@@ -33,13 +33,13 @@ async def spisok_tipov_aktov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
-async def spisok_otrasley(ctx: Context) -> str:
+async def spisok_otrasley(kontekst: Context) -> str:
     """Получить список отраслей законодательства.
 
     Возвращает:
         Список отраслей.
     """
-    await ctx.info("Запрос списка отраслей законодательства...")
+    await kontekst.info("Запрос списка отраслей законодательства...")
     otrsli = client.poluchit_spisok_otrasley()
 
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in otrsli]
@@ -47,13 +47,13 @@ async def spisok_otrasley(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
-async def spisok_istochnikov(ctx: Context) -> str:
+async def spisok_istochnikov(kontekst: Context) -> str:
     """Получить список источников официальных публикаций.
 
     Возвращает:
         Список источников.
     """
-    await ctx.info("Запрос списка источников публикаций...")
+    await kontekst.info("Запрос списка источников публикаций...")
     istochniki = client.poluchit_spisok_istochnikov()
 
     stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in istochniki]
@@ -61,13 +61,13 @@ async def spisok_istochnikov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
 
-async def spisok_statusov(ctx: Context) -> str:
+async def spisok_statusov(kontekst: Context) -> str:
     """Получить список статусов документов.
 
     Возвращает:
         Список статусов.
     """
-    await ctx.info("Запрос списка статусов документов...")
+    await kontekst.info("Запрос списка статусов документов...")
     statusy = client.poluchit_spisok_statusov()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
@@ -78,7 +78,7 @@ async def spisok_statusov(ctx: Context) -> str:
 async def info_normativnogo_akta(
     nomer: str,
     tip: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить информацию о нормативном акте по номеру.
 
@@ -89,8 +89,8 @@ async def info_normativnogo_akta(
     Возвращает:
         Информация о нормативном акте.
     """
-    if ctx:
-        await ctx.info(f"Запрос информации о нормативном акте {nomer}...")
+    if kontekst:
+        await kontekst.info(f"Запрос информации о нормативном акте {nomer}...")
     dannye = await client.poluchit_normativnyy_akt(nomer, tip)
 
     if not dannye:
@@ -118,7 +118,7 @@ async def info_normativnogo_akta(
     return "\n".join(stroki)
 
 
-async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
+async def info_zakonproekta(nomer: str, kontekst: Context | None = None) -> str:
     """Получить информацию о законопроекте по номеру.
 
     Аргументы:
@@ -127,8 +127,8 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
     Возвращает:
         Информация о законопроекте.
     """
-    if ctx:
-        await ctx.info(f"Запрос информации о законопроекте {nomer}...")
+    if kontekst:
+        await kontekst.info(f"Запрос информации о законопроекте {nomer}...")
     dannye = await client.poluchit_zakon_proekt(nomer)
 
     if not dannye:
@@ -153,7 +153,7 @@ async def info_zakonproekta(nomer: str, ctx: Context | None = None) -> str:
 async def poisk_aktov(
     tekst: str,
     tip: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Поиск нормативных актов по тексту.
 
@@ -164,8 +164,8 @@ async def poisk_aktov(
     Возвращает:
         Результаты поиска.
     """
-    if ctx:
-        await ctx.info(f"Поиск актов: '{tekst}'...")
+    if kontekst:
+        await kontekst.info(f"Поиск актов: '{tekst}'...")
     rezultaty = await client.poluchit_poisku(tekst, tip)
 
     if not rezultaty:
@@ -195,7 +195,7 @@ async def publikatsii_po_datam(
     otrasl: str = "",
     data_s: str = "",
     data_po: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить публикации за период.
 
@@ -208,8 +208,8 @@ async def publikatsii_po_datam(
     Возвращает:
         Список публикаций.
     """
-    if ctx:
-        await ctx.info("Запрос публикаций за период...")
+    if kontekst:
+        await kontekst.info("Запрос публикаций за период...")
     dannye = await client.poluchit_publikatsii(
         tip=tip, otrasl=otrasl, data_s=data_s, data_po=data_po
     )
@@ -245,7 +245,7 @@ async def publikatsii_po_datam(
     return "\n".join(stroki)
 
 
-async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
+async def izmeneniya_akta(akt_nomer: str, kontekst: Context | None = None) -> str:
     """Получить изменения нормативного акта.
 
     Аргументы:
@@ -254,8 +254,8 @@ async def izmeneniya_akta(akt_nomer: str, ctx: Context | None = None) -> str:
     Возвращает:
         Список изменений.
     """
-    if ctx:
-        await ctx.info(f"Запрос изменений акта {akt_nomer}...")
+    if kontekst:
+        await kontekst.info(f"Запрос изменений акта {akt_nomer}...")
     dannye = await client.poluchit_izmeneniya_akta(akt_nomer)
 
     if not dannye:

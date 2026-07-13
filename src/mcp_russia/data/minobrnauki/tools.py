@@ -18,7 +18,7 @@ from .constants import (
 )
 
 
-async def spisok_tipov_vuzov(ctx: Context) -> str:
+async def spisok_tipov_vuzov(kontekst: Context) -> str:
     """Список типов высших учебных заведений.
 
     Возвращает:
@@ -28,7 +28,7 @@ async def spisok_tipov_vuzov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип вуза"], stroki_tablitsy)
 
 
-async def spisok_form_obucheniya(ctx: Context) -> str:
+async def spisok_form_obucheniya(kontekst: Context) -> str:
     """Список форм обучения.
 
     Возвращает:
@@ -38,7 +38,7 @@ async def spisok_form_obucheniya(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Форма обучения"], stroki_tablitsy)
 
 
-async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
+async def spisok_urovney_obrazovaniya(kontekst: Context) -> str:
     """Список уровней образования.
 
     Возвращает:
@@ -48,7 +48,7 @@ async def spisok_urovney_obrazovaniya(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Уровень образования"], stroki_tablitsy)
 
 
-async def spisok_otrasley_nauki(ctx: Context) -> str:
+async def spisok_otrasley_nauki(kontekst: Context) -> str:
     """Список отраслей науки.
 
     Возвращает:
@@ -58,7 +58,7 @@ async def spisok_otrasley_nauki(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Отрасль науки"], stroki_tablitsy)
 
 
-async def spisok_tipov_grantov(ctx: Context) -> str:
+async def spisok_tipov_grantov(kontekst: Context) -> str:
     """Список типов научных грантов.
 
     Возвращает:
@@ -68,7 +68,7 @@ async def spisok_tipov_grantov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип гранта"], stroki_tablitsy)
 
 
-async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
+async def spisok_statusov_akkreditatsii(kontekst: Context) -> str:
     """Список статусов аккредитации вузов.
 
     Возвращает:
@@ -78,7 +78,7 @@ async def spisok_statusov_akkreditatsii(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Статус аккредитации"], stroki_tablitsy)
 
 
-async def spisok_federalnyh_okrugov(ctx: Context) -> str:
+async def spisok_federalnyh_okrugov(kontekst: Context) -> str:
     """Список федеральных округов РФ.
 
     Возвращает:
@@ -88,7 +88,7 @@ async def spisok_federalnyh_okrugov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Федеральный округ"], stroki_tablitsy)
 
 
-async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+async def info_vuza(kontekst: Context, nazvanie: str = "", inn: str = "") -> str:
     """Информация о высшем учебном заведении (аккредитация Рособрнадзора).
 
     Аргументы:
@@ -98,7 +98,7 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     Возвращает:
         Сведения о вузе (тип, город, регион, аккредитация).
     """
-    await ctx.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
+    await kontekst.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
     if inn:
         dannye = await client.info_akkreditacii(inn)
     else:
@@ -124,7 +124,7 @@ async def info_vuza(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
     return "\n".join(stroki)
 
 
-async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
+async def programmy_vuza(kontekst: Context, vuz: str, uroven: str = "") -> str:
     """Образовательные программы вуза.
 
     Аргументы:
@@ -134,7 +134,7 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
     Возвращает:
         Список программ с кодами направлений.
     """
-    await ctx.info(f"Запрос программ вуза «{vuz}»...")
+    await kontekst.info(f"Запрос программ вуза «{vuz}»...")
     rezultaty = await client.poisk_akreditovannyh_vuzov(nazvanie=vuz)
     if not rezultaty:
         return f"Вуз «{vuz}» не найден в реестре Рособрнадзора."
@@ -152,7 +152,7 @@ async def programmy_vuza(ctx: Context, vuz: str, uroven: str = "") -> str:
     return "\n".join(stroki)
 
 
-async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
+async def granty_i_isledovaniya(kontekst: Context, organizatsiya: str = "") -> str:
     """Научные гранты и исследования.
 
     Аргументы:
@@ -161,7 +161,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     Возвращает:
         Список грантовых фондов и программ.
     """
-    await ctx.info("Запрос информации о грантах...")
+    await kontekst.info("Запрос информации о грантах...")
     granty = await client.poluchit_granty(organizatsiya)
     if not granty:
         return "Гранты не найдены."
@@ -187,7 +187,7 @@ async def granty_i_isledovaniya(ctx: Context, organizatsiya: str = "") -> str:
     )
 
 
-async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -> str:
+async def reyting_vuzov(kontekst: Context, tip_reytinga: str = "", god: int = 2024) -> str:
     """Рейтинг высших учебных заведений.
 
     Аргументы:
@@ -197,7 +197,7 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
     Возвращает:
         Таблица рейтинга вузов с баллами по категориям.
     """
-    await ctx.info(f"Запрос рейтинга вузов за {god} г....")
+    await kontekst.info(f"Запрос рейтинга вузов за {god} г....")
     reyting = await client.poluchit_reyting(tip_reytinga, god)
     if not reyting:
         return (
@@ -222,7 +222,7 @@ async def reyting_vuzov(ctx: Context, tip_reytinga: str = "", god: int = 2024) -
     )
 
 
-async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
+async def aspirantura(kontekst: Context, organizatsiya: str = "") -> str:
     """Данные об аспирантах и докторантах.
 
     Аргументы:
@@ -242,7 +242,7 @@ async def aspirantura(ctx: Context, organizatsiya: str = "") -> str:
     )
 
 
-async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str:
+async def poisk_licenziy(kontekst: Context, nazvanie: str = "", inn: str = "") -> str:
     """Поиск лицензий на образовательную деятельность.
 
     Аргументы:
@@ -252,7 +252,7 @@ async def poisk_licenziy(ctx: Context, nazvanie: str = "", inn: str = "") -> str
     Возвращает:
         Список лицензий с номерами и статусами.
     """
-    await ctx.info("Запрос лицензий из реестра Рособрнадзора...")
+    await kontekst.info("Запрос лицензий из реестра Рособрнадзора...")
     rezultaty = await client.poisk_licenziy(nazvanie=nazvanie, inn=inn)
     if not rezultaty:
         return "Лицензии не найдены."

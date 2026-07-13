@@ -16,7 +16,7 @@ from .constants import (
 )
 
 
-async def spisok_napravleniy(ctx: Context) -> str:
+async def spisok_napravleniy(kontekst: Context) -> str:
     """Список направлений деятельности Роспотребнадзора.
 
     Возвращает:
@@ -26,7 +26,7 @@ async def spisok_napravleniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
-async def spisok_tipov_proverok(ctx: Context) -> str:
+async def spisok_tipov_proverok(kontekst: Context) -> str:
     """Список типов проверок Роспотребнадзора.
 
     Возвращает:
@@ -36,7 +36,7 @@ async def spisok_tipov_proverok(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип проверки"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_obiektov(ctx: Context) -> str:
+async def spisok_kategoriy_obiektov(kontekst: Context) -> str:
     """Список категорий объектов надзора.
 
     Возвращает:
@@ -46,7 +46,7 @@ async def spisok_kategoriy_obiektov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Категория объекта"], stroki_tablitsy)
 
 
-async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
+async def spisok_regionalnyh_upravleniy(kontekst: Context) -> str:
     """Список региональных управлений Роспотребнадзора.
 
     Возвращает:
@@ -56,7 +56,7 @@ async def spisok_regionalnyh_upravleniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Управление"], stroki_tablitsy)
 
 
-async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
+async def info_proverki(kontekst: Context, nomer_proverki: str) -> str:
     """Подробная информация о проверке Роспотребнадзора.
 
     Аргументы:
@@ -65,7 +65,7 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
     Возвращает:
         Информация о проверке (тип, объект, даты, статус, результат).
     """
-    await ctx.info(f"Запрос проверки № {nomer_proverki}...")
+    await kontekst.info(f"Запрос проверки № {nomer_proverki}...")
     dannye = await client.info_proverki(nomer_proverki)
     if not dannye:
         return f"Проверка № {nomer_proverki} не найдена."
@@ -85,7 +85,7 @@ async def info_proverki(ctx: Context, nomer_proverki: str) -> str:
 
 
 async def poisk_proverok(
-    ctx: Context,
+    kontekst: Context,
     inn: str = "",
     nazvanie: str = "",
     subiekt: str = "",
@@ -100,7 +100,7 @@ async def poisk_proverok(
     Возвращает:
         Список проверок с типом, датами и статусом.
     """
-    await ctx.info("Поиск проверок в реестре Роспотребнадзора...")
+    await kontekst.info("Поиск проверок в реестре Роспотребнадзора...")
     proverki = await client.poisk_proverok(
         inn_tseli=inn,
         nazvanie_tseli=nazvanie,
@@ -126,7 +126,7 @@ async def poisk_proverok(
 
 
 async def plan_proverok(
-    ctx: Context,
+    kontekst: Context,
     god: int = 0,
     subiekt: str = "",
 ) -> str:
@@ -139,7 +139,7 @@ async def plan_proverok(
     Возвращает:
         Список запланированных проверок.
     """
-    await ctx.info("Запрос плана проверок Роспотребнадзора...")
+    await kontekst.info("Запрос плана проверок Роспотребнадзора...")
     proverki = await client.plan_proverok(god=god, subiekt=subiekt)
     if not proverki:
         return (
@@ -163,7 +163,7 @@ async def plan_proverok(
     )
 
 
-async def spisok_sanpinov(ctx: Context) -> str:
+async def spisok_sanpinov(kontekst: Context) -> str:
     """Список основных санитарных правил и нормативов (СанПиН).
 
     Возвращает:
@@ -173,7 +173,7 @@ async def spisok_sanpinov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "СанПиН"], stroki_tablitsy)
 
 
-async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
+async def zhaloby_potrebiteley(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
     """Жалобы потребителей, зарегистрированные через ЗПП Роспотребнадзора.
 
     Аргументы:
@@ -183,7 +183,7 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
     Возвращает:
         Список жалоб с темой, статусом рассмотрения и результатом.
     """
-    await ctx.info("Поиск жалоб потребителей...")
+    await kontekst.info("Поиск жалоб потребителей...")
     zhaloby = await client.poisk_zhalob(organizaciya=organizaciya, inn=inn)
     if not zhaloby:
         return "Жалобы не найдены."
@@ -203,7 +203,7 @@ async def zhaloby_potrebiteley(ctx: Context, organizaciya: str = "", inn: str = 
     )
 
 
-async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") -> str:
+async def poisk_narusheniy(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
     """Поиск санитарных нарушений по организации.
 
     Аргументы:
@@ -213,7 +213,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     Возвращает:
         Список выявленных нарушений.
     """
-    await ctx.info("Поиск нарушений в реестре проверок...")
+    await kontekst.info("Поиск нарушений в реестре проверок...")
     proverki = await client.poisk_proverok(
         inn_tseli=inn,
         nazvanie_tseli=organizaciya,
@@ -237,7 +237,7 @@ async def poisk_narusheniy(ctx: Context, organizaciya: str = "", inn: str = "") 
     )
 
 
-async def pokazateli_bezopasnosti(ctx: Context, kod_pokazatelya: str = "") -> str:
+async def pokazateli_bezopasnosti(kontekst: Context, kod_pokazatelya: str = "") -> str:
     """Показатели эпидемиологической и санитарной безопасности.
 
     Аргументы:

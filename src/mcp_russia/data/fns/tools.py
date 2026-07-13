@@ -65,7 +65,7 @@ def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
     return KategoriiNalogoplatelshchikov
 
 
-async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
+async def info_organizacii(inn: str, kontekst: Context | None = None) -> str:
     """Подробная информация об организации из ЕГРЮЛ.
 
     Использует публичный API egrul.nalog.ru для получения данных.
@@ -76,8 +76,8 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
     Возвращает:
         Сведения об организации (название, адрес, руководитель, статус).
     """
-    if ctx:
-        await ctx.info(f"Запрос данных ЕГРЮЛ по ИНН {inn}...")
+    if kontekst:
+        await kontekst.info(f"Запрос данных ЕГРЮЛ по ИНН {inn}...")
     dannye = await client.poluchit_organizaciyu(inn)
 
     if not dannye:
@@ -108,7 +108,7 @@ async def info_organizacii(inn: str, ctx: Context | None = None) -> str:
     return "\n".join(stroki)
 
 
-async def info_ip(inn: str, ctx: Context | None = None) -> str:
+async def info_ip(inn: str, kontekst: Context | None = None) -> str:
     """Подробная информация об ИП из ЕГРИП.
 
     Использует публичный API egrul.nalog.ru для получения данных.
@@ -119,8 +119,8 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
     Возвращает:
         Сведения об ИП (ФИО, дата регистрации, статус, вид деятельности).
     """
-    if ctx:
-        await ctx.info(f"Запрос данных ЕГРИП по ИНН {inn}...")
+    if kontekst:
+        await kontekst.info(f"Запрос данных ЕГРИП по ИНН {inn}...")
     dannye = await client.poluchit_ip(inn)
 
     if not dannye:
@@ -140,7 +140,7 @@ async def info_ip(inn: str, ctx: Context | None = None) -> str:
     return "\n".join(stroki)
 
 
-async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
+async def proverki_organizacii(inn: str, kontekst: Context | None = None) -> str:
     """Список налоговых проверок организации.
 
     Данные о проверках требуют авторизованный доступ к API ФНС.
@@ -152,8 +152,8 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
     Возвращает:
         Информация о проверках или справка.
     """
-    if ctx:
-        await ctx.info(f"Запрос данных о проверках по ИНН {inn}...")
+    if kontekst:
+        await kontekst.info(f"Запрос данных о проверках по ИНН {inn}...")
     dannye = await client.poluchit_proverki(inn)
 
     if not dannye:
@@ -168,7 +168,9 @@ async def proverki_organizacii(inn: str, ctx: Context | None = None) -> str:
     return zagolovok + tablitsa_v_markdown(["Тип", "Период", "Статус"], stroki_tablitsy)
 
 
-async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None = None) -> str:
+async def nalogovye_nachisleniya(
+    inn: str, period: str = "", kontekst: Context | None = None
+) -> str:
     """Налоговые начисления организации или ИП.
 
     Данные о начислениях требуют авторизованный доступ к API ФНС.
@@ -181,8 +183,8 @@ async def nalogovye_nachisleniya(inn: str, period: str = "", ctx: Context | None
     Возвращает:
         Информация о начислениях или справка.
     """
-    if ctx:
-        await ctx.info(f"Запрос данных о начислениях по ИНН {inn}...")
+    if kontekst:
+        await kontekst.info(f"Запрос данных о начислениях по ИНН {inn}...")
     dannye = await client.poluchit_nachisleniya(inn, period)
 
     if not dannye:

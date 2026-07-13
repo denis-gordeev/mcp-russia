@@ -22,7 +22,7 @@ async def poisk_del(
     otvetchik: str = "",
     inn: str = "",
     kategoriya: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Поиск дел в Картотеке арбитражных дел.
 
@@ -36,8 +36,8 @@ async def poisk_del(
     Возвращает:
         Результаты поиска дел.
     """
-    if ctx:
-        await ctx.info(f"Поиск дел: {nomer or istorcz or otvetchik or 'все'}...")
+    if kontekst:
+        await kontekst.info(f"Поиск дел: {nomer or istorcz or otvetchik or 'все'}...")
 
     dela = await client.poisk_del(
         nomer=nomer,
@@ -96,7 +96,7 @@ async def poisk_del(
 
 async def info_dela(
     nomer_dela: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить подробную информацию о судебном деле.
 
@@ -106,7 +106,7 @@ async def info_dela(
     Возвращает:
         Подробная информация о деле.
     """
-    await ctx.info(f"Запрос информации о деле {nomer_dela}...")
+    await kontekst.info(f"Запрос информации о деле {nomer_dela}...")
     delo = await client.info_dela(nomer_dela)
 
     if not delo:
@@ -132,7 +132,7 @@ async def info_dela(
 
 async def akty_po_delu(
     nomer_dela: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить судебные акты по делу.
 
@@ -142,7 +142,7 @@ async def akty_po_delu(
     Возвращает:
         Судебные акты по делу.
     """
-    await ctx.info(f"Запрос актов по делу {nomer_dela}...")
+    await kontekst.info(f"Запрос актов по делу {nomer_dela}...")
     akty = await client.akty_po_delu(nomer_dela)
 
     if not akty:
@@ -160,7 +160,7 @@ async def akty_po_delu(
 
 async def storony_dela(
     nomer_dela: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить стороны судебного дела.
 
@@ -170,7 +170,7 @@ async def storony_dela(
     Возвращает:
         Стороны дела (истцы и ответчики).
     """
-    await ctx.info(f"Запрос сторон по делу {nomer_dela}...")
+    await kontekst.info(f"Запрос сторон по делу {nomer_dela}...")
     storony = await client.storony_dela(nomer_dela)
 
     if not storony:
@@ -186,13 +186,13 @@ async def storony_dela(
     return "\n".join(stroki)
 
 
-async def spravochnik_kategoriy(ctx: Context) -> str:
+async def spravochnik_kategoriy(kontekst: Context) -> str:
     """Получить справочник категорий дел.
 
     Возвращает:
         Категории дел.
     """
-    await ctx.info("Запрос справочника категорий дел...")
+    await kontekst.info("Запрос справочника категорий дел...")
     kategorii = client.poluchit_kategorii_del()
 
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
@@ -200,13 +200,13 @@ async def spravochnik_kategoriy(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
 
-async def spravochnik_instantsiy(ctx: Context) -> str:
+async def spravochnik_instantsiy(kontekst: Context) -> str:
     """Получить справочник инстанций арбитражных судов.
 
     Возвращает:
         Инстанции судов.
     """
-    await ctx.info("Запрос справочника инстанций судов...")
+    await kontekst.info("Запрос справочника инстанций судов...")
     instantsii = client.poluchit_instantsii()
 
     stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in instantsii]
@@ -214,13 +214,13 @@ async def spravochnik_instantsiy(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Инстанция"], stroki_tablitsy)
 
 
-async def spravochnik_statusov(ctx: Context) -> str:
+async def spravochnik_statusov(kontekst: Context) -> str:
     """Получить справочник статусов дел.
 
     Возвращает:
         Статусы дел.
     """
-    await ctx.info("Запрос справочника статусов дел...")
+    await kontekst.info("Запрос справочника статусов дел...")
     statusy = client.poluchit_statusy_del()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
@@ -228,13 +228,13 @@ async def spravochnik_statusov(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
 
-async def spravochnik_aktov(ctx: Context) -> str:
+async def spravochnik_aktov(kontekst: Context) -> str:
     """Получить справочник типов судебных актов.
 
     Возвращает:
         Типы актов.
     """
-    await ctx.info("Запрос справочника типов актов...")
+    await kontekst.info("Запрос справочника типов актов...")
     tipy = client.poluchit_tipy_aktov()
 
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]

@@ -7,10 +7,10 @@ from mcp_russia.data.fns.schemas import IPEGRIP, OrganizaciyaEGRUL
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 def test_spisok_nalogovyh_rezhimov():
@@ -45,7 +45,7 @@ def test_spisok_kategoriy_nalogoplatelshchikov():
 
 
 async def test_info_organizacii_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_organizatsii = OrganizaciyaEGRUL(
         inn="7707083893",
         ogrn="1027700132195",
@@ -56,21 +56,21 @@ async def test_info_organizacii_nayden():
         sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=maket_organizatsii):
-        rezultat = await fns_tools.info_organizacii("7707083893", ctx=ctx)
+        rezultat = await fns_tools.info_organizacii("7707083893", kontekst=kontekst)
     assert "7707083893" in rezultat
     assert "ПАО Сбербанк" in rezultat
     assert "Действующая" in rezultat
 
 
 async def test_info_organizacii_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=None):
-        rezultat = await fns_tools.info_organizacii("0000000000", ctx=ctx)
+        rezultat = await fns_tools.info_organizacii("0000000000", kontekst=kontekst)
     assert "не найдена" in rezultat
 
 
 async def test_info_ip_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     maket_ip = IPEGRIP(
         inn="500100732259",
         ogrnip="304500116000157",
@@ -79,27 +79,27 @@ async def test_info_ip_nayden():
         sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_ip", return_value=maket_ip):
-        rezultat = await fns_tools.info_ip("500100732259", ctx=ctx)
+        rezultat = await fns_tools.info_ip("500100732259", kontekst=kontekst)
     assert "500100732259" in rezultat
     assert "Иванов" in rezultat
 
 
 async def test_info_ip_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_ip", return_value=None):
-        rezultat = await fns_tools.info_ip("000000000000", ctx=ctx)
+        rezultat = await fns_tools.info_ip("000000000000", kontekst=kontekst)
     assert "не найден" in rezultat
 
 
 async def test_proverki_organizacii():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_proverki", return_value=[]):
-        rezultat = await fns_tools.proverki_organizacii("7707083893", ctx=ctx)
+        rezultat = await fns_tools.proverki_organizacii("7707083893", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 
 async def test_nalogovye_nachisleniya():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_nachisleniya", return_value=[]):
-        rezultat = await fns_tools.nalogovye_nachisleniya("7707083893", ctx=ctx)
+        rezultat = await fns_tools.nalogovye_nachisleniya("7707083893", kontekst=kontekst)
     assert "недоступны" in rezultat

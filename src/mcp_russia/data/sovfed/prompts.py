@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_senatora(kontekst: str, ctx: Context) -> str:
+async def analiz_senatora(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ деятельности сенатора Совета Федерации.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_senatora(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_zakonodatelstva(ctx: Context) -> str:
+async def obzor_zakonodatelstva(kontekst_mcp: Context) -> str:
     """Обзор законодательства, рассмотренного Советом Федерации.
 
     Возвращает:

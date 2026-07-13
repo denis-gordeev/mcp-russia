@@ -14,36 +14,36 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 from . import client
 
 
-async def spisok_vidov_chs(ctx: Context) -> str:
+async def spisok_vidov_chs(kontekst: Context) -> str:
     """Получить список видов чрезвычайных ситуаций."""
-    await ctx.info("Запрос списка видов ЧС...")
+    await kontekst.info("Запрос списка видов ЧС...")
     vidy = client.poluchit_spisok_vidov_chs()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды чрезвычайных ситуаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид ЧС"], stroki_tablitsy)
 
 
-async def spisok_klassov_chs(ctx: Context) -> str:
+async def spisok_klassov_chs(kontekst: Context) -> str:
     """Получить список классов чрезвычайных ситуаций."""
-    await ctx.info("Запрос списка классов ЧС...")
+    await kontekst.info("Запрос списка классов ЧС...")
     klassy = client.poluchit_spisok_klassov_chs()
     stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in klassy]
     zagolovok = "**Классы чрезвычайных ситуаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Класс ЧС"], stroki_tablitsy)
 
 
-async def spisok_vidov_pojarov(ctx: Context) -> str:
+async def spisok_vidov_pojarov(kontekst: Context) -> str:
     """Получить список видов пожаров."""
-    await ctx.info("Запрос списка видов пожаров...")
+    await kontekst.info("Запрос списка видов пожаров...")
     vidy = client.poluchit_spisok_vidov_pozharov()
     stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
     zagolovok = "**Виды пожаров**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид пожара"], stroki_tablitsy)
 
 
-async def spisok_tipov_opasnosti(ctx: Context) -> str:
+async def spisok_tipov_opasnosti(kontekst: Context) -> str:
     """Получить список типов опасностей."""
-    await ctx.info("Запрос списка типов опасностей...")
+    await kontekst.info("Запрос списка типов опасностей...")
     tipy = client.poluchit_spisok_tipov_opasnosti()
     stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
     zagolovok = "**Типы опасностей для предупреждений МЧС**\n\n"
@@ -51,7 +51,7 @@ async def spisok_tipov_opasnosti(ctx: Context) -> str:
 
 
 async def statistika_pojarov(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     god: int = 0,
     vid_pozhara: str = "",
@@ -66,7 +66,7 @@ async def statistika_pojarov(
     Возвращает:
         Статистика пожаров.
     """
-    await ctx.info("Запрос статистики пожаров...")
+    await kontekst.info("Запрос статистики пожаров...")
     pojarov_dannye = await client.statistika_pojarov(
         subiekt=subiekt,
         god=god,
@@ -123,7 +123,7 @@ async def statistika_pojarov(
 
 
 async def poisk_chs(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     vid_chs: str = "",
     klass_chs: str = "",
@@ -138,7 +138,7 @@ async def poisk_chs(
     Возвращает:
         Список чрезвычайных ситуаций.
     """
-    await ctx.info("Поиск чрезвычайных ситуаций...")
+    await kontekst.info("Поиск чрезвычайных ситуаций...")
     chs_dannye = await client.poisk_chs(
         subiekt=subiekt,
         vid_chs=vid_chs,
@@ -177,7 +177,7 @@ async def poisk_chs(
 
 
 async def radiatsionnyy_monitoring(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
 ) -> str:
     """Данные радиационного мониторинга МЧС России.
@@ -188,7 +188,7 @@ async def radiatsionnyy_monitoring(
     Возвращает:
         Данные радиационного мониторинга.
     """
-    await ctx.info("Запрос данных радиационного мониторинга...")
+    await kontekst.info("Запрос данных радиационного мониторинга...")
     monitoring_dannye = await client.radiatsionnyy_monitoring(subiekt=subiekt)
     if not monitoring_dannye:
         return (
@@ -214,7 +214,7 @@ async def radiatsionnyy_monitoring(
 
 
 async def gidrologicheskaya_obstanovka(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
 ) -> str:
     """Данные гидрологической обстановки МЧС России.
@@ -225,7 +225,7 @@ async def gidrologicheskaya_obstanovka(
     Возвращает:
         Данные гидрологической обстановки.
     """
-    await ctx.info("Запрос данных гидрологической обстановки...")
+    await kontekst.info("Запрос данных гидрологической обстановки...")
     gidro_dannye = await client.gidrologicheskaya_obstanovka(subiekt=subiekt)
     if not gidro_dannye:
         return (
@@ -251,7 +251,7 @@ async def gidrologicheskaya_obstanovka(
 
 
 async def preduprezhdeniya_chs(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     tip_opasnosti: str = "",
 ) -> str:
@@ -264,7 +264,7 @@ async def preduprezhdeniya_chs(
     Возвращает:
         Список предупреждений о ЧС.
     """
-    await ctx.info("Запрос предупреждений о ЧС...")
+    await kontekst.info("Запрос предупреждений о ЧС...")
     preduprezhdeniya = await client.preduprezhdeniya_chs(
         subiekt=subiekt,
         tip_opasnosti=tip_opasnosti,

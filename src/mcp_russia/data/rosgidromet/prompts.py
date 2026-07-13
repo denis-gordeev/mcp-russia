@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_pogody_regiona(kontekst: str, ctx: Context) -> str:
+async def analiz_pogody_regiona(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ погодных условий в регионе.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_pogody_regiona(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_ekologii(ctx: Context) -> str:
+async def obzor_ekologii(kontekst_mcp: Context) -> str:
     """Обзор экологической обстановки в России.
 
     Возвращает:

@@ -28,7 +28,7 @@ async def poisk_zakupok(
     zakon: str = "",
     subiekt: str = "",
     sostoyanie: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Поиск закупок в Единой информационной системе.
 
@@ -41,8 +41,8 @@ async def poisk_zakupok(
     Возвращает:
         Результаты поиска закупок.
     """
-    if ctx:
-        await ctx.info(f"Поиск закупок: {zapros or 'все'}...")
+    if kontekst:
+        await kontekst.info(f"Поиск закупок: {zapros or 'все'}...")
 
     zakupki = await client.poisk_zakupok(
         zapros=zapros,
@@ -93,7 +93,7 @@ async def poisk_zakupok(
 
 async def info_zakupki(
     nomer_zakupki: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить подробную информацию о конкретной закупке по номеру.
 
@@ -103,7 +103,7 @@ async def info_zakupki(
     Возвращает:
         Подробная информация о закупке.
     """
-    await ctx.info(f"Запрос информации о закупке {nomer_zakupki}...")
+    await kontekst.info(f"Запрос информации о закупке {nomer_zakupki}...")
     zakupka = await client.poluchit_zakupku(nomer_zakupki)
 
     if not zakupka:
@@ -140,7 +140,7 @@ async def info_zakupki(
 async def poisk_kontraktov(
     inn_postavshchika: str = "",
     inn_zakazchika: str = "",
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Поиск контрактов в реестре контрактов.
 
@@ -151,8 +151,8 @@ async def poisk_kontraktov(
     Возвращает:
         Результаты поиска контрактов.
     """
-    if ctx:
-        await ctx.info("Поиск контрактов в ЕИС...")
+    if kontekst:
+        await kontekst.info("Поиск контрактов в ЕИС...")
 
     kontrakty = await client.poisk_kontraktov(
         inn_podryadchika=inn_postavshchika,
@@ -186,7 +186,7 @@ async def poisk_kontraktov(
 
 async def info_zakazchika(
     inn: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить информацию о заказчике по ИНН.
 
@@ -196,7 +196,7 @@ async def info_zakazchika(
     Возвращает:
         Информация о заказчике.
     """
-    await ctx.info(f"Запрос информации о заказчике ИНН {inn}...")
+    await kontekst.info(f"Запрос информации о заказчике ИНН {inn}...")
     zakazchik = await client.info_zakazchika(inn)
 
     if not zakazchik:
@@ -225,7 +225,7 @@ async def info_zakazchika(
 
 async def info_postavshchika(
     inn: str,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Получить информацию о поставщике по ИНН.
 
@@ -235,7 +235,7 @@ async def info_postavshchika(
     Возвращает:
         Информация о поставщике.
     """
-    await ctx.info(f"Запрос информации о поставщике ИНН {inn}...")
+    await kontekst.info(f"Запрос информации о поставщике ИНН {inn}...")
     postavshchik = await client.info_postavshchika(inn)
 
     if not postavshchik:
@@ -262,13 +262,13 @@ async def info_postavshchika(
     return "\n".join(stroki)
 
 
-async def statusy_zakupok(ctx: Context) -> str:
+async def statusy_zakupok(kontekst: Context) -> str:
     """Получить справочник статусов закупок.
 
     Возвращает:
         Справочник статусов.
     """
-    await ctx.info("Запрос справочника статусов закупок...")
+    await kontekst.info("Запрос справочника статусов закупок...")
     statusy = client.poluchit_statusy_zakupok()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
@@ -276,13 +276,13 @@ async def statusy_zakupok(ctx: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
 
-async def sposoby_zakupok(ctx: Context) -> str:
+async def sposoby_zakupok(kontekst: Context) -> str:
     """Получить справочник способов определения поставщиков.
 
     Возвращает:
         Справочник способов.
     """
-    await ctx.info("Запрос справочника способов закупок...")
+    await kontekst.info("Запрос справочника способов закупок...")
     sposoby = client.poluchit_sposoby_zakupok()
 
     stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sposoby]
@@ -292,7 +292,7 @@ async def sposoby_zakupok(ctx: Context) -> str:
 
 async def plany_zakupok(
     god: int = 2026,
-    ctx: Context | None = None,
+    kontekst: Context | None = None,
 ) -> str:
     """Получить планы-графики закупок на указанный год.
 
@@ -302,8 +302,8 @@ async def plany_zakupok(
     Возвращает:
         Информация о планах-графиках.
     """
-    if ctx:
-        await ctx.info(f"Запрос планов закупок на {god} год...")
+    if kontekst:
+        await kontekst.info(f"Запрос планов закупок на {god} год...")
 
     plany = await client.plany_zakupok(god=god)
 

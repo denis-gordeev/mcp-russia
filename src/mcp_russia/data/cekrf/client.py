@@ -525,7 +525,7 @@ async def poisk_kandidata(
                     partia=str(zapis.get("party", zapis.get("partia", ""))),
                     dolzhnost=str(zapis.get("position", zapis.get("dolzhnost", ""))),
                     subiekt=str(zapis.get("region", "")),
-                    status=str(zapis.get("status", "")),
+                    sostoyanie=str(zapis.get("status", "")),
                 )
             )
         return rezultaty

@@ -17,7 +17,7 @@ from . import client
 from .constants import VALYUTY_PO_STRANAM
 
 
-async def tekushchie_kursy(ctx: Context) -> str:
+async def tekushchie_kursy(kontekst: Context) -> str:
     """Получить официальные курсы основных валют ЦБ РФ на сегодня.
 
     Возвращает курсы: доллар США, евро, китайский юань,
@@ -26,7 +26,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
     Возвращает:
         Таблица с курсами валют.
     """
-    await ctx.info("Запрос курсов основных валют ЦБ РФ...")
+    await kontekst.info("Запрос курсов основных валют ЦБ РФ...")
     valyuty = await client.poluchit_osnovnye_valyuty()
 
     if not valyuty:
@@ -63,7 +63,7 @@ async def tekushchie_kursy(ctx: Context) -> str:
     )
 
 
-async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
+async def uznat_kurs_valyuty(kod: str, kontekst: Context) -> str:
     """Получить курс одной конкретной валюты ЦБ РФ.
 
     Доступные коды: USD, EUR, CNY, GBP, JPY, CHF, KZT, BYN и др.
@@ -75,7 +75,7 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     Возвращает:
         Подробная информация о курсе валюты.
     """
-    await ctx.info(f"Запрос курса {kod}...")
+    await kontekst.info(f"Запрос курса {kod}...")
     valyuta = await client.poluchit_valyutu(kod)
 
     if not valyuta:
@@ -108,13 +108,13 @@ async def uznat_kurs_valyuty(kod: str, ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_valyut(ctx: Context) -> str:
+async def spisok_valyut(kontekst: Context) -> str:
     """Получить полный список валют, доступных в справочнике ЦБ РФ.
 
     Возвращает:
         Список всех доступных валют с кодами и названиями.
     """
-    await ctx.info("Запрос списка валют ЦБ РФ...")
+    await kontekst.info("Запрос списка валют ЦБ РФ...")
     rezultat = await client.poluchit_vse_valyuty()
     dannye_valyut = rezultat.get("Valute", {})
 
@@ -145,7 +145,7 @@ async def spisok_valyut(ctx: Context) -> str:
 async def konvertirovat_valyutu(
     valyuta: str,
     kolichestvo: float,
-    ctx: Context,
+    kontekst: Context,
 ) -> str:
     """Конвертировать сумму из иностранной валюты в рубли по курсу ЦБ РФ.
 
@@ -156,7 +156,7 @@ async def konvertirovat_valyutu(
     Возвращает:
         Результат конвертации.
     """
-    await ctx.info(f"Конвертация {kolichestvo} {valyuta} в рубли...")
+    await kontekst.info(f"Конвертация {kolichestvo} {valyuta} в рубли...")
     dannye = await client.poluchit_valyutu(valyuta)
 
     if not dannye:
@@ -178,7 +178,7 @@ async def konvertirovat_valyutu(
     return "\n".join(stroki)
 
 
-async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = None) -> str:
+async def sravnit_valyuty(kody: list[str] | None = None, kontekst: Context | None = None) -> str:
     """Сравнить курсы нескольких валют ЦБ РФ.
 
     Аргументы:
@@ -194,8 +194,8 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
     if len(kody) > 10:
         return "Можно сравнить не более 10 валют одновременно."
 
-    if ctx is not None:
-        await ctx.info(f"Сравнение {len(kody)} валют...")
+    if kontekst is not None:
+        await kontekst.info(f"Сравнение {len(kody)} валют...")
     valyuty = await client.poluchit_valyuty_spisok(kody)
 
     if not valyuty:
@@ -225,13 +225,13 @@ async def sravnit_valyuty(kody: list[str] | None = None, ctx: Context | None = N
     )
 
 
-async def kursy_po_stranam(ctx: Context) -> str:
+async def kursy_po_stranam(kontekst: Context) -> str:
     """Получить курсы валют для основных стран-партнёров России.
 
     Возвращает:
         Таблица с курсами валют по странам.
     """
-    await ctx.info("Запрос курсов валют по странам...")
+    await kontekst.info("Запрос курсов валют по странам...")
     valyuty = await client.poluchit_valyuty_spisok(list(VALYUTY_PO_STRANAM.values()))
 
     if not valyuty:

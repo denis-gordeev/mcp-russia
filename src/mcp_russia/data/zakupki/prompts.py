@@ -5,7 +5,7 @@ from __future__ import annotations
 from fastmcp import Context
 
 
-async def analiz_zakupki(kontekst: str, ctx: Context) -> str:
+async def analiz_zakupki(kontekst: str, kontekst_mcp: Context) -> str:
     """Анализ конкретной закупки в ЕИС.
 
     Аргументы:
@@ -27,7 +27,7 @@ async def analiz_zakupki(kontekst: str, ctx: Context) -> str:
     )
 
 
-async def obzor_zakupok(kontekst: str, ctx: Context) -> str:
+async def obzor_zakupok(kontekst: str, kontekst_mcp: Context) -> str:
     """Обзор закупочной активности организации.
 
     Аргументы:

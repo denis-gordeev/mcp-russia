@@ -10,9 +10,9 @@ from mcp_russia._shared import batch
 
 
 def _maket_konteksta() -> MagicMock:
-    ctx = MagicMock()
-    ctx.info = AsyncMock()
-    return ctx
+    kontekst = MagicMock()
+    kontekst.info = AsyncMock()
+    return kontekst
 
 
 @pytest.fixture(autouse=True)
@@ -44,53 +44,54 @@ class TestPostroenieDispetcherizatsii:
 class TestVypolneniePaketa:
     @pytest.mark.asyncio
     async def test_pustoy_spisok(self) -> None:
-        ctx = _maket_konteksta()
-        rezultat = await batch.vypolnit_paket_vnutrenniy([], ctx)
+        kontekst = _maket_konteksta()
+        rezultat = await batch.vypolnit_paket_vnutrenniy([], kontekst)
         assert "Нет запросов" in rezultat
 
     @pytest.mark.asyncio
     async def test_prevyshaet_limit(self) -> None:
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         zaprosy = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
-        rezultat = await batch.vypolnit_paket_vnutrenniy(zaprosy, ctx)
+        rezultat = await batch.vypolnit_paket_vnutrenniy(zaprosy, kontekst)
         assert "Максимум 10" in rezultat
 
     @pytest.mark.asyncio
     async def test_neizvestnyy_instrument(self) -> None:
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "nesushchestvuyushchiy_instrument", "argumenty": {}}], ctx
+            [{"instrument": "nesushchestvuyushchiy_instrument", "argumenty": {}}], kontekst
         )
         assert "не найден" in rezultat
 
     @pytest.mark.asyncio
     async def test_vyzyvaet_instrument_s_kontekstom(self) -> None:
-        """Должен передавать ctx инструментам, которые его принимают."""
+        """Должен передавать kontekst инструментам, которые его принимают."""
 
-        async def _spets(ctx: object, param: str) -> str: ...
+        async def _spets(kontekst: object, param: str) -> str: ...
 
-        maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat ok")
+        maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat uspekha")
         batch._dispetcher["proverochnyy_instrument"] = maket_funktsii
 
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "proverochnyy_instrument", "argumenty": {"param": "znachenie"}}], ctx
+            [{"instrument": "proverochnyy_instrument", "argumenty": {"param": "znachenie"}}],
+            kontekst,
         )
-        assert "rezultat ok" in rezultat
+        assert "rezultat uspekha" in rezultat
         maket_funktsii.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_vyzyvaet_instrument_bez_konteksta(self) -> None:
-        """Должен работать с инструментами, не принимающими ctx."""
+        """Должен работать с инструментами, не принимающими kontekst."""
 
         async def instrument_bez_konteksta(imya: str) -> str:
             return f"privet {imya}"
 
         batch._dispetcher["privetstvie"] = instrument_bez_konteksta
 
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "privetstvie", "argumenty": {"imya": "mir"}}], ctx
+            [{"instrument": "privetstvie", "argumenty": {"imya": "mir"}}], kontekst
         )
         assert "privet mir" in rezultat
 
@@ -106,14 +107,14 @@ class TestVypolneniePaketa:
 
         batch._dispetcher["schetchik"] = schitayushchiy_instrument
 
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "schetchik", "argumenty": {"n": 1}},
                 {"instrument": "schetchik", "argumenty": {"n": 2}},
                 {"instrument": "schetchik", "argumenty": {"n": 3}},
             ],
-            ctx,
+            kontekst,
         )
         assert schetchik_vyzovov == 3
         assert "rezultat-1" in rezultat
@@ -125,17 +126,17 @@ class TestVypolneniePaketa:
         """Должен перехватывать исключения и включать ошибку в результаты."""
 
         async def neudachnyy_instrument() -> str:
-            msg = "API timeout"
+            msg = "Таймаут API"
             raise TimeoutError(msg)
 
         batch._dispetcher["neudacha"] = neudachnyy_instrument
 
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "neudacha", "argumenty": {}}], ctx
+            [{"instrument": "neudacha", "argumenty": {}}], kontekst
         )
         assert "Ошибка" in rezultat
-        assert "timeout" in rezultat.lower()
+        assert "таймаут" in rezultat.lower()
 
     @pytest.mark.asyncio
     async def test_smeshannye_uspekh_i_oshibka(self) -> None:
@@ -151,13 +152,13 @@ class TestVypolneniePaketa:
         batch._dispetcher["norma"] = normanyy_instrument
         batch._dispetcher["plokho"] = plokhoy_instrument
 
-        ctx = _maket_konteksta()
+        kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
                 {"instrument": "norma", "argumenty": {}},
                 {"instrument": "plokho", "argumenty": {}},
             ],
-            ctx,
+            kontekst,
         )
         assert "uspekh" in rezultat
         assert "Ошибка" in rezultat

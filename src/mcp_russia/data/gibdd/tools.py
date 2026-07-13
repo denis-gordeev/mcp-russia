@@ -19,7 +19,7 @@ from .constants import (
 _ISTOCHNIK = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
 
 
-async def spisok_tipov_ts(ctx: Context) -> str:
+async def spisok_tipov_ts(kontekst: Context) -> str:
     """Список типов транспортных средств.
 
     Возвращает:
@@ -29,7 +29,7 @@ async def spisok_tipov_ts(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип ТС"], stroki_tablitsy)
 
 
-async def spisok_kategoriyy_vu(ctx: Context) -> str:
+async def spisok_kategoriyy_vu(kontekst: Context) -> str:
     """Список категорий водительских удостоверений.
 
     Возвращает:
@@ -39,7 +39,7 @@ async def spisok_kategoriyy_vu(ctx: Context) -> str:
     return tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
 
-async def spisok_vidov_narusheniy(ctx: Context) -> str:
+async def spisok_vidov_narusheniy(kontekst: Context) -> str:
     """Список видов нарушений ПДД.
 
     Возвращает:
@@ -49,7 +49,7 @@ async def spisok_vidov_narusheniy(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Вид нарушения"], stroki_tablitsy)
 
 
-async def spisok_statusov_shtrafov(ctx: Context) -> str:
+async def spisok_statusov_shtrafov(kontekst: Context) -> str:
     """Список статусов штрафов ГИБДД.
 
     Возвращает:
@@ -59,7 +59,7 @@ async def spisok_statusov_shtrafov(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Статус штрафа"], stroki_tablitsy)
 
 
-async def spisok_tipov_dtp(ctx: Context) -> str:
+async def spisok_tipov_dtp(kontekst: Context) -> str:
     """Список типов ДТП.
 
     Возвращает:
@@ -69,7 +69,7 @@ async def spisok_tipov_dtp(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип ДТП"], stroki_tablitsy)
 
 
-async def spisok_regionov_registratsii(ctx: Context) -> str:
+async def spisok_regionov_registratsii(kontekst: Context) -> str:
     """Список основных регионов регистрации ТС.
 
     Возвращает:
@@ -79,7 +79,7 @@ async def spisok_regionov_registratsii(ctx: Context) -> str:
     return tablitsa_v_markdown(["Код региона", "Регион"], stroki_tablitsy)
 
 
-async def info_ts(ctx: Context, vin: str) -> str:
+async def info_ts(kontekst: Context, vin: str) -> str:
     """Проверка транспортного средства по VIN.
 
     Аргументы:
@@ -156,7 +156,7 @@ async def _polnaya_proverka_ts(vin: str) -> tuple:
     return rezultaty
 
 
-async def info_vu(ctx: Context, nomer_vu: str) -> str:
+async def info_vu(kontekst: Context, nomer_vu: str) -> str:
     """Проверка водительского удостоверения.
 
     Аргументы:
@@ -183,7 +183,7 @@ async def info_vu(ctx: Context, nomer_vu: str) -> str:
     return "\n".join(stroki) + _ISTOCHNIK
 
 
-async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
+async def shtrafy_po_ts(kontekst: Context, gos_nomer: str) -> str:
     """Штрафы ГИБДД по госномеру транспортного средства.
 
     Проверка штрафов требует авторизованный доступ через Госуслуги.
@@ -202,7 +202,7 @@ async def shtrafy_po_ts(ctx: Context, gos_nomer: str) -> str:
     ) + _ISTOCHNIK
 
 
-async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
+async def shtrafy_po_vu(kontekst: Context, nomer_vu: str) -> str:
     """Штрафы ГИБДД по номеру водительского удостоверения.
 
     Проверка штрафов требует авторизованный доступ через Госуслуги.
@@ -221,7 +221,7 @@ async def shtrafy_po_vu(ctx: Context, nomer_vu: str) -> str:
     ) + _ISTOCHNIK
 
 
-async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
+async def statistika_dtp(kontekst: Context, subiekt: str, god: int = 2024) -> str:
     """Статистика ДТП по региону.
 
     Аргументы:
@@ -247,7 +247,7 @@ async def statistika_dtp(ctx: Context, subiekt: str, god: int = 2024) -> str:
     return "\n".join(stroki) + _ISTOCHNIK
 
 
-async def istoriya_registraciy(ctx: Context, vin: str) -> str:
+async def istoriya_registraciy(kontekst: Context, vin: str) -> str:
     """История регистрационных действий транспортного средства.
 
     Аргументы:

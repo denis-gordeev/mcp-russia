@@ -15,26 +15,26 @@ from . import client
 from .constants import PRIZNAKI_NAPOLNENIYA
 
 
-async def spisok_basseynovykh_okrugov(ctx: Context) -> str:
+async def spisok_basseynovykh_okrugov(kontekst: Context) -> str:
     """Получить список бассейновых округов РФ.
 
     Возвращает:
         Список бассейновых округов.
     """
-    await ctx.info("Запрос списка бассейновых округов...")
+    await kontekst.info("Запрос списка бассейновых округов...")
     okruga = client.poluchit_spisok_basseynovykh_okrugov()
     stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
     zagolovok = "**Бассейновые округа Российской Федерации**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Бассейновый округ"], stroki_tablitsy)
 
 
-async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
+async def spisok_tipov_vodnykh_obektov(kontekst: Context) -> str:
     """Получить список типов водных объектов.
 
     Возвращает:
         Список типов водных объектов и гидрологических данных.
     """
-    await ctx.info("Запрос списка типов водных объектов...")
+    await kontekst.info("Запрос списка типов водных объектов...")
     tipy = client.poluchit_spisok_tipov_vodnykh_obektov()
     gidro = client.poluchit_spisok_tipov_gidro()
 
@@ -49,13 +49,13 @@ async def spisok_tipov_vodnykh_obektov(ctx: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_vodokhranilishch(ctx: Context) -> str:
+async def spisok_vodokhranilishch(kontekst: Context) -> str:
     """Получить список крупных водохранилищ.
 
     Возвращает:
         Список крупных водохранилищ с объёмом и площадью.
     """
-    await ctx.info("Запрос списка водохранилищ...")
+    await kontekst.info("Запрос списка водохранилищ...")
     vodokhr = client.poluchit_vodokhranilishche_podrobno()
 
     stroki_tablitsy = [
@@ -70,7 +70,7 @@ async def spisok_vodokhranilishch(ctx: Context) -> str:
 
 
 async def poisk_vodnykh_obektov(
-    ctx: Context,
+    kontekst: Context,
     zapros: str = "",
     tip: str = "",
     basseyn: str = "",
@@ -87,7 +87,7 @@ async def poisk_vodnykh_obektov(
     Возвращает:
         Список найденных водных объектов.
     """
-    await ctx.info(f"Поиск водных объектов: {zapros or 'все'}...")
+    await kontekst.info(f"Поиск водных объектов: {zapros or 'все'}...")
     obekty = await client.poisk_vodnykh_obektov(
         zapros=zapros,
         tip=tip,
@@ -111,7 +111,7 @@ async def poisk_vodnykh_obektov(
     )
 
 
-async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
+async def info_vodnogo_obekta(kod: str, kontekst: Context) -> str:
     """Получить информацию о водном объекте по коду.
 
     Аргументы:
@@ -120,7 +120,7 @@ async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
     Возвращает:
         Информация о водном объекте.
     """
-    await ctx.info(f"Запрос информации о водном объекте {kod}...")
+    await kontekst.info(f"Запрос информации о водном объекте {kod}...")
     dannye = await client.info_vodnogo_obekta(kod)
 
     if not dannye:
@@ -147,7 +147,7 @@ async def info_vodnogo_obekta(kod: str, ctx: Context) -> str:
 
 
 async def gidro_monitoring(
-    ctx: Context,
+    kontekst: Context,
     identifikator_posta: str = "",
     subiekt: str = "",
     tip_dannykh: str = "uroven",
@@ -162,7 +162,7 @@ async def gidro_monitoring(
     Возвращает:
         Гидрологические данные.
     """
-    await ctx.info("Запрос данных гидрологического мониторинга...")
+    await kontekst.info("Запрос данных гидрологического мониторинга...")
     zapisi = await client.poluchit_gidro_dannye(
         identifikator_posta=identifikator_posta,
         subiekt=subiekt,
@@ -194,7 +194,7 @@ async def gidro_monitoring(
     )
 
 
-async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
+async def info_vodokhranilishcha(kod: str, kontekst: Context) -> str:
     """Получить информацию о водохранилище по коду.
 
     Аргументы:
@@ -203,7 +203,7 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
     Возвращает:
         Информация о водохранилище.
     """
-    await ctx.info(f"Запрос информации о водохранилище {kod}...")
+    await kontekst.info(f"Запрос информации о водохранилище {kod}...")
     dannye = await client.poluchit_dannye_vodokhranilishcha(kod)
 
     if not dannye:
@@ -244,7 +244,7 @@ async def info_vodokhranilishcha(kod: str, ctx: Context) -> str:
 
 
 async def vodopolzovanie_regionov(
-    ctx: Context,
+    kontekst: Context,
     subiekt: str = "",
     god: str = "",
 ) -> str:
@@ -257,7 +257,7 @@ async def vodopolzovanie_regionov(
     Возвращает:
         Данные о водопользовании.
     """
-    await ctx.info("Запрос данных о водопользовании...")
+    await kontekst.info("Запрос данных о водопользовании...")
     dannye = await client.poluchit_vodopolzovanie(subiekt=subiekt, god=god)
 
     if not dannye:

@@ -11,14 +11,14 @@ from mcp_russia.exceptions import OshibkaAutentifikatsii
 
 
 def _maket_konteksta():
-    ctx = AsyncMock()
-    ctx.info = AsyncMock()
-    ctx.warning = AsyncMock()
-    return ctx
+    kontekst = AsyncMock()
+    kontekst.info = AsyncMock()
+    kontekst.warning = AsyncMock()
+    return kontekst
 
 
 async def test_konsul_adres_po_indeksu_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "konsultirovat_adres_po_pochtovomu",
@@ -31,33 +31,33 @@ async def test_konsul_adres_po_indeksu_uspekh():
             polnyy_adres="г Москва, Красная площадь, д 1",
         ),
     ):
-        rezultat = await rosapi_tools.konsul_adres_po_indeksu("101000", ctx)
+        rezultat = await rosapi_tools.konsul_adres_po_indeksu("101000", kontekst)
     assert "101000" in rezultat
     assert "Москва" in rezultat
     assert "Dadata" in rezultat
 
 
 async def test_konsul_adres_po_indeksu_oshibka():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "konsultirovat_adres_po_pochtovomu",
         return_value={"oshibka": "Адрес по индексу 000000 не найден"},
     ):
-        rezultat = await rosapi_tools.konsul_adres_po_indeksu("000000", ctx)
+        rezultat = await rosapi_tools.konsul_adres_po_indeksu("000000", kontekst)
     assert "000000" in rezultat
     assert "Dadata" in rezultat or "API" in rezultat
 
 
 async def test_poisk_adresa_pustoy():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(rosapi_tools.client, "poisk_adresa", return_value=[]):
-        rezultat = await rosapi_tools.poisk_adresa("несуществующий адрес", ctx)
+        rezultat = await rosapi_tools.poisk_adresa("несуществующий адрес", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_poisk_adresa_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "poisk_adresa",
@@ -73,13 +73,13 @@ async def test_poisk_adresa_uspekh():
             }
         ],
     ):
-        rezultat = await rosapi_tools.poisk_adresa("Красная площадь", ctx)
+        rezultat = await rosapi_tools.poisk_adresa("Красная площадь", kontekst)
     assert "Красная площадь" in rezultat
     assert "Dadata" in rezultat
 
 
 async def test_poisk_org_po_inn_uspekh():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_inn",
@@ -95,44 +95,44 @@ async def test_poisk_org_po_inn_uspekh():
             data_registratsii="2002-08-23",
         ),
     ):
-        rezultat = await rosapi_tools.poisk_org_po_inn("7707083893", ctx)
+        rezultat = await rosapi_tools.poisk_org_po_inn("7707083893", kontekst)
     assert "7707083893" in rezultat
     assert "Сбербанк" in rezultat
     assert "Действующая" in rezultat
 
 
 async def test_poisk_org_po_inn_oshibka():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_inn",
         return_value={"oshibka": "Не удалось подключиться к API Dadata"},
     ):
-        rezultat = await rosapi_tools.poisk_org_po_inn("0000000000", ctx)
+        rezultat = await rosapi_tools.poisk_org_po_inn("0000000000", kontekst)
     assert "Dadata" in rezultat or "API" in rezultat
 
 
 async def test_poisk_org_po_ogrn_oshibka():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_organizatsiyu_po_ogrn",
         return_value={"oshibka": "не найдена"},
     ):
-        rezultat = await rosapi_tools.poisk_org_po_ogrn("0000000000000", ctx)
+        rezultat = await rosapi_tools.poisk_org_po_ogrn("0000000000000", kontekst)
     assert "0000000000000" in rezultat
 
 
 async def test_spisok_bankov():
-    ctx = _maket_konteksta()
-    rezultat = await rosapi_tools.spisok_bankov(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosapi_tools.spisok_bankov(kontekst)
     assert "Сбербанк" in rezultat
     assert "ВТБ" in rezultat
     assert "БИК" in rezultat
 
 
 async def test_konsul_bank_po_bik_dadata():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_bank_po_bik",
@@ -144,39 +144,39 @@ async def test_konsul_bank_po_bik_dadata():
             svift="SABRRUMM",
         ),
     ):
-        rezultat = await rosapi_tools.konsul_bank_po_bik("044525225", ctx)
+        rezultat = await rosapi_tools.konsul_bank_po_bik("044525225", kontekst)
     assert "Сбербанк" in rezultat
     assert "Dadata" in rezultat
 
 
 async def test_konsul_bank_po_bik_ne_nayden():
-    ctx = _maket_konteksta()
+    kontekst = _maket_konteksta()
     with patch.object(
         rosapi_tools.client,
         "nayti_bank_po_bik",
         return_value={"oshibka": "Банк с БИК 000000000 не найден"},
     ):
-        rezultat = await rosapi_tools.konsul_bank_po_bik("000000000", ctx)
+        rezultat = await rosapi_tools.konsul_bank_po_bik("000000000", kontekst)
     assert "не найден" in rezultat
 
 
 async def test_prazdniki_rf():
-    ctx = _maket_konteksta()
-    rezultat = await rosapi_tools.prazdniki_rf(god=2025, ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosapi_tools.prazdniki_rf(god=2025, kontekst=kontekst)
     assert "Новый год" in rezultat
     assert "День Победы" in rezultat
     assert "2025" in rezultat
 
 
 async def test_prazdniki_rf_god_po_umolchaniyu():
-    ctx = _maket_konteksta()
-    rezultat = await rosapi_tools.prazdniki_rf(ctx=ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosapi_tools.prazdniki_rf(kontekst=kontekst)
     assert "Новый год" in rezultat
 
 
 async def test_nalogovye_stavki():
-    ctx = _maket_konteksta()
-    rezultat = await rosapi_tools.nalogovye_stavki(ctx)
+    kontekst = _maket_konteksta()
+    rezultat = await rosapi_tools.nalogovye_stavki(kontekst)
     assert "НДС" in rezultat
     assert "20%" in rezultat
     assert "НДФЛ" in rezultat
@@ -192,6 +192,6 @@ async def test_zagolovki_dadaty_vyzyvaet_oshibku_bez_klyucha():
 
 
 async def test_zagolovki_dadaty_s_klyuchom():
-    with patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", "test-key"):
+    with patch("mcp_russia.data.rosapi.client.KLYUCH_DADATA_API", "proverochnyy-klyuch"):
         zagolovki = _zagolovki_dadaty()
-        assert zagolovki["Authorization"] == "Token test-key"
+        assert zagolovki["Authorization"] == "Token proverochnyy-klyuch"
