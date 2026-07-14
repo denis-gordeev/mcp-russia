@@ -94,7 +94,7 @@ postroit_dispetcherizatsiyu(reyestr)
 
 
 # Мета-инструмент для интроспекции
-@mcp.tool(tags={"meta", "discovery"})
+@mcp.tool(tags={"мета", "обнаружение"})
 def spisok_funktsiy() -> str:
     """Список всех доступных функций (API) в mcp-russia.
 
@@ -107,7 +107,7 @@ def spisok_funktsiy() -> str:
     return reyestr.svodka()
 
 
-@mcp.tool(tags={"meta", "discovery"})
+@mcp.tool(tags={"мета", "обнаружение"})
 async def rekomendovat_instrumenty(zapros: str, kontekst: Context) -> str:
     """Рекомендует релевантные инструменты по запросу на естественном языке.
 
@@ -125,7 +125,7 @@ async def rekomendovat_instrumenty(zapros: str, kontekst: Context) -> str:
     return await rekomendovat_instrumenty_impl(zapros, katalog)
 
 
-@mcp.tool(tags={"meta", "discovery", "планирование"})
+@mcp.tool(tags={"мета", "обнаружение", "планирование"})
 async def splanirovat_zapros(zapros: str, kontekst: Context) -> str:
     """Создаёт план выполнения для сложных запросов.
 
@@ -145,7 +145,7 @@ async def splanirovat_zapros(zapros: str, kontekst: Context) -> str:
     return await splanirovat_zapros_impl(zapros, katalog)
 
 
-@mcp.tool(tags={"meta", "batch"})
+@mcp.tool(tags={"мета", "пакет"})
 async def vypolnit_paket(zaprosy: list[dict[str, object]], kontekst: Context) -> str:
     """Выполняет несколько инструментов за один вызов, параллельно.
 

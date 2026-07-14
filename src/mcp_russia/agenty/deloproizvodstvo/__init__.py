@@ -10,11 +10,11 @@ from mcp_russia._shared.feature import MetaFunktsii
 META_FUNKTSII = MetaFunktsii(
     imya="deloproizvodstvo",
     opisanie=(
-        "Deloproizvodstvo v mcp-russia: "
-        "Ofitsialnaya perepiska RF: pismo, rasporyazhenie, prikaz, akt, spravka "
-        "na osnove GOST R 7.0.97-2016 i pravil deloproizvodstva RF"
+        "Делопроизводство в mcp-russia: "
+        "Официальная переписка РФ: письмо, распоряжение, приказ, акт, справка "
+        "на основе ГОСТ Р 7.0.97-2016 и правил делопроизводства РФ"
     ),
     versiya="0.1.0",
     trebuet_autentifikatsii=False,
-    tegi=["dokumenty", "deloproizvodstvo", "ofitsialnaya-perepiska"],
+    tegi=["документы", "делопроизводство", "официальная-переписка"],
 )
