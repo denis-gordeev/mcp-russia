@@ -140,7 +140,7 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     dannye_zadachi = await http_otpravit(
         adres_poiska,
         zagolovki={"Content-Type": "application/x-www-form-urlencoded"},
-        json_body=None,
+        telo_json=None,
         parametry={"query": zapros},
     )
 

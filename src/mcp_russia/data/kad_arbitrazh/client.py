@@ -269,7 +269,7 @@ async def poisk_del(
     try:
         dannye = await http_otpravit(
             "https://kad.arbitr.ru/Kad/Search",
-            json_body=telo,
+            telo_json=telo,
             zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         return _razobrat_rezultaty_poiska(dannye)

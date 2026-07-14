@@ -67,14 +67,14 @@ class TestVypolneniePaketa:
     async def test_vyzyvaet_instrument_s_kontekstom(self) -> None:
         """Должен передавать kontekst инструментам, которые его принимают."""
 
-        async def _spets(kontekst: object, param: str) -> str: ...
+        async def _spets(kontekst: object, parametr: str) -> str: ...
 
         maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat uspekha")
         batch._dispetcher["proverochnyy_instrument"] = maket_funktsii
 
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "proverochnyy_instrument", "argumenty": {"param": "znachenie"}}],
+            [{"instrument": "proverochnyy_instrument", "argumenty": {"parametr": "znachenie"}}],
             kontekst,
         )
         assert "rezultat uspekha" in rezultat

@@ -85,7 +85,7 @@ async def poisk_proizvodstv(
     if subiekt:
         telo["is"]["region"] = subiekt
     try:
-        dannye = await http_otpravit(FSSP_API_POISKA, json_body=telo)
+        dannye = await http_otpravit(FSSP_API_POISKA, telo_json=telo)
         return _razobrat_proizvodstva(dannye)
     except Exception:
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)

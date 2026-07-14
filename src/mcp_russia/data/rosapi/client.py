@@ -104,7 +104,7 @@ async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str,
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/address",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
@@ -117,7 +117,7 @@ async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> 
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_POISKA_PO_ID}/address",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
@@ -130,7 +130,7 @@ async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/address",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
@@ -143,7 +143,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> di
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/party",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
@@ -163,7 +163,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> 
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/party",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
@@ -179,7 +179,7 @@ async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
     try:
         rezultat = await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/bank",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
         return rezultat.get("suggestions", [])
@@ -193,7 +193,7 @@ async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, A
     try:
         return await http_otpravit(
             f"{DADATA_ADRES_PODSKAZOK}/bank",
-            json_body=telo,
+            telo_json=telo,
             zagolovki=_zagolovki_dadaty(zheton),
         )
     except Exception:
