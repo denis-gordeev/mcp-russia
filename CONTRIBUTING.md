@@ -72,9 +72,9 @@ mcp.tool(primer_tool)
 
 ```
 tests/data/{modul}/         # или tests/agenty/{modul}/
-├── test_tools.py             # Mock client, проверяет логику
-├── test_client.py            # respx mock HTTP
-└── test_integration.py       # fastmcp.Client e2e
+├── test_tools.py             # Мок клиента, проверяет логику
+├── test_client.py            # respx мок HTTP
+└── test_integration.py       # fastmcp.Client сквозное тестирование
 ```
 
 5. Запустите `make ci` и убедитесь, что проверки проходят.
@@ -141,7 +141,7 @@ make ci                   # lint + types + test
 - **pytest** + **pytest-asyncio** для async-кода
 - **respx** для HTTP-моков в `test_client.py`
 - **unittest.mock** для моков клиента в `test_tools.py`
-- **fastmcp.Client** для e2e-интеграционных тестов
+- **fastmcp.Client** для сквозных интеграционных тестов
 
 ### Шаблоны тестов
 
@@ -178,7 +178,7 @@ async def test_poisk_uspeshen():
     assert len(rezultat) == 1
 ```
 
-#### `test_integration.py` — end-to-end через `fastmcp.Client`
+#### `test_integration.py` — сквозное тестирование через `fastmcp.Client`
 
 ```python
 import pytest
@@ -214,7 +214,7 @@ refactor(gosduma): упростить логику пагинации
 
 ### Типы повышения версии
 
-| Ситуация | Bump | Пример |
+| Ситуация | Повышение | Пример |
 |----------|------|---------|
 | Новый модуль (новое API, новый агент) | **minor** | `feat(minzdrav): добавить 5 инструментов` |
 | Исправление бага, корректировка конечной точки | **patch** | `fix(cbrf): обработать таймаут` |
@@ -234,7 +234,7 @@ make build            # Сборка пакета (sdist + wheel)
 
 ### CI/CD
 
-- **CI** (`.github/workflows/ci.yml`): запускается на каждый push/PR в `main` — lint + types + тесты (Python 3.10-3.13)
+- **CI** (`.github/workflows/ci.yml`): запускается на каждый push/пул-реквест в `main` — lint + types + тесты (Python 3.10-3.13)
 - **Release** (`.github/workflows/release.yml`): запускается по тегу `v*` — CI + build + publish в PyPI + GitHub Release
 
 ### Инфраструктура
@@ -246,8 +246,8 @@ make build            # Сборка пакета (sdist + wheel)
 
 ## Pull-запрос
 
-- Используйте **Conventional Commits** в заголовке PR
-- Перед открытием PR убедитесь, что `make ci` проходит
+- Используйте **Конвенциональные коммиты** в заголовке пул-реквеста
+- Перед открытием пул-реквеста убедитесь, что `make ci` проходит
 - Опишите, что изменилось и зачем
 - Для нового модуля добавляйте тесты (`test_tools.py`, `test_client.py`, `test_integration.py`)
 - Если обнаружили технический долг или следующий шаг миграции, зафиксируйте его в `TODO.md`

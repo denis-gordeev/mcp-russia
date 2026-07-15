@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_russia.data.gosduma import client as gosduma_client
+from mcp_russia.data.gosduma import client as gosduma_klient
 from mcp_russia.data.gosduma import tools as gosduma_tools
 from mcp_russia.data.gosduma.schemas import Deputat, Golosovanie, Zakonoproekt
 
@@ -30,7 +30,7 @@ def test_razobrat_deputatov_spisok():
             "convocation": 8,
         }
     ]
-    rezultat = gosduma_client._razobrat_deputatov(dannye)
+    rezultat = gosduma_klient._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].familiya == "Иванов"
     assert rezultat[0].frakciya == "Единая Россия"
@@ -51,15 +51,15 @@ def test_razobrat_deputatov_dict():
             }
         ]
     }
-    rezultat = gosduma_client._razobrat_deputatov(dannye)
+    rezultat = gosduma_klient._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].familiya == "Петров"
     assert rezultat[0].frakciya == "КПРФ"
 
 
 def test_razobrat_deputatov_pustoy():
-    assert gosduma_client._razobrat_deputatov(None) == []
-    assert gosduma_client._razobrat_deputatov("ne spisok") == []
+    assert gosduma_klient._razobrat_deputatov(None) == []
+    assert gosduma_klient._razobrat_deputatov("ne spisok") == []
 
 
 def test_razobrat_zakonoproekty():
@@ -76,7 +76,7 @@ def test_razobrat_zakonoproekty():
             }
         ]
     }
-    rezultat = gosduma_client._razobrat_zakonoproekty(dannye)
+    rezultat = gosduma_klient._razobrat_zakonoproekty(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].nomer == "12345-8"
     assert rezultat[0].sostoyanie == "Рассматривается"
@@ -96,7 +96,7 @@ def test_razobrat_golosovaniya():
             }
         ]
     }
-    rezultat = gosduma_client._razobrat_golosovaniya(dannye)
+    rezultat = gosduma_klient._razobrat_golosovaniya(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].za == 300
     assert rezultat[0].protiv == 50
@@ -110,14 +110,14 @@ def test_razobrat_odnogo_deputata():
         "patronymic": "Сидорович",
         "factionName": "ЛДПР",
     }
-    rezultat = gosduma_client._razobrat_odnogo_deputata(dannye)
+    rezultat = gosduma_klient._razobrat_odnogo_deputata(dannye)
     assert rezultat is not None
     assert rezultat.familiya == "Сидоров"
 
 
 def test_razobrat_odnogo_deputata_nichego():
-    assert gosduma_client._razobrat_odnogo_deputata(None) is None
-    assert gosduma_client._razobrat_odnogo_deputata("string") is None
+    assert gosduma_klient._razobrat_odnogo_deputata(None) is None
+    assert gosduma_klient._razobrat_odnogo_deputata("stroka") is None
 
 
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---

@@ -157,13 +157,13 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], kontekst: Context) ->
 
     Аргументы:
         zaprosy: Список запросов. Каждый элемент — объект с:
-                 - "instrument": полное имя инструмента
-                   (напр.: «gosduma_info_deputata»)
-                 - "argumenty": объект с аргументами инструмента
-                 Пример: [
-                   {"instrument": "gosduma_info_deputata",
-                    "argumenty": {"deputat_id": 99100142}},
-                   {"instrument": "cbrf_kursy_valyut",
+                 - "imya_instrumenta": полное имя инструмента
+                    (напр.: «gosduma_info_deputata»)
+                  - "argumenty": объект с аргументами инструмента
+                  Пример: [
+                    {"imya_instrumenta": "gosduma_info_deputata",
+                     "argumenty": {"deputat_id": 99100142}},
+                    {"imya_instrumenta": "cbrf_kursy_valyut",
                     "argumenty": {}}
                  ]
     """
@@ -206,10 +206,10 @@ elif POISK_INSTRUMENTOV == "code_mode":
                 discovery_tools=[GetTags(name="get_tags"), Search(name="search"), GetSchemas()],
             )
         )
-        logger.info("Поиск инструментов: CodeMode (экспериментальный)")
+        logger.info("Поиск инструментов: режим кода (экспериментальный)")
     except ImportError:
         logger.warning(
-            "CodeMode требует pydantic-monty. "
+            "Режим кода требует pydantic-monty. "
             "Установите: pip install 'fastmcp[code-mode]'. "
             "Откат к BM25."
         )

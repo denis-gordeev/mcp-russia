@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="docs/assets/logo.png" alt="mcp-russia logo" width="100">
+<img src="docs/assets/logo.png" alt="логотип mcp-russia" width="100">
 
 # mcp-russia
 
 **Русскоязычная адаптация MCP-репозитория для работы с государственными и публичными данными**
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Лицензия: MIT](https://img.shields.io/badge/Лицензия-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
 

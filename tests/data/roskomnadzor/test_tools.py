@@ -111,9 +111,9 @@ async def test_proverka_blokirovki_ne_zablokirovan():
     with patch.object(
         rkn_tools.client,
         "proverka_blokirovki",
-        return_value={"domen": "example.com", "blokirovka": False, "istochnik": "ЕАИС"},
+        return_value={"domen": "primer.ru", "blokirovka": False, "istochnik": "ЕАИС"},
     ):
-        rezultat = await rkn_tools.proverka_blokirovki(kontekst, domen="example.com")
+        rezultat = await rkn_tools.proverka_blokirovki(kontekst, domen="primer.ru")
     assert "НЕ найден" in rezultat
 
 
@@ -123,14 +123,14 @@ async def test_proverka_blokirovki_zablokirovan():
         rkn_tools.client,
         "proverka_blokirovki",
         return_value={
-            "domen": "blocked-site.ru",
+            "domen": "zapreshcheno.ru",
             "blokirovka": True,
             "osnovanie": "Экстремистские материалы",
             "data_vklyucheniya": "2024-01-01",
             "organy": "Роскомнадзор",
         },
     ):
-        rezultat = await rkn_tools.proverka_blokirovki(kontekst, domen="blocked-site.ru")
+        rezultat = await rkn_tools.proverka_blokirovki(kontekst, domen="zapreshcheno.ru")
     assert "ЗАБЛОКИРОВАН" in rezultat
 
 

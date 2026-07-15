@@ -55,7 +55,7 @@ KLYUCHEVYE_INDIKATORY = [
 ]
 
 # Коды показателей ЕМИСС
-# После верификации 2026-06-12 исправлены коды energy_production и transport_cargo.
+# После верификации 2026-06-12 исправлены коды proizvodstvo_elektroenergii и gruzooborot_transporta.
 EMISS_KODY_POKAZATELEY = {
     "ipcz": "31088",  # ✅ ИПЦ
     "naselenie": "24133",  # ❓ численность населения

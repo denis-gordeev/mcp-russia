@@ -41,35 +41,35 @@ class TestMetaFunktsii:
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=True,
-            peremennaya_avt_env="FAKE_KEY_NOT_SET",
+            peremennaya_avt_env="PROVEROCHNYY_KLYUCH_NE_ZADAN",
         )
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("FAKE_KEY_NOT_SET", None)
+            os.environ.pop("PROVEROCHNYY_KLYUCH_NE_ZADAN", None)
             assert metadannye_ekz.dostupna_li_autentifikatsiya() is False
 
-    def test_dostupna_li_autentifikatsiya_env_var_set(self) -> None:
+    def test_dostupna_li_autentifikatsiya_s_peremennoy_okruzheniya(self) -> None:
         metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=True,
-            peremennaya_avt_env="TEST_MCP_KEY",
+            peremennaya_avt_env="PROVEROCHNYY_KLYUCH_MCP",
         )
-        with patch.dict(os.environ, {"TEST_MCP_KEY": "taynyy_klyuch"}):
+        with patch.dict(os.environ, {"PROVEROCHNYY_KLYUCH_MCP": "taynyy_klyuch"}):
             assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
-    def test_dostupna_li_autentifikatsiya_requires_auth_no_env_var(self) -> None:
+    def test_dostupna_li_autentifikatsiya_trebuet_aut_bez_peremennoy(self) -> None:
         metadannye_ekz = MetaFunktsii(imya="t", opisanie="T", trebuet_autentifikatsii=True)
         assert metadannye_ekz.dostupna_li_autentifikatsiya() is False
 
-    def test_dostupna_li_autentifikatsiya_optional_auth_no_env(self) -> None:
+    def test_dostupna_li_autentifikatsiya_neobyazatelnaya_bez_peremennoy(self) -> None:
         metadannye_ekz = MetaFunktsii(
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=False,
-            peremennaya_avt_env="FAKE_KEY_NOT_SET",
+            peremennaya_avt_env="PROVEROCHNYY_KLYUCH_NE_ZADAN",
         )
         with patch.dict(os.environ, {}, clear=False):
-            os.environ.pop("FAKE_KEY_NOT_SET", None)
+            os.environ.pop("PROVEROCHNYY_KLYUCH_NE_ZADAN", None)
             assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_dostupna_li_autentifikatsiya_neobyazatelnaya_s_peremennoy(self) -> None:
@@ -77,9 +77,9 @@ class TestMetaFunktsii:
             imya="t",
             opisanie="T",
             trebuet_autentifikatsii=False,
-            peremennaya_avt_env="TEST_OPT_KEY",
+            peremennaya_avt_env="PROVEROCHNYY_KLYUCH_NE_OBYAZ",
         )
-        with patch.dict(os.environ, {"TEST_OPT_KEY": "val"}):
+        with patch.dict(os.environ, {"PROVEROCHNYY_KLYUCH_NE_OBYAZ": "znachenie"}):
             assert metadannye_ekz.dostupna_li_autentifikatsiya() is True
 
     def test_zamorozhennyy(self) -> None:
@@ -156,7 +156,7 @@ class TestReyestrFunktsiy:
         reyestr._funktsii["test_funktsiya"] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz,
             server_funktsiya=podserver,
-            put_modulya="fake.module",
+            put_modulya="lozhnyy.modul",
         )
 
         koren = FastMCP("koren-proverka")
@@ -186,7 +186,7 @@ class TestReyestrFunktsiy:
 
     def test_propushcheno_vozvrashchaet_kopiyu(self) -> None:
         reyestr = ReyestrFunktsiy()
-        reyestr._propushcheno["x"] = "reason"
+        reyestr._propushcheno["x"] = "prichina"
         propushcheno = reyestr.propushcheno
         propushcheno["y"] = "drugoy"
         assert "y" not in reyestr._propushcheno
@@ -215,10 +215,10 @@ class TestIntegratsiyaReestra:
             return f"эхо: {soobshcheniye}"
 
         koren = FastMCP("koren")
-        koren.mount(podmodul, namespace="test")
+        koren.mount(podmodul, namespace="proverka")
 
         async with Client(koren) as klient:
-            rezultat = await klient.call_tool("test_ekho", {"soobshcheniye": "privet"})
+            rezultat = await klient.call_tool("proverka_ekho", {"soobshcheniye": "privet"})
             assert rezultat.data == "эхо: privet"
 
     @pytest.mark.asyncio

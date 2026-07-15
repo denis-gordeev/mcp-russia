@@ -159,7 +159,7 @@ class TestTransformatsiyaBM25:
 
         server_funktsiya = FastMCP("proverka")
 
-        @server_funktsiya.tool(tags={"meta"})
+        @server_funktsiya.tool(tags={"мета"})
         def spisok_funktsiy() -> str:
             """Список функций."""
             return "funktsii"
@@ -207,9 +207,9 @@ class TestTransformatsiyaBM25:
 class TestKonfiguratsiyaPoiskaInstrumentov:
     @pytest.mark.asyncio
     async def test_rezhim_none_pokazyvaet_vse_instrumenty(self) -> None:
-        from mcp_russia.server import mcp as root_mcp
+        from mcp_russia.server import mcp as kornevoy_mcp
 
-        async with Client(root_mcp) as klient:
+        async with Client(kornevoy_mcp) as klient:
             instrumenty = await klient.list_tools()
             imena = {t.name for t in instrumenty}
             assert "spisok_funktsiy" in imena
@@ -243,12 +243,12 @@ class TestRasprostranenieTegov:
 
         server_funktsiya = FastMCP("proverka")
 
-        @server_funktsiya.tool(tags={"environmental", "fires"})
+        @server_funktsiya.tool(tags={"ekologiya", "pozhary"})
         def nayti_ochagi() -> str:
             """Поиск очагов пожаров, обнаруженных спутником в России."""
             return "ochagi"
 
-        @server_funktsiya.tool(tags={"financial", "banks"})
+        @server_funktsiya.tool(tags={"finansy", "banki"})
         def spisok_bankov() -> str:
             """Список всех банков России, зарегистрированных в Центральном банке."""
             return "banki"
@@ -324,7 +324,7 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "proverochnyy-klyuch"),
         ):
-            rezultat = await splanirovat_zapros_impl("расходы депутата X", "catalog")
+            rezultat = await splanirovat_zapros_impl("расходы депутата X", "katalog")
             assert "## План запроса" in rezultat
             assert "Этап 1" in rezultat
             assert "Этап 2" in rezultat
@@ -349,7 +349,7 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "proverochnyy-klyuch"),
         ):
-            rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "katalog")
             assert "Не удалось построить структурированный план." in rezultat
 
     @pytest.mark.asyncio
@@ -364,7 +364,7 @@ class TestSplanirovatZapros:
             patch.dict("sys.modules", {"anthropic": maket_anthropic}),
             patch("mcp_russia._shared.planner.KLYUCH_ANTHROPIC_API", "proverochnyy-klyuch"),
         ):
-            rezultat = await splanirovat_zapros_impl("расходы правительства", "catalog")
+            rezultat = await splanirovat_zapros_impl("расходы правительства", "katalog")
             assert "Ошибка" in rezultat
             assert "search_tools" in rezultat
 

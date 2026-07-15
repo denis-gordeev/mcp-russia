@@ -51,7 +51,7 @@ class TestVypolneniePaketa:
     @pytest.mark.asyncio
     async def test_prevyshaet_limit(self) -> None:
         kontekst = _maket_konteksta()
-        zaprosy = [{"instrument": "x", "argumenty": {}} for _ in range(11)]
+        zaprosy = [{"imya_instrumenta": "x", "argumenty": {}} for _ in range(11)]
         rezultat = await batch.vypolnit_paket_vnutrenniy(zaprosy, kontekst)
         assert "Максимум 10" in rezultat
 
@@ -59,7 +59,7 @@ class TestVypolneniePaketa:
     async def test_neizvestnyy_instrument(self) -> None:
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "nesushchestvuyushchiy_instrument", "argumenty": {}}], kontekst
+            [{"imya_instrumenta": "nesushchestvuyushchiy_instrument", "argumenty": {}}], kontekst
         )
         assert "не найден" in rezultat
 
@@ -74,7 +74,12 @@ class TestVypolneniePaketa:
 
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "proverochnyy_instrument", "argumenty": {"parametr": "znachenie"}}],
+            [
+                {
+                    "imya_instrumenta": "proverochnyy_instrument",
+                    "argumenty": {"parametr": "znachenie"},
+                }
+            ],
             kontekst,
         )
         assert "rezultat uspekha" in rezultat
@@ -84,14 +89,14 @@ class TestVypolneniePaketa:
     async def test_vyzyvaet_instrument_bez_konteksta(self) -> None:
         """Должен работать с инструментами, не принимающими kontekst."""
 
-        async def instrument_bez_konteksta(imya: str) -> str:
+        async def instrument_ne_trebuet_konteksta(imya: str) -> str:
             return f"privet {imya}"
 
-        batch._dispetcher["privetstvie"] = instrument_bez_konteksta
+        batch._dispetcher["privetstvie"] = instrument_ne_trebuet_konteksta
 
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "privetstvie", "argumenty": {"imya": "mir"}}], kontekst
+            [{"imya_instrumenta": "privetstvie", "argumenty": {"imya": "mir"}}], kontekst
         )
         assert "privet mir" in rezultat
 
@@ -110,9 +115,9 @@ class TestVypolneniePaketa:
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"instrument": "schetchik", "argumenty": {"n": 1}},
-                {"instrument": "schetchik", "argumenty": {"n": 2}},
-                {"instrument": "schetchik", "argumenty": {"n": 3}},
+                {"imya_instrumenta": "schetchik", "argumenty": {"n": 1}},
+                {"imya_instrumenta": "schetchik", "argumenty": {"n": 2}},
+                {"imya_instrumenta": "schetchik", "argumenty": {"n": 3}},
             ],
             kontekst,
         )
@@ -133,7 +138,7 @@ class TestVypolneniePaketa:
 
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
-            [{"instrument": "neudacha", "argumenty": {}}], kontekst
+            [{"imya_instrumenta": "neudacha", "argumenty": {}}], kontekst
         )
         assert "Ошибка" in rezultat
         assert "таймаут" in rezultat.lower()
@@ -155,8 +160,8 @@ class TestVypolneniePaketa:
         kontekst = _maket_konteksta()
         rezultat = await batch.vypolnit_paket_vnutrenniy(
             [
-                {"instrument": "norma", "argumenty": {}},
-                {"instrument": "plokho", "argumenty": {}},
+                {"imya_instrumenta": "norma", "argumenty": {}},
+                {"imya_instrumenta": "plokho", "argumenty": {}},
             ],
             kontekst,
         )

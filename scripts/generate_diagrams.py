@@ -131,7 +131,7 @@ def anatomiya_modulya() -> None:
             instrumenty = Python("tools.py\nspisok_regionov()\npoluchit_indikator()")
             klient = Python("client.py\nhttp_poluchit() async")
             skhemy = Python("schemas.py\nBaseModel")
-            konstanty = Python("constants.py\nROSSTAT_API_BASE")
+            konstanty = Python("constants.py\nEMISS_BAZA_API")
 
             server_uzel >> Edge(label="регистрирует") >> instrumenty
             instrumenty >> Edge(label="делегирует HTTP") >> klient

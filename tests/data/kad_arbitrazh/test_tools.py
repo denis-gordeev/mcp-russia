@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_russia.data.kad_arbitrazh import client as kad_client
+from mcp_russia.data.kad_arbitrazh import client as kad_klient
 from mcp_russia.data.kad_arbitrazh import tools as kad_tools
 from mcp_russia.data.kad_arbitrazh.schemas import SudebnoeDelo
 
@@ -27,7 +27,7 @@ class TestRazborRezultatovPoiska:
                 "ClaimSum": 1000000,
             }
         ]
-        rezultaty = kad_client._razobrat_rezultaty_poiska(dannye)
+        rezultaty = kad_klient._razobrat_rezultaty_poiska(dannye)
         assert len(rezultaty) == 1
         assert rezultaty[0].nomer == "А40-12345/2024"
         assert rezultaty[0].nazvanie_suda == "АС г. Москвы"
@@ -49,26 +49,26 @@ class TestRazborRezultatovPoiska:
                 }
             ]
         }
-        rezultaty = kad_client._razobrat_rezultaty_poiska(dannye)
+        rezultaty = kad_klient._razobrat_rezultaty_poiska(dannye)
         assert len(rezultaty) == 1
         assert rezultaty[0].nomer == "А77-5678/2023"
 
     def test_razbor_pustogo(self) -> None:
-        assert kad_client._razobrat_rezultaty_poiska(None) == []
-        assert kad_client._razobrat_rezultaty_poiska([]) == []
+        assert kad_klient._razobrat_rezultaty_poiska(None) == []
+        assert kad_klient._razobrat_rezultaty_poiska([]) == []
 
     def test_opredelit_sud(self) -> None:
-        assert kad_client._opredelit_sud_po_nomeru("А40-12345/2024") == "АС г. Москвы"
+        assert kad_klient._opredelit_sud_po_nomeru("А40-12345/2024") == "АС г. Москвы"
         assert (
-            kad_client._opredelit_sud_po_nomeru("А77-999/2024")
+            kad_klient._opredelit_sud_po_nomeru("А77-999/2024")
             == "АС г. Санкт-Петербурга и Ленинградской области"
         )
-        assert kad_client._opredelit_sud_po_nomeru("А99-1/2024") == ""
+        assert kad_klient._opredelit_sud_po_nomeru("А99-1/2024") == ""
 
     def test_opredelit_kategoriyu(self) -> None:
-        assert kad_client._opredelit_kategoriyu("А40Б-12345/2024") == "Банкротство"
-        assert kad_client._opredelit_kategoriyu("А40А-12345/2024") == "Административные дела"
-        assert kad_client._opredelit_kategoriyu("А40-12345/2024") == ""
+        assert kad_klient._opredelit_kategoriyu("А40Б-12345/2024") == "Банкротство"
+        assert kad_klient._opredelit_kategoriyu("А40А-12345/2024") == "Административные дела"
+        assert kad_klient._opredelit_kategoriyu("А40-12345/2024") == ""
 
 
 class TestRazborKartochkiDela:
@@ -87,15 +87,15 @@ class TestRazborKartochkiDela:
                 "ClaimSum": 5000000,
             }
         }
-        rezultat = kad_client._razobrat_kartochka_dela(dannye)
+        rezultat = kad_klient._razobrat_kartochka_dela(dannye)
         assert rezultat is not None
         assert rezultat.nomer == "А40-11111/2025"
         assert rezultat.kategoriya == "Банкротство"
         assert rezultat.summa_iska == 5000000.0
 
     def test_razbor_nichego(self) -> None:
-        assert kad_client._razobrat_kartochka_dela(None) is None
-        assert kad_client._razobrat_kartochka_dela({}) is None
+        assert kad_klient._razobrat_kartochka_dela(None) is None
+        assert kad_klient._razobrat_kartochka_dela({}) is None
 
 
 class TestRazborAktov:
@@ -115,13 +115,13 @@ class TestRazborAktov:
                 }
             ]
         }
-        rezultaty = kad_client._razobrat_akty(dannye, "А40-12345/2024")
+        rezultaty = kad_klient._razobrat_akty(dannye, "А40-12345/2024")
         assert len(rezultaty) == 1
         assert rezultaty[0].tip_akta == "Решение"
         assert rezultaty[0].delo_nomer == "А40-12345/2024"
 
     def test_razbor_pustogo(self) -> None:
-        assert kad_client._razobrat_akty(None, "А40-1/2024") == []
+        assert kad_klient._razobrat_akty(None, "А40-1/2024") == []
 
 
 class TestRazborStoron:
@@ -130,7 +130,7 @@ class TestRazborStoron:
             "Plaintiffs": ["ООО Альфа", "Иванов И.И."],
             "Defendants": ["ООО Бета", "Минфин РФ"],
         }
-        rezultaty = kad_client._razobrat_storony(dannye, "А40-12345/2024")
+        rezultaty = kad_klient._razobrat_storony(dannye, "А40-12345/2024")
         assert len(rezultaty) == 4
         istorcy = [s for s in rezultaty if s.tip == "истец"]
         otvetchiki = [s for s in rezultaty if s.tip == "ответчик"]
@@ -142,7 +142,7 @@ class TestRazborStoron:
             "Plaintiffs": "ООО Альфа, ООО Гамма",
             "Defendants": "ООО Бета",
         }
-        rezultaty = kad_client._razobrat_storony(dannye, "А40-12345/2024")
+        rezultaty = kad_klient._razobrat_storony(dannye, "А40-12345/2024")
         assert len(rezultaty) == 3
 
 

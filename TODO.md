@@ -2,29 +2,46 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-14 (семидесятый восьмой проход — русификация тегов мета-инструментов, кириллизация deloproizvodstvo, русификация CHANGELOG.md)
+## Статус раунда 2026-07-15 (семидесятый девятый проход — русификация тестовых данных, португальских артефактов, JSON-ключа instrument→imya_instrumenta, документации)
 
 ### Выполнено
 
-- **Русификация английских тегов мета-инструментов в server.py** (4 тега в 4 инструментах):
-  - `tags={"meta", "discovery"}` → `tags={"мета", "обнаружение"}` (spisok_funktsiy, rekomendovat_instrumenty)
-  - `tags={"meta", "discovery", "планирование"}` → `tags={"мета", "обнаружение", "планирование"}` (splanirovat_zapros)
-  - `tags={"meta", "batch"}` → `tags={"мета", "пакет"}` (vypolnit_paket)
-- **Кириллизация deloproizvodstvo/__init__.py** (единственный модуль с транслитерацией вместо кириллицы):
-  - `opisanie`: `"Deloproizvodstvo v mcp-russia: Ofitsialnaya perepiska RF..."` → `"Делопроизводство в mcp-russia: Официальная переписка РФ..."`
-  - `tegi`: `["dokumenty", "deloproizvodstvo", "ofitsialnaya-perepiska"]` → `["документы", "делопроизводство", "официальная-переписка"]`
-- **Русификация CHANGELOG.md** (~150 замен):
-  - Все `(legacy)` → `(устаревший)` (~50 вхождений)
-  - Все португальские имена модулей → русские эквиваленты: `camara` → `палата_депутатов`, `tse` → `цвк`, `tcu` → `счётная_палата`, `tce_*` → `кро_*`, `compras` → `закупки`, `transparencia` → `прозрачность`, `senado` → `сенат`, `datajud` → `судебные_данные`, `transferegov` → `межбюджетные_трансферты`, `diario_oficial` → `официальный_вестник`, `ibge` → `росстат`, `bacen` → `цб_рф`, `brasilapi` → `россия_api`, `legislativo` → `законодательный`, `judiciario` → `судебный`, `redator` → `редактор`, `agentes` → `агенты`
-  - Английские термины → русские: `fallback` → `запасной вариант`, `deps` → `зависимости`, `tech-debt` → `технический долг`, `CNAE` → `ОКВЭД`, `rate limiting` → `ограничение частоты запросов`, `code_mode` → `режим_кода`, `discovery` → `обнаружение`
-  - Португальские переменные → русские: `pib_per_capita` → `ввп_на_душу`, `area_territorial` → `площадь_территории`, `STF` → `ВС РФ`
-- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 306 файлов formatted, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+- **Устранение португальских артефактов в тестах** (test_cache.py):
+  - `uf` (Unidade Federativa) → `subiekt`; `"SP"` (Сан-Паулу) → `"77"` (Москва); `"RJ"` (Риу-де-Жанейро) → `"16"` (Татарстан)
+- **Русификация английских имён тестовых функций** (3 функции в test_feature.py):
+  - `test_dostupna_li_autentifikatsiya_env_var_set` → `..._s_peremennoy_okruzheniya`
+  - `test_dostupna_li_autentifikatsiya_requires_auth_no_env_var` → `..._trebuet_aut_bez_peremennoy`
+  - `test_dostupna_li_autentifikatsiya_optional_auth_no_env` → `..._neobyazatelnaya_bez_peremennoy`
+- **Русификация английских строковых литералов в тестах** (~40 замен в 6 файлах):
+  - test_feature.py: `"FAKE_KEY_NOT_SET"` → `"PROVEROCHNYY_KLYUCH_NE_ZADAN"`, `"TEST_MCP_KEY"` → `"PROVEROCHNYY_KLYUCH_MCP"`, `"TEST_OPT_KEY"` → `"PROVEROCHNYY_KLYUCH_NE_OBYAZ"`, `"val"` → `"znachenie"`, `"fake.module"` → `"lozhnyy.modul"`, `"reason"` → `"prichina"`, `"test"` (namespace) → `"proverka"`, `"test_ekho"` → `"proverka_ekho"`
+  - test_cache.py: `uf`/`SP`/`RJ` → `subiekt`/`77`/`16`
+  - test_discovery.py: `"environmental"` → `"ekologiya"`, `"fires"` → `"pozhary"`, `"financial"` → `"finansy"`, `"banks"` → `"banki"`, `"meta"` → `"мета"`, `"catalog"` → `"katalog"`, `root_mcp` → `kornevoy_mcp`
+  - test_http_client.py: все URL `api.example.com/{data,search,missing,flaky,limited,down,slow,once}` → `api.primer.gov.ru/{dannye,poisk,otsutstvuet,nestabilnyy,ogranichen,nedostupen,medlennyy,odinraz}`, `"test"` → `"zapros"`
+  - test_batch.py: `"instrument"` → `"imya_instrumenta"`, `instrument_bez_konteksta` → `instrument_ne_trebuet_konteksta`
+  - test_tools.py (gosduma, zakupki, kad_arbitrazh): `*_client` → `*_klient`, `"string"` → `"stroka"`, `"abc"` → `"abv"`
+  - test_tools.py (roskomnadzor): `"example.com"` → `"primer.ru"`, `"blocked-site.ru"` → `"zapreshcheno.ru"`
+  - test_integration.py (minobrnauki): `"placeholder"` → `"zaglushka"`
+- **Русификация JSON-ключа `"instrument"` → `"imya_instrumenta"`** в batch.py и server.py (согласовано с planner.py, где Pydantic-поле уже называется `imya_instrumenta`)
+- **Русификация CONTRIBUTING.md** (~8 замен):
+  - `Mock client` → `Мок клиента`, `mock HTTP` → `мок HTTP`, `e2e` → `сквозное тестирование`, `end-to-end` → `сквозное тестирование`, `Bump` → `Повышение`, `PR` → `пул-реквест`, `Conventional Commits` → `Конвенциональные коммиты`
+- **Русификация Makefile** (2 замены):
+  - `production-зависимости` → `рабочие зависимости`, `prod + dev` → `рабочие + разработка`
+- **Русификация README.md** (2 замены):
+  - `alt="mcp-russia logo"` → `alt="логотип mcp-russia"`, `License: MIT` → `Лицензия: MIT`
+- **Исправление устаревшей константы в scripts/generate_diagrams.py**: `ROSSTAT_API_BASE` → `EMISS_BAZA_API`
+- **Русификация комментария в rosstat/constants.py**: `energy_production и transport_cargo` → `proizvodstvo_elektroenergii и gruzooborot_transporta`
+- **Русификация сообщений в server.py**: `CodeMode` → `режим кода` (лог-сообщения и предупреждения)
+- **Русификация комментария в settings.py**: `CodeMode` → `режим кода`
 
 ### Ключевые архитектурные решения
 
-- **Теги мета-инструментов**: все 24 модуля данных используют кириллические русские теги (напр. `tags={"проверки", "поиск"}`), но корневой сервер использовал английские `{"meta", "discovery", "batch"}` — устранена единственная несогласованность; `мета` = «мета», `обнаружение` = «discovery», `пакет` = «batch»
-- **Кириллизация deloproizvodstvo**: единственный модуль, чьи `opisanie` и `tegi` были на транслитерации вместо кириллицы; все 24 модуля данных используют кириллические описания — устранена единственная несогласованность
-- **CHANGELOG.md**: полностью русифицирован; устранены все португальские имена модулей, английские термины и пометки `(legacy)`; CHANGELOG.md и TODO.md — единственные файлы, где исторически допускались бразильские/португальские артефакты — теперь они тоже русифицированы
+- **`"instrument"` → `"imya_instrumenta"`**: ключ JSON в API `vypolnit_paket` приведён в соответствие с Pydantic-полем `imya_instrumenta` в `planner.py`; ломающее изменение для клиентов, использующих `vypolnit_paket`
+- **`uf`/`SP`/`RJ`**: устранены последние португальские артефакты в кодовой базе; `uf` = Unidade Federativa (бразильский штат), заменено на `subiekt` (субъект РФ) с кодами `77` (Москва) и `16` (Татарстан)
+- **`*_client` → `*_klient`**: унификация с конвенцией проекта — во всех остальных местах используется `klient`
+- **`root_mcp` → `kornevoy_mcp`**: устранён английский префикс `root`; `kornevoy` = «корневой»
+- **`api.example.com` → `api.primer.gov.ru`**: тестовые URL приведены к российскому формату
+- **`CodeMode` → `режим кода`**: русификация лог-сообщений; имя класса `CodeMode` (из внешней библиотеки) не меняется
+- **`code_mode`**: значение настройки оставлено без изменений — конфигурационный токен, аналогичный `"bm25"` и `"none"`
 
 ### Следующие действия
 

@@ -128,12 +128,12 @@ class TestDekoratorKeshaSVremenemZhizni:
         schetchik_vyzovov = 0
 
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
-        async def poluchit(uf: str = "SP") -> str:
+        async def poluchit(subiekt: str = "77") -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return f"dannye-{uf}"
+            return f"dannye-{subiekt}"
 
-        await poluchit(uf="SP")
-        await poluchit(uf="RJ")
-        await poluchit(uf="SP")  # из кэша
+        await poluchit(subiekt="77")
+        await poluchit(subiekt="16")
+        await poluchit(subiekt="77")  # из кэша
         assert schetchik_vyzovov == 2

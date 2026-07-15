@@ -76,7 +76,7 @@ async def vypolnit_paket_vnutrenniy(
     """Параллельное выполнение нескольких вызовов инструментов.
 
     Аргументы:
-        zaprosy: Список словарей {"instrument": "имя", "argumenty": {}}.
+        zaprosy: Список словарей {"imya_instrumenta": "имя", "argumenty": {}}.
         kontekst: Контекст FastMCP для передачи в инструменты, которые его принимают.
 
     Возвращает:
@@ -90,7 +90,7 @@ async def vypolnit_paket_vnutrenniy(
 
     async def _vypolnit_odin(zapros: dict[str, Any]) -> tuple[str, str]:
         """Выполнение одного инструмента из пакета."""
-        imya_instrumenta = zapros.get("instrument", "")
+        imya_instrumenta = zapros.get("imya_instrumenta", "")
         argumenty = zapros.get("argumenty", {})
         funktsiya = _dispetcher.get(imya_instrumenta)
 

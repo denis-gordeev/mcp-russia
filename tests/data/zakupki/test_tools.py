@@ -2,7 +2,7 @@
 
 from unittest.mock import AsyncMock, patch
 
-from mcp_russia.data.zakupki import client as zakupki_client
+from mcp_russia.data.zakupki import client as zakupki_klient
 from mcp_russia.data.zakupki import tools as zakupki_tools
 from mcp_russia.data.zakupki.schemas import Kontrakt, Zakupka
 
@@ -34,15 +34,15 @@ def test_razobrat_poisk_zakupok():
             }
         ]
     }
-    rezultat = zakupki_client._razobrat_poisk_zakupok(dannye)
+    rezultat = zakupki_klient._razobrat_poisk_zakupok(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].nomer == "0123400000125000001"
     assert rezultat[0].nachalnaya_tsena == 1500000.0
 
 
 def test_razobrat_poisk_zakupok_pustoy():
-    assert zakupki_client._razobrat_poisk_zakupok(None) == []
-    assert zakupki_client._razobrat_poisk_zakupok("ne spisok") == []
+    assert zakupki_klient._razobrat_poisk_zakupok(None) == []
+    assert zakupki_klient._razobrat_poisk_zakupok("ne spisok") == []
 
 
 def test_razobrat_kontrakty():
@@ -59,23 +59,23 @@ def test_razobrat_kontrakty():
             }
         ]
     }
-    rezultat = zakupki_client._razobrat_kontrakty(dannye)
+    rezultat = zakupki_klient._razobrat_kontrakty(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].nazvanie_podryadchika == "ООО Ромашка"
     assert rezultat[0].tsena == 500000.0
 
 
 def test_opredelit_zakon():
-    assert zakupki_client._opredelit_zakon({"fz": "44"}) == "44-ФЗ"
-    assert zakupki_client._opredelit_zakon({"fz": "223"}) == "223-ФЗ"
-    assert zakupki_client._opredelit_zakon({"fz": ""}) == ""
+    assert zakupki_klient._opredelit_zakon({"fz": "44"}) == "44-ФЗ"
+    assert zakupki_klient._opredelit_zakon({"fz": "223"}) == "223-ФЗ"
+    assert zakupki_klient._opredelit_zakon({"fz": ""}) == ""
 
 
 def test_bezopasnoe_veshchestvennoe():
-    assert zakupki_client._bezopasnoe_veshchestvennoe(None) == 0.0
-    assert zakupki_client._bezopasnoe_veshchestvennoe("abc") == 0.0
-    assert zakupki_client._bezopasnoe_veshchestvennoe(100) == 100.0
-    assert zakupki_client._bezopasnoe_veshchestvennoe("200.5") == 200.5
+    assert zakupki_klient._bezopasnoe_veshchestvennoe(None) == 0.0
+    assert zakupki_klient._bezopasnoe_veshchestvennoe("abv") == 0.0
+    assert zakupki_klient._bezopasnoe_veshchestvennoe(100) == 100.0
+    assert zakupki_klient._bezopasnoe_veshchestvennoe("200.5") == 200.5
 
 
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---

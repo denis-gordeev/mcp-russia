@@ -73,4 +73,4 @@ async def test_tool_info_vuza(klient):
         rezultat = await klient.call_tool("info_vuza", {"nazvanie": "МГУ"})
     assert rezultat is not None
     tekst = str(rezultat)
-    assert "не найден" in tekst or "не найдена" in tekst or "placeholder" in tekst.lower()
+    assert "не найден" in tekst or "не найдена" in tekst or "zaglushka" in tekst.lower()
