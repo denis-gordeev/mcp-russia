@@ -43,9 +43,11 @@ async def poisk_operatora_pd(inn: str = "", nazvanie: str = "") -> list[dict[str
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_operatora_pd(o) for o in elementy if isinstance(o, dict)]
+                return [
+                    _razobrat_operatora_pd(zapis) for zapis in elementy if isinstance(zapis, dict)
+                ]
         if isinstance(dannye, list):
-            return [_razobrat_operatora_pd(o) for o in dannye if isinstance(o, dict)]
+            return [_razobrat_operatora_pd(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске оператора ПД")
@@ -73,9 +75,9 @@ async def poisk_ori(nazvanie: str = "", inn: str = "") -> list[dict[str, Any]]:
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_ori(o) for o in elementy if isinstance(o, dict)]
+                return [_razobrat_ori(zapis) for zapis in elementy if isinstance(zapis, dict)]
         if isinstance(dannye, list):
-            return [_razobrat_ori(o) for o in dannye if isinstance(o, dict)]
+            return [_razobrat_ori(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске ОРИ")

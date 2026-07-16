@@ -45,7 +45,9 @@ async def spisok_ogranicheniy(kontekst: Context) -> str:
     Возвращает:
         Список ограничений (выезд, управление транспортом, арест счетов и т.д.).
     """
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in Ogranicheniya]
+    stroki_tablitsy = [
+        (ogranichenie["kod"], ogranichenie["nazvanie"]) for ogranichenie in Ogranicheniya
+    ]
     return tablitsa_v_markdown(["Код", "Ограничение"], stroki_tablitsy) + _ISTOCHNIK
 
 
@@ -65,7 +67,9 @@ async def spisok_osnovaniy_vozbuzhdeniya(kontekst: Context) -> str:
     Возвращает:
         Список оснований (судебный акт, постановление ГИБДД и т.д.).
     """
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in OsnovaniyaVozbuzhdeniya]
+    stroki_tablitsy = [
+        (osnovanie["kod"], osnovanie["nazvanie"]) for osnovanie in OsnovaniyaVozbuzhdeniya
+    ]
     return tablitsa_v_markdown(["Код", "Основание"], stroki_tablitsy) + _ISTOCHNIK
 
 
@@ -77,7 +81,7 @@ async def spisok_regionov(kontekst: Context) -> str:
     """
     stroki_tablitsy = [
         (str(kod), nazvanie)
-        for nazvanie, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda x: x[1])
+        for nazvanie, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda element: element[1])
     ]
     return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ISTOCHNIK
 

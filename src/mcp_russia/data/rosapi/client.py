@@ -248,15 +248,15 @@ async def konsultirovat_adres_po_pochtovomu(pochtovyy_indeks: str) -> AdresRF | 
             ),
         }
 
-    s = predlozheniya[0]
-    dannye = s.get("data", {})
+    pervoe = predlozheniya[0]
+    dannye = pervoe.get("data", {})
     return AdresRF(
         pochtovyy_indeks=dannye.get("postal_code", pochtovyy_indeks),
         subiekt=dannye.get("region_with_type", ""),
         gorod=dannye.get("city_with_type") or dannye.get("settlement_with_type", ""),
         ulitsa=dannye.get("street_with_type"),
         dom=dannye.get("house"),
-        polnyy_adres=s.get("unrestricted_value") or s.get("value", ""),
+        polnyy_adres=pervoe.get("unrestricted_value") or pervoe.get("value", ""),
     )
 
 

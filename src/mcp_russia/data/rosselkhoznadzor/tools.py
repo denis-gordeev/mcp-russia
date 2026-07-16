@@ -140,13 +140,13 @@ async def poisk_karantinnykh_obektov(
         )
     stroki_tablitsy = [
         (
-            o.get("nazvanie", ""),
-            o.get("tip", ""),
-            o.get("subiekt", "")[:30],
-            o.get("status_karantina", ""),
-            o.get("data_vvedeniya", ""),
+            obiekt.get("nazvanie", ""),
+            obiekt.get("tip", ""),
+            obiekt.get("subiekt", "")[:30],
+            obiekt.get("status_karantina", ""),
+            obiekt.get("data_vvedeniya", ""),
         )
-        for o in obekty
+        for obiekt in obekty
     ]
     zagolovok = f"**Карантинные объекты** — найдено: {len(obekty)}\n\n"
     return zagolovok + tablitsa_v_markdown(

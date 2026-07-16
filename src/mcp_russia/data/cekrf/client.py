@@ -129,11 +129,11 @@ def _razobrat_chislo(tekst: str) -> int:
 
 def _razobrat_veshchestvennoe(tekst: str) -> float:
     """Извлечь число с плавающей точкой из текста."""
-    m = re.search(r"[\d]+[.,][\d]+", tekst)
-    if m:
-        return float(m.group().replace(",", "."))
-    m = re.search(r"[\d]+", tekst)
-    return float(m.group()) if m else 0.0
+    sovpadenie = re.search(r"[\d]+[.,][\d]+", tekst)
+    if sovpadenie:
+        return float(sovpadenie.group().replace(",", "."))
+    sovpadenie = re.search(r"[\d]+", tekst)
+    return float(sovpadenie.group()) if sovpadenie else 0.0
 
 
 async def _zaprosit_html_vyborov(
@@ -163,8 +163,8 @@ async def _zaprosit_html_vyborov(
             bazovyy_adres_url=VYBORY_BAZA_API,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=30.0,
-        ) as c:
-            otvet = await c.get(adres_url, params=parametry)
+        ) as klient:
+            otvet = await klient.get(adres_url, params=parametry)
             otvet.raise_for_status()
             return otvet.text
     except Exception as exc:
@@ -209,11 +209,11 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
         procent = 0.0
         izbrann = False
 
-        for i, yacheyka in enumerate(stroka_tablitsy):
+        for indeks, yacheyka in enumerate(stroka_tablitsy):
             yacheyka_nizhniy = yacheyka.lower()
-            if i == 1 and len(yacheyka) > 2:
+            if indeks == 1 and len(yacheyka) > 2:
                 fio = yacheyka
-            elif i == 2 and len(yacheyka) > 1:
+            elif indeks == 2 and len(yacheyka) > 1:
                 partia = yacheyka
             if "%" in yacheyka:
                 procent = _razobrat_veshchestvennoe(yacheyka)
@@ -228,8 +228,8 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
 
         if fio:
             for yacheyka in stroka_tablitsy:
-                m = re.match(r"^[\d\s]+$", yacheyka.replace("\xa0", "").strip())
-                if m and fio:
+                sovpadenie = re.match(r"^[\d\s]+$", yacheyka.replace("\xa0", "").strip())
+                if sovpadenie and fio:
                     znachenie = _razobrat_chislo(yacheyka)
                     if znachenie > 0:
                         golosov = znachenie
@@ -303,12 +303,12 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         subiekt_str = ""
         kandidat_identifikator = ""
 
-        for i, yacheyka in enumerate(stroka_tablitsy):
-            if i == 0 and re.match(r"^\d+$", yacheyka.strip()):
+        for indeks, yacheyka in enumerate(stroka_tablitsy):
+            if indeks == 0 and re.match(r"^\d+$", yacheyka.strip()):
                 kandidat_identifikator = yacheyka.strip()
-            elif i == 1 and len(yacheyka) > 2:
+            elif indeks == 1 and len(yacheyka) > 2:
                 fio = yacheyka.strip()
-            elif i == 2 and len(yacheyka) > 1:
+            elif indeks == 2 and len(yacheyka) > 1:
                 partia = yacheyka.strip()
             elif "зарегистрирован" in yacheyka.lower():
                 sostoyanie = "Зарегистрирован"
@@ -422,8 +422,8 @@ async def spisok_vyborov(
                 bazovyy_adres_url=VYBORY_BAZA_API,
                 zagolovki={"Accept": "text/html,application/xhtml+xml"},
                 taimaut=20.0,
-            ) as c:
-                otvet = await c.get(adres_url, params=parametry)
+            ) as klient:
+                otvet = await klient.get(adres_url, params=parametry)
                 otvet.raise_for_status()
                 html_tekst = otvet.text
                 shablon_goda = re.compile(rf"\b{god}\b")
@@ -491,8 +491,8 @@ async def poisk_kandidata(
             bazovyy_adres_url=VYBORY_BAZA_API,
             zagolovki={"Accept": "text/html,application/xhtml+xml"},
             taimaut=20.0,
-        ) as c:
-            otvet = await c.get(adres_url_poiska, params=parametry)
+        ) as klient:
+            otvet = await klient.get(adres_url_poiska, params=parametry)
             otvet.raise_for_status()
             html_tekst = otvet.text
             vse_kandidaty = _razobrat_kandidatov_iz_html(html_tekst)

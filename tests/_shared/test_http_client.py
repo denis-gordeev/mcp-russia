@@ -76,13 +76,13 @@ class TestHttpPoluchit:
         marshrut = respx.get("https://api.primer.gov.ru/nestabilnyy")
         marshrut.side_effect = [
             httpx.Response(500, text="Внутренняя ошибка сервера"),
-            httpx.Response(200, json={"vosstanovleno": True}),
+            httpx.Response(200, json={"восстановлено": True}),
         ]
         with patch("mcp_russia._shared.http_client.asyncio.sleep"):
             rezultat = await http_poluchit(
                 "https://api.primer.gov.ru/nestabilnyy", maks_povtorov=2
             )
-        assert rezultat == {"vosstanovleno": True}
+        assert rezultat == {"восстановлено": True}
 
     @pytest.mark.asyncio
     @respx.mock

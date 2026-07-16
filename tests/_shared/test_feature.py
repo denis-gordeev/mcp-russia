@@ -151,7 +151,7 @@ class TestReyestrFunktsiy:
         @podserver.tool
         def proverka_svyazi_fn() -> str:
             """Инструмент проверки связи."""
-            return "pong"
+            return "отклик"
 
         reyestr._funktsii["test_funktsiya"] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz,
@@ -179,10 +179,10 @@ class TestReyestrFunktsiy:
 
     def test_svodka_s_propushchennymi(self) -> None:
         reyestr = ReyestrFunktsiy()
-        reyestr._propushcheno["broken"] = "отсутствует META_FUNKTSII"
+        reyestr._propushcheno["slomannyy"] = "отсутствует META_FUNKTSII"
         svodka_testa = reyestr.svodka()
         assert "1 пропущено" in svodka_testa
-        assert "broken" in svodka_testa
+        assert "slomannyy" in svodka_testa
 
     def test_propushcheno_vozvrashchaet_kopiyu(self) -> None:
         reyestr = ReyestrFunktsiy()

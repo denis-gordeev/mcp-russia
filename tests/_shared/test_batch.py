@@ -69,7 +69,7 @@ class TestVypolneniePaketa:
 
         async def _spets(kontekst: object, parametr: str) -> str: ...
 
-        maket_funktsii = AsyncMock(spec=_spets, return_value="rezultat uspekha")
+        maket_funktsii = AsyncMock(spec=_spets, return_value="результат успеха")
         batch._dispetcher["proverochnyy_instrument"] = maket_funktsii
 
         kontekst = _maket_konteksta()
@@ -82,7 +82,7 @@ class TestVypolneniePaketa:
             ],
             kontekst,
         )
-        assert "rezultat uspekha" in rezultat
+        assert "результат успеха" in rezultat
         maket_funktsii.assert_called_once()
 
     @pytest.mark.asyncio
@@ -108,7 +108,7 @@ class TestVypolneniePaketa:
         async def schitayushchiy_instrument(n: int) -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return f"rezultat-{n}"
+            return f"результат-{n}"
 
         batch._dispetcher["schetchik"] = schitayushchiy_instrument
 
@@ -122,9 +122,9 @@ class TestVypolneniePaketa:
             kontekst,
         )
         assert schetchik_vyzovov == 3
-        assert "rezultat-1" in rezultat
-        assert "rezultat-2" in rezultat
-        assert "rezultat-3" in rezultat
+        assert "результат-1" in rezultat
+        assert "результат-2" in rezultat
+        assert "результат-3" in rezultat
 
     @pytest.mark.asyncio
     async def test_obrabatyvaet_oshibku_instrumenta(self) -> None:
@@ -147,14 +147,14 @@ class TestVypolneniePaketa:
     async def test_smeshannye_uspekh_i_oshibka(self) -> None:
         """Должен возвращать частичные результаты при ошибках части инструментов."""
 
-        async def normanyy_instrument() -> str:
-            return "uspekh"
+        async def normalnyy_instrument() -> str:
+            return "успех"
 
         async def plokhoy_instrument() -> str:
             msg = "oy"
             raise ValueError(msg)
 
-        batch._dispetcher["norma"] = normanyy_instrument
+        batch._dispetcher["norma"] = normalnyy_instrument
         batch._dispetcher["plokho"] = plokhoy_instrument
 
         kontekst = _maket_konteksta()
@@ -165,7 +165,7 @@ class TestVypolneniePaketa:
             ],
             kontekst,
         )
-        assert "uspekh" in rezultat
+        assert "успех" in rezultat
         assert "Ошибка" in rezultat
 
 

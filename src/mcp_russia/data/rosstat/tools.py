@@ -46,7 +46,7 @@ async def spisok_okrugov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка федеральных округов...")
     okruga = client.poluchit_spisok_federalnykh_okrugov()
 
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
+    stroki_tablitsy = [(okrug["kod"], okrug["nazvanie"]) for okrug in okruga]
     zagolovok = "**Федеральные округа Российской Федерации**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Округ"], stroki_tablitsy)
 
@@ -295,7 +295,9 @@ async def sravnenie_regionov(pokazatel: str, kontekst: Context) -> str:
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}"
         )
-    otsortirovannye_dannye = sorted(dannye, key=lambda x: x.get("znachenie") or 0, reverse=True)
+    otsortirovannye_dannye = sorted(
+        dannye, key=lambda zapis: zapis.get("znachenie") or 0, reverse=True
+    )
     stroki_tablitsy = []
     for i, d in enumerate(otsortirovannye_dannye, 1):
         znachenie = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
@@ -397,7 +399,9 @@ async def otraslevaya_struktura_vrp(
             f"- ЕМИСС: https://fedstat.ru/indicator/27103\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
             f"Разделы ОКВЭД: "
-            + ", ".join(f"{o['kod']} — {o['nazvanie']}" for o in OTRASLEVAYA_STRUKTURA_VRP)
+            + ", ".join(
+                f"{otrasl['kod']} — {otrasl['nazvanie']}" for otrasl in OTRASLEVAYA_STRUKTURA_VRP
+            )
         )
     stroki_tablitsy = []
     for d in dannye:

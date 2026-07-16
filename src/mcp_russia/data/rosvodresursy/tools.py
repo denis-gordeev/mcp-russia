@@ -23,7 +23,7 @@ async def spisok_basseynovykh_okrugov(kontekst: Context) -> str:
     """
     await kontekst.info("Запрос списка бассейновых округов...")
     okruga = client.poluchit_spisok_basseynovykh_okrugov()
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in okruga]
+    stroki_tablitsy = [(okrug["kod"], okrug["nazvanie"]) for okrug in okruga]
     zagolovok = "**Бассейновые округа Российской Федерации**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Бассейновый округ"], stroki_tablitsy)
 
@@ -98,12 +98,12 @@ async def poisk_vodnykh_obektov(
         return "Водные объекты не найдены. Попробуйте изменить параметры поиска."
     stroki_tablitsy = [
         (
-            o.get("nazvanie", ""),
-            o.get("tip", ""),
-            o.get("basseyn", ""),
-            o.get("subiekt", ""),
+            obiekt.get("nazvanie", ""),
+            obiekt.get("tip", ""),
+            obiekt.get("basseyn", ""),
+            obiekt.get("subiekt", ""),
         )
-        for o in obekty
+        for obiekt in obekty
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Бассейн", "Регион"],

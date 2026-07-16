@@ -2,6 +2,85 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-16 (восьмидесятый проход — русификация однобуквенных переменных, lambda-параметров, Field-описаний, тестовых строковых литералов, документации)
+
+### Выполнено
+
+- **Исправление опечатки `normanyy_instrument` → `normalnyy_instrument`** в test_batch.py (2 ссылки)
+- **Русификация тестовых строковых литералов** (5 файлов):
+  - test_batch.py: `"uspekh"` → `"успех"`, `"rezultat uspekha"` → `"результат успеха"`, `f"rezultat-{n}"` → `f"результат-{n}"`
+  - test_feature.py: `"pong"` → `"отклик"`, `"broken"` → `"slomannyy"`
+  - test_cache.py: `"dannye"` → `"данные"`, `f"rezultat-{klyuch}"` → `f"результат-{klyuch}"`, `f"dannye-{subiekt}"` → `f"данные-{subiekt}"`
+  - test_discovery.py: `"zakeshirovano"` → `"закешировано"`, `"funktsii"` → `"функции"`, `"skrytyy"` → `"скрытый"`, `"ochagi"` → `"очаги"`, `"banki"` → `"банки"`
+  - test_http_client.py: `"vosstanovleno"` → `"восстановлено"`
+- **Русификация `sostoyanie="ACTIVE"` → `"ДЕЙСТВУЮЩАЯ"`** в rosapi/test_tools.py (согласовано с schemas.py где `ДЕЙСТВУЮЩАЯ/ЛИКВИДИРОВАНА`)
+- **Русификация имени тестовой функции**: `test_excessive_deeprichastiya` → `test_izbytochnye_deeprichastiya`
+- **Русификация однобуквенных переменных в cekrf/client.py** (~15 замен):
+  - `m = re.search(...)` → `sovpadenie = re.search(...)` (3 вхождения в `_razobrat_veshchestvennoe` и `_razobrat_rezultaty_iz_html`)
+  - `for i, yacheyka` → `for indeks, yacheyka` (2 вхождения в `_razobrat_rezultaty_iz_html` и `_razobrat_kandidatov_iz_html`)
+  - `as c:` → `as klient:` (3 вхождения в `_zaprosit_html_vyborov`, `poisk_vyborov`, `poisk_kandidata`)
+- **Русификация `s = predlozheniya[0]` → `pervoe = predlozheniya[0]`** в rosapi/client.py (3 ссылки)
+- **Русификация lambda-параметров** (3 модуля):
+  - fssp/tools.py: `lambda x: x[1]` → `lambda element: element[1]`
+  - rosstat/tools.py: `lambda x: x.get(...)` → `lambda zapis: zapis.get(...)`
+  - cbrf/tools.py: `lambda x: x.kod` → `lambda valyuta: valyuta.kod` (2 вхождения)
+- **Русификация цикловых переменных `for o in`** (~20 замен в 11 модулях):
+  - rosstat/tools.py: `for o in okruga` → `for okrug in okruga`; `for o in OTRASLEVAYA_STRUKTURA_VRP` → `for otrasl in ...`
+  - minzdrav/tools.py: `for o in organizatsii` → `for organizatsiya in organizatsii`
+  - roskomnadzor/tools.py: `for o in operatory` → `for operator in operatory`; `for o in ori` → `for zapis in ori`
+  - roskomnadzor/client.py: `for o in elementy/dannye` → `for zapis in ...` (4 вхождения)
+  - rosselkhoznadzor/tools.py: `for o in obekty` → `for obiekt in obekty`
+  - rosvodresursy/tools.py: `for o in okruga/obekty` → `for okrug/obiekt in ...`
+  - rosprirodnadzor/tools.py: `for o in obekty` → `for obiekt in obekty`
+  - minobrnauki/tools.py: `for o in OTRASLI_NAUKI` → `for otrasl in ...`
+  - publikatsii/tools.py: `for o in otrsli` → `for otrasl in ...`
+  - fssp/tools.py: `for o in Ogranicheniya/OsnovaniyaVozbuzhdeniya` → `for ogranichenie/osnovanie in ...`
+  - rosstat/client.py: `for o in FEDERALNYE_OKRUGA/OTRASLEVAYA_STRUKTURA_VRP` → `for okrug/otrasl in ...` (3 вхождения)
+  - deloproizvodstvo/tools.py: `for klyuch, o in ОБРАЩЕНИЯ.items()` → `for klyuch, obrashcheniye in ...`
+- **Русификация Pydantic Field-описаний** (4 поля в 2 модулях):
+  - cekrf/schemas.py: `"ID кандидата"` → `"Идентификатор кандидата"` (3 вхождения: KandidatKratko, Kandidat, ResultatKandidata)
+  - cekrf/schemas.py: `"(hex)"` → `"(HEX)"` (InformatsiyaPartii.tsvet)
+  - rosapi/schemas.py: `"(YYYY-MM-DD)"` → `"(ГГГГ-ММ-ДД)"` (Prazdnik.data)
+- **Русификация CONTRIBUTING.md** (~10 замен):
+  - `primer-feature` → `primer-modul`, `http_client, formatting, cache, rate_limiter` → `http-клиент, форматирование, кеш, ограничитель частоты`
+  - `lint + format` → `линтер + форматирование`, `type checking (strict)` → `проверка типов (строгий режим)`
+  - `ruff check + format check` → `проверка линтером + проверка форматирования`, `mypy strict` → `mypy в строгом режиме`
+  - `lint + types + test` → `линтер + типы + тесты`, `mock` → `maket` в примере кода
+  - `/endpoint` → `/konechnaya_tochka`, `"Test"` → `"Проверка"` в примере JSON
+  - `push/пул-реквест` → `отправлении изменений/пул-реквесте`, `build + publish в PyPI + GitHub Release` → `сборка + публикация в PyPI + релиз на GitHub`
+  - `sdist + wheel` → `исходный дистрибутив + wheel-пакет`
+- **Русификация CHANGELOG.md** (3 замены):
+  - `tool search` → `поиска инструментов`, `LLM discovery` → `обнаружения LLM`
+  - `commit-on-green` → `«фиксация-при-успехе»`
+  - `claude code skills (commit, fastmcp, skill-creator)` → `навыки Claude Code (фиксация, fastmcp, создатель-навыков)`
+- **Русификация документации** (2 файла):
+  - analiz-zakonodatelstva.md: `type="закон"` → `tip="закон"` в примере вызова
+  - adding-features.md: `FastMCP("example")` → `FastMCP("primer")`
+
+### Ключевые архитектурные решения
+
+- **`normanyy` → `normalnyy`**: исправлена опечатка (пропущена буква «л»), существовавшая с раунда 65
+- **Транслитерация → кириллица в тестовых строках**: `"uspekh"` → `"успех"`, `"dannye"` → `"данные"`, `"zakeshirovano"` → `"закешировано"` и т.д.; русские слова в тестовых возвращаемых значениях записаны кириллицей
+- **`ACTIVE` → `ДЕЙСТВУЮЩАЯ`**: устранён английский статус в мок-данных; согласовано с schemas.py где описание уже было русифицировано в раунде 66
+- **`pong` → `отклик`**: устранён последний английский строковый литерал в тестовых данных; «отклик» — точный перевод «pong» в контексте проверки связи
+- **`broken` → `slomannyy`**: устранён английский ключ словаря в тесте; «сломанный» — точный перевод
+- **`m` → `sovpadenie`**: устранена однобуквенная переменная в regex-поиске; «совпадение» — точный перевод «match»
+- **`i` → `indeks`**: устранена однобуквенная переменная в enumerate; «индекс» — точный перевод
+- **`s` → `pervoe`**: устранена однобуквенная переменная в rosapi; «первое» — первое подсказочное предложение
+- **`as c:` → `as klient:`**: устранена однобуквенная переменная контекстного менеджера в cekrf/client.py
+- **`lambda x:` → осмысленные имена**: `x` → `element`/`zapis`/`valyuta` в зависимости от контекста
+- **`for o in` → осмысленные имена**: `o` → `okrug`/`organizatsiya`/`operator`/`zapis`/`obiekt`/`otrasl`/`ogranichenie`/`osnovanie`/`obrashcheniye` в зависимости от типа коллекции
+- **`ID` → `Идентификатор`**: устранена английская аббревиатура в пользовательски-видимых Pydantic Field-описаниях
+- **`hex` → `HEX`**: стандартизация написания — заглавными как устоявшееся обозначение шестнадцатеричного формата
+- **`YYYY-MM-DD` → `ГГГГ-ММ-ДД`**: русификация формата даты в Pydantic Field-описании
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц (`"title"`, `"stats"`, `"total"`) оставлены без изменений — изменение сломает парсинг
+
 ## Статус раунда 2026-07-15 (семидесятый девятый проход — русификация тестовых данных, португальских артефактов, JSON-ключа instrument→imya_instrumenta, документации)
 
 ### Выполнено

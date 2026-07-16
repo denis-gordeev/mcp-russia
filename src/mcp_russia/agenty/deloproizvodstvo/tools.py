@@ -93,13 +93,13 @@ async def konsulitirovat_obrashchenie(dolzhnost: str) -> str:
         )
 
     # Частичный поиск
-    for klyuch, o in ОБРАЩЕНИЯ.items():
+    for klyuch, obrashcheniye in ОБРАЩЕНИЯ.items():
         if klyuch in dolzhnost_lower or dolzhnost_lower in klyuch:
             return (
                 f"Должность: {dolzhnost} (похоже на: {klyuch})\n"
-                f"Обращение: {o['обращение']}\n"
-                f"Титулование: {o['титулование']}\n"
-                f"Адресация: {o['адресация']}"
+                f"Обращение: {obrashcheniye['обращение']}\n"
+                f"Титулование: {obrashcheniye['титулование']}\n"
+                f"Адресация: {obrashcheniye['адресация']}"
             )
 
     # По умолчанию

@@ -101,7 +101,7 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     Возвращает:
         Данные федерального округа.
     """
-    info_ob_okruge = next((o for o in FEDERALNYE_OKRUGA if o["kod"] == kod), None)
+    info_ob_okruge = next((okrug for okrug in FEDERALNYE_OKRUGA if okrug["kod"] == kod), None)
     if not info_ob_okruge:
         return {"oshibka": f"Федеральный округ '{kod}' не найден"}
 
@@ -463,7 +463,11 @@ async def poluchit_otraslevuyu_strukturu_vrp(
                 continue
             znachenie_okved = zapis.get("znachenie_okved", zapis.get("code", ""))
             otrasl = next(
-                (o["nazvanie"] for o in OTRASLEVAYA_STRUKTURA_VRP if o["kod"] == znachenie_okved),
+                (
+                    otrasl["nazvanie"]
+                    for otrasl in OTRASLEVAYA_STRUKTURA_VRP
+                    if otrasl["kod"] == znachenie_okved
+                ),
                 zapis.get("name", znachenie_okved),
             )
             rezultaty.append(
@@ -499,12 +503,12 @@ def _rezerv_otraslevaya_struktura(
         OtraslevayaStrukturaVRP(
             subiekt=nazvanie_subiekta,
             period=god or "2022",
-            otrasl=o["nazvanie"],
-            kod_znachenie_okved=o["kod"],
-            dolya_vvp=o.get("dolya_2022"),
-            vrp=o.get("vrp_2022"),
+            otrasl=otrasl["nazvanie"],
+            kod_znachenie_okved=otrasl["kod"],
+            dolya_vvp=otrasl.get("dolya_2022"),
+            vrp=otrasl.get("vrp_2022"),
         )
-        for o in OTRASLEVAYA_STRUKTURA_VRP
+        for otrasl in OTRASLEVAYA_STRUKTURA_VRP
     ]
 
 

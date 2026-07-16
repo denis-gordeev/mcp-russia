@@ -98,9 +98,9 @@ class TestPostroenieKataloga:
         maket_reestra.funktsii = {}
         postroit_katalog(maket_reestra)
 
-        disk_modul._kesh_kataloga = "zakeshirovano"
+        disk_modul._kesh_kataloga = "закешировано"
         rezultat = postroit_katalog(maket_reestra)
-        assert rezultat == "zakeshirovano"
+        assert rezultat == "закешировано"
 
 
 class TestTransformatsiyaBM25:
@@ -162,12 +162,12 @@ class TestTransformatsiyaBM25:
         @server_funktsiya.tool(tags={"мета"})
         def spisok_funktsiy() -> str:
             """Список функций."""
-            return "funktsii"
+            return "функции"
 
         @server_funktsiya.tool(tags={"search"})
         def skrytyy_instrument() -> str:
             """Скрытый инструмент."""
-            return "skrytyy"
+            return "скрытый"
 
         server_funktsiya.add_transform(
             BM25SearchTransform(
@@ -246,12 +246,12 @@ class TestRasprostranenieTegov:
         @server_funktsiya.tool(tags={"ekologiya", "pozhary"})
         def nayti_ochagi() -> str:
             """Поиск очагов пожаров, обнаруженных спутником в России."""
-            return "ochagi"
+            return "очаги"
 
         @server_funktsiya.tool(tags={"finansy", "banki"})
         def spisok_bankov() -> str:
             """Список всех банков России, зарегистрированных в Центральном банке."""
-            return "banki"
+            return "банки"
 
         server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
 

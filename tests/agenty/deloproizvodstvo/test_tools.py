@@ -128,7 +128,7 @@ class TestValidirovatDokument:
         assert "наилучшими пожеланиями" in rezultat.lower()
 
     @pytest.mark.asyncio
-    async def test_excessive_deeprichastiya(self) -> None:
+    async def test_izbytochnye_deeprichastiya(self) -> None:
         tekst = (
             "г. Москва, 15 марта 2026 г.\n\n"
             "Рассматривая изучая анализируя проверяя оценивая сравнивая\n\n"

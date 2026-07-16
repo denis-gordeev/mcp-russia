@@ -119,7 +119,7 @@ from fastmcp import FastMCP
 from . import tools
 
 
-mcp = FastMCP("example")
+mcp = FastMCP("primer")
 mcp.tool(tools.spisok_zapisey)
 ```
 

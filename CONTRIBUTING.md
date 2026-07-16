@@ -18,7 +18,7 @@ src/mcp_russia/
 ├── server.py           # Корневой сервер (автообнаружение, вручную обычно не правится)
 ├── settings.py         # Конфигурация через переменные окружения
 ├── exceptions.py       # Общие исключения проекта
-├── _shared/            # Общий код (http_client, formatting, cache, rate_limiter)
+├── _shared/            # Общий код (http-клиент, форматирование, кеш, ограничитель частоты)
 ├── data/               # Модули для внешних API
 │   ├── cbrf/           # Центральный банк РФ
 │   ├── rosstat/        # Росстат
@@ -49,7 +49,7 @@ src/mcp_russia/data/{modul}/      # или agenty/{modul}/
 from mcp_russia._shared.feature import MetaFunktsii
 
 META_FUNKTSII = MetaFunktsii(
-    imya="primer-feature",
+    imya="primer-modul",
     opisanie="Короткое описание API",
     versiya="0.1.0",
     baza_api="https://api.example.gov.ru",
@@ -123,8 +123,8 @@ server.py → tools.py → client.py → schemas.py
 - **httpx** — HTTP async
 - **Pydantic v2** — схемы и валидация
 - **uv** — менеджер пакетов
-- **ruff** — lint + format (line-length 99)
-- **mypy** — type checking (strict)
+- **ruff** — линтер + форматирование (длина строки 99)
+- **mypy** — проверка типов (строгий режим)
 - **pytest + pytest-asyncio + respx** — тесты
 
 ## Тесты
@@ -132,9 +132,9 @@ server.py → tools.py → client.py → schemas.py
 ```bash
 make test                 # Все тесты
 make test-feature F=cbrf  # Тесты одного модуля
-make lint                 # ruff check + format check
-make types                # mypy strict
-make ci                   # lint + types + test
+make lint                 # проверка линтером + проверка форматирования
+make types                # mypy в строгом режиме
+make ci                   # линтер + типы + тесты
 ```
 
 Тесты используют:
@@ -154,8 +154,8 @@ from mcp_russia.data.{modul}.tools import poisk_{modul}
 
 @pytest.mark.asyncio
 async def test_poisk_vozvrashaet_otformatirovannoe():
-    with patch("mcp_russia.data.{modul}.tools.poisk_primera", new_callable=AsyncMock) as mock:
-        mock.return_value = [...]
+        with patch("mcp_russia.data.{modul}.tools.poisk_primera", new_callable=AsyncMock) as maket:
+        maket.return_value = [...]
         rezultat = await poisk_{modul}("zapros")
         assert "ozhidaemoe" in rezultat
 ```
@@ -171,8 +171,8 @@ from mcp_russia.data.{modul}.client import poisk_primera
 @pytest.mark.asyncio
 @respx.mock
 async def test_poisk_uspeshen():
-    respx.get("https://api.example.gov.ru/endpoint").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "nazvanie": "Test"}])
+    respx.get("https://api.example.gov.ru/konechnaya_tochka").mock(
+        return_value=httpx.Response(200, json=[{"id": 1, "nazvanie": "Проверка"}])
     )
     rezultat = await poisk_primera("zapros")
     assert len(rezultat) == 1
@@ -229,13 +229,13 @@ make release-patch    # Повысить patch (сначала запускае�
 make release-minor    # Повысить minor
 make release-major    # Повысить major
 make changelog        # Сгенерировать CHANGELOG.md вручную
-make build            # Сборка пакета (sdist + wheel)
+make build            # Сборка пакета (исходный дистрибутив + wheel-пакет)
 ```
 
 ### CI/CD
 
-- **CI** (`.github/workflows/ci.yml`): запускается на каждый push/пул-реквест в `main` — lint + types + тесты (Python 3.10-3.13)
-- **Release** (`.github/workflows/release.yml`): запускается по тегу `v*` — CI + build + publish в PyPI + GitHub Release
+- **CI** (`.github/workflows/ci.yml`): запускается при каждом отправлении изменений/пул-реквесте в `main` — линтер + типы + тесты (Python 3.10-3.13)
+- **Release** (`.github/workflows/release.yml`): запускается по тегу `v*` — CI + сборка + публикация в PyPI + релиз на GitHub
 
 ### Инфраструктура
 

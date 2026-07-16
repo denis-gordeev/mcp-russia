@@ -45,12 +45,12 @@ async def poisk_med_organizatsiy(
         )
     stroki_tablitsy = [
         (
-            o.get("nazvanie", ""),
-            o.get("tip", ""),
-            o.get("subiekt", ""),
-            o.get("gorod", ""),
+            organizatsiya.get("nazvanie", ""),
+            organizatsiya.get("tip", ""),
+            organizatsiya.get("subiekt", ""),
+            organizatsiya.get("gorod", ""),
         )
-        for o in organizatsii
+        for organizatsiya in organizatsii
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Регион", "Город"],

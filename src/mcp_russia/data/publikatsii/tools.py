@@ -42,7 +42,7 @@ async def spisok_otrasley(kontekst: Context) -> str:
     await kontekst.info("Запрос списка отраслей законодательства...")
     otrsli = client.poluchit_spisok_otrasley()
 
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in otrsli]
+    stroki_tablitsy = [(otrasl["kod"], otrasl["nazvanie"]) for otrasl in otrsli]
     zagolovok = "**Отрасли законодательства РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Отрасль"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 

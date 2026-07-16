@@ -54,7 +54,7 @@ async def spisok_otrasley_nauki(kontekst: Context) -> str:
     Возвращает:
         Список отраслей (естественные, технические, гуманитарные и т.д.).
     """
-    stroki_tablitsy = [(o["kod"], o["nazvanie"]) for o in OTRASLI_NAUKI]
+    stroki_tablitsy = [(otrasl["kod"], otrasl["nazvanie"]) for otrasl in OTRASLI_NAUKI]
     return tablitsa_v_markdown(["Код", "Отрасль науки"], stroki_tablitsy)
 
 

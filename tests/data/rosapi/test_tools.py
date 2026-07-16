@@ -89,7 +89,7 @@ async def test_poisk_org_po_inn_uspekh():
             ogrn="1027700132195",
             nazvanie_polnoe="Публичное акционерное общество «Сбербанк России»",
             nazvanie_kratkoe="ПАО Сбербанк",
-            sostoyanie="ACTIVE",
+            sostoyanie="ДЕЙСТВУЮЩАЯ",
             adres="г Москва, ул Вавилова, д 19",
             rukovoditel="Греф Герман Оскарович",
             data_registratsii="2002-08-23",
@@ -98,7 +98,7 @@ async def test_poisk_org_po_inn_uspekh():
         rezultat = await rosapi_tools.poisk_org_po_inn("7707083893", kontekst)
     assert "7707083893" in rezultat
     assert "Сбербанк" in rezultat
-    assert "Действующая" in rezultat
+    assert "ДЕЙСТВУЮЩАЯ" in rezultat
 
 
 async def test_poisk_org_po_inn_oshibka():

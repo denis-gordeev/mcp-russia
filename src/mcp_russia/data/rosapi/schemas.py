@@ -47,7 +47,7 @@ class BankRF(BaseModel):
 class Prazdnik(BaseModel):
     """Национальный праздник РФ."""
 
-    data: str = Field(description="Дата (YYYY-MM-DD)")
+    data: str = Field(description="Дата (ГГГГ-ММ-ДД)")
     nazvanie: str
     tip: str = Field(description="Тип: национальный, профессиональный, памятный")
 

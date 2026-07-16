@@ -202,7 +202,7 @@ async def sravnit_valyuty(kody: list[str] | None = None, kontekst: Context | Non
         return "Не удалось получить данные для указанных валют."
 
     stroki_tablitsy = []
-    for valyuta in sorted(valyuty, key=lambda x: x.kod):
+    for valyuta in sorted(valyuty, key=lambda valyuta: valyuta.kod):
         izmenenie = "—"
         if valyuta.predydushchee_znachenie is not None and valyuta.predydushchee_znachenie > 0:
             raznitsa = valyuta.znachenie - valyuta.predydushchee_znachenie
@@ -238,7 +238,7 @@ async def kursy_po_stranam(kontekst: Context) -> str:
         return "Не удалось получить данные."
 
     stroki_tablitsy = []
-    for valyuta in sorted(valyuty, key=lambda x: x.kod):
+    for valyuta in sorted(valyuty, key=lambda valyuta: valyuta.kod):
         strana = next((p for p, c in VALYUTY_PO_STRANAM.items() if c == valyuta.kod), valyuta.kod)
         stroki_tablitsy.append((strana, valyuta.kod, formatirovat_chislo_ru(valyuta.znachenie, 4)))
 

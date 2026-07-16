@@ -31,7 +31,7 @@ class Dolzhnost(BaseModel):
 class KandidatKratko(BaseModel):
     """Краткая информация о кандидате."""
 
-    identifikator: str = Field(description="ID кандидата")
+    identifikator: str = Field(description="Идентификатор кандидата")
     fio: str = Field(description="ФИО кандидата")
     partia: str = Field(description="Партия / статус выдвижения", default="")
     dolzhnost: str = Field(description="Избирательная должность")
@@ -42,7 +42,7 @@ class KandidatKratko(BaseModel):
 class Kandidat(BaseModel):
     """Полная информация о кандидате."""
 
-    identifikator: str = Field(description="ID кандидата")
+    identifikator: str = Field(description="Идентификатор кандидата")
     fio: str = Field(description="ФИО")
     data_rozhdeniya: str = Field(description="Дата рождения", default="")
     mesto_rozhdeniya: str = Field(description="Место рождения", default="")
@@ -62,7 +62,7 @@ class Kandidat(BaseModel):
 class ResultatKandidata(BaseModel):
     """Результат кандидата по итогам голосования."""
 
-    kandidat_identifikator: str = Field(description="ID кандидата")
+    kandidat_identifikator: str = Field(description="Идентификатор кандидата")
     fio: str = Field(description="ФИО")
     partia: str = Field(description="Партия", default="")
     golosov: int = Field(description="Число голосов", default=0)
@@ -89,5 +89,5 @@ class InformatsiyaPartii(BaseModel):
 
     nazvanie: str = Field(description="Полное наименование партии")
     kratkoe_nazvanie: str = Field(description="Краткое наименование")
-    tsvet: str = Field(description="Цвет партии (hex)", default="")
+    tsvet: str = Field(description="Цвет партии (HEX)", default="")
     registraciya: str = Field(description="Номер регистрации Минюста", default="")

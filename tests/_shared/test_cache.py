@@ -62,12 +62,12 @@ class TestDekoratorKeshaSVremenemZhizni:
         async def poluchit_dannye(klyuch: str) -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return f"rezultat-{klyuch}"
+            return f"результат-{klyuch}"
 
         rezultat1 = await poluchit_dannye("a")
         rezultat2 = await poluchit_dannye("a")
-        assert rezultat1 == "rezultat-a"
-        assert rezultat2 == "rezultat-a"
+        assert rezultat1 == "результат-a"
+        assert rezultat2 == "результат-a"
         assert schetchik_vyzovov == 1  # второй вызов был из кэша
 
     @pytest.mark.asyncio
@@ -78,7 +78,7 @@ class TestDekoratorKeshaSVremenemZhizni:
         async def poluchit(klyuch: str) -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return f"rezultat-{klyuch}"
+            return f"результат-{klyuch}"
 
         await poluchit("a")
         await poluchit("b")
@@ -92,7 +92,7 @@ class TestDekoratorKeshaSVremenemZhizni:
         async def poluchit() -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return "dannye"
+            return "данные"
 
         await poluchit()
         time.sleep(0.02)
@@ -103,7 +103,7 @@ class TestDekoratorKeshaSVremenemZhizni:
     async def test_atribut_kesha_dostupen(self) -> None:
         @kesh_s_vremenem_zhizni(vremya_zhizni=60)
         async def poluchit() -> str:
-            return "dannye"
+            return "данные"
 
         assert hasattr(poluchit, "kesh")
         assert isinstance(poluchit.kesh, KeshSVremenemZhizni)
@@ -116,7 +116,7 @@ class TestDekoratorKeshaSVremenemZhizni:
         async def poluchit() -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return "dannye"
+            return "данные"
 
         await poluchit()
         poluchit.kesh.ochistit()
@@ -131,7 +131,7 @@ class TestDekoratorKeshaSVremenemZhizni:
         async def poluchit(subiekt: str = "77") -> str:
             nonlocal schetchik_vyzovov
             schetchik_vyzovov += 1
-            return f"dannye-{subiekt}"
+            return f"данные-{subiekt}"
 
         await poluchit(subiekt="77")
         await poluchit(subiekt="16")

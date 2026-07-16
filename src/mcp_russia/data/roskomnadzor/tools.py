@@ -157,13 +157,13 @@ async def info_operatora_pd(kontekst: Context, inn: str = "", nazvanie: str = ""
         )
     stroki_tablitsy = [
         (
-            o.get("naimenovanie", ""),
-            o.get("inn", ""),
-            o.get("kategoriya", ""),
-            o.get("tsel_obrabotki", ""),
-            o.get("sostoyanie", ""),
+            operator.get("naimenovanie", ""),
+            operator.get("inn", ""),
+            operator.get("kategoriya", ""),
+            operator.get("tsel_obrabotki", ""),
+            operator.get("sostoyanie", ""),
         )
-        for o in operatory
+        for operator in operatory
     ]
     return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Категория", "Цель обработки", "Статус"],
@@ -237,13 +237,13 @@ async def poisk_ori(kontekst: Context, nazvanie: str = "", inn: str = "") -> str
         )
     stroki_tablitsy = [
         (
-            o.get("naimenovanie", ""),
-            o.get("inn", ""),
-            o.get("tip", ""),
-            o.get("sostoyanie", ""),
-            o.get("data_vklyucheniya", ""),
+            zapis.get("naimenovanie", ""),
+            zapis.get("inn", ""),
+            zapis.get("tip", ""),
+            zapis.get("sostoyanie", ""),
+            zapis.get("data_vklyucheniya", ""),
         )
-        for o in ori
+        for zapis in ori
     ]
     return tablitsa_v_markdown(
         ["Наименование", "ИНН", "Тип ОРИ", "Статус", "Дата включения"],
