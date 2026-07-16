@@ -22,13 +22,13 @@ async def spisok_senatorov(kontekst: Context) -> str:
         return "Сенаторы не найдены.\n\nАктуальные данные доступны на: https://sovfed.ru/senators"
     stroki_tablitsy = [
         (
-            s.get("nomer", ""),
-            s.get("familiya", ""),
-            s.get("imya", ""),
-            s.get("subiekt", ""),
-            s.get("komitet", "")[:40],
+            senator.get("nomer", ""),
+            senator.get("familiya", ""),
+            senator.get("imya", ""),
+            senator.get("subiekt", ""),
+            senator.get("komitet", "")[:40],
         )
-        for s in senatory
+        for senator in senatory
     ]
     zagolovok = f"**Сенаторы Совета Федерации РФ** — найдено: {len(senatory)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -76,18 +76,18 @@ async def spisok_komitetov(kontekst: Context) -> str:
     if komitety_api:
         stroki_tablitsy = [
             (
-                k.get("nazvanie", ""),
-                k.get("predsedatel", ""),
-                str(k.get("kolichestvo_chlenov", "")),
+                komitet.get("nazvanie", ""),
+                komitet.get("predsedatel", ""),
+                str(komitet.get("kolichestvo_chlenov", "")),
             )
-            for k in komitety_api
+            for komitet in komitety_api
         ]
         zagolovok = "**Комитеты Совета Федерации РФ**\n\n"
         return zagolovok + tablitsa_v_markdown(
             ["Комитет", "Председатель", "Членов"], stroki_tablitsy
         )
     komitety = client.poluchit_spisok_komitetov()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
+    stroki_tablitsy = [(komitet["kod"], komitet["nazvanie"]) for komitet in komitety]
     zagolovok = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
@@ -99,18 +99,18 @@ async def spisok_komissiy(kontekst: Context) -> str:
     if komissii_api:
         stroki_tablitsy = [
             (
-                k.get("nazvanie", ""),
-                k.get("predsedatel", ""),
-                str(k.get("kolichestvo_chlenov", "")),
+                komissiya.get("nazvanie", ""),
+                komissiya.get("predsedatel", ""),
+                str(komissiya.get("kolichestvo_chlenov", "")),
             )
-            for k in komissii_api
+            for komissiya in komissii_api
         ]
         zagolovok = "**Комиссии Совета Федерации РФ**\n\n"
         return zagolovok + tablitsa_v_markdown(
             ["Комиссия", "Председатель", "Членов"], stroki_tablitsy
         )
     komissii = client.poluchit_spisok_komissiy()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komissii]
+    stroki_tablitsy = [(komissiya["kod"], komissiya["nazvanie"]) for komissiya in komissii]
     zagolovok = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Комиссия"], stroki_tablitsy)
 
@@ -147,12 +147,12 @@ async def poisk_zakonoproektov(
         )
     stroki_tablitsy = [
         (
-            z.get("nomer", ""),
-            z.get("nazvanie", "")[:50],
-            z.get("sostoyanie", ""),
-            z.get("data_rassmotreniya", ""),
+            zakonoproekt.get("nomer", ""),
+            zakonoproekt.get("nazvanie", "")[:50],
+            zakonoproekt.get("sostoyanie", ""),
+            zakonoproekt.get("data_rassmotreniya", ""),
         )
-        for z in zakonoproekty
+        for zakonoproekt in zakonoproekty
     ]
     zagolovok = f"**Законопроекты Совета Федерации РФ** — найдено: {len(zakonoproekty)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -179,12 +179,12 @@ async def spisok_zasedaniy(kontekst: Context, god: int = 0) -> str:
         )
     stroki_tablitsy = [
         (
-            z.get("nomer", ""),
-            z.get("data", ""),
-            z.get("sostoyanie", ""),
-            z.get("povestka", "")[:50],
+            zasedanie.get("nomer", ""),
+            zasedanie.get("data", ""),
+            zasedanie.get("sostoyanie", ""),
+            zasedanie.get("povestka", "")[:50],
         )
-        for z in zasedaniya
+        for zasedanie in zasedaniya
     ]
     zagolovok = f"**Заседания Совета Федерации РФ** — найдено: {len(zasedaniya)}\n\n"
     return zagolovok + tablitsa_v_markdown(

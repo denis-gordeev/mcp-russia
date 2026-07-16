@@ -28,7 +28,7 @@ async def spisok_tipov_aktov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка типов актов...")
     tipy = client.poluchit_spisok_tipov_aktov()
 
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы нормативных актов РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
@@ -56,7 +56,7 @@ async def spisok_istochnikov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка источников публикаций...")
     istochniki = client.poluchit_spisok_istochnikov()
 
-    stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in istochniki]
+    stroki_tablitsy = [(istochnik["kod"], istochnik["nazvanie"]) for istochnik in istochniki]
     zagolovok = "**Источники официальных публикаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Источник"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
@@ -70,7 +70,7 @@ async def spisok_statusov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка статусов документов...")
     statusy = client.poluchit_spisok_statusov()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in statusy]
     zagolovok = "**Статусы документов**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 
@@ -176,11 +176,11 @@ async def poisk_aktov(
         )
 
     stroki = [f"**Результаты поиска: '{tekst}'** — найдено: {len(rezultaty)}\n"]
-    for i, a in enumerate(rezultaty[:10], 1):
-        stroki.append(f"{i}. **{a.nazvanie}** ({a.tip})")
-        stroki.append(f"   № {a.nomer}, статус: {a.sostoyanie}")
-        if a.kratkoe_opisanie:
-            stroki.append(f"   {a.kratkoe_opisanie}")
+    for i, rezultat in enumerate(rezultaty[:10], 1):
+        stroki.append(f"{i}. **{rezultat.nazvanie}** ({rezultat.tip})")
+        stroki.append(f"   № {rezultat.nomer}, статус: {rezultat.sostoyanie}")
+        if rezultat.kratkoe_opisanie:
+            stroki.append(f"   {rezultat.kratkoe_opisanie}")
         stroki.append("")
 
     if len(rezultaty) > 10:
@@ -231,11 +231,13 @@ async def publikatsii_po_datam(
         )
 
     stroki = [f"**Официальные публикации** — найдено: {len(dannye)}\n"]
-    for p in dannye[:10]:
-        stroki.append(f"- **{p.nazvanie}** ({p.tip_dokumenta})")
-        stroki.append(f"  Дата: {p.data_publikatsii}, источник: {p.istochnik}")
-        if p.annotaciya:
-            stroki.append(f"  {p.annotaciya}")
+    for publikatsiya in dannye[:10]:
+        stroki.append(f"- **{publikatsiya.nazvanie}** ({publikatsiya.tip_dokumenta})")
+        stroki.append(
+            f"  Дата: {publikatsiya.data_publikatsii}, источник: {publikatsiya.istochnik}"
+        )
+        if publikatsiya.annotaciya:
+            stroki.append(f"  {publikatsiya.annotaciya}")
         stroki.append("")
 
     if len(dannye) > 10:

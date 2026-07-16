@@ -35,7 +35,7 @@
 > Запрос: «Перечисли все поимённые голосования в Государственной Думе в 2024 году с индивидуальными голосами каждого депутата»
 
 ```
-APIs: gosduma_zakonoproekty(sozyv="8")
+API: gosduma_zakonoproekty(sozyv="8")
       gosduma_info_deputata(identifikator_deputata=...) → для каждого депутата
 ```
 
@@ -169,7 +169,7 @@ API: gosduma_zakonoproekty → включает позицию большинс�
 > Запрос: «Перечисли все депутатские поправки, исполненные в 2024 году, с указанием автора, суммы, муниципального образования и направления»
 
 ```
-APIs: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
+API: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
       zakupki_info_zakazchika(id=...)
 ```
 
@@ -178,7 +178,7 @@ APIs: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
 > Запрос: «Для каждого депутата, направившего поправки, определи фракцию и статус (большинство или оппозиция)»
 
 ```
-APIs: gosduma_spisok_deputatov → фракция и статус
+API: gosduma_spisok_deputatov → фракция и статус
 ```
 
 **3. Сопоставить с социальными показателями муниципальных образований**
@@ -186,7 +186,7 @@ APIs: gosduma_spisok_deputatov → фракция и статус
 > Запрос: «Для каждого муниципального образования, получившего поправки, определи индекс человеческого развития, уровень бедности и население»
 
 ```
-APIs: rosstat_spisok_regionov + rosstat_informatsiya_o_regionye
+API: rosstat_spisok_regionov + rosstat_informatsiya_o_regionye
 ```
 
 **4. Распределительная модель**
@@ -220,7 +220,7 @@ R² = 0,44
 > Запрос: «Какие муниципалитеты получили больше всего поправок на душу населения? Чьи это электоральные опоры?»
 
 ```
-APIs: zakupki_poisk_zakupok
+API: zakupki_poisk_zakupok
       cekrf_poisk_kandidata + cekrf_rezultaty_vyborov
 ```
 
@@ -253,7 +253,7 @@ APIs: zakupki_poisk_zakupok
 > Запрос: «Сколько федеральных законов было принято в 2023–2024 годах?»
 
 ```
-APIs: gosduma_zakonoproekty(tip="ФЗ", sostoyanie="Принят")
+API: gosduma_zakonoproekty(tip="ФЗ", sostoyanie="Принят")
 ```
 
 **2. Найти оспоренные законы**
@@ -261,7 +261,7 @@ APIs: gosduma_zakonoproekty(tip="ФЗ", sostoyanie="Принят")
 > Запрос: «Сколько заявлений о признании неконституционными законов 2023–2024 годов подано в Конституционный Суд?»
 
 ```
-APIs: kad_arbitrazh_poisk_del(kategoriya="Конституционный суд")
+API: kad_arbitrazh_poisk_del(kategoriya="Конституционный суд")
       publikatsii_poisk_aktov(tekst="неконституционность закона 2024")
 ```
 
@@ -293,7 +293,7 @@ APIs: kad_arbitrazh_poisk_del(kategoriya="Конституционный суд"
 > Запрос: «Из поданных заявлений сколько были удовлетворены полностью или частично?»
 
 ```
-APIs: kad_arbitrazh_akty_po_delu(nomer_dela=...)
+API: kad_arbitrazh_akty_po_delu(nomer_dela=...)
       kad_arbitrazh_info_dela(nomer_dela=...)
 ```
 
@@ -320,7 +320,7 @@ API: gosduma_zakonoproekty(sozyv=8, god=2024)
 > Запрос: «Для каждого рассмотренного законопроекта определи: кто внёс, какая комиссия подготовила заключение, является ли срочным»
 
 ```
-APIs: gosduma_zakonoproekty → детали законопроекта
+API: gosduma_zakonoproekty → детали законопроекта
 ```
 
 **3. Анализировать сроки прохождения**
@@ -375,7 +375,7 @@ APIs: gosduma_zakonoproekty → детали законопроекта
 > Запрос: «Для всех кандидатов в депутаты Госдумы по Москве в 2021 году перечисли: полученные голоса, общий объём поступлений и избран ли»
 
 ```
-APIs: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москва", god=2021)
+API: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москва", god=2021)
       cekrf_kandidat_podrobno(id=...) → для каждого кандидата
       cekrf_rezultaty_vyborov(...) → голоса и результат
 ```

@@ -162,8 +162,8 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
         )
 
     # Проверка длинных абзацев
-    abzaczy = [p for p in tekst.split("\n\n") if p.strip()]
-    dlinnye = [p for p in abzaczy if len(p) > 500]
+    abzaczy = [abzats for abzats in tekst.split("\n\n") if abzats.strip()]
+    dlinnye = [abzats for abzats in abzaczy if len(abzats) > 500]
     if dlinnye:
         rekomendacii.append(
             f"{len(dlinnye)} абзац(ев) длиннее 500 символов — рекомендуется разделить для ясности"
@@ -176,11 +176,11 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     otchet = "ОТЧЁТ О ВАЛИДАЦИИ ДОКУМЕНТА\n\n"
     if problemy:
         otchet += "Обнаружены проблемы:\n"
-        otchet += "\n".join(f"  - {p}" for p in problemy)
+        otchet += "\n".join(f"  - {problema}" for problema in problemy)
         otchet += "\n\n"
     if rekomendacii:
         otchet += "Рекомендации по улучшению:\n"
-        otchet += "\n".join(f"  - {r}" for r in rekomendacii)
+        otchet += "\n".join(f"  - {rekomendatsiya}" for rekomendatsiya in rekomendacii)
 
     return otchet
 

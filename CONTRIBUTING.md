@@ -40,7 +40,7 @@ src/mcp_russia/data/{modul}/      # или agenty/{modul}/
 ├── tools.py        # Функции MCP-инструментов
 ├── client.py       # Асинхронный HTTP-клиент
 ├── schemas.py      # Pydantic-модели
-└── constants.py    # URL, enum, коды
+└── constants.py    # URL, перечисления, коды
 ```
 
 2. В `__init__.py` определите `META_FUNKTSII`:
@@ -57,7 +57,7 @@ META_FUNKTSII = MetaFunktsii(
 )
 ```
 
-3. В `server.py` создайте и зарегистрируйте tools:
+3. В `server.py` создайте и зарегистрируйте инструменты:
 
 ```python
 from fastmcp import FastMCP

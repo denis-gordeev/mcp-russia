@@ -11,9 +11,9 @@ class TestFormatirovatDataExtenso:
     @pytest.mark.asyncio
     async def test_moskva_po_umolchaniyu(self) -> None:
         rezultat = await tools.formatirovat_data_extenso()
-        now = datetime.now()
+        seychas = datetime.now()
         assert "г. Москва" in rezultat
-        assert str(now.year) in rezultat
+        assert str(seychas.year) in rezultat
         assert rezultat.endswith("г.")
 
     @pytest.mark.asyncio
@@ -26,8 +26,8 @@ class TestFormatirovatDataExtenso:
         rezultat = await tools.formatirovat_data_extenso()
         from mcp_russia.agenty.deloproizvodstvo.constants import МЕСЯЦЫ
 
-        now = datetime.now()
-        assert МЕСЯЦЫ[now.month] in rezultat
+        seychas = datetime.now()
+        assert МЕСЯЦЫ[seychas.month] in rezultat
 
 
 class TestGenerirovatNumeraciyu:
@@ -49,8 +49,8 @@ class TestGenerirovatNumeraciyu:
     @pytest.mark.asyncio
     async def test_god_po_umolchaniyu(self) -> None:
         rezultat = await tools.generirovat_numeraciyu("распоряжение", 1)
-        now = datetime.now()
-        assert str(now.year) in rezultat
+        seychas = datetime.now()
+        assert str(seychas.year) in rezultat
 
     @pytest.mark.asyncio
     async def test_neizvestnyy_tip(self) -> None:

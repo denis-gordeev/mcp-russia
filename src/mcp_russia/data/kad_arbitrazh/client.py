@@ -64,17 +64,27 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
 
         istorcy_syranye = dannye_dela.get("Plaintiffs", zapis.get("plaintiffs", ""))
         if isinstance(istorcy_syranye, str):
-            istorcy = [s.strip() for s in istorcy_syranye.split(",") if s.strip()]
+            istorcy = [
+                storona.strip() for storona in istorcy_syranye.split(",") if storona.strip()
+            ]
         elif isinstance(istorcy_syranye, list):
-            istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_syranye]
+            istorcy = [
+                storona if isinstance(storona, str) else str(storona)
+                for storona in istorcy_syranye
+            ]
         else:
             istorcy = []
 
         otvetchiki_syranye = dannye_dela.get("Defendants", zapis.get("defendants", ""))
         if isinstance(otvetchiki_syranye, str):
-            otvetchiki = [s.strip() for s in otvetchiki_syranye.split(",") if s.strip()]
+            otvetchiki = [
+                storona.strip() for storona in otvetchiki_syranye.split(",") if storona.strip()
+            ]
         elif isinstance(otvetchiki_syranye, list):
-            otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_syranye]
+            otvetchiki = [
+                storona if isinstance(storona, str) else str(storona)
+                for storona in otvetchiki_syranye
+            ]
         else:
             otvetchiki = []
 
@@ -124,17 +134,23 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
 
     istorcy_syranye = dannye_dela.get("Plaintiffs", dannye.get("plaintiffs", ""))
     if isinstance(istorcy_syranye, str):
-        istorcy = [s.strip() for s in istorcy_syranye.split(",") if s.strip()]
+        istorcy = [storona.strip() for storona in istorcy_syranye.split(",") if storona.strip()]
     elif isinstance(istorcy_syranye, list):
-        istorcy = [s if isinstance(s, str) else str(s) for s in istorcy_syranye]
+        istorcy = [
+            storona if isinstance(storona, str) else str(storona) for storona in istorcy_syranye
+        ]
     else:
         istorcy = []
 
     otvetchiki_syranye = dannye_dela.get("Defendants", dannye.get("defendants", ""))
     if isinstance(otvetchiki_syranye, str):
-        otvetchiki = [s.strip() for s in otvetchiki_syranye.split(",") if s.strip()]
+        otvetchiki = [
+            storona.strip() for storona in otvetchiki_syranye.split(",") if storona.strip()
+        ]
     elif isinstance(otvetchiki_syranye, list):
-        otvetchiki = [s if isinstance(s, str) else str(s) for s in otvetchiki_syranye]
+        otvetchiki = [
+            storona if isinstance(storona, str) else str(storona) for storona in otvetchiki_syranye
+        ]
     else:
         otvetchiki = []
 
@@ -199,9 +215,9 @@ def _razobrat_storony(dannye: Any, delo_nomer: str) -> list[StoronaDela]:
     for tip_storony, metka_tipa in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
         syr_dannye = dannye.get(tip_storony, [])
         if isinstance(syr_dannye, str):
-            nazvaniya = [s.strip() for s in syr_dannye.split(",") if s.strip()]
+            nazvaniya = [zapis.strip() for zapis in syr_dannye.split(",") if zapis.strip()]
         elif isinstance(syr_dannye, list):
-            nazvaniya = [s if isinstance(s, str) else str(s) for s in syr_dannye]
+            nazvaniya = [zapis if isinstance(zapis, str) else str(zapis) for zapis in syr_dannye]
         else:
             continue
         for nazvanie in nazvaniya:

@@ -57,7 +57,9 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для проверок")
 
@@ -69,7 +71,9 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("data.fsvps.gov.ru недоступен")
 
@@ -99,7 +103,9 @@ async def poisk_karantinnykh_obektov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_karantin(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_karantin(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для карантинных объектов")
 
@@ -131,7 +137,11 @@ async def poisk_registratsiy_produktsii(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_registratsiyu(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_registratsiyu(element)
+                for element in elementy
+                if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для регистрации продукции")
 
@@ -163,7 +173,9 @@ async def veterinarsnye_sertifikaty(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_sertifikat(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_sertifikat(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для ветеринарных сертификатов")
 
@@ -189,7 +201,11 @@ async def preduprezhdeniya_karantina(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_preduprezhdenie(element)
+                for element in elementy
+                if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для предупреждений")
 

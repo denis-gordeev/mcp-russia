@@ -73,14 +73,14 @@ async def poisk_del(
         return zagolovok
 
     stroki_tablitsy = []
-    for d in dela[:20]:
-        summa = formatirovat_rubli(d.summa_iska) if d.summa_iska > 0 else "—"
+    for delo in dela[:20]:
+        summa = formatirovat_rubli(delo.summa_iska) if delo.summa_iska > 0 else "—"
         stroki_tablitsy.append(
             (
-                d.nomer,
-                d.kategoriya or "—",
-                d.sostoyanie or "—",
-                d.nazvanie_suda or "—",
+                delo.nomer,
+                delo.kategoriya or "—",
+                delo.sostoyanie or "—",
+                delo.nazvanie_suda or "—",
                 summa,
             )
         )
@@ -151,7 +151,9 @@ async def akty_po_delu(
             f"Проверьте номер дела или используйте info_dela()."
         )
 
-    stroki_tablitsy = [(a.tip_akta, a.data_akta, a.sud, a.rezolyutsiya[:50]) for a in akty]
+    stroki_tablitsy = [
+        (akt.tip_akta, akt.data_akta, akt.sud, akt.rezolyutsiya[:50]) for akt in akty
+    ]
     zagolovok = f"**Судебные акты по делу {nomer_dela}**\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["Тип акта", "Дата", "Суд", "Резолюция"], stroki_tablitsy
@@ -177,12 +179,12 @@ async def storony_dela(
         return f"Стороны по делу {nomer_dela} не найдены.\n\nПроверьте номер дела."
 
     stroki = [f"**Стороны дела {nomer_dela}**\n"]
-    for s in storony:
-        stroki.append(f"- **{s.tip}**: {s.nazvanie}")
-        if s.inn:
-            stroki.append(f"  ИНН: {s.inn}")
-        if s.subiekt:
-            stroki.append(f"  Регион: {s.subiekt}")
+    for storona in storony:
+        stroki.append(f"- **{storona.tip}**: {storona.nazvanie}")
+        if storona.inn:
+            stroki.append(f"  ИНН: {storona.inn}")
+        if storona.subiekt:
+            stroki.append(f"  Регион: {storona.subiekt}")
     return "\n".join(stroki)
 
 
@@ -195,7 +197,7 @@ async def spravochnik_kategoriy(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника категорий дел...")
     kategorii = client.poluchit_kategorii_del()
 
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
+    stroki_tablitsy = [(kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in kategorii]
     zagolovok = "**Категории арбитражных дел**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
@@ -209,7 +211,7 @@ async def spravochnik_instantsiy(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника инстанций судов...")
     instantsii = client.poluchit_instantsii()
 
-    stroki_tablitsy = [(i["kod"], i["nazvanie"]) for i in instantsii]
+    stroki_tablitsy = [(instantsiya["kod"], instantsiya["nazvanie"]) for instantsiya in instantsii]
     zagolovok = "**Инстанции арбитражных судов**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Инстанция"], stroki_tablitsy)
 
@@ -223,7 +225,7 @@ async def spravochnik_statusov(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника статусов дел...")
     statusy = client.poluchit_statusy_del()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in statusy]
     zagolovok = "**Статусы судебных дел**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
@@ -237,6 +239,6 @@ async def spravochnik_aktov(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника типов актов...")
     tipy = client.poluchit_tipy_aktov()
 
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы судебных актов**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип акта"], stroki_tablitsy)

@@ -54,7 +54,11 @@ async def poisk_med_organizatsiy(
             parametry["city"] = gorod
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_med_organizatsiyu(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_med_organizatsiyu(element)
+            for element in elementy
+            if isinstance(element, dict)
+        ]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
         return []
@@ -106,7 +110,7 @@ async def poisk_litsenziy(
             parametry["status"] = sostoyanie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
+        return [_razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
         return []
@@ -138,7 +142,7 @@ async def pokazateli_zdorovya(
             parametry["code"] = kod_pokazatelya
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_pokazatel(p) for p in elementy if isinstance(p, dict)]
+        return [_razobrat_pokazatel(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
         return []
@@ -170,7 +174,9 @@ async def statistika_zabolevaniy(
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_zabolevanie(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_zabolevanie(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
         return []

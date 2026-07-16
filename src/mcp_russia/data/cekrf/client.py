@@ -346,19 +346,22 @@ async def tipy_vyborov() -> list[TipVyborov]:
 
 async def subyekty_rf() -> list[SubyektRF]:
     """Получить справочник субъектов Российской Федерации."""
-    return [SubyektRF(kod=s["kod"], nazvanie=s["nazvanie"], okato=s["okato"]) for s in SUBYEKTY_RF]
+    return [
+        SubyektRF(kod=subiekt["kod"], nazvanie=subiekt["nazvanie"], okato=subiekt["okato"])
+        for subiekt in SUBYEKTY_RF
+    ]
 
 
 async def dolzhnosti_federal() -> list[Dolzhnost]:
     """Получить список федеральных избирательных должностей."""
     rezultaty: list[Dolzhnost] = []
-    for d in DOLZHNOSTI_FEDERAL:
-        kod: Any = d["kod"]
+    for dolzhnost in DOLZHNOSTI_FEDERAL:
+        kod: Any = dolzhnost["kod"]
         rezultaty.append(
             Dolzhnost(
                 kod=kod if isinstance(kod, int) else int(str(kod)),
-                nazvanie=str(d["nazvanie"]),
-                uroven=str(d["uroven"]),
+                nazvanie=str(dolzhnost["nazvanie"]),
+                uroven=str(dolzhnost["uroven"]),
             )
         )
     return rezultaty
@@ -368,9 +371,11 @@ async def partii_rf() -> list[InformatsiyaPartii]:
     """Получить справочник политических партий РФ."""
     return [
         InformatsiyaPartii(
-            nazvanie=p["nazvanie"], kratkoe_nazvanie=p["korotkoe_nazvanie"], tsvet=p["tsvet"]
+            nazvanie=partiya["nazvanie"],
+            kratkoe_nazvanie=partiya["korotkoe_nazvanie"],
+            tsvet=partiya["tsvet"],
         )
-        for p in PARTII_RF
+        for partiya in PARTII_RF
     ]
 
 

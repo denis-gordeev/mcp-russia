@@ -18,7 +18,7 @@ async def spisok_vidov_chs(kontekst: Context) -> str:
     """Получить список видов чрезвычайных ситуаций."""
     await kontekst.info("Запрос списка видов ЧС...")
     vidy = client.poluchit_spisok_vidov_chs()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды чрезвычайных ситуаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид ЧС"], stroki_tablitsy)
 
@@ -27,7 +27,7 @@ async def spisok_klassov_chs(kontekst: Context) -> str:
     """Получить список классов чрезвычайных ситуаций."""
     await kontekst.info("Запрос списка классов ЧС...")
     klassy = client.poluchit_spisok_klassov_chs()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in klassy]
+    stroki_tablitsy = [(klass["kod"], klass["nazvanie"]) for klass in klassy]
     zagolovok = "**Классы чрезвычайных ситуаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Класс ЧС"], stroki_tablitsy)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_pojarov(kontekst: Context) -> str:
     """Получить список видов пожаров."""
     await kontekst.info("Запрос списка видов пожаров...")
     vidy = client.poluchit_spisok_vidov_pozharov()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды пожаров**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид пожара"], stroki_tablitsy)
 
@@ -45,7 +45,7 @@ async def spisok_tipov_opasnosti(kontekst: Context) -> str:
     """Получить список типов опасностей."""
     await kontekst.info("Запрос списка типов опасностей...")
     tipy = client.poluchit_spisok_tipov_opasnosti()
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы опасностей для предупреждений МЧС**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип опасности"], stroki_tablitsy)
 
@@ -106,14 +106,14 @@ async def statistika_pojarov(
 
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("data", ""),
-            p.get("subiekt", "")[:30],
-            p.get("vid_pozhara", ""),
-            str(p.get("pogibshikh", "")),
-            str(p.get("postradavshikh", "")),
+            pozhar.get("nomer", ""),
+            pozhar.get("data", ""),
+            pozhar.get("subiekt", "")[:30],
+            pozhar.get("vid_pozhara", ""),
+            str(pozhar.get("pogibshikh", "")),
+            str(pozhar.get("postradavshikh", "")),
         )
-        for p in pojarov_dannye
+        for pozhar in pojarov_dannye
     ]
     zagolovok = f"**Статистика пожаров** — найдено: {len(pojarov_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -159,15 +159,15 @@ async def poisk_chs(
         )
     stroki_tablitsy = [
         (
-            c.get("nomer", ""),
-            c.get("vid_chs", ""),
-            c.get("klass_chs", ""),
-            c.get("data_vozniknoveniya", ""),
-            c.get("subiekt", "")[:30],
-            str(c.get("pogibshikh", "")),
-            str(c.get("postradavshikh", "")),
+            chs.get("nomer", ""),
+            chs.get("vid_chs", ""),
+            chs.get("klass_chs", ""),
+            chs.get("data_vozniknoveniya", ""),
+            chs.get("subiekt", "")[:30],
+            str(chs.get("pogibshikh", "")),
+            str(chs.get("postradavshikh", "")),
         )
-        for c in chs_dannye
+        for chs in chs_dannye
     ]
     zagolovok = f"**Чрезвычайные ситуации** — найдено: {len(chs_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -197,14 +197,14 @@ async def radiatsionnyy_monitoring(
         )
     stroki_tablitsy = [
         (
-            m.get("stantsiya", ""),
-            m.get("subiekt", "")[:30],
-            str(m.get("uroven_radiatsii", "")),
-            m.get("edinitsa", ""),
-            str(m.get("norma", "")),
-            m.get("data_izmereniya", ""),
+            monitoring.get("stantsiya", ""),
+            monitoring.get("subiekt", "")[:30],
+            str(monitoring.get("uroven_radiatsii", "")),
+            monitoring.get("edinitsa", ""),
+            str(monitoring.get("norma", "")),
+            monitoring.get("data_izmereniya", ""),
         )
-        for m in monitoring_dannye
+        for monitoring in monitoring_dannye
     ]
     zagolovok = f"**Радиационный мониторинг** — станций: {len(monitoring_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -234,14 +234,14 @@ async def gidrologicheskaya_obstanovka(
         )
     stroki_tablitsy = [
         (
-            g.get("reka", ""),
-            g.get("punkt_nablyudeniya", "")[:30],
-            str(g.get("uroven_vody", "")),
-            str(g.get("opasnyy_uroven", "")) if g.get("opasnyy_uroven") else "—",
-            g.get("tendentsiya", ""),
-            g.get("data_izmereniya", ""),
+            gidro.get("reka", ""),
+            gidro.get("punkt_nablyudeniya", "")[:30],
+            str(gidro.get("uroven_vody", "")),
+            str(gidro.get("opasnyy_uroven", "")) if gidro.get("opasnyy_uroven") else "—",
+            gidro.get("tendentsiya", ""),
+            gidro.get("data_izmereniya", ""),
         )
-        for g in gidro_dannye
+        for gidro in gidro_dannye
     ]
     zagolovok = f"**Гидрологическая обстановка** — пунктов: {len(gidro_dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -276,14 +276,14 @@ async def preduprezhdeniya_chs(
         )
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("tip_opasnosti", ""),
-            p.get("subiekt", "")[:30],
-            p.get("opisanie", "")[:60],
-            p.get("data_nachala", ""),
-            p.get("data_okonchaniya", ""),
+            preduprezhdenie.get("nomer", ""),
+            preduprezhdenie.get("tip_opasnosti", ""),
+            preduprezhdenie.get("subiekt", "")[:30],
+            preduprezhdenie.get("opisanie", "")[:60],
+            preduprezhdenie.get("data_nachala", ""),
+            preduprezhdenie.get("data_okonchaniya", ""),
         )
-        for p in preduprezhdeniya
+        for preduprezhdenie in preduprezhdeniya
     ]
     zagolovok = f"**Предупреждения о ЧС** — активно: {len(preduprezhdeniya)}\n\n"
     return zagolovok + tablitsa_v_markdown(

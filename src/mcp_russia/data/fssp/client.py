@@ -120,9 +120,9 @@ async def info_proizvodstva(nomer: str) -> dict[str, Any] | None:
     try:
         dannye = await http_poluchit(f"{FSSP_IP_BAZA}", parametry={"number": nomer})
         zapisi = _razobrat_proizvodstva(dannye)
-        for r in zapisi:
-            if r.get("nomer") == nomer:
-                return r
+        for zapis in zapisi:
+            if zapis.get("nomer") == nomer:
+                return zapis
         return zapisi[0] if zapisi else None
     except Exception:
         logger.exception("Ошибка при получении информации о производстве %s", nomer)
@@ -144,14 +144,14 @@ async def ogranicheniya_dolzhnika(
     """
     proizvodstva = await poisk_proizvodstv(fio, data_rozhdeniya)
     ogranicheniya = []
-    for p in proizvodstva:
-        predmet = p.get("subject", "").lower()
-        okonchanie_ip = p.get("okonchanie_ip", "")
+    for proizvodstvo in proizvodstva:
+        predmet = proizvodstvo.get("subject", "").lower()
+        okonchanie_ip = proizvodstvo.get("okonchanie_ip", "")
         if (
             any(kw in predmet for kw in ("ограничен", "запрет", "арест", "выезд", "управлен"))
             or okonchanie_ip
         ):
-            ogranicheniya.append(p)
+            ogranicheniya.append(proizvodstvo)
     return ogranicheniya
 
 
@@ -166,8 +166,8 @@ async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
     """
     proizvodstva = await poisk_proizvodstv(fio)
     razyskivaemye = []
-    for p in proizvodstva:
-        predmet = p.get("subject", "").lower()
+    for proizvodstvo in proizvodstva:
+        predmet = proizvodstvo.get("subject", "").lower()
         if "розыск" in predmet or "разыск" in predmet:
-            razyskivaemye.append(p)
+            razyskivaemye.append(proizvodstvo)
     return razyskivaemye

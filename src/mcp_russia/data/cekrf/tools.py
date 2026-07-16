@@ -31,7 +31,7 @@ async def tipy_vyborov(kontekst: Context) -> str:
     await kontekst.info("Запрос типов выборов ЦИК РФ...")
     tipy = await client.tipy_vyborov()
 
-    stroki_tablitsy = [(str(t.kod), t.nazvanie) for t in tipy]
+    stroki_tablitsy = [(str(tip.kod), tip.nazvanie) for tip in tipy]
     zagolovok = "**Типы выборов в РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
 
@@ -47,7 +47,7 @@ async def subyekty_rf(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника субъектов РФ...")
     subyekty = await client.subyekty_rf()
 
-    stroki_tablitsy = [(s.kod, s.nazvanie) for s in subyekty]
+    stroki_tablitsy = [(subiekt.kod, subiekt.nazvanie) for subiekt in subyekty]
     zagolovok = f"**Субъекты Российской Федерации** — {len(stroki_tablitsy)} субъектов\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 
@@ -64,7 +64,9 @@ async def dolzhnosti_federal(kontekst: Context) -> str:
     await kontekst.info("Запрос федеральных избирательных должностей...")
     dolzhnosti = await client.dolzhnosti_federal()
 
-    stroki_tablitsy = [(str(d.kod), d.nazvanie, d.uroven) for d in dolzhnosti]
+    stroki_tablitsy = [
+        (str(dolzhnost.kod), dolzhnost.nazvanie, dolzhnost.uroven) for dolzhnost in dolzhnosti
+    ]
     zagolovok = "**Федеральные избирательные должности**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Должность", "Уровень"], stroki_tablitsy)
 
@@ -78,7 +80,9 @@ async def partii_rf(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника партий РФ...")
     partii = await client.partii_rf()
 
-    stroki_tablitsy = [(p.kratkoe_nazvanie, p.nazvanie, p.tsvet) for p in partii]
+    stroki_tablitsy = [
+        (partiya.kratkoe_nazvanie, partiya.nazvanie, partiya.tsvet) for partiya in partii
+    ]
     zagolovok = f"**Политические партии РФ** — {len(stroki_tablitsy)} партий\n\n"
     return zagolovok + tablitsa_v_markdown(["Краткое", "Наименование", "Цвет"], stroki_tablitsy)
 
@@ -121,8 +125,13 @@ async def spisok_vyborov(
         return "Выборы не найдены. Уточните параметры запроса."
 
     stroki_tablitsy = [
-        (v.get("nazvanie", ""), str(v.get("god", "")), v.get("data", ""), v.get("klyuch", ""))
-        for v in vybory
+        (
+            vybory_item.get("nazvanie", ""),
+            str(vybory_item.get("god", "")),
+            vybory_item.get("data", ""),
+            vybory_item.get("klyuch", ""),
+        )
+        for vybory_item in vybory
     ]
     zagolovok = f"**Найдено выборов: {len(vybory)}**\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -147,7 +156,14 @@ async def poisk_kandidata(fio: str, kontekst: Context, god: int | None = None) -
         return f"Кандидат '{fio}' не найден в базе ЦИК РФ.\n\nИсточник: {_ISTOCHNIK}"
 
     stroki_tablitsy = [
-        (k.identifikator, k.fio, k.partia, k.dolzhnost, k.sostoyanie) for k in kandidaty
+        (
+            kandidat.identifikator,
+            kandidat.fio,
+            kandidat.partia,
+            kandidat.dolzhnost,
+            kandidat.sostoyanie,
+        )
+        for kandidat in kandidaty
     ]
     zagolovok = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -228,13 +244,13 @@ async def rezultaty_vyborov(
 
     stroki_tablitsy = [
         (
-            r.fio,
-            r.partia,
-            formatirovat_chislo_ru(r.golosov, 0),
-            f"{formatirovat_chislo_ru(r.procent, 2)}%",
-            "✓" if r.izbrann else "",
+            rezultat.fio,
+            rezultat.partia,
+            formatirovat_chislo_ru(rezultat.golosov, 0),
+            f"{formatirovat_chislo_ru(rezultat.procent, 2)}%",
+            "✓" if rezultat.izbrann else "",
         )
-        for r in rezultaty
+        for rezultat in rezultaty
     ]
     zagolovok = f"**Результаты выборов {god} года**\n\n"
     return zagolovok + tablitsa_v_markdown(

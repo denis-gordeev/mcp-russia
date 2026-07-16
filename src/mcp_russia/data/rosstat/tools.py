@@ -32,7 +32,9 @@ async def spisok_regionov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка субъектов РФ...")
     regiony = client.poluchit_spisok_subiektov()
 
-    stroki_tablitsy = [(r["kod"], r["nazvanie"], r.get("okrug", "")) for r in regiony]
+    stroki_tablitsy = [
+        (region["kod"], region["nazvanie"], region.get("okrug", "")) for region in regiony
+    ]
     zagolovok = f"**Субъекты Российской Федерации** — {len(regiony)} субъектов\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Регион", "ФО"], stroki_tablitsy)
 
@@ -121,7 +123,9 @@ async def pokazateli_rosstata(kontekst: Context) -> str:
     """
     await kontekst.info("Запрос списка показателей Росстата...")
 
-    stroki_tablitsy = [(p["kod"], p["nazvanie"]) for p in KLYUCHEVYE_INDIKATORY]
+    stroki_tablitsy = [
+        (pokazatel["kod"], pokazatel["nazvanie"]) for pokazatel in KLYUCHEVYE_INDIKATORY
+    ]
     zagolovok = "**Основные показатели Росстата**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Показатель"], stroki_tablitsy)
 
@@ -148,11 +152,11 @@ async def inflyaciya(god: str = "", kontekst: Context | None = None) -> str:
             f"используйте показатель 'ipcz' через API ЕМИСС."
         )
     stroki_tablitsy = []
-    for d in dannye:
-        ipcz_m = f"{d.get('ipcz_mesyac', '')}%" if d.get("ipcz_mesyac") else "—"
-        ipcz_n = f"{d.get('ipcz_nakoplenny', '')}%" if d.get("ipcz_nakoplenny") else "—"
-        ipcz_g = f"{d.get('ipcz_god', '')}%" if d.get("ipcz_god") else "—"
-        stroki_tablitsy.append((d.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
+    for zapis in dannye:
+        ipcz_m = f"{zapis.get('ipcz_mesyac', '')}%" if zapis.get("ipcz_mesyac") else "—"
+        ipcz_n = f"{zapis.get('ipcz_nakoplenny', '')}%" if zapis.get("ipcz_nakoplenny") else "—"
+        ipcz_g = f"{zapis.get('ipcz_god', '')}%" if zapis.get("ipcz_god") else "—"
+        stroki_tablitsy.append((zapis.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
     zagolovok = "**Инфляция в России (ИПЦ)**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -184,11 +188,11 @@ async def demografiya(subiekt: str = "", kontekst: Context | None = None) -> str
             f"Для получения конкретных данных используйте API ЕМИСС."
         )
     stroki_tablitsy = []
-    for d in dannye:
-        nas = formatirovat_chislo_ru(d["naselenie"], 0) if d.get("naselenie") else "—"
-        rozh = f"{d.get('rozhdaemost', '')}‰" if d.get("rozhdaemost") else "—"
-        sm = f"{d.get('smertnost', '')}‰" if d.get("smertnost") else "—"
-        stroki_tablitsy.append((d.get("period", ""), nas, rozh, sm))
+    for zapis in dannye:
+        nas = formatirovat_chislo_ru(zapis["naselenie"], 0) if zapis.get("naselenie") else "—"
+        rozh = f"{zapis.get('rozhdaemost', '')}‰" if zapis.get("rozhdaemost") else "—"
+        sm = f"{zapis.get('smertnost', '')}‰" if zapis.get("smertnost") else "—"
+        stroki_tablitsy.append((zapis.get("period", ""), nas, rozh, sm))
     zagolovok = f"**Демографические данные{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -221,10 +225,10 @@ async def vrp_dannye(subiekt: str = "", god: str = "", kontekst: Context | None 
             f"с указанием кода региона и/или года."
         )
     stroki_tablitsy = []
-    for d in dannye:
-        vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp else "—"
-        vrp_pc = formatirovat_chislo_ru(d.vrp_na_dushu, 2) if d.vrp_na_dushu else "—"
-        stroki_tablitsy.append((d.period, d.subiekt or "—", vrp_val, vrp_pc))
+    for zapis in dannye:
+        vrp_val = formatirovat_chislo_ru(zapis.vrp, 2) if zapis.vrp else "—"
+        vrp_pc = formatirovat_chislo_ru(zapis.vrp_na_dushu, 2) if zapis.vrp_na_dushu else "—"
+        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", vrp_val, vrp_pc))
     zagolovok = f"**Валовой региональный продукт{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -259,10 +263,10 @@ async def zarplata_dannye(
             f"с указанием кода региона и/или года."
         )
     stroki_tablitsy = []
-    for d in dannye:
-        zp = formatirovat_chislo_ru(d.nominalnaya_zp, 2) if d.nominalnaya_zp else "—"
-        real = f"{d.realnaya_zp_izmenenie}%" if d.realnaya_zp_izmenenie else "—"
-        stroki_tablitsy.append((d.period, d.subiekt or "—", zp, real))
+    for zapis in dannye:
+        zp = formatirovat_chislo_ru(zapis.nominalnaya_zp, 2) if zapis.nominalnaya_zp else "—"
+        real = f"{zapis.realnaya_zp_izmenenie}%" if zapis.realnaya_zp_izmenenie else "—"
+        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", zp, real))
     zagolovok = f"**Средняя заработная плата{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -299,13 +303,25 @@ async def sravnenie_regionov(pokazatel: str, kontekst: Context) -> str:
         dannye, key=lambda zapis: zapis.get("znachenie") or 0, reverse=True
     )
     stroki_tablitsy = []
-    for i, d in enumerate(otsortirovannye_dannye, 1):
-        znachenie = formatirovat_chislo_ru(d["znachenie"], 2) if d.get("znachenie") else "—"
+    for i, zapis in enumerate(otsortirovannye_dannye, 1):
+        znachenie = (
+            formatirovat_chislo_ru(zapis["znachenie"], 2) if zapis.get("znachenie") else "—"
+        )
         stroki_tablitsy.append(
-            (i, d.get("subiekt", "—"), d.get("kod", "—"), znachenie, d.get("period", "—"))
+            (
+                i,
+                zapis.get("subiekt", "—"),
+                zapis.get("kod", "—"),
+                znachenie,
+                zapis.get("period", "—"),
+            )
         )
     imya_indikatora = next(
-        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == pokazatel),
+        (
+            indikator["nazvanie"]
+            for indikator in KLYUCHEVYE_INDIKATORY
+            if indikator["kod"] == pokazatel
+        ),
         pokazatel,
     )
     zagolovok = f"**Рейтинг регионов по показателю «{imya_indikatora}»**\n\n"
@@ -339,12 +355,16 @@ async def indikator_dannye(
         await kontekst.info(f"Запрос данных показателя '{kod}'...")
     kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     imya_indikatora = next(
-        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
+        (pokazatel["nazvanie"] for pokazatel in KLYUCHEVYE_INDIKATORY if pokazatel["kod"] == kod),
         "",
     )
     if not imya_indikatora and kod in EMISS_KODY_POKAZATELEY:
         imya_indikatora = next(
-            (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
+            (
+                pokazatel["nazvanie"]
+                for pokazatel in KLYUCHEVYE_INDIKATORY
+                if pokazatel["kod"] == kod
+            ),
             f"Показатель ЕМИСС {kod_emiss}",
         )
     dannye = await client.poluchit_indikator_dannye(kod=kod, subiekt=subiekt, god=god)
@@ -362,9 +382,13 @@ async def indikator_dannye(
             f"Мнемонические коды: {', '.join(sorted(EMISS_KODY_POKAZATELEY.keys()))}"
         )
     stroki_tablitsy = []
-    for d in dannye:
-        znachenie = formatirovat_chislo_ru(d.znachenie, 2) if d.znachenie is not None else "—"
-        stroki_tablitsy.append((d.period, d.subiekt or "—", znachenie, d.edinitsa or "—"))
+    for zapis in dannye:
+        znachenie = (
+            formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
+        )
+        stroki_tablitsy.append(
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+        )
     zagolovok_tekst = imya_indikatora or f"Показатель ЕМИСС {kod_emiss}"
     zagolovok = f"**{zagolovok_tekst}**{tekst_filtra}\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
@@ -404,10 +428,10 @@ async def otraslevaya_struktura_vrp(
             )
         )
     stroki_tablitsy = []
-    for d in dannye:
-        dolya = f"{d.dolya_vvp:.1f}%" if d.dolya_vvp is not None else "—"
-        vrp_val = formatirovat_chislo_ru(d.vrp, 2) if d.vrp is not None else "—"
-        stroki_tablitsy.append((d.kod_okved, d.otrasl, vrp_val, dolya))
+    for zapis in dannye:
+        dolya = f"{zapis.dolya_vvp:.1f}%" if zapis.dolya_vvp is not None else "—"
+        vrp_val = formatirovat_chislo_ru(zapis.vrp, 2) if zapis.vrp is not None else "—"
+        stroki_tablitsy.append((zapis.kod_okved, zapis.otrasl, vrp_val, dolya))
     zagolovok = f"**Отраслевая структура ВРП{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -441,13 +465,17 @@ async def investitsii_po_vidam(
             f"- ЕМИСС: https://fedstat.ru/indicator/24145\n"
             f"- Росстат: https://rosstat.gov.ru/investment\n\n"
             f"Виды деятельности: "
-            + ", ".join(f"{v['kod']} — {v['nazvanie']}" for v in VIDY_DEYATELNOSTI_INVESTITSII)
+            + ", ".join(
+                f"{vid['kod']} — {vid['nazvanie']}" for vid in VIDY_DEYATELNOSTI_INVESTITSII
+            )
         )
     stroki_tablitsy = []
-    for d in dannye:
-        inv_val = formatirovat_chislo_ru(d.investitsii, 2) if d.investitsii is not None else "—"
-        dolya = f"{d.dolya:.1f}%" if d.dolya is not None else "—"
-        stroki_tablitsy.append((d.kod_okved, d.vid_deyatelnosti, inv_val, dolya))
+    for zapis in dannye:
+        inv_val = (
+            formatirovat_chislo_ru(zapis.investitsii, 2) if zapis.investitsii is not None else "—"
+        )
+        dolya = f"{zapis.dolya:.1f}%" if zapis.dolya is not None else "—"
+        stroki_tablitsy.append((zapis.kod_okved, zapis.vid_deyatelnosti, inv_val, dolya))
     zagolovok = f"**Инвестиции по видам деятельности{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(

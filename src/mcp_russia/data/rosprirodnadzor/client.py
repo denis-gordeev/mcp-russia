@@ -56,7 +56,9 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
 
@@ -70,7 +72,9 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен")
 
@@ -121,7 +125,11 @@ async def poisk_obektov_negativnogo(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_obekt_negativnogo(element)
+                for element in elementy
+                if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("ONV реестр недоступен")
 
@@ -135,7 +143,11 @@ async def poisk_obektov_negativnogo(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_obekt_negativnogo(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_obekt_negativnogo(element)
+                for element in elementy
+                if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для ОНВ")
 
@@ -167,7 +179,9 @@ async def poisk_litsenziy_nedra(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 
@@ -180,7 +194,7 @@ async def poisk_litsenziy_nedra(
             parametry["licenseType"] = vid_litsenzii
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_litsenziyu(p) for p in elementy if isinstance(p, dict)]
+        return [_razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
         return []
@@ -208,7 +222,11 @@ async def poluchit_ekologicheskie_platezhi(
             parametry["paymentType"] = tip_platezha
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_ekologicheskiy_platezh(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_ekologicheskiy_platezh(element)
+            for element in elementy
+            if isinstance(element, dict)
+        ]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")
         return []

@@ -67,7 +67,7 @@ async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
     Возвращает:
         Данные региона или None.
     """
-    info_o_regionye = next((r for r in SUBIEKTY_RF if r["kod"] == kod), None)
+    info_o_regionye = next((region for region in SUBIEKTY_RF if region["kod"] == kod), None)
     if not info_o_regionye:
         return None
     try:
@@ -105,12 +105,12 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     if not info_ob_okruge:
         return {"oshibka": f"Федеральный округ '{kod}' не найден"}
 
-    regiony = [r for r in SUBIEKTY_RF if r.get("okrug") == kod]
+    regiony = [region for region in SUBIEKTY_RF if region.get("okrug") == kod]
     return {
         "kod": kod,
         "nazvanie": info_ob_okruge["nazvanie"],
         "kolichestvo_subiektov": len(regiony),
-        "subiekty": [r["nazvanie"] for r in regiony],
+        "subiekty": [region["nazvanie"] for region in regiony],
     }
 
 
@@ -215,7 +215,8 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         info_subiekta = next(
-                            (r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None
+                            (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)),
+                            None,
                         )
                         if info_subiekta:
                             nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -264,7 +265,8 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         info_subiekta = next(
-                            (r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None
+                            (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)),
+                            None,
                         )
                         if info_subiekta:
                             nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -309,7 +311,8 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                     nazvanie_subiekta = zapis.get("regionName", "")
                     if not nazvanie_subiekta:
                         info_subiekta = next(
-                            (r for r in SUBIEKTY_RF if r["kod"] == kod_subiekta), None
+                            (region for region in SUBIEKTY_RF if region["kod"] == kod_subiekta),
+                            None,
                         )
                         if info_subiekta:
                             nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -345,7 +348,7 @@ async def poluchit_indikator_dannye(
     """
     kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
     imya_indikatora = next(
-        (p["nazvanie"] for p in KLYUCHEVYE_INDIKATORY if p["kod"] == kod),
+        (pokazatel["nazvanie"] for pokazatel in KLYUCHEVYE_INDIKATORY if pokazatel["kod"] == kod),
         "",
     )
     try:
@@ -368,7 +371,9 @@ async def poluchit_indikator_dannye(
             nazvanie_subiekta = ""
             kod_reg = zapis.get("region", subiekt)
             if kod_reg:
-                info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == str(kod_reg)), None)
+                info_subiekta = next(
+                    (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)), None
+                )
                 if info_subiekta:
                     nazvanie_subiekta = info_subiekta["nazvanie"]
             rezultaty.append(
@@ -454,7 +459,9 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             return _rezerv_otraslevaya_struktura(subiekt, god)
         nazvanie_subiekta = ""
         if subiekt:
-            info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+            info_subiekta = next(
+                (region for region in SUBIEKTY_RF if region["kod"] == subiekt), None
+            )
             if info_subiekta:
                 nazvanie_subiekta = info_subiekta["nazvanie"]
         rezultaty = []
@@ -496,7 +503,7 @@ def _rezerv_otraslevaya_struktura(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+        info_subiekta = next((region for region in SUBIEKTY_RF if region["kod"] == subiekt), None)
         if info_subiekta:
             nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
@@ -541,7 +548,9 @@ async def poluchit_investitsii_po_vidam(
             return _rezerv_investitsii_po_vidam(subiekt, god)
         nazvanie_subiekta = ""
         if subiekt:
-            info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+            info_subiekta = next(
+                (region for region in SUBIEKTY_RF if region["kod"] == subiekt), None
+            )
             if info_subiekta:
                 nazvanie_subiekta = info_subiekta["nazvanie"]
         rezultaty = []
@@ -551,9 +560,9 @@ async def poluchit_investitsii_po_vidam(
             znachenie_okved = zapis.get("znachenie_okved", zapis.get("activityCode", ""))
             vid = next(
                 (
-                    v["nazvanie"]
-                    for v in VIDY_DEYATELNOSTI_INVESTITSII
-                    if v["kod"] == znachenie_okved
+                    vid_deyatelnosti["nazvanie"]
+                    for vid_deyatelnosti in VIDY_DEYATELNOSTI_INVESTITSII
+                    if vid_deyatelnosti["kod"] == znachenie_okved
                 ),
                 zapis.get("activityName", zapis.get("name", znachenie_okved)),
             )
@@ -583,17 +592,17 @@ def _rezerv_investitsii_po_vidam(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        info_subiekta = next((r for r in SUBIEKTY_RF if r["kod"] == subiekt), None)
+        info_subiekta = next((region for region in SUBIEKTY_RF if region["kod"] == subiekt), None)
         if info_subiekta:
             nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
         InvestitsiiPoVidam(
             subiekt=nazvanie_subiekta,
             period=god or "2022",
-            vid_deyatelnosti=v["nazvanie"],
-            kod_znachenie_okved=v["kod"],
-            investitsii=v.get("inv_2022"),
-            dolya=v.get("dolya_2022"),
+            vid_deyatelnosti=vid["nazvanie"],
+            kod_znachenie_okved=vid["kod"],
+            investitsii=vid.get("inv_2022"),
+            dolya=vid.get("dolya_2022"),
         )
-        for v in VIDY_DEYATELNOSTI_INVESTITSII
+        for vid in VIDY_DEYATELNOSTI_INVESTITSII
     ]

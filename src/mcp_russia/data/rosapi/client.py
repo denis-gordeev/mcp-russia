@@ -273,12 +273,12 @@ async def poisk_adresa(zapros: str) -> list[dict[str, str]]:
     predlozheniya = rezultat.get("suggestions", [])
 
     rezultaty = []
-    for s in predlozheniya:
-        dannye = s.get("data", {})
+    for predlozhenie in predlozheniya:
+        dannye = predlozhenie.get("data", {})
         gorod = dannye.get("city_with_type") or dannye.get("settlement_with_type", "")
         rezultaty.append(
             {
-                "znachenie": s.get("value", ""),
+                "znachenie": predlozhenie.get("value", ""),
                 "pochtovyy_indeks": dannye.get("postal_code", ""),
                 "subiekt": dannye.get("region_with_type", ""),
                 "gorod": gorod,
@@ -356,9 +356,9 @@ async def spisok_bankov_publichnyy() -> list[BankRF]:
     """Получить список банков из справочника ЦБ РФ через Dadata."""
     banki_syranye = await _spisok_bankov()
     banki = []
-    for b in banki_syranye:
-        dannye = b.get("data", {})
-        razobrannye = _razobrat_dannye_banka(dannye, b.get("value", ""))
+    for bank in banki_syranye:
+        dannye = bank.get("data", {})
+        razobrannye = _razobrat_dannye_banka(dannye, bank.get("value", ""))
         banki.append(
             BankRF(
                 bik=dannye.get("bic", ""),

@@ -27,7 +27,7 @@ async def test_spisok_regionov():
     assert "Москва" in rezultat
 
 
-async def test_spisok_regionov_has_many():
+async def test_spisok_regionov_imeet_mnogo():
     kontekst = _maket_konteksta()
     rezultat = await rosstat_tools.spisok_regionov(kontekst)
     assert "Татарстан" in rezultat
@@ -146,7 +146,7 @@ async def test_constants_emiss_kody():
     assert "stroitelstvo" in EMISS_KODY_POKAZATELEY
 
 
-async def test_constants_emiss_kody_complete():
+async def test_constants_emiss_kody_polnyy():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY, KLYUCHEVYE_INDIKATORY
 
     kody_indikatorov = {p["kod"] for p in KLYUCHEVYE_INDIKATORY}
@@ -211,9 +211,9 @@ async def test_zarplata_dannye_pustoy():
     assert "Заработ" in rezultat or "заработ" in rezultat.lower()
 
 
-async def test_sravnenie_regionov_invalid_pokazatel():
+async def test_sravnenie_regionov_nekorrektnyy_pokazatel():
     kontekst = _maket_konteksta()
-    rezultat = await rosstat_tools.sravnenie_regionov("invalid_code", kontekst)
+    rezultat = await rosstat_tools.sravnenie_regionov("nekorrektnyy_kod", kontekst)
     assert "не поддерживается" in rezultat
 
 
@@ -263,7 +263,7 @@ async def test_indikator_dannye_s_dannymi():
     assert "105" in rezultat
 
 
-async def test_indikator_dannye_with_region():
+async def test_indikator_dannye_s_regionom():
     maket_dannykh = [
         IndikatorDannye(
             kod_emiss="24140",
@@ -305,7 +305,7 @@ async def test_indikator_dannye_emiss_code_direct():
     assert "99999" in rezultat
 
 
-async def test_constants_subiekty_no_duplicates():
+async def test_constants_subiekty_bez_dublikatov():
     from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
 
     kody = [r["kod"] for r in SUBIEKTY_RF]
@@ -392,7 +392,7 @@ async def test_constants_vidy_deyatelnosti_investitsii():
     assert "F" in kody
 
 
-async def test_constants_new_emiss_kody():
+async def test_constants_novyy_emiss_kody():
     from mcp_russia.data.rosstat.constants import EMISS_KODY_POKAZATELEY
 
     assert "vneshnetorgovyy_oborot" in EMISS_KODY_POKAZATELEY
@@ -402,7 +402,7 @@ async def test_constants_new_emiss_kody():
     assert "struktura_vrp" in EMISS_KODY_POKAZATELEY
 
 
-async def test_constants_new_regionalnye_pokazateli():
+async def test_constants_novyy_regionalnye_pokazateli():
     from mcp_russia.data.rosstat.constants import REGIONALNYE_POKAZATELI
 
     assert "selkoe_khozyaystvo" in REGIONALNYE_POKAZATELI

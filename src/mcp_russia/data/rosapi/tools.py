@@ -261,9 +261,9 @@ async def prazdniki_rf(god: int | None = None, kontekst: Context | None = None) 
     prazdniki = client.poluchit_prazdniki(god)
 
     stroki_tablitsy = []
-    for h in prazdniki:
-        data_stroka = h["data"][5:]
-        stroki_tablitsy.append((data_stroka, h["nazvanie"], h["tip"]))
+    for prazdnik in prazdniki:
+        data_stroka = prazdnik["data"][5:]
+        stroki_tablitsy.append((data_stroka, prazdnik["nazvanie"], prazdnik["tip"]))
 
     zagolovok = f"**Национальные праздники РФ ({god})**\n\n"
     return zagolovok + tablitsa_v_markdown(["Дата", "Праздник", "Тип"], stroki_tablitsy)

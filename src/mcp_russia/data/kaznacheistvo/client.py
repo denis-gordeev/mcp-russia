@@ -88,7 +88,9 @@ async def poisk_uchastnikov_bp(
             parametry["name"] = nazvanie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_uchastnik_bp(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_uchastnik_bp(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -120,7 +122,9 @@ async def poisk_uchrezhdeniy(
             parametry["type"] = tip
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_uchrezhdenie(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_uchrezhdenie(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -148,7 +152,11 @@ async def poluchit_mezhbyudzhetnye(
             parametry["region"] = subiekt
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_mezhbyudzhetnyy_transfer(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_mezhbyudzhetnyy_transfer(element)
+            for element in elementy
+            if isinstance(element, dict)
+        ]
     except Exception:
         logger.debug("budget.gov.ru API недоступен для межбюджетных трансфертов")
         return []

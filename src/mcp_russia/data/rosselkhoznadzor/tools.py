@@ -18,7 +18,7 @@ async def spisok_vidov_nadzora(kontekst: Context) -> str:
     """Получить список видов надзора Россельхознадзора."""
     await kontekst.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды надзора Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_proverok(kontekst: Context) -> str:
     """Получить список категорий проверок."""
     await kontekst.info("Запрос списка категорий проверок...")
     kategorii = client.poluchit_spisok_kategoriy_proverok()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
+    stroki_tablitsy = [(kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in kategorii]
     zagolovok = "**Категории проверок Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_narusheniy(kontekst: Context) -> str:
     """Получить список видов нарушений."""
     await kontekst.info("Запрос списка видов нарушений...")
     vidy = client.poluchit_spisok_vidov_narusheniy()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды нарушений Россельхознадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид нарушений"], stroki_tablitsy)
 
@@ -45,7 +45,7 @@ async def spisok_tipov_produktsii(kontekst: Context) -> str:
     """Получить список типов поднадзорной продукции."""
     await kontekst.info("Запрос списка типов продукции...")
     tipy = client.poluchit_spisok_tipov_produktsii()
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы поднадзорной продукции**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип продукции"], stroki_tablitsy)
 
@@ -101,14 +101,14 @@ async def poisk_proverok(
 
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("vid_nadzora", ""),
-            p.get("data_provedeniya", ""),
-            p.get("subiekt", "")[:30],
-            p.get("sostoyanie", ""),
-            str(p.get("narusheniya", "")),
+            proverka.get("nomer", ""),
+            proverka.get("vid_nadzora", ""),
+            proverka.get("data_provedeniya", ""),
+            proverka.get("subiekt", "")[:30],
+            proverka.get("sostoyanie", ""),
+            str(proverka.get("narusheniya", "")),
         )
-        for p in proverki
+        for proverka in proverki
     ]
     zagolovok = f"**Проверки Россельхознадзора** — найдено: {len(proverki)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -181,13 +181,13 @@ async def poisk_registratsiy_produktsii(
         )
     stroki_tablitsy = [
         (
-            r.get("nomer", ""),
-            r.get("naimenovanie", "")[:40],
-            r.get("proizvoditel", "")[:25],
-            r.get("tip_produktsii", ""),
-            r.get("sostoyanie", ""),
+            registratsiya.get("nomer", ""),
+            registratsiya.get("naimenovanie", "")[:40],
+            registratsiya.get("proizvoditel", "")[:25],
+            registratsiya.get("tip_produktsii", ""),
+            registratsiya.get("sostoyanie", ""),
         )
-        for r in registratsii
+        for registratsiya in registratsii
     ]
     zagolovok = f"**Зарегистрированная продукция** — найдено: {len(registratsii)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -222,13 +222,13 @@ async def veterinarsnye_sertifikaty(
         )
     stroki_tablitsy = [
         (
-            s.get("nomer", ""),
-            s.get("tip_produktsii", ""),
-            s.get("region_otpravki", "")[:30],
-            s.get("data_oformleniya", ""),
-            s.get("sostoyanie", ""),
+            sertifikat.get("nomer", ""),
+            sertifikat.get("tip_produktsii", ""),
+            sertifikat.get("region_otpravki", "")[:30],
+            sertifikat.get("data_oformleniya", ""),
+            sertifikat.get("sostoyanie", ""),
         )
-        for s in sertifikaty
+        for sertifikat in sertifikaty
     ]
     zagolovok = f"**Ветеринарные сертификаты** — найдено: {len(sertifikaty)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -258,14 +258,14 @@ async def preduprezhdeniya_karantina(
         )
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("tip_karantina", ""),
-            p.get("subiekt", "")[:30],
-            p.get("opisanie", "")[:60],
-            p.get("data_nachala", ""),
-            p.get("data_okonchaniya", ""),
+            preduprezhdenie.get("nomer", ""),
+            preduprezhdenie.get("tip_karantina", ""),
+            preduprezhdenie.get("subiekt", "")[:30],
+            preduprezhdenie.get("opisanie", "")[:60],
+            preduprezhdenie.get("data_nachala", ""),
+            preduprezhdenie.get("data_okonchaniya", ""),
         )
-        for p in preduprezhdeniya
+        for preduprezhdenie in preduprezhdeniya
     ]
     zagolovok = f"**Предупреждения о карантине** — активно: {len(preduprezhdeniya)}\n\n"
     return zagolovok + tablitsa_v_markdown(

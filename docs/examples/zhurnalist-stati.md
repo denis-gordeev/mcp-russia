@@ -31,7 +31,7 @@ API: gosduma_info_deputata (vypolnit_paket для топ-10) *(расходы д
 > Промпт: «Какова средняя сумма расходов аппарата по фракциям? Какая фракция тратит больше всего в пересчёте на одного депутата?»
 
 ```
-APIs: gosduma_spisok_deputatov (все) + gosduma_info_deputata (пакетно) *(расходы депутатов — планируемый инструмент)*
+API: gosduma_spisok_deputatov (все) + gosduma_info_deputata (пакетно) *(расходы депутатов — планируемый инструмент)*
 ```
 
 **3. Детализация по категориям**
@@ -80,7 +80,7 @@ LLM агрегирует данные и формирует:
 > Промпт: «Сравни количество больничных коек на 1000 жителей во всех субъектах РФ»
 
 ```
-APIs: minzdrav_poisk_med_organizatsiy (по субъекту) + rosstat_demografiya (численность)
+API: minzdrav_poisk_med_organizatsiy (по субъекту) + rosstat_demografiya (численность)
 ```
 
 **2. Расходы на здравоохранение**
@@ -88,7 +88,7 @@ APIs: minzdrav_poisk_med_organizatsiy (по субъекту) + rosstat_demograf
 > Промпт: «Сколько каждый субъект РФ тратит на здравоохранение в расчёте на душу населения?»
 
 ```
-APIs: rosaudit_ispolnenie_byudzheta (по субъекту) + rosstat_demografiya (численность)
+API: rosaudit_ispolnenie_byudzheta (по субъекту) + rosstat_demografiya (численность)
 ```
 
 **3. Итоговые показатели**
@@ -130,7 +130,7 @@ API: rosstat_demografiya
 > Промпт: «Покажи динамику ключевой ставки за последние 5 лет и сравни с инфляцией»
 
 ```
-APIs: cbrf_sravnit_valyuty(codes=[key_rate, cpi], last=60)
+API: cbrf_sravnit_valyuty(codes=[key_rate, cpi], last=60)
 ```
 
 **2. Влияние на кредитование**
@@ -218,7 +218,7 @@ API: publikatsii_poisk_aktov(term="режим ЧС природные пожар
 > Промпт: «Выведи кандидатов на пост губернатора Московской области с зарегистрированными финансовыми отчётами в ЦИК»
 
 ```
-APIs: cekrf_poisk_kandidata(fio="...", god=2026)
+API: cekrf_poisk_kandidata(fio="...", god=2026)
       cekrf_kandidat_podrobno (для каждого кандидата)
 ```
 

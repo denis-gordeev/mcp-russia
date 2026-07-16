@@ -182,13 +182,13 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
             return []
 
         razobrannye = []
-        for r in prava_spisok:
+        for pravo in prava_spisok:
             razobrannye.append(
                 {
-                    "tip_prava": r.get("type", "") or r.get("name", ""),
-                    "sobstvennik": r.get("owner", ""),
-                    "data_registratsii": r.get("reg_date", ""),
-                    "nomer_registratsii": r.get("reg_number", ""),
+                    "tip_prava": pravo.get("type", "") or pravo.get("name", ""),
+                    "sobstvennik": pravo.get("owner", ""),
+                    "data_registratsii": pravo.get("reg_date", ""),
+                    "nomer_registratsii": pravo.get("reg_number", ""),
                 }
             )
         return razobrannye
@@ -217,8 +217,8 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
             return []
 
         naydennye = []
-        for f in obekty_spisok[:10]:
-            atributy = f.get("attrs", {})
+        for obiekt in obekty_spisok[:10]:
+            atributy = obiekt.get("attrs", {})
             naydennye.append(
                 {
                     "kadastrovyy_nomer": atributy.get("cn", ""),

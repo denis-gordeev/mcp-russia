@@ -56,7 +56,7 @@ async def statistika_pojarov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
+            return [_razobrat_pozhar(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("fires.ru API недоступен")
 
@@ -70,7 +70,7 @@ async def statistika_pojarov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_pozhar(p) for p in elementy if isinstance(p, dict)]
+            return [_razobrat_pozhar(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен")
 
@@ -106,7 +106,7 @@ async def poisk_chs(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
+            return [_razobrat_chs(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для ЧС")
 
@@ -120,7 +120,7 @@ async def poisk_chs(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_chs(p) for p in elementy if isinstance(p, dict)]
+            return [_razobrat_chs(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("data.mchs.gov.ru недоступен")
 
@@ -146,7 +146,9 @@ async def radiatsionnyy_monitoring(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_radiatsiyu(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_radiatsiyu(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для радиационного мониторинга")
 
@@ -172,7 +174,9 @@ async def gidrologicheskaya_obstanovka(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_gidrologiyu(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_gidrologiyu(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для гидрологии")
 
@@ -202,7 +206,11 @@ async def preduprezhdeniya_chs(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_preduprezhdenie(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_preduprezhdenie(element)
+                for element in elementy
+                if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для предупреждений")
 

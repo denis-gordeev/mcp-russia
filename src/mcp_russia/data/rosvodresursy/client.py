@@ -58,7 +58,9 @@ async def poisk_vodnykh_obektov(
         parametry["limit"] = ogranichenie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_vodnyy_obekt(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_vodnyy_obekt(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.exception("Ошибка при поиске водных объектов")
         return []
@@ -108,7 +110,9 @@ async def poluchit_gidro_dannye(
             parametry["region"] = subiekt
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_gidro_zapis(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_gidro_zapis(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.exception("Ошибка при получении гидрологических данных")
         return []
@@ -156,7 +160,11 @@ async def poluchit_vodopolzovanie(
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_vodopolzovanie_zapis(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_vodopolzovanie_zapis(element)
+            for element in elementy
+            if isinstance(element, dict)
+        ]
     except Exception:
         logger.exception("Ошибка при получении данных о водопользовании")
         return []
@@ -180,8 +188,12 @@ def poluchit_spisok_tipov_gidro() -> list[dict[str, str]]:
 def poluchit_spisok_vodokhranilishch() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
-        {"kod": v["kod"], "nazvanie": v["nazvanie"], "subiekt": v["subiekt"]}
-        for v in KRUPNYE_VODOKHRANILISHCHA
+        {
+            "kod": vodokhranilishche["kod"],
+            "nazvanie": vodokhranilishche["nazvanie"],
+            "subiekt": vodokhranilishche["subiekt"],
+        }
+        for vodokhranilishche in KRUPNYE_VODOKHRANILISHCHA
     ]
 
 

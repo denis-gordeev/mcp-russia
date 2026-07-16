@@ -134,14 +134,14 @@ async def poluchit_reyting(tip_reytinga: str = "", god: int = 0) -> list[dict[st
             return []
         return [
             {
-                "mesto_v_reytinge": r.get("position", ""),
-                "nazvanie": r.get("name", ""),
-                "ball": r.get("score", 0),
-                "tip_reytinga": r.get("category", tip_reytinga),
-                "gorod": r.get("city", ""),
+                "mesto_v_reytinge": zapis.get("position", ""),
+                "nazvanie": zapis.get("name", ""),
+                "ball": zapis.get("score", 0),
+                "tip_reytinga": zapis.get("category", tip_reytinga),
+                "gorod": zapis.get("city", ""),
             }
-            for r in dannye
-            if isinstance(r, dict)
+            for zapis in dannye
+            if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при получении рейтинга вузов")

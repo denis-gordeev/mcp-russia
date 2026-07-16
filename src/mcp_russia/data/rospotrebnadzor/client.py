@@ -46,9 +46,13 @@ async def poisk_proverok(
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+                return [
+                    _razobrat_proverku(element)
+                    for element in elementy
+                    if isinstance(element, dict)
+                ]
         if isinstance(dannye, list):
-            return [_razobrat_proverku(p) for p in dannye if isinstance(p, dict)]
+            return [_razobrat_proverku(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске проверок")
@@ -101,9 +105,13 @@ async def plan_proverok(
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_proverku(p) for p in elementy if isinstance(p, dict)]
+                return [
+                    _razobrat_proverku(element)
+                    for element in elementy
+                    if isinstance(element, dict)
+                ]
         if isinstance(dannye, list):
-            return [_razobrat_proverku(p) for p in dannye if isinstance(p, dict)]
+            return [_razobrat_proverku(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при получении плана проверок")
@@ -134,9 +142,9 @@ async def poisk_zhalob(
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_zhalobu(z) for z in elementy if isinstance(z, dict)]
+                return [_razobrat_zhalobu(zapis) for zapis in elementy if isinstance(zapis, dict)]
         if isinstance(dannye, list):
-            return [_razobrat_zhalobu(z) for z in dannye if isinstance(z, dict)]
+            return [_razobrat_zhalobu(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске жалоб потребителей")

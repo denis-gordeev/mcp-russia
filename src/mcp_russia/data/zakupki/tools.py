@@ -79,8 +79,14 @@ async def poisk_zakupok(
         return zagolovok
 
     stroki_tablitsy = [
-        (z.nomer, z.nazvanie[:60], z.zakon, z.sostoyanie, formatirovat_rubli(z.nachalnaya_tsena))
-        for z in zakupki[:30]
+        (
+            zakupka.nomer,
+            zakupka.nazvanie[:60],
+            zakupka.zakon,
+            zakupka.sostoyanie,
+            formatirovat_rubli(zakupka.nachalnaya_tsena),
+        )
+        for zakupka in zakupki[:30]
     ]
     zagolovok = "**Результаты поиска в ЕИС закупок**\n\n"
     zagolovok += f"Найдено: {len(zakupki)} закупок\n\n"
@@ -168,13 +174,13 @@ async def poisk_kontraktov(
 
     stroki_tablitsy = [
         (
-            k.nomer,
-            k.nazvanie_podryadchika[:40],
-            formatirovat_rubli(k.tsena),
-            k.sostoyanie,
-            k.data_podpisaniya,
+            kontrakt.nomer,
+            kontrakt.nazvanie_podryadchika[:40],
+            formatirovat_rubli(kontrakt.tsena),
+            kontrakt.sostoyanie,
+            kontrakt.data_podpisaniya,
         )
-        for k in kontrakty[:30]
+        for kontrakt in kontrakty[:30]
     ]
     zagolovok = f"**Контракты в ЕИС**\n\nНайдено: {len(kontrakty)}\n\n"
     return (
@@ -271,7 +277,7 @@ async def statusy_zakupok(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника статусов закупок...")
     statusy = client.poluchit_statusy_zakupok()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in statusy]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in statusy]
     zagolovok = "**Статусы закупок в ЕИС**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy)
 
@@ -285,7 +291,7 @@ async def sposoby_zakupok(kontekst: Context) -> str:
     await kontekst.info("Запрос справочника способов закупок...")
     sposoby = client.poluchit_sposoby_zakupok()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sposoby]
+    stroki_tablitsy = [(sposob["kod"], sposob["nazvanie"]) for sposob in sposoby]
     zagolovok = "**Способы определения поставщиков**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Способ закупки"], stroki_tablitsy)
 
@@ -318,12 +324,12 @@ async def plany_zakupok(
 
     stroki_tablitsy = [
         (
-            p.nazvanie_organizatora[:40],
-            p.organizator_inn,
-            str(p.kolichestvo_pozitsiy),
-            formatirovat_rubli(p.obshchiy_byudzhet),
+            plan.nazvanie_organizatora[:40],
+            plan.organizator_inn,
+            str(plan.kolichestvo_pozitsiy),
+            formatirovat_rubli(plan.obshchiy_byudzhet),
         )
-        for p in plany[:30]
+        for plan in plany[:30]
     ]
     zagolovok = f"**Планы-графики закупок на {god} год**\n\n"
     zagolovok += f"Найдено: {len(plany)}\n\n"

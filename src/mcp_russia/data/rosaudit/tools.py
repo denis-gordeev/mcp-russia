@@ -18,7 +18,9 @@ async def spisok_napravleniy(kontekst: Context) -> str:
     """Получить список направлений контрольной деятельности Счётной палаты."""
     await kontekst.info("Запрос списка направлений контроля...")
     napravleniya = client.poluchit_spisok_napravleniy()
-    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in napravleniya]
+    stroki_tablitsy = [
+        (napravlenie["kod"], napravlenie["nazvanie"]) for napravlenie in napravleniya
+    ]
     zagolovok = "**Направления контрольной деятельности Счётной палаты РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
@@ -27,7 +29,7 @@ async def spisok_tipov_meropriyatiy(kontekst: Context) -> str:
     """Получить список типов контрольных мероприятий."""
     await kontekst.info("Запрос списка типов мероприятий...")
     tipy = client.poluchit_spisok_tipov_meropriyatiy()
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы контрольных мероприятий**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy)
 
@@ -36,7 +38,7 @@ async def spisok_subiektov_audita(kontekst: Context) -> str:
     """Получить список субъектов внешнего государственного аудита."""
     await kontekst.info("Запрос списка субъектов аудита...")
     subiekty = client.poluchit_spisok_subiektov_audita()
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in subiekty]
+    stroki_tablitsy = [(subiekt["kod"], subiekt["nazvanie"]) for subiekt in subiekty]
     zagolovok = "**Субъекты внешнего государственного аудита**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Субъект"], stroki_tablitsy)
 
@@ -70,13 +72,13 @@ async def poisk_kontrolnyh_meropriyatiy(
         )
     stroki_tablitsy = [
         (
-            m.get("nomer", ""),
-            m.get("nazvanie", "")[:50],
-            m.get("tip", ""),
-            m.get("sostoyanie", ""),
-            str(m.get("obiem_sredstv", "")),
+            meropriyatie.get("nomer", ""),
+            meropriyatie.get("nazvanie", "")[:50],
+            meropriyatie.get("tip", ""),
+            meropriyatie.get("sostoyanie", ""),
+            str(meropriyatie.get("obiem_sredstv", "")),
         )
-        for m in meropriyatiya
+        for meropriyatie in meropriyatiya
     ]
     return tablitsa_v_markdown(
         ["№", "Название", "Тип", "Статус", "Объём средств"],
@@ -148,7 +150,9 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, kontekst: Context) -> str:
         )
     rekomendacii = dannye.get("rekomendacii", [])
     if rekomendacii:
-        stroki.append(f"- Рекомендации: {', '.join(str(r)[:80] for r in rekomendacii[:5])}")
+        stroki.append(
+            f"- Рекомендации: {', '.join(str(rekomendatsiya)[:80] for rekomendatsiya in rekomendacii[:5])}"
+        )
     if dannye.get("ispolnenie"):
         stroki.append(f"- Исполнение: {dannye['ispolnenie']}")
     stroki.append(f"- Источник: {dannye.get('istochnik', 'ach.gov.ru')}")
@@ -220,12 +224,12 @@ async def poisk_narusheniy(
         )
     stroki_tablitsy = [
         (
-            n.get("organizaciya", ""),
-            n.get("tip_narusheniya", ""),
-            n.get("opisanie", "")[:60],
-            str(n.get("summa", "")),
+            narushenie.get("organizaciya", ""),
+            narushenie.get("tip_narusheniya", ""),
+            narushenie.get("opisanie", "")[:60],
+            str(narushenie.get("summa", "")),
         )
-        for n in narusheniya
+        for narushenie in narusheniya
     ]
     zagolovok = f"**Выявленные нарушения** — найдено: {len(narusheniya)}\n\n"
     return zagolovok + tablitsa_v_markdown(

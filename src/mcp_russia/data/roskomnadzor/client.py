@@ -165,9 +165,11 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [_razobrat_smi(s) for s in elementy if isinstance(s, dict)]
+                return [
+                    _razobrat_smi(element) for element in elementy if isinstance(element, dict)
+                ]
         if isinstance(dannye, list):
-            return [_razobrat_smi(s) for s in dannye if isinstance(s, dict)]
+            return [_razobrat_smi(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []
     except Exception:
         logger.exception("Ошибка при поиске СМИ")

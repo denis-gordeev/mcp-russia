@@ -47,7 +47,9 @@ async def poisk_senatorov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_senator(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
 
@@ -57,16 +59,18 @@ async def poisk_senatorov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_senator(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_senator(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("data.gov.ru API недоступен")
 
     if subiekt or komitet:
         return [
-            s
-            for s in SENATORY_SPRAVOCHNIK
-            if (not subiekt or subiekt.lower() in s.get("subiekt", "").lower())
-            and (not komitet or komitet.lower() in s.get("komitet", "").lower())
+            senator
+            for senator in SENATORY_SPRAVOCHNIK
+            if (not subiekt or subiekt.lower() in senator.get("subiekt", "").lower())
+            and (not komitet or komitet.lower() in senator.get("komitet", "").lower())
         ]
 
     return SENATORY_SPRAVOCHNIK
@@ -89,9 +93,9 @@ async def info_senatora(identifikator_senatora: str) -> dict[str, Any] | None:
     except Exception:
         logger.debug("sovfed.ru API недоступен для сенатора %s", identifikator_senatora)
 
-    for s in SENATORY_SPRAVOCHNIK:
-        if identifikator_senatora in (s.get("familiya", ""), str(s.get("nomer", ""))):
-            return s
+    for senator in SENATORY_SPRAVOCHNIK:
+        if identifikator_senatora in (senator.get("familiya", ""), str(senator.get("nomer", ""))):
+            return senator
     return None
 
 
@@ -102,7 +106,9 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_komitet(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комитетов")
 
@@ -116,7 +122,9 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
         dannye = await http_poluchit(adres_url, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [_razobrat_komitet(p) for p in elementy if isinstance(p, dict)]
+            return [
+                _razobrat_komitet(element) for element in elementy if isinstance(element, dict)
+            ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комиссий")
 
@@ -145,7 +153,9 @@ async def poisk_zakonoproektov(
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_zakonoproekt(p) for p in elementy if isinstance(p, dict)]
+        return [
+            _razobrat_zakonoproekt(element) for element in elementy if isinstance(element, dict)
+        ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
         return []
@@ -167,7 +177,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_zasedanie(p) for p in elementy if isinstance(p, dict)]
+        return [_razobrat_zasedanie(element) for element in elementy if isinstance(element, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
         return []

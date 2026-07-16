@@ -245,7 +245,9 @@ async def poluchit_frakcii() -> list[Frakciya]:
     Возвращает:
         Список фракций.
     """
-    return [Frakciya(kod=f["kod"], nazvanie=f["nazvanie"]) for f in FRAKCII]
+    return [
+        Frakciya(kod=fraktsiya["kod"], nazvanie=fraktsiya["nazvanie"]) for fraktsiya in FRAKCII
+    ]
 
 
 def poluchit_sozyvy() -> list[dict[str, str]]:

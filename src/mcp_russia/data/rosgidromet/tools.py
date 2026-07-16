@@ -25,7 +25,9 @@ async def spisok_stanciy(kontekst: Context) -> str:
     await kontekst.info("Запрос списка станций мониторинга...")
     stancii = client.poluchit_spisok_stantsiy()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"], s["subiekt"]) for s in stancii]
+    stroki_tablitsy = [
+        (stantsiya["kod"], stantsiya["nazvanie"], stantsiya["subiekt"]) for stantsiya in stancii
+    ]
     zagolovok = "**Станции мониторинга Росгидромета**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
 
@@ -41,11 +43,11 @@ async def spisok_tipov_dannykh(kontekst: Context) -> str:
     eko = client.poluchit_spisok_tipov_eko()
 
     stroki = ["**Типы метеорологических данных**\n"]
-    stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in meteo]
+    stroki_tablitsy = [(tip_meteo["kod"], tip_meteo["nazvanie"]) for tip_meteo in meteo]
     stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
     stroki.append("\n**Типы экологических данных**\n")
-    stroki_tablitsy = [(e["kod"], e["nazvanie"]) for e in eko]
+    stroki_tablitsy = [(tip_eko["kod"], tip_eko["nazvanie"]) for tip_eko in eko]
     stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
     return "\n".join(stroki)
@@ -118,16 +120,20 @@ async def prognoz_pogody(
         )
 
     stroki = [f"**Прогноз погоды** — {len(prognoz)} дней\n"]
-    for p in prognoz:
-        stroki.append(f"**{p.data}**")
-        if p.temperatura_dnem is not None:
-            stroki.append(f"- Днём: {formatirovat_chislo_ru(p.temperatura_dnem, 1)}°C")
-        if p.temperatura_nochyu is not None:
-            stroki.append(f"- Ночью: {formatirovat_chislo_ru(p.temperatura_nochyu, 1)}°C")
-        if p.osadki_veroyatnost is not None:
-            stroki.append(f"- Осадки: {formatirovat_chislo_ru(p.osadki_veroyatnost, 0)}%")
-        if p.opisaniye:
-            stroki.append(f"- {p.opisaniye}")
+    for prognoz_item in prognoz:
+        stroki.append(f"**{prognoz_item.data}**")
+        if prognoz_item.temperatura_dnem is not None:
+            stroki.append(f"- Днём: {formatirovat_chislo_ru(prognoz_item.temperatura_dnem, 1)}°C")
+        if prognoz_item.temperatura_nochyu is not None:
+            stroki.append(
+                f"- Ночью: {formatirovat_chislo_ru(prognoz_item.temperatura_nochyu, 1)}°C"
+            )
+        if prognoz_item.osadki_veroyatnost is not None:
+            stroki.append(
+                f"- Осадки: {formatirovat_chislo_ru(prognoz_item.osadki_veroyatnost, 0)}%"
+            )
+        if prognoz_item.opisaniye:
+            stroki.append(f"- {prognoz_item.opisaniye}")
         stroki.append("")
 
     stroki.append("- Источник: Open-Meteo / Росгидромет")
@@ -164,11 +170,11 @@ async def ekologiya_regiona(
         )
 
     stroki = [f"**Экологическая обстановка** — измерений: {len(dannye)}\n"]
-    for d in dannye[:10]:
-        stroka = f"- {d.gorod} ({d.tip}): {d.pokazatel}"
-        if d.znachenie is not None:
-            stroka += f" = {formatirovat_chislo_ru(d.znachenie, 2)}"
-        if d.prevyshenie:
+    for zapis in dannye[:10]:
+        stroka = f"- {zapis.gorod} ({zapis.tip}): {zapis.pokazatel}"
+        if zapis.znachenie is not None:
+            stroka += f" = {formatirovat_chislo_ru(zapis.znachenie, 2)}"
+        if zapis.prevyshenie:
             stroka += " ⚠️ ПРЕВЫШЕНИЕ нормы"
         stroki.append(stroka)
 
@@ -199,14 +205,16 @@ async def preduprezhdeniya(subiekt: str = "", kontekst: Context | None = None) -
         )
 
     stroki = [f"**Активные предупреждения** — {len(dannye)}\n"]
-    for p in dannye:
-        stroki.append(f"⚠️ **{p.tip}** — {p.subiekt}, {p.gorod}")
-        stroki.append(f"   {p.opisanie}")
-        if p.data_nachala:
-            stroki.append(f"   С: {p.data_nachala}")
-        if p.data_okonchaniya:
-            stroki.append(f"   По: {p.data_okonchaniya}")
-        stroki.append(f"   Уровень опасности: {p.uroven_opasnosti}")
+    for preduprezhdenie in dannye:
+        stroki.append(
+            f"⚠️ **{preduprezhdenie.tip}** — {preduprezhdenie.subiekt}, {preduprezhdenie.gorod}"
+        )
+        stroki.append(f"   {preduprezhdenie.opisanie}")
+        if preduprezhdenie.data_nachala:
+            stroki.append(f"   С: {preduprezhdenie.data_nachala}")
+        if preduprezhdenie.data_okonchaniya:
+            stroki.append(f"   По: {preduprezhdenie.data_okonchaniya}")
+        stroki.append(f"   Уровень опасности: {preduprezhdenie.uroven_opasnosti}")
         stroki.append("")
 
     stroki.append("- Источник: Open-Meteo / Росгидромет")
@@ -243,11 +251,11 @@ async def sputnik_monitoring(
         )
 
     stroki = [f"**Спутниковый мониторинг** — снимков: {len(dannye)}\n"]
-    for s in dannye[:5]:
-        stroki.append(f"- {s.subiekt} ({s.data_syomki}): {s.tip_dannykh}")
-        stroki.append(f"  Спутник: {s.sputnik}, Разрешение: {s.razreshenie}")
-        if s.izobrazhenie_ssylka:
-            stroki.append(f"  Изображение: {s.izobrazhenie_ssylka}")
+    for snimok in dannye[:5]:
+        stroki.append(f"- {snimok.subiekt} ({snimok.data_syomki}): {snimok.tip_dannykh}")
+        stroki.append(f"  Спутник: {snimok.sputnik}, Разрешение: {snimok.razreshenie}")
+        if snimok.izobrazhenie_ssylka:
+            stroki.append(f"  Изображение: {snimok.izobrazhenie_ssylka}")
         stroki.append("")
 
     if len(dannye) > 5:

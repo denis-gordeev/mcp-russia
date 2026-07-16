@@ -2,6 +2,95 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-16 (восемьдесят первый проход — русификация однобуквенных переменных циклов/comprehensions, имён тестовых функций, диаграмм, документации)
+
+### Выполнено
+
+- **Русификация однобуквенных переменных в циклах `for` и генераторах** (~249 замен в 50+ файлах):
+  - cbrf/client.py: `c` → `kod` (в `kody`)
+  - rosapi/client.py: `s` → `predlozhenie` (в `predlozheniya`), `b` → `bank` (в `banki_syranye`)
+  - rosapi/tools.py: `h` → `prazdnik` (в `prazdniki`)
+  - rosstat/tools.py: `r` → `region`, `p` → `pokazatel`/`indikator`, `d` → `zapis`, `v` → `vid`
+  - rosstat/client.py: `r` → `region`, `p` → `pokazatel`, `v` → `vid`/`vid_deyatelnosti`
+  - minobrnauki/tools.py: `t` → `tip`, `f` → `forma`/`okrug`, `u` → `uroven`, `g` → `grant`, `s` → `status`, `r` → `pozitsiya`/`rezultat`
+  - minobrnauki/client.py: `r` → `zapis`
+  - kaznacheistvo/tools.py: `v` → `vid`, `k` → `kategoriya`, `u` → `uchastnik`/`uchrezhdenie`, `t` → `transfer`
+  - kaznacheistvo/client.py: `p` → `element` (3 вхождения)
+  - minzdrav/tools.py: `p` → `pokazatel`, `z` → `zapis`, `t` → `tip`, `s` → `spetsialnost`, `m` → `klass`
+  - minzdrav/client.py: `p` → `element` (4 вхождения)
+  - zakupki/tools.py: `z` → `zakupka`, `k` → `kontrakt`, `s` → `status`/`sposob`, `p` → `plan`
+  - fns/tools.py: `p` → `proverka`, `n` → `nachislenie`
+  - rosreestr/client.py: `r` → `pravo`, `f` → `obiekt`
+  - rosreestr/tools.py: `r` → `pravo`
+  - rosreestr/constants.py: `t` → `tip`, `k` → `kategoriya`, `v` → `vid`, `s` → `status`, `f` → `forma`
+  - rosaudit/tools.py: `n` → `napravlenie`/`narushenie`, `t` → `tip`, `s` → `subiekt`, `m` → `meropriyatie`, `r` → `rekomendatsiya`
+  - rosaudit/client.py: `p` → `element` (2 вхождения)
+  - rospotrebnadzor/tools.py: `n` → `napravlenie`, `t` → `tip`, `k` → `kategoriya`, `r` → `upravlenie`, `p` → `proverka`/`narushenie`, `s` → `sanpin`, `z` → `zhaloba`
+  - rospotrebnadzor/client.py: `p` → `element`/`zapis`, `z` → `zapis`
+  - rosprirodnadzor/tools.py: `v` → `vid`, `k` → `kategoriya`, `p` → `proverka`/`platezh`
+  - rosprirodnadzor/client.py: `p` → `element` (7 вхождений)
+  - sovfed/tools.py: `s` → `senator`, `k` → `komitet`/`komissiya`, `z` → `zakonoproekt`/`zasedanie`
+  - sovfed/client.py: `p` → `element` (5 вхождений), `s` → `senator`
+  - publikatsii/tools.py: `t` → `tip`, `i` → `istochnik`, `s` → `status`, `a` → `rezultat`, `p` → `publikatsiya`
+  - gosduma/tools.py: `d` → `deputat`, `f` → `fraktsiya`, `k` → `komitet`, `s` → `sozyv`, `b` → `zakonoproekt`, `v` → `golosovanie`
+  - gosduma/client.py: `f` → `fraktsiya`
+  - kad_arbitrazh/tools.py: `d` → `delo`, `a` → `akt`, `s` → `storona`, `k` → `kategoriya`, `i` → `instantsiya`, `t` → `tip`
+  - kad_arbitrazh/client.py: `s` → `storona`/`zapis`
+  - mchs/tools.py: `v` → `vid`, `k` → `klass`, `t` → `tip`, `p` → `pozhar`/`preduprezhdenie`, `c` → `chs`, `m` → `monitoring`, `g` → `gidro`
+  - mchs/client.py: `p` → `element` (7 вхождений)
+  - fssp/tools.py: `v` → `vid`, `s` → `status`, `k` → `kategoriya`, `r` → `rezultat`
+  - fssp/client.py: `r` → `zapis`, `p` → `proizvodstvo`
+  - gibdd/tools.py: `t` → `tip`, `k` → `kategoriya`, `n` → `narushenie`, `s` → `status`, `r` → `region`/`zapis`, `d` → `zapis`, `w` → `razyskivaemyy`
+  - cekrf/tools.py: `t` → `tip`, `s` → `subiekt`, `d` → `dolzhnost`, `p` → `partiya`, `v` → `vybory_item`, `k` → `kandidat`, `r` → `rezultat`
+  - cekrf/client.py: `s` → `subiekt`, `d` → `dolzhnost`, `p` → `partiya`
+  - rosgidromet/tools.py: `s` → `stantsiya`/`snimok`, `m` → `tip_meteo`, `e` → `tip_eko`, `p` → `prognoz_item`/`preduprezhdenie`, `d` → `zapis`
+  - rosgidromet/client.py: `s` → `stantsiya`, `r` → `rezultat`
+  - rosvodresursy/tools.py: `t` → `tip`, `g` → `gidro_stantsiya`, `v` → `vodokhranilishche`/`zapis`, `z` → `zapis`
+  - rosvodresursy/client.py: `p` → `element`, `v` → `vodokhranilishche`
+  - rosselkhoznadzor/tools.py: `v` → `vid`, `k` → `kategoriya`, `t` → `tip`, `p` → `proverka`/`preduprezhdenie`, `r` → `registratsiya`, `s` → `sertifikat`
+  - rosselkhoznadzor/client.py: `p` → `element` (6 вхождений)
+  - roskomnadzor/tools.py: `n` → `napravlenie`, `t` → `tip_licenzii`/`tip_smi`, `k` → `kategoriya`, `r` → `reestr`/`zapis_reestra`, `s` → `sredstvo`
+  - roskomnadzor/client.py: `s` → `element`/`zapis`
+  - _shared/planner.py: `d` → `nomer_etapa`
+  - _shared/formatting.py: `h` → `zagolovok`
+  - agenty/deloproizvodstvo/tools.py: `p` → `abzats`/`problema`, `r` → `rekomendatsiya`
+- **Русификация имён тестовых функций** (7 функций в rosstat/test_tools.py):
+  - `test_spisok_regionov_has_many` → `..._imeet_mnogo`
+  - `test_constants_emiss_kody_complete` → `..._polnyy`
+  - `test_sravnenie_regionov_invalid_pokazatel` → `..._nekorrektnyy_pokazatel`
+  - `test_indikator_dannye_with_region` → `..._s_regionom`
+  - `test_constants_subiekty_no_duplicates` → `..._bez_dublikatov`
+  - `test_constants_new_emiss_kody` → `..._novyy_emiss_kody`
+  - `test_constants_new_regionalnye_pokazateli` → `..._novyy_regionalnye_pokazateli`
+- **Русификация тестовых строковых литералов**: `"invalid_code"` → `"nekorrektnyy_kod"` (rosstat/test_tools.py)
+- **Русификация переменной `now` → `seychas`** в deloproizvodstvo/test_tools.py (3 вхождения; `datetime.now()` оставлен — метод stdlib)
+- **Русификация `APIs:` → `API:`** в документации (15 замен в 2 файлах):
+  - docs/examples/zhurnalist-stati.md: 5 замен
+  - docs/examples/politolog.md: 10 замен
+- **Русификация CONTRIBUTING.md**: `enum` → `перечисления`, `tools:` → `инструменты:`
+- **Русификация cliff.toml**: `<!-- generated by git-cliff -->` → `<!-- сгенерировано git-cliff -->`
+- **Русификация CHANGELOG.md**: `<!-- generated by git-cliff -->` → `<!-- сгенерировано git-cliff -->`
+- **Русификация имён файлов диаграмм** в scripts/generate_diagrams.py (4 замены):
+  - `system_overview` → `obzor_sistemy`
+  - `feature_anatomy` → `anatomiya_modulya`
+  - `auto_registry_flow` → `potok_avtoobnaruzheniya`
+  - `data_flow` → `potok_dannykh`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 32 файла переформатировано, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **Однобуквенные переменные → осмысленные имена**: каждый идентификатор согласован с типом коллекции (`for region in regiony`, `for zapis in dannye`, `for element in elementy` и т.д.); устранён последний массовый класс английских артефактов
+- **`APIs:` → `API:`**: устранён английский множественный суффикс «s»; в русском языке «API» — неизменяемое заимствование
+- **`enum` → `перечисления`**: устранён английский технический термин в пользу устоявшегося русского эквивалента, уже использовавшегося в других местах проекта
+- **Имена файлов диаграмм → русская транслитерация**: `system_overview` → `obzor_sistemy` и т.д.; синхронизировано с конвенцией проекта
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг
+
 ## Статус раунда 2026-07-16 (восьмидесятый проход — русификация однобуквенных переменных, lambda-параметров, Field-описаний, тестовых строковых литералов, документации)
 
 ### Выполнено

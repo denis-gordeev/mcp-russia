@@ -23,7 +23,7 @@ def tablitsa_v_markdown(zagolovki: Sequence[str], stroki_tablitsy: Sequence[Sequ
     if not stroki_tablitsy:
         return "Результаты не найдены."
 
-    stroka_zagolovka = "| " + " | ".join(str(h) for h in zagolovki) + " |"
+    stroka_zagolovka = "| " + " | ".join(str(zagolovok) for zagolovok in zagolovki) + " |"
     razdelitel = "| " + " | ".join("---" for _ in zagolovki) + " |"
     stroki_tela = [
         "| " + " | ".join(str(znachenie_yacheyki) for znachenie_yacheyki in stroka) + " |"

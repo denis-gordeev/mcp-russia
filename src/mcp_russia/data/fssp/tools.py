@@ -25,7 +25,7 @@ async def spisok_vidov_proizvodstv(kontekst: Context) -> str:
     Возвращает:
         Список видов (имущественные, неимущественные, штрафы и т.д.).
     """
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in VidyIspolnitelnyhProizvodstv]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in VidyIspolnitelnyhProizvodstv]
     return tablitsa_v_markdown(["Код", "Вид производства"], stroki_tablitsy) + _ISTOCHNIK
 
 
@@ -35,7 +35,7 @@ async def spisok_statusov_proizvodstva(kontekst: Context) -> str:
     Возвращает:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in StatusyProizvodstva]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in StatusyProizvodstva]
     return tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK
 
 
@@ -57,7 +57,9 @@ async def spisok_kategoriy_dolzhnikov(kontekst: Context) -> str:
     Возвращает:
         Список категорий (физлицо, юрлицо, ИП).
     """
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KategoriiDolzhnikov]
+    stroki_tablitsy = [
+        (kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in KategoriiDolzhnikov
+    ]
     return tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy) + _ISTOCHNIK
 
 
@@ -137,14 +139,14 @@ async def poisk_dolzhnika(
 
     stroki_tablitsy = [
         (
-            r.get("nomer", ""),
-            r.get("dolzhnik", ""),
-            r.get("subiekt", ""),
-            r.get("summa", ""),
-            r.get("otdel_pristavov", ""),
-            r.get("okonchanie_ip", "") or "в производстве",
+            rezultat.get("nomer", ""),
+            rezultat.get("dolzhnik", ""),
+            rezultat.get("subiekt", ""),
+            rezultat.get("summa", ""),
+            rezultat.get("otdel_pristavov", ""),
+            rezultat.get("okonchanie_ip", "") or "в производстве",
         )
-        for r in rezultaty
+        for rezultat in rezultaty
     ]
     return (
         tablitsa_v_markdown(
@@ -175,12 +177,12 @@ async def ogranicheniya_dolzhnika(
 
     stroki_tablitsy = [
         (
-            r.get("nomer", ""),
-            r.get("dolzhnik", ""),
-            r.get("subiekt", ""),
-            r.get("okonchanie_ip", "") or "действует",
+            rezultat.get("nomer", ""),
+            rezultat.get("dolzhnik", ""),
+            rezultat.get("subiekt", ""),
+            rezultat.get("okonchanie_ip", "") or "действует",
         )
-        for r in rezultaty
+        for rezultat in rezultaty
     ]
     return (
         tablitsa_v_markdown(
@@ -206,12 +208,12 @@ async def rozysk_dolzhnika(kontekst: Context, fio: str) -> str:
 
     stroki_tablitsy = [
         (
-            r.get("nomer", ""),
-            r.get("dolzhnik", ""),
-            r.get("subiekt", ""),
-            r.get("otdel_pristavov", ""),
+            rezultat.get("nomer", ""),
+            rezultat.get("dolzhnik", ""),
+            rezultat.get("subiekt", ""),
+            rezultat.get("otdel_pristavov", ""),
         )
-        for r in rezultaty
+        for rezultat in rezultaty
     ]
     return (
         tablitsa_v_markdown(

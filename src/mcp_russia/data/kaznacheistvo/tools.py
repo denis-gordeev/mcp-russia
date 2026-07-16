@@ -18,7 +18,7 @@ async def spisok_vidov_byudzhetov(kontekst: Context) -> str:
     """Получить список видов бюджетов бюджетной системы РФ."""
     await kontekst.info("Запрос списка видов бюджетов...")
     vidy = client.poluchit_spisok_vidov_byudzhetov()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды бюджетов бюджетной системы РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид бюджета"], stroki_tablitsy)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_raskhodov(kontekst: Context) -> str:
     """Получить список категорий расходов бюджета."""
     await kontekst.info("Запрос списка категорий расходов...")
     kategorii = client.poluchit_spisok_kategoriy_raskhodov()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
+    stroki_tablitsy = [(kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in kategorii]
     zagolovok = "**Категории расходов бюджета**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Категория"], stroki_tablitsy)
 
@@ -101,12 +101,12 @@ async def poisk_uchastnikov_bp(
         )
     stroki_tablitsy = [
         (
-            u.get("inn", ""),
-            u.get("nazvanie", "")[:50],
-            u.get("tip_uchastnika", ""),
-            u.get("byudzhet", ""),
+            uchastnik.get("inn", ""),
+            uchastnik.get("nazvanie", "")[:50],
+            uchastnik.get("tip_uchastnika", ""),
+            uchastnik.get("byudzhet", ""),
         )
-        for u in uchastniki
+        for uchastnik in uchastniki
     ]
     zagolovok = f"**Участники бюджетного процесса** — найдено: {len(uchastniki)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -148,12 +148,12 @@ async def poisk_uchrezhdeniy(
         )
     stroki_tablitsy = [
         (
-            u.get("inn", ""),
-            u.get("nazvanie", "")[:50],
-            u.get("tip", ""),
-            u.get("osnovnoj_vid_deyatelnosti", "")[:40],
+            uchrezhdenie.get("inn", ""),
+            uchrezhdenie.get("nazvanie", "")[:50],
+            uchrezhdenie.get("tip", ""),
+            uchrezhdenie.get("osnovnoj_vid_deyatelnosti", "")[:40],
         )
-        for u in uchrezhdeniya
+        for uchrezhdenie in uchrezhdeniya
     ]
     zagolovok = f"**Учреждения** — найдено: {len(uchrezhdeniya)}\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -187,13 +187,13 @@ async def mezhbyudzhetnye_transferty(
         )
     stroki_tablitsy = [
         (
-            t.get("vid", ""),
-            t.get("otpravitel", "")[:30],
-            t.get("poluchatel", "")[:30],
-            str(t.get("summa", "")),
-            t.get("god", ""),
+            transfer.get("vid", ""),
+            transfer.get("otpravitel", "")[:30],
+            transfer.get("poluchatel", "")[:30],
+            str(transfer.get("summa", "")),
+            transfer.get("god", ""),
         )
-        for t in transferty
+        for transfer in transferty
     ]
     zagolovok = f"**Межбюджетные трансферты** — найдено: {len(transferty)}\n\n"
     return zagolovok + tablitsa_v_markdown(

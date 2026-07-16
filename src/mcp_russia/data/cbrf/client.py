@@ -91,7 +91,9 @@ async def poluchit_valyuty_spisok(kody: list[str]) -> list[ZnachenieValyuty]:
     dannye_valyut = rezultat.get("Valute", {})
     stroka_daty = rezultat.get("Date", "")
 
-    return [_razobrat_valyutu(c, dannye_valyut, stroka_daty) for c in kody if c in dannye_valyut]
+    return [
+        _razobrat_valyutu(kod, dannye_valyut, stroka_daty) for kod in kody if kod in dannye_valyut
+    ]
 
 
 async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:

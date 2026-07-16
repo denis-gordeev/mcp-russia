@@ -34,9 +34,9 @@ from .schemas import (
 
 def _nayti_stantsiyu(kod: str) -> dict[str, Any] | None:
     """Поиск станции мониторинга по коду."""
-    for s in STANCII_MONITORINGA:
-        if s["kod"] == kod:
-            return s
+    for stantsiya in STANCII_MONITORINGA:
+        if stantsiya["kod"] == kod:
+            return stantsiya
     return None
 
 
@@ -112,7 +112,9 @@ async def poluchit_ekologiyu(
     """
     stantsii = STANCII_MONITORINGA
     if gorod:
-        stantsii = [s for s in stantsii if gorod.lower() in s["nazvanie"].lower()]
+        stantsii = [
+            stantsiya for stantsiya in stantsii if gorod.lower() in stantsiya["nazvanie"].lower()
+        ]
     if not stantsii:
         stantsii = STANCII_MONITORINGA[:5]
 
@@ -134,7 +136,7 @@ async def poluchit_ekologiyu(
             continue
 
     if tip:
-        rezultaty = [r for r in rezultaty if r.tip == tip]
+        rezultaty = [rezultat for rezultat in rezultaty if rezultat.tip == tip]
 
     return rezultaty
 
@@ -154,10 +156,10 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
     stantsii = STANCII_MONITORINGA
     if subiekt:
         stantsii = [
-            s
-            for s in stantsii
-            if subiekt.lower() in s.get("subiekt", "").lower()
-            or subiekt.lower() in s.get("nazvanie", "").lower()
+            stantsiya
+            for stantsiya in stantsii
+            if subiekt.lower() in stantsiya.get("subiekt", "").lower()
+            or subiekt.lower() in stantsiya.get("nazvanie", "").lower()
         ]
     if not stantsii:
         stantsii = STANCII_MONITORINGA

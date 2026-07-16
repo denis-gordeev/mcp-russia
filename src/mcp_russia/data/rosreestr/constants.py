@@ -59,8 +59,8 @@ FormySobstvennosti = [
     {"kod": "obschaya_sovmestnaya", "nazvanie": "Общая совместная собственность"},
 ]
 
-TIPY_NEDVIZIMOSTI_MAP = {t["kod"]: t["nazvanie"] for t in TipyNedvizhimosti}
-KATEGORII_ZEMEL_MAP = {k["kod"]: k["nazvanie"] for k in KategoriiZemel}
-VIDY_ISPOLZOVANIYA_MAP = {v["kod"]: v["nazvanie"] for v in VidyIspolzovaniya}
-STATUSY_UCHE_TA_MAP = {s["kod"]: s["nazvanie"] for s in StatusyObiekta}
-FORMY_SOBSTVENNOSTI_MAP = {f["kod"]: f["nazvanie"] for f in FormySobstvennosti}
+TIPY_NEDVIZIMOSTI_MAP = {tip["kod"]: tip["nazvanie"] for tip in TipyNedvizhimosti}
+KATEGORII_ZEMEL_MAP = {kategoriya["kod"]: kategoriya["nazvanie"] for kategoriya in KategoriiZemel}
+VIDY_ISPOLZOVANIYA_MAP = {vid["kod"]: vid["nazvanie"] for vid in VidyIspolzovaniya}
+STATUSY_UCHE_TA_MAP = {status["kod"]: status["nazvanie"] for status in StatusyObiekta}
+FORMY_SOBSTVENNOSTI_MAP = {forma["kod"]: forma["nazvanie"] for forma in FormySobstvennosti}

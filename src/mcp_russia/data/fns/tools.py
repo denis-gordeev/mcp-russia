@@ -163,7 +163,10 @@ async def proverki_organizacii(inn: str, kontekst: Context | None = None) -> str
             f"Планы проверок: pb.nalog.ru"
         )
 
-    stroki_tablitsy = [(p.tip_proverki, p.period_proverki, p.sostoyanie) for p in dannye]
+    stroki_tablitsy = [
+        (proverka.tip_proverki, proverka.period_proverki, proverka.sostoyanie)
+        for proverka in dannye
+    ]
     zagolovok = f"**Налоговые проверки** — ИНН {inn}\n\n"
     return zagolovok + tablitsa_v_markdown(["Тип", "Период", "Статус"], stroki_tablitsy)
 
@@ -195,8 +198,12 @@ async def nalogovye_nachisleniya(
         )
 
     stroki_tablitsy = [
-        (n.vid_naloga, n.period, formatirovat_chislo_ru(n.summa, 2) if n.summa else "—")
-        for n in dannye
+        (
+            nachislenie.vid_naloga,
+            nachislenie.period,
+            formatirovat_chislo_ru(nachislenie.summa, 2) if nachislenie.summa else "—",
+        )
+        for nachislenie in dannye
     ]
     zagolovok = f"**Налоговые начисления** — ИНН {inn}\n\n"
     return zagolovok + tablitsa_v_markdown(["Вид налога", "Период", "Сумма"], stroki_tablitsy)

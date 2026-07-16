@@ -158,13 +158,13 @@ async def pokazateli_zdorovya(
         )
     stroki_tablitsy = [
         (
-            p.get("nazvanie", ""),
-            str(p.get("znachenie", "")),
-            p.get("ed_izm", ""),
-            str(p.get("god", "")),
-            p.get("subiekt", ""),
+            pokazatel.get("nazvanie", ""),
+            str(pokazatel.get("znachenie", "")),
+            pokazatel.get("ed_izm", ""),
+            str(pokazatel.get("god", "")),
+            pokazatel.get("subiekt", ""),
         )
-        for p in dannye
+        for pokazatel in dannye
     ]
     return tablitsa_v_markdown(
         ["Показатель", "Значение", "Ед. изм.", "Год", "Регион"],
@@ -205,13 +205,13 @@ async def statistika_zabolevaniy(
         return zagolovok
     stroki_tablitsy = [
         (
-            z.get("kod_mkb", ""),
-            z.get("nazvanie", ""),
-            str(z.get("chelovek_zabolelo", "")),
-            str(z.get("letalnykh_sluchaev", "")),
-            str(z.get("god", "")),
+            zapis.get("kod_mkb", ""),
+            zapis.get("nazvanie", ""),
+            str(zapis.get("chelovek_zabolelo", "")),
+            str(zapis.get("letalnykh_sluchaev", "")),
+            str(zapis.get("god", "")),
         )
-        for z in dannye
+        for zapis in dannye
     ]
     return tablitsa_v_markdown(
         ["МКБ-10", "Заболевание", "Заболевших", "Летальных", "Год"],
@@ -227,7 +227,7 @@ async def spravochnik_mo(kontekst: Context) -> str:
     """
     await kontekst.info("Запрос справочника типов медицинских организаций...")
     tipy = client.poluchit_tipy_mo()
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     zagolovok = "**Типы медицинских организаций**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Тип организации"], stroki_tablitsy)
 
@@ -240,7 +240,9 @@ async def spravochnik_spetsialnostey(kontekst: Context) -> str:
     """
     await kontekst.info("Запрос справочника врачебных специальностей...")
     spetsialnosti = client.poluchit_spetsialnosti()
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in spetsialnosti]
+    stroki_tablitsy = [
+        (spetsialnost["kod"], spetsialnost["nazvanie"]) for spetsialnost in spetsialnosti
+    ]
     zagolovok = "**Врачебные специальности**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Специальность"], stroki_tablitsy)
 
@@ -253,6 +255,6 @@ async def spravochnik_mkb10(kontekst: Context) -> str:
     """
     await kontekst.info("Запрос справочника МКБ-10...")
     mkb_classes = client.poluchit_klassy_mkb10()
-    stroki_tablitsy = [(m["kod"], m["nazvanie"]) for m in mkb_classes]
+    stroki_tablitsy = [(klass["kod"], klass["nazvanie"]) for klass in mkb_classes]
     zagolovok = "**Классы МКБ-10**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Класс заболеваний"], stroki_tablitsy)

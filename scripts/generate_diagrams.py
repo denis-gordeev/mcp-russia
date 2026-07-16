@@ -3,10 +3,10 @@
 """Генерация диаграмм архитектуры для документации mcp-russia.
 
 Создаёт 4 PNG-диаграммы в docs/concepts/img/:
-  - system_overview.png
-  - feature_anatomy.png
-  - auto_registry_flow.png
-  - data_flow.png
+  - obzor_sistemy.png
+  - anatomiya_modulya.png
+  - potok_avtoobnaruzheniya.png
+  - potok_dannykh.png
 
 Требования: graphviz (brew install graphviz), diagrams (pip install diagrams)
 Использование: python scripts/generate_diagrams.py
@@ -35,7 +35,7 @@ def obzor_sistemy() -> None:
     """Диаграмма 1: Высокоуровневая архитектура системы."""
     with Diagram(
         "mcp-russia — Обзор системы",
-        filename=str(KATALOG_VYVODA / "system_overview"),
+        filename=str(KATALOG_VYVODA / "obzor_sistemy"),
         direction="TB",
         show=False,
         graph_attr=ATRIBUBY_GRAFA,
@@ -118,7 +118,7 @@ def anatomiya_modulya() -> None:
     """Диаграмма 2: Внутреннее строение пакета модуля."""
     with Diagram(
         "Анатомия модуля (data/rosstat/)",
-        filename=str(KATALOG_VYVODA / "feature_anatomy"),
+        filename=str(KATALOG_VYVODA / "anatomiya_modulya"),
         direction="LR",
         show=False,
         graph_attr=ATRIBUBY_GRAFA,
@@ -149,7 +149,7 @@ def potok_avtoobnaruzheniya() -> None:
     """Диаграмма 3: Блок-схема потока автоматического обнаружения."""
     with Diagram(
         "Автообнаружение — Поток обнаружения",
-        filename=str(KATALOG_VYVODA / "auto_registry_flow"),
+        filename=str(KATALOG_VYVODA / "potok_avtoobnaruzheniya"),
         direction="TB",
         show=False,
         graph_attr=ATRIBUBY_GRAFA,
@@ -182,7 +182,7 @@ def potok_dannykh() -> None:
     """Диаграмма 4: Конвейер потока данных запрос/ответ."""
     with Diagram(
         "Поток данных — Запрос и ответ",
-        filename=str(KATALOG_VYVODA / "data_flow"),
+        filename=str(KATALOG_VYVODA / "potok_dannykh"),
         direction="LR",
         show=False,
         graph_attr={**ATRIBUBY_GRAFA, "nodesep": "0.8"},

@@ -186,13 +186,13 @@ async def prava_na_obekt(kadastrovyy_nomer: str, kontekst: Context) -> str:
         )
 
     stroki_tablitsy = []
-    for r in prava:
+    for pravo in prava:
         stroki_tablitsy.append(
             (
-                r.get("tip_prava", ""),
-                r.get("sobstvennik", "Не указан"),
-                r.get("data_registratsii", ""),
-                r.get("nomer_registratsii", ""),
+                pravo.get("tip_prava", ""),
+                pravo.get("sobstvennik", "Не указан"),
+                pravo.get("data_registratsii", ""),
+                pravo.get("nomer_registratsii", ""),
             )
         )
 

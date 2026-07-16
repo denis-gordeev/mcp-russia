@@ -39,11 +39,13 @@ async def spisok_tipov_vodnykh_obektov(kontekst: Context) -> str:
     gidro = client.poluchit_spisok_tipov_gidro()
 
     stroki = ["**Типы водных объектов**\n"]
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in tipy]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in tipy]
     stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
     stroki.append("\n**Типы гидрологических данных**\n")
-    stroki_tablitsy = [(g["kod"], g["nazvanie"]) for g in gidro]
+    stroki_tablitsy = [
+        (gidro_stantsiya["kod"], gidro_stantsiya["nazvanie"]) for gidro_stantsiya in gidro
+    ]
     stroki.append(tablitsa_v_markdown(["Код", "Тип"], stroki_tablitsy))
 
     return "\n".join(stroki)
@@ -59,8 +61,13 @@ async def spisok_vodokhranilishch(kontekst: Context) -> str:
     vodokhr = client.poluchit_vodokhranilishche_podrobno()
 
     stroki_tablitsy = [
-        (v["nazvanie"], v["subiekt"], str(v.get("obiem_km3", "")), str(v.get("ploshchad_km2", "")))
-        for v in vodokhr
+        (
+            vodokhranilishche["nazvanie"],
+            vodokhranilishche["subiekt"],
+            str(vodokhranilishche.get("obiem_km3", "")),
+            str(vodokhranilishche.get("ploshchad_km2", "")),
+        )
+        for vodokhranilishche in vodokhr
     ]
     zagolovok = "**Крупные водохранилища РФ**\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -179,13 +186,13 @@ async def gidro_monitoring(
 
     stroki_tablitsy = [
         (
-            z.get("post", ""),
-            z.get("vodnyy_obekt", ""),
-            z.get("data_izmereniya", ""),
-            str(z.get("uroven", "")),
-            str(z.get("raskhod", "")),
+            zapis.get("post", ""),
+            zapis.get("vodnyy_obekt", ""),
+            zapis.get("data_izmereniya", ""),
+            str(zapis.get("uroven", "")),
+            str(zapis.get("raskhod", "")),
         )
-        for z in zapisi
+        for zapis in zapisi
     ]
     zagolovok = f"**Данные гидрологического мониторинга** ({tip_dannykh})\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -208,7 +215,14 @@ async def info_vodokhranilishcha(kod: str, kontekst: Context) -> str:
 
     if not dannye:
         vodokhr_spisok = client.poluchit_vodokhranilishche_podrobno()
-        statika = next((v for v in vodokhr_spisok if v["kod"] == kod), None)
+        statika = next(
+            (
+                vodokhranilishche
+                for vodokhranilishche in vodokhr_spisok
+                if vodokhranilishche["kod"] == kod
+            ),
+            None,
+        )
         if statika:
             stroki = [f"**{statika['nazvanie']}** ({statika['subiekt']})"]
             if statika.get("obiem_km3"):
@@ -274,13 +288,13 @@ async def vodopolzovanie_regionov(
 
     stroki_tablitsy = [
         (
-            v.get("subiekt", ""),
-            v.get("god", ""),
-            str(v.get("zabrano_vody_km3", "")),
-            str(v.get("ispolzovano_vody_km3", "")),
-            str(v.get("sbrosheno_stokov_km3", "")),
+            zapis.get("subiekt", ""),
+            zapis.get("god", ""),
+            str(zapis.get("zabrano_vody_km3", "")),
+            str(zapis.get("ispolzovano_vody_km3", "")),
+            str(zapis.get("sbrosheno_stokov_km3", "")),
         )
-        for v in dannye
+        for zapis in dannye
     ]
     zagolovok = f"**Водопользование** — записей: {len(dannye)}\n\n"
     return zagolovok + tablitsa_v_markdown(

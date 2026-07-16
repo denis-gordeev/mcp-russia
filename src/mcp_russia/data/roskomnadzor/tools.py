@@ -23,7 +23,9 @@ async def spisok_napravleniy(kontekst: Context) -> str:
     Возвращает:
         Список направлений с кодами и названиями.
     """
-    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in NAPRAVLENIYA_DEYATELNOSTI]
+    stroki_tablitsy = [
+        (napravlenie["kod"], napravlenie["nazvanie"]) for napravlenie in NAPRAVLENIYA_DEYATELNOSTI
+    ]
     return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
@@ -33,7 +35,9 @@ async def spisok_tipov_licenziy(kontekst: Context) -> str:
     Возвращает:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_LICENZIY_SVYAZI]
+    stroki_tablitsy = [
+        (tip_licenzii["kod"], tip_licenzii["nazvanie"]) for tip_licenzii in TIPY_LICENZIY_SVYAZI
+    ]
     return tablitsa_v_markdown(["Код", "Тип лицензии"], stroki_tablitsy)
 
 
@@ -43,7 +47,9 @@ async def spisok_kategoriy_narusheniy(kontekst: Context) -> str:
     Возвращает:
         Список категорий нарушений (утечка ПД, запрещённый контент и т.д.).
     """
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KATEGORII_NARUSHENIY]
+    stroki_tablitsy = [
+        (kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in KATEGORII_NARUSHENIY
+    ]
     return tablitsa_v_markdown(["Код", "Категория нарушения"], stroki_tablitsy)
 
 
@@ -53,7 +59,7 @@ async def spisok_reestrov(kontekst: Context) -> str:
     Возвращает:
         Справочник реестров (запрещённые сайты, операторы ПД, ОРИ и т.д.).
     """
-    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in REESTR_RKN]
+    stroki_tablitsy = [(reestr["kod"], reestr["nazvanie"]) for reestr in REESTR_RKN]
     return tablitsa_v_markdown(["Код", "Реестр"], stroki_tablitsy)
 
 
@@ -63,7 +69,7 @@ async def spisok_tipov_smi(kontekst: Context) -> str:
     Возвращает:
         Справочник типов СМИ (печатные, сетевые, ТВ, радио и т.д.).
     """
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_SMI]
+    stroki_tablitsy = [(tip_smi["kod"], tip_smi["nazvanie"]) for tip_smi in TIPY_SMI]
     return tablitsa_v_markdown(["Код", "Тип СМИ"], stroki_tablitsy)
 
 
@@ -73,7 +79,9 @@ async def spisok_kategoriy_pd_operatorov(kontekst: Context) -> str:
     Возвращает:
         Справочник категорий операторов ПД.
     """
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KATEGORII_PD_OPERATOROV]
+    stroki_tablitsy = [
+        (kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in KATEGORII_PD_OPERATOROV
+    ]
     return tablitsa_v_markdown(["Код", "Категория оператора"], stroki_tablitsy)
 
 
@@ -124,13 +132,13 @@ async def poisk_smi(kontekst: Context, registracionnyy_nomer: str = "", nazvanie
         return "СМИ не найдены."
     stroki_tablitsy = [
         (
-            s.get("registracionnyy_nomer", ""),
-            s.get("nazvanie", ""),
-            s.get("tip_smi", ""),
-            s.get("uchreditel", ""),
-            s.get("yazyk", ""),
+            sredstvo.get("registracionnyy_nomer", ""),
+            sredstvo.get("nazvanie", ""),
+            sredstvo.get("tip_smi", ""),
+            sredstvo.get("uchreditel", ""),
+            sredstvo.get("yazyk", ""),
         )
-        for s in smi
+        for sredstvo in smi
     ]
     return tablitsa_v_markdown(
         ["Рег. номер", "Название", "Тип", "Учредитель", "Язык"],
@@ -263,7 +271,10 @@ async def zapisi_reestra(
     Возвращает:
         Описание реестра и ссылка на источник.
     """
-    reestr = next((r for r in REESTR_RKN if r["kod"] == kod_reestra), None)
+    reestr = next(
+        (zapis_reestra for zapis_reestra in REESTR_RKN if zapis_reestra["kod"] == kod_reestra),
+        None,
+    )
     if not reestr:
         return f"Реестр «{kod_reestra}» не найден. Используйте spisok_reestrov()."
     stroki = [

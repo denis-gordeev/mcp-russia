@@ -18,7 +18,7 @@ async def spisok_vidov_nadzora(kontekst: Context) -> str:
     """Получить список видов государственного надзора Росприроднадзора."""
     await kontekst.info("Запрос списка видов надзора...")
     vidy = client.poluchit_spisok_vidov_nadzora()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды государственного надзора Росприроднадзора**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид надзора"], stroki_tablitsy)
 
@@ -27,7 +27,7 @@ async def spisok_kategoriy_obnv(kontekst: Context) -> str:
     """Получить список категорий объектов негативного воздействия."""
     await kontekst.info("Запрос списка категорий ОНВ...")
     kategorii = client.poluchit_spisok_kategoriy_obnv()
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in kategorii]
+    stroki_tablitsy = [(kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in kategorii]
     zagolovok = "**Категории объектов негативного воздействия (ОНВ)**\n\n"
     return zagolovok + tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
@@ -36,7 +36,7 @@ async def spisok_vidov_litsenziy_nedra(kontekst: Context) -> str:
     """Получить список видов лицензий на пользование недрами."""
     await kontekst.info("Запрос списка видов лицензий...")
     vidy = client.poluchit_spisok_vidov_litsenziy_nedra()
-    stroki_tablitsy = [(v["kod"], v["nazvanie"]) for v in vidy]
+    stroki_tablitsy = [(vid["kod"], vid["nazvanie"]) for vid in vidy]
     zagolovok = "**Виды лицензий на пользование недрами**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Вид лицензии"], stroki_tablitsy)
 
@@ -70,13 +70,13 @@ async def poisk_proverok(
         )
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("organizaciya", "")[:50],
-            p.get("vid_nadzora", ""),
-            p.get("sostoyanie", ""),
-            str(p.get("vyavleno_narusheniy", "")),
+            proverka.get("nomer", ""),
+            proverka.get("organizaciya", "")[:50],
+            proverka.get("vid_nadzora", ""),
+            proverka.get("sostoyanie", ""),
+            str(proverka.get("vyavleno_narusheniy", "")),
         )
-        for p in proverki
+        for proverka in proverki
     ]
     return tablitsa_v_markdown(
         ["№", "Организация", "Вид надзора", "Статус", "Нарушений"],
@@ -237,13 +237,13 @@ async def ekologicheskie_platezhi(
         )
     stroki_tablitsy = [
         (
-            p.get("nomer", ""),
-            p.get("platelshchik", "")[:40],
-            p.get("tip_platezha", ""),
-            str(p.get("summa", "")),
-            str(p.get("god", "")),
+            platezh.get("nomer", ""),
+            platezh.get("platelshchik", "")[:40],
+            platezh.get("tip_platezha", ""),
+            str(platezh.get("summa", "")),
+            str(platezh.get("god", "")),
         )
-        for p in platezhi
+        for platezh in platezhi
     ]
     zagolovok = f"**Экологические платежи** — найдено: {len(platezhi)}\n\n"
     return zagolovok + tablitsa_v_markdown(

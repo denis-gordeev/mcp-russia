@@ -49,12 +49,12 @@ async def spisok_deputatov(sozyv: str = "", kontekst: Context | None = None) -> 
 
     stroki_tablitsy = [
         (
-            str(d.identifikator),
-            f"{d.familiya} {d.imya} {d.otchestvo}".strip(),
-            d.frakciya,
-            d.komitet,
+            str(deputat.identifikator),
+            f"{deputat.familiya} {deputat.imya} {deputat.otchestvo}".strip(),
+            deputat.frakciya,
+            deputat.komitet,
         )
-        for d in deputats[:50]
+        for deputat in deputats[:50]
     ]
     zagolovok = f"**Депутаты Государственной Думы (созыв {sozyv or 'текущий'})**\n\n"
     zagolovok += f"Найдено: {len(deputats)} депутатов"
@@ -113,7 +113,7 @@ async def spisok_frakcii(kontekst: Context) -> str:
     await kontekst.info("Запрос списка фракций Госдумы...")
     frakcii = client.poluchit_fraktsii()
 
-    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in frakcii]
+    stroki_tablitsy = [(fraktsiya["kod"], fraktsiya["nazvanie"]) for fraktsiya in frakcii]
     zagolovok = "**Фракции Государственной Думы**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Фракция"], stroki_tablitsy)
 
@@ -127,7 +127,7 @@ async def spisok_komitetov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка комитетов Госдумы...")
     komitety = client.poluchit_komitety()
 
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in komitety]
+    stroki_tablitsy = [(komitet["kod"], komitet["nazvanie"]) for komitet in komitety]
     zagolovok = "**Комитеты Государственной Думы**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
@@ -141,7 +141,7 @@ async def spisok_sozyvov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка созывов Госдумы...")
     sozyvy = client.poluchit_sozyvy()
 
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in sozyvy]
+    stroki_tablitsy = [(sozyv["kod"], sozyv["nazvanie"]) for sozyv in sozyvy]
     zagolovok = "**Созывы Государственной Думы**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Созыв"], stroki_tablitsy)
 
@@ -179,7 +179,13 @@ async def zakonoproekty(
         )
 
     stroki_tablitsy = [
-        (b.nomer, b.nazvanie[:80], b.sostoyanie, b.data_vneseniya) for b in zakonoproekty
+        (
+            zakonoproekt.nomer,
+            zakonoproekt.nazvanie[:80],
+            zakonoproekt.sostoyanie,
+            zakonoproekt.data_vneseniya,
+        )
+        for zakonoproekt in zakonoproekty
     ]
     zagolovok = "**Законопроекты Государственной Думы**\n\n"
     zagolovok += f"Найдено: {len(zakonoproekty)} законопроектов\n\n"
@@ -221,8 +227,13 @@ async def golosovaniya(
         )
 
     stroki_tablitsy = [
-        (v.zakonoproekt_identifikator, v.nazvanie[:60], v.data, f"За: {v.za} / Против: {v.protiv}")
-        for v in golosovaniya_spisok
+        (
+            golosovanie.zakonoproekt_identifikator,
+            golosovanie.nazvanie[:60],
+            golosovanie.data,
+            f"За: {golosovanie.za} / Против: {golosovanie.protiv}",
+        )
+        for golosovanie in golosovaniya_spisok
     ]
     zagolovok = "**Голосования Государственной Думы**\n\n"
     zagolovok += f"Найдено: {len(golosovaniya_spisok)} голосований\n\n"

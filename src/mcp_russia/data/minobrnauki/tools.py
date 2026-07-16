@@ -24,7 +24,7 @@ async def spisok_tipov_vuzov(kontekst: Context) -> str:
     Возвращает:
         Список типов вузов (университет, академия, институт и т.д.).
     """
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TIPY_VUZOV]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in TIPY_VUZOV]
     return tablitsa_v_markdown(["Код", "Тип вуза"], stroki_tablitsy)
 
 
@@ -34,7 +34,7 @@ async def spisok_form_obucheniya(kontekst: Context) -> str:
     Возвращает:
         Список форм (очная, заочная, очно-заочная, дистанционная).
     """
-    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in FORMY_OBUCHENIYA]
+    stroki_tablitsy = [(forma["kod"], forma["nazvanie"]) for forma in FORMY_OBUCHENIYA]
     return tablitsa_v_markdown(["Код", "Форма обучения"], stroki_tablitsy)
 
 
@@ -44,7 +44,7 @@ async def spisok_urovney_obrazovaniya(kontekst: Context) -> str:
     Возвращает:
         Список уровней (бакалавриат, специалитет, магистратура и т.д.).
     """
-    stroki_tablitsy = [(u["kod"], u["nazvanie"]) for u in UROVNI_OBRAZOVANIYA]
+    stroki_tablitsy = [(uroven["kod"], uroven["nazvanie"]) for uroven in UROVNI_OBRAZOVANIYA]
     return tablitsa_v_markdown(["Код", "Уровень образования"], stroki_tablitsy)
 
 
@@ -64,7 +64,7 @@ async def spisok_tipov_grantov(kontekst: Context) -> str:
     Возвращает:
         Список грантовых фондов и программ.
     """
-    stroki_tablitsy = [(g["kod"], g["nazvanie"]) for g in TIPY_GRANTOV]
+    stroki_tablitsy = [(grant["kod"], grant["nazvanie"]) for grant in TIPY_GRANTOV]
     return tablitsa_v_markdown(["Код", "Тип гранта"], stroki_tablitsy)
 
 
@@ -74,7 +74,7 @@ async def spisok_statusov_akkreditatsii(kontekst: Context) -> str:
     Возвращает:
         Список статусов (действует, приостановлена, отменена).
     """
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in STATUSY_AKKREDITATSII]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in STATUSY_AKKREDITATSII]
     return tablitsa_v_markdown(["Код", "Статус аккредитации"], stroki_tablitsy)
 
 
@@ -84,7 +84,7 @@ async def spisok_federalnyh_okrugov(kontekst: Context) -> str:
     Возвращает:
         Список федеральных округов.
     """
-    stroki_tablitsy = [(f["kod"], f["nazvanie"]) for f in FEDERALNYE_OKRUGA]
+    stroki_tablitsy = [(okrug["kod"], okrug["nazvanie"]) for okrug in FEDERALNYE_OKRUGA]
     return tablitsa_v_markdown(["Код", "Федеральный округ"], stroki_tablitsy)
 
 
@@ -166,19 +166,19 @@ async def granty_i_isledovaniya(kontekst: Context, organizatsiya: str = "") -> s
     if not granty:
         return "Гранты не найдены."
     stroki_tablitsy = []
-    for g in granty:
+    for grant in granty:
         summ = (
-            formatirovat_chislo_ru(g.get("summa_finansirovaniya", 0), 0)
-            if g.get("summa_finansirovaniya")
+            formatirovat_chislo_ru(grant.get("summa_finansirovaniya", 0), 0)
+            if grant.get("summa_finansirovaniya")
             else "—"
         )
         stroki_tablitsy.append(
             (
-                g.get("tip_granta", ""),
-                g.get("nazvanie", ""),
-                g.get("rukovoditel", ""),
+                grant.get("tip_granta", ""),
+                grant.get("nazvanie", ""),
+                grant.get("rukovoditel", ""),
                 summ,
-                g.get("sostoyanie", ""),
+                grant.get("sostoyanie", ""),
             )
         )
     return tablitsa_v_markdown(
@@ -207,13 +207,15 @@ async def reyting_vuzov(kontekst: Context, tip_reytinga: str = "", god: int = 20
             f"- https://obrnadzor.gov.ru"
         )
     stroki_tablitsy = []
-    for r in reyting:
+    for pozitsiya in reyting:
         stroki_tablitsy.append(
             (
-                str(r.get("mesto_v_reytinge", "")),
-                r.get("nazvanie", ""),
-                formatirovat_chislo_ru(r.get("ball", 0), 1) if r.get("ball") else "—",
-                r.get("tip_reytinga", ""),
+                str(pozitsiya.get("mesto_v_reytinge", "")),
+                pozitsiya.get("nazvanie", ""),
+                formatirovat_chislo_ru(pozitsiya.get("ball", 0), 1)
+                if pozitsiya.get("ball")
+                else "—",
+                pozitsiya.get("tip_reytinga", ""),
             )
         )
     return tablitsa_v_markdown(
@@ -257,13 +259,13 @@ async def poisk_licenziy(kontekst: Context, nazvanie: str = "", inn: str = "") -
     if not rezultaty:
         return "Лицензии не найдены."
     stroki_tablitsy = []
-    for r in rezultaty:
+    for rezultat in rezultaty:
         stroki_tablitsy.append(
             (
-                r.get("nomer_licenzii", ""),
-                r.get("nazvanie", ""),
-                r.get("status_licenzii", ""),
-                r.get("srok_deystviya", ""),
+                rezultat.get("nomer_licenzii", ""),
+                rezultat.get("nazvanie", ""),
+                rezultat.get("status_licenzii", ""),
+                rezultat.get("srok_deystviya", ""),
             )
         )
     return tablitsa_v_markdown(

@@ -78,7 +78,7 @@ class PlanZaprosa(BaseModel):
                 stroki.append(f"- **Параметры:** {parametry_str}")
 
             if etap.zavisit_ot:
-                zavisimosti = ", ".join(f"Этап {d}" for d in etap.zavisit_ot)
+                zavisimosti = ", ".join(f"Этап {nomer_etapa}" for nomer_etapa in etap.zavisit_ot)
                 stroki.append(f"- **Зависит от:** {zavisimosti}")
             else:
                 stroki.append("- **Зависит от:** (нет)")

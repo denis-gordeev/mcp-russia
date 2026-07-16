@@ -25,7 +25,7 @@ async def spisok_tipov_ts(kontekst: Context) -> str:
     Возвращает:
         Список типов ТС (легковой, грузовой, автобус, мотоцикл и т.д.).
     """
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TipyTransportnykhSredstv]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in TipyTransportnykhSredstv]
     return tablitsa_v_markdown(["Код", "Тип ТС"], stroki_tablitsy)
 
 
@@ -35,7 +35,10 @@ async def spisok_kategoriyy_vu(kontekst: Context) -> str:
     Возвращает:
         Список категорий ВУ (A, B, C, D, M и т.д.).
     """
-    stroki_tablitsy = [(k["kod"], k["nazvanie"]) for k in KategoriiVoditelskihUdostovereniy]
+    stroki_tablitsy = [
+        (kategoriya["kod"], kategoriya["nazvanie"])
+        for kategoriya in KategoriiVoditelskihUdostovereniy
+    ]
     return tablitsa_v_markdown(["Категория", "Описание"], stroki_tablitsy)
 
 
@@ -45,7 +48,9 @@ async def spisok_vidov_narusheniy(kontekst: Context) -> str:
     Возвращает:
         Список нарушений (скорость, красный свет, пешеходы и т.д.).
     """
-    stroki_tablitsy = [(n["kod"], n["nazvanie"]) for n in VidyNarusheniy]
+    stroki_tablitsy = [
+        (narushenie["kod"], narushenie["nazvanie"]) for narushenie in VidyNarusheniy
+    ]
     return tablitsa_v_markdown(["Код", "Вид нарушения"], stroki_tablitsy)
 
 
@@ -55,7 +60,7 @@ async def spisok_statusov_shtrafov(kontekst: Context) -> str:
     Возвращает:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
-    stroki_tablitsy = [(s["kod"], s["nazvanie"]) for s in StatusyShtrafov]
+    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in StatusyShtrafov]
     return tablitsa_v_markdown(["Код", "Статус штрафа"], stroki_tablitsy)
 
 
@@ -65,7 +70,7 @@ async def spisok_tipov_dtp(kontekst: Context) -> str:
     Возвращает:
         Список типов ДТП (столкновение, налёт на пешехода и т.д.).
     """
-    stroki_tablitsy = [(t["kod"], t["nazvanie"]) for t in TipyDTP]
+    stroki_tablitsy = [(tip["kod"], tip["nazvanie"]) for tip in TipyDTP]
     return tablitsa_v_markdown(["Код", "Тип ДТП"], stroki_tablitsy)
 
 
@@ -75,7 +80,7 @@ async def spisok_regionov_registratsii(kontekst: Context) -> str:
     Возвращает:
         Список регионов с кодами.
     """
-    stroki_tablitsy = [(r["kod"], r["nazvanie"]) for r in RegionyRegistratsii]
+    stroki_tablitsy = [(region["kod"], region["nazvanie"]) for region in RegionyRegistratsii]
     return tablitsa_v_markdown(["Код региона", "Регион"], stroki_tablitsy)
 
 
@@ -95,7 +100,8 @@ async def info_ts(kontekst: Context, vin: str) -> str:
     if istoriya:
         stroki.append(f"\n**История регистраций** ({len(istoriya)} записей)")
         stroki_tablitsy = [
-            (r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in istoriya
+            (zapis.data_deystviya, zapis.tip_deystviya, zapis.gos_nomer, zapis.subiekt)
+            for zapis in istoriya
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
@@ -106,7 +112,8 @@ async def info_ts(kontekst: Context, vin: str) -> str:
     if dtp:
         stroki.append(f"\n**ДТП** ({len(dtp)} записей)")
         stroki_tablitsy = [
-            (d["data_dtp"], d["tip_dtp"], d["subiekt_dtp"], d["model_ts"]) for d in dtp
+            (zapis["data_dtp"], zapis["tip_dtp"], zapis["subiekt_dtp"], zapis["model_ts"])
+            for zapis in dtp
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата ДТП", "Тип", "Регион", "Модель ТС"], stroki_tablitsy)
@@ -117,8 +124,13 @@ async def info_ts(kontekst: Context, vin: str) -> str:
     if razyskivaemye:
         stroki.append(f"\n**⚠ Розыск** ({len(razyskivaemye)} записей)")
         stroki_tablitsy = [
-            (w["data_rozyska"], w["subiekt"], w["initsiator"], w["model_ts"])
-            for w in razyskivaemye
+            (
+                razyskivaemyy["data_rozyska"],
+                razyskivaemyy["subiekt"],
+                razyskivaemyy["initsiator"],
+                razyskivaemyy["model_ts"],
+            )
+            for razyskivaemyy in razyskivaemye
         ]
         stroki.append(
             tablitsa_v_markdown(["Дата", "Регион", "Инициатор", "Модель ТС"], stroki_tablitsy)
@@ -129,8 +141,13 @@ async def info_ts(kontekst: Context, vin: str) -> str:
     if ogranicheniya:
         stroki.append(f"\n**⚠ Ограничения** ({len(ogranicheniya)} записей)")
         stroki_tablitsy = [
-            (r["data_ogranicheniya"], r["tip_ogranicheniya"], r["subiekt"], r["initsiator"])
-            for r in ogranicheniya
+            (
+                ogranichenie["data_ogranicheniya"],
+                ogranichenie["tip_ogranicheniya"],
+                ogranichenie["subiekt"],
+                ogranichenie["initsiator"],
+            )
+            for ogranichenie in ogranicheniya
         ]
         stroki.append(
             tablitsa_v_markdown(
@@ -260,7 +277,10 @@ async def istoriya_registraciy(kontekst: Context, vin: str) -> str:
     if not zapisi:
         return f"История регистраций по VIN {vin} не найдена." + _ISTOCHNIK
 
-    stroki_tablitsy = [(r.data_deystviya, r.tip_deystviya, r.gos_nomer, r.subiekt) for r in zapisi]
+    stroki_tablitsy = [
+        (zapis.data_deystviya, zapis.tip_deystviya, zapis.gos_nomer, zapis.subiekt)
+        for zapis in zapisi
+    ]
     return (
         tablitsa_v_markdown(["Дата", "Действие", "Госномер", "Регион"], stroki_tablitsy)
         + _ISTOCHNIK
