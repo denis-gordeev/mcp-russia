@@ -7,10 +7,10 @@ import pytest
 from mcp_russia.agenty.deloproizvodstvo import tools
 
 
-class TestFormatirovatDataExtenso:
+class TestFormatirovatDatuPropisyu:
     @pytest.mark.asyncio
     async def test_moskva_po_umolchaniyu(self) -> None:
-        rezultat = await tools.formatirovat_data_extenso()
+        rezultat = await tools.formatirovat_datu_propisyu()
         seychas = datetime.now()
         assert "г. Москва" in rezultat
         assert str(seychas.year) in rezultat
@@ -18,12 +18,12 @@ class TestFormatirovatDataExtenso:
 
     @pytest.mark.asyncio
     async def test_polzovatelskiy_gorod(self) -> None:
-        rezultat = await tools.formatirovat_data_extenso(gorod="Санкт-Петербург")
+        rezultat = await tools.formatirovat_datu_propisyu(gorod="Санкт-Петербург")
         assert "г. Санкт-Петербург" in rezultat
 
     @pytest.mark.asyncio
     async def test_soderzhit_mesyats(self) -> None:
-        rezultat = await tools.formatirovat_data_extenso()
+        rezultat = await tools.formatirovat_datu_propisyu()
         from mcp_russia.agenty.deloproizvodstvo.constants import МЕСЯЦЫ
 
         seychas = datetime.now()

@@ -159,7 +159,7 @@ DOLZHNOSTI_FEDERAL = [
 ]
 
 # Субъекты РФ (85 + 4 новых)
-SUBYEKTY_RF = [
+SUBIEKTY_RF = [
     {"kod": "01", "nazvanie": "Республика Адыгея", "okato": "79"},
     {"kod": "02", "nazvanie": "Республика Башкортостан", "okato": "80"},
     {"kod": "03", "nazvanie": "Республика Бурятия", "okato": "81"},

@@ -5,7 +5,7 @@ from __future__ import annotations
 from pydantic import BaseModel, Field
 
 
-class SubyektRF(BaseModel):
+class SubiektRF(BaseModel):
     """Субъект Российской Федерации."""
 
     kod: str = Field(description="Код субъекта РФ")

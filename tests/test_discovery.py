@@ -110,12 +110,12 @@ class TestTransformatsiyaBM25:
 
         server_funktsiya = FastMCP("proverka")
 
-        @server_funktsiya.tool(tags={"search", "regions"})
+        @server_funktsiya.tool(tags={"поиск", "регионы"})
         def spisok_regionov() -> str:
             """Список всех регионов России."""
             return "Москва, Татарстан, Свердловск"
 
-        @server_funktsiya.tool(tags={"query", "data"})
+        @server_funktsiya.tool(tags={"запрос", "данные"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных по коду."""
             return f"Данные {kod}"
@@ -136,12 +136,12 @@ class TestTransformatsiyaBM25:
 
         server_funktsiya = FastMCP("proverka")
 
-        @server_funktsiya.tool(tags={"search", "regions"})
+        @server_funktsiya.tool(tags={"поиск", "регионы"})
         def spisok_regionov() -> str:
             """Список всех регионов России (spisok regionov)."""
             return "Москва, Татарстан"
 
-        @server_funktsiya.tool(tags={"query", "data"})
+        @server_funktsiya.tool(tags={"запрос", "данные"})
         def zaprosit_dannye(kod: int) -> str:
             """Запрос данных временных рядов из Росстата."""
             return f"Данные {kod}"
@@ -164,7 +164,7 @@ class TestTransformatsiyaBM25:
             """Список функций."""
             return "функции"
 
-        @server_funktsiya.tool(tags={"search"})
+        @server_funktsiya.tool(tags={"поиск"})
         def skrytyy_instrument() -> str:
             """Скрытый инструмент."""
             return "скрытый"
@@ -222,7 +222,7 @@ class TestRasprostranenieTegov:
     async def test_tegi_sokhranyayutsya_posle_montirovaniya(self) -> None:
         docherniy = FastMCP("docherniy")
 
-        @docherniy.tool(tags={"search", "regions"})
+        @docherniy.tool(tags={"поиск", "регионы"})
         def spisok_regionov() -> str:
             """Список регионов."""
             return "Москва"

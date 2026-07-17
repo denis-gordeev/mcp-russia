@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-DIREKTORIYA_SHABLONOV = Path(__file__).parent / "templates"
+DIREKTORIYA_SHABLONOV = Path(__file__).parent / "shablony"
 DIREKTORIYA_NORM = Path(__file__).parent / "normy"
 
 

@@ -6,7 +6,7 @@ from .constants import (
     CIK_BAZA_API,
     IZVESTNYE_VYBORY,
     PARTII_RF,
-    SUBYEKTY_RF,
+    SUBIEKTY_RF,
     TIPOVY_VYBORY,
     VYBORY_BAZA_API,
 )
@@ -21,10 +21,10 @@ def tipy_vyborov_resource() -> str:
     )
 
 
-def subyekty_rf_resource() -> str:
+def subiekty_rf_resource() -> str:
     """Справочник субъектов РФ (JSON)."""
     return json.dumps(
-        {"subyekty_rf": SUBYEKTY_RF},
+        {"subiekty_rf": SUBIEKTY_RF},
         ensure_ascii=False,
         indent=2,
     )

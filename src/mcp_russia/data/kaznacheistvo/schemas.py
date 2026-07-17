@@ -26,7 +26,7 @@ class SvedeniyaUchrezhdeniya(BaseModel):
     inn: str
     nazvanie: str
     tip: str = ""
-    osnovnoj_vid_deyatelnosti: str = ""
+    osnovnoy_vid_deyatelnosti: str = ""
     osnovanie: str = ""
 
 

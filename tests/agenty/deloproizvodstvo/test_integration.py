@@ -13,7 +13,7 @@ class TestInstrumentyZaregistrirovany:
             spisok_instrumentov = await klient.list_tools()
             imena = {t.name for t in spisok_instrumentov}
             ozhidayemyy = {
-                "formatirovat_data_extenso",
+                "formatirovat_datu_propisyu",
                 "generirovat_numeraciyu",
                 "konsulitirovat_obrashchenie",
                 "validirovat_dokument",
@@ -70,10 +70,10 @@ class TestPromptyZaregistrirovany:
 
 class TestVypolnenieInstrumentov:
     @pytest.mark.asyncio
-    async def test_formatirovat_data_e2e(self) -> None:
+    async def test_formatirovat_datu_propisyu_e2e(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool(
-                "formatirovat_data_extenso",
+                "formatirovat_datu_propisyu",
                 {"gorod": "Санкт-Петербург"},
             )
             assert "г. Санкт-Петербург" in rezultat.data

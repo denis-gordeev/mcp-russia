@@ -19,7 +19,7 @@ async def test_instrumenty_zaregistrirovany(klient):
 
     ozhidayemyy = {
         "tipy_vyborov",
-        "subyekty_rf",
+        "subiekty_rf",
         "dolzhnosti_federal",
         "partii_rf",
         "gody_vyborov",
@@ -41,7 +41,7 @@ async def test_resursy_zaregistrirovany(klient):
 
     ozhidayemyy = {
         "data://tipy-vyborov",
-        "data://subyekty-rf",
+        "data://subiekty-rf",
         "data://partii-rf",
         "data://info-api",
     }
@@ -69,10 +69,10 @@ async def test_tipy_vyborov(klient):
     assert "Президент" in tekst or "Государственная" in tekst
 
 
-async def test_subyekty_rf(klient):
-    """Проверка работы инструмента subyekty_rf."""
+async def test_subiekty_rf(klient):
+    """Проверка работы инструмента subiekty_rf."""
     async with klient:
-        rezultat = await klient.call_tool("subyekty_rf", {})
+        rezultat = await klient.call_tool("subiekty_rf", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Москва" in tekst or "Санкт-Петербург" in tekst

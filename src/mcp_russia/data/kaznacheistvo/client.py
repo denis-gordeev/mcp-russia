@@ -233,8 +233,8 @@ def _razobrat_uchrezhdenie(dannye: dict[str, Any]) -> dict[str, Any]:
         "inn": dannye.get("inn", "") or dannye.get("id", ""),
         "nazvanie": dannye.get("name", "") or dannye.get("nazvanie", ""),
         "tip": dannye.get("type", "") or dannye.get("tip", ""),
-        "osnovnoj_vid_deyatelnosti": dannye.get("mainActivity", "")
-        or dannye.get("osnovnoj_vid_deyatelnosti", ""),
+        "osnovnoy_vid_deyatelnosti": dannye.get("mainActivity", "")
+        or dannye.get("osnovnoy_vid_deyatelnosti", ""),
         "osnovanie": dannye.get("basis", "") or dannye.get("osnovanie", ""),
         "istochnik": "Федеральное казначейство (roskazna.gov.ru)",
     }

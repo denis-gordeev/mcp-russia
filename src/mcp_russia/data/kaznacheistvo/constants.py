@@ -21,7 +21,7 @@ UROVNI_BUDZHETOV = [
 ]
 
 KATEGORII_RASKHODOV = [
-    {"kod": "obshhegosudarstvennye", "nazvanie": "Общегосударственные вопросы"},
+    {"kod": "obshchegosudarstvennye", "nazvanie": "Общегосударственные вопросы"},
     {"kod": "nacionalnaya_oborona", "nazvanie": "Национальная оборона"},
     {
         "kod": "nacionalnaya_bezopasnost",
@@ -29,7 +29,7 @@ KATEGORII_RASKHODOV = [
     },
     {"kod": "nacionalnaya_ekonomika", "nazvanie": "Национальная экономика"},
     {"kod": "zhkkh", "nazvanie": "Жилищно-коммунальное хозяйство"},
-    {"kod": "ohrana_okruzhayushhej_sredy", "nazvanie": "Охрана окружающей среды"},
+    {"kod": "okhrana_okruzhayushchey_sredy", "nazvanie": "Охрана окружающей среды"},
     {"kod": "obrazovanie", "nazvanie": "Образование"},
     {"kod": "kulutura", "nazvanie": "Культура и кинематография"},
     {"kod": "zdravoohranenie", "nazvanie": "Здравоохранение"},
@@ -41,7 +41,7 @@ KATEGORII_RASKHODOV = [
         "nazvanie": "Обслуживание государственного и муниципального долга",
     },
     {"kod": "mezhdunarodnaya_deyatelnost", "nazvanie": "Международная деятельность"},
-    {"kod": "uslugi_obshhego_haraktera", "nazvanie": "Услуги общего характера"},
+    {"kod": "uslugi_obshchego_kharaktera", "nazvanie": "Услуги общего характера"},
 ]
 
 STATUSY_ISPOLNENIYA = {

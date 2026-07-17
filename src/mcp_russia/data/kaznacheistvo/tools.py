@@ -151,7 +151,7 @@ async def poisk_uchrezhdeniy(
             uchrezhdenie.get("inn", ""),
             uchrezhdenie.get("nazvanie", "")[:50],
             uchrezhdenie.get("tip", ""),
-            uchrezhdenie.get("osnovnoj_vid_deyatelnosti", "")[:40],
+            uchrezhdenie.get("osnovnoy_vid_deyatelnosti", "")[:40],
         )
         for uchrezhdenie in uchrezhdeniya
     ]

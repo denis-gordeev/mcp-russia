@@ -36,7 +36,7 @@ async def tipy_vyborov(kontekst: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Тип выборов"], stroki_tablitsy)
 
 
-async def subyekty_rf(kontekst: Context) -> str:
+async def subiekty_rf(kontekst: Context) -> str:
     """Получить справочник субъектов Российской Федерации.
 
     Включает все 89 субъектов РФ (85 + 4 новых).
@@ -45,9 +45,9 @@ async def subyekty_rf(kontekst: Context) -> str:
         Таблица с субъектами РФ.
     """
     await kontekst.info("Запрос справочника субъектов РФ...")
-    subyekty = await client.subyekty_rf()
+    subiekty = await client.subiekty_rf()
 
-    stroki_tablitsy = [(subiekt.kod, subiekt.nazvanie) for subiekt in subyekty]
+    stroki_tablitsy = [(subiekt.kod, subiekt.nazvanie) for subiekt in subiekty]
     zagolovok = f"**Субъекты Российской Федерации** — {len(stroki_tablitsy)} субъектов\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 

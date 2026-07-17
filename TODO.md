@@ -2,6 +2,63 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-17 (восемьдесят второй проход — русификация каталога templates→shablony, португальского артефакта extenso→propisyu, английских ключей/тегов/переменных, унификация транслитерации)
+
+### Выполнено
+
+- **Переименование английского каталога `templates/` → `shablony/`** (1 каталог + 2 ссылки):
+  - `src/mcp_russia/agenty/deloproizvodstvo/templates/` → `shablony/`
+  - resources.py: `Path(__file__).parent / "templates"` → `"shablony"`
+  - tools.py: `Шаблоны доступны в templates/` → `shablony/`
+- **Устранение португальского артефакта `extenso` → `propisyu`** (5 файлов):
+  - tools.py: `formatirovat_data_extenso` → `formatirovat_datu_propisyu` (имя функции)
+  - server.py: импорт и регистрация
+  - test_tools.py: `TestFormatirovatDataExtenso` → `TestFormatirovatDatuPropisyu` + вызовы
+  - test_integration.py: строковые ссылки `"formatirovat_data_extenso"` → `"formatirovat_datu_propisyu"` + вызов
+- **Русификация английского строкового литерала** `"param"` → `"parametr"` в planner.py (пример JSON-ключа в системном промпте)
+- **Русификация английского ключа `"city"` → `"gorod"`** в minzdrav/test_tools.py (согласовано с client.py где ключ уже `gorod`)
+- **Русификация переменной `msg` → `soobshcheniye`** в test_batch.py (3 вхождения)
+- **Унификация транслитерации `osnovnoj` → `osnovnoy`** в kaznacheistvo (3 файла):
+  - schemas.py: `osnovnoj_vid_deyatelnosti` → `osnovnoy_vid_deyatelnosti`
+  - client.py: ключ словаря и fallback
+  - tools.py: `.get("osnovnoy_vid_deyatelnosti", ...)`
+- **Унификация транслитерации `h` → `zh/sh/ch`** в kaznacheistvo/constants.py (3 ключа):
+  - `obshhegosudarstvennye` → `obshchegosudarstvennye`
+  - `ohrana_okruzhayushhej_sredy` → `okhrana_okruzhayushchey_sredy`
+  - `uslugi_obshhego_haraktera` → `uslugi_obshchego_kharaktera`
+- **Унификация `subyekt` → `subiekt`** в cekrf (7 файлов, ~15 вхождений):
+  - schemas.py: `SubyektRF` → `SubiektRF`
+  - constants.py: `SUBYEKTY_RF` → `SUBIEKTY_RF`
+  - client.py: `subyekty_rf` → `subiekty_rf`, `SubyektRF` → `SubiektRF`, `SUBYEKTY_RF` → `SUBIEKTY_RF`
+  - tools.py: `subyekty_rf` → `subiekty_rf`, `subyekty` → `subiekty`
+  - resources.py: `subyekty_rf_resource` → `subiekty_rf_resource`, `"subyekty_rf"` → `"subiekty_rf"`, `SUBYEKTY_RF` → `SUBIEKTY_RF`
+  - server.py: импорты, `data://subyekty-rf` → `data://subiekty-rf`
+  - test_tools.py: `test_subyekty_rf` → `test_subiekty_rf`
+  - test_integration.py: `"subyekty_rf"` → `"subiekty_rf"`, `data://subyekty-rf` → `data://subiekty-rf`, `test_subyekty_rf` → `test_subiekty_rf`
+- **Русификация English tags в test_discovery.py** (6 наборов тегов):
+  - `{"search", "regions"}` → `{"поиск", "регионы"}` (3 вхождения)
+  - `{"query", "data"}` → `{"запрос", "данные"}` (2 вхождения)
+  - `{"search"}` → `{"поиск"}` (1 вхождение)
+- **Прогнаны все проверки**: `ruff check` — all passed, `pytest` — 681 unit-тест пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`templates/` → `shablony/`**: устранён последний английский каталог в кодовой базе; `shablony` = «шаблоны»; согласовано с `DIREKTORIYA_SHABLONOV`
+- **`extenso` → `propisyu`**: устранён португальский/латинский артефакт; «прописью» — точный русский эквивалент «in words/extenso» в контексте написания даты; ломающее изменение для клиентов, использующих `formatirovat_data_extenso`
+- **`"city"` → `"gorod"`**: устранён английский ключ в мок-данных; клиент уже возвращает `"gorod"` (строка 229 в client.py)
+- **`osnovnoj` → `osnovnoy`**: унификация транслитерации `й`; во всей кодовой базе используется `y` для `й`, `j` — единичное исключение
+- **`obshhegosudarstvennye` → `obshchegosudarstvennye`**: унификация транслитерации `щ` и `ш`; `h` для `ж/ш/ч/щ` — устаревшая транслитерация, `zh/sh/ch/shch` — стандартная конвенция проекта
+- **`SubyektRF` → `SubiektRF`**: унификация транслитерации `ъ`; во всей кодовой базе (60+ файлов) используется `subiekt` (через `ie`), `subyekt` — единичное исключение в модуле cekrf; ломающее изменение для клиентов, использующих инструмент `subyekty_rf` или ресурс `data://subyekty-rf`
+- **English tags → кириллица**: устранены последние английские теги в тестовых данных; согласовано с конвенцией проекта — все теги в server.py на кириллице (`"форматирование"`, `"справочник"`, `"субъекты-рф"`)
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Унификация `obiekt` → `obekt`**: в ~40 файлах используются две формы транслитерации слова «объект»; `obekt` — преобладающая конвенция, `obiekt` — в _shared/discovery.py, _shared/feature.py, rosapi/client.py, rosprirodnadzor, rosselkhoznadzor, rosvodresursy, rospotrebnadzor
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг
+
 ## Статус раунда 2026-07-16 (восемьдесят первый проход — русификация однобуквенных переменных циклов/comprehensions, имён тестовых функций, диаграмм, документации)
 
 ### Выполнено

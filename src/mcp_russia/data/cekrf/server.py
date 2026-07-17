@@ -10,7 +10,7 @@ from .resources import (
     info_api,
     izvestnye_vybory_resource,
     partii_rf_resource,
-    subyekty_rf_resource,
+    subiekty_rf_resource,
     tipy_vyborov_resource,
 )
 from .tools import (
@@ -21,7 +21,7 @@ from .tools import (
     poisk_kandidata,
     rezultaty_vyborov,
     spisok_vyborov,
-    subyekty_rf,
+    subiekty_rf,
     tipy_vyborov,
     yavka_i_itogi,
 )
@@ -30,7 +30,7 @@ mcp = FastMCP("mcp-russia-cekrf")
 
 # Инструменты (10)
 mcp.tool(tipy_vyborov, tags={"список", "типы-выборов", "справочник"})
-mcp.tool(subyekty_rf, tags={"список", "субъекты-рф", "справочник"})
+mcp.tool(subiekty_rf, tags={"список", "субъекты-рф", "справочник"})
 mcp.tool(dolzhnosti_federal, tags={"список", "должности", "федеральные"})
 mcp.tool(partii_rf, tags={"список", "партии", "справочник"})
 mcp.tool(gody_vyborov, tags={"список", "годы-выборов", "справочник"})
@@ -42,7 +42,7 @@ mcp.tool(yavka_i_itogi, tags={"явка", "итоги", "статистика"})
 
 # Ресурсы (5)
 mcp.resource("data://tipy-vyborov", mime_type="application/json")(tipy_vyborov_resource)
-mcp.resource("data://subyekty-rf", mime_type="application/json")(subyekty_rf_resource)
+mcp.resource("data://subiekty-rf", mime_type="application/json")(subiekty_rf_resource)
 mcp.resource("data://partii-rf", mime_type="application/json")(partii_rf_resource)
 mcp.resource("data://izvestnye-vybory", mime_type="application/json")(izvestnye_vybory_resource)
 mcp.resource("data://info-api", mime_type="application/json")(info_api)

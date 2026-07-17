@@ -131,8 +131,8 @@ class TestVypolneniePaketa:
         """Должен перехватывать исключения и включать ошибку в результаты."""
 
         async def neudachnyy_instrument() -> str:
-            msg = "Таймаут API"
-            raise TimeoutError(msg)
+            soobshcheniye = "Таймаут API"
+            raise TimeoutError(soobshcheniye)
 
         batch._dispetcher["neudacha"] = neudachnyy_instrument
 
@@ -151,8 +151,8 @@ class TestVypolneniePaketa:
             return "успех"
 
         async def plokhoy_instrument() -> str:
-            msg = "oy"
-            raise ValueError(msg)
+            soobshcheniye = "oy"
+            raise ValueError(soobshcheniye)
 
         batch._dispetcher["norma"] = normalnyy_instrument
         batch._dispetcher["plokho"] = plokhoy_instrument

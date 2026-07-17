@@ -146,7 +146,7 @@ _SISTEMNYY_PROMPT = """\
       "etap": 1,
       "opisanie": "что делает этот этап",
       "imya_instrumenta": "modul_imya_instrumenta",
-      "parametry": {{"param": "znachenie"}},
+      "parametry": {{"parametr": "znachenie"}},
       "zavisit_ot": [],
       "obosnovanie": "почему этот этап необходим"
     }}

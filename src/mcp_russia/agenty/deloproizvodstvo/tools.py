@@ -18,7 +18,7 @@ from .constants import (
 )
 
 
-async def formatirovat_data_extenso(
+async def formatirovat_datu_propisyu(
     gorod: str = "Москва",
 ) -> str:
     """Форматирует текущую дату по стандартам официальных документов РФ.
@@ -207,6 +207,6 @@ async def spisok_tipov_dokumentov() -> str:
 
     stroki.append(
         "\nИспользуйте инструменты deloproizvodstvo для создания каждого типа. "
-        "Шаблоны доступны в templates/."
+        "Шаблоны доступны в shablony/."
     )
     return "\n".join(stroki)

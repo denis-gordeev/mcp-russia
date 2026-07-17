@@ -21,10 +21,10 @@ async def test_tipy_vyborov():
     assert "Президент" in rezultat
 
 
-async def test_subyekty_rf():
-    """Проверка subyekty_rf."""
+async def test_subiekty_rf():
+    """Проверка subiekty_rf."""
     kontekst = _maket_konteksta()
-    rezultat = await cekrf_tools.subyekty_rf(kontekst)
+    rezultat = await cekrf_tools.subiekty_rf(kontekst)
     assert "Субъекты" in rezultat
     assert "Москва" in rezultat
 

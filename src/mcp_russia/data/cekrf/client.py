@@ -28,7 +28,7 @@ from .constants import (
     IZBIRATELNYY_KOD_REGIONA,
     IZVESTNYE_VYBORY,
     PARTII_RF,
-    SUBYEKTY_RF,
+    SUBIEKTY_RF,
     TIPOVY_VYBORY,
     VYBORY_API,
     VYBORY_BAZA_API,
@@ -39,7 +39,7 @@ from .schemas import (
     Kandidat,
     KandidatKratko,
     ResultatKandidata,
-    SubyektRF,
+    SubiektRF,
     TipVyborov,
 )
 
@@ -344,11 +344,11 @@ async def tipy_vyborov() -> list[TipVyborov]:
     return rezultaty
 
 
-async def subyekty_rf() -> list[SubyektRF]:
+async def subiekty_rf() -> list[SubiektRF]:
     """Получить справочник субъектов Российской Федерации."""
     return [
-        SubyektRF(kod=subiekt["kod"], nazvanie=subiekt["nazvanie"], okato=subiekt["okato"])
-        for subiekt in SUBYEKTY_RF
+        SubiektRF(kod=subiekt["kod"], nazvanie=subiekt["nazvanie"], okato=subiekt["okato"])
+        for subiekt in SUBIEKTY_RF
     ]
 
 

@@ -50,7 +50,7 @@ async def test_info_med_organizatsii_nayden():
         "tip": "Больница",
         "adres": "г. Москва, ул. Примерная, д.1",
         "subiekt": "Москва",
-        "city": "Москва",
+        "gorod": "Москва",
         "telefon": "+7 (495) 123-45-67",
         "litsenzia": "Л041-01137-77/00368123",
         "krovatey": 500,
