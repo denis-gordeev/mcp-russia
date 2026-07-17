@@ -217,8 +217,8 @@ async def poisk_po_nomeru(zapros: str) -> list[dict[str, Any]]:
             return []
 
         naydennye = []
-        for obiekt in obekty_spisok[:10]:
-            atributy = obiekt.get("attrs", {})
+        for obekt in obekty_spisok[:10]:
+            atributy = obekt.get("attrs", {})
             naydennye.append(
                 {
                     "kadastrovyy_nomer": atributy.get("cn", ""),

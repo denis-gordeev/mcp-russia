@@ -22,7 +22,7 @@ from . import client
 from .constants import (
     FormySobstvennosti,
     KategoriiZemel,
-    StatusyObiekta,
+    StatusyObekta,
     TipyNedvizhimosti,
     VidyIspolzovaniya,
 )
@@ -55,13 +55,13 @@ def spisok_vidov_ispolzovaniya() -> list[dict]:
     return VidyIspolzovaniya
 
 
-def spisok_statusov_obiekta() -> list[dict]:
+def spisok_statusov_obekta() -> list[dict]:
     """Список статусов учёта объектов недвижимости.
 
     Возвращает:
         Список статусов (учтённый, ранее учтённый, временный и др.).
     """
-    return StatusyObiekta
+    return StatusyObekta
 
 
 def spisok_form_sobstvennosti() -> list[dict]:

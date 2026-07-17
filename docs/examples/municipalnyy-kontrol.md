@@ -59,10 +59,10 @@
 
 ```json
 [
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
 ]
 ```
 
@@ -228,15 +228,15 @@ LLM группирует результаты и выявляет законом
 
 ```json
 [
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Москва", "munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Свердловская область", "munitsipalitet": "Екатеринбург"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Нижегородская область", "munitsipalitet": "Нижний Новгород"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Ростовская область", "munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Татарстан", "munitsipalitet": "Казань"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "СПб", "munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Красноярск"}}
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Москва", "munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Свердловская область", "munitsipalitet": "Екатеринбург"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Нижегородская область", "munitsipalitet": "Нижний Новгород"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Ростовская область", "munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Татарстан", "munitsipalitet": "Казань"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "СПб", "munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Красноярск"}}
 ]
 ```
 

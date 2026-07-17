@@ -18,7 +18,7 @@ from .constants import (
     GMVO_BAZA_API,
     KRUPNYE_VODOKHRANILISHCHA,
     TIPY_GIDRO_DANNYKH,
-    TIPY_VODNYKH_OBIEKTOV,
+    TIPY_VODNYKH_OBEKTOV,
     VODNYY_REESTR_BAZA,
 )
 
@@ -177,7 +177,7 @@ def poluchit_spisok_basseynovykh_okrugov() -> list[dict[str, str]]:
 
 def poluchit_spisok_tipov_vodnykh_obektov() -> list[dict[str, str]]:
     """Вернуть справочник типов водных объектов."""
-    return TIPY_VODNYKH_OBIEKTOV
+    return TIPY_VODNYKH_OBEKTOV
 
 
 def poluchit_spisok_tipov_gidro() -> list[dict[str, str]]:

@@ -83,9 +83,9 @@ class PlanZaprosa(BaseModel):
 
 ```text
 → vypolnit_paket([
-    {"instrument": "cbrf_tekushchie_kursy", "argumenty": {}},
-    {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
-    {"instrument": "gosduma_spisok_deputatov", "argumenty": {}}
+    {"imya_instrumenta": "cbrf_tekushchie_kursy", "argumenty": {}},
+    {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
+    {"imya_instrumenta": "gosduma_spisok_deputatov", "argumenty": {}}
   ])
 ← [результат1, результат2, результат3]
 ```

@@ -180,15 +180,15 @@ class ReyestrFunktsiy:
 
         # Шаг 5: Импорт server.py и получение объекта mcp
         modul_servera = importlib.import_module(f"{put_modulya}.server")
-        obiekt_servera = getattr(modul_servera, "mcp", None)
+        obekt_servera = getattr(modul_servera, "mcp", None)
 
-        if obiekt_servera is None:
+        if obekt_servera is None:
             raise ValueError(f"Нет объекта `mcp` в {put_modulya}.server")
 
         # Шаг 6: Регистрация
         self._funktsii[korotkoe_imya] = ZaregistrirovannayaFunktsiya(
             metadannye=metadannye_ekz,
-            server_funktsiya=obiekt_servera,
+            server_funktsiya=obekt_servera,
             put_modulya=put_modulya,
         )
         logger.info(

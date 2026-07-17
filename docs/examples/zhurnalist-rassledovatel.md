@@ -266,10 +266,10 @@ LLM автоматически группирует победителей и п
 
 ```json
 [
-  {"instrument": "rosstat_informatsiya_o_regionye", "argumenty": {"kod": "77"}},
-  {"instrument": "zakupki_poisk_zakupok", "argumenty": {"zakazchik": "Правительство Москвы"}},
-  {"instrument": "kad_arbitrazh_poisk_del", "argumenty": {"istorcz": "Правительство Москвы"}},
-  {"instrument": "rosaudit_poisk_narusheniy", "argumenty": {"tema": "закупки"}}
+  {"imya_instrumenta": "rosstat_informatsiya_o_regionye", "argumenty": {"kod": "77"}},
+  {"imya_instrumenta": "zakupki_poisk_zakupok", "argumenty": {"zakazchik": "Правительство Москвы"}},
+  {"imya_instrumenta": "kad_arbitrazh_poisk_del", "argumenty": {"istorcz": "Правительство Москвы"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"tema": "закупки"}}
 ]
 ```
 

@@ -43,9 +43,9 @@ API: gosduma_zakonoproekty(sozyv="8")
 
 ```json
 [
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
 ]
 ```
 
@@ -440,9 +440,9 @@ API: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москв�
 
 ```json
 [
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 1}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 2}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 3}}
 ]
 ```
 

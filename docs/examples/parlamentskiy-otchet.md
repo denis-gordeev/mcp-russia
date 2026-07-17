@@ -279,12 +279,12 @@
 
 ```json
 [
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204554}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204555}},
-  {"instrument": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204556}},
-  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204554, "god": 2024}},
-  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204555, "god": 2024}},
-  {"instrument": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204556, "god": 2024}}
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204554}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204555}},
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204556}},
+  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204554, "god": 2024}},
+  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204555, "god": 2024}},
+  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204556, "god": 2024}}
 ]
 ```
 

@@ -162,9 +162,9 @@
 
 ```json
 [
-  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 1", "god": 2021}},
-  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 2", "god": 2021}},
-  {"instrument": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 3", "god": 2021}}
+  {"imya_instrumenta": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 1", "god": 2021}},
+  {"imya_instrumenta": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 2", "god": 2021}},
+  {"imya_instrumenta": "cekrf_poisk_kandidata", "argumenty": {"fio": "Депутат 3", "god": 2021}}
 ]
 ```
 

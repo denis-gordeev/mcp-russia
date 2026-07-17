@@ -32,8 +32,8 @@ def test_spisok_vidov_ispolzovaniya():
     assert any(v["kod"] == "zhiloe" for v in rezultat)
 
 
-def test_spisok_statusov_obiekta():
-    rezultat = rre_tools.spisok_statusov_obiekta()
+def test_spisok_statusov_obekta():
+    rezultat = rre_tools.spisok_statusov_obekta()
     assert isinstance(rezultat, list)
     assert any(s["kod"] == "uchtenny" for s in rezultat)
 

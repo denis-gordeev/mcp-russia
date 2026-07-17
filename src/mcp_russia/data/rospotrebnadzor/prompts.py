@@ -60,7 +60,7 @@ def obzor_sanitarnoy_situacii() -> PromptResult:
                             "5. Предложите меры по улучшению.\n\n"
                             "Используйте tools: pokazateli_bezopasnosti, "
                             "poisk_narusheniy, zhaloby_potrebiteley, "
-                            "spisok_kategoriy_obiektov."
+                            "spisok_kategoriy_obektov."
                         ),
                     ),
                 )

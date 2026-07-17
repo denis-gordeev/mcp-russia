@@ -105,12 +105,12 @@ async def poisk_vodnykh_obektov(
         return "Водные объекты не найдены. Попробуйте изменить параметры поиска."
     stroki_tablitsy = [
         (
-            obiekt.get("nazvanie", ""),
-            obiekt.get("tip", ""),
-            obiekt.get("basseyn", ""),
-            obiekt.get("subiekt", ""),
+            obekt.get("nazvanie", ""),
+            obekt.get("tip", ""),
+            obekt.get("basseyn", ""),
+            obekt.get("subiekt", ""),
         )
-        for obiekt in obekty
+        for obekt in obekty
     ]
     return tablitsa_v_markdown(
         ["Название", "Тип", "Бассейн", "Регион"],

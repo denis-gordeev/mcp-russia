@@ -24,9 +24,9 @@ async def test_spisok_tipov_proverok():
     assert "Плановая проверка" in rezultat
 
 
-async def test_spisok_kategoriy_obiektov():
+async def test_spisok_kategoriy_obektov():
     kontekst = _maket_konteksta()
-    rezultat = await rpn_tools.spisok_kategoriy_obiektov(kontekst)
+    rezultat = await rpn_tools.spisok_kategoriy_obektov(kontekst)
     assert "Предприятия пищевой промышленности" in rezultat
 
 

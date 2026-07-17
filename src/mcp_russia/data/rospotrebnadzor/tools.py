@@ -8,7 +8,7 @@ from mcp_russia._shared.formatting import tablitsa_v_markdown
 
 from . import client
 from .constants import (
-    KATEGORII_OBIEKTOV,
+    KATEGORII_OBEKTOV,
     NAPRAVLENIYA_DEYATELNOSTI,
     REGIONALNYE_UPRAVLENIYA,
     SANPIN_OSNOVNYE,
@@ -38,14 +38,14 @@ async def spisok_tipov_proverok(kontekst: Context) -> str:
     return tablitsa_v_markdown(["Код", "Тип проверки"], stroki_tablitsy)
 
 
-async def spisok_kategoriy_obiektov(kontekst: Context) -> str:
+async def spisok_kategoriy_obektov(kontekst: Context) -> str:
     """Список категорий объектов надзора.
 
     Возвращает:
         Список категорий объектов (пищевые предприятия, медицина и т.д.).
     """
     stroki_tablitsy = [
-        (kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in KATEGORII_OBIEKTOV
+        (kategoriya["kod"], kategoriya["nazvanie"]) for kategoriya in KATEGORII_OBEKTOV
     ]
     return tablitsa_v_markdown(["Код", "Категория объекта"], stroki_tablitsy)
 

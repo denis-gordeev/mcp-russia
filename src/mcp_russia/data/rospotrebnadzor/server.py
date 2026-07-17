@@ -17,7 +17,7 @@ from .tools import (
     poisk_narusheniy,
     poisk_proverok,
     pokazateli_bezopasnosti,
-    spisok_kategoriy_obiektov,
+    spisok_kategoriy_obektov,
     spisok_napravleniy,
     spisok_regionalnyh_upravleniy,
     spisok_sanpinov,
@@ -30,7 +30,7 @@ mcp = FastMCP("mcp-russia-rospotrebnadzor")
 # Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
 mcp.tool(spisok_tipov_proverok, tags={"типы-проверок", "справочник"})
-mcp.tool(spisok_kategoriy_obiektov, tags={"категории-объектов", "справочник"})
+mcp.tool(spisok_kategoriy_obektov, tags={"категории-объектов", "справочник"})
 mcp.tool(spisok_regionalnyh_upravleniy, tags={"региональные-управления", "справочник"})
 mcp.tool(info_proverki, tags={"проверка", "информация"})
 mcp.tool(poisk_proverok, tags={"проверки", "поиск"})

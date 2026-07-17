@@ -245,9 +245,9 @@ API: cekrf_poisk_kandidata + cekrf_kandidat_podrobno (пакетно)
 
 ```json
 [
-  {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
-  {"instrument": "rosstat_spisok_regionov", "argumenty": {}},
-  {"instrument": "rosstat_spisok_regionov", "argumenty": {}}
+  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
+  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
+  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}}
 ]
 ```
 

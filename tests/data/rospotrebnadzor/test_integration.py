@@ -19,7 +19,7 @@ async def test_instrumenty_zaregistrirovany(klient):
     ozhidayemyy = {
         "spisok_napravleniy",
         "spisok_tipov_proverok",
-        "spisok_kategoriy_obiektov",
+        "spisok_kategoriy_obektov",
         "spisok_regionalnyh_upravleniy",
         "info_proverki",
         "poisk_proverok",

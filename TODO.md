@@ -2,7 +2,60 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-17 (восемьдесят второй проход — русификация каталога templates→shablony, португальского артефакта extenso→propisyu, английских ключей/тегов/переменных, унификация транслитерации)
+## Статус раунда 2026-07-17 (восемьдесят третий проход — унификация obiekt→obekt, исправление документации instrument→imya_instrumenta, русификация ключей ресурсов РосАПИ)
+
+### Выполнено
+
+- **Унификация `obiekt` → `obekt`** (~58 замен в 20 файлах):
+  - _shared/discovery.py: `obiekt_instrumenta` → `obekt_instrumenta` (6 вхождений: параметр, docstring, getattr, вызов)
+  - _shared/feature.py: `obiekt_servera` → `obekt_servera` (3 вхождения: присвоение, проверка, аргумент)
+  - rosapi/client.py: `obiekt_imeni` → `obekt_imeni` (4 вхождения), `obiekt_subiekta` → `obekt_subiekta` (3), `obiekt_adresa` → `obekt_adresa` (4), `obiekt_upravleniya` → `obekt_upravleniya` (2)
+  - rosselkhoznadzor/tools.py: `obiekt` → `obekt` (цикловая переменная, 5+1 вхождений)
+  - rosprirodnadzor/tools.py: `obiekt` → `obekt` (цикловая переменная, 4+1 вхождений)
+  - rosvodresursy/tools.py: `obiekt` → `obekt` (цикловая переменная, 4+1 вхождений)
+  - rosvodresursy/constants.py: `TIPY_VODNYKH_OBIEKTOV` → `TIPY_VODNYKH_OBEKTOV` (1 определение)
+  - rosvodresursy/client.py: импорт `TIPY_VODNYKH_OBEKTOV`, использование (2 вхождения)
+  - rosreestr/client.py: `obiekt` → `obekt` (цикловая переменная, 2 вхождения)
+  - rosreestr/constants.py: `StatusyObiekta` → `StatusyObekta` (2 вхождения: определение + MAP)
+  - rosreestr/tools.py: `StatusyObiekta` → `StatusyObekta` (импорт), `spisok_statusov_obiekta` → `spisok_statusov_obekta`
+  - rosreestr/server.py: `spisok_statusov_obiekta` → `spisok_statusov_obekta` (импорт + регистрация)
+  - rospotrebnadzor/constants.py: `KATEGORII_OBIEKTOV` → `KATEGORII_OBEKTOV` (определение)
+  - rospotrebnadzor/tools.py: `KATEGORII_OBEKTOV` (импорт), `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov`
+  - rospotrebnadzor/server.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (импорт + регистрация)
+  - rospotrebnadzor/prompts.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (1 вхождение)
+  - tests/data/rospotrebnadzor/test_tools.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (2 вхождения)
+  - tests/data/rospotrebnadzor/test_integration.py: `"spisok_kategoriy_obiektov"` → `"spisok_kategoriy_obektov"` (1 вхождение)
+  - tests/data/rosreestr/test_tools.py: `spisok_statusov_obiekta` → `spisok_statusov_obekta` (2 вхождения)
+  - tests/data/rosreestr/test_integration.py: `"spisok_statusov_obiekta"` → `"spisok_statusov_obekta"` (1 вхождение)
+  - docs/reference/features.md: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov`, `spisok_statusov_obiekta` → `spisok_statusov_obekta`
+- **Исправление документации: `"instrument"` → `"imya_instrumenta"`** (~38 замен в 7 файлах):
+  - docs/reference/smart-tools.md: 3 замены в примере JSON `vypolnit_paket`
+  - docs/examples/analiz-zakonodatelstva.md: 3 замены
+  - docs/examples/zhurnalist-stati.md: 3 замены
+  - docs/examples/zhurnalist-rassledovatel.md: 4 замены
+  - docs/examples/parlamentskiy-otchet.md: 6 замен
+  - docs/examples/politolog.md: 6 замен
+  - docs/examples/municipalnyy-kontrol.md: 13 замен
+- **Русификация ключей ресурсов РосАПИ** (5 ключей в rosapi/resources.py):
+  - `"dadata_address"` → `"dadata_adresa"`, описание: `"Dadata Address API — ..."` → `"API адресов Dadata — ..."`
+  - `"dadata_party"` → `"dadata_organizatsii"`, описание: `"Dadata Party API — ..."` → `"API организаций Dadata — ..."`
+  - `"dadata_bank"` → `"dadata_banki"`, описание: `"Dadata Bank API — ..."` → `"API банков Dadata — ..."`
+  - `"cbr_credit"` → `"cbr_kreditnye"`
+  - `"postal_api"` → `"pochtovyy_api"`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 файл переформатировано, `pytest` — 548 unit-тестов пройдено (интеграционные HTTP-тесты пропущены)
+
+### Ключевые архитектурные решения
+
+- **`obiekt` → `obekt`**: устранена последняя двойная транслитерация в кодовой базе; `obekt` — единственная форма во всех 37+ файлах; `obiekt` (через `ie`) — устаревшая форма, несовместимая с конвенцией проекта (где `ъ` транслитерируется как `e`, не `ie`); ломающее изменение для клиентов, использующих инструменты `spisok_statusov_obiekta` или `spisok_kategoriy_obiektov`
+- **`"instrument"` → `"imya_instrumenta"`**: устранён английский JSON-ключ в документации; **исправлен функциональный баг** — исходный код `server.py` и `batch.py` ожидает ключ `"imya_instrumenta"`, а документация содержала `"instrument"`, что приводило к ошибкам при использовании `vypolnit_paket` по документации
+- **Ключи ресурсов РосАПИ**: устранены английские ключи словаря в `dostupnye_servisy()`; описания переведены на русский; `"fias"` (акроним) и `"nalog_ru"` оставлены без изменений
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг
 
 ### Выполнено
 

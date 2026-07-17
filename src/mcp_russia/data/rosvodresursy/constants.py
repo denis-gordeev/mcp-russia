@@ -37,7 +37,7 @@ BASSEYNOVYE_OKRUGA = [
 ]
 
 # Типы водных объектов
-TIPY_VODNYKH_OBIEKTOV = [
+TIPY_VODNYKH_OBEKTOV = [
     {"kod": "reka", "nazvanie": "Река"},
     {"kod": "ozero", "nazvanie": "Озеро"},
     {"kod": "vodokhranilishche", "nazvanie": "Водохранилище"},

@@ -149,12 +149,12 @@ async def poisk_obektov_negativnogo(
         )
     stroki_tablitsy = [
         (
-            obiekt.get("nomer", ""),
-            obiekt.get("nazvanie", "")[:50],
-            obiekt.get("kategoriya", ""),
-            obiekt.get("subiekt", ""),
+            obekt.get("nomer", ""),
+            obekt.get("nazvanie", "")[:50],
+            obekt.get("kategoriya", ""),
+            obekt.get("subiekt", ""),
         )
-        for obiekt in obekty
+        for obekt in obekty
     ]
     zagolovok = f"**Объекты негативного воздействия** — найдено: {len(obekty)}\n\n"
     return zagolovok + tablitsa_v_markdown(

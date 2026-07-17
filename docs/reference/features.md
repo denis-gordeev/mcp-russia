@@ -274,7 +274,7 @@
 |------|----------|
 | `spisok_napravleniy` | Справочник направлений надзора |
 | `spisok_tipov_proverok` | Справочник типов проверок |
-| `spisok_kategoriy_obiektov` | Справочник категорий объектов |
+| `spisok_kategoriy_obektov` | Справочник категорий объектов |
 | `spisok_regionalnyh_upravleniy` | Справочник региональных управлений |
 | `info_proverki` | Информация о проверке из реестра proverki.rospotrebnadzor.ru |
 | `poisk_proverok` | Поиск проверок по ИНН/названию/региону |
@@ -347,7 +347,7 @@
 | `spisok_tipov_nedvizhimosti` | Справочник типов недвижимости |
 | `spisok_kategoriy_zemel` | Справочник категорий земель |
 | `spisok_vidov_ispolzovaniya` | Справочник видов разрешённого использования |
-| `spisok_statusov_obiekta` | Справочник статусов учёта |
+| `spisok_statusov_obekta` | Справочник статусов учёта |
 | `spisok_form_sobstvennosti` | Справочник форм собственности |
 | `info_obekta` | Информация об объекте недвижимости |
 | `kadastrovaya_stoimost` | Кадастровая стоимость объекта |

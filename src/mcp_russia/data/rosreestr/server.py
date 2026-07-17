@@ -13,7 +13,7 @@ from .tools import (
     prava_na_obekt,
     spisok_form_sobstvennosti,
     spisok_kategoriy_zemel,
-    spisok_statusov_obiekta,
+    spisok_statusov_obekta,
     spisok_tipov_nedvizhimosti,
     spisok_vidov_ispolzovaniya,
 )
@@ -23,7 +23,7 @@ mcp = FastMCP("mcp-russia-rosreestr")
 mcp.tool(spisok_tipov_nedvizhimosti, tags={"типы", "справочник"})
 mcp.tool(spisok_kategoriy_zemel, tags={"категории", "справочник"})
 mcp.tool(spisok_vidov_ispolzovaniya, tags={"виды-использования", "справочник"})
-mcp.tool(spisok_statusov_obiekta, tags={"статус", "справочник"})
+mcp.tool(spisok_statusov_obekta, tags={"статус", "справочник"})
 mcp.tool(spisok_form_sobstvennosti, tags={"собственность", "справочник"})
 mcp.tool(info_obekta, tags={"объект", "информация"})
 mcp.tool(kadastrovaya_stoimost, tags={"стоимость", "кадастр"})

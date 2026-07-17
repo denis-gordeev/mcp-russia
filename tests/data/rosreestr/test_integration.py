@@ -20,7 +20,7 @@ async def test_instrumenty_zaregistrirovany(klient):
         "spisok_tipov_nedvizhimosti",
         "spisok_kategoriy_zemel",
         "spisok_vidov_ispolzovaniya",
-        "spisok_statusov_obiekta",
+        "spisok_statusov_obekta",
         "spisok_form_sobstvennosti",
         "info_obekta",
         "kadastrovaya_stoimost",

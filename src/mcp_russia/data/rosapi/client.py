@@ -54,19 +54,19 @@ def _vlozhennoe_poluchenie(
 
 def _razobrat_dannye_organizatsii(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных организации из ответа Dadata."""
-    obiekt_imeni = dannye.get("name")
-    polnoe_nazvanie = obiekt_imeni.get("full") if isinstance(obiekt_imeni, dict) else None
-    kratkoe_nazvanie = obiekt_imeni.get("short") if isinstance(obiekt_imeni, dict) else None
-    obiekt_subiekta = dannye.get("state")
-    sostoyanie_org = obiekt_subiekta.get("status") if isinstance(obiekt_subiekta, dict) else None
-    obiekt_adresa = dannye.get("address")
-    adres_str = obiekt_adresa.get("value") if isinstance(obiekt_adresa, dict) else None
-    obiekt_upravleniya = dannye.get("management")
+    obekt_imeni = dannye.get("name")
+    polnoe_nazvanie = obekt_imeni.get("full") if isinstance(obekt_imeni, dict) else None
+    kratkoe_nazvanie = obekt_imeni.get("short") if isinstance(obekt_imeni, dict) else None
+    obekt_subiekta = dannye.get("state")
+    sostoyanie_org = obekt_subiekta.get("status") if isinstance(obekt_subiekta, dict) else None
+    obekt_adresa = dannye.get("address")
+    adres_str = obekt_adresa.get("value") if isinstance(obekt_adresa, dict) else None
+    obekt_upravleniya = dannye.get("management")
     rukovoditel_imya = (
-        obiekt_upravleniya.get("name") if isinstance(obiekt_upravleniya, dict) else None
+        obekt_upravleniya.get("name") if isinstance(obekt_upravleniya, dict) else None
     )
     data_reg = (
-        obiekt_subiekta.get("registration_date") if isinstance(obiekt_subiekta, dict) else None
+        obekt_subiekta.get("registration_date") if isinstance(obekt_subiekta, dict) else None
     )
     return {
         "nazvanie_polnoe": polnoe_nazvanie,
@@ -80,15 +80,13 @@ def _razobrat_dannye_organizatsii(dannye: dict[str, Any]) -> dict[str, Any]:
 
 def _razobrat_dannye_banka(dannye: dict[str, Any], rezervnoe_imya: str = "") -> dict[str, Any]:
     """Разбор данных банка из ответа Dadata."""
-    obiekt_imeni = dannye.get("name")
-    polnoe_nazvanie = (
-        obiekt_imeni.get("full") if isinstance(obiekt_imeni, dict) else rezervnoe_imya
-    )
-    kratkoe_nazvanie = obiekt_imeni.get("short") if isinstance(obiekt_imeni, dict) else None
-    obiekt_adresa = dannye.get("address")
+    obekt_imeni = dannye.get("name")
+    polnoe_nazvanie = obekt_imeni.get("full") if isinstance(obekt_imeni, dict) else rezervnoe_imya
+    kratkoe_nazvanie = obekt_imeni.get("short") if isinstance(obekt_imeni, dict) else None
+    obekt_adresa = dannye.get("address")
     gorod = (
-        _vlozhennoe_poluchenie(obiekt_adresa, "data", "city")
-        if isinstance(obiekt_adresa, dict)
+        _vlozhennoe_poluchenie(obekt_adresa, "data", "city")
+        if isinstance(obekt_adresa, dict)
         else None
     )
     return {

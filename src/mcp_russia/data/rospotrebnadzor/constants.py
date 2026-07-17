@@ -39,7 +39,7 @@ TIPY_PROVEROK = [
 ]
 
 # Категории объектов надзора
-KATEGORII_OBIEKTOV = [
+KATEGORII_OBEKTOV = [
     {"kod": "pishchevye_predpriyatiya", "nazvanie": "Предприятия пищевой промышленности"},
     {"kod": "obshchestvennoe_pitanie", "nazvanie": "Общественное питание"},
     {"kod": "obrazovatelnye_uchrezhdeniya", "nazvanie": "Образовательные учреждения"},
