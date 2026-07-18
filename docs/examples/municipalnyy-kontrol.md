@@ -52,17 +52,17 @@
 > Промпт: "Сравни расходы на образование городских округов Мытищи и Люберцы за последние 3 года"
 
 Инструменты:
-- `rosaudit_poisk_narusheniy(region="МО", munitsipalitet="Мытищи", funktsiya="Образование", god=2024)`
-- `rosaudit_poisk_narusheniy(region="МО", munitsipalitet="Люберцы", funktsiya="Образование", god=2024)`
+- `rosaudit_poisk_narusheniy(subiekt="МО", tip="Образование", god=2024)`
+- `rosaudit_poisk_narusheniy(subiekt="МО", tip="Образование", god=2024)`
 
 Используем `vypolnit_paket` для параллелизации:
 
 ```json
 [
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2024}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2024}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Мытищи", "funktsiya": "Образование", "god": 2023}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Люберцы", "funktsiya": "Образование", "god": 2023}}
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "МО", "tip": "Образование", "god": 2024}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "МО", "tip": "Образование", "god": 2024}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "МО", "tip": "Образование", "god": 2023}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "МО", "tip": "Образование", "god": 2023}}
 ]
 ```
 
@@ -99,7 +99,7 @@
 > Промпт: "Перечисли все контракты администрации городского округа [Название] за последний год"
 
 Инструменты:
-- `rosaudit_poisk_narusheniy(region="Москва", munitsipalitet="...", god=2024)` — контракты через контрольно-счётный орган *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="Москва", god=2024)` — контракты через контрольно-счётный орган *(планируемый региональный модуль)*
 - `zakupki_poisk_kontraktov(organ="...", god=2024)` — через ЕИС
 
 **2. Сгруппировать по поставщикам**
@@ -123,14 +123,14 @@ LLM группирует результаты и выявляет законом
 
 Инструменты:
 - `fns_info_organizacii(nazvanie="Альфа-Сервис")` или `zakupki_info_postavshchika(nazvanie="Альфа-Сервис")`
-- `rosaudit_poisk_narusheniy(region="Москва", postavshchik="Альфа-Сервис")` *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="Москва", organizaciya="Альфа-Сервис")` *(планируемый региональный модуль)*
 
 **4. Найти связанные объекты строительства**
 
 > Промпт: "Есть ли у администрации объекты строительства в стадии реализации? Каков статус каждого?"
 
 Инструменты:
-- `rosaudit_poisk_narusheniy(region="Москва", munitsipalitet="...")` — объекты, зарегистрированные в контрольно-счётном органе *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="Москва")` — объекты, зарегистрированные в контрольно-счётном органе *(планируемый региональный модуль)*
 
 ---
 
@@ -145,9 +145,9 @@ LLM группирует результаты и выявляет законом
 > Промпт: "Какие муниципальные образования Московской области находятся на пределе ограничений Бюджетного кодекса по расходам на персонал?"
 
 Инструменты:
-- `rosaudit_poisk_narusheniy(region="МО")` — индикаторы по БК РФ для каждого муниципального образования *(планируемый региональный модуль)*
-- `rosaudit_poisk_narusheniy(region="МО", funktsiya="Образование")` — расходы на образование (минимум по закону об образовании) *(планируемый региональный модуль)*
-- `rosaudit_poisk_narusheniy(region="МО", funktsiya="Здравоохранение")` — расходы на здравоохранение (минимальные нормативы) *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="МО")` — индикаторы по БК РФ для каждого муниципального образования *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="МО", tip="Образование")` — расходы на образование (минимум по закону об образовании) *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="МО", tip="Здравоохранение")` — расходы на здравоохранение (минимальные нормативы) *(планируемый региональный модуль)*
 
 ### Ожидаемый результат
 
@@ -176,7 +176,7 @@ LLM группирует результаты и выявляет законом
 > Промпт: "Какие муниципальные образования Московской области получили больше всего целевых трансфертов в 2024 году?"
 
 Инструменты:
-- *(региональный модуль)* `kaznacheistvo_ispolnenie_byudzheta(region="МО", god=2024)` *(инструмент недоступен)*
+- *(региональный модуль)* `kaznacheistvo_ispolnenie_byudzheta(subiekt="МО", god=2024)` *(инструмент недоступен)*
 
 **2. Сопоставить с демографическими данными**
 
@@ -198,8 +198,8 @@ LLM группирует результаты и выявляет законом
 > Промпт: "На что муниципалитет потратил трансферты? Была ли конкурентная закупка?"
 
 Инструменты:
-- `rosaudit_poisk_narusheniy(region="Красноярский край", munitsipalitet="...")` — как были израсходованы *(планируемый региональный модуль)*
-- `rosaudit_poisk_narusheniy(region="Красноярский край", munitsipalitet="...")` — была ли закупка *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="Красноярский край")` — как были израсходованы *(планируемый региональный модуль)*
+- `rosaudit_poisk_narusheniy(subiekt="Красноярский край")` — была ли закупка *(планируемый региональный модуль)*
 - `zakupki_poisk_kontraktov(munitsipalitet="...")` — зарегистрированные контракты
 
 ### Полная цепочка
@@ -228,15 +228,15 @@ LLM группирует результаты и выявляет законом
 
 ```json
 [
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "МО", "munitsipalitet": "Москва", "funktsiya": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Москва", "munitsipalitet": "Санкт-Петербург", "tip": "zdravookhranenie"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Свердловская область", "munitsipalitet": "Екатеринбург"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Нижегородская область", "munitsipalitet": "Нижний Новгород"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Ростовская область", "munitsipalitet": "Ростов-на-Дону", "funktsiya": "zdravookhranenie"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Краснодар", "funktsiya": "zdravookhranenie"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Татарстан", "munitsipalitet": "Казань"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "СПб", "munitsipalitet": "Новосибирск", "funktsiya": "zdravookhranenie"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"region": "Красноярский край", "munitsipalitet": "Красноярск"}}
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "МО", "tip": "Здравоохранение"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Москва", "tip": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Свердловская область"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Нижегородская область"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Ростовская область", "tip": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Красноярский край", "tip": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Татарстан"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "СПб", "tip": "zdravookhranenie"}},
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"subiekt": "Красноярский край"}}
 ]
 ```
 

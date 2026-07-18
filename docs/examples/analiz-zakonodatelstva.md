@@ -35,7 +35,7 @@
 > Промпт: «Найди все законопроекты об искусственном интеллекте, рассматривавшиеся в Государственной Думе в 2024 году»
 
 Инструменты:
-- `gosduma_zakonoproekty(topic="искусственный интеллект", year=2024)`
+- `gosduma_zakonoproekty(sostoyanie="искусственный интеллект")`
 
 Ожидаемый результат:
 
@@ -49,8 +49,8 @@
 > Промпт: «Подробности по законопроекту ФЗ № 12345-8 — кто автор, какое содержание, на какой стадии рассмотрение»
 
 Инструменты:
-- `gosduma_zakonoproekty(id=...)` — текст и пояснительная записка
-- `gosduma_zakonoproekty(id=...)` — история рассмотрения
+- `gosduma_zakonoproekty(sostoyanie="...")` — текст и пояснительная записка
+- `gosduma_zakonoproekty(sostoyanie="...")` — история рассмотрения
 
 ---
 
@@ -169,7 +169,7 @@
 ```
 
 Затем для каждого найденного кандидата:
-- `cekrf_kandidat_podrobno(id=...)` — жертвователи и суммы
+- `cekrf_kandidat_podrobno(kandidat_identifikator=...)` — жертвователи и суммы
 
 ### Полная кросс-ссылка
 
@@ -200,7 +200,7 @@
 > Промпт: «Перечисли все законопроекты о регулировании цифровых платформ, по которым были движения за последнюю неделю»
 
 Инструменты:
-- `gosduma_zakonoproekty(topic="цифровые платформы", recent_progress=True)`
+- `gosduma_zakonoproekty(sostoyanie="цифровые платформы")`
 - `sovfed_poisk_zakonoproektov(sostoyanie="цифровые платформы")`
 
 > Промпт: «Какие законопроекты о налоговой реформе поставлены на голосование на этой неделе?»
@@ -220,7 +220,7 @@
 > Промпт: «Сравни версию закона, принятую Госдумой, с редакцией Совета Федерации. Какие ключевые разночтения?»
 
 Инструменты:
-- `gosduma_zakonoproekty(id=...)` — текст Госдумы
+- `gosduma_zakonoproekty(sostoyanie="...")` — текст Госдумы
 - `sovfed_tekst_zakonoproekta(code=...)` *(инструмент недоступен)* — текст Совета Федерации
 - `sovfed_popravki(code=...)` *(инструмент недоступен)* — поправки, изменившие текст
 
@@ -264,8 +264,8 @@ LLM может сопоставить:
   └── sovfed_poisk_zakonoproektov(god=..., sostoyanie=...)
 
 Этап 2 — Детализация (параллельно):
-  ├── gosduma_zakonoproekty(id=...)
-  ├── gosduma_zakonoproekty(id=...)
+  ├── gosduma_zakonoproekty(sostoyanie="...")
+  ├── gosduma_zakonoproekty(sostoyanie="...")
   ├── sovfed_podrobnosti_zakonoproekta(code=...) *(инструмент недоступен)*
   └── sovfed_khod_rassmotreniya(code=...) *(инструмент недоступен)*
 

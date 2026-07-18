@@ -170,7 +170,7 @@ API: gosduma_zakonoproekty → включает позицию большинс�
 
 ```
 API: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
-      zakupki_info_zakazchika(id=...)
+      zakupki_info_zakazchika(inn="...")
 ```
 
 **2. Классифицировать авторов по политической позиции**
@@ -376,7 +376,7 @@ API: gosduma_zakonoproekty → детали законопроекта
 
 ```
 API: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subyekt="Москва", god=2021)
-      cekrf_kandidat_podrobno(id=...) → для каждого кандидата
+      cekrf_kandidat_podrobno(kandidat_identifikator=...) → для каждого кандидата
       cekrf_rezultaty_vyborov(...) → голоса и результат
 ```
 

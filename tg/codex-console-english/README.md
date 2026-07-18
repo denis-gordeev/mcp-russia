@@ -1,5 +1,5 @@
 # codex-console-english
 
-Local Telegram mirror for this repository.
-- Repo: /Users/denis/programming/autowork/codex-console-english
-- Topic ID: pending
+Локальный зеркальный канал Telegram для этого репозитория.
+- Репозиторий: /Users/denis/programming/autowork/codex-console-english
+- Идентификатор темы: ожидается

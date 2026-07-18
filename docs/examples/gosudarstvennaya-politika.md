@@ -35,8 +35,8 @@
 > Промпт: "Сколько участков первичной медико-санитарной помощи обслуживают население в районах Республики Татарстан? Сравните с численностью населения"
 
 ```
-API: minzdrav_poisk_med_organizatsiy(region="16", tip="polyclinika")
-     rosstat_informatsiya_o_regionye(region="16") → chislennost_naseleniya
+API: minzdrav_poisk_med_organizatsiy(subiekt="16", tip="polyclinika")
+     rosstat_informatsiya_o_regionye(kod="16") → chislennost_naseleniya
 ```
 
 **2. Расходы на первичное звено здравоохранения**
@@ -44,7 +44,7 @@ API: minzdrav_poisk_med_organizatsiy(region="16", tip="polyclinika")
 > Промпт: "Какова доля расходов на первичную медико-санитарную помощь в общих расходах на здравоохранение по каждому району?"
 
 ```
-API: budget_rashody_subekta(region="16", razdel="09", podrazdel="01") *(планируемый модуль «Бюджетная система»)*
+API: budget_rashody_subekta(subiekt="16", razdel="09", podrazdel="01") *(планируемый модуль «Бюджетная система»)*
 ```
 
 **3. Показатели результативности**
@@ -60,7 +60,7 @@ API: rosstat_pokazateli_rosstata(indikatory="zdorovye", uroven="municipalitet")
 > Промпт: "Какой объём межбюджетных трансфертов на здравоохранение получил каждый район Республики Татарстан в 2024 году?"
 
 ```
-API: budget_transformacii(region="16", razdel="09") *(планируемый модуль «Бюджетная система»)*
+API: budget_transformacii(subiekt="16", razdel="09") *(планируемый модуль «Бюджетная система»)*
 ```
 
 ### Как связываются данные
@@ -159,7 +159,7 @@ API: budget_spetsperechisleniya *(планируемый)* + rosstat_pokazateli_
 > Промпт: "Каков объём вырубки лесов по субъектам РФ в Сибирском федеральном округе за последние 5 лет?"
 
 ```
-API: rosprirodnadzor_lesnaya_okhrana(region="sibir", period="5y") *(инструмент недоступен)*
+API: rosprirodnadzor_lesnaya_okhrana(subiekt="sibir", period="5y") *(инструмент недоступен)*
 ```
 
 **2. Штрафы и санкции**
@@ -185,7 +185,7 @@ API: kad_arbitrazh_poisk_del(tema="ekologicheskoe_pravonarushenie")
 > Промпт: "Снизился ли уровень водохранилищ в регионах с наибольшим объёмом вырубки лесов?"
 
 ```
-API: rosvodresursy_info_vodokhranilishcha(region="sibir")
+API: rosvodresursy_info_vodokhranilishcha(subiekt="sibir")
 ```
 
 ### Кросс-ссылка
@@ -224,7 +224,7 @@ API: budget_dokhody_subekta(period="3y") *(планируемый модуль �
 > Промпт: "Каков ВРП и ВРП на душу населения каждого субъекта?"
 
 ```
-API: rosstat_informatsiya_o_regionye(region="all", pokazatel="vrp_na_dushu")
+API: rosstat_informatsiya_o_regionye(kod="77")
 ```
 
 **3. Законодательное оформление**
@@ -258,7 +258,7 @@ API: publikatsii_poisk_aktov(term="nalogovaya reforma regulirovanie")
 > Промпт: "Сколько закупок проведено федеральными органами власти в 2024 году? Каков их общий объём?"
 
 ```
-API: zakupki_poisk_kontraktov(god=2024, uroven="federalny")
+API: zakupki_poisk_kontraktov(inn_zakazchika="...")
 ```
 
 **2. Концентрация рынка**
@@ -266,7 +266,7 @@ API: zakupki_poisk_kontraktov(god=2024, uroven="federalny")
 > Промпт: "Кто 20 крупнейших поставщиков федеральных органов власти? Какую долю от общего объёма они составляют?"
 
 ```
-API: zakupki_info_postavshchika(top=20, uroven="federalny")
+API: zakupki_info_postavshchika(inn="...")
 ```
 
 **3. Конкурентность закупок**
@@ -274,7 +274,7 @@ API: zakupki_info_postavshchika(top=20, uroven="federalny")
 > Промпт: "Каково среднее число заявок на одну закупку? Сколько закупок получили только одну заявку?"
 
 ```
-API: zakupki_sposoby_zakupok(zayavki="sravnenie")
+API: zakupki_sposoby_zakupok()
 ```
 
 **4. Санкции и нарушения**
@@ -282,7 +282,7 @@ API: zakupki_sposoby_zakupok(zayavki="sravnenie")
 > Промпт: "Сколько поставщиков федеральных органов власти включены в реестр недобросовестных поставщиков (РНП)?"
 
 ```
-API: zakupki_gov_ru_rnp(uchastniki="postavshchiki_federalnykh") *(планируемый — функционал РНП)*
+API: zakupki_reestr_nedobrosovestnykh_postavshchikov() *(планируемый — функционал РНП)*
 ```
 
 ---

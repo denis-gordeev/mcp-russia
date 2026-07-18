@@ -134,7 +134,7 @@ from mcp_russia._shared.feature import MetaFunktsii
 
 
 META_FUNKTSII = MetaFunktsii(
-    imya="example",
+    imya="primer",
     opisanie="Описание новой интеграции",
     versiya="0.1.0",
     baza_api="https://api.example.gov/v1",
@@ -167,7 +167,7 @@ tests/data/{modul}/
 Минимум для локальной валидации:
 
 ```bash
-make test-feature F=example
+make test-feature F=primer
 make inspect
 ```
 

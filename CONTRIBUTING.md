@@ -61,11 +61,11 @@ META_FUNKTSII = MetaFunktsii(
 
 ```python
 from fastmcp import FastMCP
-from .tools import primer_tool
+from .tools import primer_instrument
 
 mcp = FastMCP("mcp-russia-primer-modul")
 
-mcp.tool(primer_tool)
+mcp.tool(primer_instrument)
 ```
 
 4. Добавьте тесты в `tests/data/{modul}/` (или `tests/agenty/{modul}/`):

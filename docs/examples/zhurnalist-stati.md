@@ -130,7 +130,7 @@ API: rosstat_demografiya
 > Промпт: «Покажи динамику ключевой ставки за последние 5 лет и сравни с инфляцией»
 
 ```
-API: cbrf_sravnit_valyuty(codes=[key_rate, cpi], last=60)
+API: cbrf_sravnit_valyuty(kody=["key_rate", "cpi"])
 ```
 
 **2. Влияние на кредитование**
@@ -178,7 +178,7 @@ LLM рассчитывает: ключевая ставка (21,00 %) − инф
 > Промпт: «Сколько очагов природных пожаров зарегистрировано в Сибирском федеральном округе в 2024 году? Сравни с предыдущими 5 годами»
 
 ```
-API: rosgidromet_preduprezhdeniya(region="sibirskiy_fo", year=2024)
+API: rosgidromet_preduprezhdeniya(subiekt="sibirskiy_fo")
 ```
 
 **2. Вырубка лесов**
@@ -186,7 +186,7 @@ API: rosgidromet_preduprezhdeniya(region="sibirskiy_fo", year=2024)
 > Промпт: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_obezlesenie(region="sibirskiy_fo") *(инструмент недоступен)*
+API: rosprirodnadzor_obezlesenie(subiekt="sibirskiy_fo") *(инструмент недоступен)*
 ```
 
 **3. Водные ресурсы**

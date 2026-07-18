@@ -117,7 +117,7 @@
 > Промпт: "Детализируй расходы аппарата депутата в 2024 году. Какие статьи самые крупные?"
 
 Инструменты:
-- `gosduma_raskhody_deputata(id=..., god=2024)` *(планируемый инструмент)*
+- `gosduma_raskhody_deputata(identifikator_deputata=..., god=2024)` *(планируемый инструмент)*
 
 ```
 ═══════════════════════════════════════════
@@ -188,7 +188,7 @@
 
 Инструменты:
 - `cekrf_poisk_kandidata(fio="...", god=2021)`
-- `cekrf_kandidat_podrobno(id=...)`
+- `cekrf_kandidat_podrobno(kandidat_identifikator=...)`
 
 ```
 ═══════════════════════════════════════════

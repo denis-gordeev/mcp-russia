@@ -1,5 +1,5 @@
 # My-RU-Coverage
 
-Local Telegram mirror for this repository.
-- Repo: /Users/denis/programming/autowork/My-RU-Coverage
-- Topic ID: pending
+Локальный зеркальный канал Telegram для этого репозитория.
+- Репозиторий: /Users/denis/programming/autowork/My-RU-Coverage
+- Идентификатор темы: ожидается

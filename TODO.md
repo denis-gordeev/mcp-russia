@@ -2,53 +2,34 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-17 (восемьдесят третий проход — унификация obiekt→obekt, исправление документации instrument→imya_instrumenta, русификация ключей ресурсов РосАПИ)
+## Статус раунда 2026-07-18 (восемьдесят четвёртый проход — исправление параметров в документации, русификация CONTRIBUTING.md/adding-features.md, устранение осиротевших переменных, русификация tg/ README)
 
 ### Выполнено
 
-- **Унификация `obiekt` → `obekt`** (~58 замен в 20 файлах):
-  - _shared/discovery.py: `obiekt_instrumenta` → `obekt_instrumenta` (6 вхождений: параметр, docstring, getattr, вызов)
-  - _shared/feature.py: `obiekt_servera` → `obekt_servera` (3 вхождения: присвоение, проверка, аргумент)
-  - rosapi/client.py: `obiekt_imeni` → `obekt_imeni` (4 вхождения), `obiekt_subiekta` → `obekt_subiekta` (3), `obiekt_adresa` → `obekt_adresa` (4), `obiekt_upravleniya` → `obekt_upravleniya` (2)
-  - rosselkhoznadzor/tools.py: `obiekt` → `obekt` (цикловая переменная, 5+1 вхождений)
-  - rosprirodnadzor/tools.py: `obiekt` → `obekt` (цикловая переменная, 4+1 вхождений)
-  - rosvodresursy/tools.py: `obiekt` → `obekt` (цикловая переменная, 4+1 вхождений)
-  - rosvodresursy/constants.py: `TIPY_VODNYKH_OBIEKTOV` → `TIPY_VODNYKH_OBEKTOV` (1 определение)
-  - rosvodresursy/client.py: импорт `TIPY_VODNYKH_OBEKTOV`, использование (2 вхождения)
-  - rosreestr/client.py: `obiekt` → `obekt` (цикловая переменная, 2 вхождения)
-  - rosreestr/constants.py: `StatusyObiekta` → `StatusyObekta` (2 вхождения: определение + MAP)
-  - rosreestr/tools.py: `StatusyObiekta` → `StatusyObekta` (импорт), `spisok_statusov_obiekta` → `spisok_statusov_obekta`
-  - rosreestr/server.py: `spisok_statusov_obiekta` → `spisok_statusov_obekta` (импорт + регистрация)
-  - rospotrebnadzor/constants.py: `KATEGORII_OBIEKTOV` → `KATEGORII_OBEKTOV` (определение)
-  - rospotrebnadzor/tools.py: `KATEGORII_OBEKTOV` (импорт), `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov`
-  - rospotrebnadzor/server.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (импорт + регистрация)
-  - rospotrebnadzor/prompts.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (1 вхождение)
-  - tests/data/rospotrebnadzor/test_tools.py: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov` (2 вхождения)
-  - tests/data/rospotrebnadzor/test_integration.py: `"spisok_kategoriy_obiektov"` → `"spisok_kategoriy_obektov"` (1 вхождение)
-  - tests/data/rosreestr/test_tools.py: `spisok_statusov_obiekta` → `spisok_statusov_obekta` (2 вхождения)
-  - tests/data/rosreestr/test_integration.py: `"spisok_statusov_obiekta"` → `"spisok_statusov_obekta"` (1 вхождение)
-  - docs/reference/features.md: `spisok_kategoriy_obiektov` → `spisok_kategoriy_obektov`, `spisok_statusov_obiekta` → `spisok_statusov_obekta`
-- **Исправление документации: `"instrument"` → `"imya_instrumenta"`** (~38 замен в 7 файлах):
-  - docs/reference/smart-tools.md: 3 замены в примере JSON `vypolnit_paket`
-  - docs/examples/analiz-zakonodatelstva.md: 3 замены
-  - docs/examples/zhurnalist-stati.md: 3 замены
-  - docs/examples/zhurnalist-rassledovatel.md: 4 замены
-  - docs/examples/parlamentskiy-otchet.md: 6 замен
-  - docs/examples/politolog.md: 6 замен
-  - docs/examples/municipalnyy-kontrol.md: 13 замен
-- **Русификация ключей ресурсов РосАПИ** (5 ключей в rosapi/resources.py):
-  - `"dadata_address"` → `"dadata_adresa"`, описание: `"Dadata Address API — ..."` → `"API адресов Dadata — ..."`
-  - `"dadata_party"` → `"dadata_organizatsii"`, описание: `"Dadata Party API — ..."` → `"API организаций Dadata — ..."`
-  - `"dadata_bank"` → `"dadata_banki"`, описание: `"Dadata Bank API — ..."` → `"API банков Dadata — ..."`
-  - `"cbr_credit"` → `"cbr_kreditnye"`
-  - `"postal_api"` → `"pochtovyy_api"`
-- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 файл переформатировано, `pytest` — 548 unit-тестов пройдено (интеграционные HTTP-тесты пропущены)
+- **Исправление английских параметров в документации** (~30 замен в 8 файлах):
+  - zhurnalist-stati.md: `codes=[...]` → `kody=[...]`, `region=` → `subiekt=` (3 замены)
+  - gosudarstvennaya-politika.md: `region=` → `subiekt=`/`kod=` (8 замен), удалены несуществующие параметры (`god=`, `uroven=`, `top=`, `zayavki=`, `pokazatel=`), `zakupki_gov_ru_rnp` → `zakupki_reestr_nedobrosovestnykh_postavshchikov`
+  - zhurnalist-rassledovatel.md: `region=` → `subiekt=` (2 замены)
+  - municipalnyy-kontrol.md: `region=` → `subiekt=`, `munitsipalitet=` → удалён, `funktsiya=` → `tip=`, `postavshchik=` → `organizaciya=` (20+ замен в тексте и JSON-примерах)
+  - analiz-zakonodatelstva.md: `topic=` → `sostoyanie=`, `year=` удалён, `id=` → `kandidat_identifikator=`/`sostoyanie=`, `recent_progress=True` удалён (6 замен)
+  - politolog.md: `id=` → `kandidat_identifikator=`, `inn=` (2 замены)
+  - parlamentskiy-otchet.md: `id=` → `identifikator_deputata=`/`kandidat_identifikator=` (2 замены)
+  - ofitsialnyy-redaktor.md: `region=` → `subiekt=`, `name=` → `tip=` (2 замены)
+- **Русификация CONTRIBUTING.md**: `primer_tool` → `primer_instrument`
+- **Русификация adding-features.md**: `imya="example"` → `imya="primer"`, `F=example` → `F=primer`
+- **Русификация комментариев в settings.py**: `list_tools` → `spisok_instrumentov`, `search_tools + call_tool` → `poisk_instrumentov + vypolnit_instrument`, `search + get_tags + execute` → `poisk + poluchit_tegi + vypolnit`
+- **Устранение осиротевшей переменной `OPEN_DATA_API_KEY`** в .env.example (не используется ни в src/, ни в tests/)
+- **Русификация tg/ README файлов** (4 файла): `Local Telegram mirror for this repository` → `Локальный зеркальный канал Telegram для этого репозитория`, `Repo:` → `Репозиторий:`, `Topic ID: pending` → `Идентификатор темы: ожидается`
+- **Русификация README.md**: `запрос на слияние (pull request)` → `пул-реквест` (согласовано с CONTRIBUTING.md)
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 306 файлов уже форматировано, `pytest` — 681 unit-тест пройдено
 
 ### Ключевые архитектурные решения
 
-- **`obiekt` → `obekt`**: устранена последняя двойная транслитерация в кодовой базе; `obekt` — единственная форма во всех 37+ файлах; `obiekt` (через `ie`) — устаревшая форма, несовместимая с конвенцией проекта (где `ъ` транслитерируется как `e`, не `ie`); ломающее изменение для клиентов, использующих инструменты `spisok_statusov_obiekta` или `spisok_kategoriy_obiektov`
-- **`"instrument"` → `"imya_instrumenta"`**: устранён английский JSON-ключ в документации; **исправлен функциональный баг** — исходный код `server.py` и `batch.py` ожидает ключ `"imya_instrumenta"`, а документация содержала `"instrument"`, что приводило к ошибкам при использовании `vypolnit_paket` по документации
-- **Ключи ресурсов РосАПИ**: устранены английские ключи словаря в `dostupnye_servisy()`; описания переведены на русский; `"fias"` (акроним) и `"nalog_ru"` оставлены без изменений
+- **`region=` → `subiekt=`/`kod=`**: устранены английские параметры в документации, не соответствующие реальным сигнатурам функций; `subiekt` используется в minzdrav, rosgidromet, rospotrebnadzor, kaznacheistvo, rosstat/demografiya; `kod` используется в rosstat/informatsiya_o_regionye; это **исправление бага документации** — пользователи, копировавшие примеры, получали ошибки несуществующих параметров
+- **Удалены несуществующие параметры**: `god=`, `uroven=`, `top=`, `zayavki=`, `pokazatel=`, `topic=`, `year=`, `recent_progress=True`, `munitsipalitet=`, `funktsiya=`, `postavshchik=` — все не существуют в реальных сигнатурах инструментов; заменены на реальные параметры (или удалены, если инструмент не принимает таких аргументов)
+- **`id=` → `kandidat_identifikator=`/`identifikator_deputata=`**: устранён английский параметр `id` в примерах; заменён на реальные имена параметров из исходного кода
+- **`primer_tool` → `primer_instrument`**: устранён английский суффикс `_tool` в CONTRIBUTING.md; `instrument` — конвенция проекта
+- **`OPEN_DATA_API_KEY`**: осиротевшая переменная окружения, не используемая ни в одном файле проекта; удалена из .env.example
 
 ### Следующие действия
 
