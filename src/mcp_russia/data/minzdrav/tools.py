@@ -254,7 +254,7 @@ async def spravochnik_mkb10(kontekst: Context) -> str:
         Классы МКБ-10.
     """
     await kontekst.info("Запрос справочника МКБ-10...")
-    mkb_classes = client.poluchit_klassy_mkb10()
-    stroki_tablitsy = [(klass["kod"], klass["nazvanie"]) for klass in mkb_classes]
+    mkb_klassy = client.poluchit_klassy_mkb10()
+    stroki_tablitsy = [(klass["kod"], klass["nazvanie"]) for klass in mkb_klassy]
     zagolovok = "**Классы МКБ-10**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Класс заболеваний"], stroki_tablitsy)

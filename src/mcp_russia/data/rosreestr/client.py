@@ -16,7 +16,7 @@ from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
 
-from .constants import KATEGORII_ZEMEL_MAP, STATUSY_UCHE_TA_MAP
+from .constants import KATEGORII_ZEMEL_SLOVAR, STATUSY_UCHE_TA_SLOVAR
 from .schemas import KadastrovayaStoimost, KadastrovyyObekt
 
 PKK_BAZA_API = "https://pkk.rosreestr.ru/api/features"
@@ -73,7 +73,7 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     if dannye.get("state"):
         st = dannye["state"]
         if isinstance(st, dict):
-            status_ucheta = STATUSY_UCHE_TA_MAP.get(st.get("code", ""), st.get("name", ""))
+            status_ucheta = STATUSY_UCHE_TA_SLOVAR.get(st.get("code", ""), st.get("name", ""))
         else:
             status_ucheta = str(st)
 
@@ -81,7 +81,7 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     if dannye.get("category"):
         kategoriya_slovar = dannye["category"]
         if isinstance(kategoriya_slovar, dict):
-            kategoriya = KATEGORII_ZEMEL_MAP.get(
+            kategoriya = KATEGORII_ZEMEL_SLOVAR.get(
                 kategoriya_slovar.get("code", ""), kategoriya_slovar.get("name", "")
             )
         else:

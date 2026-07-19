@@ -29,7 +29,7 @@ def postroit_dispetcherizatsiyu(reyestr: ReyestrFunktsiy) -> dict[str, Any]:
     """Построение отображения полных имён инструментов → асинхронные функции.
 
     Сканирует модули tools.py всех зарегистрированных функций, включая
-    вложенные подпакеты (напр., zakupki/sub-module).
+    вложенные подпакеты (напр., zakupki/podmodul).
     """
     global _dispetcher
     if _dispetcher:

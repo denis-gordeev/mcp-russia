@@ -75,13 +75,13 @@ class _VyboryTableParser(HTMLParser):
         elif teg_nizhniy == "tr":
             self._tekushchaya_stroka = []
         elif teg_nizhniy in ("h1", "h2", "h3"):
-            klass_css = slovar_atributov.get("class", "") or ""
-            if "title" in klass_css.lower() or teg_nizhniy == "h1":
+            klass_stiley = slovar_atributov.get("class", "") or ""
+            if "title" in klass_stiley.lower() or teg_nizhniy == "h1":
                 self._v_zagolovke = True
                 self.tekst_zagolovka = ""
         elif teg_nizhniy in ("div", "span"):
-            klass_css = slovar_atributov.get("class", "") or ""
-            if any(klyuch in klass_css.lower() for klyuch in ("stats", "itog", "total")):
+            klass_stiley = slovar_atributov.get("class", "") or ""
+            if any(klyuch in klass_stiley.lower() for klyuch in ("stats", "itog", "total")):
                 self._v_statistike = True
                 self.tekst_statistiki = ""
 
