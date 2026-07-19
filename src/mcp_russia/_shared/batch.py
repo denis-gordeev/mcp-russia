@@ -104,8 +104,8 @@ async def vypolnit_paket_vnutrenniy(
             else:
                 rezultat = await funktsiya(**argumenty)
             return imya_instrumenta, rezultat
-        except Exception as exc:
-            return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {exc}"
+        except Exception as isklyuchenie:
+            return imya_instrumenta, f"Ошибка при выполнении '{imya_instrumenta}': {isklyuchenie}"
 
     rezultaty = await asyncio.gather(*[_vypolnit_odin(zapros) for zapros in zaprosy])
 

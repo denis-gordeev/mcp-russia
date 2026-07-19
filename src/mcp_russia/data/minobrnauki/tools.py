@@ -74,7 +74,9 @@ async def spisok_statusov_akkreditatsii(kontekst: Context) -> str:
     Возвращает:
         Список статусов (действует, приостановлена, отменена).
     """
-    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in STATUSY_AKKREDITATSII]
+    stroki_tablitsy = [
+        (sostoyanie["kod"], sostoyanie["nazvanie"]) for sostoyanie in STATUSY_AKKREDITATSII
+    ]
     return tablitsa_v_markdown(["Код", "Статус аккредитации"], stroki_tablitsy)
 
 

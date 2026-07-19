@@ -141,8 +141,8 @@ class ReyestrFunktsiy:
 
             try:
                 self._poprovat_zaregistrirovat(imya, korotkoe_imya)
-            except Exception as exc:
-                prichina = str(exc)
+            except Exception as isklyuchenie:
+                prichina = str(isklyuchenie)
                 self._propushcheno[korotkoe_imya] = prichina
                 logger.warning("Функция '%s' пропущена: %s", korotkoe_imya, prichina)
 

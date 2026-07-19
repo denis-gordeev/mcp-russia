@@ -167,8 +167,8 @@ async def _zaprosit_html_vyborov(
             otvet = await klient.get(adres_url, params=parametry)
             otvet.raise_for_status()
             return otvet.text
-    except Exception as exc:
-        logger.warning("Не удалось получить страницу ГАС «Выборы» %s: %s", adres_url, exc)
+    except Exception as isklyuchenie:
+        logger.warning("Не удалось получить страницу ГАС «Выборы» %s: %s", adres_url, isklyuchenie)
         return None
 
 
@@ -177,8 +177,8 @@ async def _zaprosit_json_tsik(put_api: str, parametry: dict[str, Any] | None = N
     adres_url = f"{CIK_BAZA_API}{put_api}"
     try:
         return await http_poluchit(adres_url, parametry=parametry, taimaut=15.0, maks_povtorov=1)
-    except Exception as exc:
-        logger.debug("CIK API %s недоступен: %s", adres_url, exc)
+    except Exception as isklyuchenie:
+        logger.debug("CIK API %s недоступен: %s", adres_url, isklyuchenie)
         return None
 
 
@@ -195,8 +195,8 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
     razobratchik = _VyboryTableParser()
     try:
         razobratchik.feed(html)
-    except Exception as exc:
-        logger.warning("Ошибка парсинга HTML: %s", exc)
+    except Exception as isklyuchenie:
+        logger.warning("Ошибка парсинга HTML: %s", isklyuchenie)
         return []
 
     rezultaty: list[ResultatKandidata] = []
@@ -288,8 +288,8 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
     razobratchik = _VyboryTableParser()
     try:
         razobratchik.feed(html)
-    except Exception as exc:
-        logger.warning("Ошибка парсинга HTML кандидатов: %s", exc)
+    except Exception as isklyuchenie:
+        logger.warning("Ошибка парсинга HTML кандидатов: %s", isklyuchenie)
         return []
 
     kandidaty: list[KandidatKratko] = []
@@ -448,8 +448,8 @@ async def spisok_vyborov(
                                 "subiekt": subiekt or 0,
                             }
                         )
-        except Exception as exc:
-            logger.debug("Не удалось получить список выборов: %s", exc)
+        except Exception as isklyuchenie:
+            logger.debug("Не удалось получить список выборов: %s", isklyuchenie)
 
     return rezultaty
 
@@ -511,8 +511,8 @@ async def poisk_kandidata(
                 return otfiltrovannye
             return vse_kandidaty[:20]
 
-    except Exception as exc:
-        logger.warning("Поиск кандидата '%s' не удался: %s", fio, exc)
+    except Exception as isklyuchenie:
+        logger.warning("Поиск кандидата '%s' не удался: %s", fio, isklyuchenie)
 
     cik_dannye = await _zaprosit_json_tsik(
         "/api/elections/candidates",

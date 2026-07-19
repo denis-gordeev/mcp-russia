@@ -35,7 +35,9 @@ async def spisok_statusov_proizvodstva(kontekst: Context) -> str:
     Возвращает:
         Список статусов (возбуждено, в производстве, окончено и т.д.).
     """
-    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in StatusyProizvodstva]
+    stroki_tablitsy = [
+        (sostoyanie["kod"], sostoyanie["nazvanie"]) for sostoyanie in StatusyProizvodstva
+    ]
     return tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK
 
 

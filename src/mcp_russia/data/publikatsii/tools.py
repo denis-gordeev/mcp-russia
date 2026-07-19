@@ -70,7 +70,7 @@ async def spisok_statusov(kontekst: Context) -> str:
     await kontekst.info("Запрос списка статусов документов...")
     statusy = client.poluchit_spisok_statusov()
 
-    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in statusy]
+    stroki_tablitsy = [(sostoyanie["kod"], sostoyanie["nazvanie"]) for sostoyanie in statusy]
     zagolovok = "**Статусы документов**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Статус"], stroki_tablitsy) + _ISTOCHNIK_PRAVO
 

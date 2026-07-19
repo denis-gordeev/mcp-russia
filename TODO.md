@@ -2,7 +2,44 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-18 (восемьдесят четвёртый проход — исправление параметров в документации, русификация CONTRIBUTING.md/adding-features.md, устранение осиротевших переменных, русификация tg/ README)
+## Статус раунда 2026-07-19 (восемьдесят пятый проход — русификация region→subiekt_rf, exc→isklyuchenie, status→sostoyanie в цикловых переменных)
+
+### Выполнено
+
+- **Русификация `region` → `subiekt_rf` в цикловых переменных** (13 вхождений в 3 файлах):
+  - rosstat/client.py: `region for region in SUBIEKTY_RF` → `subiekt_rf for subiekt_rf in SUBIEKTY_RF` (11 вхождений); `subiekt_rf` используется вместо `subiekt` для избежания затенения параметра `subiekt` в функциях `poluchit_vrp`, `poluchit_zarplatu`, `poluchit_indikator_dannye`, `poluchit_otraslevuyu_strukturu_vrp`, `poluchit_investitsii_po_vidam`, `_rezerv_otraslevaya_struktura`, `_rezerv_investitsii_po_vidam`
+  - rosstat/tools.py: `region in regiony` → `subiekt_rf in regiony` (1 вхождение)
+  - gibdd/tools.py: `region in RegionyRegistratsii` → `subiekt_rf in RegionyRegistratsii` (1 вхождение)
+- **Русификация `exc` → `isklyuchenie` в except-блоках** (12 привязок в 4 файлах):
+  - _shared/feature.py: `except Exception as exc` → `as isklyuchenie` + `str(exc)` → `str(isklyuchenie)`
+  - _shared/batch.py: `except Exception as exc` → `as isklyuchenie` + `f"...{exc}"` → `f"...{isklyuchenie}"`
+  - _shared/http_client.py: `except httpx.HTTPStatusError as exc` → `as isklyuchenie` + `exc.response.*` → `isklyuchenie.response.*` + `from exc` → `from isklyuchenie` (2 блока); `except (httpx.TimeoutException, httpx.ConnectError) as exc` → `as isklyuchenie` + `poslednyaya_oshibka = exc` → `= isklyuchenie` + `type(exc)` → `type(isklyuchenie)` (2 блока)
+  - cekrf/client.py: `except Exception as exc` → `as isklyuchenie` + все ссылки `exc` → `isklyuchenie` (6 привязок)
+- **Русификация `status` → `sostoyanie` в цикловых переменных** (7 вхождений в 7 файлах):
+  - rosreestr/constants.py: `status in StatusyObekta` → `sostoyanie in StatusyObekta`
+  - fssp/tools.py: `status in StatusyProizvodstva` → `sostoyanie in StatusyProizvodstva`
+  - gibdd/tools.py: `status in StatusyShtrafov` → `sostoyanie in StatusyShtrafov`
+  - publikatsii/tools.py: `status in statusy` → `sostoyanie in statusy`
+  - kad_arbitrazh/tools.py: `status in statusy` → `sostoyanie in statusy`
+  - zakupki/tools.py: `status in statusy` → `sostoyanie in statusy`
+  - minobrnauki/tools.py: `status in STATUSY_AKKREDITATSII` → `sostoyanie in STATUSY_AKKREDITATSII`
+- **Подтверждено**: `obiekt` → `obekt` уже унифицировано (0 vs 204 вхождения); португальские/бразильские артефакты полностью отсутствуют
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 5 файлов переформатировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **`region` → `subiekt_rf`**: устранён английский идентификатор в цикловых переменных, итерирующих по `SUBIEKTY_RF` и производным спискам; `subiekt_rf` (субъект РФ) используется вместо `subiekt` для избежания затенения параметра `subiekt: str` в функциях-клиентах; согласовано с конвенцией `for okrug in FEDERALNYE_OKRUGA`
+- **`exc` → `isklyuchenie`**: устранён последний массовый класс английских переменных в `except ... as` привязках; `isklyuchenie` = «исключение»; внешние атрибуты исключений (`.response`, `.__name__`) оставлены без изменений — они принадлежат httpx/stdlib
+- **`status` → `sostoyanie`**: устранён английский идентификатор в цикловых переменных, итерирующих по коллекциям статусов; `sostoyanie` = «состояние» — согласовано с конвенцией поля `sostoyanie` в schemas.py; имена коллекций `Statusy*` оставлены без изменений (транслитерация устоявшегося заимствования «статусы»)
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг
+
+
 
 ### Выполнено
 

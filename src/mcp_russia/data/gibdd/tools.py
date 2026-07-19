@@ -60,7 +60,9 @@ async def spisok_statusov_shtrafov(kontekst: Context) -> str:
     Возвращает:
         Список статусов (не оплачен, оплачен, передан приставам и т.д.).
     """
-    stroki_tablitsy = [(status["kod"], status["nazvanie"]) for status in StatusyShtrafov]
+    stroki_tablitsy = [
+        (sostoyanie["kod"], sostoyanie["nazvanie"]) for sostoyanie in StatusyShtrafov
+    ]
     return tablitsa_v_markdown(["Код", "Статус штрафа"], stroki_tablitsy)
 
 
@@ -80,7 +82,9 @@ async def spisok_regionov_registratsii(kontekst: Context) -> str:
     Возвращает:
         Список регионов с кодами.
     """
-    stroki_tablitsy = [(region["kod"], region["nazvanie"]) for region in RegionyRegistratsii]
+    stroki_tablitsy = [
+        (subiekt_rf["kod"], subiekt_rf["nazvanie"]) for subiekt_rf in RegionyRegistratsii
+    ]
     return tablitsa_v_markdown(["Код региона", "Регион"], stroki_tablitsy)
 
 

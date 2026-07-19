@@ -33,7 +33,8 @@ async def spisok_regionov(kontekst: Context) -> str:
     regiony = client.poluchit_spisok_subiektov()
 
     stroki_tablitsy = [
-        (region["kod"], region["nazvanie"], region.get("okrug", "")) for region in regiony
+        (subiekt_rf["kod"], subiekt_rf["nazvanie"], subiekt_rf.get("okrug", ""))
+        for subiekt_rf in regiony
     ]
     zagolovok = f"**Субъекты Российской Федерации** — {len(regiony)} субъектов\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Регион", "ФО"], stroki_tablitsy)

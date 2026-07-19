@@ -121,13 +121,14 @@ async def http_poluchit(
                 otvet.raise_for_status()
                 return otvet.json()
 
-            except httpx.HTTPStatusError as exc:
+            except httpx.HTTPStatusError as isklyuchenie:
                 raise OshibkaHttpClienta(
-                    f"HTTP {exc.response.status_code} от {adres_url}: {exc.response.text[:200]}"
-                ) from exc
+                    f"HTTP {isklyuchenie.response.status_code} от {adres_url}: "
+                    f"{isklyuchenie.response.text[:200]}"
+                ) from isklyuchenie
 
-            except (httpx.TimeoutException, httpx.ConnectError) as exc:
-                poslednyaya_oshibka = exc
+            except (httpx.TimeoutException, httpx.ConnectError) as isklyuchenie:
+                poslednyaya_oshibka = isklyuchenie
                 if popytka < povtory:
                     ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                     logger.warning(
@@ -135,7 +136,7 @@ async def http_poluchit(
                         adres_url,
                         popytka + 1,
                         povtory,
-                        type(exc).__name__,
+                        type(isklyuchenie).__name__,
                         ozhidanie,
                     )
                     await asyncio.sleep(ozhidanie)
@@ -202,13 +203,14 @@ async def http_otpravit(
                 otvet.raise_for_status()
                 return otvet.json()
 
-            except httpx.HTTPStatusError as exc:
+            except httpx.HTTPStatusError as isklyuchenie:
                 raise OshibkaHttpClienta(
-                    f"HTTP {exc.response.status_code} от {adres_url}: {exc.response.text[:200]}"
-                ) from exc
+                    f"HTTP {isklyuchenie.response.status_code} от {adres_url}: "
+                    f"{isklyuchenie.response.text[:200]}"
+                ) from isklyuchenie
 
-            except (httpx.TimeoutException, httpx.ConnectError) as exc:
-                poslednyaya_oshibka = exc
+            except (httpx.TimeoutException, httpx.ConnectError) as isklyuchenie:
+                poslednyaya_oshibka = isklyuchenie
                 if popytka < povtory:
                     ozhidanie = BAZA_EKSPON_ZADERZH * (2**popytka)
                     logger.warning(
@@ -216,7 +218,7 @@ async def http_otpravit(
                         adres_url,
                         popytka + 1,
                         povtory,
-                        type(exc).__name__,
+                        type(isklyuchenie).__name__,
                         ozhidanie,
                     )
                     await asyncio.sleep(ozhidanie)

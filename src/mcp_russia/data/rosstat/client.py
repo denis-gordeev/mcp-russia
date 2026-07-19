@@ -67,7 +67,9 @@ async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
     Возвращает:
         Данные региона или None.
     """
-    info_o_regionye = next((region for region in SUBIEKTY_RF if region["kod"] == kod), None)
+    info_o_regionye = next(
+        (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == kod), None
+    )
     if not info_o_regionye:
         return None
     try:
@@ -105,12 +107,12 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     if not info_ob_okruge:
         return {"oshibka": f"Федеральный округ '{kod}' не найден"}
 
-    regiony = [region for region in SUBIEKTY_RF if region.get("okrug") == kod]
+    regiony = [subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf.get("okrug") == kod]
     return {
         "kod": kod,
         "nazvanie": info_ob_okruge["nazvanie"],
         "kolichestvo_subiektov": len(regiony),
-        "subiekty": [region["nazvanie"] for region in regiony],
+        "subiekty": [subiekt_rf["nazvanie"] for subiekt_rf in regiony],
     }
 
 
@@ -215,7 +217,11 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         info_subiekta = next(
-                            (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)),
+                            (
+                                subiekt_rf
+                                for subiekt_rf in SUBIEKTY_RF
+                                if subiekt_rf["kod"] == str(kod_reg)
+                            ),
                             None,
                         )
                         if info_subiekta:
@@ -265,7 +271,11 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
                     kod_reg = zapis.get("region", subiekt)
                     if kod_reg:
                         info_subiekta = next(
-                            (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)),
+                            (
+                                subiekt_rf
+                                for subiekt_rf in SUBIEKTY_RF
+                                if subiekt_rf["kod"] == str(kod_reg)
+                            ),
                             None,
                         )
                         if info_subiekta:
@@ -311,7 +321,11 @@ async def poluchit_sravnenie_regionov(pokazatel: str) -> list[dict[str, Any]]:
                     nazvanie_subiekta = zapis.get("regionName", "")
                     if not nazvanie_subiekta:
                         info_subiekta = next(
-                            (region for region in SUBIEKTY_RF if region["kod"] == kod_subiekta),
+                            (
+                                subiekt_rf
+                                for subiekt_rf in SUBIEKTY_RF
+                                if subiekt_rf["kod"] == kod_subiekta
+                            ),
                             None,
                         )
                         if info_subiekta:
@@ -372,7 +386,12 @@ async def poluchit_indikator_dannye(
             kod_reg = zapis.get("region", subiekt)
             if kod_reg:
                 info_subiekta = next(
-                    (region for region in SUBIEKTY_RF if region["kod"] == str(kod_reg)), None
+                    (
+                        subiekt_rf
+                        for subiekt_rf in SUBIEKTY_RF
+                        if subiekt_rf["kod"] == str(kod_reg)
+                    ),
+                    None,
                 )
                 if info_subiekta:
                     nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -460,7 +479,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
         nazvanie_subiekta = ""
         if subiekt:
             info_subiekta = next(
-                (region for region in SUBIEKTY_RF if region["kod"] == subiekt), None
+                (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == subiekt), None
             )
             if info_subiekta:
                 nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -503,7 +522,9 @@ def _rezerv_otraslevaya_struktura(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        info_subiekta = next((region for region in SUBIEKTY_RF if region["kod"] == subiekt), None)
+        info_subiekta = next(
+            (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == subiekt), None
+        )
         if info_subiekta:
             nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
@@ -549,7 +570,7 @@ async def poluchit_investitsii_po_vidam(
         nazvanie_subiekta = ""
         if subiekt:
             info_subiekta = next(
-                (region for region in SUBIEKTY_RF if region["kod"] == subiekt), None
+                (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == subiekt), None
             )
             if info_subiekta:
                 nazvanie_subiekta = info_subiekta["nazvanie"]
@@ -592,7 +613,9 @@ def _rezerv_investitsii_po_vidam(
     """
     nazvanie_subiekta = ""
     if subiekt:
-        info_subiekta = next((region for region in SUBIEKTY_RF if region["kod"] == subiekt), None)
+        info_subiekta = next(
+            (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == subiekt), None
+        )
         if info_subiekta:
             nazvanie_subiekta = info_subiekta["nazvanie"]
     return [
