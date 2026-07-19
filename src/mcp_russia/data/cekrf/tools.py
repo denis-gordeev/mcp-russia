@@ -167,7 +167,7 @@ async def poisk_kandidata(fio: str, kontekst: Context, god: int | None = None) -
     ]
     zagolovok = f"**Найдено кандидатов: {len(kandidaty)}**\n\n"
     return zagolovok + tablitsa_v_markdown(
-        ["ID", "ФИО", "Партия", "Должность", "Статус"],
+        ["Идентификатор", "ФИО", "Партия", "Должность", "Статус"],
         stroki_tablitsy,
     )
 
@@ -181,7 +181,7 @@ async def kandidat_podrobno(
     место работы, декларации о доходах и имуществе.
 
     Аргументы:
-        kandidat_identifikator: ID кандидата в базе ЦИК.
+        kandidat_identifikator: Идентификатор кандидата в базе ЦИК.
         god: Год выборов (необязательно).
 
     Возвращает:
@@ -192,13 +192,13 @@ async def kandidat_podrobno(
 
     if not kandidat:
         return (
-            f"Кандидат с ID '{kandidat_identifikator}' не найден.\n\n"
+            f"Кандидат с идентификатором '{kandidat_identifikator}' не найден.\n\n"
             "Используйте poisk_kandidata() для поиска по ФИО."
         )
 
     stroki = [
         f"**{kandidat.fio}**",
-        f"- ID: {kandidat.identifikator}",
+        f"- Идентификатор: {kandidat.identifikator}",
         f"- Партия: {kandidat.partia or 'Самовыдвижение'}",
         f"- Должность: {kandidat.dolzhnost}",
         f"- Регион: {kandidat.subiekt or 'Не указан'}",

@@ -171,15 +171,15 @@ _SISTEMNYY_PROMPT = """\
       "imya_instrumenta": "gosduma_poluchit_deputatov",
       "parametry": {{"familiya": "Иванов"}},
       "zavisit_ot": [],
-      "obosnovanie": "Нужен ID депутата для запроса расходов"
+      "obosnovanie": "Нужен идентификатор депутата для запроса расходов"
     }},
     {{
       "etap": 2,
       "opisanie": "Запросить расходы депутата за 2024 год",
       "imya_instrumenta": "gosduma_raskhody_deputata",
-      "parametry": {{"id": "{{etap_1.id}}", "god": "2024"}},
+      "parametry": {{"identifikator_deputata": "{{etap_1.identifikator}}", "god": "2024"}},
       "zavisit_ot": [1],
-      "obosnovanie": "Получить расходы используя ID из предыдущего этапа"
+      "obosnovanie": "Получить расходы используя идентификатор из предыдущего этапа"
     }}
   ],
   "primechaniya": ""

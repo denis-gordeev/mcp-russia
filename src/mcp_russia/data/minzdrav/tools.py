@@ -75,7 +75,7 @@ async def info_med_organizatsii(
 
     if not mo:
         return (
-            f"Медицинская организация с ID {identifikator_mo} не найдена.\n\n"
+            f"Медицинская организация с идентификатором {identifikator_mo} не найдена.\n\n"
             f"Используйте poisk_med_organizatsiy() для поиска."
         )
 

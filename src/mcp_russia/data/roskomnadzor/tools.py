@@ -266,7 +266,7 @@ async def zapisi_reestra(
 
     Аргументы:
         kod_reestra: Код реестра (zapreshchennye_sayty, operatory_pd, ori и т.д.).
-        identifikator_zapisi: ID конкретной записи (необязательно).
+        identifikator_zapisi: Идентификатор конкретной записи (необязательно).
 
     Возвращает:
         Описание реестра и ссылка на источник.

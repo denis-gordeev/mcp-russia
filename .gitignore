@@ -1,29 +1,29 @@
-# Python
+# Пайтон
 __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
 build/
 
-# Virtual environment
+# Виртуальное окружение
 .venv/
 
 plan/
 CLAUDE.md
 AGENTS.md
 
-# Caches
+# Кеши
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
 
-# Claude
+# Клод
 .claude/
 
-# Environment
+# Окружение
 .env
 
-# IDE
+# Среда разработки
 .idea/
 .vscode/
 *.swp

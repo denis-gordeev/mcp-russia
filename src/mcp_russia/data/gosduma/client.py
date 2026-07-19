@@ -80,10 +80,10 @@ def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
 
 
 async def poluchit_deputata(identifikator: int) -> Deputat | None:
-    """Получение конкретного депутата по ID.
+    """Получение конкретного депутата по идентификатору.
 
     Аргументы:
-        identifikator: ID депутата.
+        identifikator: Идентификатор депутата.
 
     Возвращает:
         Данные депутата или None.

@@ -28,7 +28,7 @@
 > Промпт: "Сформируй полный профиль депутата [ФИО]: фракция, регион, сроки полномочий, комиссии и должности"
 
 Инструменты:
-- `gosduma_spisok_deputatov(fio="...")` → ID
+- `gosduma_spisok_deputatov(fio="...")` → идентификатор
 - `gosduma_info_deputata(identifikator_deputata=...)` → полный профиль
 
 ```

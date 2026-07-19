@@ -63,7 +63,7 @@ async def spisok_deputatov(sozyv: str = "", kontekst: Context | None = None) -> 
     zagolovok += "\n\n"
     return (
         zagolovok
-        + tablitsa_v_markdown(["ID", "ФИО", "Фракция", "Комитет"], stroki_tablitsy)
+        + tablitsa_v_markdown(["Идентификатор", "ФИО", "Фракция", "Комитет"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
 
@@ -72,7 +72,7 @@ async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
     """Получить информацию о конкретном депутате Госдумы.
 
     Аргументы:
-        identifikator_deputata: ID депутата.
+        identifikator_deputata: Идентификатор депутата.
 
     Возвращает:
         Подробная информация о депутате.
@@ -82,13 +82,13 @@ async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
 
     if not deputat:
         return (
-            f"Депутат с ID {identifikator_deputata} не найден.\n\n"
+            f"Депутат с идентификатором {identifikator_deputata} не найден.\n\n"
             f"Используйте spisok_deputatov() для поиска."
         )
 
     stroki = [
         f"**{deputat.familiya} {deputat.imya} {deputat.otchestvo}**",
-        f"- ID: {deputat.identifikator}",
+        f"- Идентификатор: {deputat.identifikator}",
     ]
     if deputat.frakciya:
         stroki.append(f"- Фракция: {deputat.frakciya}")
@@ -239,6 +239,6 @@ async def golosovaniya(
     zagolovok += f"Найдено: {len(golosovaniya_spisok)} голосований\n\n"
     return (
         zagolovok
-        + tablitsa_v_markdown(["ID", "Тема", "Дата", "Результат"], stroki_tablitsy)
+        + tablitsa_v_markdown(["Идентификатор", "Тема", "Дата", "Результат"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )

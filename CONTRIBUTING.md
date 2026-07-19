@@ -172,7 +172,7 @@ from mcp_russia.data.{modul}.client import poisk_primera
 @respx.mock
 async def test_poisk_uspeshen():
     respx.get("https://api.example.gov.ru/konechnaya_tochka").mock(
-        return_value=httpx.Response(200, json=[{"id": 1, "nazvanie": "Проверка"}])
+        return_value=httpx.Response(200, json=[{"identifikator": 1, "nazvanie": "Проверка"}])
     )
     rezultat = await poisk_primera("zapros")
     assert len(rezultat) == 1
@@ -188,7 +188,7 @@ from mcp_russia.data.{modul}.server import mcp
 @pytest.mark.asyncio
 async def test_tool_via_mcp_client():
     async with Client(mcp) as klient:
-        rezultat = await klient.call_tool("poisk_{modul}", {"zapros": "test"})
+        rezultat = await klient.call_tool("poisk_{modul}", {"zapros": "proverka"})
         assert rezultat is not None
 ```
 
