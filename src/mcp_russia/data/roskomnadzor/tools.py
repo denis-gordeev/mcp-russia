@@ -12,7 +12,7 @@ from .constants import (
     KATEGORII_PD_OPERATOROV,
     NAPRAVLENIYA_DEYATELNOSTI,
     REESTR_RKN,
-    TIPY_LICENZIY_SVYAZI,
+    TIPY_LITSENZIY_SVYAZI,
     TIPY_SMI,
 )
 
@@ -29,14 +29,15 @@ async def spisok_napravleniy(kontekst: Context) -> str:
     return tablitsa_v_markdown(["Код", "Направление"], stroki_tablitsy)
 
 
-async def spisok_tipov_licenziy(kontekst: Context) -> str:
+async def spisok_tipov_litsenziy(kontekst: Context) -> str:
     """Список типов лицензий связи.
 
     Возвращает:
         Список типов лицензий (телефонная, мобильная, интернет и т.д.).
     """
     stroki_tablitsy = [
-        (tip_licenzii["kod"], tip_licenzii["nazvanie"]) for tip_licenzii in TIPY_LICENZIY_SVYAZI
+        (tip_litsenzii["kod"], tip_litsenzii["nazvanie"])
+        for tip_litsenzii in TIPY_LITSENZIY_SVYAZI
     ]
     return tablitsa_v_markdown(["Код", "Тип лицензии"], stroki_tablitsy)
 
@@ -85,25 +86,25 @@ async def spisok_kategoriy_pd_operatorov(kontekst: Context) -> str:
     return tablitsa_v_markdown(["Код", "Категория оператора"], stroki_tablitsy)
 
 
-async def info_licenzii(kontekst: Context, nomer_licenzii: str = "", inn: str = "") -> str:
+async def info_litsenzii(kontekst: Context, nomer_litsenzii: str = "", inn: str = "") -> str:
     """Информация о лицензии связи.
 
     Аргументы:
-        nomer_licenzii: Номер лицензии (необязательно).
+        nomer_litsenzii: Номер лицензии (необязательно).
         inn: ИНН лицензиата (необязательно).
 
     Возвращает:
         Информация о лицензии (тип, организация, даты, статус, территория).
     """
     await kontekst.info("Запрос информации о лицензии связи...")
-    licenzii = await client.poisk_licenziy(nomer=nomer_licenzii, inn=inn)
-    if not licenzii:
+    litsenzii = await client.poisk_litsenziy(nomer=nomer_litsenzii, inn=inn)
+    if not litsenzii:
         return "Лицензия не найдена.\n\nРеестр лицензий связи: https://rkn.gov.ru/licenses"
-    dannye = licenzii[0]
+    dannye = litsenzii[0]
     stroki = [
-        f"**Лицензия связи** № {dannye.get('nomer', nomer_licenzii)}",
+        f"**Лицензия связи** № {dannye.get('nomer', nomer_litsenzii)}",
         f"- Организация: {dannye.get('organizaciya', '')}",
-        f"- Тип лицензии: {dannye.get('tip_licenzii', '')}",
+        f"- Тип лицензии: {dannye.get('tip_litsenzii', '')}",
         f"- Дата выдачи: {dannye.get('data_vydachi', '')}",
         f"- Дата окончания: {dannye.get('data_okonchaniya', '')}",
         f"- Статус: {dannye.get('sostoyanie', '')}",

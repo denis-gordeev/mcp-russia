@@ -28,7 +28,7 @@ from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
 
 def _poluchit_api_token() -> str:
     """Получение токена API Закупок из настроек."""
-    return settings.TOKEN_ZAKUPKI_API
+    return settings.KLYUCH_ZAKUPKI_API
 
 
 async def poisk_zakupok(

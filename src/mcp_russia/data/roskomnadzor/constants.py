@@ -29,7 +29,7 @@ NAPRAVLENIYA_DEYATELNOSTI = [
 ]
 
 # Типы лицензий связи
-TIPY_LICENZIY_SVYAZI = [
+TIPY_LITSENZIY_SVYAZI = [
     {"kod": "telefonnaya", "nazvanie": "Телефонная связь"},
     {"kod": "mobilnaya", "nazvanie": "Мобильная связь"},
     {"kod": "internet", "nazvanie": "Интернет-доступ"},

@@ -18,9 +18,9 @@ async def test_spisok_napravleniy():
     assert "Надзор в сфере СМИ" in rezultat
 
 
-async def test_spisok_tipov_licenziy():
+async def test_spisok_tipov_litsenziy():
     kontekst = _maket_konteksta()
-    rezultat = await rkn_tools.spisok_tipov_licenziy(kontekst)
+    rezultat = await rkn_tools.spisok_tipov_litsenziy(kontekst)
     assert "Интернет-доступ" in rezultat
 
 
@@ -49,20 +49,20 @@ async def test_spisok_kategoriy_pd_operatorov():
     assert len(rezultat) > 0
 
 
-async def test_info_licenzii_ne_nayden():
+async def test_info_litsenzii_ne_nayden():
     kontekst = _maket_konteksta()
-    with patch.object(rkn_tools.client, "poisk_licenziy", return_value=[]):
-        rezultat = await rkn_tools.info_licenzii(kontekst, nomer_licenzii="LIC-001")
+    with patch.object(rkn_tools.client, "poisk_litsenziy", return_value=[]):
+        rezultat = await rkn_tools.info_litsenzii(kontekst, nomer_litsenzii="LIC-001")
     assert "не найдена" in rezultat
 
 
-async def test_info_licenzii_nayden():
+async def test_info_litsenzii_nayden():
     kontekst = _maket_konteksta()
     maket_dannykh = [
         {
             "nomer": "LIC-001",
             "organizaciya": "ООО Тест",
-            "tip_licenzii": "Интернет-доступ",
+            "tip_litsenzii": "Интернет-доступ",
             "data_vydachi": "2023-01-01",
             "data_okonchaniya": "2028-01-01",
             "sostoyanie": "Действует",
@@ -70,8 +70,8 @@ async def test_info_licenzii_nayden():
             "istochnik": "Реестр лицензий (rkn.gov.ru)",
         }
     ]
-    with patch.object(rkn_tools.client, "poisk_licenziy", return_value=maket_dannykh):
-        rezultat = await rkn_tools.info_licenzii(kontekst, nomer_licenzii="LIC-001")
+    with patch.object(rkn_tools.client, "poisk_litsenziy", return_value=maket_dannykh):
+        rezultat = await rkn_tools.info_litsenzii(kontekst, nomer_litsenzii="LIC-001")
     assert "LIC-001" in rezultat
     assert "ООО Тест" in rezultat
 

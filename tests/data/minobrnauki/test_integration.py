@@ -29,7 +29,7 @@ async def test_instrumenty_zaregistrirovany(klient):
         "granty_i_isledovaniya",
         "reyting_vuzov",
         "aspirantura",
-        "poisk_licenziy",
+        "poisk_litsenziy",
     }
     assert ozhidayemyy.issubset(imena_instrumentov), (
         f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"

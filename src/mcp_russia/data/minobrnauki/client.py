@@ -82,7 +82,7 @@ async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
         return None
 
 
-async def poisk_licenziy(
+async def poisk_litsenziy(
     nazvanie: str = "",
     inn: str = "",
 ) -> list[dict[str, Any]]:
@@ -218,9 +218,9 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
         "tip": zapis.get("type", ""),
         "gorod": zapis.get("city", ""),
         "subiekt": zapis.get("subjectRF", ""),
-        "status_licenzii": zapis.get("licenseStatus", ""),
-        "data_licenzii": zapis.get("licenseDate", ""),
-        "nomer_licenzii": zapis.get("licenseNumber", ""),
+        "status_litsenzii": zapis.get("licenseStatus", ""),
+        "data_litsenzii": zapis.get("licenseDate", ""),
+        "nomer_litsenzii": zapis.get("licenseNumber", ""),
         "srok_deystviya": zapis.get("validUntil", ""),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }

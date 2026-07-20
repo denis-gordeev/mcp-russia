@@ -12,7 +12,7 @@ from .resources import (
     zakonodatelstvo,
 )
 from .tools import (
-    info_licenzii,
+    info_litsenzii,
     info_operatora_pd,
     poisk_narusheniy,
     poisk_ori,
@@ -22,7 +22,7 @@ from .tools import (
     spisok_kategoriy_pd_operatorov,
     spisok_napravleniy,
     spisok_reestrov,
-    spisok_tipov_licenziy,
+    spisok_tipov_litsenziy,
     spisok_tipov_smi,
     zapisi_reestra,
 )
@@ -31,12 +31,12 @@ mcp = FastMCP("mcp-russia-roskomnadzor")
 
 # Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})
-mcp.tool(spisok_tipov_licenziy, tags={"лицензии", "справочник"})
+mcp.tool(spisok_tipov_litsenziy, tags={"лицензии", "справочник"})
 mcp.tool(spisok_kategoriy_narusheniy, tags={"нарушения", "справочник"})
 mcp.tool(spisok_reestrov, tags={"реестры", "справочник"})
 mcp.tool(spisok_tipov_smi, tags={"сми", "справочник"})
 mcp.tool(spisok_kategoriy_pd_operatorov, tags={"операторы-пд", "справочник"})
-mcp.tool(info_licenzii, tags={"лицензия", "информация"})
+mcp.tool(info_litsenzii, tags={"лицензия", "информация"})
 mcp.tool(poisk_smi, tags={"сми", "поиск"})
 mcp.tool(info_operatora_pd, tags={"оператор-пд", "информация"})
 mcp.tool(poisk_narusheniy, tags={"нарушения", "поиск"})

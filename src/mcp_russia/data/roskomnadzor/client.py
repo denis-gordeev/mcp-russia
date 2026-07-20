@@ -112,7 +112,7 @@ async def proverka_blokirovki(domen: str = "") -> dict[str, Any]:
         }
 
 
-async def poisk_licenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]:
+async def poisk_litsenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]]:
     """Поиск лицензий связи в реестре Роскомнадзора.
 
     Аргументы:
@@ -220,7 +220,7 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
     return {
         "nomer": zapis.get("number", "") or zapis.get("nomer", ""),
         "organizaciya": zapis.get("licensee", "") or zapis.get("organizaciya", ""),
-        "tip_licenzii": zapis.get("type", "") or zapis.get("tip", ""),
+        "tip_litsenzii": zapis.get("type", "") or zapis.get("tip", ""),
         "data_vydachi": zapis.get("issueDate", ""),
         "data_okonchaniya": zapis.get("expiryDate", ""),
         "sostoyanie": zapis.get("status", ""),

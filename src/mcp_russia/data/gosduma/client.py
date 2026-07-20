@@ -22,7 +22,7 @@ from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
 
 def _poluchit_api_token() -> str:
     """Получение токена API Госдумы из настроек."""
-    return settings.TOKEN_GOSDUMY_API
+    return settings.KLYUCH_GOSDUMY_API
 
 
 async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:

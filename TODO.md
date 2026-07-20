@@ -2,7 +2,56 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-20 (восемьдесят восьмой проход — русификация as e→isklyuchenie, документация subyekty→subiekty, cliff.toml breaking, CI/CD шаги, диаграммы, adding-features.md пример)
+## Статус раунда 2026-07-20 (восемьдесят девятый проход — TOKEN→KLYUCH, licenz→litsenz, исправление документации)
+
+### Выполнено
+
+- **Унификация `TOKEN` → `KLYUCH`** в settings.py (2 константы + 2 ссылки):
+  - settings.py: `TOKEN_GOSDUMY_API` → `KLYUCH_GOSDUMY_API`, `TOKEN_ZAKUPKI_API` → `KLYUCH_ZAKUPKI_API`
+  - gosduma/client.py: `settings.TOKEN_GOSDUMY_API` → `settings.KLYUCH_GOSDUMY_API`
+  - zakupki/client.py: `settings.TOKEN_ZAKUPKI_API` → `settings.KLYUCH_ZAKUPKI_API`
+- **Унификация `licenz` → `litsenz`** — устранение португальской транслитерации `c` → русская `ts` для «ц» (~30 замен в 12 файлах):
+  - roskomnadzor/schemas.py: `LicenziyaSvyazi` → `LitsenziyaSvyazi`, `tip_licenzii` → `tip_litsenzii`
+  - roskomnadzor/constants.py: `TIPY_LICENZIY_SVYAZI` → `TIPY_LITSENZIY_SVYAZI`
+  - roskomnadzor/tools.py: `spisok_tipov_licenziy` → `spisok_tipov_litsenziy`, `info_licenzii` → `info_litsenzii`, `nomer_licenzii` → `nomer_litsenzii`, `licenzii` → `litsenzii`, `poisk_licenziy` → `poisk_litsenziy`, `tip_licenzii` → `tip_litsenzii`
+  - roskomnadzor/client.py: `poisk_licenziy` → `poisk_litsenziy`, `tip_licenzii` → `tip_litsenzii`
+  - roskomnadzor/server.py: `info_licenzii` → `info_litsenzii`, `spisok_tipov_licenziy` → `spisok_tipov_litsenziy`
+  - minobrnauki/client.py: `poisk_licenziy` → `poisk_litsenziy`, `status_licenzii` → `status_litsenzii`, `nomer_licenzii` → `nomer_litsenzii`, `data_licenzii` → `data_litsenzii`
+  - minobrnauki/tools.py: `poisk_licenziy` → `poisk_litsenziy`, `nomer_licenzii` → `nomer_litsenzii`, `status_licenzii` → `status_litsenzii`
+  - minobrnauki/server.py: `poisk_licenziy` → `poisk_litsenziy`
+  - rosprirodnadzor/schemas.py: `LicenziyaNedropolzovanie` → `LitsenziyaNedropolzovanie`
+  - tests/data/roskomnadzor/test_tools.py: 5 функций и моков
+  - tests/data/roskomnadzor/test_integration.py: 2 ссылки
+  - tests/data/minobrnauki/test_tools.py: 2 функции и моков
+  - tests/data/minobrnauki/test_integration.py: 1 ссылка
+- **Исправление смешанного скрипта в документации**: `прavo.gov.ru` → `pravo.gov.ru` в politolog.md (кириллическое «пр» + латинское «avo»)
+- **Исправление `subyekt` → `subiekt`** в politolog.md (1 вхождение; согласовано с конвенцией проекта)
+- **Исправление грамматической ошибки**: `юанка` → `юаня` в ekonomist.md (родительный падеж слова «юань»)
+- **Исправление параметров в документации** (~15 замен в municipalnyy-kontrol.md):
+  - `rosaudit_poisk_narusheniy(subiekt=...)` → `(organizaciya=...)` / `(tip=...)` — функция не принимает параметр `subiekt`; реальная сигнатура: `organizaciya, tip, god`
+  - `kaznacheistvo_ispolnenie_byudzheta(subiekt=...)` → `(god=...)` — устранён несуществующий параметр
+  - `zakupki_poisk_kontraktov(organ=..., god=...)` → `(inn_zakazchika=...)` — реальная сигнатура: `inn_podryadchika, inn_zakazchika, ogranichenie`
+  - Устранены дублирующиеся вызовы (Мытищи/Люберцы вместо двух идентичных «МО»)
+  - `"zdravookhranenie"` → `"Здравоохранение"` (унификация кириллицей в примерах)
+- **Исправление примера в zhurnalist-stati.md**: `cbrf_sravnit_valyuty(kody=["key_rate", "cpi"])` → `(kody=["USD", "EUR", "CNY"])` — функция принимает коды валют, не макроиндикаторы
+- **Исправление дублирующихся вызовов** в zhurnalist-stati.md: 3 одинаковых `rosstat_spisok_regionov` → 3 разных инструмента (справочник + 2 региональных запроса)
+- **Контекстуализация аббревиатуры `пнкп`** в CHANGELOG.md (2 вхождения): добавлено пояснение «(бразильская ПНЗК — Plataforma Nacional de Contratações Públicas)»
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 1 файл переформатировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **`TOKEN` → `KLYUCH`**: устранён английский идентификатор в константах настроек; `KLYUCH_DADATA_API` и `KLYUCH_ANTHROPIC_API` уже использовали `KLYUCH`; `TOKEN` — единственное исключение; имена переменных окружения (`MCP_RUSSIA_DUMA_API_TOKEN`, `MCP_RUSSIA_ZAKUPKI_API_TOKEN`) оставлены без изменений — внешняя конфигурация; ломающее изменение для клиентов, использующих `settings.TOKEN_GOSDUMY_API` или `settings.TOKEN_ZAKUPKI_API`
+- **`licenz` → `litsenz`**: устранена португальская транслитерация «ц» через `c`; русская транслитерация через `ts` (`litsenziya`) — устоявшаяся конвенция проекта; в rosprirodnadzor/tools.py и rosprirodnadzor/client.py уже использовалось `litsenz`, но класс `LicenziyaNedropolzovanie` и весь модуль roskomnadzor/minobrnauki использовали `licenz`; ломающее изменение для клиентов, использующих инструменты `spisok_tipov_licenziy`, `info_licenzii`, `poisk_licenziy`
+- **`прavo.gov.ru`**: критическая опечатка — смешение кириллицы и латиницы; URL должен быть полностью латинским
+- **`subyekt` → `subiekt`**: исправлена документация — исходный код использует `subiekt` (с `ie` для `ъ`), а документация ссылалась на устаревшее `subyekt`; согласовано с исправлением раунда 86
+- **`rosaudit_poisk_narusheniy(subiekt=...)`**: исправлена документация — реальная функция принимает `organizaciya, tip, god`, не `subiekt`; пользователи, копировавшие примеры, получали ошибки несуществующих параметров
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг; имена переменных окружения оставлены на английском — внешняя конфигурация
 
 ### Выполнено
 

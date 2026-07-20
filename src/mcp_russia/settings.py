@@ -29,10 +29,10 @@ POISK_INSTRUMENTOV: str = os.environ.get("MCP_RUSSIA_TOOL_SEARCH", "bm25")
 KLYUCH_DADATA_API: str = os.environ.get("MCP_RUSSIA_DADATA_API_KEY", "")
 
 # --- Госдума API ---
-TOKEN_GOSDUMY_API: str = os.environ.get("MCP_RUSSIA_DUMA_API_TOKEN", "")
+KLYUCH_GOSDUMY_API: str = os.environ.get("MCP_RUSSIA_DUMA_API_TOKEN", "")
 
 # --- ЕИС Закупки API ---
-TOKEN_ZAKUPKI_API: str = os.environ.get("MCP_RUSSIA_ZAKUPKI_API_TOKEN", "")
+KLYUCH_ZAKUPKI_API: str = os.environ.get("MCP_RUSSIA_ZAKUPKI_API_TOKEN", "")
 
 # --- ИИ-рекомендации (rekomendovat_instrumenty) ---
 KLYUCH_ANTHROPIC_API: str = os.environ.get("ANTHROPIC_API_KEY", "")

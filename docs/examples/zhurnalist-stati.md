@@ -130,7 +130,7 @@ API: rosstat_demografiya
 > Промпт: «Покажи динамику ключевой ставки за последние 5 лет и сравни с инфляцией»
 
 ```
-API: cbrf_sravnit_valyuty(kody=["key_rate", "cpi"])
+API: cbrf_sravnit_valyuty(kody=["USD", "EUR", "CNY"])
 ```
 
 **2. Влияние на кредитование**
@@ -246,8 +246,8 @@ API: cekrf_poisk_kandidata + cekrf_kandidat_podrobno (пакетно)
 ```json
 [
   {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
-  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
-  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}}
+  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod_pokazatelya": "XXX", "subiekt": "Москва"}},
+  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod_pokazatelya": "XXX", "subiekt": "Санкт-Петербург"}}
 ]
 ```
 

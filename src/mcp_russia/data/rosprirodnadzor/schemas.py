@@ -23,7 +23,7 @@ class ObektNegativnogoVozdeystviya(BaseModel):
     vid_deyatelnosti: str = ""
 
 
-class LicenziyaNedropolzovanie(BaseModel):
+class LitsenziyaNedropolzovanie(BaseModel):
     nomer: str
     vid_litsenzii: str = ""
     territoriya: str = ""

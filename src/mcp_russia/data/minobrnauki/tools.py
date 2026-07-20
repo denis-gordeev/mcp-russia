@@ -246,7 +246,7 @@ async def aspirantura(kontekst: Context, organizatsiya: str = "") -> str:
     )
 
 
-async def poisk_licenziy(kontekst: Context, nazvanie: str = "", inn: str = "") -> str:
+async def poisk_litsenziy(kontekst: Context, nazvanie: str = "", inn: str = "") -> str:
     """Поиск лицензий на образовательную деятельность.
 
     Аргументы:
@@ -257,16 +257,16 @@ async def poisk_licenziy(kontekst: Context, nazvanie: str = "", inn: str = "") -
         Список лицензий с номерами и статусами.
     """
     await kontekst.info("Запрос лицензий из реестра Рособрнадзора...")
-    rezultaty = await client.poisk_licenziy(nazvanie=nazvanie, inn=inn)
+    rezultaty = await client.poisk_litsenziy(nazvanie=nazvanie, inn=inn)
     if not rezultaty:
         return "Лицензии не найдены."
     stroki_tablitsy = []
     for rezultat in rezultaty:
         stroki_tablitsy.append(
             (
-                rezultat.get("nomer_licenzii", ""),
+                rezultat.get("nomer_litsenzii", ""),
                 rezultat.get("nazvanie", ""),
-                rezultat.get("status_licenzii", ""),
+                rezultat.get("status_litsenzii", ""),
                 rezultat.get("srok_deystviya", ""),
             )
         )

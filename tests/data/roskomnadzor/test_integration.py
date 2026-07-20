@@ -18,12 +18,12 @@ async def test_instrumenty_zaregistrirovany(klient):
 
     ozhidayemyy = {
         "spisok_napravleniy",
-        "spisok_tipov_licenziy",
+        "spisok_tipov_litsenziy",
         "spisok_kategoriy_narusheniy",
         "spisok_reestrov",
         "spisok_tipov_smi",
         "spisok_kategoriy_pd_operatorov",
-        "info_licenzii",
+        "info_litsenzii",
         "poisk_smi",
         "info_operatora_pd",
         "poisk_narusheniy",

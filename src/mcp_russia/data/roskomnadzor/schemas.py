@@ -5,11 +5,11 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class LicenziyaSvyazi(BaseModel):
+class LitsenziyaSvyazi(BaseModel):
     """Лицензия на оказание услуг связи."""
 
     nomer: str
-    tip_licenzii: str = ""
+    tip_litsenzii: str = ""
     organizaciya: str = ""
     data_vydachi: str = ""
     data_okonchaniya: str = ""

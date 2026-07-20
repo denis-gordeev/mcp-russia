@@ -131,24 +131,24 @@ async def test_aspirantura():
     assert "аспирант" in rezultat.lower()
 
 
-async def test_poisk_licenziy_pustoy():
+async def test_poisk_litsenziy_pustoy():
     kontekst = _maket_konteksta()
-    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=[]):
-        rezultat = await minobrnauki_tools.poisk_licenziy(kontekst=kontekst, inn="1234567890")
+    with patch.object(minobrnauki_tools.client, "poisk_litsenziy", return_value=[]):
+        rezultat = await minobrnauki_tools.poisk_litsenziy(kontekst=kontekst, inn="1234567890")
     assert "не найдены" in rezultat
 
 
-async def test_poisk_licenziy_nayden():
+async def test_poisk_litsenziy_nayden():
     kontekst = _maket_konteksta()
     maket_dannykh = [
         {
-            "nomer_licenzii": "1234",
+            "nomer_litsenzii": "1234",
             "nazvanie": "МГУ",
-            "status_licenzii": "Действует",
+            "status_litsenzii": "Действует",
             "srok_deystviya": "2026-01-01",
         }
     ]
-    with patch.object(minobrnauki_tools.client, "poisk_licenziy", return_value=maket_dannykh):
-        rezultat = await minobrnauki_tools.poisk_licenziy(kontekst=kontekst, inn="7710563663")
+    with patch.object(minobrnauki_tools.client, "poisk_litsenziy", return_value=maket_dannykh):
+        rezultat = await minobrnauki_tools.poisk_litsenziy(kontekst=kontekst, inn="7710563663")
     assert "МГУ" in rezultat
     assert "1234" in rezultat
