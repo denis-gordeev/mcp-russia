@@ -2,6 +2,37 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-20 (восемьдесят восьмой проход — русификация as e→isklyuchenie, документация subyekty→subiekty, cliff.toml breaking, CI/CD шаги, диаграммы, adding-features.md пример)
+
+### Выполнено
+
+- **Русификация `as e` → `as isklyuchenie`** в except-блоках (2 файла, пропущенные в раунде 85):
+  - _shared/discovery.py: `except Exception as e` → `as isklyuchenie` + `str(e)` → `str(isklyuchenie)` + `f"...{e}"` → `f"...{isklyuchenie}"`
+  - _shared/planner.py: `except Exception as e` → `as isklyuchenie` + `str(e)` → `str(isklyuchenie)` + `f"...{e}"` → `f"...{isklyuchenie}"`
+- **Исправление документации `subyekty_rf` → `subiekty_rf`** в features.md (2 вхождения: имя инструмента и ресурс URI)
+- **Русификация `breaking` → `ломающее изменение`** в cliff.toml (пользовательски-видимый маркер в CHANGELOG)
+- **Русификация примера в adding-features.md** (3 замены): `/items` → `/zapisi`, `"page"` → `"stranitsa"`, `element` → `zapis` в цикле
+- **Переименование устаревших диаграмм** (4 PNG): `system_overview.png` → `obzor_sistemy.png`, `feature_anatomy.png` → `anatomiya_modulya.png`, `auto_registry_flow.png` → `potok_avtoobnaruzheniya.png`, `data_flow.png` → `potok_dannykh.png` (синхронизировано с generate_diagrams.py)
+- **Русификация CI/CD step names** (16 шагов в 2 файлах):
+  - ci.yml: `CI` → `НИК`, `Install Python` → `Установить Python`, `Install dependencies` → `Установить зависимости`, `Lint` → `Линтинг`, `Type check` → `Проверка типов`, `Test` → `Тесты`
+  - release.yml: `Release to PyPI` → `Релиз в PyPI`, `Publish to PyPI` → `Публикация в PyPI`, `Build package` → `Сборка пакета`, `Smoke test` → `Дымовое тестирование`, `Create GitHub Release` → `Создать релиз на GitHub`, `Install git-cliff` → `Установить git-cliff`
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 306 файлов уже форматировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **`as e` → `as isklyuchenie`**: устранены два пропущенных English-идентификатора в except-блоках; согласовано с конвенцией, установленной в раунде 85
+- **`subyekty_rf` → `subiekty_rf`**: исправлена документация — исходный код использует `subiekty_rf` (с `ie` для `ъ`), а документация ссылалась на устаревшее `subyekty_rf`; пользователи, копировавшие из документации, получали ошибки
+- **`breaking` → `ломающее изменение`**: русификация пользовательски-видимого маркера в CHANGELOG; «ломающее изменение» — точный перевод «breaking change»
+- **Диаграммы**: устаревшие английские имена файлов заменены на русские транслитерации; скрипт generate_diagrams.py уже генерирует новые имена (с раунда 81), но старые PNG-файлы оставались на диске
+- **CI/CD step names**: GitHub Actions отображает `name:` в интерфейсе; русификация согласована с общей конвенцией проекта
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг
+
 ## Статус раунда 2026-07-19 (восемьдесят седьмой проход — русификация ID→Идентификатор, .gitignore, planner.py пример, CHANGELOG.md, CONTRIBUTING.md)
 
 ### Выполнено

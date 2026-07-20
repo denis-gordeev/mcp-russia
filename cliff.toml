@@ -20,7 +20,7 @@ body = """
     {% for commit in commits %}
         - {% if commit.scope %}**{{ commit.scope }}:** {% endif %}\
             {{ commit.message | upper_first }}\
-            {% if commit.breaking %} [**breaking**]{% endif %}\
+            {% if commit.breaking %} [**ломающее изменение**]{% endif %}\
     {%- endfor %}
 {% endfor %}\n
 """

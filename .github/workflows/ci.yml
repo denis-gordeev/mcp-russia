@@ -1,4 +1,4 @@
-name: CI
+name: НИК
 
 on:
   push:
@@ -20,17 +20,17 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Python ${{ matrix.python-version }}
+      - name: Установить Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Установить зависимости
         run: uv sync --group dev
 
-      - name: Lint
+      - name: Линтинг
         run: uv run ruff check src/ tests/ && uv run ruff format --check src/ tests/
 
-      - name: Type check
+      - name: Проверка типов
         run: uv run mypy src/mcp_russia/
 
-      - name: Test
+      - name: Тесты
         run: uv run pytest -v

@@ -1,4 +1,4 @@
-name: Release to PyPI
+name: Релиз в PyPI
 
 on:
   push:
@@ -19,23 +19,23 @@ jobs:
         with:
           enable-cache: true
 
-      - name: Install Python ${{ matrix.python-version }}
+      - name: Установить Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
 
-      - name: Install dependencies
+      - name: Установить зависимости
         run: uv sync --group dev
 
-      - name: Lint
+      - name: Линтинг
         run: uv run ruff check src/ tests/ && uv run ruff format --check src/ tests/
 
-      - name: Type check
+      - name: Проверка типов
         run: uv run mypy src/mcp_russia/
 
-      - name: Test
+      - name: Тесты
         run: uv run pytest -v
 
   publish:
-    name: Publish to PyPI
+    name: Публикация в PyPI
     needs: ci
     runs-on: ubuntu-latest
     environment:
@@ -49,21 +49,21 @@ jobs:
 
       - uses: astral-sh/setup-uv@v5
 
-      - name: Install Python
+      - name: Установить Python
         run: uv python install 3.13
 
-      - name: Build package
+      - name: Сборка пакета
         run: uv build
 
-      - name: Smoke test
+      - name: Дымовое тестирование
         run: |
           uv run --with ./dist/*.whl --no-project -- python -c "import mcp_russia; print(mcp_russia.__version__)"
 
-      - name: Publish to PyPI
+      - name: Публикация в PyPI
         run: uv publish --trusted-publishing always
 
   github-release:
-    name: Create GitHub Release
+    name: Создать релиз на GitHub
     needs: [ci, publish]
     runs-on: ubuntu-latest
     permissions:
@@ -74,7 +74,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Install git-cliff
+      - name: Установить git-cliff
         uses: orhun/git-cliff-action@v4
         with:
           config: cliff.toml
@@ -82,7 +82,7 @@ jobs:
         env:
           OUTPUT: RELEASE_NOTES.md
 
-      - name: Create GitHub Release
+      - name: Создать релиз на GitHub
         run: gh release create ${{ github.ref_name }} --title "${{ github.ref_name }}" --notes-file RELEASE_NOTES.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

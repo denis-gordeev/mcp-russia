@@ -85,8 +85,8 @@ from .schemas import PrimerZapisi
 
 
 async def spisok_zapisey(stranitsa: int = 1) -> list[PrimerZapisi]:
-    dannye = await http_poluchit(f"{PRIMER_BAZA_API}/items", parametry={"page": stranitsa})
-    return [PrimerZapisi(**element) for element in dannye]
+    dannye = await http_poluchit(f"{PRIMER_BAZA_API}/zapisi", parametry={"stranitsa": stranitsa})
+    return [PrimerZapisi(**zapis) for zapis in dannye]
 ```
 
 ## Шаг 4. Описать инструменты

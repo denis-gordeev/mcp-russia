@@ -148,9 +148,9 @@ async def rekomendovat_instrumenty_impl(zapros: str, katalog: str) -> str:
         )
         blok = otvet.content[0]
         return str(getattr(blok, "text", ""))
-    except Exception as e:
-        logger.error("Ошибка вызова API Anthropic: %s", e)
+    except Exception as isklyuchenie:
+        logger.error("Ошибка вызова API Anthropic: %s", isklyuchenie)
         return (
-            f"Ошибка при обращении к LLM: {e}\n\n"
+            f"Ошибка при обращении к LLM: {isklyuchenie}\n\n"
             "В качестве альтернативы используйте 'search_tools'."
         )

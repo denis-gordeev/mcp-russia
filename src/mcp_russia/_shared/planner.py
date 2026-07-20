@@ -268,9 +268,9 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
             logger.warning("Не удалось разобрать JSON плана; возврат сырого текста")
             return syrovoy_tekst
 
-    except Exception as e:
-        logger.error("Ошибка вызова API Anthropic: %s", e)
+    except Exception as isklyuchenie:
+        logger.error("Ошибка вызова API Anthropic: %s", isklyuchenie)
         return (
-            f"Ошибка при обращении к LLM: {e}\n\n"
+            f"Ошибка при обращении к LLM: {isklyuchenie}\n\n"
             "В качестве альтернативы используйте 'search_tools'."
         )
