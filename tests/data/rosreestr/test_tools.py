@@ -56,7 +56,7 @@ async def test_info_obekta_uspekh():
             ploshchad="1000",
             kadastrovaya_stoimost="5000000",
             data_opredeleniya_stoimosti="2024-01-01",
-            status_ucheta="Учтённый",
+            sostoyanie_ucheta="Учтённый",
             kategoriya_zemel="Земли населённых пунктов",
         ),
     ):

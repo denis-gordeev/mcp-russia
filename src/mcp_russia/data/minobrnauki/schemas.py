@@ -13,7 +13,7 @@ class VUZ(BaseModel):
     gorod: str = ""
     subiekt: str = ""
     federalny_okrug: str = ""
-    status_akkreditatsii: str = ""
+    sostoyanie_akkreditatsii: str = ""
     kolichestvo_studentov: int | None = None
     kolichestvo_prepodavateley: int | None = None
     god_osnovaniya: int | None = None

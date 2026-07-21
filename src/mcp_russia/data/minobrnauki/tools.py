@@ -115,7 +115,7 @@ async def info_vuza(kontekst: Context, nazvanie: str = "", inn: str = "") -> str
         f"- Тип: {dannye.get('tip', '')}",
         f"- Город: {dannye.get('gorod', '')}",
         f"- Регион: {dannye.get('subiekt', '')}",
-        f"- Аккредитация: {dannye.get('status_akkreditatsii', '')}",
+        f"- Аккредитация: {dannye.get('sostoyanie_akkreditatsii', '')}",
         f"- Дата аккредитации: {dannye.get('data_akkreditatsii', '')}",
         f"- Срок действия: {dannye.get('srok_deystviya', '')}",
         f"- № свидетельства: {dannye.get('nomer_svidetelstva', '')}",
@@ -144,7 +144,7 @@ async def programmy_vuza(kontekst: Context, vuz: str, uroven: str = "") -> str:
     dannye = rezultaty[0]
     stroki = [
         f"**{dannye.get('nazvanie', vuz)}**",
-        f"- Аккредитация: {dannye.get('status_akkreditatsii', '')}",
+        f"- Аккредитация: {dannye.get('sostoyanie_akkreditatsii', '')}",
         f"- № свидетельства: {dannye.get('nomer_svidetelstva', '')}",
         "",
         "Подробная информация об образовательных программах доступна на:",
@@ -266,7 +266,7 @@ async def poisk_litsenziy(kontekst: Context, nazvanie: str = "", inn: str = "") 
             (
                 rezultat.get("nomer_litsenzii", ""),
                 rezultat.get("nazvanie", ""),
-                rezultat.get("status_litsenzii", ""),
+                rezultat.get("sostoyanie_litsenzii", ""),
                 rezultat.get("srok_deystviya", ""),
             )
         )

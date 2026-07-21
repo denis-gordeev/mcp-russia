@@ -44,7 +44,7 @@ class ShtrafGIBDD(BaseModel):
     opisanie_narusheniya: str = ""
     summa_shtrafa: float | None = None
     skidka_50: bool = False
-    status_oplaty: str = ""
+    sostoyanie_oplaty: str = ""
     data_oplaty: str = ""
     mesto_narusheniya: str = ""
 

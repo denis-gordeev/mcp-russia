@@ -14,7 +14,7 @@ class KadastrovyyObekt(BaseModel):
     ploshchad: str = ""
     kadastrovaya_stoimost: str = ""
     data_opredeleniya_stoimosti: str = ""
-    status_ucheta: str = ""
+    sostoyanie_ucheta: str = ""
     kategoriya_zemel: str = ""
 
 

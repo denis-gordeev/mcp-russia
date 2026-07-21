@@ -279,8 +279,8 @@ def _razobrat_karantin(dannye: dict[str, Any]) -> dict[str, Any]:
         "nazvanie": dannye.get("name", "") or dannye.get("nazvanie", ""),
         "tip": dannye.get("type", "") or dannye.get("tip", ""),
         "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
-        "status_karantina": dannye.get("quarantineStatus", "")
-        or dannye.get("status_karantina", ""),
+        "sostoyanie_karantina": dannye.get("quarantineStatus", "")
+        or dannye.get("sostoyanie_karantina", ""),
         "data_vvedeniya": dannye.get("startDate", "") or dannye.get("data_vvedeniya", ""),
         "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
@@ -310,7 +310,7 @@ def _razobrat_sertifikat(dannye: dict[str, Any]) -> dict[str, Any]:
         "otpravitel": dannye.get("sender", "") or dannye.get("otpravitel", ""),
         "poluchatel": dannye.get("receiver", "") or dannye.get("poluchatel", ""),
         "data_oformleniya": dannye.get("date", "") or dannye.get("data_oformleniya", ""),
-        "region_otpravki": dannye.get("senderRegion", "") or dannye.get("region_otpravki", ""),
+        "subiekt_otpravki": dannye.get("senderRegion", "") or dannye.get("subiekt_otpravki", ""),
         "sostoyanie": dannye.get("status", ""),
         "istochnik": "Россельхознадзор (fsvps.gov.ru)",
     }

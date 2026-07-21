@@ -143,7 +143,7 @@ async def poisk_karantinnykh_obektov(
             obekt.get("nazvanie", ""),
             obekt.get("tip", ""),
             obekt.get("subiekt", "")[:30],
-            obekt.get("status_karantina", ""),
+            obekt.get("sostoyanie_karantina", ""),
             obekt.get("data_vvedeniya", ""),
         )
         for obekt in obekty
@@ -224,7 +224,7 @@ async def veterinarsnye_sertifikaty(
         (
             sertifikat.get("nomer", ""),
             sertifikat.get("tip_produktsii", ""),
-            sertifikat.get("region_otpravki", "")[:30],
+            sertifikat.get("subiekt_otpravki", "")[:30],
             sertifikat.get("data_oformleniya", ""),
             sertifikat.get("sostoyanie", ""),
         )

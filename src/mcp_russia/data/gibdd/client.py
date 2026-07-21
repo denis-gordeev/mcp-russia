@@ -188,7 +188,7 @@ def _razobrat_dtp(dannye: Any) -> list[dict[str, Any]]:
                 "subiekt_dtp": zapis.get("regionName", ""),
                 "model_ts": zapis.get("vehicleModel", ""),
                 "god_vypuska": zapis.get("vehicleYear", ""),
-                "status_ts": zapis.get("damageState", ""),
+                "sostoyanie_ts": zapis.get("damageState", ""),
             }
         )
     return zapisi

@@ -52,7 +52,7 @@ async def subiekty_rf(kontekst: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Субъект РФ"], stroki_tablitsy)
 
 
-async def dolzhnosti_federal(kontekst: Context) -> str:
+async def dolzhnosti_federalnye(kontekst: Context) -> str:
     """Получить список федеральных избирательных должностей.
 
     Включает: Президент РФ, депутат Госдумы (фед. округ),
@@ -62,7 +62,7 @@ async def dolzhnosti_federal(kontekst: Context) -> str:
         Таблица с должностями.
     """
     await kontekst.info("Запрос федеральных избирательных должностей...")
-    dolzhnosti = await client.dolzhnosti_federal()
+    dolzhnosti = await client.dolzhnosti_federalnye()
 
     stroki_tablitsy = [
         (str(dolzhnost.kod), dolzhnost.nazvanie, dolzhnost.uroven) for dolzhnost in dolzhnosti

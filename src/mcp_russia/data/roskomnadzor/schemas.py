@@ -48,7 +48,7 @@ class NarushenieRKN(BaseModel):
     organizaciya: str = ""
     norma_prava: str = ""  # ссылка на закон (152-ФЗ, 149-ФЗ и т.д.)
     data_vyyavleniya: str = ""
-    status_rassmotreniya: str = ""
+    sostoyanie_rassmotreniya: str = ""
     shtraf: float | None = None
     valyuta: str = "руб."
 

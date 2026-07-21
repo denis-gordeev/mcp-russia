@@ -20,7 +20,7 @@ class KarantinnyyObyekt(BaseModel):
     nazvanie: str
     tip: str = ""
     subiekt: str = ""
-    status_karantina: str = ""
+    sostoyanie_karantina: str = ""
     data_vvedeniya: str = ""
     opisanie: str = ""
 
@@ -41,5 +41,5 @@ class VeterinarnyySertifikat(BaseModel):
     otpravitel: str = ""
     poluchatel: str = ""
     data_oformleniya: str = ""
-    region_otpravki: str = ""
+    subiekt_otpravki: str = ""
     sostoyanie: str = ""

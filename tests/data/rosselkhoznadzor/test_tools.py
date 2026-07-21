@@ -111,7 +111,7 @@ class TestInstrumenty:
                 "nazvanie": "Калифорнийская щитовка",
                 "tip": "Вредитель",
                 "subiekt": "Краснодарский край",
-                "status_karantina": "Действует",
+                "sostoyanie_karantina": "Действует",
                 "data_vvedeniya": "2023-06-01",
             }
         ]

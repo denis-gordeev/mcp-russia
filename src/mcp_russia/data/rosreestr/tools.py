@@ -119,8 +119,8 @@ async def info_obekta(kadastrovyy_nomer: str, kontekst: Context) -> str:
             stroki.append(f"**Кадастровая стоимость:** {obekt.kadastrovaya_stoimost}")
     if obekt.data_opredeleniya_stoimosti:
         stroki.append(f"**Дата определения стоимости:** {obekt.data_opredeleniya_stoimosti}")
-    if obekt.status_ucheta:
-        stroki.append(f"**Статус учёта:** {obekt.status_ucheta}")
+    if obekt.sostoyanie_ucheta:
+        stroki.append(f"**Статус учёта:** {obekt.sostoyanie_ucheta}")
     if obekt.kategoriya_zemel:
         stroki.append(f"**Категория земель:** {obekt.kategoriya_zemel}")
 

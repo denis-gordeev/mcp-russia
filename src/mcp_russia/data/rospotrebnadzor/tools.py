@@ -198,7 +198,7 @@ async def zhaloby_potrebiteley(kontekst: Context, organizaciya: str = "", inn: s
             zhaloba.get("tema", ""),
             zhaloba.get("organizaciya", ""),
             zhaloba.get("data_podachi", ""),
-            zhaloba.get("status_rassmotreniya", ""),
+            zhaloba.get("sostoyanie_rassmotreniya", ""),
             zhaloba.get("rezultat", ""),
         )
         for zhaloba in zhaloby

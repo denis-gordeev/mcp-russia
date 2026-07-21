@@ -51,7 +51,7 @@ class NalogovoeNachislenie(BaseModel):
     vid_naloga: str = ""
     period: str = ""
     summa: float | None = None
-    status_oplaty: str = ""
+    sostoyanie_oplaty: str = ""
     zadolzhennost: float | None = None
 
 

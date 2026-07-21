@@ -173,7 +173,7 @@ def _razobrat_zhalobu(zapis: dict[str, Any]) -> dict[str, Any]:
     return {
         "tema": zapis.get("subject", "") or zapis.get("topic", ""),
         "data_podachi": zapis.get("date", "") or zapis.get("created", ""),
-        "status_rassmotreniya": zapis.get("status", ""),
+        "sostoyanie_rassmotreniya": zapis.get("status", ""),
         "rezultat": zapis.get("result", ""),
         "organizaciya": zapis.get("organizationName", ""),
         "inn": zapis.get("inn", ""),

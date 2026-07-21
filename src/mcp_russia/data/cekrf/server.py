@@ -14,7 +14,7 @@ from .resources import (
     tipy_vyborov_resource,
 )
 from .tools import (
-    dolzhnosti_federal,
+    dolzhnosti_federalnye,
     gody_vyborov,
     kandidat_podrobno,
     partii_rf,
@@ -31,7 +31,7 @@ mcp = FastMCP("mcp-russia-cekrf")
 # Инструменты (10)
 mcp.tool(tipy_vyborov, tags={"список", "типы-выборов", "справочник"})
 mcp.tool(subiekty_rf, tags={"список", "субъекты-рф", "справочник"})
-mcp.tool(dolzhnosti_federal, tags={"список", "должности", "федеральные"})
+mcp.tool(dolzhnosti_federalnye, tags={"список", "должности", "федеральные"})
 mcp.tool(partii_rf, tags={"список", "партии", "справочник"})
 mcp.tool(gody_vyborov, tags={"список", "годы-выборов", "справочник"})
 mcp.tool(spisok_vyborov, tags={"список", "выборы", "поиск"})

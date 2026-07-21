@@ -114,7 +114,7 @@ async def test_zhaloby_potrebiteley_nayden():
             "tema": "Некачественный товар",
             "organizaciya": "ООО Тест",
             "data_podachi": "2024-03-01",
-            "status_rassmotreniya": "Рассматривается",
+            "sostoyanie_rassmotreniya": "Рассматривается",
             "rezultat": "",
         }
     ]

@@ -167,14 +167,14 @@ async def zakonoproekty(
     )
 
     if not zakonoproekty:
-        status_label = sostoyanie or "все"
+        metka_sostoyaniya = sostoyanie or "все"
         return (
             f"**Законопроекты Государственной Думы**\n\n"
             f"Не удалось получить данные через API СОЗД.\n\n"
             f"Данные о законопроектах доступны через:\n"
             f"- Система СОЗД: https://sozd.duma.gov.ru\n"
             f"- API: https://api.duma.gov.ru\n\n"
-            f"Для поиска законопроектов по статусу '{status_label}' "
+            f"Для поиска законопроектов по статусу '{metka_sostoyaniya}' "
             f"используйте API СОЗД."
         )
 

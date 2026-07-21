@@ -2,7 +2,57 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
-## Статус раунда 2026-07-20 (восемьдесят девятый проход — TOKEN→KLYUCH, licenz→litsenz, исправление документации)
+## Статус раунда 2026-07-21 (девяностый проход — federal→federalnye, region→subiekt, status→sostoyanie в идентификаторах)
+
+### Выполнено
+
+- **Унификация `federal` → `federalnye`** в cekrf (13 замен в 7 файлах):
+  - constants.py: `DOLZHNOSTI_FEDERAL` → `DOLZHNOSTI_FEDERALNYE`
+  - client.py: импорт, вызов `dolzhnosti_federal()` → `dolzhnosti_federalnye()`, цикл по `DOLZHNOSTI_FEDERALNYE`
+  - tools.py: `dolzhnosti_federal()` → `dolzhnosti_federalnye()`, вызов `client.dolzhnosti_federalnye()`
+  - server.py: импорт, регистрация `dolzhnosti_federalnye`
+  - test_tools.py: `test_dolzhnosti_federal` → `test_dolzhnosti_federalnye`, вызов
+  - test_integration.py: `"dolzhnosti_federal"` → `"dolzhnosti_federalnye"`
+  - features.md: `dolzhnosti_federal` → `dolzhnosti_federalnye`
+- **Унификация `region_otpravki` → `subiekt_otpravki`** в rosselkhoznadzor (4 замены в 3 файлах):
+  - schemas.py: `region_otpravki` → `subiekt_otpravki`
+  - tools.py: `sertifikat.get("subiekt_otpravki", "")`
+  - client.py: `"subiekt_otpravki": dannye.get(...)` + fallback
+  - test_tools.py: мок-данные обновлены
+- **Унификация `status_*` → `sostoyanie_*`** в Pydantic-полях и ключах словарей (~26 замен в 14 файлах):
+  - rosselkhoznadzor/schemas.py: `status_karantina` → `sostoyanie_karantina`
+  - rosselkhoznadzor/tools.py: `.get("sostoyanie_karantina", "")`
+  - rosselkhoznadzor/client.py: `"sostoyanie_karantina": ...` + fallback
+  - rosreestr/schemas.py: `status_ucheta` → `sostoyanie_ucheta`
+  - rosreestr/tools.py: `obekt.sostoyanie_ucheta`
+  - rosreestr/client.py: `sostoyanie_ucheta` (3 ссылки)
+  - fns/schemas.py: `status_oplaty` → `sostoyanie_oplaty`
+  - gibdd/schemas.py: `status_oplaty` → `sostoyanie_oplaty`
+  - gibdd/client.py: `"status_ts"` → `"sostoyanie_ts"`
+  - rospotrebnadzor/schemas.py: `status_rassmotreniya` → `sostoyanie_rassmotreniya`
+  - rospotrebnadzor/tools.py: `.get("sostoyanie_rassmotreniya", "")`
+  - rospotrebnadzor/client.py: `"sostoyanie_rassmotreniya": ...`
+  - roskomnadzor/schemas.py: `status_rassmotreniya` → `sostoyanie_rassmotreniya`
+  - minobrnauki/schemas.py: `status_akkreditatsii` → `sostoyanie_akkreditatsii`
+  - minobrnauki/tools.py: `.get('sostoyanie_akkreditatsii', '')` (2), `.get("sostoyanie_litsenzii", "")`
+  - minobrnauki/client.py: `"sostoyanie_akkreditatsii": ...`, `"sostoyanie_litsenzii": ...`
+  - gosduma/tools.py: `status_label` → `metka_sostoyaniya` (2 ссылки)
+  - test_tools.py (4 файла): обновлены мок-данные
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 306 файлов уже форматировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **`federal` → `federalnye`**: устранён английский идентификатор в именах констант и функций; `federalnye` — русская транслитерация прилагательного «федеральные» во множественном числе; согласовано с `federalnyy` (единственное число в `uroven: "federalnyy"`); ломающее изменение для клиентов, использующих инструмент `dolzhnosti_federal`
+- **`region_otpravki` → `subiekt_otpravki`**: устранён английский идентификатор `region`; `subiekt` — устоявшаяся конвенция проекта для «субъект РФ» (с `ie` для `ъ`); ломающее изменение для клиентов, использующих ключ `region_otpravki`
+- **`status_*` → `sostoyanie_*`**: устранён последний массовый класс английских идентификаторов в Pydantic-полях и ключах словарей; `sostoyanie` = «состояние» — устоявшаяся конвенция проекта; цикловые переменные `status in Statusy*` уже были переименованы в `sostoyanie` в раунде 85; ломающее изменение для клиентов, использующих ключи `status_karantina`, `status_ucheta`, `status_oplaty`, `status_rassmotreniya`, `status_akkreditatsii`, `status_litsenzii`, `status_ts`
+- **`status_label` → `metka_sostoyaniya`**: устранена английская переменная; `metka_sostoyaniya` = «метка состояния»; согласовано с параметром `sostoyanie`
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг; имена переменных окружения оставлены на английском — внешняя конфигурация
 
 ### Выполнено
 

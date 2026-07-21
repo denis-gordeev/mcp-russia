@@ -62,7 +62,7 @@ async def test_info_vuza_po_nazvaniyu():
         "tip": "университет",
         "gorod": "Москва",
         "subiekt": "г. Москва",
-        "status_akkreditatsii": "Действует",
+        "sostoyanie_akkreditatsii": "Действует",
         "data_akkreditatsii": "2020-01-01",
         "srok_deystviya": "2026-01-01",
         "nomer_svidetelstva": "1234",
@@ -84,7 +84,7 @@ async def test_info_vuza_po_inn():
         "nazvanie": "МФТИ",
         "inn": "5032003607",
         "tip": "университет",
-        "status_akkreditatsii": "Действует",
+        "sostoyanie_akkreditatsii": "Действует",
     }
     with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=maket_dannykh):
         rezultat = await minobrnauki_tools.info_vuza(kontekst=kontekst, inn="5032003607")
@@ -144,7 +144,7 @@ async def test_poisk_litsenziy_nayden():
         {
             "nomer_litsenzii": "1234",
             "nazvanie": "МГУ",
-            "status_litsenzii": "Действует",
+            "sostoyanie_litsenzii": "Действует",
             "srok_deystviya": "2026-01-01",
         }
     ]

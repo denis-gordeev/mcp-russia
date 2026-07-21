@@ -20,7 +20,7 @@ async def test_instrumenty_zaregistrirovany(klient):
     ozhidayemyy = {
         "tipy_vyborov",
         "subiekty_rf",
-        "dolzhnosti_federal",
+        "dolzhnosti_federalnye",
         "partii_rf",
         "gody_vyborov",
         "poisk_kandidata",

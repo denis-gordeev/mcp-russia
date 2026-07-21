@@ -144,7 +144,7 @@ TIPOVY_VYBORY = {
 }
 
 # Избирательные должности (федеральные)
-DOLZHNOSTI_FEDERAL = [
+DOLZHNOSTI_FEDERALNYE = [
     {"kod": 1, "nazvanie": "Президент Российской Федерации", "uroven": "federalnyy"},
     {
         "kod": 2,

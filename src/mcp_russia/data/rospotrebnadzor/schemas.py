@@ -58,6 +58,6 @@ class ZhalobaPotrebitelya(BaseModel):
     nomer: str
     tema: str = ""
     data_registracii: str = ""
-    status_rassmotreniya: str = ""
+    sostoyanie_rassmotreniya: str = ""
     organizaciya: str = ""
     rezulstat: str = ""

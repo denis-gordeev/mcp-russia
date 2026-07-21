@@ -29,10 +29,10 @@ async def test_subiekty_rf():
     assert "Москва" in rezultat
 
 
-async def test_dolzhnosti_federal():
-    """Проверка dolzhnosti_federal."""
+async def test_dolzhnosti_federalnye():
+    """Проверка dolzhnosti_federalnye."""
     kontekst = _maket_konteksta()
-    rezultat = await cekrf_tools.dolzhnosti_federal(kontekst)
+    rezultat = await cekrf_tools.dolzhnosti_federalnye(kontekst)
     assert "должност" in rezultat.lower()
 
 

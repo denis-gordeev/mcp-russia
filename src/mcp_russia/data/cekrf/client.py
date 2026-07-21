@@ -23,7 +23,7 @@ from mcp_russia._shared.http_client import http_poluchit, sozdat_klienta
 
 from .constants import (
     CIK_BAZA_API,
-    DOLZHNOSTI_FEDERAL,
+    DOLZHNOSTI_FEDERALNYE,
     GODY_VYBOROV,
     IZBIRATELNYY_KOD_REGIONA,
     IZVESTNYE_VYBORY,
@@ -352,10 +352,10 @@ async def subiekty_rf() -> list[SubiektRF]:
     ]
 
 
-async def dolzhnosti_federal() -> list[Dolzhnost]:
+async def dolzhnosti_federalnye() -> list[Dolzhnost]:
     """Получить список федеральных избирательных должностей."""
     rezultaty: list[Dolzhnost] = []
-    for dolzhnost in DOLZHNOSTI_FEDERAL:
+    for dolzhnost in DOLZHNOSTI_FEDERALNYE:
         kod: Any = dolzhnost["kod"]
         rezultaty.append(
             Dolzhnost(

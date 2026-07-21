@@ -69,13 +69,13 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     elif dannye.get("date_cad_cost"):
         data_stoimosti = str(dannye["date_cad_cost"])
 
-    status_ucheta = ""
+    sostoyanie_ucheta = ""
     if dannye.get("state"):
         st = dannye["state"]
         if isinstance(st, dict):
-            status_ucheta = STATUSY_UCHE_TA_SLOVAR.get(st.get("code", ""), st.get("name", ""))
+            sostoyanie_ucheta = STATUSY_UCHE_TA_SLOVAR.get(st.get("code", ""), st.get("name", ""))
         else:
-            status_ucheta = str(st)
+            sostoyanie_ucheta = str(st)
 
     kategoriya = ""
     if dannye.get("category"):
@@ -94,7 +94,7 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
         ploshchad=ploshchad,
         kadastrovaya_stoimost=stoimost,
         data_opredeleniya_stoimosti=data_stoimosti,
-        status_ucheta=status_ucheta,
+        sostoyanie_ucheta=sostoyanie_ucheta,
         kategoriya_zemel=kategoriya,
     )
 
