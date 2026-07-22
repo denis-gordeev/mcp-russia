@@ -162,7 +162,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], kontekst: Context) ->
                   - "argumenty": объект с аргументами инструмента
                   Пример: [
                     {"imya_instrumenta": "gosduma_info_deputata",
-                     "argumenty": {"deputat_id": 99100142}},
+                     "argumenty": {"identifikator_deputata": 99100142}},
                     {"imya_instrumenta": "cbrf_kursy_valyut",
                     "argumenty": {}}
                  ]

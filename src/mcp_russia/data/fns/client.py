@@ -163,7 +163,7 @@ def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizaciyaEGRUL:
         polnoe_nazvanie=zapis.get("n", ""),
         yuridicheskiy_adres=zapis.get("a", ""),
         data_registracii=zapis.get("r", "") or zapis.get("g", ""),
-        sostoyanie=_razobrat_status(zapis.get("s", "")),
+        sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
         ustroyennyy_kapital="",
         rukovoditel="",
@@ -177,14 +177,14 @@ def _razobrat_egrul_ip(zapis: dict[str, Any]) -> IPEGRIP:
         ogrnip=zapis.get("ogrn", "") or zapis.get("o", ""),
         fio=zapis.get("n", "") or zapis.get("c", ""),
         data_registracii=zapis.get("r", "") or zapis.get("g", ""),
-        sostoyanie=_razobrat_status(zapis.get("s", "")),
+        sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
     )
 
 
-def _razobrat_status(kod_statusa: Any) -> str:
-    """Преобразование кода статуса ЕГРЮЛ в русское описание."""
-    karta_statusov = {
+def _razobrat_sostoyanie(kod_sostoyaniya: Any) -> str:
+    """Преобразование кода состояния ЕГРЮЛ в русское описание."""
+    karta_sostoyaniy = {
         "01": "Действующая",
         "02": "В процессе ликвидации",
         "03": "Ликвидирована",
@@ -198,6 +198,6 @@ def _razobrat_status(kod_statusa: Any) -> str:
         "11": "Прекратила деятельность через выделение",
         "12": "Прекратила деятельность через преобразование",
     }
-    if isinstance(kod_statusa, str):
-        return karta_statusov.get(kod_statusa, kod_statusa)
-    return str(kod_statusa) if kod_statusa else ""
+    if isinstance(kod_sostoyaniya, str):
+        return karta_sostoyaniy.get(kod_sostoyaniya, kod_sostoyaniya)
+    return str(kod_sostoyaniya) if kod_sostoyaniya else ""

@@ -2,6 +2,34 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-22 (девяносто второй проход — deputat_id→identifikator_deputata, _razobrat_status→_razobrat_sostoyanie, .env.example code_mode→rezhim_koda)
+
+### Выполнено
+
+- **Русификация `deputat_id` → `identifikator_deputata`** в server.py (1 замена):
+  - server.py: пример `"deputat_id": 99100142` → `"identifikator_deputata": 99100142` в docstring `vypolnit_paket`; реальный инструмент `gosduma_info_deputata` принимает параметр `identifikator_deputata`, не `deputat_id` — исправление бага документации
+- **Русификация `_razobrat_status` → `_razobrat_sostoyanie`** в fns/client.py (5 ссылок):
+  - client.py: функция `_razobrat_status` → `_razobrat_sostoyanie`, параметр `kod_statusa` → `kod_sostoyaniya`
+  - client.py: переменная `karta_statusov` → `karta_sostoyaniy`
+  - client.py: 2 вызова `_razobrat_status()` → `_razobrat_sostoyanie()`
+- **Исправление `.env.example`**: `"code_mode"` → `"rezhim_koda"` — пропущено в раунде 91
+- **Контекстуализация CHANGELOG.md** (3 записи): добавлено «модуль удалён» к устаревшим модулям с португальскими артефактами; `search_after` → `search_after (Elasticsearch API)`
+- **Удаление дублирующегося ключевого слова** в pyproject.toml: `"opendata"` указан дважды → один раз
+
+### Ключевые архитектурные решения
+
+- **`deputat_id` → `identifikator_deputata`**: устранён английский суффикс `_id` в примере docstring; реальный инструмент `gosduma_info_deputata` принимает `identifikator_deputata`, не `deputat_id` — пользователи, копировавшие пример, получали ошибки несуществующего параметра
+- **`_razobrat_status` → `_razobrat_sostoyanie`**: устранён английский идентификатор `status` в имени функции и параметра; `sostoyanie` = «состояние» — устоявшаяся конвенция проекта; `karta_statusov` → `karta_sostoyaniy` для согласованности; поле Pydantic-схемы уже называлось `sostoyanie` (с раунда 90)
+- **`.env.example`**: синхронизация с раундом 91, где `code_mode` был заменён на `rezhim_koda` в settings.py, server.py и документации, но `.env.example` был пропущен
+- **CHANGELOG.md**: исторические записи с португальскими артефактами уточнены пометкой «модуль удалён» для ясности, что эти инструменты больше не существуют в кодовой базе
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг; имена переменных окружения оставлены на английском — внешняя конфигурация; международные аббревиатуры (`WMO`, `VIN`, `API`) оставлены без изменений
+
 ## Статус раунда 2026-07-22 (девяносто первый проход — TableParser→RazborshchikTablitsVyborov, call_next→vyzvat_sleduyushchiy, code_mode→rezhim_koda, info_api→svedeniya_ob_api)
 
 ### Выполнено
