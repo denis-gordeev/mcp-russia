@@ -46,7 +46,7 @@ from .schemas import (
 logger = logging.getLogger(__name__)
 
 
-class _VyboryTableParser(HTMLParser):
+class _RazborshchikTablitsVyborov(HTMLParser):
     """Парсер HTML-таблиц ГАС «Выборы» для извлечения результатов."""
 
     def __init__(self) -> None:
@@ -192,7 +192,7 @@ def _nayti_vybory_po_godu_tipu(god: int, tip: int | None = None) -> dict[str, An
 
 def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
     """Извлечь результаты кандидатов из HTML ГАС «Выборы»."""
-    razobratchik = _VyboryTableParser()
+    razobratchik = _RazborshchikTablitsVyborov()
     try:
         razobratchik.feed(html)
     except Exception as isklyuchenie:
@@ -285,7 +285,7 @@ def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
 
 def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
     """Извлечь список кандидатов из HTML ГАС «Выборы»."""
-    razobratchik = _VyboryTableParser()
+    razobratchik = _RazborshchikTablitsVyborov()
     try:
         razobratchik.feed(html)
     except Exception as isklyuchenie:

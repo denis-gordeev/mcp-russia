@@ -39,13 +39,13 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
     async def pri_vyzove_instrumenta(
         self,
         context: MiddlewareContext[mt.CallToolRequestParams],
-        call_next: CallNext[mt.CallToolRequestParams, ToolResult],
+        vyzvat_sleduyushchiy: CallNext[mt.CallToolRequestParams, ToolResult],
     ) -> ToolResult:
         """Логирование вызова инструмента с замером времени."""
         imya = context.message.name
         logger.info("Вызов инструмента: %s", imya)
         nachalo = time.monotonic()
-        rezultat = await call_next(context)
+        rezultat = await vyzvat_sleduyushchiy(context)
         proshlo_vremeni = time.monotonic() - nachalo
         logger.info("Инструмент %s завершён за %.2fс", imya, proshlo_vremeni)
         return rezultat
@@ -53,22 +53,22 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
     async def pri_chtenii_resursa(
         self,
         context: MiddlewareContext[mt.ReadResourceRequestParams],
-        call_next: CallNext[mt.ReadResourceRequestParams, ResourceResult],
+        vyzvat_sleduyushchiy: CallNext[mt.ReadResourceRequestParams, ResourceResult],
     ) -> ResourceResult:
         """Логирование чтения ресурса."""
         adres_uri = context.message.uri
         logger.info("Чтение ресурса: %s", adres_uri)
-        return await call_next(context)
+        return await vyzvat_sleduyushchiy(context)
 
     async def pri_zaprose_prompta(
         self,
         context: MiddlewareContext[mt.GetPromptRequestParams],
-        call_next: CallNext[mt.GetPromptRequestParams, PromptResult],
+        vyzvat_sleduyushchiy: CallNext[mt.GetPromptRequestParams, PromptResult],
     ) -> PromptResult:
         """Логирование запроса промпта."""
         imya = context.message.name
         logger.info("Запрос промпта: %s", imya)
-        return await call_next(context)
+        return await vyzvat_sleduyushchiy(context)
 
 
 # ---------------------------------------------------------------------------
@@ -192,7 +192,7 @@ if POISK_INSTRUMENTOV == "bm25":
     )
     logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
 
-elif POISK_INSTRUMENTOV == "code_mode":
+elif POISK_INSTRUMENTOV == "rezhim_koda":
     try:
         from fastmcp.experimental.transforms.code_mode import (
             CodeMode,

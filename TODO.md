@@ -2,6 +2,44 @@
 
 Живой список задач по миграции `mcp-russia` на российские и русскоязычные реалии.
 
+## Статус раунда 2026-07-22 (девяносто первый проход — TableParser→RazborshchikTablitsVyborov, call_next→vyzvat_sleduyushchiy, code_mode→rezhim_koda, info_api→svedeniya_ob_api)
+
+### Выполнено
+
+- **Русификация `_VyboryTableParser` → `_RazborshchikTablitsVyborov`** в cekrf/client.py (3 ссылки):
+  - client.py: объявление класса `_VyboryTableParser` → `_RazborshchikTablitsVyborov`
+  - client.py: 2 использования `razobratchik = _VyboryTableParser()` → `_RazborshchikTablitsVyborov()`
+- **Русификация `call_next` → `vyzvat_sleduyushchiy`** в server.py (6 ссылок):
+  - server.py: параметр `call_next: CallNext[...]` → `vyzvat_sleduyushchiy: CallNext[...]` (3 метода)
+  - server.py: вызов `await call_next(context)` → `await vyzvat_sleduyushchiy(context)` (3 вызова)
+- **Русификация `code_mode` → `rezhim_koda`** в конфигурации (4 файла):
+  - settings.py: комментарий `"code_mode"` → `"rezhim_koda"`
+  - server.py: сравнение `POISK_INSTRUMENTOV == "code_mode"` → `"rezhim_koda"`
+  - smart-tools.md: таблица значений настройки
+  - configuration.md: таблица значений настройки
+- **Русификация `info_api` → `svedeniya_ob_api`** в cekrf (4 файла):
+  - resources.py: функция `info_api()` → `svedeniya_ob_api()`
+  - server.py: импорт, `mcp.resource("data://info-api")` → `"data://svedeniya-ob-api"`
+  - test_integration.py: `"data://info-api"` → `"data://svedeniya-ob-api"`
+  - features.md: ресурс URI
+- **Русификация `proverka_svyazi_fn` → `instrument_proverki_svyazi`** в test_feature.py (1 замена)
+- **Прогнаны все проверки**: `ruff check` — 1 импорт исправлен, `ruff format` — 306 файлов уже форматировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **`_VyboryTableParser` → `_RazborshchikTablitsVyborov`**: устранён последний смешанный русско-английский идентификатор класса; `RazborshchikTablitsVyborov` = «разборщик таблиц выборов» — полностью русская транслитерация; внутренние поля класса (`stroki_tablitsy`, `tekst_zagolovka`, `tekst_statistiki`) уже были на русской транслитерации
+- **`call_next` → `vyzvat_sleduyushchiy`**: устранён английский идентификатор параметра в промежуточном слое; `vyzvat_sleduyushchiy` = «вызвать следующий» — точная транслитерация паттерна middleware; имена методов уже русифицированы (`pri_vyzove_instrumenta`, `pri_chtenii_resursa`, `pri_zaprose_prompta`)
+- **`code_mode` → `rezhim_koda`**: устранён английский конфигурационный токен; `rezhim_koda` = «режим кода» — согласовано с другими значениями `bm25` (алгоритм) и `none` (ключевое слово); ломающее изменение для клиентов, использующих `MCP_RUSSIA_TOOL_SEARCH=code_mode`
+- **`info_api` → `svedeniya_ob_api`**: устранён английский идентификатор функции и ресурса; `svedeniya_ob_api` = «сведения об API»; ресурс URI `data://info-api` → `data://svedeniya-ob-api` согласован с остальными ресурсами (`data://tipy-vyborov`, `data://subiekty-rf`); ломающее изменение для клиентов, использующих ресурс `data://info-api`
+- **`proverka_svyazi_fn` → `instrument_proverki_svyazi`**: устранён английский суффикс `_fn`; `instrument_proverki_svyazi` = «инструмент проверки связи»
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг; имена переменных окружения оставлены на английском — внешняя конфигурация; международные аббревиатуры (`WMO`, `VIN`, `API`) оставлены без изменений
+
 ## Статус раунда 2026-07-21 (девяностый проход — federal→federalnye, region→subiekt, status→sostoyanie в идентификаторах)
 
 ### Выполнено

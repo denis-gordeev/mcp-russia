@@ -48,7 +48,7 @@ def izvestnye_vybory_resource() -> str:
     )
 
 
-def info_api() -> str:
+def svedeniya_ob_api() -> str:
     """Информация об API ЦИК РФ."""
     return json.dumps(
         {

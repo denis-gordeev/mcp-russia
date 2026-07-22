@@ -92,7 +92,7 @@
 | `yavka_i_itogi` | Явка и итоги голосования |
 | `spisok_vyborov` | Список известных выборов (федеральные) |
 
-**Ресурсы:** `data://tipy-vyborov`, `data://subiekty-rf`, `data://partii-rf`, `data://info-api`, `data://izvestnye-vybory`
+**Ресурсы:** `data://tipy-vyborov`, `data://subiekty-rf`, `data://partii-rf`, `data://svedeniya-ob-api`, `data://izvestnye-vybory`
 
 **Промпты:** `analiz_kandidata`, `sravnenie_partiy`
 

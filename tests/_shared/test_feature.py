@@ -149,7 +149,7 @@ class TestReyestrFunktsiy:
         podserver = FastMCP("podserver-proverka")
 
         @podserver.tool
-        def proverka_svyazi_fn() -> str:
+        def instrument_proverki_svyazi() -> str:
             """Инструмент проверки связи."""
             return "отклик"
 

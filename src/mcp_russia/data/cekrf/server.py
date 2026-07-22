@@ -7,10 +7,10 @@ from fastmcp import FastMCP
 
 from .prompts import analiz_kandidata, sravnenie_partiy
 from .resources import (
-    info_api,
     izvestnye_vybory_resource,
     partii_rf_resource,
     subiekty_rf_resource,
+    svedeniya_ob_api,
     tipy_vyborov_resource,
 )
 from .tools import (
@@ -45,7 +45,7 @@ mcp.resource("data://tipy-vyborov", mime_type="application/json")(tipy_vyborov_r
 mcp.resource("data://subiekty-rf", mime_type="application/json")(subiekty_rf_resource)
 mcp.resource("data://partii-rf", mime_type="application/json")(partii_rf_resource)
 mcp.resource("data://izvestnye-vybory", mime_type="application/json")(izvestnye_vybory_resource)
-mcp.resource("data://info-api", mime_type="application/json")(info_api)
+mcp.resource("data://svedeniya-ob-api", mime_type="application/json")(svedeniya_ob_api)
 
 # Промпты (2)
 mcp.prompt(analiz_kandidata)

@@ -43,7 +43,7 @@ async def test_resursy_zaregistrirovany(klient):
         "data://tipy-vyborov",
         "data://subiekty-rf",
         "data://partii-rf",
-        "data://info-api",
+        "data://svedeniya-ob-api",
     }
     assert ozhidayemyy.issubset(adresa_uri), f"Отсутствуют ресурсы: {ozhidayemyy - adresa_uri}"
 
