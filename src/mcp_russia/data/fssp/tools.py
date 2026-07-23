@@ -108,11 +108,11 @@ async def info_proizvodstva(kontekst: Context, nomer: str) -> str:
         f"**Исполнительное производство** № {rezultat.get('nomer', nomer)}",
         f"- Должник: {rezultat.get('dolzhnik', '')}",
         f"- Дата возбуждения: {rezultat.get('data_vozbuzhdeniya', '')}",
-        f"- Предмет исполнения: {rezultat.get('subject', '')}",
+        f"- Предмет исполнения: {rezultat.get('subiekt', '')}",
         f"- Сума взыскания: {rezultat.get('summa', '')}",
         f"- Отдел судебных приставов: {rezultat.get('otdel_pristavov', '')}",
         f"- Судебный пристав: {rezultat.get('pristav', '')}",
-        f"- Дата окончания: {rezultat.get('ip_end', '') or 'в производстве'}",
+        f"- Дата окончания: {rezultat.get('okonchanie_ip', '') or 'в производстве'}",
         f"- Основание: {rezultat.get('osnovanie', '')}",
         f"- Регион: {rezultat.get('subiekt_rf', '')}",
     ]

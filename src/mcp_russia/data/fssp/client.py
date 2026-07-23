@@ -21,11 +21,11 @@ def _razobrat_fio(fio: str) -> dict[str, str]:
     chasti = fio.strip().split()
     rezultat: dict[str, str] = {}
     if len(chasti) >= 1:
-        rezultat["lastName"] = chasti[0]
+        rezultat["familiya"] = chasti[0]
     if len(chasti) >= 2:
-        rezultat["firstName"] = chasti[1]
+        rezultat["imya"] = chasti[1]
     if len(chasti) >= 3:
-        rezultat["patronymic"] = " ".join(chasti[2:])
+        rezultat["otchestvo"] = " ".join(chasti[2:])
     return rezultat
 
 
@@ -79,7 +79,14 @@ async def poisk_proizvodstv(
         Список исполнительных производств.
     """
     chasti_fio = _razobrat_fio(fio)
-    telo: dict[str, Any] = {"is": chasti_fio}
+    chasti_dlya_api: dict[str, str] = {}
+    if "familiya" in chasti_fio:
+        chasti_dlya_api["lastName"] = chasti_fio["familiya"]
+    if "imya" in chasti_fio:
+        chasti_dlya_api["firstName"] = chasti_fio["imya"]
+    if "otchestvo" in chasti_fio:
+        chasti_dlya_api["patronymic"] = chasti_fio["otchestvo"]
+    telo: dict[str, Any] = {"is": chasti_dlya_api}
     if data_rozhdeniya:
         telo["is"]["date"] = data_rozhdeniya
     if subiekt:
@@ -91,12 +98,12 @@ async def poisk_proizvodstv(
         logger.exception("Ошибка при поиске производств по ФИО «%s»", fio)
         try:
             parametry: dict[str, Any] = {}
-            if "lastName" in chasti_fio:
-                parametry["is[lastName]"] = chasti_fio["lastName"]
-            if "firstName" in chasti_fio:
-                parametry["is[firstName]"] = chasti_fio["firstName"]
-            if "patronymic" in chasti_fio:
-                parametry["is[patronymic]"] = chasti_fio["patronymic"]
+            if "familiya" in chasti_fio:
+                parametry["is[lastName]"] = chasti_fio["familiya"]
+            if "imya" in chasti_fio:
+                parametry["is[firstName]"] = chasti_fio["imya"]
+            if "otchestvo" in chasti_fio:
+                parametry["is[patronymic]"] = chasti_fio["otchestvo"]
             if data_rozhdeniya:
                 parametry["is[date]"] = data_rozhdeniya
             if subiekt:
@@ -145,7 +152,7 @@ async def ogranicheniya_dolzhnika(
     proizvodstva = await poisk_proizvodstv(fio, data_rozhdeniya)
     ogranicheniya = []
     for proizvodstvo in proizvodstva:
-        predmet = proizvodstvo.get("subject", "").lower()
+        predmet = proizvodstvo.get("subiekt", "").lower()
         okonchanie_ip = proizvodstvo.get("okonchanie_ip", "")
         if (
             any(kw in predmet for kw in ("ограничен", "запрет", "арест", "выезд", "управлен"))
@@ -167,7 +174,7 @@ async def rozysk_dolzhnika(fio: str) -> list[dict[str, Any]]:
     proizvodstva = await poisk_proizvodstv(fio)
     razyskivaemye = []
     for proizvodstvo in proizvodstva:
-        predmet = proizvodstvo.get("subject", "").lower()
+        predmet = proizvodstvo.get("subiekt", "").lower()
         if "розыск" in predmet or "разыск" in predmet:
             razyskivaemye.append(proizvodstvo)
     return razyskivaemye
