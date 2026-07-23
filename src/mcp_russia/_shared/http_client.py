@@ -49,7 +49,7 @@ def sozdat_klienta(
         zagolovki: Дополнительные заголовки для слияния с заголовками по умолчанию.
 
     Возвращает:
-        Настроенный httpx.AsyncClient (использовать как async context manager).
+        Настроенный httpx.AsyncClient (использовать как асинхронный менеджер контекста).
     """
     zagolovki_po_umolchaniyu = {
         "User-Agent": POLZOVATELSKIY_AGENT,

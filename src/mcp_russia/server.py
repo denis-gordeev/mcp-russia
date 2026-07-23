@@ -38,37 +38,37 @@ class PosrednikLogirovaniyaZaprosov(Middleware):
 
     async def pri_vyzove_instrumenta(
         self,
-        context: MiddlewareContext[mt.CallToolRequestParams],
+        kontekst: MiddlewareContext[mt.CallToolRequestParams],
         vyzvat_sleduyushchiy: CallNext[mt.CallToolRequestParams, ToolResult],
     ) -> ToolResult:
         """Логирование вызова инструмента с замером времени."""
-        imya = context.message.name
+        imya = kontekst.message.name
         logger.info("Вызов инструмента: %s", imya)
         nachalo = time.monotonic()
-        rezultat = await vyzvat_sleduyushchiy(context)
+        rezultat = await vyzvat_sleduyushchiy(kontekst)
         proshlo_vremeni = time.monotonic() - nachalo
         logger.info("Инструмент %s завершён за %.2fс", imya, proshlo_vremeni)
         return rezultat
 
     async def pri_chtenii_resursa(
         self,
-        context: MiddlewareContext[mt.ReadResourceRequestParams],
+        kontekst: MiddlewareContext[mt.ReadResourceRequestParams],
         vyzvat_sleduyushchiy: CallNext[mt.ReadResourceRequestParams, ResourceResult],
     ) -> ResourceResult:
         """Логирование чтения ресурса."""
-        adres_uri = context.message.uri
+        adres_uri = kontekst.message.uri
         logger.info("Чтение ресурса: %s", adres_uri)
-        return await vyzvat_sleduyushchiy(context)
+        return await vyzvat_sleduyushchiy(kontekst)
 
     async def pri_zaprose_prompta(
         self,
-        context: MiddlewareContext[mt.GetPromptRequestParams],
+        kontekst: MiddlewareContext[mt.GetPromptRequestParams],
         vyzvat_sleduyushchiy: CallNext[mt.GetPromptRequestParams, PromptResult],
     ) -> PromptResult:
         """Логирование запроса промпта."""
-        imya = context.message.name
+        imya = kontekst.message.name
         logger.info("Запрос промпта: %s", imya)
-        return await vyzvat_sleduyushchiy(context)
+        return await vyzvat_sleduyushchiy(kontekst)
 
 
 # ---------------------------------------------------------------------------
