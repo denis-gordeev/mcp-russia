@@ -84,12 +84,12 @@ async def konsulitirovat_obrashchenie(dolzhnost: str) -> str:
 
     # Точный поиск
     if dolzhnost_lower in ОБРАЩЕНИЯ:
-        o = ОБРАЩЕНИЯ[dolzhnost_lower]
+        obrashcheniye = ОБРАЩЕНИЯ[dolzhnost_lower]
         return (
             f"Должность: {dolzhnost}\n"
-            f"Обращение: {o['обращение']}\n"
-            f"Титулование: {o['титулование']}\n"
-            f"Адресация: {o['адресация']}"
+            f"Обращение: {obrashcheniye['обращение']}\n"
+            f"Титулование: {obrashcheniye['титулование']}\n"
+            f"Адресация: {obrashcheniye['адресация']}"
         )
 
     # Частичный поиск
