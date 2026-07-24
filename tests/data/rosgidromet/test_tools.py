@@ -20,9 +20,9 @@ def _maket_konteksta():
     return kontekst
 
 
-async def test_spisok_stanciy():
+async def test_spisok_stantsiy():
     kontekst = _maket_konteksta()
-    rezultat = await rosgidromet_tools.spisok_stanciy(kontekst)
+    rezultat = await rosgidromet_tools.spisok_stantsiy(kontekst)
     assert "Станции мониторинга" in rezultat
     assert "Москва" in rezultat
 
@@ -37,14 +37,14 @@ async def test_spisok_tipov_dannykh():
 async def test_pogoda_seychas_nedostupen():
     kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_pogodu", return_value=None):
-        rezultat = await rosgidromet_tools.pogoda_seychas(stanciya="99", kontekst=kontekst)
+        rezultat = await rosgidromet_tools.pogoda_seychas(stantsiya="99", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 
 async def test_prognoz_pogody_nedostupen():
     kontekst = _maket_konteksta()
     with patch.object(rosgidromet_tools.client, "poluchit_prognoz", return_value=[]):
-        rezultat = await rosgidromet_tools.prognoz_pogody(stanciya="99", kontekst=kontekst)
+        rezultat = await rosgidromet_tools.prognoz_pogody(stantsiya="99", kontekst=kontekst)
     assert "недоступен" in rezultat
 
 

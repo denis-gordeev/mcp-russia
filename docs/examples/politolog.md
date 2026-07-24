@@ -464,7 +464,7 @@ API: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subiekt="Москв�
 |----------|-------|------|
 | Поимённый голос (за/против/воздержался) | Госдума | `gosduma_info_deputata` |
 | Внесённые законопроекты | Госдума | `gosduma_zakonoproekty` |
-| Фракция депутата | Госдума | `gosduma_spisok_frakcii` |
+| Фракция депутата | Госдума | `gosduma_spisok_fraktsii` |
 
 ### Независимые переменные — политические
 

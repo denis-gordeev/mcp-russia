@@ -6,7 +6,7 @@
 
 from fastmcp import FastMCP
 
-from .prompts import analiz_organizacii, poisk_adresa_prompt
+from .prompts import analiz_organizatsii, poisk_adresa_prompt
 from .resources import dostupnye_servisy, nalogovye_stavki_resurs
 from .tools import (
     konsul_adres_po_indeksu,
@@ -36,5 +36,5 @@ mcp.resource("data://nalogovye-stavki", mime_type="application/json")(nalogovye_
 mcp.resource("data://servisy", mime_type="application/json")(dostupnye_servisy)
 
 # Промпты
-mcp.prompt(analiz_organizacii)
+mcp.prompt(analiz_organizatsii)
 mcp.prompt(poisk_adresa_prompt)

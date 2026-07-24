@@ -33,7 +33,7 @@ def zakonodatelstvo() -> str:
 """
 
 
-def sistema_rogistracii() -> str:
+def sistema_registratsii() -> str:
     """Структура системы государственной регистрации."""
     return """\
 Структура Росреестра:

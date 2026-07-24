@@ -29,7 +29,7 @@
 ```text
 cbrf_tekushchie_kursy()
 cbrf_sravnit_valyuty(kody=["USD", "EUR", "CNY"])
-rosstat_inflyaciya()
+rosstat_inflyatsiya()
 ```
 
 ### Как интерпретировать результат в российском контексте
@@ -145,7 +145,7 @@ zakupki_poisk_zakupok(zakazchik="Минфин России")
 zakupki_statusy_zakupok()
 ```
 
-В российской адаптации этим данным соответствуют:
+В российском контексте этим данным соответствуют:
 
 - федеральный бюджет;
 - исполнение расходов по функциональной классификации;
@@ -173,7 +173,7 @@ zakupki_statusy_zakupok()
 ```text
 cbrf_tekushchie_kursy()
 cbrf_kursy_po_stranam()
-rosstat_inflyaciya()
+rosstat_inflyatsiya()
 rosstat_pokazateli_rosstata()
 ```
 

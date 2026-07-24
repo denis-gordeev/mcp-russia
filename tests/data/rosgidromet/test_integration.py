@@ -18,7 +18,7 @@ async def test_instrumenty_zaregistrirovany(klient):
     imena_instrumentov = {t.name for t in instrumenty}
 
     ozhidayemyy = {
-        "spisok_stanciy",
+        "spisok_stantsiy",
         "spisok_tipov_dannykh",
         "pogoda_seychas",
         "prognoz_pogody",
@@ -57,10 +57,10 @@ async def test_prompty_zaregistrirovany(klient):
     )
 
 
-async def test_spisok_stanciy(klient):
-    """Проверка работы инструмента spisok_stanciy."""
+async def test_spisok_stantsiy(klient):
+    """Проверка работы инструмента spisok_stantsiy."""
     async with klient:
-        rezultat = await klient.call_tool("spisok_stanciy", {})
+        rezultat = await klient.call_tool("spisok_stantsiy", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Москва" in tekst or "Санкт-Петербург" in tekst

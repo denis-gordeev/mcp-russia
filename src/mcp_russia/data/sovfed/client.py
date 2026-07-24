@@ -215,7 +215,7 @@ def _razobrat_senator(dannye: dict[str, Any]) -> dict[str, Any]:
         "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
         "dolzhnost": dannye.get("position", "") or dannye.get("dolzhnost", ""),
         "komitet": dannye.get("committee", "") or dannye.get("komitet", ""),
-        "frakciya": dannye.get("faction", "") or dannye.get("frakciya", ""),
+        "fraktsiya": dannye.get("faction", "") or dannye.get("fraktsiya", ""),
         "data_naznacheniya": dannye.get("appointmentDate", "")
         or dannye.get("data_naznacheniya", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",

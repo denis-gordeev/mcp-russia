@@ -139,7 +139,7 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, kontekst: Context) -> str:
         )
     stroki = [
         f"**{dannye.get('nazvanie', '')}** (№ {dannye.get('nomer', nomer)})",
-        f"- Дата публикации: {dannye.get('data_publikacii', '')}",
+        f"- Дата публикации: {dannye.get('data_publikatsii', '')}",
         f"- Объект аудита: {dannye.get('obekt_audita', '')}",
         f"- Направление: {dannye.get('napravlenie', '')}",
         f"- Выявлено нарушений: {dannye.get('vyavleno_narusheniy', 0)}",
@@ -148,10 +148,10 @@ async def info_auditorskogo_zaklyucheniya(nomer: str, kontekst: Context) -> str:
         stroki.append(
             f"- Сумма нарушений: {formatirovat_chislo_ru(dannye['summa_narusheniy'], 2)} руб."
         )
-    rekomendacii = dannye.get("rekomendacii", [])
-    if rekomendacii:
+    rekomendatsii = dannye.get("rekomendatsii", [])
+    if rekomendatsii:
         stroki.append(
-            f"- Рекомендации: {', '.join(str(rekomendatsiya)[:80] for rekomendatsiya in rekomendacii[:5])}"
+            f"- Рекомендации: {', '.join(str(rekomendatsiya)[:80] for rekomendatsiya in rekomendatsii[:5])}"
         )
     if dannye.get("ispolnenie"):
         stroki.append(f"- Исполнение: {dannye['ispolnenie']}")
@@ -191,14 +191,14 @@ async def ispolnenie_byudzheta(kontekst: Context, period: str = "") -> str:
 
 async def poisk_narusheniy(
     kontekst: Context,
-    organizaciya: str = "",
+    organizatsiya: str = "",
     tip: str = "",
     god: int = 0,
 ) -> str:
     """Поиск выявленных нарушений по организации или типу.
 
     Аргументы:
-        organizaciya: Название организации (необязательно).
+        organizatsiya: Название организации (необязательно).
         tip: Тип нарушения (необязательно).
         god: Год (необязательно).
 
@@ -207,14 +207,14 @@ async def poisk_narusheniy(
     """
     await kontekst.info("Поиск нарушений...")
     narusheniya = await client.poisk_narusheniy(
-        organizaciya=organizaciya,
+        organizatsiya=organizatsiya,
         tip=tip,
         god=god,
     )
     if not narusheniya:
         filtry = []
-        if organizaciya:
-            filtry.append(f"организация: {organizaciya}")
+        if organizatsiya:
+            filtry.append(f"организация: {organizatsiya}")
         if tip:
             filtry.append(f"тип: {tip}")
         tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
@@ -224,7 +224,7 @@ async def poisk_narusheniy(
         )
     stroki_tablitsy = [
         (
-            narushenie.get("organizaciya", ""),
+            narushenie.get("organizatsiya", ""),
             narushenie.get("tip_narusheniya", ""),
             narushenie.get("opisanie", "")[:60],
             str(narushenie.get("summa", "")),

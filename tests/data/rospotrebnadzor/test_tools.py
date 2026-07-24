@@ -112,14 +112,14 @@ async def test_zhaloby_potrebiteley_nayden():
     maket_dannykh = [
         {
             "tema": "Некачественный товар",
-            "organizaciya": "ООО Тест",
+            "organizatsiya": "ООО Тест",
             "data_podachi": "2024-03-01",
             "sostoyanie_rassmotreniya": "Рассматривается",
             "rezultat": "",
         }
     ]
     with patch.object(rpn_tools.client, "poisk_zhalob", return_value=maket_dannykh):
-        rezultat = await rpn_tools.zhaloby_potrebiteley(kontekst, organizaciya="ООО Тест")
+        rezultat = await rpn_tools.zhaloby_potrebiteley(kontekst, organizatsiya="ООО Тест")
     assert "Некачественный товар" in rezultat
 
 

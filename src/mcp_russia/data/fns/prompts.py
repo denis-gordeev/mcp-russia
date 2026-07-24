@@ -29,8 +29,8 @@ def analiz_nalogoplatelshchika() -> PromptResult:
                             "3. Определите режим налогообложения.\n"
                             "4. Проверьте наличие налоговых проверок.\n"
                             "5. Оцените налоговую нагрузку и задолженность.\n\n"
-                            "Используйте tools: info_organizacii, info_ip, "
-                            "proverki_organizacii, nalogovye_nachisleniya."
+                            "Используйте tools: info_organizatsii, info_ip, "
+                            "proverki_organizatsii, nalogovye_nachisleniya."
                         ),
                     ),
                 )

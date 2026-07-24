@@ -40,16 +40,16 @@ def _nayti_stantsiyu(kod: str) -> dict[str, Any] | None:
     return None
 
 
-async def poluchit_pogodu(stanciya: str = "77") -> PogodaDannye | None:
+async def poluchit_pogodu(stantsiya: str = "77") -> PogodaDannye | None:
     """Получение текущих данных о погоде через API Open-Meteo.
 
     Аргументы:
-        stanciya: Код станции (по умолчанию: Москва — 77).
+        stantsiya: Код станции (по умолчанию: Москва — 77).
 
     Возвращает:
         Данные о текущей погоде или None.
     """
-    svedeniya = _nayti_stantsiyu(stanciya)
+    svedeniya = _nayti_stantsiyu(stantsiya)
     if not svedeniya:
         return None
 
@@ -67,19 +67,19 @@ async def poluchit_pogodu(stanciya: str = "77") -> PogodaDannye | None:
 
 
 async def poluchit_prognoz(
-    stanciya: str = "77",
+    stantsiya: str = "77",
     dni: int = 3,
 ) -> list[PrognozDannye]:
     """Получение прогноза погоды через API Open-Meteo.
 
     Аргументы:
-        stanciya: Код станции.
+        stantsiya: Код станции.
         dni: Количество дней прогноза (1-16).
 
     Возвращает:
         Список данных прогноза.
     """
-    svedeniya = _nayti_stantsiyu(stanciya)
+    svedeniya = _nayti_stantsiyu(stantsiya)
     if not svedeniya:
         return []
 
@@ -276,7 +276,7 @@ def _razobrat_openmeteo_pogodu(dannye: dict[str, Any], svedeniya: dict[str, Any]
     opisaniye = WMO_KODY_POGODY.get(kod_vmo, "")
 
     return PogodaDannye(
-        stanciya=svedeniya["kod"],
+        stantsiya=svedeniya["kod"],
         gorod=svedeniya["nazvanie"],
         subiekt=svedeniya.get("subiekt", ""),
         temperatura=tekushchie.get("temperature_2m"),
@@ -347,7 +347,7 @@ def _razobrat_openmeteo_ekologiyu(
             rezultaty.append(
                 EkologiyaDannye(
                     gorod=svedeniya["nazvanie"],
-                    stanciya=svedeniya["kod"],
+                    stantsiya=svedeniya["kod"],
                     tip="vozdukh",
                     pokazatel=nazvanie_pokazatelya,
                     znachenie=round(znachenie_pokazatelya, 2),

@@ -116,7 +116,7 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     }
 
 
-async def poluchit_inflyaciyu(god: str = "") -> list[dict[str, Any]]:
+async def poluchit_inflyatsiyu(god: str = "") -> list[dict[str, Any]]:
     """Получение данных об инфляции (ИПЦ) из ЕМИСС.
 
     Аргументы:

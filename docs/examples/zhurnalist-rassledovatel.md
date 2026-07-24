@@ -222,7 +222,7 @@ LLM автоматически группирует победителей и п
 > Промпт: "Есть ли показатели предотвратимой смертности и других проблемных исходов по этому муниципалитету?"
 
 ```
-Источник: rosstat_inflyaciya() + rosstat_demografiya(subiekt="...")
+Источник: rosstat_inflyatsiya() + rosstat_demografiya(subiekt="...")
 ```
 
 ---

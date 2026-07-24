@@ -21,7 +21,7 @@ class Proverka(BaseModel):
 
     nomer: str
     tip_proverki: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""
     sostoyanie: str = ""
@@ -34,7 +34,7 @@ class NarushenieSanitarnoe(BaseModel):
 
     opisanie: str
     tip_narusheniya: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     norma_prava: str = ""  # ссылка на СанПиН/нормативный акт
     predpisaniya: list[str] = []
     shtraf: float | None = None
@@ -57,7 +57,7 @@ class ZhalobaPotrebitelya(BaseModel):
 
     nomer: str
     tema: str = ""
-    data_registracii: str = ""
+    data_registratsii: str = ""
     sostoyanie_rassmotreniya: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     rezulstat: str = ""

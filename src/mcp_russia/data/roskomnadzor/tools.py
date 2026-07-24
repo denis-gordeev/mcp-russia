@@ -103,7 +103,7 @@ async def info_litsenzii(kontekst: Context, nomer_litsenzii: str = "", inn: str 
     dannye = litsenzii[0]
     stroki = [
         f"**Лицензия связи** № {dannye.get('nomer', nomer_litsenzii)}",
-        f"- Организация: {dannye.get('organizaciya', '')}",
+        f"- Организация: {dannye.get('organizatsiya', '')}",
         f"- Тип лицензии: {dannye.get('tip_litsenzii', '')}",
         f"- Дата выдачи: {dannye.get('data_vydachi', '')}",
         f"- Дата окончания: {dannye.get('data_okonchaniya', '')}",
@@ -114,11 +114,13 @@ async def info_litsenzii(kontekst: Context, nomer_litsenzii: str = "", inn: str 
     return "\n".join(stroki)
 
 
-async def poisk_smi(kontekst: Context, registracionnyy_nomer: str = "", nazvanie: str = "") -> str:
+async def poisk_smi(
+    kontekst: Context, registratsionnyy_nomer: str = "", nazvanie: str = ""
+) -> str:
     """Поиск СМИ по регистрационному номеру или названию.
 
     Аргументы:
-        registracionnyy_nomer: Регистрационный номер СМИ (необязательно).
+        registratsionnyy_nomer: Регистрационный номер СМИ (необязательно).
         nazvanie: Название СМИ (необязательно).
 
     Возвращает:
@@ -126,14 +128,14 @@ async def poisk_smi(kontekst: Context, registracionnyy_nomer: str = "", nazvanie
     """
     await kontekst.info("Поиск СМИ в реестре Роскомнадзора...")
     smi = await client.poisk_smi(
-        registracionnyy_nomer=registracionnyy_nomer,
+        registratsionnyy_nomer=registratsionnyy_nomer,
         nazvanie=nazvanie,
     )
     if not smi:
         return "СМИ не найдены."
     stroki_tablitsy = [
         (
-            sredstvo.get("registracionnyy_nomer", ""),
+            sredstvo.get("registratsionnyy_nomer", ""),
             sredstvo.get("nazvanie", ""),
             sredstvo.get("tip_smi", ""),
             sredstvo.get("uchreditel", ""),
@@ -180,7 +182,7 @@ async def info_operatora_pd(kontekst: Context, inn: str = "", nazvanie: str = ""
     )
 
 
-async def poisk_narusheniy(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
+async def poisk_narusheniy(kontekst: Context, organizatsiya: str = "", inn: str = "") -> str:
     """Поиск нарушений в сфере связи/ИТ.
 
     Аргументы:

@@ -12,7 +12,7 @@ from .tools import (
     pogoda_seychas,
     preduprezhdeniya,
     prognoz_pogody,
-    spisok_stanciy,
+    spisok_stantsiy,
     spisok_tipov_dannykh,
     sputnik_monitoring,
 )
@@ -20,7 +20,7 @@ from .tools import (
 mcp = FastMCP("mcp-russia-rosgidromet")
 
 # Инструменты
-mcp.tool(spisok_stanciy, tags={"станции", "справочник"})
+mcp.tool(spisok_stantsiy, tags={"станции", "справочник"})
 mcp.tool(spisok_tipov_dannykh, tags={"типы-данных", "справочник"})
 mcp.tool(pogoda_seychas, tags={"погода", "текущая"})
 mcp.tool(prognoz_pogody, tags={"прогноз", "погода"})

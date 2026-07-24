@@ -71,11 +71,13 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
 
     sostoyanie_ucheta = ""
     if dannye.get("state"):
-        st = dannye["state"]
-        if isinstance(st, dict):
-            sostoyanie_ucheta = STATUSY_UCHE_TA_SLOVAR.get(st.get("code", ""), st.get("name", ""))
+        sostoyanie_dannykh = dannye["state"]
+        if isinstance(sostoyanie_dannykh, dict):
+            sostoyanie_ucheta = STATUSY_UCHE_TA_SLOVAR.get(
+                sostoyanie_dannykh.get("code", ""), sostoyanie_dannykh.get("name", "")
+            )
         else:
-            sostoyanie_ucheta = str(st)
+            sostoyanie_ucheta = str(sostoyanie_dannykh)
 
     kategoriya = ""
     if dannye.get("category"):

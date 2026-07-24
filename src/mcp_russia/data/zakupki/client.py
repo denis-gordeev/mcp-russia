@@ -239,17 +239,17 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
         Данные заказчика или None.
     """
     try:
-        from mcp_russia.data.fns.client import poluchit_organizaciyu
+        from mcp_russia.data.fns.client import poluchit_organizatsiyu
 
-        org = await poluchit_organizaciyu(inn)
-        if org:
+        organizatsiya = await poluchit_organizatsiyu(inn)
+        if organizatsiya:
             return Zakazchik(
-                identifikator=org.inn,
-                nazvanie=org.nazvanie,
-                inn=org.inn,
+                identifikator=organizatsiya.inn,
+                nazvanie=organizatsiya.nazvanie,
+                inn=organizatsiya.inn,
                 kpp="",
                 subiekt="",
-                adres=org.yuridicheskiy_adres,
+                adres=organizatsiya.yuridicheskiy_adres,
                 obshchie_raskhody=0.0,
             )
     except Exception:
@@ -269,15 +269,15 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
         Данные поставщика или None.
     """
     try:
-        from mcp_russia.data.fns.client import poluchit_ip, poluchit_organizaciyu
+        from mcp_russia.data.fns.client import poluchit_ip, poluchit_organizatsiyu
 
         if len(inn) == 10:
-            org = await poluchit_organizaciyu(inn)
-            if org:
+            organizatsiya = await poluchit_organizatsiyu(inn)
+            if organizatsiya:
                 return Postavshchik(
-                    identifikator=org.inn,
-                    nazvanie=org.nazvanie,
-                    inn=org.inn,
+                    identifikator=organizatsiya.inn,
+                    nazvanie=organizatsiya.nazvanie,
+                    inn=organizatsiya.inn,
                     subiekt="",
                     kontraktov_vyigrano=0,
                     kontraktov_ispolneno=0,

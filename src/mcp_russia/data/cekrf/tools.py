@@ -159,7 +159,7 @@ async def poisk_kandidata(fio: str, kontekst: Context, god: int | None = None) -
         (
             kandidat.identifikator,
             kandidat.fio,
-            kandidat.partia,
+            kandidat.partiya,
             kandidat.dolzhnost,
             kandidat.sostoyanie,
         )
@@ -199,7 +199,7 @@ async def kandidat_podrobno(
     stroki = [
         f"**{kandidat.fio}**",
         f"- Идентификатор: {kandidat.identifikator}",
-        f"- Партия: {kandidat.partia or 'Самовыдвижение'}",
+        f"- Партия: {kandidat.partiya or 'Самовыдвижение'}",
         f"- Должность: {kandidat.dolzhnost}",
         f"- Регион: {kandidat.subiekt or 'Не указан'}",
         f"- Статус: {kandidat.sostoyanie}",
@@ -245,9 +245,9 @@ async def rezultaty_vyborov(
     stroki_tablitsy = [
         (
             rezultat.fio,
-            rezultat.partia,
+            rezultat.partiya,
             formatirovat_chislo_ru(rezultat.golosov, 0),
-            f"{formatirovat_chislo_ru(rezultat.procent, 2)}%",
+            f"{formatirovat_chislo_ru(rezultat.protsent, 2)}%",
             "✓" if rezultat.izbrann else "",
         )
         for rezultat in rezultaty
@@ -290,7 +290,7 @@ async def yavka_i_itogi(
         [
             f"- Всего избирателей: {formatirovat_chislo_ru(itogi.get('vseh_izbirateley', 0), 0)}",
             f"- Проголосовало: {formatirovat_chislo_ru(itogi.get('progalosovalo', 0), 0)}",
-            f"- Явка: {formatirovat_chislo_ru(itogi.get('yavka_procent', 0), 2)}%",
+            f"- Явка: {formatirovat_chislo_ru(itogi.get('yavka_protsent', 0), 2)}%",
             f"- Действительных бюллетеней: {formatirovat_chislo_ru(itogi.get('deystvitelnykh_byulleteney', 0), 0)}",
             f"- Недействительных бюллетеней: {formatirovat_chislo_ru(itogi.get('nedeystvitelnykh_byulleteney', 0), 0)}",
             f"- Источник: {_ISTOCHNIK}",

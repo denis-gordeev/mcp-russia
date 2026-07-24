@@ -82,7 +82,7 @@ async def test_yavka_i_itogi():
             "god": 2024,
             "vseh_izbirateley": 1000000,
             "progalosovalo": 650000,
-            "yavka_procent": 65.0,
+            "yavka_protsent": 65.0,
         }
         rezultat = await cekrf_tools.yavka_i_itogi(kontekst, god=2024)
     assert "65" in rezultat

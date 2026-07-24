@@ -39,7 +39,7 @@ async def formatirovat_datu_propisyu(
     return f"г. {gorod}, {den} {mesyac} {segodnya.year} г."
 
 
-async def generirovat_numeraciyu(
+async def generirovat_numeratsiyu(
     tip: str,
     nomer: int,
     god: int | None = None,
@@ -125,7 +125,7 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
         Отчёт о валидации с проблемами и рекомендациями.
     """
     problemy: list[str] = []
-    rekomendacii: list[str] = []
+    rekomendatsii: list[str] = []
 
     # Проверка даты
     mesyacy_spisok = list(МЕСЯЦЫ.values())
@@ -136,11 +136,11 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     # Проверка номера
     est_nomer = "№" in tekst or "номер" in tekst.lower()
     if not est_nomer and tip in ("письмо", "приказ", "распоряжение", "акт", "протокол"):
-        rekomendacii.append("Рекомендуется указать номер документа")
+        rekomendatsii.append("Рекомендуется указать номер документа")
 
     # Проверка подписи
     if tip in ("письмо", "приказ", "распоряжение", "акт", "справка") and "__________" not in tekst:
-        rekomendacii.append("Отсутствует место для подписи")
+        rekomendatsii.append("Отсутствует место для подписи")
 
     # Проверка на излишне эмоциональные выражения
     izbytochnye = [
@@ -151,12 +151,12 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     ]
     for fraza in izbytochnye:
         if fraza in tekst.lower():
-            rekomendacii.append(f"Фраза «{fraza}» не соответствует официальному стилю")
+            rekomendatsii.append(f"Фраза «{fraza}» не соответствует официальному стилю")
 
     # Проверка на герундий (деепричастия)
     deeprichastiya = re.findall(r"\b\w+(?:я|ая|учи|в)\b", tekst)
     if len(deeprichastiya) > 5:
-        rekomendacii.append(
+        rekomendatsii.append(
             f"Найдено {len(deeprichastiya)} деепричастий — "
             "официальный стиль предпочитает прямые формы"
         )
@@ -165,12 +165,12 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
     abzaczy = [abzats for abzats in tekst.split("\n\n") if abzats.strip()]
     dlinnye = [abzats for abzats in abzaczy if len(abzats) > 500]
     if dlinnye:
-        rekomendacii.append(
+        rekomendatsii.append(
             f"{len(dlinnye)} абзац(ев) длиннее 500 символов — рекомендуется разделить для ясности"
         )
 
     # Отчёт
-    if not problemy and not rekomendacii:
+    if not problemy and not rekomendatsii:
         return "Документ соответствует нормам делопроизводства. Проблем не обнаружено."
 
     otchet = "ОТЧЁТ О ВАЛИДАЦИИ ДОКУМЕНТА\n\n"
@@ -178,9 +178,9 @@ async def validirovat_dokument(tekst: str, tip: str) -> str:
         otchet += "Обнаружены проблемы:\n"
         otchet += "\n".join(f"  - {problema}" for problema in problemy)
         otchet += "\n\n"
-    if rekomendacii:
+    if rekomendatsii:
         otchet += "Рекомендации по улучшению:\n"
-        otchet += "\n".join(f"  - {rekomendatsiya}" for rekomendatsiya in rekomendacii)
+        otchet += "\n".join(f"  - {rekomendatsiya}" for rekomendatsiya in rekomendatsii)
 
     return otchet
 

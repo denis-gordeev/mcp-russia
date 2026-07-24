@@ -268,7 +268,7 @@ async def statistika_dtp(kontekst: Context, subiekt: str, god: int = 2024) -> st
     return "\n".join(stroki) + _ISTOCHNIK
 
 
-async def istoriya_registraciy(kontekst: Context, vin: str) -> str:
+async def istoriya_registratsiy(kontekst: Context, vin: str) -> str:
     """История регистрационных действий транспортного средства.
 
     Аргументы:

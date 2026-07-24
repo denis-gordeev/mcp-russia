@@ -14,7 +14,7 @@ from . import client
 from .constants import (
     KategoriiNalogoplatelshchikov,
     NalogovyeRezhimy,
-    StatusyOrganizacii,
+    StatusyOrganizatsii,
     TipyProverok,
     VidyNalogov,
 )
@@ -47,13 +47,13 @@ def spisok_tipov_proverok() -> list[dict]:
     return TipyProverok
 
 
-def spisok_statusov_organizaciy() -> list[dict]:
+def spisok_statusov_organizatsiy() -> list[dict]:
     """Список статусов организаций в ЕГРЮЛ.
 
     Возвращает:
         Список статусов (действующая, ликвидирована и т.д.).
     """
-    return StatusyOrganizacii
+    return StatusyOrganizatsii
 
 
 def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
@@ -65,7 +65,7 @@ def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
     return KategoriiNalogoplatelshchikov
 
 
-async def info_organizacii(inn: str, kontekst: Context | None = None) -> str:
+async def info_organizatsii(inn: str, kontekst: Context | None = None) -> str:
     """Подробная информация об организации из ЕГРЮЛ.
 
     Использует публичный API egrul.nalog.ru для получения данных.
@@ -78,7 +78,7 @@ async def info_organizacii(inn: str, kontekst: Context | None = None) -> str:
     """
     if kontekst:
         await kontekst.info(f"Запрос данных ЕГРЮЛ по ИНН {inn}...")
-    dannye = await client.poluchit_organizaciyu(inn)
+    dannye = await client.poluchit_organizatsiyu(inn)
 
     if not dannye:
         return (
@@ -94,8 +94,8 @@ async def info_organizacii(inn: str, kontekst: Context | None = None) -> str:
         stroki.append(f"- Полное название: {dannye.polnoe_nazvanie}")
     if dannye.yuridicheskiy_adres:
         stroki.append(f"- Юридический адрес: {dannye.yuridicheskiy_adres}")
-    if dannye.data_registracii:
-        stroki.append(f"- Дата регистрации: {dannye.data_registracii}")
+    if dannye.data_registratsii:
+        stroki.append(f"- Дата регистрации: {dannye.data_registratsii}")
     if dannye.sostoyanie:
         stroki.append(f"- Статус: {dannye.sostoyanie}")
     if dannye.vid_deyatelnosti:
@@ -130,8 +130,8 @@ async def info_ip(inn: str, kontekst: Context | None = None) -> str:
     stroki.append(f"- ИНН: {dannye.inn}")
     if dannye.ogrnip:
         stroki.append(f"- ОГРНИП: {dannye.ogrnip}")
-    if dannye.data_registracii:
-        stroki.append(f"- Дата регистрации: {dannye.data_registracii}")
+    if dannye.data_registratsii:
+        stroki.append(f"- Дата регистрации: {dannye.data_registratsii}")
     if dannye.sostoyanie:
         stroki.append(f"- Статус: {dannye.sostoyanie}")
     if dannye.vid_deyatelnosti:
@@ -140,7 +140,7 @@ async def info_ip(inn: str, kontekst: Context | None = None) -> str:
     return "\n".join(stroki)
 
 
-async def proverki_organizacii(inn: str, kontekst: Context | None = None) -> str:
+async def proverki_organizatsii(inn: str, kontekst: Context | None = None) -> str:
     """Список налоговых проверок организации.
 
     Данные о проверках требуют авторизованный доступ к API ФНС.

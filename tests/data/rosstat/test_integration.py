@@ -22,7 +22,7 @@ async def test_instrumenty_zaregistrirovany(klient):
         "informatsiya_o_regionye",
         "informatsiya_ob_okruge",
         "pokazateli_rosstata",
-        "inflyaciya",
+        "inflyatsiya",
         "demografiya",
         "vrp_dannye",
         "zarplata_dannye",
@@ -51,7 +51,7 @@ async def test_prompty_zaregistrirovany(klient):
         prompty = await klient.list_prompts()
     imena_promtov = {p.name for p in prompty}
 
-    ozhidayemyy = {"analiz_regiona", "obzor_inflyacii"}
+    ozhidayemyy = {"analiz_regiona", "obzor_inflyatsii"}
     assert ozhidayemyy.issubset(imena_promtov), (
         f"Отсутствуют промпты: {ozhidayemyy - imena_promtov}"
     )
@@ -73,9 +73,9 @@ async def test_pokazateli_rosstata(klient):
     assert "населени" in tekst.lower() or "показател" in tekst.lower()
 
 
-async def test_inflyaciya(klient):
+async def test_inflyatsiya(klient):
     async with klient:
-        rezultat = await klient.call_tool("inflyaciya", {"god": "2025"})
+        rezultat = await klient.call_tool("inflyatsiya", {"god": "2025"})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "ИПЦ" in tekst or "Инфляц" in tekst

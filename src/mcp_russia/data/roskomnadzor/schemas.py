@@ -10,7 +10,7 @@ class LitsenziyaSvyazi(BaseModel):
 
     nomer: str
     tip_litsenzii: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     data_vydachi: str = ""
     data_okonchaniya: str = ""
     sostoyanie: str = ""  # "действует", "приостановлена", "аннулирована"
@@ -22,8 +22,8 @@ class SMI(BaseModel):
 
     nazvanie: str = ""
     tip_smi: str = ""
-    registracionnyy_nomer: str = ""
-    data_registracii: str = ""
+    registratsionnyy_nomer: str = ""
+    data_registratsii: str = ""
     uchreditel: str = ""
     yazyk: str = ""
     territoriye_rasprostraneniya: str = ""
@@ -45,7 +45,7 @@ class NarushenieRKN(BaseModel):
 
     opisanie: str
     tip_narusheniya: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     norma_prava: str = ""  # ссылка на закон (152-ФЗ, 149-ФЗ и т.д.)
     data_vyyavleniya: str = ""
     sostoyanie_rassmotreniya: str = ""

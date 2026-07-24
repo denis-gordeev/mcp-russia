@@ -27,7 +27,7 @@ class DannyeRegiona(BaseModel):
     srednyaya_zp: float | None = None
 
 
-class InflaciyaDannye(BaseModel):
+class InflyatsiyaDannye(BaseModel):
     """Данные об инфляции (ИПЦ)."""
 
     period: str

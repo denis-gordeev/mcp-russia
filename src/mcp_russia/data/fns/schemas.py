@@ -5,7 +5,7 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class OrganizaciyaEGRUL(BaseModel):
+class OrganizatsiyaEGRUL(BaseModel):
     """Организация из ЕГРЮЛ."""
 
     inn: str
@@ -13,7 +13,7 @@ class OrganizaciyaEGRUL(BaseModel):
     nazvanie: str = ""
     polnoe_nazvanie: str = ""
     yuridicheskiy_adres: str = ""
-    data_registracii: str = ""
+    data_registratsii: str = ""
     sostoyanie: str = ""
     vid_deyatelnosti: str = ""
     ustroyennyy_kapital: str = ""
@@ -26,7 +26,7 @@ class IPEGRIP(BaseModel):
     inn: str
     ogrnip: str = ""
     fio: str = ""
-    data_registracii: str = ""
+    data_registratsii: str = ""
     sostoyanie: str = ""
     vid_deyatelnosti: str = ""
 
@@ -55,12 +55,12 @@ class NalogovoeNachislenie(BaseModel):
     zadolzhennost: float | None = None
 
 
-class SvedeniyaOrganizacii(BaseModel):
+class SvedeniyaOrganizatsii(BaseModel):
     """Сводные сведения об организации."""
 
     inn: str
     nazvanie: str = ""
-    registracionnyy_nomer: str = ""
+    registratsionnyy_nomer: str = ""
     data_postanovki_na_uchet: str = ""
     nalogovyy_organ: str = ""
     rezhim_nalogooblozheniya: str = ""

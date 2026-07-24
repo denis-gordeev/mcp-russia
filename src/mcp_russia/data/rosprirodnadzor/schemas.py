@@ -7,7 +7,7 @@ from pydantic import BaseModel
 
 class ProverkaEkologicheskaya(BaseModel):
     nomer: str
-    organizaciya: str = ""
+    organizatsiya: str = ""
     vid_nadzora: str = ""
     data_nachala: str = ""
     data_okonchaniya: str = ""

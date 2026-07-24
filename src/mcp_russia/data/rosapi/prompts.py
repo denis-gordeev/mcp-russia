@@ -6,7 +6,7 @@ import mcp.types as mt
 from fastmcp.prompts import Message, PromptMessage, PromptResult
 
 
-def analiz_organizacii(inn: str) -> PromptResult:
+def analiz_organizatsii(inn: str) -> PromptResult:
     """Подсказка для анализа организации по ИНН.
 
     Аргументы:

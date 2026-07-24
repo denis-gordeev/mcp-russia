@@ -24,7 +24,7 @@ VIDY_NADZORA = [
         "nazvanie": "Государственный контроль и надзор в сфере рыболовства",
     },
     {
-        "kod": "radiacionnyy",
+        "kod": "radiatsionnyy",
         "nazvanie": "Радиационный контроль",
     },
 ]

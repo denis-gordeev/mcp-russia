@@ -179,24 +179,24 @@ async def spisok_sanpinov(kontekst: Context) -> str:
     return tablitsa_v_markdown(["Код", "СанПиН"], stroki_tablitsy)
 
 
-async def zhaloby_potrebiteley(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
+async def zhaloby_potrebiteley(kontekst: Context, organizatsiya: str = "", inn: str = "") -> str:
     """Жалобы потребителей, зарегистрированные через ЗПП Роспотребнадзора.
 
     Аргументы:
-        organizaciya: Название организации (необязательно).
+        organizatsiya: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
     Возвращает:
         Список жалоб с темой, статусом рассмотрения и результатом.
     """
     await kontekst.info("Поиск жалоб потребителей...")
-    zhaloby = await client.poisk_zhalob(organizaciya=organizaciya, inn=inn)
+    zhaloby = await client.poisk_zhalob(organizatsiya=organizatsiya, inn=inn)
     if not zhaloby:
         return "Жалобы не найдены."
     stroki_tablitsy = [
         (
             zhaloba.get("tema", ""),
-            zhaloba.get("organizaciya", ""),
+            zhaloba.get("organizatsiya", ""),
             zhaloba.get("data_podachi", ""),
             zhaloba.get("sostoyanie_rassmotreniya", ""),
             zhaloba.get("rezultat", ""),
@@ -209,11 +209,11 @@ async def zhaloby_potrebiteley(kontekst: Context, organizaciya: str = "", inn: s
     )
 
 
-async def poisk_narusheniy(kontekst: Context, organizaciya: str = "", inn: str = "") -> str:
+async def poisk_narusheniy(kontekst: Context, organizatsiya: str = "", inn: str = "") -> str:
     """Поиск санитарных нарушений по организации.
 
     Аргументы:
-        organizaciya: Название организации (необязательно).
+        organizatsiya: Название организации (необязательно).
         inn: ИНН организации (необязательно).
 
     Возвращает:
@@ -222,7 +222,7 @@ async def poisk_narusheniy(kontekst: Context, organizaciya: str = "", inn: str =
     await kontekst.info("Поиск нарушений в реестре проверок...")
     proverki = await client.poisk_proverok(
         inn_tseli=inn,
-        nazvanie_tseli=organizaciya,
+        nazvanie_tseli=organizatsiya,
     )
     narusheniya = [proverka for proverka in proverki if proverka.get("vyavleno_narusheniy", 0) > 0]
     if not narusheniya:

@@ -5,12 +5,12 @@
 
 from fastmcp import FastMCP
 
-from .prompts import analiz_regiona, obzor_inflyacii
+from .prompts import analiz_regiona, obzor_inflyatsii
 from .resources import istochniki_dannyh, metodologiya
 from .tools import (
     demografiya,
     indikator_dannye,
-    inflyaciya,
+    inflyatsiya,
     informatsiya_o_regionye,
     informatsiya_ob_okruge,
     investitsii_po_vidam,
@@ -31,7 +31,7 @@ mcp.tool(spisok_okrugov, tags={"федеральные-округа", "спра�
 mcp.tool(informatsiya_o_regionye, tags={"регион", "информация"})
 mcp.tool(informatsiya_ob_okruge, tags={"федеральный-округ", "информация"})
 mcp.tool(pokazateli_rosstata, tags={"показатели", "справочник"})
-mcp.tool(inflyaciya, tags={"инфляция", "ИПЦ"})
+mcp.tool(inflyatsiya, tags={"инфляция", "ИПЦ"})
 mcp.tool(demografiya, tags={"демография", "население"})
 mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
 mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
@@ -46,4 +46,4 @@ mcp.resource("data://metodologiya", mime_type="text/plain")(metodologiya)
 
 # Промпты
 mcp.prompt(analiz_regiona)
-mcp.prompt(obzor_inflyacii)
+mcp.prompt(obzor_inflyatsii)

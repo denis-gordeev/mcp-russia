@@ -39,7 +39,7 @@ def analiz_proverki() -> PromptResult:
     )
 
 
-def obzor_sanitarnoy_situacii() -> PromptResult:
+def obzor_sanitarnoy_situatsii() -> PromptResult:
     """Обзор санитарно-эпидемиологической ситуации в регионе. (заглушка)
 
     Используйте этот промпт для обзора санитарной ситуации.

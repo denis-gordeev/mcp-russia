@@ -22,12 +22,12 @@ UROVNI_BUDZHETOV = [
 
 KATEGORII_RASKHODOV = [
     {"kod": "obshchegosudarstvennye", "nazvanie": "Общегосударственные вопросы"},
-    {"kod": "nacionalnaya_oborona", "nazvanie": "Национальная оборона"},
+    {"kod": "natsionalnaya_oborona", "nazvanie": "Национальная оборона"},
     {
-        "kod": "nacionalnaya_bezopasnost",
+        "kod": "natsionalnaya_bezopasnost",
         "nazvanie": "Национальная безопасность и правоохранительная деятельность",
     },
-    {"kod": "nacionalnaya_ekonomika", "nazvanie": "Национальная экономика"},
+    {"kod": "natsionalnaya_ekonomika", "nazvanie": "Национальная экономика"},
     {"kod": "zhkkh", "nazvanie": "Жилищно-коммунальное хозяйство"},
     {"kod": "okhrana_okruzhayushchey_sredy", "nazvanie": "Охрана окружающей среды"},
     {"kod": "obrazovanie", "nazvanie": "Образование"},

@@ -28,7 +28,7 @@ from .resources import (
 )
 from .tools import (
     formatirovat_datu_propisyu,
-    generirovat_numeraciyu,
+    generirovat_numeratsiyu,
     konsulitirovat_obrashchenie,
     spisok_tipov_dokumentov,
     validirovat_dokument,
@@ -38,7 +38,7 @@ mcp = FastMCP("mcp-russia-deloproizvodstvo")
 
 # Инструменты
 mcp.tool(formatirovat_datu_propisyu, tags={"форматирование", "дата"})
-mcp.tool(generirovat_numeraciyu, tags={"форматирование", "нумерация"})
+mcp.tool(generirovat_numeratsiyu, tags={"форматирование", "нумерация"})
 mcp.tool(konsulitirovat_obrashchenie, tags={"справочник", "обращения"})
 mcp.tool(validirovat_dokument, tags={"валидация", "документ"})
 mcp.tool(spisok_tipov_dokumentov, tags={"справочник", "типы-документов"})

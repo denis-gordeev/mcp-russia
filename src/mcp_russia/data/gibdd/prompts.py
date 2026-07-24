@@ -25,7 +25,7 @@ def analiz_transportnogo_sredstva() -> PromptResult:
                             "3. Проверьте ДТП с участием ТС.\n"
                             "4. Проверьте розыск и ограничения.\n"
                             "5. Оцените общую историю ТС и риски.\n\n"
-                            "Используйте tools: info_ts, istoriya_registraciy."
+                            "Используйте tools: info_ts, istoriya_registratsiy."
                         ),
                     ),
                 )

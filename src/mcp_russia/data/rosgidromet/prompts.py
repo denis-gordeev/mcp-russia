@@ -18,7 +18,7 @@ async def analiz_pogody_regiona(kontekst: str, kontekst_mcp: Context) -> str:
         f"Выполни анализ погодных условий в регионе.\n\n"
         f"Контекст: {kontekst}\n\n"
         f"Инструкция:\n"
-        f"1. Определи код станции через spisok_stanciy()\n"
+        f"1. Определи код станции через spisok_stantsiy()\n"
         f"2. Получи текущую погоду через pogoda_seychas()\n"
         f"3. Получи прогноз на ближайшие дни через prognoz_pogody()\n"
         f"4. Проверь активные предупреждения через preduprezhdeniya()\n"

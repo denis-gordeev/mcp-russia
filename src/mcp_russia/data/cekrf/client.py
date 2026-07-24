@@ -204,9 +204,9 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
         if len(stroka_tablitsy) < 4:
             continue
         fio = ""
-        partia = ""
+        partiya = ""
         golosov = 0
-        procent = 0.0
+        protsent = 0.0
         izbrann = False
 
         for indeks, yacheyka in enumerate(stroka_tablitsy):
@@ -214,9 +214,9 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
             if indeks == 1 and len(yacheyka) > 2:
                 fio = yacheyka
             elif indeks == 2 and len(yacheyka) > 1:
-                partia = yacheyka
+                partiya = yacheyka
             if "%" in yacheyka:
-                procent = _razobrat_veshchestvennoe(yacheyka)
+                protsent = _razobrat_veshchestvennoe(yacheyka)
             if "избран" in yacheyka_nizhniy or "избрана" in yacheyka_nizhniy:
                 izbrann = True
 
@@ -240,9 +240,9 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
                 ResultatKandidata(
                     kandidat_identifikator="",
                     fio=fio,
-                    partia=partia,
+                    partiya=partiya,
                     golosov=golosov,
-                    procent=procent,
+                    protsent=protsent,
                     izbrann=izbrann,
                 )
             )
@@ -253,7 +253,7 @@ def _razobrat_rezultaty_iz_html(html: str) -> list[ResultatKandidata]:
 def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
     """Извлечь данные о явке из HTML ГАС «Выборы»."""
     rezultat: dict[str, Any] = {
-        "yavka_procent": 0.0,
+        "yavka_protsent": 0.0,
         "vseh_izbirateley": 0,
         "progalosovalo": 0,
         "deystvitelnykh_byulleteney": 0,
@@ -262,7 +262,7 @@ def _razobrat_yavku_iz_html(html: str) -> dict[str, Any]:
 
     yavka_match = re.search(r"явк[аи][^<>]*?([\d]+[.,][\d]+)\s*%", html, re.IGNORECASE)
     if yavka_match:
-        rezultat["yavka_procent"] = float(yavka_match.group(1).replace(",", "."))
+        rezultat["yavka_protsent"] = float(yavka_match.group(1).replace(",", "."))
 
     vse_match = re.search(r"число избирателей[^<>]*?([\d\s]+)", html, re.IGNORECASE)
     if vse_match:
@@ -297,7 +297,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
         if len(stroka_tablitsy) < 3:
             continue
         fio = ""
-        partia = ""
+        partiya = ""
         sostoyanie = ""
         dolzhnost = ""
         subiekt_str = ""
@@ -309,7 +309,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
             elif indeks == 1 and len(yacheyka) > 2:
                 fio = yacheyka.strip()
             elif indeks == 2 and len(yacheyka) > 1:
-                partia = yacheyka.strip()
+                partiya = yacheyka.strip()
             elif "зарегистрирован" in yacheyka.lower():
                 sostoyanie = "Зарегистрирован"
             elif "снят" in yacheyka.lower():
@@ -322,7 +322,7 @@ def _razobrat_kandidatov_iz_html(html: str) -> list[KandidatKratko]:
                 KandidatKratko(
                     identifikator=kandidat_identifikator or fio,
                     fio=fio,
-                    partia=partia,
+                    partiya=partiya,
                     dolzhnost=dolzhnost,
                     subiekt=subiekt_str,
                     sostoyanie=sostoyanie,
@@ -527,7 +527,7 @@ async def poisk_kandidata(
                 KandidatKratko(
                     identifikator=str(zapis.get("id", "")),
                     fio=str(zapis.get("fio", zapis.get("name", ""))),
-                    partia=str(zapis.get("party", zapis.get("partia", ""))),
+                    partiya=str(zapis.get("party", zapis.get("partiya", ""))),
                     dolzhnost=str(zapis.get("position", zapis.get("dolzhnost", ""))),
                     subiekt=str(zapis.get("region", "")),
                     sostoyanie=str(zapis.get("status", "")),
@@ -565,7 +565,7 @@ async def kandidat_podrobno(
             mesto_rozhdeniya=str(
                 cik_dannye.get("birthPlace", cik_dannye.get("mesto_rozhdeniya", ""))
             ),
-            partia=str(cik_dannye.get("party", cik_dannye.get("partia", ""))),
+            partiya=str(cik_dannye.get("party", cik_dannye.get("partiya", ""))),
             dolzhnost=str(cik_dannye.get("position", cik_dannye.get("dolzhnost", ""))),
             subiekt=str(cik_dannye.get("region", "")),
             obrazovanie=str(cik_dannye.get("education", cik_dannye.get("obrazovanie", ""))),
@@ -603,7 +603,7 @@ async def kandidat_podrobno(
                     return Kandidat(
                         identifikator=klyuch.identifikator,
                         fio=klyuch.fio,
-                        partia=klyuch.partia,
+                        partiya=klyuch.partiya,
                         dolzhnost=klyuch.dolzhnost,
                         subiekt=klyuch.subiekt,
                         sostoyanie=klyuch.sostoyanie,
@@ -660,9 +660,9 @@ async def rezultaty_vyborov(
                     ResultatKandidata(
                         kandidat_identifikator=str(zapis.get("id", "")),
                         fio=str(zapis.get("fio", zapis.get("name", ""))),
-                        partia=str(zapis.get("party", zapis.get("partia", ""))),
+                        partiya=str(zapis.get("party", zapis.get("partiya", ""))),
                         golosov=int(str(zapis.get("votes", zapis.get("golosov", 0)))),
-                        procent=float(str(zapis.get("percent", zapis.get("procent", 0.0)))),
+                        protsent=float(str(zapis.get("percent", zapis.get("protsent", 0.0)))),
                         izbrann=bool(zapis.get("elected", zapis.get("izbrann", False))),
                     )
                 )
@@ -701,7 +701,7 @@ async def yavka_i_itogi(
         )
         if html_tekst:
             yavka = _razobrat_yavku_iz_html(html_tekst)
-            if yavka["vseh_izbirateley"] > 0 or yavka["yavka_procent"] > 0:
+            if yavka["vseh_izbirateley"] > 0 or yavka["yavka_protsent"] > 0:
                 return {
                     "god": god,
                     "tip": tip,
@@ -723,7 +723,7 @@ async def yavka_i_itogi(
             "subiekt": subiekt,
             "nazvanie": cik_dannye.get("name", ""),
             "data": cik_dannye.get("date", ""),
-            "yavka_procent": cik_dannye.get("turnout", cik_dannye.get("yavka_procent", 0.0)),
+            "yavka_protsent": cik_dannye.get("turnout", cik_dannye.get("yavka_protsent", 0.0)),
             "vseh_izbirateley": cik_dannye.get(
                 "totalVoters", cik_dannye.get("vseh_izbirateley", 0)
             ),
@@ -739,7 +739,7 @@ async def yavka_i_itogi(
         "subiekt": subiekt,
         "nazvanie": "",
         "data": "",
-        "yavka_procent": 0.0,
+        "yavka_protsent": 0.0,
         "vseh_izbirateley": 0,
         "progalosovalo": 0,
         "deystvitelnykh_byulleteney": 0,

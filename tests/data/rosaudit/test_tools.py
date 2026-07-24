@@ -105,7 +105,7 @@ async def test_info_auditorskogo_zaklyucheniya_nayden():
     maket_dannykh = {
         "nomer": "АЗ-2026-001",
         "nazvanie": "Заключение по проверке Минфина",
-        "data_publikacii": "2026-04-01",
+        "data_publikatsii": "2026-04-01",
         "obekt_audita": "Минфин России",
         "napravlenie": "Контроль исполнения бюджета",
         "vyavleno_narusheniy": 5,
@@ -145,7 +145,7 @@ async def test_ispolnenie_byudzheta_nayden():
 async def test_poisk_narusheniy_pustoy():
     kontekst = _maket_konteksta()
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=[]):
-        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizaciya="Тест")
+        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizatsiya="Тест")
     assert "не найдены" in rezultat
 
 
@@ -153,12 +153,12 @@ async def test_poisk_narusheniy_nayden():
     kontekst = _maket_konteksta()
     maket_dannykh = [
         {
-            "organizaciya": "Минобороны",
+            "organizatsiya": "Минобороны",
             "tip_narusheniya": "Финансовое нарушение",
             "opisanie": "Нецелевое использование средств",
             "summa": 500000,
         },
     ]
     with patch.object(rosaudit_tools.client, "poisk_narusheniy", return_value=maket_dannykh):
-        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizaciya="Минобороны")
+        rezultat = await rosaudit_tools.poisk_narusheniy(kontekst, organizatsiya="Минобороны")
     assert "Минобороны" in rezultat

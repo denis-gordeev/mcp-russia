@@ -5,7 +5,7 @@
 
 from fastmcp import FastMCP
 
-from .prompts import analiz_proverki, obzor_sanitarnoy_situacii
+from .prompts import analiz_proverki, obzor_sanitarnoy_situatsii
 from .resources import (
     istochniki_dannyh,
     struktura_rospotrebnadzora,
@@ -47,4 +47,4 @@ mcp.resource("data://struktura", mime_type="text/plain")(struktura_rospotrebnadz
 
 # Промпты
 mcp.prompt(analiz_proverki)
-mcp.prompt(obzor_sanitarnoy_situacii)
+mcp.prompt(obzor_sanitarnoy_situatsii)

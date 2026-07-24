@@ -102,7 +102,7 @@ async def info_vuza(kontekst: Context, nazvanie: str = "", inn: str = "") -> str
     """
     await kontekst.info(f"Запрос информации о вузе «{nazvanie or inn}»...")
     if inn:
-        dannye = await client.info_akkreditacii(inn)
+        dannye = await client.info_akkreditatsii(inn)
     else:
         rezultaty = await client.poisk_akreditovannyh_vuzov(nazvanie=nazvanie)
         dannye = rezultaty[0] if rezultaty else None

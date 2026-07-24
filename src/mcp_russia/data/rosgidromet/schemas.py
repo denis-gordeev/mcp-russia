@@ -8,7 +8,7 @@ from pydantic import BaseModel
 class PogodaDannye(BaseModel):
     """Данные о погоде."""
 
-    stanciya: str = ""
+    stantsiya: str = ""
     gorod: str = ""
     subiekt: str = ""
     temperatura: float | None = None
@@ -39,7 +39,7 @@ class EkologiyaDannye(BaseModel):
     """Данные об экологической обстановке."""
 
     gorod: str = ""
-    stanciya: str = ""
+    stantsiya: str = ""
     tip: str = ""  # воздух, вода, почва, радиация, шум
     pokazatel: str = ""
     znachenie: float | None = None

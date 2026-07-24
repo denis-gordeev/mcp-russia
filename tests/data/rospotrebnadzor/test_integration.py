@@ -52,7 +52,7 @@ async def test_prompty_zaregistrirovany(klient):
         prompty = await klient.list_prompts()
     imena_promtov = {p.name for p in prompty}
 
-    ozhidayemyy = {"analiz_proverki", "obzor_sanitarnoy_situacii"}
+    ozhidayemyy = {"analiz_proverki", "obzor_sanitarnoy_situatsii"}
     assert ozhidayemyy.issubset(imena_promtov), (
         f"Отсутствуют промпты: {ozhidayemyy - imena_promtov}"
     )

@@ -19,7 +19,7 @@ async def test_instrumenty_zaregistrirovany(klient):
     ozhidayemyy = {
         "spisok_deputatov",
         "info_deputata",
-        "spisok_frakcii",
+        "spisok_fraktsii",
         "spisok_komitetov",
         "spisok_sozyvov",
         "zakonoproekty",
@@ -53,9 +53,9 @@ async def test_prompty_zaregistrirovany(klient):
     )
 
 
-async def test_spisok_frakcii(klient):
+async def test_spisok_fraktsii(klient):
     async with klient:
-        rezultat = await klient.call_tool("spisok_frakcii", {})
+        rezultat = await klient.call_tool("spisok_fraktsii", {})
     assert rezultat is not None
     tekst = str(rezultat)
     assert "Единая Россия" in tekst

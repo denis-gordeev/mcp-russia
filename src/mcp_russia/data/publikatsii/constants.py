@@ -48,7 +48,7 @@ TIPY_NORMATIVNYKH_AKTOV = [
 
 # Отрасли законодательства
 OTRASLI_ZAKONODATELSTVA = [
-    {"kod": "konstitucionnoe", "nazvanie": "Конституционное право"},
+    {"kod": "konstitutsionnoe", "nazvanie": "Конституционное право"},
     {"kod": "grazhdanskoe", "nazvanie": "Гражданское право"},
     {"kod": "ugolovnoe", "nazvanie": "Уголовное право"},
     {"kod": "administrativnoe", "nazvanie": "Административное право"},

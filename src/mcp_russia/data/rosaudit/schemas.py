@@ -24,12 +24,12 @@ class AuditorskoeZaklyuchenie(BaseModel):
 
     nomer: str
     nazvanie: str
-    data_publikacii: str = ""
+    data_publikatsii: str = ""
     obekt_audita: str = ""
     napravlenie: str = ""
     vyavleno_narusheniy: int = 0
     summa_narusheniy: float | None = None
-    rekomendacii: list[str] = []
+    rekomendatsii: list[str] = []
     ispolnenie: str = ""
 
 
@@ -40,7 +40,7 @@ class Narushenie(BaseModel):
     summa: float | None = None
     valyuta: str = "руб."
     tip_narusheniya: str = ""
-    organizaciya: str = ""
+    organizatsiya: str = ""
     norma_prava: str = ""
 
 

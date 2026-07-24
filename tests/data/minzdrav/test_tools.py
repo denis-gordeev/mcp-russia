@@ -74,7 +74,7 @@ async def test_poisk_litsenziy_nayden():
     maket_dannykh = [
         {
             "nomer": "Л041-01137",
-            "organizaciya": "Городская больница №1",
+            "organizatsiya": "Городская больница №1",
             "vid_deyatelnosti": "Медицинская деятельность",
             "sostoyanie": "Действует",
             "data_okonchaniya": "2030-01-01",

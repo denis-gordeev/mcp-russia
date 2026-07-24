@@ -95,7 +95,7 @@ rosstat_pokazateli_rosstata()
 
 ```text
 zakupki_poisk_zakupok(zakazchik="Минфин России")
-rosstat_inflyaciya()
+rosstat_inflyatsiya()
 ```
 
 В этом сценарии используются:

@@ -61,7 +61,7 @@ async def test_info_litsenzii_nayden():
     maket_dannykh = [
         {
             "nomer": "LIC-001",
-            "organizaciya": "ООО Тест",
+            "organizatsiya": "ООО Тест",
             "tip_litsenzii": "Интернет-доступ",
             "data_vydachi": "2023-01-01",
             "data_okonchaniya": "2028-01-01",

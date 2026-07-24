@@ -42,7 +42,7 @@ async def test_poisk_proverok_nayden():
     maket_dannykh = [
         {
             "nomer": "ПР-2026-001",
-            "organizaciya": "ООО «Промышленник»",
+            "organizatsiya": "ООО «Промышленник»",
             "vid_nadzora": "Государственный экологический надзор",
             "data_nachala": "2026-02-01",
             "data_okonchaniya": "2026-03-01",
@@ -66,7 +66,7 @@ async def test_info_proverki_nayden():
     kontekst = _maket_konteksta()
     maket_dannykh = {
         "nomer": "ПР-2026-001",
-        "organizaciya": "ООО «Промышленник»",
+        "organizatsiya": "ООО «Промышленник»",
         "vid_nadzora": "Государственный экологический надзор",
         "data_nachala": "2026-02-01",
         "data_okonchaniya": "2026-03-01",

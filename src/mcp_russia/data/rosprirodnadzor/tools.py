@@ -43,14 +43,14 @@ async def spisok_vidov_litsenziy_nedra(kontekst: Context) -> str:
 
 async def poisk_proverok(
     kontekst: Context,
-    organizaciya: str = "",
+    organizatsiya: str = "",
     vid_nadzora: str = "",
     god: int = 0,
 ) -> str:
     """Поиск экологических проверок Росприроднадзора.
 
     Аргументы:
-        organizaciya: Название организации (необязательно).
+        organizatsiya: Название организации (необязательно).
         vid_nadzora: Вид надзора (необязательно).
         god: Год (необязательно).
 
@@ -59,7 +59,7 @@ async def poisk_proverok(
     """
     await kontekst.info("Поиск экологических проверок...")
     proverki = await client.poisk_proverok(
-        organizaciya=organizaciya,
+        organizatsiya=organizatsiya,
         vid_nadzora=vid_nadzora,
         god=god,
     )
@@ -71,7 +71,7 @@ async def poisk_proverok(
     stroki_tablitsy = [
         (
             proverka.get("nomer", ""),
-            proverka.get("organizaciya", "")[:50],
+            proverka.get("organizatsiya", "")[:50],
             proverka.get("vid_nadzora", ""),
             proverka.get("sostoyanie", ""),
             str(proverka.get("vyavleno_narusheniy", "")),
@@ -102,7 +102,7 @@ async def info_proverki(nomer: str, kontekst: Context) -> str:
         )
     stroki = [
         f"**Проверка № {dannye.get('nomer', nomer)}**",
-        f"- Организация: {dannye.get('organizaciya', '')}",
+        f"- Организация: {dannye.get('organizatsiya', '')}",
         f"- Вид надзора: {dannye.get('vid_nadzora', '')}",
     ]
     if dannye.get("data_nachala"):
@@ -119,13 +119,13 @@ async def info_proverki(nomer: str, kontekst: Context) -> str:
 
 async def poisk_obektov_negativnogo(
     kontekst: Context,
-    organizaciya: str = "",
+    organizatsiya: str = "",
     kategoriya: str = "",
 ) -> str:
     """Поиск объектов негативного воздействия на окружающую среду.
 
     Аргументы:
-        organizaciya: Название организации (необязательно).
+        organizatsiya: Название организации (необязательно).
         kategoriya: Категория ОНВ I–IV (необязательно).
 
     Возвращает:
@@ -133,13 +133,13 @@ async def poisk_obektov_negativnogo(
     """
     await kontekst.info("Поиск объектов негативного воздействия...")
     obekty = await client.poisk_obektov_negativnogo(
-        organizaciya=organizaciya,
+        organizatsiya=organizatsiya,
         kategoriya=kategoriya,
     )
     if not obekty:
         filtry = []
-        if organizaciya:
-            filtry.append(f"организация: {organizaciya}")
+        if organizatsiya:
+            filtry.append(f"организация: {organizatsiya}")
         if kategoriya:
             filtry.append(f"категория: {kategoriya}")
         tekst_filtra = f" ({', '.join(filtry)})" if filtry else ""
@@ -195,13 +195,13 @@ async def poisk_litsenziy_nedra(
         )
     stroki_tablitsy = [
         (
-            lic.get("nomer", ""),
-            lic.get("vid_litsenzii", ""),
-            lic.get("territoriya", ""),
-            lic.get("derzhatel", "")[:40],
-            lic.get("srok_deystviya", ""),
+            litsenziya.get("nomer", ""),
+            litsenziya.get("vid_litsenzii", ""),
+            litsenziya.get("territoriya", ""),
+            litsenziya.get("derzhatel", "")[:40],
+            litsenziya.get("srok_deystviya", ""),
         )
-        for lic in litsenzii
+        for litsenziya in litsenzii
     ]
     zagolovok = f"**Лицензии на пользование недрами** — найдено: {len(litsenzii)}\n\n"
     return zagolovok + tablitsa_v_markdown(

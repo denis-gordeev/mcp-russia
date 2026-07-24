@@ -240,7 +240,7 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных лицензии."""
     return {
         "nomer": zapis.get("number", "") or zapis.get("nomer", ""),
-        "organizaciya": zapis.get("organizationName", "") or zapis.get("name", ""),
+        "organizatsiya": zapis.get("organizationName", "") or zapis.get("name", ""),
         "inn": zapis.get("inn", ""),
         "vid_deyatelnosti": zapis.get("activityType", "") or zapis.get("vid", ""),
         "data_vydachi": zapis.get("issueDate", "") or zapis.get("data_vydachi", ""),

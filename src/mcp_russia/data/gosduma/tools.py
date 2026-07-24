@@ -51,7 +51,7 @@ async def spisok_deputatov(sozyv: str = "", kontekst: Context | None = None) -> 
         (
             str(deputat.identifikator),
             f"{deputat.familiya} {deputat.imya} {deputat.otchestvo}".strip(),
-            deputat.frakciya,
+            deputat.fraktsiya,
             deputat.komitet,
         )
         for deputat in deputats[:50]
@@ -90,8 +90,8 @@ async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
         f"**{deputat.familiya} {deputat.imya} {deputat.otchestvo}**",
         f"- Идентификатор: {deputat.identifikator}",
     ]
-    if deputat.frakciya:
-        stroki.append(f"- Фракция: {deputat.frakciya}")
+    if deputat.fraktsiya:
+        stroki.append(f"- Фракция: {deputat.fraktsiya}")
     if deputat.komitet:
         stroki.append(f"- Комитет: {deputat.komitet}")
     if deputat.subiekt:
@@ -104,16 +104,16 @@ async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
     return "\n".join(stroki)
 
 
-async def spisok_frakcii(kontekst: Context) -> str:
+async def spisok_fraktsii(kontekst: Context) -> str:
     """Получить список фракций Государственной Думы.
 
     Возвращает:
         Список фракций.
     """
     await kontekst.info("Запрос списка фракций Госдумы...")
-    frakcii = client.poluchit_fraktsii()
+    fraktsii = await client.poluchit_fraktsii()
 
-    stroki_tablitsy = [(fraktsiya["kod"], fraktsiya["nazvanie"]) for fraktsiya in frakcii]
+    stroki_tablitsy = [(fraktsiya.kod, fraktsiya.nazvanie) for fraktsiya in fraktsii]
     zagolovok = "**Фракции Государственной Думы**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Фракция"], stroki_tablitsy)
 

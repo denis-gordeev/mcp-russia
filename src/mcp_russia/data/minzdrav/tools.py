@@ -120,7 +120,7 @@ async def poisk_litsenziy(
     stroki_tablitsy = [
         (
             lit.get("nomer", ""),
-            lit.get("organizaciya", ""),
+            lit.get("organizatsiya", ""),
             lit.get("vid_deyatelnosti", ""),
             lit.get("sostoyanie", ""),
             lit.get("data_okonchaniya", ""),

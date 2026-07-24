@@ -33,7 +33,7 @@ def test_razobrat_deputatov_spisok():
     rezultat = gosduma_klient._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].familiya == "Иванов"
-    assert rezultat[0].frakciya == "Единая Россия"
+    assert rezultat[0].fraktsiya == "Единая Россия"
 
 
 def test_razobrat_deputatov_dict():
@@ -54,7 +54,7 @@ def test_razobrat_deputatov_dict():
     rezultat = gosduma_klient._razobrat_deputatov(dannye)
     assert len(rezultat) == 1
     assert rezultat[0].familiya == "Петров"
-    assert rezultat[0].frakciya == "КПРФ"
+    assert rezultat[0].fraktsiya == "КПРФ"
 
 
 def test_razobrat_deputatov_pustoy():
@@ -136,7 +136,7 @@ async def test_spisok_deputatov_s_dannymi():
             familiya="Иванов",
             imya="Иван",
             otchestvo="Иванович",
-            frakciya="Единая Россия",
+            fraktsiya="Единая Россия",
             komitet="Бюджет",
             subiekt="Москва",
             sozyv="8",
@@ -146,7 +146,7 @@ async def test_spisok_deputatov_s_dannymi():
             familiya="Петров",
             imya="Пётр",
             otchestvo="Петрович",
-            frakciya="КПРФ",
+            fraktsiya="КПРФ",
             komitet="Оборона",
             subiekt="Краснодар",
             sozyv="8",
@@ -172,7 +172,7 @@ async def test_info_deputata_nayden():
         familiya="Иванов",
         imya="Иван",
         otchestvo="Иванович",
-        frakciya="Единая Россия",
+        fraktsiya="Единая Россия",
         komitet="Бюджет",
         subiekt="Москва",
         sozyv="8",
@@ -183,9 +183,9 @@ async def test_info_deputata_nayden():
     assert "Единая Россия" in rezultat
 
 
-async def test_spisok_frakcii():
+async def test_spisok_fraktsii():
     kontekst = _maket_konteksta()
-    rezultat = await gosduma_tools.spisok_frakcii(kontekst)
+    rezultat = await gosduma_tools.spisok_fraktsii(kontekst)
     assert "Единая Россия" in rezultat
     assert "КПРФ" in rezultat
     assert "ЛДПР" in rezultat

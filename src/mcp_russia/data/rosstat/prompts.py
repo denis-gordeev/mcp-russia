@@ -27,7 +27,7 @@ async def analiz_regiona(kontekst: str, kontekst_mcp: Context) -> str:
     )
 
 
-async def obzor_inflyacii(kontekst_mcp: Context) -> str:
+async def obzor_inflyatsii(kontekst_mcp: Context) -> str:
     """Обзор динамики потребительских цен в России.
 
     Возвращает:

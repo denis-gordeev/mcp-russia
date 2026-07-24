@@ -61,8 +61,8 @@ async def info_senatora(identifikator_senatora: str, kontekst: Context) -> str:
     ]
     if dannye.get("komitet"):
         stroki.append(f"- Комитет: {dannye['komitet']}")
-    if dannye.get("frakciya"):
-        stroki.append(f"- Фракция: {dannye['frakciya']}")
+    if dannye.get("fraktsiya"):
+        stroki.append(f"- Фракция: {dannye['fraktsiya']}")
     if dannye.get("data_naznacheniya"):
         stroki.append(f"- Дата назначения: {dannye['data_naznacheniya']}")
     stroki.append(f"- Источник: {dannye.get('istochnik', 'sovfed.ru')}")

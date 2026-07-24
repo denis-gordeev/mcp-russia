@@ -217,7 +217,7 @@ def _razobrat_publikatsii(dannye: Any) -> list[OficialnayaPublikatsiya]:
                 nomer_vypuska=zapis.get("issueNumber", zapis.get("nomer_vypuska", "")),
                 istochnik=zapis.get("source", zapis.get("istochnik", "pravo.gov.ru")),
                 rubrika=zapis.get("rubric", zapis.get("rubrika", "")),
-                annotaciya=zapis.get("annotation", zapis.get("annotaciya", "")),
+                annotatsiya=zapis.get("annotation", zapis.get("annotatsiya", "")),
                 tekst_ssylka=zapis.get("url", zapis.get("tekst_ssylka", "")),
             )
         )

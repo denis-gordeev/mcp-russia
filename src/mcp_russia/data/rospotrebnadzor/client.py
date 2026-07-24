@@ -119,13 +119,13 @@ async def plan_proverok(
 
 
 async def poisk_zhalob(
-    organizaciya: str = "",
+    organizatsiya: str = "",
     inn: str = "",
 ) -> list[dict[str, Any]]:
     """Поиск жалоб потребителей через zpp.rospotrebnadzor.ru.
 
     Аргументы:
-        organizaciya: Название организации.
+        organizatsiya: Название организации.
         inn: ИНН организации.
 
     Возвращает:
@@ -134,8 +134,8 @@ async def poisk_zhalob(
     try:
         adres_url = f"{ZPP_API_BAZA}/api/complaints"
         parametry: dict[str, Any] = {}
-        if organizaciya:
-            parametry["organizationName"] = organizaciya
+        if organizatsiya:
+            parametry["organizationName"] = organizatsiya
         if inn:
             parametry["inn"] = inn
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
@@ -175,7 +175,7 @@ def _razobrat_zhalobu(zapis: dict[str, Any]) -> dict[str, Any]:
         "data_podachi": zapis.get("date", "") or zapis.get("created", ""),
         "sostoyanie_rassmotreniya": zapis.get("status", ""),
         "rezultat": zapis.get("result", ""),
-        "organizaciya": zapis.get("organizationName", ""),
+        "organizatsiya": zapis.get("organizationName", ""),
         "inn": zapis.get("inn", ""),
         "istochnik": "ЗПП (zpp.rospotrebnadzor.ru)",
     }

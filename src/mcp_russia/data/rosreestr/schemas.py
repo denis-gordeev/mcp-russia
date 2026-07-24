@@ -38,7 +38,7 @@ class Zdanie(BaseModel):
     adreshnye_svedeniya: str = ""
     ploshchad: float | None = None
     etazhnost: int | None = None
-    god_vvoda_v_ekspluataciyu: str = ""
+    god_vvoda_v_ekspluatatsiyu: str = ""
     material_sten: str = ""
     kadastrovaya_stoimost: float | None = None
     naznachenie: str = ""

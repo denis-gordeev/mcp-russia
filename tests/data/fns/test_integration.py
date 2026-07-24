@@ -20,11 +20,11 @@ async def test_instrumenty_zaregistrirovany(klient):
         "spisok_nalogovyh_rezhimov",
         "spisok_vidov_nalogov",
         "spisok_tipov_proverok",
-        "spisok_statusov_organizaciy",
+        "spisok_statusov_organizatsiy",
         "spisok_kategoriy_nalogoplatelshchikov",
-        "info_organizacii",
+        "info_organizatsii",
         "info_ip",
-        "proverki_organizacii",
+        "proverki_organizatsii",
         "nalogovye_nachisleniya",
     }
     assert ozhidayemyy.issubset(imena_instrumentov), (

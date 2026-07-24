@@ -30,7 +30,7 @@ FORMY_OBUCHENIYA = [
     {"kod": "ochnaya", "nazvanie": "Очная"},
     {"kod": "ochno_zaochnaya", "nazvanie": "Очно-заочная (вечерняя)"},
     {"kod": "zaochnaya", "nazvanie": "Заочная"},
-    {"kod": "distancionnaya", "nazvanie": "Дистанционная"},
+    {"kod": "distantsionnaya", "nazvanie": "Дистанционная"},
 ]
 
 UROVNI_OBRAZOVANIYA = [

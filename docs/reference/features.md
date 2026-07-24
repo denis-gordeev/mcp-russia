@@ -1,10 +1,8 @@
 # Каталог модулей
 
-24 российских модуля · 213 инструментов · 70 ресурсов · 48 промптов
+24 российских модуля · 218 инструментов · 80 ресурсов · 55 промптов
 
 Этот каталог описывает текущее содержимое сервера. Все модули используют русские имена переменных и функций и подключены к реальным российским API.
-
-> **Статус миграции:** сервер полностью перешёл на российские реалии. 24 российских модуля данных подключены к реальным API. Устаревшие модули с бразильскими данными удалены из кодовой базы.
 
 ---
 
@@ -40,7 +38,7 @@
 | `informatsiya_o_regionye` | Детальная информация о регионе: население, ВРП, средняя зарплата (ЕМИСС) |
 | `informatsiya_ob_okruge` | Информация о федеральном округе с перечнем субъектов |
 | `pokazateli_rosstata` | Справочник основных показателей Росстата (21 показатель) |
-| `inflyaciya` | Данные об инфляции (ИПЦ) из ЕМИСС |
+| `inflyatsiya` | Данные об инфляции (ИПЦ) из ЕМИСС |
 | `demografiya` | Демографические данные из ЕМИСС (рождаемость, смертность, численность) |
 | `vrp_dannye` | Данные о валовом региональном продукте (ВРП) с разбивкой по регионам |
 | `zarplata_dannye` | Данные о средней заработной плате с региональной разбивкой |
@@ -51,7 +49,7 @@
 
 **Ресурсы:** `data://istochniki` (источники данных), `data://metodologiya`
 
-**Промпты:** `analiz_regiona`, `obzor_inflyacii`
+**Промпты:** `analiz_regiona`, `obzor_inflyatsii`
 
 **Авторизация:** не требуется
 
@@ -63,7 +61,7 @@
 |------|----------|
 | `spisok_deputatov` | Список депутатов Госдумы с фильтрацией по созыву |
 | `info_deputata` | Карточка депутата: фракция, комитет, регион, созыв |
-| `spisok_frakcii` | Справочник фракций Государственной Думы |
+| `spisok_fraktsii` | Справочник фракций Государственной Думы |
 | `spisok_komitetov` | Справочник комитетов Госдумы |
 | `spisok_sozyvov` | Список созывов Государственной Думы |
 | `zakonoproekty` | Законопроекты с фильтрацией по статусу |
@@ -115,7 +113,7 @@
 
 **Ресурсы:** `data://nalogovye-stavki`, `data://servisy`
 
-**Промпты:** `analiz_organizacii`, `poisk_adresa_prompt`
+**Промпты:** `analiz_organizatsii`, `poisk_adresa_prompt`
 
 **Авторизация:** требуется (MCP_RUSSIA_DADATA_API_KEY)
 
@@ -209,7 +207,7 @@
 
 | Инструмент | Описание |
 |------|----------|
-| `spisok_stanciy` | Справочник станций мониторинга |
+| `spisok_stantsiy` | Справочник станций мониторинга |
 | `spisok_tipov_dannykh` | Справочник типов данных |
 | `pogoda_seychas` | Текущая погода |
 | `prognoz_pogody` | Прогноз погоды |
@@ -286,7 +284,7 @@
 
 **Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
-**Промпты:** `analiz_proverki`, `obzor_sanitarnoy_situacii`
+**Промпты:** `analiz_proverki`, `obzor_sanitarnoy_situatsii`
 
 **Авторизация:** не требуется
 
@@ -325,11 +323,11 @@
 | `spisok_nalogovyh_rezhimov` | Справочник режимов налогообложения |
 | `spisok_vidov_nalogov` | Справочник видов налогов |
 | `spisok_tipov_proverok` | Справочник типов проверок |
-| `spisok_statusov_organizaciy` | Справочник статусов организаций |
+| `spisok_statusov_organizatsiy` | Справочник статусов организаций |
 | `spisok_kategoriy_nalogoplatelshchikov` | Справочник категорий налогоплательщиков |
-| `info_organizacii` | Информация об организации (ЕГРЮЛ) |
+| `info_organizatsii` | Информация об организации (ЕГРЮЛ) |
 | `info_ip` | Информация об ИП (ЕГРИП) |
-| `proverki_organizacii` | Налоговые проверки организации |
+| `proverki_organizatsii` | Налоговые проверки организации |
 | `nalogovye_nachisleniya` | Налоговые начисления |
 
 **Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
@@ -399,7 +397,7 @@
 | `shtrafy_po_ts` | Штрафы по транспортному средству |
 | `shtrafy_po_vu` | Штрафы по водительскому удостоверению |
 | `statistika_dtp` | Статистика ДТП |
-| `istoriya_registraciy` | История регистраций транспортного средства |
+| `istoriya_registratsiy` | История регистраций транспортного средства |
 
 **Ресурсы:** `data://istochniki`, `data://zakonodatelstvo`, `data://struktura`
 
@@ -533,5 +531,27 @@
 **Ресурсы:** `data://istochniki`, `data://struktura`, `data://zakonodatelstvo`
 
 **Промпты:** `analiz_veterinarnoy_proverki`, `obzor_karantinnoy_obstanovki`
+
+**Авторизация:** не требуется
+
+---
+
+## Агенты
+
+### `deloproizvodstvo` — Делопроизводство (5 инструментов, 10 ресурсов, 7 промптов)
+
+Подготовка, валидация и оформление официальных документов по правилам российского делопроизводства. Шаблоны документов, обращения, нумерация.
+
+| Инструмент | Описание |
+|------|----------|
+| `formatirovat_datu_propisyu` | Форматирование даты прописью по правилам делопроизводства |
+| `generirovat_numeratsiyu` | Генерация регистрационного номера документа |
+| `konsulitirovat_obrashchenie` | Консультация по тексту обращения |
+| `validirovat_dokument` | Валидация документа на соответствие правилам делопроизводства |
+| `spisok_tipov_dokumentov` | Справочник типов документов |
+
+**Ресурсы:** `data://shablon-pismo`, `data://shablon-prikaz`, `data://shablon-rasporyazhenie`, `data://shablon-akt`, `data://shablon-spravka`, `data://shablon-protokol`, `data://shablon-dokladnaya-zapiska`, `data://manual-deloproizvodstvo`, `data://obrashcheniya`, `data://zaklyuchitelnye-formuly`
+
+**Промпты:** `redaktor_pismo`, `redaktor_prikaz`, `redaktor_rasporyazhenie`, `redaktor_akt`, `redaktor_spravka`, `redaktor_protokol`, `redaktor_dokladnaya_zapiska`
 
 **Авторизация:** не требуется

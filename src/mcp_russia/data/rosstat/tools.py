@@ -131,7 +131,7 @@ async def pokazateli_rosstata(kontekst: Context) -> str:
     return zagolovok + tablitsa_v_markdown(["Код", "Показатель"], stroki_tablitsy)
 
 
-async def inflyaciya(god: str = "", kontekst: Context | None = None) -> str:
+async def inflyatsiya(god: str = "", kontekst: Context | None = None) -> str:
     """Получить данные об инфляции (ИПЦ) в России.
 
     Аргументы:
@@ -142,7 +142,7 @@ async def inflyaciya(god: str = "", kontekst: Context | None = None) -> str:
     """
     if kontekst:
         await kontekst.info("Запрос данных об инфляции...")
-    dannye = await client.poluchit_inflyaciyu(god)
+    dannye = await client.poluchit_inflyatsiyu(god)
     if not dannye:
         return (
             f"**Инфляция в России (ИПЦ)**\n\n"
@@ -266,8 +266,10 @@ async def zarplata_dannye(
     stroki_tablitsy = []
     for zapis in dannye:
         zp = formatirovat_chislo_ru(zapis.nominalnaya_zp, 2) if zapis.nominalnaya_zp else "—"
-        real = f"{zapis.realnaya_zp_izmenenie}%" if zapis.realnaya_zp_izmenenie else "—"
-        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", zp, real))
+        realnoe_izmenenie = (
+            f"{zapis.realnaya_zp_izmenenie}%" if zapis.realnaya_zp_izmenenie else "—"
+        )
+        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", zp, realnoe_izmenenie))
     zagolovok = f"**Средняя заработная плата{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(

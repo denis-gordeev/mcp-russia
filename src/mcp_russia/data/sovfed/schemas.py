@@ -13,7 +13,7 @@ class SenatorRezyume(BaseModel):
     subiekt: str = ""
     dolzhnost: str = ""
     komitet: str = ""
-    frakciya: str = ""
+    fraktsiya: str = ""
     data_naznacheniya: str = ""
 
 

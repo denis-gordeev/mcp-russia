@@ -59,7 +59,7 @@ Ogranicheniya = [
     },
     {"kod": "arest_schetov", "nazvanie": "Арест банковских счетов"},
     {"kod": "arest_imushchestva", "nazvanie": "Арест имущества"},
-    {"kod": "zapret_registracii", "nazvanie": "Запрет на регистрационные действия с имуществом"},
+    {"kod": "zapret_registratsii", "nazvanie": "Запрет на регистрационные действия с имуществом"},
 ]
 
 KategoriiDolzhnikov = [

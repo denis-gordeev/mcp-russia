@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 
 async def poisk_proverok(
-    organizaciya: str = "",
+    organizatsiya: str = "",
     vid_nadzora: str = "",
     god: int = 0,
     ogranichenie: int = 20,
@@ -36,7 +36,7 @@ async def poisk_proverok(
     """Поиск экологических проверок Росприроднадзора.
 
     Аргументы:
-        organizaciya: Название организации.
+        organizatsiya: Название организации.
         vid_nadzora: Код вида надзора.
         god: Год проверки.
         ogranichenie: Максимум результатов.
@@ -47,8 +47,8 @@ async def poisk_proverok(
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/inspections"
         parametry: dict[str, Any] = {"limit": ogranichenie}
-        if organizaciya:
-            parametry["organization"] = organizaciya
+        if organizatsiya:
+            parametry["organization"] = organizatsiya
         if vid_nadzora:
             parametry["supervisionType"] = vid_nadzora
         if god:
@@ -65,8 +65,8 @@ async def poisk_proverok(
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH}/inspections"
         parametry: dict[str, Any] = {"limit": ogranichenie}
-        if organizaciya:
-            parametry["organization"] = organizaciya
+        if organizatsiya:
+            parametry["organization"] = organizatsiya
         if god:
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
@@ -101,14 +101,14 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
 
 
 async def poisk_obektov_negativnogo(
-    organizaciya: str = "",
+    organizatsiya: str = "",
     kategoriya: str = "",
     ogranichenie: int = 20,
 ) -> list[dict[str, Any]]:
     """Поиск объектов негативного воздействия в реестре ОНВ.
 
     Аргументы:
-        organizaciya: Название организации.
+        organizatsiya: Название организации.
         kategoriya: Категория ОНВ.
         ogranichenie: Максимум результатов.
 
@@ -118,8 +118,8 @@ async def poisk_obektov_negativnogo(
     try:
         adres_url = f"{ONV_REESTR_BAZA}/search"
         parametry: dict[str, Any] = {"limit": ogranichenie}
-        if organizaciya:
-            parametry["name"] = organizaciya
+        if organizatsiya:
+            parametry["name"] = organizatsiya
         if kategoriya:
             parametry["category"] = kategoriya
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
@@ -136,8 +136,8 @@ async def poisk_obektov_negativnogo(
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/onv"
         parametry: dict[str, Any] = {"limit": ogranichenie}
-        if organizaciya:
-            parametry["organization"] = organizaciya
+        if organizatsiya:
+            parametry["organization"] = organizatsiya
         if kategoriya:
             parametry["category"] = kategoriya
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
@@ -263,7 +263,7 @@ def _razobrat_proverku(dannye: dict[str, Any]) -> dict[str, Any]:
     """Разбор данных проверки Росприроднадзора."""
     return {
         "nomer": dannye.get("id", "") or dannye.get("number", "") or dannye.get("nomer", ""),
-        "organizaciya": dannye.get("organization", "") or dannye.get("organizaciya", ""),
+        "organizatsiya": dannye.get("organization", "") or dannye.get("organizatsiya", ""),
         "vid_nadzora": dannye.get("supervisionType", "") or dannye.get("vid_nadzora", ""),
         "data_nachala": dannye.get("startDate", "") or dannye.get("data_nachala", ""),
         "data_okonchaniya": dannye.get("endDate", "") or dannye.get("data_okonchaniya", ""),

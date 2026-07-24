@@ -60,7 +60,7 @@ API: rosstat_pokazateli_rosstata(indikatory="zdorovye", uroven="municipalitet")
 > Промпт: "Какой объём межбюджетных трансфертов на здравоохранение получил каждый район Республики Татарстан в 2024 году?"
 
 ```
-API: budget_transformacii(subiekt="16", razdel="09") *(планируемый модуль «Бюджетная система»)*
+API: budget_transformatsii(subiekt="16", razdel="09") *(планируемый модуль «Бюджетная система»)*
 ```
 
 ### Как связываются данные
@@ -316,7 +316,7 @@ API: zakupki_reestr_nedobrosovestnykh_postavshchikov() *(планируемый 
 ## Следующие шаги
 
 - привязать примеры к конкретным кейсам по программам лекарственного обеспечения, национального проекта «Здравоохранение» и экологического мониторинга;
-- добавить недостающие инструменты: «Бюджетная система» (budget_rashody_subekta, budget_transformacii, budget_spetsperechisleniya, budget_dokhody_subekta), `rosprirodnadzor_lesnaya_okhrana`, функционал РНП в модуле «Закупки».
+- добавить недостающие инструменты: «Бюджетная система» (budget_rashody_subekta, budget_transformatsii, budget_spetsperechisleniya, budget_dokhody_subekta), `rosprirodnadzor_lesnaya_okhrana`, функционал РНП в модуле «Закупки».
 
 ### Автоматизация Через `splanirovat_zapros`
 

@@ -84,7 +84,7 @@ TIPY_EKODANNYKH = [
     {"kod": "vozdukh", "nazvanie": "Качество атмосферного воздуха"},
     {"kod": "voda", "nazvanie": "Качество водных ресурсов"},
     {"kod": "pochva", "nazvanie": "Загрязнение почв"},
-    {"kod": "radiaciya", "nazvanie": "Радиационный фон"},
+    {"kod": "radiatsiya", "nazvanie": "Радиационный фон"},
     {"kod": "shum", "nazvanie": "Шумовое загрязнение"},
 ]
 

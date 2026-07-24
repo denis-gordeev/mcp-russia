@@ -33,7 +33,7 @@ class KandidatKratko(BaseModel):
 
     identifikator: str = Field(description="Идентификатор кандидата")
     fio: str = Field(description="ФИО кандидата")
-    partia: str = Field(description="Партия / статус выдвижения", default="")
+    partiya: str = Field(description="Партия / статус выдвижения", default="")
     dolzhnost: str = Field(description="Избирательная должность")
     subiekt: str = Field(description="Субъект РФ / округ", default="")
     sostoyanie: str = Field(description="Состояние (зарегистрирован/снят/исключён)", default="")
@@ -46,7 +46,7 @@ class Kandidat(BaseModel):
     fio: str = Field(description="ФИО")
     data_rozhdeniya: str = Field(description="Дата рождения", default="")
     mesto_rozhdeniya: str = Field(description="Место рождения", default="")
-    partia: str = Field(description="Партия / статус выдвижения", default="")
+    partiya: str = Field(description="Партия / статус выдвижения", default="")
     dolzhnost: str = Field(description="Избирательная должность")
     subiekt: str = Field(description="Субъект РФ / округ", default="")
     sostoyanie: str = Field(description="Состояние", default="")
@@ -64,11 +64,11 @@ class ResultatKandidata(BaseModel):
 
     kandidat_identifikator: str = Field(description="Идентификатор кандидата")
     fio: str = Field(description="ФИО")
-    partia: str = Field(description="Партия", default="")
+    partiya: str = Field(description="Партия", default="")
     golosov: int = Field(description="Число голосов", default=0)
-    procent: float = Field(description="Процент голосов", default=0.0)
+    protsent: float = Field(description="Процент голосов", default=0.0)
     izbrann: bool = Field(description="Избран/не избран", default=False)
-    yavka_procent: float = Field(description="Явка избирателей, %", default=0.0)
+    yavka_protsent: float = Field(description="Явка избирателей, %", default=0.0)
 
 
 class ItogiVYborov(BaseModel):
@@ -77,7 +77,7 @@ class ItogiVYborov(BaseModel):
     tip: str = Field(description="Тип выборов")
     data: str = Field(description="Дата голосования")
     subiekt: str = Field(description="Субъект РФ", default="")
-    yavka_procent: float = Field(description="Явка избирателей, %", default=0.0)
+    yavka_protsent: float = Field(description="Явка избирателей, %", default=0.0)
     vseh_izbirateley: int = Field(description="Всего избирателей", default=0)
     progalosovalo: int = Field(description="Проголосовало", default=0)
     deystvitelnykh_byulleteney: int = Field(description="Действительных бюллетеней", default=0)
@@ -90,4 +90,4 @@ class InformatsiyaPartii(BaseModel):
     nazvanie: str = Field(description="Полное наименование партии")
     kratkoe_nazvanie: str = Field(description="Краткое наименование")
     tsvet: str = Field(description="Цвет партии (HEX)", default="")
-    registraciya: str = Field(description="Номер регистрации Минюста", default="")
+    registratsiya: str = Field(description="Номер регистрации Минюста", default="")

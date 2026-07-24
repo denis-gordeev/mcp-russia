@@ -43,7 +43,7 @@ class OficialnayaPublikatsiya(BaseModel):
     nomer_vypuska: str = ""
     istochnik: str = ""
     rubrika: str = ""
-    annotaciya: str = ""
+    annotatsiya: str = ""
     tekst_ssylka: str = ""
 
 

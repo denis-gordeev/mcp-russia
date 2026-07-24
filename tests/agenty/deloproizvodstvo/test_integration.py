@@ -14,7 +14,7 @@ class TestInstrumentyZaregistrirovany:
             imena = {t.name for t in spisok_instrumentov}
             ozhidayemyy = {
                 "formatirovat_datu_propisyu",
-                "generirovat_numeraciyu",
+                "generirovat_numeratsiyu",
                 "konsulitirovat_obrashchenie",
                 "validirovat_dokument",
                 "spisok_tipov_dokumentov",
@@ -79,10 +79,10 @@ class TestVypolnenieInstrumentov:
             assert "г. Санкт-Петербург" in rezultat.data
 
     @pytest.mark.asyncio
-    async def test_generirovat_numeraciyu_e2e(self) -> None:
+    async def test_generirovat_numeratsiyu_e2e(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool(
-                "generirovat_numeraciyu",
+                "generirovat_numeratsiyu",
                 {"tip": "письмо", "nomer": 42, "god": 2026, "otdel": "Д-15"},
             )
             assert "ПИСЬМО № 42/2026/Д-15" in rezultat.data

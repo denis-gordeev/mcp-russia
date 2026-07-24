@@ -16,17 +16,17 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 from . import client
 
 
-async def spisok_stanciy(kontekst: Context) -> str:
+async def spisok_stantsiy(kontekst: Context) -> str:
     """Получить список станций мониторинга Росгидромета.
 
     Возвращает:
         Список станций с кодами.
     """
     await kontekst.info("Запрос списка станций мониторинга...")
-    stancii = client.poluchit_spisok_stantsiy()
+    stantsii = client.poluchit_spisok_stantsiy()
 
     stroki_tablitsy = [
-        (stantsiya["kod"], stantsiya["nazvanie"], stantsiya["subiekt"]) for stantsiya in stancii
+        (stantsiya["kod"], stantsiya["nazvanie"], stantsiya["subiekt"]) for stantsiya in stantsii
     ]
     zagolovok = "**Станции мониторинга Росгидромета**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Город", "Округ"], stroki_tablitsy)
@@ -53,22 +53,22 @@ async def spisok_tipov_dannykh(kontekst: Context) -> str:
     return "\n".join(stroki)
 
 
-async def pogoda_seychas(stanciya: str = "77", kontekst: Context | None = None) -> str:
+async def pogoda_seychas(stantsiya: str = "77", kontekst: Context | None = None) -> str:
     """Получить текущую погоду на станции.
 
     Аргументы:
-        stanciya: Код станции (по умолчанию Москва — 77).
+        stantsiya: Код станции (по умолчанию Москва — 77).
 
     Возвращает:
         Текущие погодные данные.
     """
-    await kontekst.info(f"Запрос текущей погоды на станции {stanciya}...")
-    dannye = await client.poluchit_pogodu(stanciya)
+    await kontekst.info(f"Запрос текущей погоды на станции {stantsiya}...")
+    dannye = await client.poluchit_pogodu(stantsiya)
 
     if not dannye:
         return (
-            f"Данные о погоде для станции '{stanciya}' недоступны.\n\n"
-            f"Используйте spisok_stanciy() для списка станций."
+            f"Данные о погоде для станции '{stantsiya}' недоступны.\n\n"
+            f"Используйте spisok_stantsiy() для списка станций."
         )
 
     stroki = [f"**Погода: {dannye.gorod}** ({dannye.subiekt})"]
@@ -97,26 +97,26 @@ async def pogoda_seychas(stanciya: str = "77", kontekst: Context | None = None) 
 
 
 async def prognoz_pogody(
-    stanciya: str = "77",
+    stantsiya: str = "77",
     dni: int = 3,
     kontekst: Context | None = None,
 ) -> str:
     """Получить прогноз погоды на несколько дней.
 
     Аргументы:
-        stanciya: Код станции.
+        stantsiya: Код станции.
         dni: Количество дней прогноза (1-7).
 
     Возвращает:
         Прогноз погоды.
     """
-    await kontekst.info(f"Запрос прогноза на {dni} дней для станции {stanciya}...")
-    prognoz = await client.poluchit_prognoz(stanciya, dni)
+    await kontekst.info(f"Запрос прогноза на {dni} дней для станции {stantsiya}...")
+    prognoz = await client.poluchit_prognoz(stantsiya, dni)
 
     if not prognoz:
         return (
-            f"Прогноз погоды для станции '{stanciya}' недоступен.\n\n"
-            f"Используйте spisok_stanciy() для списка станций."
+            f"Прогноз погоды для станции '{stantsiya}' недоступен.\n\n"
+            f"Используйте spisok_stantsiy() для списка станций."
         )
 
     stroki = [f"**Прогноз погоды** — {len(prognoz)} дней\n"]
@@ -149,7 +149,7 @@ async def ekologiya_regiona(
 
     Аргументы:
         gorod: Название города (необязательно).
-        tip: Тип данных (vozdukh, voda, pochva, radiaciya, shum).
+        tip: Тип данных (vozdukh, voda, pochva, radiatsiya, shum).
 
     Возвращает:
         Данные об экологической обстановке.

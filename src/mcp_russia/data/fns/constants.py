@@ -37,11 +37,11 @@ TipyProverok = [
     {"kod": "dokumentalnaya", "nazvanie": "Документарная проверка"},
 ]
 
-StatusyOrganizacii = [
+StatusyOrganizatsii = [
     {"kod": "deystvuyushchaya", "nazvanie": "Действующая"},
-    {"kod": "v_processe_likvidacii", "nazvanie": "В процессе ликвидации"},
+    {"kod": "v_protsesse_likvidatsii", "nazvanie": "В процессе ликвидации"},
     {"kod": "likvidirovana", "nazvanie": "Ликвидирована"},
-    {"kod": "v_processe_reorganizacii", "nazvanie": "В процессе реорганизации"},
+    {"kod": "v_protsesse_reorganizatsii", "nazvanie": "В процессе реорганизации"},
     {"kod": "prekratila_deyatelnost", "nazvanie": "Прекратила деятельность"},
 ]
 

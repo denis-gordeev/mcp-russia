@@ -144,11 +144,11 @@ async def poisk_litsenziy(nomer: str = "", inn: str = "") -> list[dict[str, Any]
         return []
 
 
-async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list[dict[str, Any]]:
+async def poisk_smi(registratsionnyy_nomer: str = "", nazvanie: str = "") -> list[dict[str, Any]]:
     """Поиск СМИ в реестре Роскомнадзора.
 
     Аргументы:
-        registracionnyy_nomer: Регистрационный номер СМИ.
+        registratsionnyy_nomer: Регистрационный номер СМИ.
         nazvanie: Название СМИ.
 
     Возвращает:
@@ -157,8 +157,8 @@ async def poisk_smi(registracionnyy_nomer: str = "", nazvanie: str = "") -> list
     try:
         adres_url = f"{RKN_BAZA_API}/mass-media/search"
         parametry: dict[str, Any] = {}
-        if registracionnyy_nomer:
-            parametry["regNumber"] = registracionnyy_nomer
+        if registratsionnyy_nomer:
+            parametry["regNumber"] = registratsionnyy_nomer
         if nazvanie:
             parametry["name"] = nazvanie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
@@ -182,9 +182,9 @@ def _razobrat_operatora_pd(zapis: dict[str, Any]) -> dict[str, Any]:
         "naimenovanie": zapis.get("name", "") or zapis.get("naimenovanie", ""),
         "inn": zapis.get("inn", ""),
         "kategoriya": zapis.get("category", ""),
-        "tsel_obrabotki": zapis.get("processingPurpose", "") or zapis.get("tsel", ""),
+        "tsel_obrabotki": zapis.get("protsessingPurpose", "") or zapis.get("tsel", ""),
         "sostoyanie": zapis.get("status", ""),
-        "data_registracii": zapis.get("registrationDate", ""),
+        "data_registratsii": zapis.get("registrationDate", ""),
         "adres": zapis.get("address", ""),
         "istochnik": "Реестр ПД (rkn.gov.ru/pdn)",
     }
@@ -219,7 +219,7 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи лицензии связи."""
     return {
         "nomer": zapis.get("number", "") or zapis.get("nomer", ""),
-        "organizaciya": zapis.get("licensee", "") or zapis.get("organizaciya", ""),
+        "organizatsiya": zapis.get("licensee", "") or zapis.get("organizatsiya", ""),
         "tip_litsenzii": zapis.get("type", "") or zapis.get("tip", ""),
         "data_vydachi": zapis.get("issueDate", ""),
         "data_okonchaniya": zapis.get("expiryDate", ""),
@@ -232,7 +232,7 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
 def _razobrat_smi(zapis: dict[str, Any]) -> dict[str, Any]:
     """Парсинг записи СМИ."""
     return {
-        "registracionnyy_nomer": zapis.get("regNumber", "") or zapis.get("nomer", ""),
+        "registratsionnyy_nomer": zapis.get("regNumber", "") or zapis.get("nomer", ""),
         "nazvanie": zapis.get("name", "") or zapis.get("nazvanie", ""),
         "tip_smi": zapis.get("type", "") or zapis.get("tip", ""),
         "uchreditel": zapis.get("founder", ""),

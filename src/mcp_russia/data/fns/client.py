@@ -20,12 +20,12 @@ from .schemas import (
     IPEGRIP,
     NalogovayaProverka,
     NalogovoeNachislenie,
-    OrganizaciyaEGRUL,
-    SvedeniyaOrganizacii,
+    OrganizatsiyaEGRUL,
+    SvedeniyaOrganizatsii,
 )
 
 
-async def poluchit_organizaciyu(inn: str) -> OrganizaciyaEGRUL | None:
+async def poluchit_organizatsiyu(inn: str) -> OrganizatsiyaEGRUL | None:
     """Получение данных организации из ЕГРЮЛ через egrul.nalog.ru.
 
     Аргументы:
@@ -98,7 +98,7 @@ async def poluchit_nachisleniya(inn: str, period: str = "") -> list[NalogovoeNac
     return []
 
 
-async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
+async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizatsii | None:
     """Получение данных об организации из ЕГРЮЛ через egrul.nalog.ru.
 
     Аргументы:
@@ -107,15 +107,15 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizacii | None:
     Возвращает:
         Данные организации или None.
     """
-    organizaciya = await poluchit_organizaciyu(inn)
-    if not organizaciya:
+    organizatsiya = await poluchit_organizatsiyu(inn)
+    if not organizatsiya:
         return None
 
-    return SvedeniyaOrganizacii(
-        inn=organizaciya.inn,
-        nazvanie=organizaciya.nazvanie,
-        registracionnyy_nomer=organizaciya.ogrn,
-        data_postanovki_na_uchet=organizaciya.data_registracii,
+    return SvedeniyaOrganizatsii(
+        inn=organizatsiya.inn,
+        nazvanie=organizatsiya.nazvanie,
+        registratsionnyy_nomer=organizatsiya.ogrn,
+        data_postanovki_na_uchet=organizatsiya.data_registratsii,
         nalogovyy_organ="",
         rezhim_nalogooblozheniya="",
         srednespisochnaya_chislennost=None,
@@ -154,15 +154,15 @@ async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
     return rezultat
 
 
-def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizaciyaEGRUL:
-    """Разбор записи ЕГРЮЛ в схему OrganizaciyaEGRUL."""
-    return OrganizaciyaEGRUL(
+def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizatsiyaEGRUL:
+    """Разбор записи ЕГРЮЛ в схему OrganizatsiyaEGRUL."""
+    return OrganizatsiyaEGRUL(
         inn=zapis.get("inn", "") or zapis.get("t", ""),
         ogrn=zapis.get("ogrn", "") or zapis.get("o", ""),
         nazvanie=zapis.get("n", "") or zapis.get("c", ""),
         polnoe_nazvanie=zapis.get("n", ""),
         yuridicheskiy_adres=zapis.get("a", ""),
-        data_registracii=zapis.get("r", "") or zapis.get("g", ""),
+        data_registratsii=zapis.get("r", "") or zapis.get("g", ""),
         sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
         ustroyennyy_kapital="",
@@ -176,7 +176,7 @@ def _razobrat_egrul_ip(zapis: dict[str, Any]) -> IPEGRIP:
         inn=zapis.get("inn", "") or zapis.get("t", ""),
         ogrnip=zapis.get("ogrn", "") or zapis.get("o", ""),
         fio=zapis.get("n", "") or zapis.get("c", ""),
-        data_registracii=zapis.get("r", "") or zapis.get("g", ""),
+        data_registratsii=zapis.get("r", "") or zapis.get("g", ""),
         sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
     )

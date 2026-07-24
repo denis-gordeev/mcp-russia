@@ -17,7 +17,7 @@ from mcp_russia import settings
 from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import DUMA_DEPUTATY, DUMA_GOLOSOVANIYA, DUMA_ZAKONOPROEKTY, FRAKCII, SOZYVY
-from .schemas import Deputat, Frakciya, Golosovanie, Zakonoproekt
+from .schemas import Deputat, Fraktsiya, Golosovanie, Zakonoproekt
 
 
 def _poluchit_api_token() -> str:
@@ -62,14 +62,14 @@ def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
     for deputat in elementy:
         if not isinstance(deputat, dict):
             continue
-        frakciya_syraya = deputat.get("factionName", deputat.get("faction", ""))
+        fraktsiya_syraya = deputat.get("factionName", deputat.get("faction", ""))
         rezultaty.append(
             Deputat(
                 identifikator=deputat.get("id", 0),
                 familiya=deputat.get("surname", deputat.get("lastName", "")),
                 imya=deputat.get("name", deputat.get("firstName", "")),
                 otchestvo=deputat.get("patronymic", deputat.get("middleName", "")),
-                frakciya=frakciya_syraya,
+                fraktsiya=fraktsiya_syraya,
                 komitet=deputat.get("committeeName", deputat.get("committee", "")),
                 subiekt=deputat.get("districtName", deputat.get("region", "")),
                 sozyv=str(deputat.get("convocation", deputat.get("sozyv", ""))),
@@ -117,7 +117,7 @@ def _razobrat_odnogo_deputata(dannye: dict[str, Any]) -> Deputat | None:
         familiya=dannye.get("surname", dannye.get("lastName", "")),
         imya=dannye.get("name", dannye.get("firstName", "")),
         otchestvo=dannye.get("patronymic", dannye.get("middleName", "")),
-        frakciya=dannye.get("factionName", dannye.get("faction", "")),
+        fraktsiya=dannye.get("factionName", dannye.get("faction", "")),
         komitet=dannye.get("committeeName", dannye.get("committee", "")),
         subiekt=dannye.get("districtName", dannye.get("region", "")),
         sozyv=str(dannye.get("convocation", dannye.get("sozyv", ""))),
@@ -239,25 +239,20 @@ def _razobrat_golosovaniya(dannye: Any) -> list[Golosovanie]:
     return rezultaty
 
 
-async def poluchit_frakcii() -> list[Frakciya]:
+async def poluchit_fraktsii() -> list[Fraktsiya]:
     """Получение текущих фракций Госдумы.
 
     Возвращает:
         Список фракций.
     """
     return [
-        Frakciya(kod=fraktsiya["kod"], nazvanie=fraktsiya["nazvanie"]) for fraktsiya in FRAKCII
+        Fraktsiya(kod=fraktsiya["kod"], nazvanie=fraktsiya["nazvanie"]) for fraktsiya in FRAKCII
     ]
 
 
 def poluchit_sozyvy() -> list[dict[str, str]]:
     """Возвращает список созывов Государственной Думы."""
     return SOZYVY
-
-
-def poluchit_fraktsii() -> list[dict[str, str]]:
-    """Возвращает список текущих фракций."""
-    return FRAKCII
 
 
 def poluchit_komitety() -> list[dict[str, str]]:

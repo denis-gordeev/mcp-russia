@@ -18,7 +18,7 @@ class TransportnoeSredstvo(BaseModel):
     moshchnost_ls: int | None = None
     obiem_sm3: int | None = None
     tip_dvigatelya: str = ""
-    registracioniya_oblast: str = ""
+    registratsionnaya_oblast: str = ""
 
 
 class VoditelskoeUdostoverenie(BaseModel):
@@ -62,7 +62,7 @@ class StatistikaDTP(BaseModel):
     alco_gibdd: int = 0
 
 
-class RegistracionnoeDeystvie(BaseModel):
+class RegistratsionnoeDeystvie(BaseModel):
     """Регистрационное действие с ТС."""
 
     vin: str = ""

@@ -58,7 +58,7 @@ async def poisk_akreditovannyh_vuzov(
         return []
 
 
-async def info_akkreditacii(inn: str) -> dict[str, Any] | None:
+async def info_akkreditatsii(inn: str) -> dict[str, Any] | None:
     """Получить информацию об аккредитации образовательного учреждения.
 
     Аргументы:

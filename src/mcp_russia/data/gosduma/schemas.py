@@ -12,7 +12,7 @@ class Deputat(BaseModel):
     familiya: str
     imya: str
     otchestvo: str
-    frakciya: str = ""
+    fraktsiya: str = ""
     komitet: str = ""
     subiekt: str = ""
     sozyv: str = ""
@@ -31,7 +31,7 @@ class Zakonoproekt(BaseModel):
     chteniya: int = 0
 
 
-class Frakciya(BaseModel):
+class Fraktsiya(BaseModel):
     """Фракция Государственной Думы."""
 
     kod: str

@@ -10,7 +10,7 @@ from .resources import istochniki_dannyh, sistema_gibdd, zakonodatelstvo
 from .tools import (
     info_ts,
     info_vu,
-    istoriya_registraciy,
+    istoriya_registratsiy,
     shtrafy_po_ts,
     shtrafy_po_vu,
     spisok_kategoriyy_vu,
@@ -35,7 +35,7 @@ mcp.tool(info_vu, tags={"ву", "информация"})
 mcp.tool(shtrafy_po_ts, tags={"штрафы", "поиск"})
 mcp.tool(shtrafy_po_vu, tags={"штрафы", "поиск"})
 mcp.tool(statistika_dtp, tags={"дтп", "статистика"})
-mcp.tool(istoriya_registraciy, tags={"регистрация", "информация"})
+mcp.tool(istoriya_registratsiy, tags={"регистрация", "информация"})
 
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)

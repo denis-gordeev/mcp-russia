@@ -94,18 +94,18 @@ async def test_pokazateli_rosstata():
     assert "населени" in rezultat or "naselenie" in rezultat
 
 
-async def test_inflyaciya_zapasnoy():
-    rezultat = await rosstat_tools.inflyaciya(god="2025")
+async def test_inflyatsiya_zapasnoy():
+    rezultat = await rosstat_tools.inflyatsiya(god="2025")
     assert "Инфляц" in rezultat or "ИПЦ" in rezultat
     assert "2025" in rezultat
 
 
-async def test_inflyaciya_s_dannymi():
+async def test_inflyatsiya_s_dannymi():
     maket_dannykh = [
         {"period": "2025-01", "ipcz_mesyac": 0.5, "ipcz_nakoplenny": 0.5, "ipcz_god": 9.9},
     ]
-    with patch.object(rosstat_tools.client, "poluchit_inflyaciyu", return_value=maket_dannykh):
-        rezultat = await rosstat_tools.inflyaciya(god="2025")
+    with patch.object(rosstat_tools.client, "poluchit_inflyatsiyu", return_value=maket_dannykh):
+        rezultat = await rosstat_tools.inflyatsiya(god="2025")
     assert "2025-01" in rezultat
 
 

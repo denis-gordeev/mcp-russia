@@ -15,7 +15,7 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import GIBDD_BAZA_PROVEROK, GIBDD_BAZA_STATISTIKI
 from .schemas import (
-    RegistracionnoeDeystvie,
+    RegistratsionnoeDeystvie,
     StatistikaDTP,
     VoditelskoeUdostoverenie,
 )
@@ -23,7 +23,7 @@ from .schemas import (
 logger = logging.getLogger(__name__)
 
 
-async def proverka_istorii_ts(vin: str) -> list[RegistracionnoeDeystvie]:
+async def proverka_istorii_ts(vin: str) -> list[RegistratsionnoeDeystvie]:
     """Проверка истории регистрации ТС через API ГИБДД.
 
     Аргументы:
@@ -149,7 +149,7 @@ def _izvlech_rezultat(dannye: Any, klyuch: str) -> dict[str, Any]:
     return rezultat.get(klyuch, {})
 
 
-def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
+def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistratsionnoeDeystvie]:
     """Разбор ответа истории регистрации ТС."""
     istoriya = _izvlech_rezultat(dannye, "history")
     if not isinstance(istoriya, dict):
@@ -160,7 +160,7 @@ def _razobrat_istoriyu(dannye: Any, vin: str) -> list[RegistracionnoeDeystvie]:
         if not isinstance(zapis, dict):
             continue
         zapisi.append(
-            RegistracionnoeDeystvie(
+            RegistratsionnoeDeystvie(
                 vin=vin,
                 gos_nomer=zapis.get("regNumber", ""),
                 tip_deystviya=zapis.get("regAction", ""),

@@ -127,14 +127,14 @@ async def poluchit_byudzhet_ispolnenie(
 
 
 async def poisk_narusheniy(
-    organizaciya: str = "",
+    organizatsiya: str = "",
     tip: str = "",
     god: int = 0,
 ) -> list[dict[str, Any]]:
     """Поиск выявленных нарушений.
 
     Аргументы:
-        organizaciya: Организация.
+        organizatsiya: Организация.
         tip: Тип нарушения.
         god: Год.
 
@@ -144,8 +144,8 @@ async def poisk_narusheniy(
     try:
         adres_url = f"{ACH_BAZA_API}/violations"
         parametry: dict[str, Any] = {}
-        if organizaciya:
-            parametry["organization"] = organizaciya
+        if organizatsiya:
+            parametry["organization"] = organizatsiya
         if tip:
             parametry["type"] = tip
         if god:
@@ -210,13 +210,13 @@ def _razobrat_auditorskoe_zaklyuchenie(dannye: dict[str, Any]) -> dict[str, Any]
         "nazvanie": dannye.get("title", "")
         or dannye.get("name", "")
         or dannye.get("nazvanie", ""),
-        "data_publikacii": dannye.get("publishDate", "") or dannye.get("data_publikacii", ""),
+        "data_publikatsii": dannye.get("publishDate", "") or dannye.get("data_publikatsii", ""),
         "obekt_audita": dannye.get("auditObject", "") or dannye.get("obekt_audita", ""),
         "napravlenie": dannye.get("direction", "") or dannye.get("napravlenie", ""),
         "vyavleno_narusheniy": dannye.get("violationsCount", 0)
         or dannye.get("vyavleno_narusheniy", 0),
         "summa_narusheniy": dannye.get("violationsAmount") or dannye.get("summa_narusheniy"),
-        "rekomendacii": dannye.get("recommendations", []) or dannye.get("rekomendacii", []),
+        "rekomendatsii": dannye.get("recommendations", []) or dannye.get("rekomendatsii", []),
         "ispolnenie": dannye.get("execution", "") or dannye.get("ispolnenie", ""),
         "istochnik": "Счётная палата РФ (ach.gov.ru)",
     }
@@ -239,7 +239,7 @@ def _razobrat_narushenie(dannye: dict[str, Any]) -> dict[str, Any]:
         "opisanie": dannye.get("description", "") or dannye.get("opisanie", ""),
         "summa": dannye.get("amount") or dannye.get("summa"),
         "tip_narusheniya": dannye.get("type", "") or dannye.get("tip_narusheniya", ""),
-        "organizaciya": dannye.get("organization", "") or dannye.get("organizaciya", ""),
+        "organizatsiya": dannye.get("organization", "") or dannye.get("organizatsiya", ""),
         "norma_prava": dannye.get("legalNorm", "") or dannye.get("norma_prava", ""),
         "istochnik": "Счётная палата РФ (ach.gov.ru)",
     }

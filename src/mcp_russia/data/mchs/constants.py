@@ -40,7 +40,7 @@ STATUSY_CHS = {
 }
 
 TIPY_OPASNOSTI = [
-    {"kod": "radiacionnyy", "nazvanie": "Радиационная опасность"},
+    {"kod": "radiatsionnyy", "nazvanie": "Радиационная опасность"},
     {"kod": "khimicheskiy", "nazvanie": "Химическая опасность"},
     {"kod": "biologicheskiy", "nazvanie": "Биологическая опасность"},
     {"kod": "gidrologicheskiy", "nazvanie": "Гидрологическая опасность"},

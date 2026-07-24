@@ -86,7 +86,7 @@ async def test_info_vuza_po_inn():
         "tip": "университет",
         "sostoyanie_akkreditatsii": "Действует",
     }
-    with patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=maket_dannykh):
+    with patch.object(minobrnauki_tools.client, "info_akkreditatsii", return_value=maket_dannykh):
         rezultat = await minobrnauki_tools.info_vuza(kontekst=kontekst, inn="5032003607")
     assert "МФТИ" in rezultat
 
@@ -95,7 +95,7 @@ async def test_info_vuza_ne_nayden():
     kontekst = _maket_konteksta()
     with (
         patch.object(minobrnauki_tools.client, "poisk_akreditovannyh_vuzov", return_value=[]),
-        patch.object(minobrnauki_tools.client, "info_akkreditacii", return_value=None),
+        patch.object(minobrnauki_tools.client, "info_akkreditatsii", return_value=None),
     ):
         rezultat = await minobrnauki_tools.info_vuza(
             kontekst=kontekst, nazvanie="НесуществующийВУЗ"

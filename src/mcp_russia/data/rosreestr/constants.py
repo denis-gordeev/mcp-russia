@@ -38,7 +38,7 @@ VidyIspolzovaniya = [
     {"kod": "obschestvennoe", "nazvanie": "Общественное использование"},
     {"kod": "promyshlennoe", "nazvanie": "Промышленное использование"},
     {"kod": "selskohozyaystvennoe", "nazvanie": "Сельскохозяйственное использование"},
-    {"kod": "rekreacionnoe", "nazvanie": "Рекреационное использование"},
+    {"kod": "rekreatsionnoe", "nazvanie": "Рекреационное использование"},
     {"kod": "transportnoe", "nazvanie": "Транспортное использование"},
     {"kod": "specialnoe", "nazvanie": "Специальное использование"},
 ]

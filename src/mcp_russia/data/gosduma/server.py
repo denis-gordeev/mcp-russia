@@ -11,7 +11,7 @@ from .tools import (
     golosovaniya,
     info_deputata,
     spisok_deputatov,
-    spisok_frakcii,
+    spisok_fraktsii,
     spisok_komitetov,
     spisok_sozyvov,
     zakonoproekty,
@@ -22,7 +22,7 @@ mcp = FastMCP("mcp-russia-gosduma")
 # Инструменты
 mcp.tool(spisok_deputatov, tags={"депутаты", "справочник"})
 mcp.tool(info_deputata, tags={"депутат", "информация"})
-mcp.tool(spisok_frakcii, tags={"фракции", "справочник"})
+mcp.tool(spisok_fraktsii, tags={"фракции", "справочник"})
 mcp.tool(spisok_komitetov, tags={"комитеты", "справочник"})
 mcp.tool(spisok_sozyvov, tags={"созывы", "справочник"})
 mcp.tool(zakonoproekty, tags={"законопроекты", "активность"})

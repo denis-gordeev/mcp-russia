@@ -6,7 +6,7 @@
 from fastmcp import FastMCP
 
 from .prompts import analiz_nedvizhimosti, obzor_zemelnogo_uchastka
-from .resources import istochniki_dannyh, sistema_rogistracii, zakonodatelstvo
+from .resources import istochniki_dannyh, sistema_registratsii, zakonodatelstvo
 from .tools import (
     info_obekta,
     kadastrovaya_stoimost,
@@ -31,7 +31,7 @@ mcp.tool(prava_na_obekt, tags={"права", "информация"})
 
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)
-mcp.resource("data://struktura", mime_type="text/plain")(sistema_rogistracii)
+mcp.resource("data://struktura", mime_type="text/plain")(sistema_registratsii)
 
 mcp.prompt(analiz_nedvizhimosti)
 mcp.prompt(obzor_zemelnogo_uchastka)

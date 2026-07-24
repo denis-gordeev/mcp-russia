@@ -10,8 +10,8 @@
 → spisok_funktsiy()
 ← 24 активных модуля:
    cbrf (6 инструментов) ✓
-   rosstat (7 инструментов) ✓
-   gosduma (6 инструментов) ✓
+   rosstat (13 инструментов) ✓
+   gosduma (7 инструментов) ✓
    ...
 ```
 
@@ -25,7 +25,7 @@
 → rekomendovat_instrumenty("Какие данные по инфляции и ключевой ставке доступны?")
 ← Рекомендация:
    1. cbrf_tekushchie_kursy
-   2. rosstat_inflyaciya
+   2. rosstat_inflyatsiya
    3. cbrf_sravnit_valyuty
 ```
 

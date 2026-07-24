@@ -81,10 +81,10 @@ async def test_statistika_dtp_ne_nayden():
     assert "не найдена" in rezultat
 
 
-async def test_istoriya_registraciy_ne_nayden():
+async def test_istoriya_registratsiy_ne_nayden():
     kontekst = _maket_konteksta()
     with patch.object(gibdd_tools.client, "proverka_istorii_ts", return_value=[]):
-        rezultat = await gibdd_tools.istoriya_registraciy(
+        rezultat = await gibdd_tools.istoriya_registratsiy(
             kontekst=kontekst, vin="XTA21140052XXXXXX"
         )
     assert "не найдена" in rezultat

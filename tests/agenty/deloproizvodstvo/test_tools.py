@@ -30,31 +30,31 @@ class TestFormatirovatDatuPropisyu:
         assert МЕСЯЦЫ[seychas.month] in rezultat
 
 
-class TestGenerirovatNumeraciyu:
+class TestGenerirovatNumeratsiyu:
     @pytest.mark.asyncio
     async def test_pismo_s_otdelom(self) -> None:
-        rezultat = await tools.generirovat_numeraciyu("письмо", 42, 2026, "Д-15")
+        rezultat = await tools.generirovat_numeratsiyu("письмо", 42, 2026, "Д-15")
         assert rezultat == "ПИСЬМО № 42/2026/Д-15"
 
     @pytest.mark.asyncio
     async def test_pismo_bez_otdela(self) -> None:
-        rezultat = await tools.generirovat_numeraciyu("письмо", 10, 2026)
+        rezultat = await tools.generirovat_numeratsiyu("письмо", 10, 2026)
         assert rezultat == "ПИСЬМО № 10/2026"
 
     @pytest.mark.asyncio
     async def test_prikaz(self) -> None:
-        rezultat = await tools.generirovat_numeraciyu("приказ", 123, 2026)
+        rezultat = await tools.generirovat_numeratsiyu("приказ", 123, 2026)
         assert rezultat == "ПРИКАЗ № 123/2026"
 
     @pytest.mark.asyncio
     async def test_god_po_umolchaniyu(self) -> None:
-        rezultat = await tools.generirovat_numeraciyu("распоряжение", 1)
+        rezultat = await tools.generirovat_numeratsiyu("распоряжение", 1)
         seychas = datetime.now()
         assert str(seychas.year) in rezultat
 
     @pytest.mark.asyncio
     async def test_neizvestnyy_tip(self) -> None:
-        rezultat = await tools.generirovat_numeraciyu("rezolyutsiya", 5, 2026)
+        rezultat = await tools.generirovat_numeratsiyu("rezolyutsiya", 5, 2026)
         assert rezultat == "REZOLYUTSIYA № 5/2026"
 
 

@@ -3,7 +3,7 @@
 from unittest.mock import AsyncMock, patch
 
 from mcp_russia.data.fns import tools as fns_tools
-from mcp_russia.data.fns.schemas import IPEGRIP, OrganizaciyaEGRUL
+from mcp_russia.data.fns.schemas import IPEGRIP, OrganizatsiyaEGRUL
 
 
 def _maket_konteksta():
@@ -32,8 +32,8 @@ def test_spisok_tipov_proverok():
     assert any(t["kod"] == "kameralnaya" for t in rezultat)
 
 
-def test_spisok_statusov_organizaciy():
-    rezultat = fns_tools.spisok_statusov_organizaciy()
+def test_spisok_statusov_organizatsiy():
+    rezultat = fns_tools.spisok_statusov_organizatsiy()
     assert isinstance(rezultat, list)
     assert any(s["kod"] == "deystvuyushchaya" for s in rezultat)
 
@@ -44,28 +44,28 @@ def test_spisok_kategoriy_nalogoplatelshchikov():
     assert any(k["kod"] == "ip" for k in rezultat)
 
 
-async def test_info_organizacii_nayden():
+async def test_info_organizatsii_nayden():
     kontekst = _maket_konteksta()
-    maket_organizatsii = OrganizaciyaEGRUL(
+    maket_organizatsii = OrganizatsiyaEGRUL(
         inn="7707083893",
         ogrn="1027700132195",
         nazvanie="ПАО Сбербанк",
         polnoe_nazvanie="Публичное акционерное общество Сбербанк России",
         yuridicheskiy_adres="г. Москва, ул. Вавилова, д. 19",
-        data_registracii="2002-08-22",
+        data_registratsii="2002-08-22",
         sostoyanie="Действующая",
     )
-    with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=maket_organizatsii):
-        rezultat = await fns_tools.info_organizacii("7707083893", kontekst=kontekst)
+    with patch.object(fns_tools.client, "poluchit_organizatsiyu", return_value=maket_organizatsii):
+        rezultat = await fns_tools.info_organizatsii("7707083893", kontekst=kontekst)
     assert "7707083893" in rezultat
     assert "ПАО Сбербанк" in rezultat
     assert "Действующая" in rezultat
 
 
-async def test_info_organizacii_ne_nayden():
+async def test_info_organizatsii_ne_nayden():
     kontekst = _maket_konteksta()
-    with patch.object(fns_tools.client, "poluchit_organizaciyu", return_value=None):
-        rezultat = await fns_tools.info_organizacii("0000000000", kontekst=kontekst)
+    with patch.object(fns_tools.client, "poluchit_organizatsiyu", return_value=None):
+        rezultat = await fns_tools.info_organizatsii("0000000000", kontekst=kontekst)
     assert "не найдена" in rezultat
 
 
@@ -75,7 +75,7 @@ async def test_info_ip_nayden():
         inn="500100732259",
         ogrnip="304500116000157",
         fio="Иванов Иван Иванович",
-        data_registracii="2004-04-27",
+        data_registratsii="2004-04-27",
         sostoyanie="Действующая",
     )
     with patch.object(fns_tools.client, "poluchit_ip", return_value=maket_ip):
@@ -91,10 +91,10 @@ async def test_info_ip_ne_nayden():
     assert "не найден" in rezultat
 
 
-async def test_proverki_organizacii():
+async def test_proverki_organizatsii():
     kontekst = _maket_konteksta()
     with patch.object(fns_tools.client, "poluchit_proverki", return_value=[]):
-        rezultat = await fns_tools.proverki_organizacii("7707083893", kontekst=kontekst)
+        rezultat = await fns_tools.proverki_organizatsii("7707083893", kontekst=kontekst)
     assert "недоступны" in rezultat
 
 

@@ -236,8 +236,8 @@ async def publikatsii_po_datam(
         stroki.append(
             f"  Дата: {publikatsiya.data_publikatsii}, источник: {publikatsiya.istochnik}"
         )
-        if publikatsiya.annotaciya:
-            stroki.append(f"  {publikatsiya.annotaciya}")
+        if publikatsiya.annotatsiya:
+            stroki.append(f"  {publikatsiya.annotatsiya}")
         stroki.append("")
 
     if len(dannye) > 10:
