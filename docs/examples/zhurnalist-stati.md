@@ -1,6 +1,6 @@
 # Сценарий: Журналист — Подготовка материалов на основе данных
 
-> Как использовать `mcp-russia` для подготовки, обогащения и проверки журналистских материалов на основе официальных и публичных API. Данный сценарий полностью адаптирован под российский контекст: все источники, формулировки и примеры приведены для работы с российскими государственными данными.
+> Как использовать `mcp-russia` для подготовки, обогащения и проверки журналистских материалов на основе официальных и публичных API. Все источники, формулировки и примеры приведены для работы с российскими государственными данными.
 
 ---
 
@@ -138,7 +138,7 @@ API: cbrf_sravnit_valyuty(kody=["USD", "EUR", "CNY"])
 > Промпт: «Какова стоимость ипотеки на ₽ 10 млн при текущей ключевой ставке по сравнению со ставкой 2 года назад?»
 
 ```
-API: rosstat_indikator_dannye(kod_pokazatelya="...") *(ряды по кредитованию — планируемый источник)*
+API: rosstat_indikator_dannye(kod="...") *(ряды по кредитованию — планируемый источник)*
 ```
 
 **3. Международное сравнение**
@@ -246,8 +246,8 @@ API: cekrf_poisk_kandidata + cekrf_kandidat_podrobno (пакетно)
 ```json
 [
   {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
-  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod_pokazatelya": "XXX", "subiekt": "Москва"}},
-  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod_pokazatelya": "XXX", "subiekt": "Санкт-Петербург"}}
+  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod": "XXX", "subiekt": "Москва"}},
+  {"imya_instrumenta": "rosstat_indikator_dannye", "argumenty": {"kod": "XXX", "subiekt": "Санкт-Петербург"}}
 ]
 ```
 

@@ -94,7 +94,7 @@ rosstat_pokazateli_rosstata()
 > Промпт: "Собери обзор по федеральным расходам и дефициту"
 
 ```text
-zakupki_poisk_zakupok(zakazchik="Минфин России")
+zakupki_poisk_zakupok(zapros="Минфин России")
 rosstat_inflyatsiya()
 ```
 

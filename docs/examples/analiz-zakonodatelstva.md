@@ -260,7 +260,7 @@ LLM может сопоставить:
 ═══════════════════
 
 Этап 1 — Идентификация:
-  ├── gosduma_zakonoproekty(number=12345, sozyv="8")
+  ├── gosduma_zakonoproekty(sostoyanie="рассматривается")
   └── sovfed_poisk_zakonoproektov(god=..., sostoyanie=...)
 
 Этап 2 — Детализация (параллельно):

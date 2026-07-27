@@ -15,7 +15,7 @@ class TestInstrumentyZaregistrirovany:
             ozhidayemyy = {
                 "formatirovat_datu_propisyu",
                 "generirovat_numeratsiyu",
-                "konsulitirovat_obrashchenie",
+                "konsultirovat_obrashchenie",
                 "validirovat_dokument",
                 "spisok_tipov_dokumentov",
             }
@@ -70,7 +70,7 @@ class TestPromptyZaregistrirovany:
 
 class TestVypolnenieInstrumentov:
     @pytest.mark.asyncio
-    async def test_formatirovat_datu_propisyu_e2e(self) -> None:
+    async def test_formatirovat_datu_propisyu_skvozn(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool(
                 "formatirovat_datu_propisyu",
@@ -79,7 +79,7 @@ class TestVypolnenieInstrumentov:
             assert "г. Санкт-Петербург" in rezultat.data
 
     @pytest.mark.asyncio
-    async def test_generirovat_numeratsiyu_e2e(self) -> None:
+    async def test_generirovat_numeratsiyu_skvozn(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool(
                 "generirovat_numeratsiyu",
@@ -88,16 +88,16 @@ class TestVypolnenieInstrumentov:
             assert "ПИСЬМО № 42/2026/Д-15" in rezultat.data
 
     @pytest.mark.asyncio
-    async def test_konsulitirovat_obrashchenie_e2e(self) -> None:
+    async def test_konsultirovat_obrashchenie_skvozn(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool(
-                "konsulitirovat_obrashchenie",
+                "konsultirovat_obrashchenie",
                 {"dolzhnost": "Губернатор"},
             )
             assert "Уважаемый господин Губернатор" in rezultat.data
 
     @pytest.mark.asyncio
-    async def test_spisok_tipov_e2e(self) -> None:
+    async def test_spisok_tipov_skvozn(self) -> None:
         async with Client(mcp) as klient:
             rezultat = await klient.call_tool("spisok_tipov_dokumentov", {})
             assert "приказ" in rezultat.data

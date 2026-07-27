@@ -69,7 +69,7 @@ async def generirovat_numeratsiyu(
     return f"{prefiks} № {nomer}/{god}"
 
 
-async def konsulitirovat_obrashchenie(dolzhnost: str) -> str:
+async def konsultirovat_obrashchenie(dolzhnost: str) -> str:
     """Возвращает правильную форму обращения к должностному лицу.
 
     Основано на правилах российского делопроизводства.

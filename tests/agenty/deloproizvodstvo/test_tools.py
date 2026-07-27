@@ -58,32 +58,32 @@ class TestGenerirovatNumeratsiyu:
         assert rezultat == "REZOLYUTSIYA № 5/2026"
 
 
-class TestKonsulitirovatObrashchenie:
+class TestKonsultirovatObrashchenie:
     @pytest.mark.asyncio
     async def test_tochnoe_sovpadenie(self) -> None:
-        rezultat = await tools.konsulitirovat_obrashchenie("Губернатор")
+        rezultat = await tools.konsultirovat_obrashchenie("Губернатор")
         assert "Уважаемый господин Губернатор" in rezultat
         assert "Губернатор" in rezultat
         assert "Адресация" in rezultat
 
     @pytest.mark.asyncio
     async def test_prezident(self) -> None:
-        rezultat = await tools.konsulitirovat_obrashchenie("Президент Российской Федерации")
+        rezultat = await tools.konsultirovat_obrashchenie("Президент Российской Федерации")
         assert "Уважаемый господин Президент" in rezultat
 
     @pytest.mark.asyncio
     async def test_minister(self) -> None:
-        rezultat = await tools.konsulitirovat_obrashchenie("Министр")
+        rezultat = await tools.konsultirovat_obrashchenie("Министр")
         assert "Уважаемый господин Министр" in rezultat
 
     @pytest.mark.asyncio
     async def test_chastichnoe_sovpadenie(self) -> None:
-        rezultat = await tools.konsulitirovat_obrashchenie("Губернатор области")
+        rezultat = await tools.konsultirovat_obrashchenie("Губернатор области")
         assert "похоже на" in rezultat
 
     @pytest.mark.asyncio
     async def test_po_umolchaniyu(self) -> None:
-        rezultat = await tools.konsulitirovat_obrashchenie("Аналитик")
+        rezultat = await tools.konsultirovat_obrashchenie("Аналитик")
         assert "Уважаемый господин/госпожа" in rezultat
 
 

@@ -546,11 +546,11 @@
 |------|----------|
 | `formatirovat_datu_propisyu` | Форматирование даты прописью по правилам делопроизводства |
 | `generirovat_numeratsiyu` | Генерация регистрационного номера документа |
-| `konsulitirovat_obrashchenie` | Консультация по тексту обращения |
+| `konsultirovat_obrashchenie` | Консультация по тексту обращения |
 | `validirovat_dokument` | Валидация документа на соответствие правилам делопроизводства |
 | `spisok_tipov_dokumentov` | Справочник типов документов |
 
-**Ресурсы:** `data://shablon-pismo`, `data://shablon-prikaz`, `data://shablon-rasporyazhenie`, `data://shablon-akt`, `data://shablon-spravka`, `data://shablon-protokol`, `data://shablon-dokladnaya-zapiska`, `data://manual-deloproizvodstvo`, `data://obrashcheniya`, `data://zaklyuchitelnye-formuly`
+**Ресурсы:** `shablon://pismo`, `shablon://prikaz`, `shablon://rasporyazhenie`, `shablon://akt`, `shablon://spravka`, `shablon://protokol`, `shablon://dokladnaya_zapiska`, `normy://manual`, `normy://obrashcheniya`, `normy://zaklyuchitelnye`
 
 **Промпты:** `redaktor_pismo`, `redaktor_prikaz`, `redaktor_rasporyazhenie`, `redaktor_akt`, `redaktor_spravka`, `redaktor_protokol`, `redaktor_dokladnaya_zapiska`
 
