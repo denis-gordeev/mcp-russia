@@ -31,7 +31,7 @@
 > Промпт: "Покажи все трансферты и депутатские средства, связанные с [ФИО/регион] в 2024 году, с суммами и муниципалитетами назначения"
 
 ```
-Источники: zakupki_poisk_zakupok + rosstat_informatsiya_o_regionye
+Источники: zakupki_poisk_zakupok(zapros="...") + rosstat_informatsiya_o_regionye
 ```
 
 **2. Определить конечных получателей**
@@ -138,7 +138,7 @@
 > Промпт: "Покажи все закупки администрации [муниципалитета] за последние 2 года"
 
 ```
-Источники: zakupki_poisk_zakupok(zakazchik="...")
+Источники: zakupki_poisk_zakupok(zapros="...")
 ```
 
 **2. Сгруппировать по победителям**
@@ -198,7 +198,7 @@ LLM автоматически группирует победителей и п
 > Промпт: "Сколько местный бюджет потратил на здравоохранение в 2024 году и выполнены ли нормативы?"
 
 ```
-Источники: rosstat_informatsiya_o_regionye(kod="...") + zakupki_poisk_zakupok(otrasl="Здравоохранение")
+Источники: rosstat_informatsiya_o_regionye(kod="...") + zakupki_poisk_zakupok(zapros="Здравоохранение")
 ```
 
 **3. Федеральные трансферты**
@@ -206,7 +206,7 @@ LLM автоматически группирует победителей и п
 > Промпт: "Сколько муниципалитет получил целевых межбюджетных трансфертов на здравоохранение?"
 
 ```
-Источник: zakupki_poisk_zakupok(zakazchik="...", otrasl="Здравоохранение")
+Источник: zakupki_poisk_zakupok(zapros="...", subiekt="...")
 ```
 
 **4. Сравнить с соседними муниципалитетами**
@@ -267,9 +267,9 @@ LLM автоматически группирует победителей и п
 ```json
 [
   {"imya_instrumenta": "rosstat_informatsiya_o_regionye", "argumenty": {"kod": "77"}},
-  {"imya_instrumenta": "zakupki_poisk_zakupok", "argumenty": {"zakazchik": "Правительство Москвы"}},
+  {"imya_instrumenta": "zakupki_poisk_zakupok", "argumenty": {"zapros": "Правительство Москвы"}},
   {"imya_instrumenta": "kad_arbitrazh_poisk_del", "argumenty": {"istorcz": "Правительство Москвы"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"tema": "закупки"}}
+  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"tip": "закупки"}}
 ]
 ```
 

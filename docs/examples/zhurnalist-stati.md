@@ -138,7 +138,7 @@ API: cbrf_sravnit_valyuty(kody=["USD", "EUR", "CNY"])
 > Промпт: «Какова стоимость ипотеки на ₽ 10 млн при текущей ключевой ставке по сравнению со ставкой 2 года назад?»
 
 ```
-API: cbrf_ryady_kreditovaniya *(планируемый — ряды по кредитованию)*
+API: rosstat_indikator_dannye(kod_pokazatelya="...") *(ряды по кредитованию — планируемый источник)*
 ```
 
 **3. Международное сравнение**
@@ -186,7 +186,7 @@ API: rosgidromet_preduprezhdeniya(subiekt="sibirskiy_fo")
 > Промпт: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_obezlesenie(subiekt="sibirskiy_fo") *(инструмент недоступен)*
+API: rosprirodnadzor_poisk_proverok(subiekt="sibirskiy_fo") *(лесной надзор — планируемый инструмент)*
 ```
 
 **3. Водные ресурсы**
@@ -202,7 +202,7 @@ API: rosvodresursy_info_vodokhranilishcha
 > Промпт: «Найди официальные публикации о введении режима ЧС из-за природных пожаров в 2024 году»
 
 ```
-API: publikatsii_poisk_aktov(term="режим ЧС природные пожары 2024")
+API: publikatsii_poisk_aktov(tekst="режим ЧС природные пожары 2024")
 ```
 
 ---

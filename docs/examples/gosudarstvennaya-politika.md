@@ -44,7 +44,7 @@ API: minzdrav_poisk_med_organizatsiy(subiekt="16", tip="polyclinika")
 > Промпт: "Какова доля расходов на первичную медико-санитарную помощь в общих расходах на здравоохранение по каждому району?"
 
 ```
-API: budget_rashody_subekta(subiekt="16", razdel="09", podrazdel="01") *(планируемый модуль «Бюджетная система»)*
+API: kaznacheistvo_ispolnenie_byudzheta(god=2024) *(детализация по разделам — планируемый параметр)*
 ```
 
 **3. Показатели результативности**
@@ -52,7 +52,7 @@ API: budget_rashody_subekta(subiekt="16", razdel="09", podrazdel="01") *(пла�
 > Промпт: "Сравните младенческую смертность и ожидаемую продолжительность жизни в районах с наибольшим и наименьшим охватом участковой службой"
 
 ```
-API: rosstat_pokazateli_rosstata(indikatory="zdorovye", uroven="municipalitet")
+API: rosstat_pokazateli_rosstata()
 ```
 
 **4. Межбюджетные трансферты на здравоохранение**
@@ -60,7 +60,7 @@ API: rosstat_pokazateli_rosstata(indikatory="zdorovye", uroven="municipalitet")
 > Промпт: "Какой объём межбюджетных трансфертов на здравоохранение получил каждый район Республики Татарстан в 2024 году?"
 
 ```
-API: budget_transformatsii(subiekt="16", razdel="09") *(планируемый модуль «Бюджетная система»)*
+API: kaznacheistvo_mezhbyudzhetnye_transferty(subiekt="16") *(детализация по разделам — планируемый параметр)*
 ```
 
 ### Как связываются данные
@@ -96,7 +96,7 @@ API: budget_transformatsii(subiekt="16", razdel="09") *(планируемый �
 > Промпт: "Какие муниципалитеты получили наибольший объём специальных перечислений в 2024 году?"
 
 ```
-API: budget_spetsperechisleniya(god=2024) *(планируемый модуль «Бюджетная система»)*
+API: kaznacheistvo_mezhbyudzhetnye_transferty(god=2024) *(планируемый модуль «Бюджетная система»)*
 ```
 
 **2. Расчёт на душу населения и сравнение с индикаторами**
@@ -104,7 +104,7 @@ API: budget_spetsperechisleniya(god=2024) *(планируемый модуль 
 > Промпт: "Сопоставьте объём специальных перечислений на душу населения с индексом человеческого развития (ИЧР) муниципалитетов"
 
 ```
-API: budget_spetsperechisleniya *(планируемый)* + rosstat_informatsiya_o_regionye + rosstat_pokazateli_rosstata
+API: kaznacheistvo_mezhbyudzhetnye_transferty *(планируемый)* + rosstat_informatsiya_o_regionye + rosstat_pokazateli_rosstata
 ```
 
 **3. Проверка целевого использования ресурсов**
@@ -112,7 +112,7 @@ API: budget_spetsperechisleniya *(планируемый)* + rosstat_informatsiy
 > Промпт: "На какие цели муниципалитеты направили специальные перечисления? Были ли проведены конкурентные закупки?"
 
 ```
-API: zakupki_poisk_kontraktov(perechisleniya) + rosaudit_ispolnenie_byudzheta
+API: zakupki_poisk_kontraktov(inn_zakazchika="...") + rosaudit_ispolnenie_byudzheta
 ```
 
 **4. Анализ закономерности распределения**
@@ -120,7 +120,7 @@ API: zakupki_poisk_kontraktov(perechisleniya) + rosaudit_ispolnenie_byudzheta
 > Промпт: "Специальные перечисления направляются в муниципалитеты с опорой на социальную необходимость или распределяются пропорционально?"
 
 ```
-API: budget_spetsperechisleniya *(планируемый)* + rosstat_pokazateli_rosstata(sotsialno-ekonomicheskie)
+API: kaznacheistvo_mezhbyudzhetnye_transferty *(планируемый)* + rosstat_pokazateli_rosstata()
 ```
 
 ### Типовой вывод
@@ -159,7 +159,7 @@ API: budget_spetsperechisleniya *(планируемый)* + rosstat_pokazateli_
 > Промпт: "Каков объём вырубки лесов по субъектам РФ в Сибирском федеральном округе за последние 5 лет?"
 
 ```
-API: rosprirodnadzor_lesnaya_okhrana(subiekt="sibir", period="5y") *(инструмент недоступен)*
+API: rosprirodnadzor_poisk_proverok(subiekt="sibir") *(лесной надзор — планируемый инструмент)*
 ```
 
 **2. Штрафы и санкции**
@@ -167,7 +167,7 @@ API: rosprirodnadzor_lesnaya_okhrana(subiekt="sibir", period="5y") *(инстр�
 > Промпт: "Сколько организаций привлечено к ответственности за незаконную вырубку? Были ли уплачены штрафы?"
 
 ```
-API: rosaudit_poisk_narusheniy(narushenie="nezakonnaya_vyrubka")
+API: rosaudit_poisk_narusheniy(tip="nezakonnaya_vyrubka")
      rosaudit_info_auditorskogo_zaklyucheniya(tema="lesnoe_khozyaistvo")
 ```
 
@@ -176,8 +176,8 @@ API: rosaudit_poisk_narusheniy(narushenie="nezakonnaya_vyrubka")
 > Промпт: "Сколько дел о нарушениях в области охраны окружающей среды рассмотрено судами за последние 5 лет?"
 
 ```
-API: kad_arbitrazh_poisk_del(tema="ekologicheskoe_pravonarushenie")
-     kad_arbitrazh_poisk_del(term="nezakonnaya_vyrubka obvinenie")
+API: kad_arbitrazh_poisk_del(kategoriya="ekologicheskoe_pravonarushenie")
+     kad_arbitrazh_poisk_del(istorcz="nezakonnaya_vyrubka obvinenie")
 ```
 
 **4. Затронутые водные ресурсы**
@@ -215,8 +215,8 @@ API: rosvodresursy_info_vodokhranilishcha(subiekt="sibir")
 > Промпт: "Каковы налоговые доходы по каждому субъекту РФ за последние 3 года?"
 
 ```
-API: budget_dokhody_subekta(period="3y") *(планируемый модуль «Бюджетная система»)*
-     rosstat_pokazateli_rosstata(dokhody_byudzhetov)
+API: kaznacheistvo_ispolnenie_byudzheta(god=2024) *(детализация по субъекту — планируемый параметр)*
+     rosstat_pokazateli_rosstata()
 ```
 
 **2. ВРП по субъектам**
@@ -240,7 +240,7 @@ API: gosduma_golosovaniya(sozyv=..., ogranichenie=...)
 > Промпт: "Найдите в Официальном интернет-портале правовой информации нормативные акты, регулирующие налоговую реформу"
 
 ```
-API: publikatsii_poisk_aktov(term="nalogovaya reforma regulirovanie")
+API: publikatsii_poisk_aktov(tekst="nalogovaya reforma regulirovanie")
 ```
 
 ---
@@ -282,7 +282,7 @@ API: zakupki_sposoby_zakupok()
 > Промпт: "Сколько поставщиков федеральных органов власти включены в реестр недобросовестных поставщиков (РНП)?"
 
 ```
-API: zakupki_reestr_nedobrosovestnykh_postavshchikov() *(планируемый — функционал РНП)*
+API: zakupki_poisk_zakupok(zapros="недобросовестный поставщик") *(функционал РНП — планируемый)*
 ```
 
 ---
@@ -316,7 +316,7 @@ API: zakupki_reestr_nedobrosovestnykh_postavshchikov() *(планируемый 
 ## Следующие шаги
 
 - привязать примеры к конкретным кейсам по программам лекарственного обеспечения, национального проекта «Здравоохранение» и экологического мониторинга;
-- добавить недостающие инструменты: «Бюджетная система» (budget_rashody_subekta, budget_transformatsii, budget_spetsperechisleniya, budget_dokhody_subekta), `rosprirodnadzor_lesnaya_okhrana`, функционал РНП в модуле «Закупки».
+- добавить недостающие инструменты: детализация казначейства по разделам/подразделам, лесной надзор в Росприроднадзоре, функционал РНП в модуле «Закупки», поимённое голосование в Совете Федерации.
 
 ### Автоматизация Через `splanirovat_zapros`
 

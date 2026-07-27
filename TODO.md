@@ -2,6 +2,53 @@
 
 Живой список задач по развитию `mcp-russia`.
 
+## Статус раунда 2026-07-27 (девяносто седьмой проход — устранение формулировок «адаптация», исправление примеров документации, обновление CONTRIBUTING.md)
+
+### Выполнено
+
+- **Устранение формулировок «адаптация»** (3 файла):
+  - `__init__.py`: «Русскоязычная адаптация MCP-сервера для публичных и государственных данных» → «Русскоязычный MCP-сервер для государственных и публичных данных РФ» — проект позиционируется как самостоятельный, не как производная адаптация
+  - `README.md:7`: «Русскоязычная адаптация MCP-репозитория для работы с государственными и публичными данными» → «Русскоязычный MCP-сервер для работы с государственными и публичными данными РФ»
+  - `README.md:45`: «Текущее направление адаптации» → «Направление развития»; добавлен пункт «добавлять новые модули данных»
+- **Исправление несуществующих инструментов в примерах документации** (7 файлов, ~19 замен):
+  - `parlamentskiy-otchet.md`: `gosduma_raskhody_deputata` → удалён из примера `vypolnit_paket`; `rosstat_dannye_po_transfertam` → `kaznacheistvo_ispolnenie_byudzheta`; `kaznacheistvo_dannye` → `kaznacheistvo_ispolnenie_byudzheta`; `sovfed_golosovaniya` → `sovfed_spisok_zasedaniy`
+  - `analiz-zakonodatelstva.md`: `sovfed_podrobnosti_zakonoproekta`/`sovfed_popravki`/`sovfed_khod_rassmotreniya`/`sovfed_golosovaniya_zakonoproekta`/`sovfed_podrobnosti_golosovaniya`/`sovfed_tekst_zakonoproekta` → заменены на `sovfed_poisk_zakonoproektov`/`sovfed_spisok_zasedaniy` с пометкой «планируемый инструмент»
+  - `gosudarstvennaya-politika.md`: `budget_rashody_subekta`/`budget_transformatsii`/`budget_spetsperechisleniya`/`budget_dokhody_subekta` → `kaznacheistvo_ispolnenie_byudzheta`/`kaznacheistvo_mezhbyudzhetnye_transferty`; `rosprirodnadzor_lesnaya_okhrana` → `rosprirodnadzor_poisk_proverok`; `zakupki_reestr_nedobrosovestnykh_postavshchikov` → `zakupki_poisk_zakupok`
+  - `zhurnalist-stati.md`: `cbrf_ryady_kreditovaniya` → `rosstat_indikator_dannye`; `rosprirodnadzor_obezlesenie` → `rosprirodnadzor_poisk_proverok`
+- **Исправление неверных параметров в примерах документации** (7 файлов, ~18 замен):
+  - `publikatsii_poisk_aktov(term=...)` → `tekst=...` (3 файла: analiz-zakonodatelstva, gosudarstvennaya-politika, zhurnalist-stati)
+  - `zakupki_poisk_zakupok(zakazchik=.../otrasl=...)` → `zapros=...` (4 файла: zhurnalist-rassledovatel, ekonomist, politolog, gosudarstvennaya-politika)
+  - `kad_arbitrazh_poisk_del(tema=.../term=.../subject=.../court=...)` → `kategoriya=...`/`istorcz=...` (2 файла: gosudarstvennaya-politika, analiz-zakonodatelstva)
+  - `rosaudit_poisk_narusheniy(narushenie=.../tema=...)` → `tip=...` (2 файла: gosudarstvennaya-politika, zhurnalist-rassledovatel)
+  - `cekrf_poisk_kandidata(dolzhnost=.../subiekt=...)` → `fio=.../god=...` (politolog)
+  - `gosduma_spisok_deputatov(fio=...)` → `sozyv=...` (parlamentskiy-otchet)
+  - `gosduma_zakonoproekty(avtor=.../sozyv=.../tip=...)` → `sostoyanie=...` (parlamentskiy-otchet, politolog)
+  - `fns_info_organizatsii(nazvanie=...)`/`zakupki_info_postavshchika(nazvanie=...)` → `inn=...` (municipalnyy-kontrol)
+  - `zakupki_poisk_kontraktov(munitsipalitet=.../perechisleniya)` → `inn_zakazchika=...` (municipalnyy-kontrol, gosudarstvennaya-politika)
+  - `rosstat_pokazateli_rosstata(indikatory=.../uroven=...)` → без параметров (gosudarstvennaya-politika)
+- **Обновление CONTRIBUTING.md** (4 исправления):
+  - Структура проекта: показаны все 24 модуля данных вместо 2
+  - Описание `_shared/`: добавлены `обнаружение, планировщик, пакетное выполнение`
+  - Шаблон модуля: добавлены `resources.py` и `prompts.py`
+  - Структура `agenty/deloproizvodstvo/`: добавлены `shablony/` и `normy/`
+  - «следующий шаг миграции» → «следующий шаг развития»
+- **Прогнаны все проверки**: `ruff check` — all passed, `ruff format` — 306 файлов уже форматировано, `pytest` — 681 unit-тест пройдено
+
+### Ключевые архитектурные решения
+
+- **«адаптация» → самостоятельный проект**: устранены все формулировки, позиционирующие проект как «адаптацию» бразильского оригинала; `mcp-russia` описывается как самостоятельный MCP-сервер для российских данных
+- **Несуществующие инструменты**: вместо выдуманных имён инструментов (`budget_rashody_subekta`, `sovfed_golosovaniya` и др.) примеры используют существующие инструменты с пометкой «планируемый» для ещё не реализованных возможностей
+- **Неверные параметры**: все параметры инструментов в примерах приведены в соответствие с реальными сигнатурами функций в `tools.py`; пользователи, копировавшие примеры, больше не получат ошибок несуществующих параметров
+- **CONTRIBUTING.md**: структура проекта актуализирована — отражены все 24 модуля данных, полный набор файлов модуля, агентная структура
+
+### Следующие действия
+
+- **Добавление новых модулей данных**: МВД (расширенный), Рособрнадзор (расширенный), Ростехнадзор
+- **Миграция на новые ЕМИСС-коды (9xxxxxx)**: ЕМИСС перешёл на новую систему кодов; при появлении документации обновить все коды в `EMISS_KODY_POKAZATELEY`
+- **Углубление интеграций**: расширение данных по регионам, новые инструменты Росстата
+- **Новые параметры инструментов**: фильтрация законопроектов по автору/соответствию (gosduma_zakonoproekty), поимённое голосование Совета Федерации (sovfed), лесной надзор (rosprirodnadzor), функционал РНП (zakupki), детализация казначейства по разделам/подразделам
+- **Кодовая база полностью русифицирована**: оставшиеся английские идентификаторы — только строковые ключи API-ответов (`.get("key")`), keyword-аргументы внешних библиотек (httpx, Pydantic, FastMCP), стандартные Python-идентификаторы (`*args`, `**kwargs`, `__aexit__(*exc)`), параметры stdlib-переопределений (`tag`, `attrs` в HTMLParser), loanwords идентичные русским (`data` = «дата», `period` = «период»), и `logger` (стандартная конвенция Python); CSS-классы внешних HTML-страниц оставлены без изменений — изменение сломает парсинг; имена переменных окружения оставлены на английском — внешняя конфигурация; международные аббревиатуры (`WMO`, `VIN`, `API`) оставлены без изменений
+
 ## Статус раунда 2026-07-24 (девяносто шестой проход — систематическая русификация c→ts, устранение английских идентификаторов, документация)
 
 ### Выполнено

@@ -122,7 +122,7 @@ LLM группирует результаты и выявляет законом
 > Промпт: "Есть ли у ООО «Альфа-Сервис» санкции в реестре недобросовестных поставщиков?"
 
 Инструменты:
-- `fns_info_organizatsii(nazvanie="Альфа-Сервис")` или `zakupki_info_postavshchika(nazvanie="Альфа-Сервис")`
+- `fns_info_organizatsii(inn="...")` или `zakupki_info_postavshchika(inn="...")`
 - `rosaudit_poisk_narusheniy(organizatsiya="Альфа-Сервис")` *(планируемый региональный модуль)*
 
 **4. Найти связанные объекты строительства**
@@ -200,7 +200,7 @@ LLM группирует результаты и выявляет законом
 Инструменты:
 - `rosaudit_poisk_narusheniy(organizatsiya="Красноярский край")` — как были израсходованы *(планируемый региональный модуль)*
 - `rosaudit_poisk_narusheniy(organizatsiya="Красноярский край")` — была ли закупка *(планируемый региональный модуль)*
-- `zakupki_poisk_kontraktov(munitsipalitet="...")` — зарегистрированные контракты
+- `zakupki_poisk_kontraktov(inn_zakazchika="...")` — зарегистрированные контракты
 
 ### Полная цепочка
 

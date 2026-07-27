@@ -1,4 +1,4 @@
-"""mcp-russia — Русскоязычная адаптация MCP-сервера для публичных и государственных данных."""
+"""mcp-russia — Русскоязычный MCP-сервер для государственных и публичных данных РФ."""
 
 from importlib.metadata import PackageNotFoundError, version
 

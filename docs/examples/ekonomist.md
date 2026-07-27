@@ -141,7 +141,7 @@ rosstat_pokazateli_rosstata()
 > Промпт: "Собери краткий бюджетный профиль: закупки, контракты и расходы"
 
 ```text
-zakupki_poisk_zakupok(zakazchik="Минфин России")
+zakupki_poisk_zakupok(zapros="Минфин России")
 zakupki_statusy_zakupok()
 ```
 

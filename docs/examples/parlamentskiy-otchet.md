@@ -28,7 +28,7 @@
 > Промпт: "Сформируй полный профиль депутата [ФИО]: фракция, регион, сроки полномочий, комиссии и должности"
 
 Инструменты:
-- `gosduma_spisok_deputatov(fio="...")` → идентификатор
+- `gosduma_spisok_deputatov(sozyv="8")` → список депутатов; затем найти нужного по ФИО
 - `gosduma_info_deputata(identifikator_deputata=...)` → полный профиль
 
 ```
@@ -53,7 +53,7 @@
 > Промпт: "Сколько законопроектов внёс депутат [ФИО] в 2024 году? Сгруппируй по типу"
 
 Инструменты:
-- `gosduma_zakonoproekty(avtor="[ФИО]", god=2024)`
+- `gosduma_zakonoproekty(sostoyanie="...")` *(фильтрация по автору — планируемый параметр)*
 
 ```
 ═══════════════════════════════════════════
@@ -152,8 +152,7 @@
 > Промпт: "Какие средства направил депутат в 2024 году? В какие муниципальные образования и на какие цели?"
 
 Инструменты:
-- `rosstat_dannye_po_transfertam(avtor="[ФИО]", god=2024)` *(планируемый инструмент)*
-- `kaznacheistvo_dannye(avtor="[ФИО]", god=2024)` *(инструмент недоступен)*
+- `kaznacheistvo_ispolnenie_byudzheta(god=2024)` *(данные о трансфертах — планируемый источник)*
 
 ```
 ═══════════════════════════════════════════
@@ -264,9 +263,9 @@
 | Данные | Дума | Совет Федерации |
 |--------|------|-----------------|
 | Профиль | `gosduma_info_deputata` | `sovfed_info_senatora` |
-| Голосования | `gosduma_golosovaniya` | `sovfed_golosovaniya` *(инструмент недоступен)* |
+| Голосования | `gosduma_golosovaniya` | `sovfed_spisok_zasedaniy` *(поимённое голосование — планируемый инструмент)* |
 | Инициативы | `gosduma_zakonoproekty` | `sovfed_poisk_zakonoproektov` |
-| Расходы | `gosduma_raskhody_deputata` *(инструмент недоступен)* | (через портал открытых данных) |
+| Расходы | *(планируемый инструмент)* | *(через портал открытых данных)* |
 | Комиссии | `gosduma_spisok_komitetov` | `sovfed_spisok_komissiy` |
 
 Модуль Совета Федерации предоставляет 6 инструментов (сенаторы, комитеты, комиссии, законопроекты, заседания). Дополнительные возможности планируются в следующих релизах.
@@ -281,14 +280,10 @@
 [
   {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204554}},
   {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204555}},
-  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204556}},
-  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204554, "god": 2024}},
-  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204555, "god": 2024}},
-  {"imya_instrumenta": "gosduma_raskhody_deputata", "argumenty": {"identifikator_deputata": 204556, "god": 2024}}
+  {"imya_instrumenta": "gosduma_info_deputata", "argumenty": {"identifikator_deputata": 204556}}
 ]
-```
 
-6 запросов параллельно — профиль + расходы 3 депутатов за один вызов. `gosduma_raskhody_deputata` — инструмент недоступен.
+6 запросов параллельно — профиль 3 депутатов за один вызов.
 
 ---
 

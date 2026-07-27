@@ -35,7 +35,7 @@
 > Запрос: «Перечисли все поимённые голосования в Государственной Думе в 2024 году с индивидуальными голосами каждого депутата»
 
 ```
-API: gosduma_zakonoproekty(sozyv="8")
+API: gosduma_zakonoproekty(sostoyanie="...")
       gosduma_info_deputata(identifikator_deputata=...) → для каждого депутата
 ```
 
@@ -169,7 +169,7 @@ API: gosduma_zakonoproekty → включает позицию большинс�
 > Запрос: «Перечисли все депутатские поправки, исполненные в 2024 году, с указанием автора, суммы, муниципального образования и направления»
 
 ```
-API: zakupki_poisk_zakupok(otrasl="поправки", god=2024)
+API: zakupki_poisk_zakupok(zapros="поправки", sostoyanie="...")
       zakupki_info_zakazchika(inn="...")
 ```
 
@@ -253,7 +253,7 @@ API: zakupki_poisk_zakupok
 > Запрос: «Сколько федеральных законов было принято в 2023–2024 годах?»
 
 ```
-API: gosduma_zakonoproekty(tip="ФЗ", sostoyanie="Принят")
+API: gosduma_zakonoproekty(sostoyanie="Принят")
 ```
 
 **2. Найти оспоренные законы**
@@ -312,7 +312,7 @@ API: kad_arbitrazh_akty_po_delu(nomer_dela=...)
 > Запрос: «Какие законопроекты были вынесены на голосование в Госдуме каждую неделю 2024 года?»
 
 ```
-API: gosduma_zakonoproekty(sozyv=8, god=2024)
+API: gosduma_zakonoproekty(sostoyanie="...")
 ```
 
 **2. Классифицировать по источнику и приоритету**
@@ -375,7 +375,7 @@ API: gosduma_zakonoproekty → детали законопроекта
 > Запрос: «Для всех кандидатов в депутаты Госдумы по Москве в 2021 году перечисли: полученные голоса, общий объём поступлений и избран ли»
 
 ```
-API: cekrf_poisk_kandidata(dolzhnost="депутат ГД", subiekt="Москва", god=2021)
+API: cekrf_poisk_kandidata(fio="...", god=2021)
       cekrf_kandidat_podrobno(kandidat_identifikator=...) → для каждого кандидата
       cekrf_rezultaty_vyborov(...) → голоса и результат
 ```
