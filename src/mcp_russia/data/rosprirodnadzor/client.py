@@ -57,7 +57,7 @@ async def poisk_proverok(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
@@ -73,7 +73,7 @@ async def poisk_proverok(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен")
@@ -126,9 +126,9 @@ async def poisk_obektov_negativnogo(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_obekt_negativnogo(element)
-                for element in elementy
-                if isinstance(element, dict)
+                _razobrat_obekt_negativnogo(zapis)
+                for zapis in elementy
+                if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("ONV реестр недоступен")
@@ -144,9 +144,9 @@ async def poisk_obektov_negativnogo(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_obekt_negativnogo(element)
-                for element in elementy
-                if isinstance(element, dict)
+                _razobrat_obekt_negativnogo(zapis)
+                for zapis in elementy
+                if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для ОНВ")
@@ -180,7 +180,7 @@ async def poisk_litsenziy_nedra(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)
+                _razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
@@ -194,7 +194,7 @@ async def poisk_litsenziy_nedra(
             parametry["licenseType"] = vid_litsenzii
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)]
+        return [_razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для лицензий")
         return []
@@ -223,9 +223,9 @@ async def poluchit_ekologicheskie_platezhi(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_ekologicheskiy_platezh(element)
-            for element in elementy
-            if isinstance(element, dict)
+            _razobrat_ekologicheskiy_platezh(zapis)
+            for zapis in elementy
+            if isinstance(zapis, dict)
         ]
     except Exception:
         logger.debug("Госуслуги ЭКО API недоступен")

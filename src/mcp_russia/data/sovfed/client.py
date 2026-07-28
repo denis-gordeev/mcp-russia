@@ -48,7 +48,7 @@ async def poisk_senatorov(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_senator(element) for element in elementy if isinstance(element, dict)
+                _razobrat_senator(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("sovfed.ru API недоступен, пробуем data.gov.ru")
@@ -60,7 +60,7 @@ async def poisk_senatorov(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_senator(element) for element in elementy if isinstance(element, dict)
+                _razobrat_senator(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("data.gov.ru API недоступен")
@@ -107,7 +107,7 @@ async def spisok_komitetov() -> list[dict[str, Any]]:
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_komitet(element) for element in elementy if isinstance(element, dict)
+                _razobrat_komitet(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комитетов")
@@ -123,7 +123,7 @@ async def spisok_komissiy() -> list[dict[str, Any]]:
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_komitet(element) for element in elementy if isinstance(element, dict)
+                _razobrat_komitet(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для комиссий")
@@ -154,7 +154,7 @@ async def poisk_zakonoproektov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_zakonoproekt(element) for element in elementy if isinstance(element, dict)
+            _razobrat_zakonoproekt(zapis) for zapis in elementy if isinstance(zapis, dict)
         ]
     except Exception:
         logger.debug("sovfed.ru API недоступен для законопроектов")
@@ -177,7 +177,7 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_zasedanie(element) for element in elementy if isinstance(element, dict)]
+        return [_razobrat_zasedanie(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("sovfed.ru API недоступен для заседаний")
         return []

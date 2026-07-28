@@ -47,9 +47,9 @@ async def poisk_proverok(
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [
-                    _razobrat_proverku(element)
-                    for element in elementy
-                    if isinstance(element, dict)
+                    _razobrat_proverku(zapis)
+                    for zapis in elementy
+                    if isinstance(zapis, dict)
                 ]
         if isinstance(dannye, list):
             return [_razobrat_proverku(zapis) for zapis in dannye if isinstance(zapis, dict)]
@@ -106,9 +106,9 @@ async def plan_proverok(
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
                 return [
-                    _razobrat_proverku(element)
-                    for element in elementy
-                    if isinstance(element, dict)
+                    _razobrat_proverku(zapis)
+                    for zapis in elementy
+                    if isinstance(zapis, dict)
                 ]
         if isinstance(dannye, list):
             return [_razobrat_proverku(zapis) for zapis in dannye if isinstance(zapis, dict)]

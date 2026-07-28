@@ -85,7 +85,7 @@ async def spisok_regionov(kontekst: Context) -> str:
     """
     stroki_tablitsy = [
         (str(kod), nazvanie)
-        for nazvanie, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda element: element[1])
+        for nazvanie, kod in sorted(KODY_REGIONOV_FSSP.items(), key=lambda zapis: zapis[1])
     ]
     return tablitsa_v_markdown(["Код", "Регион"], stroki_tablitsy) + _ISTOCHNIK
 

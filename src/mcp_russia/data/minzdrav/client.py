@@ -55,9 +55,9 @@ async def poisk_med_organizatsiy(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_med_organizatsiyu(element)
-            for element in elementy
-            if isinstance(element, dict)
+            _razobrat_med_organizatsiyu(zapis)
+            for zapis in elementy
+            if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
@@ -110,7 +110,7 @@ async def poisk_litsenziy(
             parametry["status"] = sostoyanie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_litsenziyu(element) for element in elementy if isinstance(element, dict)]
+        return [_razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.exception("Ошибка при поиске лицензий")
         return []
@@ -142,7 +142,7 @@ async def pokazateli_zdorovya(
             parametry["code"] = kod_pokazatelya
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [_razobrat_pokazatel(element) for element in elementy if isinstance(element, dict)]
+        return [_razobrat_pokazatel(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.exception("Ошибка при получении показателей здоровья")
         return []
@@ -175,7 +175,7 @@ async def statistika_zabolevaniy(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_zabolevanie(element) for element in elementy if isinstance(element, dict)
+            _razobrat_zabolevanie(zapis) for zapis in elementy if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")

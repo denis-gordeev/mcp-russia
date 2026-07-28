@@ -59,7 +59,7 @@ async def poisk_vodnykh_obektov(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_vodnyy_obekt(element) for element in elementy if isinstance(element, dict)
+            _razobrat_vodnyy_obekt(zapis) for zapis in elementy if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при поиске водных объектов")
@@ -111,7 +111,7 @@ async def poluchit_gidro_dannye(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_gidro_zapis(element) for element in elementy if isinstance(element, dict)
+            _razobrat_gidro_zapis(zapis) for zapis in elementy if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при получении гидрологических данных")
@@ -161,9 +161,9 @@ async def poluchit_vodopolzovanie(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_vodopolzovanie_zapis(element)
-            for element in elementy
-            if isinstance(element, dict)
+            _razobrat_vodopolzovanie_zapis(zapis)
+            for zapis in elementy
+            if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при получении данных о водопользовании")

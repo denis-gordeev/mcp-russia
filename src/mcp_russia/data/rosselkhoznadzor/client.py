@@ -58,7 +58,7 @@ async def poisk_proverok(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для проверок")
@@ -72,7 +72,7 @@ async def poisk_proverok(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_proverku(element) for element in elementy if isinstance(element, dict)
+                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("data.fsvps.gov.ru недоступен")
@@ -104,7 +104,7 @@ async def poisk_karantinnykh_obektov(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_karantin(element) for element in elementy if isinstance(element, dict)
+                _razobrat_karantin(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для карантинных объектов")
@@ -138,9 +138,9 @@ async def poisk_registratsiy_produktsii(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_registratsiyu(element)
-                for element in elementy
-                if isinstance(element, dict)
+                _razobrat_registratsiyu(zapis)
+                for zapis in elementy
+                if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для регистрации продукции")
@@ -174,7 +174,7 @@ async def veterinarsnye_sertifikaty(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_sertifikat(element) for element in elementy if isinstance(element, dict)
+                _razobrat_sertifikat(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для ветеринарных сертификатов")
@@ -202,9 +202,9 @@ async def preduprezhdeniya_karantina(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_preduprezhdenie(element)
-                for element in elementy
-                if isinstance(element, dict)
+                _razobrat_preduprezhdenie(zapis)
+                for zapis in elementy
+                if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("fsvps.gov.ru API недоступен для предупреждений")
