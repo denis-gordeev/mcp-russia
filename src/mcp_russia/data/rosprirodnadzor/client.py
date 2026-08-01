@@ -56,9 +56,7 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [
-                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
-            ]
+            return [_razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен")
 
@@ -72,9 +70,7 @@ async def poisk_proverok(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [
-                _razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)
-            ]
+            return [_razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен")
 
@@ -126,9 +122,7 @@ async def poisk_obektov_negativnogo(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_obekt_negativnogo(zapis)
-                for zapis in elementy
-                if isinstance(zapis, dict)
+                _razobrat_obekt_negativnogo(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("ONV реестр недоступен")
@@ -144,9 +138,7 @@ async def poisk_obektov_negativnogo(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_obekt_negativnogo(zapis)
-                for zapis in elementy
-                if isinstance(zapis, dict)
+                _razobrat_obekt_negativnogo(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для ОНВ")
@@ -179,9 +171,7 @@ async def poisk_litsenziy_nedra(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [
-                _razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)
-            ]
+            return [_razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("rpn.gov.ru/opendata недоступен для лицензий")
 

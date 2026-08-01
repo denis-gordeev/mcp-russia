@@ -165,9 +165,7 @@ async def poisk_smi(registratsionnyy_nomer: str = "", nazvanie: str = "") -> lis
         if isinstance(dannye, dict):
             elementy = dannye.get("data", dannye.get("items", []))
             if isinstance(elementy, list):
-                return [
-                    _razobrat_smi(zapis) for zapis in elementy if isinstance(zapis, dict)
-                ]
+                return [_razobrat_smi(zapis) for zapis in elementy if isinstance(zapis, dict)]
         if isinstance(dannye, list):
             return [_razobrat_smi(zapis) for zapis in dannye if isinstance(zapis, dict)]
         return []

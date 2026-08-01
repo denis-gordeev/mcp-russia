@@ -55,9 +55,7 @@ async def poisk_med_organizatsiy(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [
-            _razobrat_med_organizatsiyu(zapis)
-            for zapis in elementy
-            if isinstance(zapis, dict)
+            _razobrat_med_organizatsiyu(zapis) for zapis in elementy if isinstance(zapis, dict)
         ]
     except Exception:
         logger.exception("Ошибка при поиске медицинских организаций")
@@ -174,9 +172,7 @@ async def statistika_zabolevaniy(
             parametry["year"] = god
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [
-            _razobrat_zabolevanie(zapis) for zapis in elementy if isinstance(zapis, dict)
-        ]
+        return [_razobrat_zabolevanie(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.exception("Ошибка при получении статистики заболеваний")
         return []

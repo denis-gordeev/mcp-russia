@@ -186,7 +186,7 @@ API: rosgidromet_preduprezhdeniya(subiekt="sibirskiy_fo")
 > Промпт: «Каков объём обезлесения в Сибирском ФО за последние 12 месяцев?»
 
 ```
-API: rosprirodnadzor_poisk_proverok(subiekt="sibirskiy_fo") *(лесной надзор — планируемый инструмент)*
+API: rosprirodnadzor_poisk_proverok(vid_nadzora="лесной надзор") *(региональная фильтрация — планируемое расширение)*
 ```
 
 **3. Водные ресурсы**

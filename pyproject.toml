@@ -1,7 +1,7 @@
 [project]
 name = "mcp-russia"
 version = "0.5.0"
-description = "Русскоязычная адаптация MCP-сервера для публичных и государственных данных"
+description = "Русскоязычный MCP-сервер для государственных и публичных данных РФ"
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.10"

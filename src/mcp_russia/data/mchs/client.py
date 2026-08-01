@@ -146,9 +146,7 @@ async def radiatsionnyy_monitoring(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [
-                _razobrat_radiatsiyu(zapis) for zapis in elementy if isinstance(zapis, dict)
-            ]
+            return [_razobrat_radiatsiyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для радиационного мониторинга")
 
@@ -174,9 +172,7 @@ async def gidrologicheskaya_obstanovka(
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
-            return [
-                _razobrat_gidrologiyu(zapis) for zapis in elementy if isinstance(zapis, dict)
-            ]
+            return [_razobrat_gidrologiyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для гидрологии")
 
@@ -207,9 +203,7 @@ async def preduprezhdeniya_chs(
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
-                _razobrat_preduprezhdenie(zapis)
-                for zapis in elementy
-                if isinstance(zapis, dict)
+                _razobrat_preduprezhdenie(zapis) for zapis in elementy if isinstance(zapis, dict)
             ]
     except Exception:
         logger.debug("mchs.gov.ru API недоступен для предупреждений")

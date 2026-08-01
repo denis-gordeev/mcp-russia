@@ -159,7 +159,7 @@ API: kaznacheistvo_mezhbyudzhetnye_transferty *(планируемый)* + rosst
 > Промпт: "Каков объём вырубки лесов по субъектам РФ в Сибирском федеральном округе за последние 5 лет?"
 
 ```
-API: rosprirodnadzor_poisk_proverok(subiekt="sibir") *(лесной надзор — планируемый инструмент)*
+API: rosprirodnadzor_poisk_proverok(vid_nadzora="лесной надзор") *(региональная фильтрация — планируемое расширение)*
 ```
 
 **2. Штрафы и санкции**
@@ -168,7 +168,7 @@ API: rosprirodnadzor_poisk_proverok(subiekt="sibir") *(лесной надзор
 
 ```
 API: rosaudit_poisk_narusheniy(tip="nezakonnaya_vyrubka")
-     rosaudit_info_auditorskogo_zaklyucheniya(tema="lesnoe_khozyaistvo")
+     rosaudit_info_auditorskogo_zaklyucheniya(nomer="...")
 ```
 
 **3. Судебные дела**
@@ -185,7 +185,7 @@ API: kad_arbitrazh_poisk_del(kategoriya="ekologicheskoe_pravonarushenie")
 > Промпт: "Снизился ли уровень водохранилищ в регионах с наибольшим объёмом вырубки лесов?"
 
 ```
-API: rosvodresursy_info_vodokhranilishcha(subiekt="sibir")
+API: rosvodresursy_info_vodokhranilishcha(kod="...")
 ```
 
 ### Кросс-ссылка

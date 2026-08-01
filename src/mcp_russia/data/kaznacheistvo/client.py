@@ -88,9 +88,7 @@ async def poisk_uchastnikov_bp(
             parametry["name"] = nazvanie
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [
-            _razobrat_uchastnik_bp(zapis) for zapis in elementy if isinstance(zapis, dict)
-        ]
+        return [_razobrat_uchastnik_bp(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
@@ -122,9 +120,7 @@ async def poisk_uchrezhdeniy(
             parametry["type"] = tip
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
-        return [
-            _razobrat_uchrezhdenie(zapis) for zapis in elementy if isinstance(zapis, dict)
-        ]
+        return [_razobrat_uchrezhdenie(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:
         logger.debug("roskazna.gov.ru открытые данные недоступны")
         return []
