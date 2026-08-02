@@ -20,6 +20,55 @@ from .constants import DUMA_DEPUTATY, DUMA_GOLOSOVANIYA, DUMA_ZAKONOPROEKTY, FRA
 from .schemas import Deputat, Fraktsiya, Golosovanie, Zakonoproekt
 
 
+def _stroka(znachenie: object, po_umolchaniyu: str = "") -> str:
+    """Безопасно приводит скалярное значение внешнего API к строке."""
+    if znachenie is None or isinstance(znachenie, (bool, dict, list)):
+        return po_umolchaniyu
+    if isinstance(znachenie, str):
+        return znachenie
+    if isinstance(znachenie, (int, float)):
+        return str(znachenie)
+    return po_umolchaniyu
+
+
+def _tseloe(znachenie: object, po_umolchaniyu: int = 0) -> int:
+    """Безопасно приводит целочисленное значение внешнего API к числу."""
+    if znachenie is None or isinstance(znachenie, bool):
+        return po_umolchaniyu
+    if isinstance(znachenie, int):
+        return znachenie
+    if isinstance(znachenie, float):
+        return int(znachenie) if znachenie.is_integer() else po_umolchaniyu
+    if isinstance(znachenie, str):
+        try:
+            return int(znachenie.strip())
+        except ValueError:
+            return po_umolchaniyu
+    return po_umolchaniyu
+
+
+def _pervoe_znachenie(zapis: dict[str, Any], *klyuchi: str) -> object:
+    """Возвращает первое непустое по отсутствию значение из вариантов схемы API."""
+    for klyuch in klyuchi:
+        znachenie = zapis.get(klyuch)
+        if znachenie is not None:
+            return znachenie
+    return None
+
+
+def _spisok_iz_otveta(dannye: object, *klyuchi: str) -> list[object]:
+    """Извлекает список из корневого массива или известных полей ответа."""
+    if isinstance(dannye, list):
+        return dannye
+    if not isinstance(dannye, dict):
+        return []
+    for klyuch in klyuchi:
+        elementy = dannye.get(klyuch)
+        if isinstance(elementy, list):
+            return elementy
+    return []
+
+
 def _poluchit_api_token() -> str:
     """Получение токена API Госдумы из настроек."""
     return settings.KLYUCH_GOSDUMY_API
@@ -49,31 +98,25 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
         return []
 
 
-def _razobrat_deputatov(dannye: Any) -> list[Deputat]:
+def _razobrat_deputatov(dannye: object) -> list[Deputat]:
     """Разбор данных депутатов из ответа API."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("deputies", dannye.get("items", []))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
+    elementy = _spisok_iz_otveta(dannye, "deputies", "items")
 
-    rezultaty = []
+    rezultaty: list[Deputat] = []
     for deputat in elementy:
         if not isinstance(deputat, dict):
             continue
-        fraktsiya_syraya = deputat.get("factionName", deputat.get("faction", ""))
         rezultaty.append(
             Deputat(
-                identifikator=deputat.get("id", 0),
-                familiya=deputat.get("surname", deputat.get("lastName", "")),
-                imya=deputat.get("name", deputat.get("firstName", "")),
-                otchestvo=deputat.get("patronymic", deputat.get("middleName", "")),
-                fraktsiya=fraktsiya_syraya,
-                komitet=deputat.get("committeeName", deputat.get("committee", "")),
-                subiekt=deputat.get("districtName", deputat.get("region", "")),
-                sozyv=str(deputat.get("convocation", deputat.get("sozyv", ""))),
-                foto_ssylka=deputat.get("photoUrl", deputat.get("photo", "")),
+                identifikator=_tseloe(deputat.get("id")),
+                familiya=_stroka(_pervoe_znachenie(deputat, "surname", "lastName")),
+                imya=_stroka(_pervoe_znachenie(deputat, "name", "firstName")),
+                otchestvo=_stroka(_pervoe_znachenie(deputat, "patronymic", "middleName")),
+                fraktsiya=_stroka(_pervoe_znachenie(deputat, "factionName", "faction")),
+                komitet=_stroka(_pervoe_znachenie(deputat, "committeeName", "committee")),
+                subiekt=_stroka(_pervoe_znachenie(deputat, "districtName", "region")),
+                sozyv=_stroka(_pervoe_znachenie(deputat, "convocation", "sozyv")),
+                foto_ssylka=_stroka(_pervoe_znachenie(deputat, "photoUrl", "photo")),
             )
         )
     return rezultaty
@@ -108,20 +151,20 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
     return None
 
 
-def _razobrat_odnogo_deputata(dannye: dict[str, Any]) -> Deputat | None:
+def _razobrat_odnogo_deputata(dannye: object) -> Deputat | None:
     """Разбор данных одного депутата из ответа API."""
     if not isinstance(dannye, dict):
         return None
     return Deputat(
-        identifikator=dannye.get("id", 0),
-        familiya=dannye.get("surname", dannye.get("lastName", "")),
-        imya=dannye.get("name", dannye.get("firstName", "")),
-        otchestvo=dannye.get("patronymic", dannye.get("middleName", "")),
-        fraktsiya=dannye.get("factionName", dannye.get("faction", "")),
-        komitet=dannye.get("committeeName", dannye.get("committee", "")),
-        subiekt=dannye.get("districtName", dannye.get("region", "")),
-        sozyv=str(dannye.get("convocation", dannye.get("sozyv", ""))),
-        foto_ssylka=dannye.get("photoUrl", dannye.get("photo", "")),
+        identifikator=_tseloe(dannye.get("id")),
+        familiya=_stroka(_pervoe_znachenie(dannye, "surname", "lastName")),
+        imya=_stroka(_pervoe_znachenie(dannye, "name", "firstName")),
+        otchestvo=_stroka(_pervoe_znachenie(dannye, "patronymic", "middleName")),
+        fraktsiya=_stroka(_pervoe_znachenie(dannye, "factionName", "faction")),
+        komitet=_stroka(_pervoe_znachenie(dannye, "committeeName", "committee")),
+        subiekt=_stroka(_pervoe_znachenie(dannye, "districtName", "region")),
+        sozyv=_stroka(_pervoe_znachenie(dannye, "convocation", "sozyv")),
+        foto_ssylka=_stroka(_pervoe_znachenie(dannye, "photoUrl", "photo")),
     )
 
 
@@ -155,28 +198,25 @@ async def poluchit_zakonoproekty(
         return []
 
 
-def _razobrat_zakonoproekty(dannye: Any) -> list[Zakonoproekt]:
+def _razobrat_zakonoproekty(dannye: object) -> list[Zakonoproekt]:
     """Разбор данных законопроектов из ответа API."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("bills", dannye.get("items", []))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
+    elementy = _spisok_iz_otveta(dannye, "bills", "items")
 
-    rezultaty = []
+    rezultaty: list[Zakonoproekt] = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Zakonoproekt(
-                identifikator=str(zapis.get("id", "")),
-                nomer=zapis.get("number", ""),
-                nazvanie=zapis.get("name", zapis.get("title", "")),
-                sostoyanie=zapis.get("statusName", zapis.get("status", "")),
-                data_vneseniya=zapis.get("dateIntroduction", zapis.get("introductionDate", "")),
-                avtor=zapis.get("subjectName", zapis.get("author", "")),
-                chteniya=zapis.get("readingsCount", zapis.get("readings", 0)),
+                identifikator=_stroka(zapis.get("id")),
+                nomer=_stroka(zapis.get("number")),
+                nazvanie=_stroka(_pervoe_znachenie(zapis, "name", "title")),
+                sostoyanie=_stroka(_pervoe_znachenie(zapis, "statusName", "status")),
+                data_vneseniya=_stroka(
+                    _pervoe_znachenie(zapis, "dateIntroduction", "introductionDate")
+                ),
+                avtor=_stroka(_pervoe_znachenie(zapis, "subjectName", "author")),
+                chteniya=_tseloe(_pervoe_znachenie(zapis, "readingsCount", "readings")),
             )
         )
     return rezultaty
@@ -212,28 +252,23 @@ async def poluchit_golosovaniya(
         return []
 
 
-def _razobrat_golosovaniya(dannye: Any) -> list[Golosovanie]:
+def _razobrat_golosovaniya(dannye: object) -> list[Golosovanie]:
     """Разбор результатов голосований из ответа API."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("votes", dannye.get("items", []))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
+    elementy = _spisok_iz_otveta(dannye, "votes", "items")
 
-    rezultaty = []
+    rezultaty: list[Golosovanie] = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
             continue
         rezultaty.append(
             Golosovanie(
-                zakonoproekt_identifikator=str(zapis.get("billId", zapis.get("id", ""))),
-                nazvanie=zapis.get("subject", zapis.get("title", "")),
-                data=zapis.get("date", zapis.get("voteDate", "")),
-                za=zapis.get("totalFor", zapis.get("for", 0)),
-                protiv=zapis.get("totalAgainst", zapis.get("against", 0)),
-                vozhderzhalsya=zapis.get("totalAbstain", zapis.get("abstain", 0)),
-                ne_golosoval=zapis.get("totalNotVoting", zapis.get("notVoting", 0)),
+                zakonoproekt_identifikator=_stroka(_pervoe_znachenie(zapis, "billId", "id")),
+                nazvanie=_stroka(_pervoe_znachenie(zapis, "subject", "title")),
+                data=_stroka(_pervoe_znachenie(zapis, "date", "voteDate")),
+                za=_tseloe(_pervoe_znachenie(zapis, "totalFor", "for")),
+                protiv=_tseloe(_pervoe_znachenie(zapis, "totalAgainst", "against")),
+                vozhderzhalsya=_tseloe(_pervoe_znachenie(zapis, "totalAbstain", "abstain")),
+                ne_golosoval=_tseloe(_pervoe_znachenie(zapis, "totalNotVoting", "notVoting")),
             )
         )
     return rezultaty
