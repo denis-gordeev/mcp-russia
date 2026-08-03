@@ -11,6 +11,7 @@ API КАД является публичным и не требует аутен
 from __future__ import annotations
 
 import contextlib
+import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit, http_poluchit
@@ -24,6 +25,8 @@ from .constants import (
     TIPLY_AKTOV,
 )
 from .schemas import StoronaDela, SudebnoeDelo, SudebnoeZasedanie, SudebnyyAkt, Sudy
+
+logger = logging.getLogger(__name__)
 
 
 def _opredelit_sud_po_nomeru(nomer: str) -> str:
@@ -290,6 +293,7 @@ async def poisk_del(
         )
         return _razobrat_rezultaty_poiska(dannye)
     except Exception:
+        logger.exception("Ошибка при поиске дел в КАД")
         return []
 
 
@@ -309,6 +313,7 @@ async def info_dela(nomer: str) -> SudebnoeDelo | None:
         )
         return _razobrat_kartochka_dela(dannye)
     except Exception:
+        logger.exception("Ошибка при получении дела %s", nomer)
         return None
 
 
@@ -328,6 +333,7 @@ async def akty_po_delu(nomer: str) -> list[SudebnyyAkt]:
         )
         return _razobrat_akty(dannye, nomer)
     except Exception:
+        logger.exception("Ошибка при получении актов по делу %s", nomer)
         return []
 
 
@@ -359,7 +365,7 @@ async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
                 pdf_ssylka=dokument.get("PdfUrl", ""),
             )
     except Exception:
-        pass
+        logger.exception("Ошибка при получении акта %s", identifikator_akta)
     return None
 
 
@@ -402,6 +408,7 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
             )
         return rezultaty
     except Exception:
+        logger.exception("Ошибка при получении заседаний по делу %s", nomer)
         return []
 
 
@@ -434,6 +441,7 @@ async def storony_dela(nomer: str) -> list[StoronaDela]:
         )
         return _razobrat_storony(dannye, nomer)
     except Exception:
+        logger.exception("Ошибка при получении сторон дела %s", nomer)
         return []
 
 

@@ -11,6 +11,7 @@ API Госдумы предоставляет открытые данные о �
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from mcp_russia import settings
@@ -18,6 +19,8 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import DUMA_DEPUTATY, DUMA_GOLOSOVANIYA, DUMA_ZAKONOPROEKTY, FRAKCII, SOZYVY
 from .schemas import Deputat, Fraktsiya, Golosovanie, Zakonoproekt
+
+logger = logging.getLogger(__name__)
 
 
 def _stroka(znachenie: object, po_umolchaniyu: str = "") -> str:
@@ -95,6 +98,7 @@ async def poluchit_deputatov(sozyv: str = "") -> list[Deputat]:
         dannye = await http_poluchit(DUMA_DEPUTATY, parametry=parametry)
         return _razobrat_deputatov(dannye)
     except Exception:
+        logger.exception("Ошибка при получении списка депутатов")
         return []
 
 
@@ -142,7 +146,7 @@ async def poluchit_deputata(identifikator: int) -> Deputat | None:
         if isinstance(dannye, dict):
             return _razobrat_odnogo_deputata(dannye)
     except Exception:
-        pass
+        logger.exception("Ошибка при получении депутата %s напрямую", identifikator)
 
     deputats = await poluchit_deputatov()
     for deputat in deputats:
@@ -195,6 +199,7 @@ async def poluchit_zakonoproekty(
         dannye = await http_poluchit(f"{DUMA_ZAKONOPROEKTY}/bills", parametry=parametry)
         return _razobrat_zakonoproekty(dannye)
     except Exception:
+        logger.exception("Ошибка при получении законопроектов")
         return []
 
 
@@ -249,6 +254,7 @@ async def poluchit_golosovaniya(
         dannye = await http_poluchit(DUMA_GOLOSOVANIYA, parametry=parametry)
         return _razobrat_golosovaniya(dannye)
     except Exception:
+        logger.exception("Ошибка при получении голосований")
         return []
 
 

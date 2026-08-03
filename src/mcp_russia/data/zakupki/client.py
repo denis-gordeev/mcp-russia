@@ -11,6 +11,7 @@ API ЕИС предоставляет публичный доступ к дан�
 
 from __future__ import annotations
 
+import logging
 from typing import Any
 
 from mcp_russia import settings
@@ -24,6 +25,8 @@ from .constants import (
     ZAKUPKI_BAZA_API,
 )
 from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
+
+logger = logging.getLogger(__name__)
 
 
 def _poluchit_api_token() -> str:
@@ -75,6 +78,7 @@ async def poisk_zakupok(
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_poisk_zakupok(dannye)
     except Exception:
+        logger.exception("Ошибка при поиске закупок")
         return []
 
 
@@ -155,7 +159,7 @@ async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
             elementy = _razobrat_poisk_zakupok([dannye])
             return elementy[0] if elementy else None
     except Exception:
-        pass
+        logger.exception("Ошибка при получении закупки %s", identifikator_zakupki)
     return None
 
 
@@ -192,6 +196,7 @@ async def poisk_kontraktov(
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_kontrakty(dannye)
     except Exception:
+        logger.exception("Ошибка при поиске контрактов")
         return []
 
 
@@ -253,7 +258,7 @@ async def info_zakazchika(inn: str) -> Zakazchik | None:
                 obshchie_raskhody=0.0,
             )
     except Exception:
-        pass
+        logger.exception("Ошибка при получении информации о заказчике %s", inn)
     return None
 
 
@@ -298,7 +303,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
                     is_dobrosovestny=True,
                 )
     except Exception:
-        pass
+        logger.exception("Ошибка при получении информации о поставщике %s", inn)
     return None
 
 
@@ -328,6 +333,7 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
         dannye = await http_poluchit(adres_url, parametry=parametry)
         return _razobrat_plany(dannye)
     except Exception:
+        logger.exception("Ошибка при получении планов закупок")
         return []
 
 
