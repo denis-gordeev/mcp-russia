@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from fastmcp import Context
 
 from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_markdown
@@ -15,6 +17,7 @@ from .constants import (
     TipyTransportnykhSredstv,
     VidyNarusheniy,
 )
+from .schemas import RegistratsionnoeDeystvie
 
 _ISTOCHNIK = "\n\n_Источник: ГИБДД / МВД (гибдд.рф)_"
 
@@ -164,11 +167,23 @@ async def info_ts(kontekst: Context, vin: str) -> str:
     return "\n".join(stroki) + _ISTOCHNIK
 
 
-async def _polnaya_proverka_ts(vin: str) -> tuple:
+async def _polnaya_proverka_ts(
+    vin: str,
+) -> tuple[
+    list[RegistratsionnoeDeystvie],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+    list[dict[str, Any]],
+]:
     """Выполнение всех проверок транспортного средства параллельно."""
     import asyncio
 
-    rezultaty = await asyncio.gather(
+    rezultaty: tuple[
+        list[RegistratsionnoeDeystvie],
+        list[dict[str, Any]],
+        list[dict[str, Any]],
+        list[dict[str, Any]],
+    ] = await asyncio.gather(
         client.proverka_istorii_ts(vin),
         client.proverka_dtp_ts(vin),
         client.proverka_rozysk_ts(vin),

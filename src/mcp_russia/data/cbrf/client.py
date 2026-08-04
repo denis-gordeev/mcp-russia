@@ -46,7 +46,7 @@ def _razobrat_valyutu(kod: str, dannye: dict[str, Any], stroka_daty: str = "") -
     )
 
 
-async def poluchit_vse_valyuty(data: str | None = None) -> dict[str, Any]:
+async def poluchit_vse_valyuty(data: str | None = None) -> Any:
     """Получение всех курсов валют ЦБ РФ.
 
     Аргументы:
@@ -106,7 +106,7 @@ async def poluchit_osnovnye_valyuty() -> list[ZnachenieValyuty]:
     return await poluchit_valyuty_spisok(osnovnyye)
 
 
-async def poluchit_dinamiku_kursa(kod: str) -> dict[str, Any]:
+async def poluchit_dinamiku_kursa(kod: str) -> Any:
     """Получение динамики исторических данных для валюты.
 
     Использует API динамики ЦБ РФ для исторических данных.

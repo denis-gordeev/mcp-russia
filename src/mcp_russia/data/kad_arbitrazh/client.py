@@ -52,6 +52,9 @@ def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
     else:
         return []
 
+    if not isinstance(elementy, list):
+        return []
+
     rezultaty = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
@@ -124,12 +127,14 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
         return None
 
     dannye_dela = dannye.get("CaseInfo", dannye.get("Case", dannye))
+    if not isinstance(dannye_dela, dict):
+        return None
     nomer = dannye_dela.get("CaseNumber", dannye.get("caseNumber", ""))
     if not nomer:
         return None
 
-    kategoriya = _opredelit_kategoriyu(nomer) or dannye_dela.get(
-        "Category", dannye.get("category", "")
+    kategoriya = _opredelit_kategoriyu(nomer) or str(
+        dannye_dela.get("Category", dannye.get("category", "")) or ""
     )
     nazvanie_suda = dannye_dela.get("Court", dannye.get("courtName", ""))
     if not nazvanie_suda:
@@ -166,12 +171,14 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     return SudebnoeDelo(
         nomer=nomer,
         kategoriya=kategoriya,
-        sostoyanie=dannye_dela.get("Status", dannye.get("status", "")),
-        sudya=dannye_dela.get("Judge", dannye.get("judge", "")),
+        sostoyanie=str(dannye_dela.get("Status", dannye.get("status", "")) or ""),
+        sudya=str(dannye_dela.get("Judge", dannye.get("judge", "")) or ""),
         nazvanie_suda=nazvanie_suda,
-        data_vozbuzhdeniya=dannye_dela.get("RegistrationDate", dannye.get("registrationDate", "")),
-        data_poslednego_akta=dannye_dela.get(
-            "LastDocumentDate", dannye.get("lastDocumentDate", "")
+        data_vozbuzhdeniya=str(
+            dannye_dela.get("RegistrationDate", dannye.get("registrationDate", "")) or ""
+        ),
+        data_poslednego_akta=str(
+            dannye_dela.get("LastDocumentDate", dannye.get("lastDocumentDate", "")) or ""
         ),
         istorcy=istorcy,
         otvetchiki=otvetchiki,
@@ -186,6 +193,9 @@ def _razobrat_akty(dannye: Any, delo_nomer: str) -> list[SudebnyyAkt]:
     elif isinstance(dannye, list):
         elementy = dannye
     else:
+        return []
+
+    if not isinstance(elementy, list):
         return []
 
     rezultaty = []
@@ -388,6 +398,9 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
         elif isinstance(dannye, list):
             elementy = dannye
         else:
+            return []
+
+        if not isinstance(elementy, list):
             return []
 
         rezultaty = []

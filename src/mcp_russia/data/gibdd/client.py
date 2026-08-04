@@ -133,7 +133,7 @@ async def statistika_dtp_region(subiekt: str, god: int) -> StatistikaDTP | None:
         return None
 
 
-def _izvlech_rezultat(dannye: Any, klyuch: str) -> dict[str, Any]:
+def _izvlech_rezultat(dannye: Any, klyuch: str) -> Any:
     """Извлечение секции результата из ответа API проверки ГИБДД.
 
     Типичный формат: {"RequestResult": {"result": {<key>: {...}}}}

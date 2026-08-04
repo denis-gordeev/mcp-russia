@@ -42,7 +42,7 @@ def _zagolovki_dadaty(zheton: str | None = None) -> dict[str, str]:
 
 
 def _vlozhennoe_poluchenie(
-    dannye: dict, *klyuchi: str, znacheniye_po_umolchaniyu: Any = None
+    dannye: dict[str, Any], *klyuchi: str, znacheniye_po_umolchaniyu: Any = None
 ) -> Any:
     """Безопасное извлечение вложенного значения из словаря."""
     for klyuch in klyuchi:
@@ -96,7 +96,7 @@ def _razobrat_dannye_banka(dannye: dict[str, Any], rezervnoe_imya: str = "") -> 
     }
 
 
-async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str, Any]:
+async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> Any:
     """Получить подсказки по адресу через Dadata API."""
     telo = {"query": zapros, "count": 10}
     try:
@@ -109,7 +109,7 @@ async def _predlozhit_adres(zapros: str, zheton: str | None = None) -> dict[str,
         return {"predlozheniya": []}
 
 
-async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> dict[str, Any]:
+async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> Any:
     """Найти адрес по ФИАС-идентификатору через Dadata API."""
     telo = {"query": identifikator_fias}
     try:
@@ -122,7 +122,7 @@ async def _nayti_po_fias(identifikator_fias: str, zheton: str | None = None) -> 
         return {"predlozheniya": []}
 
 
-async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[str, Any]:
+async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> Any:
     """Найти адрес по почтовому индексу через Dadata API."""
     telo = {"query": indeks, "count": 1}
     try:
@@ -135,7 +135,7 @@ async def _pochtovyy_po_indeksu(indeks: str, zheton: str | None = None) -> dict[
         return {"predlozheniya": []}
 
 
-async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> Any:
     """Найти организацию по ИНН через Dadata API."""
     telo = {"query": inn}
     try:
@@ -155,7 +155,7 @@ async def _nayti_organizatsiyu_po_inn(inn: str, zheton: str | None = None) -> di
         }
 
 
-async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> dict[str, Any]:
+async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> Any:
     """Найти организацию по ОГРН через Dadata API."""
     telo = {"query": ogrn}
     try:
@@ -171,7 +171,7 @@ async def _nayti_organizatsiyu_po_ogrn(ogrn: str, zheton: str | None = None) -> 
         }
 
 
-async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
+async def _spisok_bankov(zheton: str | None = None) -> Any:
     """Получить список банков через Dadata API."""
     telo = {"query": "", "count": 100}
     try:
@@ -185,7 +185,7 @@ async def _spisok_bankov(zheton: str | None = None) -> list[dict[str, Any]]:
         return []
 
 
-async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> dict[str, Any]:
+async def _nayti_bank_po_bik(bik: str, zheton: str | None = None) -> Any:
     """Найти банк по БИК через Dadata API."""
     telo = {"query": bik}
     try:

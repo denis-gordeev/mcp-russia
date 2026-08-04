@@ -62,12 +62,12 @@ async def poisk_proverok(
 
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH}/inspections"
-        parametry: dict[str, Any] = {"limit": ogranichenie}
+        parametry_opendata: dict[str, Any] = {"limit": ogranichenie}
         if organizatsiya:
-            parametry["organization"] = organizatsiya
+            parametry_opendata["organization"] = organizatsiya
         if god:
-            parametry["year"] = god
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+            parametry_opendata["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry_opendata, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)]
@@ -94,6 +94,8 @@ async def info_proverki(nomer: str) -> dict[str, Any] | None:
     except Exception:
         logger.debug("rpn.gov.ru API недоступен для проверки №%s", nomer)
         return None
+
+    return None
 
 
 async def poisk_obektov_negativnogo(
@@ -129,12 +131,12 @@ async def poisk_obektov_negativnogo(
 
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/onv"
-        parametry: dict[str, Any] = {"limit": ogranichenie}
+        parametry_api: dict[str, Any] = {"limit": ogranichenie}
         if organizatsiya:
-            parametry["organization"] = organizatsiya
+            parametry_api["organization"] = organizatsiya
         if kategoriya:
-            parametry["category"] = kategoriya
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+            parametry_api["category"] = kategoriya
+        dannye = await http_poluchit(adres_url, parametry=parametry_api, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [
@@ -177,12 +179,12 @@ async def poisk_litsenziy_nedra(
 
     try:
         adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/licenses"
-        parametry: dict[str, Any] = {"limit": ogranichenie}
+        parametry_api: dict[str, Any] = {"limit": ogranichenie}
         if territoriya:
-            parametry["territory"] = territoriya
+            parametry_api["territory"] = territoriya
         if vid_litsenzii:
-            parametry["licenseType"] = vid_litsenzii
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+            parametry_api["licenseType"] = vid_litsenzii
+        dannye = await http_poluchit(adres_url, parametry=parametry_api, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         return [_razobrat_litsenziyu(zapis) for zapis in elementy if isinstance(zapis, dict)]
     except Exception:

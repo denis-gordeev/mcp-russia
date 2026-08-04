@@ -22,7 +22,8 @@ async def spisok_stantsiy(kontekst: Context) -> str:
     Возвращает:
         Список станций с кодами.
     """
-    await kontekst.info("Запрос списка станций мониторинга...")
+    if kontekst is not None:
+        await kontekst.info("Запрос списка станций мониторинга...")
     stantsii = client.poluchit_spisok_stantsiy()
 
     stroki_tablitsy = [
@@ -38,7 +39,8 @@ async def spisok_tipov_dannykh(kontekst: Context) -> str:
     Возвращает:
         Список типов данных.
     """
-    await kontekst.info("Запрос списка типов данных...")
+    if kontekst is not None:
+        await kontekst.info("Запрос списка типов данных...")
     meteo = client.poluchit_spisok_tipov_meteo()
     eko = client.poluchit_spisok_tipov_eko()
 
@@ -62,7 +64,8 @@ async def pogoda_seychas(stantsiya: str = "77", kontekst: Context | None = None)
     Возвращает:
         Текущие погодные данные.
     """
-    await kontekst.info(f"Запрос текущей погоды на станции {stantsiya}...")
+    if kontekst is not None:
+        await kontekst.info(f"Запрос текущей погоды на станции {stantsiya}...")
     dannye = await client.poluchit_pogodu(stantsiya)
 
     if not dannye:
@@ -110,7 +113,8 @@ async def prognoz_pogody(
     Возвращает:
         Прогноз погоды.
     """
-    await kontekst.info(f"Запрос прогноза на {dni} дней для станции {stantsiya}...")
+    if kontekst is not None:
+        await kontekst.info(f"Запрос прогноза на {dni} дней для станции {stantsiya}...")
     prognoz = await client.poluchit_prognoz(stantsiya, dni)
 
     if not prognoz:
@@ -154,7 +158,8 @@ async def ekologiya_regiona(
     Возвращает:
         Данные об экологической обстановке.
     """
-    await kontekst.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
+    if kontekst is not None:
+        await kontekst.info(f"Запрос экологических данных: город={gorod}, тип={tip}")
     dannye = await client.poluchit_ekologiyu(gorod=gorod, tip=tip)
 
     if not dannye:
@@ -194,7 +199,8 @@ async def preduprezhdeniya(subiekt: str = "", kontekst: Context | None = None) -
     Возвращает:
         Активные предупреждения.
     """
-    await kontekst.info(f"Запрос предупреждений для региона {subiekt}...")
+    if kontekst is not None:
+        await kontekst.info(f"Запрос предупреждений для региона {subiekt}...")
     dannye = await client.poluchit_preduprezhdeniya(subiekt)
 
     if not dannye:
@@ -235,7 +241,8 @@ async def sputnik_monitoring(
     Возвращает:
         Данные спутникового мониторинга.
     """
-    await kontekst.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
+    if kontekst is not None:
+        await kontekst.info(f"Запрос спутниковых данных: регион={subiekt}, тип={tip}")
     dannye = await client.poluchit_sputnik_dannye(subiekt, tip)
 
     if not dannye:

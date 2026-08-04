@@ -28,7 +28,7 @@ from .constants import (
 )
 
 
-def spisok_tipov_nedvizhimosti() -> list[dict]:
+def spisok_tipov_nedvizhimosti() -> list[dict[str, str]]:
     """Список типов объектов недвижимости.
 
     Возвращает:
@@ -37,7 +37,7 @@ def spisok_tipov_nedvizhimosti() -> list[dict]:
     return TipyNedvizhimosti
 
 
-def spisok_kategoriy_zemel() -> list[dict]:
+def spisok_kategoriy_zemel() -> list[dict[str, str]]:
     """Список категорий земель по целевому назначению.
 
     Возвращает:
@@ -46,7 +46,7 @@ def spisok_kategoriy_zemel() -> list[dict]:
     return KategoriiZemel
 
 
-def spisok_vidov_ispolzovaniya() -> list[dict]:
+def spisok_vidov_ispolzovaniya() -> list[dict[str, str]]:
     """Список видов разрешённого использования земельных участков.
 
     Возвращает:
@@ -55,7 +55,7 @@ def spisok_vidov_ispolzovaniya() -> list[dict]:
     return VidyIspolzovaniya
 
 
-def spisok_statusov_obekta() -> list[dict]:
+def spisok_statusov_obekta() -> list[dict[str, str]]:
     """Список статусов учёта объектов недвижимости.
 
     Возвращает:
@@ -64,7 +64,7 @@ def spisok_statusov_obekta() -> list[dict]:
     return StatusyObekta
 
 
-def spisok_form_sobstvennosti() -> list[dict]:
+def spisok_form_sobstvennosti() -> list[dict[str, str]]:
     """Список форм собственности на недвижимость.
 
     Возвращает:

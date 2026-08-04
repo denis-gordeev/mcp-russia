@@ -52,12 +52,12 @@ async def poluchit_ispolnenie_byudzheta(
 
     try:
         adres_url = f"{KAZNACHEISTVO_BAZA_API}/execution"
-        parametry: dict[str, Any] = {}
+        parametry_kaznacheistvo: dict[str, Any] = {}
         if god:
-            parametry["year"] = god
+            parametry_kaznacheistvo["year"] = god
         if tip:
-            parametry["budgetType"] = tip
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+            parametry_kaznacheistvo["budgetType"] = tip
+        dannye = await http_poluchit(adres_url, parametry=parametry_kaznacheistvo, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_ispolnenie_byudzheta(dannye)
     except Exception:
@@ -175,6 +175,8 @@ async def poluchit_byudzhetnuyu_smetu(nomer: str) -> dict[str, Any] | None:
     except Exception:
         logger.debug("roskazna.gov.ru API недоступен для сметы №%s", nomer)
         return None
+
+    return None
 
 
 def poluchit_spisok_vidov_byudzhetov() -> list[dict[str, str]]:

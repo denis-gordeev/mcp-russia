@@ -87,7 +87,7 @@ async def spisok_komitetov(kontekst: Context) -> str:
             ["Комитет", "Председатель", "Членов"], stroki_tablitsy
         )
     komitety = client.poluchit_spisok_komitetov()
-    stroki_tablitsy = [(komitet["kod"], komitet["nazvanie"]) for komitet in komitety]
+    stroki_tablitsy = [(komitet["kod"], komitet["nazvanie"], "") for komitet in komitety]
     zagolovok = "**Комитеты Совета Федерации РФ** (справочник)\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Комитет"], stroki_tablitsy)
 
@@ -110,7 +110,7 @@ async def spisok_komissiy(kontekst: Context) -> str:
             ["Комиссия", "Председатель", "Членов"], stroki_tablitsy
         )
     komissii = client.poluchit_spisok_komissiy()
-    stroki_tablitsy = [(komissiya["kod"], komissiya["nazvanie"]) for komissiya in komissii]
+    stroki_tablitsy = [(komissiya["kod"], komissiya["nazvanie"], "") for komissiya in komissii]
     zagolovok = "**Комиссии Совета Федерации РФ** (справочник)\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Комиссия"], stroki_tablitsy)
 

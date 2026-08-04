@@ -122,7 +122,7 @@ async def poluchit_svedeniya(inn: str) -> SvedeniyaOrganizatsii | None:
     )
 
 
-async def _poisk_egrul(zapros: str) -> dict[str, Any] | None:
+async def _poisk_egrul(zapros: str) -> Any:
     """Двухшаговый поиск через API ЕГРЮЛ nalog.ru.
 
     Шаг 1: POST-запрос поиска → получение идентификатора задачи.

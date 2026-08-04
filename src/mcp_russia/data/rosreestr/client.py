@@ -73,8 +73,11 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     if dannye.get("state"):
         sostoyanie_dannykh = dannye["state"]
         if isinstance(sostoyanie_dannykh, dict):
-            sostoyanie_ucheta = STATUSY_UCHE_TA_SLOVAR.get(
-                sostoyanie_dannykh.get("code", ""), sostoyanie_dannykh.get("name", "")
+            sostoyanie_ucheta = (
+                STATUSY_UCHE_TA_SLOVAR.get(
+                    sostoyanie_dannykh.get("code", ""), sostoyanie_dannykh.get("name", "")
+                )
+                or ""
             )
         else:
             sostoyanie_ucheta = str(sostoyanie_dannykh)
@@ -83,8 +86,11 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     if dannye.get("category"):
         kategoriya_slovar = dannye["category"]
         if isinstance(kategoriya_slovar, dict):
-            kategoriya = KATEGORII_ZEMEL_SLOVAR.get(
-                kategoriya_slovar.get("code", ""), kategoriya_slovar.get("name", "")
+            kategoriya = (
+                KATEGORII_ZEMEL_SLOVAR.get(
+                    kategoriya_slovar.get("code", ""), kategoriya_slovar.get("name", "")
+                )
+                or ""
             )
         else:
             kategoriya = str(kategoriya_slovar)

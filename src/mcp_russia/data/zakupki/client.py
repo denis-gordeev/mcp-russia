@@ -91,6 +91,9 @@ def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
     else:
         return []
 
+    if not isinstance(elementy, list):
+        return []
+
     rezultaty = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
@@ -98,19 +101,25 @@ def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
         rezultaty.append(
             Zakupka(
                 identifikator=str(zapis.get("id", zapis.get("regNumber", ""))),
-                nomer=zapis.get("regNumber", zapis.get("number", "")),
-                nazvanie=zapis.get("name", zapis.get("title", zapis.get("objectInfo", ""))),
+                nomer=str(zapis.get("regNumber", zapis.get("number", "")) or ""),
+                nazvanie=str(
+                    zapis.get("name", zapis.get("title", zapis.get("objectInfo", ""))) or ""
+                ),
                 zakon=_opredelit_zakon(zapis),
-                sposob=zapis.get("purchaseMethod", zapis.get("method", "")),
-                sostoyanie=zapis.get("status", zapis.get("commonStatus", "")),
+                sposob=str(zapis.get("purchaseMethod", zapis.get("method", "")) or ""),
+                sostoyanie=str(zapis.get("status", zapis.get("commonStatus", "")) or ""),
                 nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
                     zapis.get("price", zapis.get("maxPrice", 0))
                 ),
                 valyuta=zapis.get("currency", "RUB"),
-                data_publikatsii=zapis.get("publishDate", zapis.get("docPublishDate", "")),
-                srok_podachi=zapis.get("endDate", zapis.get("bidEndDate", "")),
-                nazvanie_organizatora=zapis.get("customerName", zapis.get("organizerName", "")),
-                organizator_inn=zapis.get("customerInn", zapis.get("organizerInn", "")),
+                data_publikatsii=str(
+                    zapis.get("publishDate", zapis.get("docPublishDate", "")) or ""
+                ),
+                srok_podachi=str(zapis.get("endDate", zapis.get("bidEndDate", "")) or ""),
+                nazvanie_organizatora=str(
+                    zapis.get("customerName", zapis.get("organizerName", "")) or ""
+                ),
+                organizator_inn=str(zapis.get("customerInn", zapis.get("organizerInn", "")) or ""),
             )
         )
     return rezultaty
@@ -209,6 +218,9 @@ def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
     else:
         return []
 
+    if not isinstance(elementy, list):
+        return []
+
     rezultaty = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
@@ -216,17 +228,21 @@ def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
         rezultaty.append(
             Kontrakt(
                 identifikator=str(zapis.get("id", "")),
-                nomer=zapis.get("regNum", zapis.get("contractNumber", "")),
+                nomer=str(zapis.get("regNum", zapis.get("contractNumber", "")) or ""),
                 zakupka_nomer=zapis.get("purchaseNumber", ""),
-                nazvanie_podryadchika=zapis.get("supplierName", zapis.get("contractorName", "")),
-                podryadchik_inn=zapis.get("supplierInn", zapis.get("contractorInn", "")),
+                nazvanie_podryadchika=str(
+                    zapis.get("supplierName", zapis.get("contractorName", "")) or ""
+                ),
+                podryadchik_inn=str(
+                    zapis.get("supplierInn", zapis.get("contractorInn", "")) or ""
+                ),
                 tsena=_bezopasnoe_veshchestvennoe(
                     zapis.get("price", zapis.get("contractPrice", 0))
                 ),
                 valyuta=zapis.get("currency", "RUB"),
-                data_podpisaniya=zapis.get("signDate", zapis.get("contractDate", "")),
-                sostoyanie=zapis.get("status", zapis.get("contractStatus", "")),
-                srok_ispolneniya=zapis.get("executionDate", zapis.get("endDate", "")),
+                data_podpisaniya=str(zapis.get("signDate", zapis.get("contractDate", "")) or ""),
+                sostoyanie=str(zapis.get("status", zapis.get("contractStatus", "")) or ""),
+                srok_ispolneniya=str(zapis.get("executionDate", zapis.get("endDate", "")) or ""),
             )
         )
     return rezultaty
@@ -344,6 +360,9 @@ def _razobrat_plany(dannye: Any) -> list[PlanZakupki]:
     elif isinstance(dannye, list):
         elementy = dannye
     else:
+        return []
+
+    if not isinstance(elementy, list):
         return []
 
     rezultaty = []

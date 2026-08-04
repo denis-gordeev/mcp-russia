@@ -53,8 +53,8 @@ async def poisk_senatorov(
 
     try:
         adres_url = f"{DANNYE_GOV_RU_SOVFED}"
-        parametry: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        parametry_dannye: dict[str, Any] = {"organization": "sovet_federatsii", "limit": 50}
+        dannye = await http_poluchit(adres_url, parametry=parametry_dannye, taimaut=15.0)
         elementy = _izvlech_spisok(dannye)
         if elementy:
             return [_razobrat_senator(zapis) for zapis in elementy if isinstance(zapis, dict)]

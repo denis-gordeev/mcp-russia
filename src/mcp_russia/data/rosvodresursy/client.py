@@ -183,9 +183,9 @@ def poluchit_spisok_vodokhranilishch() -> list[dict[str, str]]:
     """Вернуть справочник водохранилищ (краткий)."""
     return [
         {
-            "kod": vodokhranilishche["kod"],
-            "nazvanie": vodokhranilishche["nazvanie"],
-            "subiekt": vodokhranilishche["subiekt"],
+            "kod": str(vodokhranilishche["kod"]),
+            "nazvanie": str(vodokhranilishche["nazvanie"]),
+            "subiekt": str(vodokhranilishche["subiekt"]),
         }
         for vodokhranilishche in KRUPNYE_VODOKHRANILISHCHA
     ]

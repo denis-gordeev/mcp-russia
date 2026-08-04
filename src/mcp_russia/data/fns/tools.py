@@ -20,7 +20,7 @@ from .constants import (
 )
 
 
-def spisok_nalogovyh_rezhimov() -> list[dict]:
+def spisok_nalogovyh_rezhimov() -> list[dict[str, str]]:
     """Список режимов налогообложения в РФ.
 
     Возвращает:
@@ -29,7 +29,7 @@ def spisok_nalogovyh_rezhimov() -> list[dict]:
     return NalogovyeRezhimy
 
 
-def spisok_vidov_nalogov() -> list[dict]:
+def spisok_vidov_nalogov() -> list[dict[str, str]]:
     """Список основных видов налогов в РФ.
 
     Возвращает:
@@ -38,7 +38,7 @@ def spisok_vidov_nalogov() -> list[dict]:
     return VidyNalogov
 
 
-def spisok_tipov_proverok() -> list[dict]:
+def spisok_tipov_proverok() -> list[dict[str, str]]:
     """Список типов налоговых проверок.
 
     Возвращает:
@@ -47,7 +47,7 @@ def spisok_tipov_proverok() -> list[dict]:
     return TipyProverok
 
 
-def spisok_statusov_organizatsiy() -> list[dict]:
+def spisok_statusov_organizatsiy() -> list[dict[str, str]]:
     """Список статусов организаций в ЕГРЮЛ.
 
     Возвращает:
@@ -56,7 +56,7 @@ def spisok_statusov_organizatsiy() -> list[dict]:
     return StatusyOrganizatsii
 
 
-def spisok_kategoriy_nalogoplatelshchikov() -> list[dict]:
+def spisok_kategoriy_nalogoplatelshchikov() -> list[dict[str, str]]:
     """Список категорий налогоплательщиков.
 
     Возвращает:
