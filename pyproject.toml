@@ -137,6 +137,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "tests/data/rosselkhoznadzor/*" = ["RUF001", "RUF002", "E501"]
 "tests/data/gosduma/*" = ["RUF001", "RUF002"]
 "tests/test_discovery.py" = ["RUF001", "RUF002"]
+"scripts/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "tests/test_root_server.py" = ["RUF001", "RUF002"]
 
 [tool.mypy]

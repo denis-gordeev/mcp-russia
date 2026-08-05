@@ -27,7 +27,7 @@ class EtapPlana(BaseModel):
     """Описание действия шага."""
 
     imya_instrumenta: str
-    """Имя инструмента (с префиксом модуля, напр. gosduma_poluchit_deputatov)."""
+    """Имя инструмента (с префиксом модуля, напр. gosduma_spisok_deputatov)."""
 
     parametry: dict[str, str]
     """Ключевые параметры (могут содержать плейсхолдеры вида '{etap_1.id}')."""
@@ -158,28 +158,28 @@ _SISTEMNYY_PROMPT = """\
 
 ### Пример 1: умеренно сложный запрос
 
-Вопрос: "Какие расходы были у депутата Иванова в 2024 году?"
+Вопрос: "Какие данные о депутате Иванове?"
 
 {{
-  "zapros": "Какие расходы были у депутата Иванова в 2024 году?",
+  "zapros": "Какие данные о депутате Иванове?",
   "slozhnost": "umerennyy",
-  "svodka": "Найти депутата по фамилии в Госдуме и запросить его расходы за 2024 год.",
+  "svodka": "Найти депутата по фамилии в Госдуме и запросить подробную информацию.",
   "etapy": [
     {{
       "etap": 1,
-      "opisanie": "Найти депутата по фамилии",
-      "imya_instrumenta": "gosduma_poluchit_deputatov",
-      "parametry": {{"familiya": "Иванов"}},
+      "opisanie": "Получить список депутатов Госдумы",
+      "imya_instrumenta": "gosduma_spisok_deputatov",
+      "parametry": {{"sozyv": "8"}},
       "zavisit_ot": [],
-      "obosnovanie": "Нужен идентификатор депутата для запроса расходов"
+      "obosnovanie": "Нужен идентификатор депутата для запроса подробной информации"
     }},
     {{
       "etap": 2,
-      "opisanie": "Запросить расходы депутата за 2024 год",
-      "imya_instrumenta": "gosduma_raskhody_deputata",
-      "parametry": {{"identifikator_deputata": "{{etap_1.identifikator}}", "god": "2024"}},
+      "opisanie": "Запросить подробную информацию о депутате",
+      "imya_instrumenta": "gosduma_info_deputata",
+      "parametry": {{"identifikator_deputata": "{{etap_1.identifikator}}"}},
       "zavisit_ot": [1],
-      "obosnovanie": "Получить расходы используя идентификатор из предыдущего этапа"
+      "obosnovanie": "Получить подробную информацию используя идентификатор из предыдущего этапа"
     }}
   ],
   "primechaniya": ""
@@ -196,19 +196,19 @@ _SISTEMNYY_PROMPT = """\
   "etapy": [
     {{
       "etap": 1,
-      "opisanie": "Запросить расходы на здравоохранение в Татарстане",
-      "imya_instrumenta": "rosstat_poluchit_indikator",
-      "parametry": {{"indikator": "zdravookhranenie", "region": "16", "god": "2024"}},
+      "opisanie": "Запросить данные показателя здравоохранения по Татарстану",
+      "imya_instrumenta": "rosstat_indikator_dannye",
+      "parametry": {{"kod": "zdravookhranenie", "subiekt": "16", "god": "2024"}},
       "zavisit_ot": [],
-      "obosnovanie": "Получить общую сумму расходов на здравоохранение в регионе"
+      "obosnovanie": "Получить данные о расходах на здравоохранение в регионе"
     }},
     {{
       "etap": 2,
-      "opisanie": "Запросить численность населения Татарстана",
-      "imya_instrumenta": "rosstat_poluchit_dannye_regiona",
-      "parametry": {{"region": "16"}},
+      "opisanie": "Запросить информацию о Татарстане",
+      "imya_instrumenta": "rosstat_informatsiya_o_regionye",
+      "parametry": {{"kod": "16"}},
       "zavisit_ot": [],
-      "obosnovanie": "Получить население для расчёта на душу населения"
+      "obosnovanie": "Получить население и другие данные региона для расчёта на душу населения"
     }}
   ],
   "primechaniya": "Этапы 1 и 2 выполняются параллельно. \

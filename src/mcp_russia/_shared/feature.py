@@ -64,6 +64,7 @@ class MetaFunktsii:
     peremennaya_avt_env: str | None = None
     vklyuchena: bool = True
     tegi: list[str] = field(default_factory=list)
+    operatsii_trebuyut_avtorizatsii: list[str] = field(default_factory=list)
 
     def dostupna_li_autentifikatsiya(self) -> bool:
         """Проверка доступности учётных данных аутентификации."""

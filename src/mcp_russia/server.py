@@ -163,7 +163,7 @@ async def vypolnit_paket(zaprosy: list[dict[str, object]], kontekst: Context) ->
                   Пример: [
                     {"imya_instrumenta": "gosduma_info_deputata",
                      "argumenty": {"identifikator_deputata": 99100142}},
-                    {"imya_instrumenta": "cbrf_kursy_valyut",
+                    {"imya_instrumenta": "cbrf_tekushchie_kursy",
                     "argumenty": {}}
                  ]
     """

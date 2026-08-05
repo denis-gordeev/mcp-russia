@@ -21,7 +21,7 @@ def _formatirovat_signaturu_instrumenta(
     """Форматирование инструмента в читаемую сигнатуру с параметрами и описанием.
 
     Формирует вывод вида:
-        - gosduma_poluchit_deputatov(familiya?: str) — Список депутатов Госдумы.
+        - gosduma_spisok_deputatov(sozyv?: str) — Список депутатов Госдумы.
 
     Аргументы:
         imya_modulya: Имя модуля (префикс инструмента).
@@ -88,11 +88,12 @@ def postroit_katalog(reyestr: object) -> str:
                 imya_instrumenta,
                 obekt_instrumenta,
             ) in server_funktsiya._tool_manager._tools.items():
-                stroki.append(
-                    _formatirovat_signaturu_instrumenta(
-                        metadannye.imya, imya_instrumenta, obekt_instrumenta
-                    )
+                signatura = _formatirovat_signaturu_instrumenta(
+                    metadannye.imya, imya_instrumenta, obekt_instrumenta
                 )
+                if imya_instrumenta in metadannye.operatsii_trebuyut_avtorizatsii:
+                    signatura += f" [требует {metadannye.peremennaya_avt_env}]"
+                stroki.append(signatura)
 
     _kesh_kataloga = "\n".join(stroki)
     return _kesh_kataloga

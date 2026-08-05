@@ -40,7 +40,7 @@ class TestRekomendovatInstrumenty:
     @pytest.mark.asyncio
     async def test_uspeshnaya_rekomendatsiya(self) -> None:
         maket_bloka = MagicMock()
-        maket_bloka.text = "Рекомендую: rosstat_poluchit_indikator"
+        maket_bloka.text = "Рекомендую: rosstat_indikator_dannye"
 
         maket_otveta = MagicMock()
         maket_otveta.content = [maket_bloka]
@@ -58,7 +58,7 @@ class TestRekomendovatInstrumenty:
             rezultat = await rekomendovat_instrumenty_impl(
                 "расходы правительства", "tekst_kataloga"
             )
-            assert "rosstat_poluchit_indikator" in rezultat
+            assert "rosstat_indikator_dannye" in rezultat
 
     @pytest.mark.asyncio
     async def test_obrabotka_oshibki_api(self) -> None:
@@ -289,25 +289,25 @@ class TestRasprostranenieTegov:
 
 _KORREKTNYY_PLAN_JSON = json.dumps(
     {
-        "zapros": "расходы депутата X",
+        "zapros": "данные о депутате X",
         "slozhnost": "umerennyy",
-        "svodka": "Найти депутата и запросить его расходы",
+        "svodka": "Найти депутата и запросить подробную информацию",
         "etapy": [
             {
                 "etap": 1,
-                "opisanie": "Найти депутата по фамилии",
-                "imya_instrumenta": "gosduma_poluchit_deputatov",
-                "parametry": {"familiya": "X"},
+                "opisanie": "Получить список депутатов Госдумы",
+                "imya_instrumenta": "gosduma_spisok_deputatov",
+                "parametry": {"sozyv": "8"},
                 "zavisit_ot": [],
                 "obosnovanie": "Нужен идентификатор депутата",
             },
             {
                 "etap": 2,
-                "opisanie": "Запросить расходы депутата",
-                "imya_instrumenta": "gosduma_raskhody_deputata",
+                "opisanie": "Запросить подробную информацию о депутате",
+                "imya_instrumenta": "gosduma_info_deputata",
                 "parametry": {"identifikator_deputata": "{etap_1.identifikator}"},
                 "zavisit_ot": [1],
-                "obosnovanie": "Получить расходы используя идентификатор",
+                "obosnovanie": "Получить подробную информацию используя идентификатор",
             },
         ],
         "primechaniya": "",
@@ -354,7 +354,7 @@ class TestSplanirovatZapros:
             assert "## План запроса" in rezultat
             assert "Этап 1" in rezultat
             assert "Этап 2" in rezultat
-            assert "gosduma_poluchit_deputatov" in rezultat
+            assert "gosduma_spisok_deputatov" in rezultat
             assert "Зависит от:** Этап 1" in rezultat
 
     @pytest.mark.asyncio
@@ -403,7 +403,7 @@ class TestPlanZaprosaVMarkdown:
         assert "**Сложность:** umerennyy" in markdown
         assert "### Этап 1:" in markdown
         assert "### Этап 2:" in markdown
-        assert "`gosduma_poluchit_deputatov`" in markdown
+        assert "`gosduma_spisok_deputatov`" in markdown
         assert "Зависит от:** (нет)" in markdown
         assert "Зависит от:** Этап 1" in markdown
 
@@ -416,7 +416,7 @@ class TestPlanZaprosaVMarkdown:
                 {
                     "etap": 1,
                     "opisanie": "Единственный шаг",
-                    "imya_instrumenta": "rosstat_poluchit_indikator",
+                    "imya_instrumenta": "rosstat_indikator_dannye",
                     "parametry": {},
                     "zavisit_ot": [],
                     "obosnovanie": "Необходимо",

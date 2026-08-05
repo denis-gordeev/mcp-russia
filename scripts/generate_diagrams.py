@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ruff: noqa: F841, RUF001
+# ruff: noqa: F841
 """Генерация диаграмм архитектуры для документации mcp-russia.
 
 Создаёт 4 PNG-диаграммы в docs/concepts/img/:
