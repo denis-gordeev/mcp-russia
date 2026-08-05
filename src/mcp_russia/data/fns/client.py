@@ -14,6 +14,7 @@ import asyncio
 from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit, http_poluchit
+from mcp_russia._shared.normalizatsiya import bezopasnaya_stroka, pervoe_znachenie
 
 from .constants import EGRUL_BAZA_API
 from .schemas import (
@@ -157,12 +158,12 @@ async def _poisk_egrul(zapros: str) -> Any:
 def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizatsiyaEGRUL:
     """Разбор записи ЕГРЮЛ в схему OrganizatsiyaEGRUL."""
     return OrganizatsiyaEGRUL(
-        inn=zapis.get("inn", "") or zapis.get("t", ""),
-        ogrn=zapis.get("ogrn", "") or zapis.get("o", ""),
-        nazvanie=zapis.get("n", "") or zapis.get("c", ""),
+        inn=bezopasnaya_stroka(pervoe_znachenie(zapis, "inn", "t")),
+        ogrn=bezopasnaya_stroka(pervoe_znachenie(zapis, "ogrn", "o")),
+        nazvanie=bezopasnaya_stroka(pervoe_znachenie(zapis, "n", "c")),
         polnoe_nazvanie=zapis.get("n", ""),
         yuridicheskiy_adres=zapis.get("a", ""),
-        data_registratsii=zapis.get("r", "") or zapis.get("g", ""),
+        data_registratsii=bezopasnaya_stroka(pervoe_znachenie(zapis, "r", "g")),
         sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
         ustroyennyy_kapital="",
@@ -173,10 +174,10 @@ def _razobrat_egrul_organizatsiyu(zapis: dict[str, Any]) -> OrganizatsiyaEGRUL:
 def _razobrat_egrul_ip(zapis: dict[str, Any]) -> IPEGRIP:
     """Разбор записи ЕГРИП в схему IPEGRIP."""
     return IPEGRIP(
-        inn=zapis.get("inn", "") or zapis.get("t", ""),
-        ogrnip=zapis.get("ogrn", "") or zapis.get("o", ""),
-        fio=zapis.get("n", "") or zapis.get("c", ""),
-        data_registratsii=zapis.get("r", "") or zapis.get("g", ""),
+        inn=bezopasnaya_stroka(pervoe_znachenie(zapis, "inn", "t")),
+        ogrnip=bezopasnaya_stroka(pervoe_znachenie(zapis, "ogrn", "o")),
+        fio=bezopasnaya_stroka(pervoe_znachenie(zapis, "n", "c")),
+        data_registratsii=bezopasnaya_stroka(pervoe_znachenie(zapis, "r", "g")),
         sostoyanie=_razobrat_sostoyanie(zapis.get("s", "")),
         vid_deyatelnosti=zapis.get("k", ""),
     )

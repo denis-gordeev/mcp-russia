@@ -72,10 +72,12 @@ def test_opredelit_zakon():
 
 
 def test_bezopasnoe_veshchestvennoe():
-    assert zakupki_klient._bezopasnoe_veshchestvennoe(None) == 0.0
-    assert zakupki_klient._bezopasnoe_veshchestvennoe("abv") == 0.0
-    assert zakupki_klient._bezopasnoe_veshchestvennoe(100) == 100.0
-    assert zakupki_klient._bezopasnoe_veshchestvennoe("200.5") == 200.5
+    from mcp_russia._shared.normalizatsiya import bezopasnoe_chislo
+
+    assert bezopasnoe_chislo(None, po_umolchaniyu=0.0) == 0.0
+    assert bezopasnoe_chislo("abv", po_umolchaniyu=0.0) == 0.0
+    assert bezopasnoe_chislo(100, po_umolchaniyu=0.0) == 100.0
+    assert bezopasnoe_chislo("200.5", po_umolchaniyu=0.0) == 200.5
 
 
 # --- Тесты инструментов (все HTTP-вызовы замоканы) ---

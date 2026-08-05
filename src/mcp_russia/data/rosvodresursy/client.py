@@ -12,6 +12,7 @@ import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
+from mcp_russia._shared.normalizatsiya import izvlech_spisok
 
 from .constants import (
     BASSEYNOVYE_OKRUGA,
@@ -198,14 +199,7 @@ def poluchit_vodokhranilishche_podrobno() -> list[dict[str, Any]]:
 
 def _izvlech_spisok(dannye: Any) -> list[Any]:
     """Извлечь список из ответа API (поддержка разных форматов)."""
-    if isinstance(dannye, list):
-        return dannye
-    if isinstance(dannye, dict):
-        for klyuch in ("data", "items", "results", "records"):
-            znachenie_spiska = dannye.get(klyuch)
-            if isinstance(znachenie_spiska, list):
-                return znachenie_spiska
-    return []
+    return izvlech_spisok(dannye)
 
 
 def _razobrat_vodnyy_obekt(zapis: dict[str, Any]) -> dict[str, Any]:

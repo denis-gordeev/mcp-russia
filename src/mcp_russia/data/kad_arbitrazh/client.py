@@ -10,11 +10,16 @@ API КАД является публичным и не требует аутен
 
 from __future__ import annotations
 
-import contextlib
 import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_otpravit, http_poluchit
+from mcp_russia._shared.normalizatsiya import (
+    bezopasnaya_stroka,
+    bezopasnoe_chislo,
+    izvlech_spisok,
+    razorvat_stroku_spisok,
+)
 
 from .constants import (
     INSTANTSII_SUDOV,
@@ -45,73 +50,41 @@ def _opredelit_kategoriyu(nomer: str) -> str:
 
 def _razobrat_rezultaty_poiska(dannye: Any) -> list[SudebnoeDelo]:
     """Разбор результатов поиска дел из API КАД."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("Instances", dannye.get("Result", []))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
-
-    if not isinstance(elementy, list):
-        return []
+    elementy = izvlech_spisok(dannye, "Instances", "Result")
 
     rezultaty = []
     for zapis in elementy:
         if not isinstance(zapis, dict):
             continue
         dannye_dela = zapis.get("CaseInfo", zapis)
-        nomer = dannye_dela.get("CaseNumber", zapis.get("caseNumber", ""))
-        kategoriya = _opredelit_kategoriyu(nomer) or dannye_dela.get(
-            "Category", zapis.get("category", "")
+        nomer = bezopasnaya_stroka(dannye_dela.get("CaseNumber") or zapis.get("caseNumber"))
+        kategoriya = _opredelit_kategoriyu(nomer) or bezopasnaya_stroka(
+            dannye_dela.get("Category") or zapis.get("category")
         )
-        nazvanie_suda = dannye_dela.get("Court", zapis.get("courtName", ""))
+        nazvanie_suda = bezopasnaya_stroka(dannye_dela.get("Court") or zapis.get("courtName"))
         if not nazvanie_suda:
             nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-        istorcy_syranye = dannye_dela.get("Plaintiffs", zapis.get("plaintiffs", ""))
-        if isinstance(istorcy_syranye, str):
-            istorcy = [
-                storona.strip() for storona in istorcy_syranye.split(",") if storona.strip()
-            ]
-        elif isinstance(istorcy_syranye, list):
-            istorcy = [
-                storona if isinstance(storona, str) else str(storona)
-                for storona in istorcy_syranye
-            ]
-        else:
-            istorcy = []
+        istorcy = razorvat_stroku_spisok(dannye_dela.get("Plaintiffs") or zapis.get("plaintiffs"))
+        otvetchiki = razorvat_stroku_spisok(
+            dannye_dela.get("Defendants") or zapis.get("defendants")
+        )
 
-        otvetchiki_syranye = dannye_dela.get("Defendants", zapis.get("defendants", ""))
-        if isinstance(otvetchiki_syranye, str):
-            otvetchiki = [
-                storona.strip() for storona in otvetchiki_syranye.split(",") if storona.strip()
-            ]
-        elif isinstance(otvetchiki_syranye, list):
-            otvetchiki = [
-                storona if isinstance(storona, str) else str(storona)
-                for storona in otvetchiki_syranye
-            ]
-        else:
-            otvetchiki = []
-
-        summa = 0.0
-        summa_syraya = dannye_dela.get("ClaimSum", zapis.get("claimSum"))
-        if summa_syraya:
-            with contextlib.suppress(ValueError, TypeError):
-                summa = float(summa_syraya)
+        summa_syraya = dannye_dela.get("ClaimSum") or zapis.get("claimSum")
+        summa = bezopasnoe_chislo(summa_syraya, po_umolchaniyu=0.0) or 0.0
 
         rezultaty.append(
             SudebnoeDelo(
                 nomer=nomer,
                 kategoriya=kategoriya,
-                sostoyanie=dannye_dela.get("Status", zapis.get("status", "")),
-                sudya=dannye_dela.get("Judge", zapis.get("judge", "")),
+                sostoyanie=bezopasnaya_stroka(dannye_dela.get("Status") or zapis.get("status")),
+                sudya=bezopasnaya_stroka(dannye_dela.get("Judge") or zapis.get("judge")),
                 nazvanie_suda=nazvanie_suda,
-                data_vozbuzhdeniya=dannye_dela.get(
-                    "RegistrationDate", zapis.get("registrationDate", "")
+                data_vozbuzhdeniya=bezopasnaya_stroka(
+                    dannye_dela.get("RegistrationDate") or zapis.get("registrationDate")
                 ),
-                data_poslednego_akta=dannye_dela.get(
-                    "LastDocumentDate", zapis.get("lastDocumentDate", "")
+                data_poslednego_akta=bezopasnaya_stroka(
+                    dannye_dela.get("LastDocumentDate") or zapis.get("lastDocumentDate")
                 ),
                 istorcy=istorcy,
                 otvetchiki=otvetchiki,
@@ -129,56 +102,34 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
     dannye_dela = dannye.get("CaseInfo", dannye.get("Case", dannye))
     if not isinstance(dannye_dela, dict):
         return None
-    nomer = dannye_dela.get("CaseNumber", dannye.get("caseNumber", ""))
+    nomer = bezopasnaya_stroka(dannye_dela.get("CaseNumber") or dannye.get("caseNumber"))
     if not nomer:
         return None
 
-    kategoriya = _opredelit_kategoriyu(nomer) or str(
-        dannye_dela.get("Category", dannye.get("category", "")) or ""
+    kategoriya = _opredelit_kategoriyu(nomer) or bezopasnaya_stroka(
+        dannye_dela.get("Category") or dannye.get("category")
     )
-    nazvanie_suda = dannye_dela.get("Court", dannye.get("courtName", ""))
+    nazvanie_suda = bezopasnaya_stroka(dannye_dela.get("Court") or dannye.get("courtName"))
     if not nazvanie_suda:
         nazvanie_suda = _opredelit_sud_po_nomeru(nomer)
 
-    istorcy_syranye = dannye_dela.get("Plaintiffs", dannye.get("plaintiffs", ""))
-    if isinstance(istorcy_syranye, str):
-        istorcy = [storona.strip() for storona in istorcy_syranye.split(",") if storona.strip()]
-    elif isinstance(istorcy_syranye, list):
-        istorcy = [
-            storona if isinstance(storona, str) else str(storona) for storona in istorcy_syranye
-        ]
-    else:
-        istorcy = []
+    istorcy = razorvat_stroku_spisok(dannye_dela.get("Plaintiffs") or dannye.get("plaintiffs"))
+    otvetchiki = razorvat_stroku_spisok(dannye_dela.get("Defendants") or dannye.get("defendants"))
 
-    otvetchiki_syranye = dannye_dela.get("Defendants", dannye.get("defendants", ""))
-    if isinstance(otvetchiki_syranye, str):
-        otvetchiki = [
-            storona.strip() for storona in otvetchiki_syranye.split(",") if storona.strip()
-        ]
-    elif isinstance(otvetchiki_syranye, list):
-        otvetchiki = [
-            storona if isinstance(storona, str) else str(storona) for storona in otvetchiki_syranye
-        ]
-    else:
-        otvetchiki = []
-
-    summa = 0.0
-    summa_syraya = dannye_dela.get("ClaimSum", dannye.get("claimSum"))
-    if summa_syraya:
-        with contextlib.suppress(ValueError, TypeError):
-            summa = float(summa_syraya)
+    summa_syraya = dannye_dela.get("ClaimSum") or dannye.get("claimSum")
+    summa = bezopasnoe_chislo(summa_syraya, po_umolchaniyu=0.0) or 0.0
 
     return SudebnoeDelo(
         nomer=nomer,
         kategoriya=kategoriya,
-        sostoyanie=str(dannye_dela.get("Status", dannye.get("status", "")) or ""),
-        sudya=str(dannye_dela.get("Judge", dannye.get("judge", "")) or ""),
+        sostoyanie=bezopasnaya_stroka(dannye_dela.get("Status") or dannye.get("status")),
+        sudya=bezopasnaya_stroka(dannye_dela.get("Judge") or dannye.get("judge")),
         nazvanie_suda=nazvanie_suda,
-        data_vozbuzhdeniya=str(
-            dannye_dela.get("RegistrationDate", dannye.get("registrationDate", "")) or ""
+        data_vozbuzhdeniya=bezopasnaya_stroka(
+            dannye_dela.get("RegistrationDate") or dannye.get("registrationDate")
         ),
-        data_poslednego_akta=str(
-            dannye_dela.get("LastDocumentDate", dannye.get("lastDocumentDate", "")) or ""
+        data_poslednego_akta=bezopasnaya_stroka(
+            dannye_dela.get("LastDocumentDate") or dannye.get("lastDocumentDate")
         ),
         istorcy=istorcy,
         otvetchiki=otvetchiki,
@@ -188,15 +139,7 @@ def _razobrat_kartochka_dela(dannye: Any) -> SudebnoeDelo | None:
 
 def _razobrat_akty(dannye: Any, delo_nomer: str) -> list[SudebnyyAkt]:
     """Разбор судебных актов из ответа API КАД."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("Documents", dannye.get("Result", []))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
-
-    if not isinstance(elementy, list):
-        return []
+    elementy = izvlech_spisok(dannye, "Documents", "Result")
 
     rezultaty = []
     for zapis in elementy:
@@ -205,15 +148,19 @@ def _razobrat_akty(dannye: Any, delo_nomer: str) -> list[SudebnyyAkt]:
         dokument = zapis.get("Document", zapis)
         rezultaty.append(
             SudebnyyAkt(
-                identifikator=str(dokument.get("Id", dokument.get("id", ""))),
+                identifikator=bezopasnaya_stroka(dokument.get("Id") or dokument.get("id")),
                 delo_nomer=delo_nomer,
-                tip_akta=dokument.get("DocumentType", dokument.get("type", "")),
-                data_akta=dokument.get("DocumentDate", dokument.get("date", "")),
-                sud=dokument.get("CourtName", dokument.get("court", "")),
-                sudya=dokument.get("Judge", dokument.get("judge", "")),
-                kratkoe_soderzhanie=dokument.get("ShortContent", dokument.get("summary", "")),
-                rezolyutsiya=dokument.get("Resolution", dokument.get("resolution", "")),
-                pdf_ssylka=dokument.get("PdfUrl", dokument.get("pdfUrl", "")),
+                tip_akta=bezopasnaya_stroka(dokument.get("DocumentType") or dokument.get("type")),
+                data_akta=bezopasnaya_stroka(dokument.get("DocumentDate") or dokument.get("date")),
+                sud=bezopasnaya_stroka(dokument.get("CourtName") or dokument.get("court")),
+                sudya=bezopasnaya_stroka(dokument.get("Judge") or dokument.get("judge")),
+                kratkoe_soderzhanie=bezopasnaya_stroka(
+                    dokument.get("ShortContent") or dokument.get("summary")
+                ),
+                rezolyutsiya=bezopasnaya_stroka(
+                    dokument.get("Resolution") or dokument.get("resolution")
+                ),
+                pdf_ssylka=bezopasnaya_stroka(dokument.get("PdfUrl") or dokument.get("pdfUrl")),
             )
         )
     return rezultaty
@@ -226,13 +173,7 @@ def _razobrat_storony(dannye: Any, delo_nomer: str) -> list[StoronaDela]:
 
     rezultaty = []
     for tip_storony, metka_tipa in [("Plaintiffs", "истец"), ("Defendants", "ответчик")]:
-        syr_dannye = dannye.get(tip_storony, [])
-        if isinstance(syr_dannye, str):
-            nazvaniya = [zapis.strip() for zapis in syr_dannye.split(",") if zapis.strip()]
-        elif isinstance(syr_dannye, list):
-            nazvaniya = [zapis if isinstance(zapis, str) else str(zapis) for zapis in syr_dannye]
-        else:
-            continue
+        nazvaniya = razorvat_stroku_spisok(dannye.get(tip_storony, []))
         for nazvanie in nazvaniya:
             inn = ""
             if "ИНН" in nazvanie:
@@ -364,15 +305,15 @@ async def info_akta(identifikator_akta: str) -> SudebnyyAkt | None:
         if isinstance(dannye, dict):
             dokument = dannye.get("Document", dannye)
             return SudebnyyAkt(
-                identifikator=str(dokument.get("Id", identifikator_akta)),
-                delo_nomer=dokument.get("CaseNumber", ""),
-                tip_akta=dokument.get("DocumentType", ""),
-                data_akta=dokument.get("DocumentDate", ""),
-                sud=dokument.get("CourtName", ""),
-                sudya=dokument.get("Judge", ""),
-                kratkoe_soderzhanie=dokument.get("ShortContent", ""),
-                rezolyutsiya=dokument.get("Resolution", ""),
-                pdf_ssylka=dokument.get("PdfUrl", ""),
+                identifikator=bezopasnaya_stroka(dokument.get("Id")) or identifikator_akta,
+                delo_nomer=bezopasnaya_stroka(dokument.get("CaseNumber")),
+                tip_akta=bezopasnaya_stroka(dokument.get("DocumentType")),
+                data_akta=bezopasnaya_stroka(dokument.get("DocumentDate")),
+                sud=bezopasnaya_stroka(dokument.get("CourtName")),
+                sudya=bezopasnaya_stroka(dokument.get("Judge")),
+                kratkoe_soderzhanie=bezopasnaya_stroka(dokument.get("ShortContent")),
+                rezolyutsiya=bezopasnaya_stroka(dokument.get("Resolution")),
+                pdf_ssylka=bezopasnaya_stroka(dokument.get("PdfUrl")),
             )
     except Exception:
         logger.exception("Ошибка при получении акта %s", identifikator_akta)
@@ -394,13 +335,10 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
             zagolovki={"Accept": "application/json", "Referer": "https://kad.arbitr.ru/"},
         )
         if isinstance(dannye, dict):
-            elementy = dannye.get("Sessions", dannye.get("Result", []))
+            elementy = izvlech_spisok(dannye, "Sessions", "Result")
         elif isinstance(dannye, list):
             elementy = dannye
         else:
-            return []
-
-        if not isinstance(elementy, list):
             return []
 
         rezultaty = []
@@ -409,14 +347,14 @@ async def zasedaniya_po_delu(nomer: str) -> list[SudebnoeZasedanie]:
                 continue
             rezultaty.append(
                 SudebnoeZasedanie(
-                    identifikator=str(zapis.get("Id", "")),
+                    identifikator=bezopasnaya_stroka(zapis.get("Id")),
                     delo_nomer=nomer,
-                    data_zasedaniya=zapis.get("Date", ""),
-                    vremya=zapis.get("Time", ""),
-                    sudya=zapis.get("Judge", ""),
-                    zala=zapis.get("Hall", ""),
-                    sostoyanie=zapis.get("Status", ""),
-                    rezultaty=zapis.get("Result", ""),
+                    data_zasedaniya=bezopasnaya_stroka(zapis.get("Date")),
+                    vremya=bezopasnaya_stroka(zapis.get("Time")),
+                    sudya=bezopasnaya_stroka(zapis.get("Judge")),
+                    zala=bezopasnaya_stroka(zapis.get("Hall")),
+                    sostoyanie=bezopasnaya_stroka(zapis.get("Status")),
+                    rezultaty=bezopasnaya_stroka(zapis.get("Result")),
                 )
             )
         return rezultaty

@@ -23,7 +23,7 @@ class TestRekomendovatInstrumenty:
             rezultat = await rekomendovat_instrumenty_impl(
                 "расходы правительства", "tekst_kataloga"
             )
-            assert "anthropic" in rezultat.lower() or "search_tools" in rezultat
+            assert "anthropic" in rezultat.lower() or "poisk_instrumentov" in rezultat
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
@@ -76,7 +76,7 @@ class TestRekomendovatInstrumenty:
                 "расходы правительства", "tekst_kataloga"
             )
             assert "Ошибка" in rezultat
-            assert "search_tools" in rezultat
+            assert "poisk_instrumentov" in rezultat
 
 
 class TestPostroenieKataloga:
@@ -120,13 +120,19 @@ class TestTransformatsiyaBM25:
             """Запрос данных по коду."""
             return f"Данные {kod}"
 
-        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(
+            BM25SearchTransform(
+                max_results=5,
+                search_tool_name="poisk_instrumentov",
+                call_tool_name="vypolnit_instrument",
+            )
+        )
 
         async with Client(server_funktsiya) as klient:
             instrumenty = await klient.list_tools()
             imena = {t.name for t in instrumenty}
-            assert "search_tools" in imena
-            assert "call_tool" in imena
+            assert "poisk_instrumentov" in imena
+            assert "vypolnit_instrument" in imena
             assert "spisok_regionov" not in imena
             assert "zaprosit_dannye" not in imena
 
@@ -146,10 +152,16 @@ class TestTransformatsiyaBM25:
             """Запрос данных временных рядов из Росстата."""
             return f"Данные {kod}"
 
-        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(
+            BM25SearchTransform(
+                max_results=5,
+                search_tool_name="poisk_instrumentov",
+                call_tool_name="vypolnit_instrument",
+            )
+        )
 
         async with Client(server_funktsiya) as klient:
-            rezultat = await klient.call_tool("search_tools", {"query": "spisok regionov"})
+            rezultat = await klient.call_tool("poisk_instrumentov", {"query": "spisok regionov"})
             tekst = str(rezultat.content)
             assert "spisok_regionov" in tekst
 
@@ -193,11 +205,17 @@ class TestTransformatsiyaBM25:
             """Сложение двух чисел."""
             return a + b
 
-        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(
+            BM25SearchTransform(
+                max_results=5,
+                search_tool_name="poisk_instrumentov",
+                call_tool_name="vypolnit_instrument",
+            )
+        )
 
         async with Client(server_funktsiya) as klient:
             rezultat = await klient.call_tool(
-                "call_tool",
+                "vypolnit_instrument",
                 {"name": "slozhit", "arguments": {"a": 3, "b": 4}},
             )
             tekst = str(rezultat.content)
@@ -253,10 +271,18 @@ class TestRasprostranenieTegov:
             """Список всех банков России, зарегистрированных в Центральном банке."""
             return "банки"
 
-        server_funktsiya.add_transform(BM25SearchTransform(max_results=5))
+        server_funktsiya.add_transform(
+            BM25SearchTransform(
+                max_results=5,
+                search_tool_name="poisk_instrumentov",
+                call_tool_name="vypolnit_instrument",
+            )
+        )
 
         async with Client(server_funktsiya) as klient:
-            rezultat = await klient.call_tool("search_tools", {"query": "ochagi pozhary sputnik"})
+            rezultat = await klient.call_tool(
+                "poisk_instrumentov", {"query": "ochagi pozhary sputnik"}
+            )
             tekst = str(rezultat.content)
             assert "nayti_ochagi" in tekst
 
@@ -294,7 +320,7 @@ class TestSplanirovatZapros:
     async def test_otsutstvuyushchiy_paket_antropic(self) -> None:
         with patch.dict("sys.modules", {"anthropic": None}):
             rezultat = await splanirovat_zapros_impl("расходы правительства", "tekst_kataloga")
-            assert "anthropic" in rezultat.lower() or "search_tools" in rezultat
+            assert "anthropic" in rezultat.lower() or "poisk_instrumentov" in rezultat
 
     @pytest.mark.asyncio
     async def test_otsutstvuyushchiy_klyuch_api(self) -> None:
@@ -366,7 +392,7 @@ class TestSplanirovatZapros:
         ):
             rezultat = await splanirovat_zapros_impl("расходы правительства", "katalog")
             assert "Ошибка" in rezultat
-            assert "search_tools" in rezultat
+            assert "poisk_instrumentov" in rezultat
 
 
 class TestPlanZaprosaVMarkdown:

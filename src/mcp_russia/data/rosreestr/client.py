@@ -15,6 +15,7 @@ import contextlib
 from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
+from mcp_russia._shared.normalizatsiya import bezopasnaya_stroka, pervoe_znachenie
 
 from .constants import KATEGORII_ZEMEL_SLOVAR, STATUSY_UCHE_TA_SLOVAR
 from .schemas import KadastrovayaStoimost, KadastrovyyObekt
@@ -40,34 +41,34 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
     adres = ""
     if dannye.get("address"):
         adres_dannye = dannye["address"]
-        adres = (
-            adres_dannye.get("note", "") or adres_dannye.get("formatted", "") or str(adres_dannye)
+        adres = bezopasnaya_stroka(adres_dannye.get("note")) or bezopasnaya_stroka(
+            adres_dannye.get("formatted")
         )
 
     ploshchad = ""
     if dannye.get("area"):
         dannye_ploshchadi = dannye["area"]
         if isinstance(dannye_ploshchadi, dict):
-            ploshchad = str(dannye_ploshchadi.get("value", ""))
+            ploshchad = bezopasnaya_stroka(dannye_ploshchadi.get("value"))
         else:
-            ploshchad = str(dannye_ploshchadi)
+            ploshchad = bezopasnaya_stroka(dannye_ploshchadi)
 
     stoimost = ""
     if dannye.get("cad_cost"):
-        stoimost = str(dannye["cad_cost"])
+        stoimost = bezopasnaya_stroka(dannye["cad_cost"])
     elif dannye.get("cadastral_cost"):
         stoimost_slovar = dannye["cadastral_cost"]
         stoimost = (
-            str(stoimost_slovar.get("value", ""))
+            bezopasnaya_stroka(stoimost_slovar.get("value"))
             if isinstance(stoimost_slovar, dict)
-            else str(stoimost_slovar)
+            else bezopasnaya_stroka(stoimost_slovar)
         )
 
     data_stoimosti = ""
     if dannye.get("cad_record_date"):
-        data_stoimosti = str(dannye["cad_record_date"])
+        data_stoimosti = bezopasnaya_stroka(dannye["cad_record_date"])
     elif dannye.get("date_cad_cost"):
-        data_stoimosti = str(dannye["date_cad_cost"])
+        data_stoimosti = bezopasnaya_stroka(dannye["date_cad_cost"])
 
     sostoyanie_ucheta = ""
     if dannye.get("state"):
@@ -75,12 +76,13 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
         if isinstance(sostoyanie_dannykh, dict):
             sostoyanie_ucheta = (
                 STATUSY_UCHE_TA_SLOVAR.get(
-                    sostoyanie_dannykh.get("code", ""), sostoyanie_dannykh.get("name", "")
+                    bezopasnaya_stroka(sostoyanie_dannykh.get("code")),
+                    bezopasnaya_stroka(sostoyanie_dannykh.get("name")),
                 )
                 or ""
             )
         else:
-            sostoyanie_ucheta = str(sostoyanie_dannykh)
+            sostoyanie_ucheta = bezopasnaya_stroka(sostoyanie_dannykh)
 
     kategoriya = ""
     if dannye.get("category"):
@@ -88,12 +90,13 @@ def _razobrat_obekt(kadastrovyy_nomer: str, dannye: dict[str, Any]) -> Kadastrov
         if isinstance(kategoriya_slovar, dict):
             kategoriya = (
                 KATEGORII_ZEMEL_SLOVAR.get(
-                    kategoriya_slovar.get("code", ""), kategoriya_slovar.get("name", "")
+                    bezopasnaya_stroka(kategoriya_slovar.get("code")),
+                    bezopasnaya_stroka(kategoriya_slovar.get("name")),
                 )
                 or ""
             )
         else:
-            kategoriya = str(kategoriya_slovar)
+            kategoriya = bezopasnaya_stroka(kategoriya_slovar)
 
     return KadastrovyyObekt(
         kadastrovyy_nomer=kadastrovyy_nomer,
@@ -153,13 +156,13 @@ async def poluchit_kadastrovnuyu_stoimost(kadastrovyy_nomer: str) -> Kadastrovay
 
         data_opr = ""
         if atributy.get("cad_record_date"):
-            data_opr = str(atributy["cad_record_date"])
+            data_opr = bezopasnaya_stroka(atributy["cad_record_date"])
         elif atributy.get("date_cad_cost"):
-            data_opr = str(atributy["date_cad_cost"])
+            data_opr = bezopasnaya_stroka(atributy["date_cad_cost"])
 
         data_vneseniya = ""
         if atributy.get("date_created"):
-            data_vneseniya = str(atributy["date_created"])
+            data_vneseniya = bezopasnaya_stroka(atributy["date_created"])
 
         return KadastrovayaStoimost(
             kadastrovyy_nomer=kadastrovyy_nomer,
@@ -193,7 +196,7 @@ async def poluchit_prava(kadastrovyy_nomer: str) -> list[dict[str, Any]]:
         for pravo in prava_spisok:
             razobrannye.append(
                 {
-                    "tip_prava": pravo.get("type", "") or pravo.get("name", ""),
+                    "tip_prava": bezopasnaya_stroka(pervoe_znachenie(pravo, "type", "name")),
                     "sobstvennik": pravo.get("owner", ""),
                     "data_registratsii": pravo.get("reg_date", ""),
                     "nomer_registratsii": pravo.get("reg_number", ""),

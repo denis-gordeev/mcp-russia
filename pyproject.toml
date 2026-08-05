@@ -87,7 +87,7 @@ select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
 "src/mcp_russia/data/gosduma/*" = ["RUF001", "RUF002"]
 "src/mcp_russia/data/cekrf/*" = ["RUF001", "RUF002", "E501"]
 "src/mcp_russia/agenty/deloproizvodstvo/*" = ["RUF001", "RUF002"]
-"src/mcp_russia/_shared/*" = ["RUF001", "RUF002", "RUF003"]
+"src/mcp_russia/_shared/*" = ["RUF001", "RUF002", "RUF003", "E501"]
 "tests/agenty/deloproizvodstvo/*" = ["RUF001", "RUF002"]
 "tests/_shared/*" = ["RUF001", "RUF002", "RUF003"]
 # Российские модули с кириллическим текстом

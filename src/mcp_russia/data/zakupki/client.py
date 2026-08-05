@@ -16,6 +16,13 @@ from typing import Any
 
 from mcp_russia import settings
 from mcp_russia._shared.http_client import http_poluchit
+from mcp_russia._shared.normalizatsiya import (
+    bezopasnaya_stroka,
+    bezopasnoe_chislo,
+    bezopasnoe_tseloe,
+    izvlech_spisok,
+    pervoe_znachenie,
+)
 
 from .constants import (
     OTRASLI,
@@ -84,15 +91,7 @@ async def poisk_zakupok(
 
 def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
     """Разбор результатов поиска в список Zakupka."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
-
-    if not isinstance(elementy, list):
-        return []
+    elementy = izvlech_spisok(dannye, "results", "items", "list")
 
     rezultaty = []
     for zapis in elementy:
@@ -100,26 +99,29 @@ def _razobrat_poisk_zakupok(dannye: Any) -> list[Zakupka]:
             continue
         rezultaty.append(
             Zakupka(
-                identifikator=str(zapis.get("id", zapis.get("regNumber", ""))),
-                nomer=str(zapis.get("regNumber", zapis.get("number", "")) or ""),
-                nazvanie=str(
-                    zapis.get("name", zapis.get("title", zapis.get("objectInfo", ""))) or ""
+                identifikator=bezopasnaya_stroka(pervoe_znachenie(zapis, "id", "regNumber")),
+                nomer=bezopasnaya_stroka(pervoe_znachenie(zapis, "regNumber", "number")),
+                nazvanie=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "name", "title", "objectInfo")
                 ),
                 zakon=_opredelit_zakon(zapis),
-                sposob=str(zapis.get("purchaseMethod", zapis.get("method", "")) or ""),
-                sostoyanie=str(zapis.get("status", zapis.get("commonStatus", "")) or ""),
-                nachalnaya_tsena=_bezopasnoe_veshchestvennoe(
-                    zapis.get("price", zapis.get("maxPrice", 0))
+                sposob=bezopasnaya_stroka(pervoe_znachenie(zapis, "purchaseMethod", "method")),
+                sostoyanie=bezopasnaya_stroka(pervoe_znachenie(zapis, "status", "commonStatus")),
+                nachalnaya_tsena=bezopasnoe_chislo(
+                    pervoe_znachenie(zapis, "price", "maxPrice"), po_umolchaniyu=0.0
+                )
+                or 0.0,
+                valyuta=bezopasnaya_stroka(zapis.get("currency")) or "RUB",
+                data_publikatsii=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "publishDate", "docPublishDate")
                 ),
-                valyuta=zapis.get("currency", "RUB"),
-                data_publikatsii=str(
-                    zapis.get("publishDate", zapis.get("docPublishDate", "")) or ""
+                srok_podachi=bezopasnaya_stroka(pervoe_znachenie(zapis, "endDate", "bidEndDate")),
+                nazvanie_organizatora=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "customerName", "organizerName")
                 ),
-                srok_podachi=str(zapis.get("endDate", zapis.get("bidEndDate", "")) or ""),
-                nazvanie_organizatora=str(
-                    zapis.get("customerName", zapis.get("organizerName", "")) or ""
+                organizator_inn=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "customerInn", "organizerInn")
                 ),
-                organizator_inn=str(zapis.get("customerInn", zapis.get("organizerInn", "")) or ""),
             )
         )
     return rezultaty
@@ -135,16 +137,6 @@ def _opredelit_zakon(zapis: dict[str, Any]) -> str:
     if "223" in fz or "223" in str(zapis.get("purchaseCode", "")):
         return "223-ФЗ"
     return ""
-
-
-def _bezopasnoe_veshchestvennoe(znachenie: Any) -> float:
-    """Безопасное преобразование значения в float."""
-    if znachenie is None:
-        return 0.0
-    try:
-        return float(znachenie)
-    except (ValueError, TypeError):
-        return 0.0
 
 
 async def poluchit_zakupku(identifikator_zakupki: str) -> Zakupka | None:
@@ -211,15 +203,7 @@ async def poisk_kontraktov(
 
 def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
     """Разбор результатов поиска контрактов."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
-
-    if not isinstance(elementy, list):
-        return []
+    elementy = izvlech_spisok(dannye, "results", "items", "list")
 
     rezultaty = []
     for zapis in elementy:
@@ -227,22 +211,27 @@ def _razobrat_kontrakty(dannye: Any) -> list[Kontrakt]:
             continue
         rezultaty.append(
             Kontrakt(
-                identifikator=str(zapis.get("id", "")),
-                nomer=str(zapis.get("regNum", zapis.get("contractNumber", "")) or ""),
-                zakupka_nomer=zapis.get("purchaseNumber", ""),
-                nazvanie_podryadchika=str(
-                    zapis.get("supplierName", zapis.get("contractorName", "")) or ""
+                identifikator=bezopasnaya_stroka(zapis.get("id")),
+                nomer=bezopasnaya_stroka(pervoe_znachenie(zapis, "regNum", "contractNumber")),
+                zakupka_nomer=bezopasnaya_stroka(zapis.get("purchaseNumber")),
+                nazvanie_podryadchika=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "supplierName", "contractorName")
                 ),
-                podryadchik_inn=str(
-                    zapis.get("supplierInn", zapis.get("contractorInn", "")) or ""
+                podryadchik_inn=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "supplierInn", "contractorInn")
                 ),
-                tsena=_bezopasnoe_veshchestvennoe(
-                    zapis.get("price", zapis.get("contractPrice", 0))
+                tsena=bezopasnoe_chislo(
+                    pervoe_znachenie(zapis, "price", "contractPrice"), po_umolchaniyu=0.0
+                )
+                or 0.0,
+                valyuta=bezopasnaya_stroka(zapis.get("currency")) or "RUB",
+                data_podpisaniya=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "signDate", "contractDate")
                 ),
-                valyuta=zapis.get("currency", "RUB"),
-                data_podpisaniya=str(zapis.get("signDate", zapis.get("contractDate", "")) or ""),
-                sostoyanie=str(zapis.get("status", zapis.get("contractStatus", "")) or ""),
-                srok_ispolneniya=str(zapis.get("executionDate", zapis.get("endDate", "")) or ""),
+                sostoyanie=bezopasnaya_stroka(pervoe_znachenie(zapis, "status", "contractStatus")),
+                srok_ispolneniya=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "executionDate", "endDate")
+                ),
             )
         )
     return rezultaty
@@ -355,15 +344,7 @@ async def plany_zakupok(god: int = 2026, inn_organizatora: str = "") -> list[Pla
 
 def _razobrat_plany(dannye: Any) -> list[PlanZakupki]:
     """Разбор планов закупок."""
-    if isinstance(dannye, dict):
-        elementy = dannye.get("results", dannye.get("items", dannye.get("list", [])))
-    elif isinstance(dannye, list):
-        elementy = dannye
-    else:
-        return []
-
-    if not isinstance(elementy, list):
-        return []
+    elementy = izvlech_spisok(dannye, "results", "items", "list")
 
     rezultaty = []
     for zapis in elementy:
@@ -371,14 +352,15 @@ def _razobrat_plany(dannye: Any) -> list[PlanZakupki]:
             continue
         rezultaty.append(
             PlanZakupki(
-                identifikator=str(zapis.get("id", "")),
-                god=zapis.get("year", 0),
-                nazvanie_organizatora=zapis.get("customerName", ""),
-                organizator_inn=zapis.get("customerInn", ""),
-                kolichestvo_pozitsiy=zapis.get("positionsCount", 0),
-                obshchiy_byudzhet=_bezopasnoe_veshchestvennoe(zapis.get("totalSum", 0)),
-                data_sozdaniya=zapis.get("createDate", ""),
-                data_obnovleniya=zapis.get("updateDate", ""),
+                identifikator=bezopasnaya_stroka(zapis.get("id")),
+                god=bezopasnoe_tseloe(zapis.get("year")),
+                nazvanie_organizatora=bezopasnaya_stroka(zapis.get("customerName")),
+                organizator_inn=bezopasnaya_stroka(zapis.get("customerInn")),
+                kolichestvo_pozitsiy=bezopasnoe_tseloe(zapis.get("positionsCount")),
+                obshchiy_byudzhet=bezopasnoe_chislo(zapis.get("totalSum"), po_umolchaniyu=0.0)
+                or 0.0,
+                data_sozdaniya=bezopasnaya_stroka(zapis.get("createDate")),
+                data_obnovleniya=bezopasnaya_stroka(zapis.get("updateDate")),
             )
         )
     return rezultaty

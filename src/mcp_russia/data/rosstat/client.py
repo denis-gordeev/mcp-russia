@@ -11,6 +11,10 @@ import logging
 from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
+from mcp_russia._shared.normalizatsiya import (
+    bezopasnaya_stroka,
+    bezopasnoe_chislo,
+)
 
 from .constants import (
     EMISS_BAZA_API,
@@ -33,27 +37,6 @@ from .schemas import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-def _stroka(znachenie: object, po_umolchaniyu: str = "") -> str:
-    """Безопасно приводит значение внешнего API к строке."""
-    if znachenie is None:
-        return po_umolchaniyu
-    if isinstance(znachenie, str):
-        return znachenie
-    return str(znachenie)
-
-
-def _chislo(znachenie: object) -> float | None:
-    """Преобразует числовое значение API, сохраняя отсутствие данных как None."""
-    if znachenie is None or isinstance(znachenie, bool):
-        return None
-    if isinstance(znachenie, (int, float, str)):
-        try:
-            return float(znachenie)
-        except ValueError:
-            return None
-    return None
 
 
 async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[PokazatelRosstata]:
@@ -249,10 +232,10 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
                             nazvanie_subiekta = info_subiekta["nazvanie"]
                     rezultaty.append(
                         VRPDannye(
-                            period=_stroka(zapis.get("date", zapis.get("period", ""))),
+                            period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
                             subiekt=nazvanie_subiekta,
-                            vrp=_chislo(zapis.get("value")),
-                            vrp_na_dushu=_chislo(zapis.get("perCapita")),
+                            vrp=bezopasnoe_chislo(zapis.get("value")),
+                            vrp_na_dushu=bezopasnoe_chislo(zapis.get("perCapita")),
                         )
                     )
                 return rezultaty
@@ -303,10 +286,10 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
                             nazvanie_subiekta = info_subiekta["nazvanie"]
                     rezultaty.append(
                         DannyeZarplaty(
-                            period=_stroka(zapis.get("date", zapis.get("period", ""))),
+                            period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
                             subiekt=nazvanie_subiekta,
-                            nominalnaya_zp=_chislo(zapis.get("value")),
-                            realnaya_zp_izmenenie=_chislo(zapis.get("realChange")),
+                            nominalnaya_zp=bezopasnoe_chislo(zapis.get("value")),
+                            realnaya_zp_izmenenie=bezopasnoe_chislo(zapis.get("realChange")),
                         )
                     )
                 return rezultaty
@@ -419,10 +402,10 @@ async def poluchit_indikator_dannye(
             rezultaty.append(
                 IndikatorDannye(
                     kod_emiss=kod_emiss,
-                    nazvanie=imya_indikatora or _stroka(zapis.get("name"), kod),
-                    period=_stroka(zapis.get("date", zapis.get("period", ""))),
-                    znachenie=_chislo(zapis.get("value")),
-                    edinitsa=_stroka(zapis.get("unit")),
+                    nazvanie=imya_indikatora or bezopasnaya_stroka(zapis.get("name"), kod),
+                    period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
+                    znachenie=bezopasnoe_chislo(zapis.get("value")),
+                    edinitsa=bezopasnaya_stroka(zapis.get("unit")),
                     subiekt=nazvanie_subiekta,
                 )
             )
@@ -519,12 +502,12 @@ async def poluchit_otraslevuyu_strukturu_vrp(
             )
             rezultaty.append(
                 OtraslevayaStrukturaVRP(
-                    subiekt=nazvanie_subiekta or _stroka(zapis.get("regionName")),
-                    period=_stroka(zapis.get("date", zapis.get("period", god or ""))),
-                    otrasl=_stroka(otrasl),
-                    kod_okved=_stroka(znachenie_okved),
-                    dolya_vvp=_chislo(zapis.get("share") or zapis.get("dolya")),
-                    vrp=_chislo(zapis.get("value")),
+                    subiekt=nazvanie_subiekta or bezopasnaya_stroka(zapis.get("regionName")),
+                    period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", god or ""))),
+                    otrasl=bezopasnaya_stroka(otrasl),
+                    kod_okved=bezopasnaya_stroka(znachenie_okved),
+                    dolya_vvp=bezopasnoe_chislo(zapis.get("share") or zapis.get("dolya")),
+                    vrp=bezopasnoe_chislo(zapis.get("value")),
                 )
             )
         return rezultaty
@@ -552,10 +535,10 @@ def _rezerv_otraslevaya_struktura(
         OtraslevayaStrukturaVRP(
             subiekt=nazvanie_subiekta,
             period=god or "2022",
-            otrasl=_stroka(otrasl["nazvanie"]),
-            kod_okved=_stroka(otrasl["kod"]),
-            dolya_vvp=_chislo(otrasl.get("dolya_2022")),
-            vrp=_chislo(otrasl.get("vrp_2022")),
+            otrasl=bezopasnaya_stroka(otrasl["nazvanie"]),
+            kod_okved=bezopasnaya_stroka(otrasl["kod"]),
+            dolya_vvp=bezopasnoe_chislo(otrasl.get("dolya_2022")),
+            vrp=bezopasnoe_chislo(otrasl.get("vrp_2022")),
         )
         for otrasl in OTRASLEVAYA_STRUKTURA_VRP
     ]
@@ -610,12 +593,12 @@ async def poluchit_investitsii_po_vidam(
             )
             rezultaty.append(
                 InvestitsiiPoVidam(
-                    subiekt=nazvanie_subiekta or _stroka(zapis.get("regionName")),
-                    period=_stroka(zapis.get("date", zapis.get("period", god or ""))),
-                    vid_deyatelnosti=_stroka(vid),
-                    kod_okved=_stroka(znachenie_okved),
-                    investitsii=_chislo(zapis.get("value")),
-                    dolya=_chislo(zapis.get("share") or zapis.get("dolya")),
+                    subiekt=nazvanie_subiekta or bezopasnaya_stroka(zapis.get("regionName")),
+                    period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", god or ""))),
+                    vid_deyatelnosti=bezopasnaya_stroka(vid),
+                    kod_okved=bezopasnaya_stroka(znachenie_okved),
+                    investitsii=bezopasnoe_chislo(zapis.get("value")),
+                    dolya=bezopasnoe_chislo(zapis.get("share") or zapis.get("dolya")),
                 )
             )
         return rezultaty
@@ -643,10 +626,10 @@ def _rezerv_investitsii_po_vidam(
         InvestitsiiPoVidam(
             subiekt=nazvanie_subiekta,
             period=god or "2022",
-            vid_deyatelnosti=_stroka(vid["nazvanie"]),
-            kod_okved=_stroka(vid["kod"]),
-            investitsii=_chislo(vid.get("inv_2022")),
-            dolya=_chislo(vid.get("dolya_2022")),
+            vid_deyatelnosti=bezopasnaya_stroka(vid["nazvanie"]),
+            kod_okved=bezopasnaya_stroka(vid["kod"]),
+            investitsii=bezopasnoe_chislo(vid.get("inv_2022")),
+            dolya=bezopasnoe_chislo(vid.get("dolya_2022")),
         )
         for vid in VIDY_DEYATELNOSTI_INVESTITSII
     ]

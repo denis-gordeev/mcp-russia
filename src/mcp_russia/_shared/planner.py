@@ -237,7 +237,7 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
         return (
             "Ошибка: пакет 'anthropic' не установлен. "
             "Установите его командой: pip install 'mcp-russia[llm]'\n\n"
-            "В качестве альтернативы используйте инструмент 'search_tools'."
+            "В качестве альтернативы используйте инструмент 'poisk_instrumentov'."
         )
 
     klyuch_api = KLYUCH_ANTHROPIC_API
@@ -245,7 +245,7 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
         return (
             "Ошибка: переменная ANTHROPIC_API_KEY не настроена. "
             "Задайте ANTHROPIC_API_KEY, чтобы использовать этот мета-инструмент.\n\n"
-            "В качестве альтернативы используйте инструмент 'search_tools'."
+            "В качестве альтернативы используйте инструмент 'poisk_instrumentov'."
         )
 
     klient = anthropic.AsyncAnthropic(api_key=klyuch_api)
@@ -272,5 +272,5 @@ async def splanirovat_zapros_impl(zapros: str, katalog: str) -> str:
         logger.error("Ошибка вызова API Anthropic: %s", isklyuchenie)
         return (
             f"Ошибка при обращении к LLM: {isklyuchenie}\n\n"
-            "В качестве альтернативы используйте 'search_tools'."
+            "В качестве альтернативы используйте 'poisk_instrumentov'."
         )

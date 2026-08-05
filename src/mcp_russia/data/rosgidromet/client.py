@@ -13,6 +13,7 @@ from __future__ import annotations
 from typing import Any
 
 from mcp_russia._shared.http_client import http_poluchit
+from mcp_russia._shared.normalizatsiya import bezopasnaya_stroka
 
 from .constants import (
     OTKRYTYY_METEO_BAZA,
@@ -160,8 +161,8 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
         stantsii = [
             stantsiya
             for stantsiya in stantsii
-            if subiekt.lower() in str(stantsiya.get("subiekt", "")).lower()
-            or subiekt.lower() in str(stantsiya.get("nazvanie", "")).lower()
+            if subiekt.lower() in bezopasnaya_stroka(stantsiya.get("subiekt")).lower()
+            or subiekt.lower() in bezopasnaya_stroka(stantsiya.get("nazvanie")).lower()
         ]
     if not stantsii:
         stantsii = STANCII_MONITORINGA
@@ -185,7 +186,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
                 preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="moroz",
-                        subiekt=str(stantsiya.get("subiekt", "")),
+                        subiekt=bezopasnaya_stroka(stantsiya.get("subiekt")),
                         gorod=str(stantsiya["nazvanie"]),
                         opisanie=f"Сильный мороз: {temperatura}°C",
                         uroven_opasnosti="vysokiy",
@@ -195,7 +196,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
                 preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="zhara",
-                        subiekt=str(stantsiya.get("subiekt", "")),
+                        subiekt=bezopasnaya_stroka(stantsiya.get("subiekt")),
                         gorod=str(stantsiya["nazvanie"]),
                         opisanie=f"Сильная жара: {temperatura}°C",
                         uroven_opasnosti="sredniy",
@@ -206,7 +207,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
                 preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="shtorm",
-                        subiekt=str(stantsiya.get("subiekt", "")),
+                        subiekt=bezopasnaya_stroka(stantsiya.get("subiekt")),
                         gorod=str(stantsiya["nazvanie"]),
                         opisanie=f"Сильный ветер: {skorost_vetra:.1f} м/с",
                         uroven_opasnosti="vysokiy" if skorost_vetra >= 30 else "sredniy",
@@ -217,7 +218,7 @@ async def poluchit_preduprezhdeniya(subiekt: str = "") -> list[Preduprezhdenie]:
                 preduprezhdeniya.append(
                     Preduprezhdenie(
                         tip="uroagan",
-                        subiekt=str(stantsiya.get("subiekt", "")),
+                        subiekt=bezopasnaya_stroka(stantsiya.get("subiekt")),
                         gorod=str(stantsiya["nazvanie"]),
                         opisanie=f"Гроза ({WMO_KODY_POGODY.get(vmo, '')})",
                         uroven_opasnosti="sredniy" if vmo == 95 else "vysokiy",
@@ -280,7 +281,7 @@ def _razobrat_openmeteo_pogodu(dannye: dict[str, Any], svedeniya: dict[str, Any]
     return PogodaDannye(
         stantsiya=svedeniya["kod"],
         gorod=str(svedeniya["nazvanie"]),
-        subiekt=str(svedeniya.get("subiekt", "")),
+        subiekt=bezopasnaya_stroka(svedeniya.get("subiekt")),
         temperatura=tekushchie.get("temperature_2m"),
         oshchushchaetsya_kak=tekushchie.get("apparent_temperature"),
         vlazhnost=tekushchie.get("relative_humidity_2m"),

@@ -188,9 +188,11 @@ if POISK_INSTRUMENTOV == "bm25":
         BM25SearchTransform(
             max_results=10,
             always_visible=_vsegda_vidimye,
+            search_tool_name="poisk_instrumentov",
+            call_tool_name="vypolnit_instrument",
         )
     )
-    logger.info("Поиск инструментов: BM25 (search_tools + call_tool)")
+    logger.info("Поиск инструментов: BM25 (poisk_instrumentov + vypolnit_instrument)")
 
 elif POISK_INSTRUMENTOV == "rezhim_koda":
     try:
@@ -203,7 +205,11 @@ elif POISK_INSTRUMENTOV == "rezhim_koda":
 
         mcp.add_transform(
             CodeMode(
-                discovery_tools=[GetTags(name="get_tags"), Search(name="search"), GetSchemas()],
+                discovery_tools=[
+                    GetTags(name="teg"),
+                    Search(name="poisk"),
+                    GetSchemas(name="poluchit_skhemy"),
+                ],
             )
         )
         logger.info("Поиск инструментов: режим кода (экспериментальный)")
@@ -219,6 +225,8 @@ elif POISK_INSTRUMENTOV == "rezhim_koda":
             BM25SearchTransform(
                 max_results=10,
                 always_visible=_vsegda_vidimye,
+                search_tool_name="poisk_instrumentov",
+                call_tool_name="vypolnit_instrument",
             )
         )
 
