@@ -173,6 +173,33 @@ async def spisok_zasedaniy(god: int = 0) -> list[dict[str, Any]]:
         return []
 
 
+async def poimennoe_golosovanie(
+    identifikator_golosovaniya: str,
+) -> list[dict[str, Any]]:
+    """Получить результаты поимённого голосования.
+
+    Аргументы:
+        identifikator_golosovaniya: Идентификатор голосования.
+
+    Возвращает:
+        Список результатов поимённого голосования.
+    """
+    try:
+        adres_url = f"{SOVFED_BAZA_API}/votes/{identifikator_golosovaniya}/results"
+        dannye = await http_poluchit(adres_url, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
+        if elementy:
+            return [
+                _razobrat_rezultat_golosovaniya(zapis)
+                for zapis in elementy
+                if isinstance(zapis, dict)
+            ]
+    except Exception:
+        logger.debug("sovfed.ru API недоступен для голосования %s", identifikator_golosovaniya)
+
+    return []
+
+
 def poluchit_spisok_komitetov() -> list[dict[str, str]]:
     """Вернуть справочник комитетов Совета Федерации."""
     return KOMITETY_SOVFEDA
@@ -247,5 +274,16 @@ def _razobrat_zakonoproekt(dannye: dict[str, Any]) -> dict[str, Any]:
         "sostoyanie": dannye.get("status", ""),
         "data_rassmotreniya": dannye.get("reviewDate", "") or dannye.get("data_rassmotreniya", ""),
         "iniciator": dannye.get("initiator", "") or dannye.get("iniciator", ""),
+        "istochnik": "Совет Федерации РФ (sovfed.ru)",
+    }
+
+
+def _razobrat_rezultat_golosovaniya(dannye: dict[str, Any]) -> dict[str, Any]:
+    """Разбор данных результата поимённого голосования."""
+    return {
+        "fio": dannye.get("senatorName", "") or dannye.get("fio", ""),
+        "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
+        "golos": dannye.get("vote", "") or dannye.get("golos", ""),
+        "fraktsiya": dannye.get("faction", "") or dannye.get("fraktsiya", ""),
         "istochnik": "Совет Федерации РФ (sovfed.ru)",
     }

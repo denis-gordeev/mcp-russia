@@ -191,3 +191,38 @@ async def spisok_zasedaniy(kontekst: Context, god: int = 0) -> str:
         ["№", "Дата", "Статус", "Повестка"],
         stroki_tablitsy,
     )
+
+
+async def poimennoe_golosovanie(
+    identifikator_golosovaniya: str,
+    kontekst: Context,
+) -> str:
+    """Получить результаты поимённого голосования Совета Федерации.
+
+    Аргументы:
+        identifikator_golosovaniya: Идентификатор голосования.
+
+    Возвращает:
+        Результаты поимённого голосования сенаторов.
+    """
+    await kontekst.info(f"Запрос поимённого голосования {identifikator_golosovaniya}...")
+    rezultaty = await client.poimennoe_golosovanie(identifikator_golosovaniya)
+    if not rezultaty:
+        return (
+            f"Результаты голосования '{identifikator_golosovaniya}' не найдены.\n\n"
+            f"Данные доступны на: https://sovfed.ru/votes"
+        )
+    stroki_tablitsy = [
+        (
+            rezultat.get("fio", ""),
+            rezultat.get("subiekt", "")[:30],
+            rezultat.get("golos", ""),
+            rezultat.get("fraktsiya", ""),
+        )
+        for rezultat in rezultaty
+    ]
+    zagolovok = f"**Поимённое голосование** — сенаторов: {len(rezultaty)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["ФИО", "Регион", "Голос", "Фракция"],
+        stroki_tablitsy,
+    )

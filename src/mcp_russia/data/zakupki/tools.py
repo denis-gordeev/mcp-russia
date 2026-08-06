@@ -338,3 +338,52 @@ async def plany_zakupok(
         + tablitsa_v_markdown(["Заказчик", "ИНН", "Позиций", "Бюджет"], stroki_tablitsy)
         + _zametka_ob_avtorizatsii()
     )
+
+
+async def poisk_rnp(
+    inn: str = "",
+    nazvanie: str = "",
+    god: int = 0,
+    kontekst: Context | None = None,
+) -> str:
+    """Поиск в реестре недобросовестных поставщиков (РНП).
+
+    Аргументы:
+        inn: ИНН поставщика (необязательно).
+        nazvanie: Название организации (необязательно).
+        god: Год включения в РНП (необязательно).
+
+    Возвращает:
+        Список недобросовестных поставщиков.
+    """
+    if kontekst:
+        await kontekst.info("Поиск в реестре недобросовестных поставщиков...")
+
+    zapisi = await client.poisk_rnp(inn=inn, nazvanie=nazvanie, god=god)
+
+    if not zapisi:
+        return (
+            "**Реестр недобросовестных поставщиков (РНП)**\n\n"
+            "Записи не найдены.\n\n"
+            "Реестр РНП доступен на: https://zakupki.gov.ru/epz/dishonestsupplier/quicksearch/search.html"
+        )
+
+    stroki_tablitsy = [
+        (
+            zapis.nazvanie[:40],
+            zapis.inn,
+            zapis.data_vklyucheniya,
+            zapis.osnovanie[:40],
+            zapis.sostoyanie,
+        )
+        for zapis in zapisi
+    ]
+    zagolovok = f"**Реестр недобросовестных поставщиков** — найдено: {len(zapisi)}\n\n"
+    return (
+        zagolovok
+        + tablitsa_v_markdown(
+            ["Организация", "ИНН", "Дата включения", "Основание", "Статус"],
+            stroki_tablitsy,
+        )
+        + _zametka_ob_avtorizatsii()
+    )

@@ -274,3 +274,118 @@ async def poisk_litsenziy(kontekst: Context, nazvanie: str = "", inn: str = "") 
         ["№ лицензии", "Организация", "Статус", "Срок действия"],
         stroki_tablitsy,
     )
+
+
+async def vuzy_zapret_priema(kontekst: Context) -> str:
+    """Список вузов, в которых запрещён приём обучающихся.
+
+    Возвращает:
+        Список вузов с запретом приёма с указанием причины.
+    """
+    await kontekst.info("Запрос списка вузов с запретом приёма...")
+    dannye = client.poluchit_vuzy_zapret_priema()
+    if not dannye:
+        return (
+            "Вузы с запретом приёма не найдены.\n\n"
+            "Актуальный список: https://obrnadzor.gov.ru/spisok-vuzov-v-kotorye-zapreshhen-priem-obuchayushhihsya/"
+        )
+    stroki_tablitsy = [(zapis["nazvanie"], zapis["inn"], zapis["prichina"]) for zapis in dannye]
+    zagolovok = f"**Вузы с запретом приёма** — найдено: {len(dannye)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Название", "ИНН", "Причина"],
+        stroki_tablitsy,
+    )
+
+
+async def statistika_kontrolya(kontekst: Context) -> str:
+    """Статистика контрольной деятельности Рособрнадзора.
+
+    Возвращает:
+        Статистика контрольных мероприятий.
+    """
+    await kontekst.info("Запрос статистики контроля Рособрнадзора...")
+    dannye = await client.statistika_kontrolya()
+    if not dannye:
+        return (
+            "Статистика контроля не найдена.\n\n"
+            "Актуальные данные: https://obrnadzor.gov.ru/otkrytoe-pravitelstvo/opendata/"
+        )
+    stroki_tablitsy = [
+        (
+            str(zapis.get("god", "")),
+            zapis.get("vid_kontrolya", ""),
+            str(zapis.get("kolichestvo_proverok", "")),
+            str(zapis.get("narusheniy_vyyavleno", "")),
+            str(zapis.get("meropriyatiy_provedeno", "")),
+        )
+        for zapis in dannye
+    ]
+    zagolovok = f"**Статистика контроля Рособрнадзора** — записей: {len(dannye)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Год", "Вид контроля", "Проверок", "Нарушений", "Мероприятий"],
+        stroki_tablitsy,
+    )
+
+
+async def rezultaty_proverok(kontekst: Context, subiekt: str = "") -> str:
+    """Результаты проверок Рособрнадзора.
+
+    Аргументы:
+        subiekt: Регион (необязательно).
+
+    Возвращает:
+        Результаты проверок образовательных учреждений.
+    """
+    await kontekst.info("Запрос результатов проверок Рособрнадзора...")
+    dannye = await client.rezultaty_proverok(subiekt=subiekt)
+    if not dannye:
+        return (
+            "Результаты проверок не найдены.\n\n"
+            "Актуальные данные: https://obrnadzor.gov.ru/otkrytoe-pravitelstvo/opendata/"
+        )
+    stroki_tablitsy = [
+        (
+            zapis.get("organizatsiya", "")[:40],
+            zapis.get("subiekt", "")[:30],
+            zapis.get("vid_proverki", ""),
+            zapis.get("rezultat", "")[:40],
+        )
+        for zapis in dannye
+    ]
+    zagolovok = f"**Результаты проверок Рособрнадзора** — найдено: {len(dannye)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Организация", "Регион", "Вид проверки", "Результат"],
+        stroki_tablitsy,
+    )
+
+
+async def reestr_ekspertov(kontekst: Context, tip: str = "") -> str:
+    """Реестр экспертов Рособрнадзора.
+
+    Аргументы:
+        tip: Тип экспертизы (необязательно).
+
+    Возвращает:
+        Реестр экспертов аккредитации.
+    """
+    await kontekst.info("Запрос реестра экспертов Рособрнадзора...")
+    dannye = await client.reestr_ekspertov(tip=tip)
+    if not dannye:
+        return (
+            "Эксперты не найдены.\n\n"
+            "Актуальные данные: https://obrnadzor.gov.ru/otkrytoe-pravitelstvo/opendata/"
+        )
+    stroki_tablitsy = [
+        (
+            zapis.get("fio", ""),
+            zapis.get("tip_ekspertizy", ""),
+            zapis.get("organizatsiya", "")[:30],
+            zapis.get("subiekt", "")[:30],
+        )
+        for zapis in dannye
+    ]
+    zagolovok = f"**Реестр экспертов Рособрнадзора** — найдено: {len(dannye)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["ФИО", "Тип экспертизы", "Организация", "Регион"],
+        stroki_tablitsy,
+    )

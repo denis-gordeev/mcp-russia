@@ -136,6 +136,8 @@ async def poluchit_zakonoproekty(
     sostoyanie: str = "",
     ogranichenie: int = 20,
     stranitsa: int = 1,
+    avtor: str = "",
+    sootvetstvie: str = "",
 ) -> list[Zakonoproekt]:
     """Получение законопроектов из API СОЗД.
 
@@ -143,6 +145,8 @@ async def poluchit_zakonoproekty(
         sostoyanie: Фильтр по статусу (необязательно).
         ogranichenie: Максимальное количество результатов.
         stranitsa: Номер страницы.
+        avtor: Фильтр по автору/депутату (необязательно).
+        sootvetstvie: Поиск по тексту названия (необязательно).
 
     Возвращает:
         Список законопроектов.
@@ -150,6 +154,10 @@ async def poluchit_zakonoproekty(
     parametry: dict[str, str | int] = {"limit": min(ogranichenie, 50), "page": stranitsa}
     if sostoyanie:
         parametry["status"] = sostoyanie
+    if avtor:
+        parametry["author"] = avtor
+    if sootvetstvie:
+        parametry["searchString"] = sootvetstvie
 
     zheton = _poluchit_api_token()
     if zheton:

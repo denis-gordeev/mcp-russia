@@ -13,7 +13,9 @@ from .tools import (
     info_vuza,
     poisk_litsenziy,
     programmy_vuza,
+    reestr_ekspertov,
     reyting_vuzov,
+    rezultaty_proverok,
     spisok_federalnyh_okrugov,
     spisok_form_obucheniya,
     spisok_otrasley_nauki,
@@ -21,6 +23,8 @@ from .tools import (
     spisok_tipov_grantov,
     spisok_tipov_vuzov,
     spisok_urovney_obrazovaniya,
+    statistika_kontrolya,
+    vuzy_zapret_priema,
 )
 
 mcp = FastMCP("mcp-russia-minobrnauki")
@@ -38,6 +42,10 @@ mcp.tool(granty_i_isledovaniya, tags={"гранты", "поиск"})
 mcp.tool(reyting_vuzov, tags={"рейтинг", "информация"})
 mcp.tool(aspirantura, tags={"аспирантура", "информация"})
 mcp.tool(poisk_litsenziy, tags={"лицензии", "поиск"})
+mcp.tool(vuzy_zapret_priema, tags={"вузы", "запрет-приёма"})
+mcp.tool(statistika_kontrolya, tags={"контроль", "статистика"})
+mcp.tool(rezultaty_proverok, tags={"проверки", "результаты"})
+mcp.tool(reestr_ekspertov, tags={"эксперты", "реестр"})
 
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://zakonodatelstvo", mime_type="text/plain")(zakonodatelstvo)

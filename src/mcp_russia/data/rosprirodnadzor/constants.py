@@ -27,6 +27,10 @@ VIDY_NADZORA = [
         "kod": "radiatsionnyy",
         "nazvanie": "Радиационный контроль",
     },
+    {
+        "kod": "lesnoy",
+        "nazvanie": "Государственный лесной надзор (охрана лесов)",
+    },
 ]
 
 KATEGORII_OBNV = [

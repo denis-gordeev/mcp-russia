@@ -149,6 +149,8 @@ async def spisok_sozyvov(kontekst: Context) -> str:
 async def zakonoproekty(
     sostoyanie: str = "",
     ogranichenie: int = 20,
+    avtor: str = "",
+    sootvetstvie: str = "",
     kontekst: Context | None = None,
 ) -> str:
     """Получить список законопроектов Государственной Думы.
@@ -156,6 +158,8 @@ async def zakonoproekty(
     Аргументы:
         sostoyanie: Фильтр по статусу (например, 'принят', 'рассматривается').
         ogranichenie: Максимальное количество результатов (до 50).
+        avtor: Фильтр по автору законопроекта (фамилия депутата).
+        sootvetstvie: Поиск по тексту названия законопроекта.
 
     Возвращает:
         Список законопроектов.
@@ -163,7 +167,10 @@ async def zakonoproekty(
     if kontekst:
         await kontekst.info(f"Запрос законопроектов (статус: {sostoyanie or 'все'})...")
     zakonoproekty = await client.poluchit_zakonoproekty(
-        sostoyanie=sostoyanie, ogranichenie=ogranichenie
+        sostoyanie=sostoyanie,
+        ogranichenie=ogranichenie,
+        avtor=avtor,
+        sootvetstvie=sootvetstvie,
     )
 
     if not zakonoproekty:

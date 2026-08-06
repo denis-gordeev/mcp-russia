@@ -36,18 +36,24 @@ async def ispolnenie_byudzheta(
     kontekst: Context,
     god: int = 0,
     tip: str = "",
+    razdel: str = "",
+    podrazdel: str = "",
 ) -> str:
     """Получить данные об исполнении бюджета.
 
     Аргументы:
         god: Год (необязательно).
         tip: Тип бюджета (необязательно).
+        razdel: Код раздела бюджетной классификации (необязательно).
+        podrazdel: Код подраздела бюджетной классификации (необязательно).
 
     Возвращает:
         Данные об исполнении бюджета.
     """
     await kontekst.info("Запрос данных об исполнении бюджета...")
-    dannye = await client.poluchit_ispolnenie_byudzheta(god=god, tip=tip)
+    dannye = await client.poluchit_ispolnenie_byudzheta(
+        god=god, tip=tip, razdel=razdel, podrazdel=podrazdel
+    )
     if not dannye:
         tip_tekst = f" ({tip})" if tip else ""
         god_tekst = f" за {god} год" if god else ""
@@ -200,3 +206,65 @@ async def mezhbyudzhetnye_transferty(
         ["Вид", "Отправитель", "Получатель", "Сумма (руб.)", "Год"],
         stroki_tablitsy,
     )
+
+
+async def spisok_razdelov_byudzheta(kontekst: Context) -> str:
+    """Получить справочник разделов бюджетной классификации РФ.
+
+    Возвращает:
+        Справочник разделов БК с кодами.
+    """
+    await kontekst.info("Запрос справочника разделов БК...")
+    razdely = client.poluchit_spisok_razdelov_byudzheta()
+    stroki_tablitsy = [(razdel["kod"], razdel["nazvanie"]) for razdel in razdely]
+    zagolovok = "**Разделы бюджетной классификации РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Раздел"], stroki_tablitsy)
+
+
+async def spisok_podrazdelov_byudzheta(kontekst: Context, razdel: str = "") -> str:
+    """Получить справочник подразделов бюджетной классификации.
+
+    Аргументы:
+        razdel: Код раздела БК для фильтрации (необязательно).
+
+    Возвращает:
+        Справочник подразделов БК.
+    """
+    await kontekst.info("Запрос справочника подразделов БК...")
+    podrazdely = client.poluchit_spisok_podrazdelov_byudzheta(razdel=razdel)
+    stroki_tablitsy = [
+        (podrazdel["kod"], podrazdel["razdel"], podrazdel["nazvanie"]) for podrazdel in podrazdely
+    ]
+    zagolovok = "**Подразделы бюджетной классификации РФ**\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Раздел", "Подраздел"], stroki_tablitsy)
+
+
+async def byudzhetnaya_smeta(nomer: str, kontekst: Context) -> str:
+    """Получить бюджетную смету по номеру.
+
+    Аргументы:
+        nomer: Номер бюджетной сметы.
+
+    Возвращает:
+        Данные бюджетной сметы.
+    """
+    await kontekst.info(f"Запрос бюджетной сметы {nomer}...")
+    dannye = await client.poluchit_byudzhetnuyu_smetu(nomer)
+    if not dannye:
+        return f"Бюджетная смета '{nomer}' не найдена.\n\nРеестр смет доступен на: roskazna.gov.ru"
+    stroki = [
+        f"**Бюджетная смета № {dannye.get('nomer', nomer)}**",
+        f"- Участник: {dannye.get('uchastnik', '')}",
+        f"- Период: {dannye.get('period', '')}",
+    ]
+    if dannye.get("limity_byudzhetnykh_obyazatelstv"):
+        stroki.append(
+            f"- Лимиты бюджетных обязательств: "
+            f"{formatirovat_chislo_ru(dannye['limity_byudzhetnykh_obyazatelstv'], 2)} руб."
+        )
+    if dannye.get("obshchaya_summa"):
+        stroki.append(
+            f"- Общая сумма: {formatirovat_chislo_ru(dannye['obshchaya_summa'], 2)} руб."
+        )
+    stroki.append(f"- Источник: {dannye.get('istochnik', 'roskazna.gov.ru')}")
+    return "\n".join(stroki)

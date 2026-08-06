@@ -8,7 +8,7 @@ META_FUNKTSII = MetaFunktsii(
         "Данные Минобрнауки России: вузы, научные исследования, "
         "образовательные программы, рейтинги, гранты, аспирантура"
     ),
-    versiya="0.2.0",
+    versiya="0.3.0",
     baza_api="https://obrnadzor.gov.ru",
     trebuet_autentifikatsii=False,
     tegi=["минобрнауки", "образование", "наука", "вузы", "исследования"],

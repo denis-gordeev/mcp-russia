@@ -13,6 +13,7 @@ from .tools import (
     info_zakupki,
     plany_zakupok,
     poisk_kontraktov,
+    poisk_rnp,
     poisk_zakupok,
     sposoby_zakupok,
     statusy_zakupok,
@@ -29,6 +30,7 @@ mcp.tool(info_postavshchika, tags={"поставщик", "информация"}
 mcp.tool(statusy_zakupok, tags={"статусы", "справочник"})
 mcp.tool(sposoby_zakupok, tags={"способы", "справочник"})
 mcp.tool(plany_zakupok, tags={"планы", "закупки"})
+mcp.tool(poisk_rnp, tags={"РНП", "поставщики"})
 
 # Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)

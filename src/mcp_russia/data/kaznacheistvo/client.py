@@ -17,6 +17,8 @@ from .constants import (
     BYUDZHET_GOV_RU_BAZA,
     KATEGORII_RASKHODOV,
     KAZNACHEISTVO_BAZA_API,
+    PODRAZDELY_BYUDZHETNOY_KLASSIFIKATSII,
+    RAZDELY_BYUDZHETNOY_KLASSIFIKATSII,
     ROSKAZNA_BAZA_OTKRYTYKH_DANNYKH,
     VIDY_BUDZHETOV,
 )
@@ -27,12 +29,16 @@ logger = logging.getLogger(__name__)
 async def poluchit_ispolnenie_byudzheta(
     god: int = 0,
     tip: str = "",
+    razdel: str = "",
+    podrazdel: str = "",
 ) -> dict[str, Any] | None:
     """Получить данные об исполнении федерального бюджета.
 
     Аргументы:
         god: Год.
         tip: Тип бюджета.
+        razdel: Код раздела бюджетной классификации.
+        podrazdel: Код подраздела бюджетной классификации.
 
     Возвращает:
         Данные об исполнении бюджета или None.
@@ -44,6 +50,10 @@ async def poluchit_ispolnenie_byudzheta(
             parametry["year"] = god
         if tip:
             parametry["budgetType"] = tip
+        if razdel:
+            parametry["section"] = razdel
+        if podrazdel:
+            parametry["subsection"] = podrazdel
         dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
         if isinstance(dannye, dict):
             return _razobrat_ispolnenie_byudzheta(dannye)
@@ -187,6 +197,26 @@ def poluchit_spisok_vidov_byudzhetov() -> list[dict[str, str]]:
 def poluchit_spisok_kategoriy_raskhodov() -> list[dict[str, str]]:
     """Вернуть справочник категорий расходов."""
     return KATEGORII_RASKHODOV
+
+
+def poluchit_spisok_razdelov_byudzheta() -> list[dict[str, str]]:
+    """Вернуть справочник разделов бюджетной классификации."""
+    return RAZDELY_BYUDZHETNOY_KLASSIFIKATSII
+
+
+def poluchit_spisok_podrazdelov_byudzheta(razdel: str = "") -> list[dict[str, str]]:
+    """Вернуть справочник подразделов бюджетной классификации.
+
+    Аргументы:
+        razdel: Код раздела для фильтрации (необязательно).
+    """
+    if not razdel:
+        return PODRAZDELY_BYUDZHETNOY_KLASSIFIKATSII
+    return [
+        podrazdel
+        for podrazdel in PODRAZDELY_BYUDZHETNOY_KLASSIFIKATSII
+        if podrazdel["razdel"] == razdel
+    ]
 
 
 def _izvlech_spisok(dannye: Any) -> list[Any]:

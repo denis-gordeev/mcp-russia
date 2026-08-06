@@ -14,6 +14,7 @@ from .resources import (
 from .tools import (
     ekologicheskie_platezhi,
     info_proverki,
+    poisk_lesnogo_nadzora,
     poisk_litsenziy_nedra,
     poisk_obektov_negativnogo,
     poisk_proverok,
@@ -33,6 +34,7 @@ mcp.tool(info_proverki, tags={"проверка", "информация"})
 mcp.tool(poisk_obektov_negativnogo, tags={"ОНВ", "поиск"})
 mcp.tool(poisk_litsenziy_nedra, tags={"лицензии-недра", "поиск"})
 mcp.tool(ekologicheskie_platezhi, tags={"экологические-платежи", "данные"})
+mcp.tool(poisk_lesnogo_nadzora, tags={"лесной-надзор", "поиск"})
 
 # Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)

@@ -86,3 +86,25 @@ VIDY_OBRAZOVATELNYH_ORGANIZATSYY = {
     "филиал": "Филиал",
     "нии": "Научно-исследовательский институт",
 }
+
+OBRNADZOR_KONTROL_ADRES = f"{OBRNADZOR_API_BAZA}/opendata/7701537808-statctrl/data-20240901.json"
+OBRNADZOR_PROVERKI_ADRES = f"{OBRNADZOR_API_BAZA}/opendata/7701537808-ronchecks/data-20240901.json"
+OBRNADZOR_EKSPERTY_ADRES = f"{OBRNADZOR_API_BAZA}/opendata/7701537808-akexperts/data-20240901.json"
+
+VUZY_ZAPRET_PRIEMA = [
+    {
+        "nazvanie": "Московский университет имени С.Ю. Витте",
+        "inn": "7717563274",
+        "prichina": "Приказ Рособрнадзора от 28.02.2024",
+    },
+    {
+        "nazvanie": "Московский финансово-промышленный университет «Синергия»",
+        "inn": "7710142601",
+        "prichina": "Приказ Рособрнадзора от 24.01.2024",
+    },
+    {
+        "nazvanie": "Институт мировых цивилизаций",
+        "inn": "7710356967",
+        "prichina": "Приказ Рособрнадзора от 15.03.2024",
+    },
+]

@@ -31,7 +31,7 @@ from .constants import (
     TIPLY_DANNYKH,
     ZAKUPKI_BAZA_API,
 )
-from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka
+from .schemas import Kontrakt, PlanZakupki, Postavshchik, Zakazchik, Zakupka, ZapisRNP
 
 logger = logging.getLogger(__name__)
 
@@ -384,3 +384,75 @@ def poluchit_otrasli() -> list[dict[str, str]]:
 def poluchit_statusy_zakupok() -> list[dict[str, str]]:
     """Получить список статусов закупок."""
     return STATUSY_ZAKUPOK
+
+
+async def poisk_rnp(
+    inn: str = "",
+    nazvanie: str = "",
+    god: int = 0,
+    ogranichenie: int = 20,
+) -> list[ZapisRNP]:
+    """Поиск в реестре недобросовестных поставщиков (РНП).
+
+    Аргументы:
+        inn: ИНН поставщика.
+        nazvanie: Название организации.
+        god: Год включения в РНП.
+        ogranichenie: Максимальное количество результатов.
+
+    Возвращает:
+        Список записей РНП.
+    """
+    parametry: dict[str, str | int] = {
+        "pageNumber": 1,
+        "pageSize": min(ogranichenie, 50),
+    }
+    if inn:
+        parametry["inn"] = inn
+    if nazvanie:
+        parametry["name"] = nazvanie
+    if god:
+        parametry["year"] = god
+
+    zheton = _poluchit_api_token()
+    if zheton:
+        parametry["token"] = zheton
+
+    adres_url = f"{ZAKUPKI_BAZA_API}/api/nsi/rnp"
+    try:
+        dannye = await http_poluchit(adres_url, parametry=parametry)
+        return _razobrat_rnp(dannye)
+    except Exception:
+        logger.exception("Ошибка при поиске в РНП")
+        return []
+
+
+def _razobrat_rnp(dannye: Any) -> list[ZapisRNP]:
+    """Разбор результатов поиска РНП."""
+    elementy = izvlech_spisok(dannye, "results", "items", "list")
+
+    rezultaty = []
+    for zapis in elementy:
+        if not isinstance(zapis, dict):
+            continue
+        rezultaty.append(
+            ZapisRNP(
+                identifikator=bezopasnaya_stroka(zapis.get("id")),
+                inn=bezopasnaya_stroka(pervoe_znachenie(zapis, "inn", "supplierInn")),
+                nazvanie=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "name", "supplierName", "fullName")
+                ),
+                data_vklyucheniya=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "includeDate", "dateInclusion")
+                ),
+                osnovanie=bezopasnaya_stroka(pervoe_znachenie(zapis, "reason", "basis")),
+                organ_zakazchik=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "customerName", "organizerName")
+                ),
+                nomer_zakupki=bezopasnaya_stroka(
+                    pervoe_znachenie(zapis, "purchaseNumber", "tenderNumber")
+                ),
+                sostoyanie=bezopasnaya_stroka(pervoe_znachenie(zapis, "status", "rnpStatus")),
+            )
+        )
+    return rezultaty

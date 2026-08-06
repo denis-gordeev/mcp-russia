@@ -152,3 +152,80 @@ async def test_poisk_litsenziy_nayden():
         rezultat = await minobrnauki_tools.poisk_litsenziy(kontekst=kontekst, inn="7710563663")
     assert "МГУ" in rezultat
     assert "1234" in rezultat
+
+
+async def test_vuzy_zapret_priema():
+    kontekst = _maket_konteksta()
+    rezultat = await minobrnauki_tools.vuzy_zapret_priema(kontekst=kontekst)
+    assert "запрет" in rezultat.lower() or "запрещ" in rezultat.lower()
+
+
+async def test_statistika_kontrolya_pustoy():
+    kontekst = _maket_konteksta()
+    with patch.object(minobrnauki_tools.client, "statistika_kontrolya", return_value=[]):
+        rezultat = await minobrnauki_tools.statistika_kontrolya(kontekst=kontekst)
+    assert "не найдена" in rezultat or "obrnadzor" in rezultat
+
+
+async def test_statistika_kontrolya_s_dannymi():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {
+            "god": 2024,
+            "vid_kontrolya": "Контроль качества образования",
+            "kolichestvo_proverok": 4500,
+            "narusheniy_vyyavleno": 1200,
+            "meropriyatiy_provedeno": 800,
+        },
+    ]
+    with patch.object(
+        minobrnauki_tools.client, "statistika_kontrolya", return_value=maket_dannykh
+    ):
+        rezultat = await minobrnauki_tools.statistika_kontrolya(kontekst=kontekst)
+    assert "4500" in rezultat or "Контроль" in rezultat
+
+
+async def test_rezultaty_proverok_pustoy():
+    kontekst = _maket_konteksta()
+    with patch.object(minobrnauki_tools.client, "rezultaty_proverok", return_value=[]):
+        rezultat = await minobrnauki_tools.rezultaty_proverok(kontekst=kontekst)
+    assert "не найдены" in rezultat or "obrnadzor" in rezultat
+
+
+async def test_rezultaty_proverok_s_dannymi():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {
+            "organizatsiya": "МГУ",
+            "inn": "7710563663",
+            "subiekt": "г. Москва",
+            "vid_proverki": "Выездная",
+            "data_proverki": "2024-03-15",
+            "rezultat": "Нарушений не выявлено",
+        },
+    ]
+    with patch.object(minobrnauki_tools.client, "rezultaty_proverok", return_value=maket_dannykh):
+        rezultat = await minobrnauki_tools.rezultaty_proverok(kontekst=kontekst)
+    assert "МГУ" in rezultat
+
+
+async def test_reestr_ekspertov_pustoy():
+    kontekst = _maket_konteksta()
+    with patch.object(minobrnauki_tools.client, "reestr_ekspertov", return_value=[]):
+        rezultat = await minobrnauki_tools.reestr_ekspertov(kontekst=kontekst)
+    assert "не найдены" in rezultat or "obrnadzor" in rezultat
+
+
+async def test_reestr_ekspertov_s_dannymi():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {
+            "fio": "Иванов И.И.",
+            "tip_ekspertizy": "Аккредитация",
+            "organizatsiya": "МГУ",
+            "subiekt": "г. Москва",
+        },
+    ]
+    with patch.object(minobrnauki_tools.client, "reestr_ekspertov", return_value=maket_dannykh):
+        rezultat = await minobrnauki_tools.reestr_ekspertov(kontekst=kontekst)
+    assert "Иванов" in rezultat

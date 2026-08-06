@@ -15,8 +15,12 @@ from mcp_russia._shared.http_client import http_poluchit
 
 from .constants import (
     OBRNADZOR_AKKREDITATSIYA_ADRES,
+    OBRNADZOR_EKSPERTY_ADRES,
+    OBRNADZOR_KONTROL_ADRES,
     OBRNADZOR_LITSENZIYA_ADRES,
+    OBRNADZOR_PROVERKI_ADRES,
     VUZ_REYTING_ADRES,
+    VUZY_ZAPRET_PRIEMA,
 )
 
 logger = logging.getLogger(__name__)
@@ -222,5 +226,131 @@ def _razobrat_litsenziyu(zapis: dict[str, Any]) -> dict[str, Any]:
         "data_litsenzii": zapis.get("licenseDate", ""),
         "nomer_litsenzii": zapis.get("licenseNumber", ""),
         "srok_deystviya": zapis.get("validUntil", ""),
+        "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
+    }
+
+
+async def statistika_kontrolya() -> list[dict[str, Any]]:
+    """Получить статистику контрольной деятельности Рособрнадзора.
+
+    Возвращает:
+        Список статистических данных контроля.
+    """
+    try:
+        dannye = await http_poluchit(OBRNADZOR_KONTROL_ADRES, taimaut=30.0)
+        if isinstance(dannye, list):
+            return [_razobrat_kontrol(zapis) for zapis in dannye if isinstance(zapis, dict)]
+    except Exception:
+        logger.exception("Ошибка при получении статистики контроля")
+    return []
+
+
+async def rezultaty_proverok(
+    subiekt: str = "",
+    ogranichenie: int = 20,
+) -> list[dict[str, Any]]:
+    """Получить результаты проверок Рособрнадзора.
+
+    Аргументы:
+        subiekt: Регион.
+        ogranichenie: Максимум результатов.
+
+    Возвращает:
+        Список результатов проверок.
+    """
+    try:
+        dannye = await http_poluchit(OBRNADZOR_PROVERKI_ADRES, taimaut=30.0)
+        if isinstance(dannye, list):
+            rezultaty = []
+            for zapis in dannye:
+                if not isinstance(zapis, dict):
+                    continue
+                if (
+                    subiekt
+                    and subiekt.lower()
+                    not in str(zapis.get("subjectRF", zapis.get("region", ""))).lower()
+                ):
+                    continue
+                rezultaty.append(_razobrat_proverku(zapis))
+                if len(rezultaty) >= ogranichenie:
+                    break
+            return rezultaty
+    except Exception:
+        logger.exception("Ошибка при получении результатов проверок")
+    return []
+
+
+async def reestr_ekspertov(
+    tip: str = "",
+    ogranichenie: int = 20,
+) -> list[dict[str, Any]]:
+    """Получить реестр экспертов Рособрнадзора.
+
+    Аргументы:
+        tip: Тип экспертизы.
+        ogranichenie: Максимум результатов.
+
+    Возвращает:
+        Список экспертов.
+    """
+    try:
+        dannye = await http_poluchit(OBRNADZOR_EKSPERTY_ADRES, taimaut=30.0)
+        if isinstance(dannye, list):
+            rezultaty = []
+            for zapis in dannye:
+                if not isinstance(zapis, dict):
+                    continue
+                if (
+                    tip
+                    and tip.lower()
+                    not in str(zapis.get("expertType", zapis.get("type", ""))).lower()
+                ):
+                    continue
+                rezultaty.append(_razobrat_eksperta(zapis))
+                if len(rezultaty) >= ogranichenie:
+                    break
+            return rezultaty
+    except Exception:
+        logger.exception("Ошибка при получении реестра экспертов")
+    return []
+
+
+def poluchit_vuzy_zapret_priema() -> list[dict[str, Any]]:
+    """Вернуть список вузов с запретом приёма."""
+    return VUZY_ZAPRET_PRIEMA
+
+
+def _razobrat_kontrol(zapis: dict[str, Any]) -> dict[str, Any]:
+    """Парсинг записи статистики контроля."""
+    return {
+        "god": zapis.get("year", zapis.get("god", "")),
+        "vid_kontrolya": zapis.get("controlType", zapis.get("vid_kontrolya", "")),
+        "kolichestvo_proverok": zapis.get("inspectionsCount", zapis.get("kolichestvo", 0)),
+        "narusheniy_vyyavleno": zapis.get("violationsFound", zapis.get("narusheniy", 0)),
+        "meropriyatiy_provedeno": zapis.get("actionsTaken", zapis.get("meropriyatiy", 0)),
+        "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
+    }
+
+
+def _razobrat_proverku(zapis: dict[str, Any]) -> dict[str, Any]:
+    """Парсинг записи проверки."""
+    return {
+        "organizatsiya": zapis.get("organization", zapis.get("fullName", "")),
+        "inn": zapis.get("inn", ""),
+        "subiekt": zapis.get("subjectRF", zapis.get("region", "")),
+        "vid_proverki": zapis.get("inspectionType", zapis.get("vid", "")),
+        "data_proverki": zapis.get("inspectionDate", zapis.get("data", "")),
+        "rezultat": zapis.get("result", zapis.get("rezultat", "")),
+        "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
+    }
+
+
+def _razobrat_eksperta(zapis: dict[str, Any]) -> dict[str, Any]:
+    """Парсинг записи эксперта."""
+    return {
+        "fio": zapis.get("fullName", zapis.get("fio", "")),
+        "tip_ekspertizy": zapis.get("expertType", zapis.get("type", "")),
+        "organizatsiya": zapis.get("organization", ""),
+        "subiekt": zapis.get("subjectRF", zapis.get("region", "")),
         "istochnik": "Рособрнадзор (obrnadzor.gov.ru)",
     }

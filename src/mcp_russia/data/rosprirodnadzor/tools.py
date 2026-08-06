@@ -250,3 +250,46 @@ async def ekologicheskie_platezhi(
         ["№", "Плательщик", "Тип платежа", "Сумма (руб.)", "Год"],
         stroki_tablitsy,
     )
+
+
+async def poisk_lesnogo_nadzora(
+    kontekst: Context,
+    organizatsiya: str = "",
+    subiekt: str = "",
+    god: int = 0,
+) -> str:
+    """Поиск проверок лесного надзора Росприроднадзора.
+
+    Аргументы:
+        organizatsiya: Название организации (необязательно).
+        subiekt: Субъект РФ (необязательно).
+        god: Год (необязательно).
+
+    Возвращает:
+        Список проверок лесного надзора.
+    """
+    await kontekst.info("Поиск проверок лесного надзора...")
+    proverki = await client.poisk_lesnogo_nadzora(
+        organizatsiya=organizatsiya,
+        subiekt=subiekt,
+        god=god,
+    )
+    if not proverki:
+        return (
+            "Проверки лесного надзора не найдены.\n\n"
+            "Актуальные данные доступны на: https://rpn.gov.ru/activities"
+        )
+    stroki_tablitsy = [
+        (
+            proverka.get("nomer", ""),
+            proverka.get("organizatsiya", "")[:50],
+            proverka.get("sostoyanie", ""),
+            str(proverka.get("vyavleno_narusheniy", "")),
+        )
+        for proverka in proverki
+    ]
+    zagolovok = f"**Проверки лесного надзора** — найдено: {len(proverki)}\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["№", "Организация", "Статус", "Нарушений"],
+        stroki_tablitsy,
+    )

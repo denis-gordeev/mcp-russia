@@ -16,7 +16,7 @@
 
 Репозиторий полностью переведён на российские и русскоязычные реалии.
 
-Python-пакет `mcp_russia` является единой точкой входа. 24 российских модуля активны и подключены к реальным API. Сервер экспонирует только русскоязычные инструменты и ресурсы.
+Python-пакет `mcp_russia` является единой точкой входа. 26 российских модулей активны и подключены к реальным API. Сервер экспонирует только русскоязычные инструменты и ресурсы.
 
 ## Что уже сделано
 
@@ -25,8 +25,8 @@ Python-пакет `mcp_russia` является единой точкой вхо
 - Корневой сервер автообнаруживает модули из `mcp_russia.data` и `mcp_russia.agenty`.
 - Мета-инструменты сервера на русском: `spisok_funktsiy`, `rekomendovat_instrumenty`, `splanirovat_zapros`, `vypolnit_paket`.
 - Базовый класс исключений: `OshibkaMcpRussia`.
-- 24 российских модуля данных, подключённых к реальным API-интеграциям.
-- Российские модули: ЦБ РФ (cbr-xml-daily.ru), Росгидромет (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru).
+- 26 российских модулей данных, подключённых к реальным API-интеграциям.
+- Российские модули: ЦБ РФ (cbr-xml-daily.ru), Росгидромет (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru), МВД России (мвд.рф, data.gov.ru), Ростехнадзор (rostechnadzor.gov.ru).
 - Универсальный инструмент Росстата `indikator_dannye` для запроса данных по произвольному коду ЕМИСС.
 - Инструменты отраслевой структуры ВРП (`otraslevaya_struktura_vrp`) и инвестиций по видам деятельности (`investitsii_po_vidam`).
 - Клиент Росстата проходит строгую типизацию: ответы ЕМИСС безопасно нормализуются, а коды ОКВЭД сохраняются в согласованном поле моделей `kod_okved`.
@@ -124,7 +124,7 @@ src/mcp_russia/
 
 ## Дисклеймер
 
-Проект предоставляет доступ к государственным и публичным данным РФ через 24 модуля, подключённых к реальным российским API.
+Проект предоставляет доступ к государственным и публичным данным РФ через 26 модулей, подключённых к реальным российским API.
 
 Сервер не создаёт видимости официального государственного источника. При подключении интеграций явно указывается происхождение данных, ограничения покрытия и условия использования каждого внешнего API.
 

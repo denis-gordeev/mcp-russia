@@ -224,6 +224,64 @@ async def poluchit_ekologicheskie_platezhi(
         return []
 
 
+async def poisk_lesnogo_nadzora(
+    organizatsiya: str = "",
+    subiekt: str = "",
+    god: int = 0,
+    ogranichenie: int = 20,
+) -> list[dict[str, Any]]:
+    """Поиск проверок лесного надзора Росприроднадзора.
+
+    Аргументы:
+        organizatsiya: Название организации.
+        subiekt: Субъект РФ.
+        god: Год проверки.
+        ogranichenie: Максимум результатов.
+
+    Возвращает:
+        Список проверок лесного надзора.
+    """
+    try:
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_API}/inspections"
+        parametry: dict[str, Any] = {
+            "limit": ogranichenie,
+            "supervisionType": "lesnoy",
+        }
+        if organizatsiya:
+            parametry["organization"] = organizatsiya
+        if subiekt:
+            parametry["region"] = subiekt
+        if god:
+            parametry["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
+        if elementy:
+            return [_razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)]
+    except Exception:
+        logger.debug("rpn.gov.ru API недоступен для лесного надзора")
+
+    try:
+        adres_url = f"{ROSPRIRODNADZOR_BAZA_OTKRYTYKH_DANNYKH}/inspections"
+        parametry_opendata: dict[str, Any] = {
+            "limit": ogranichenie,
+            "supervisionType": "lesnoy",
+        }
+        if organizatsiya:
+            parametry_opendata["organization"] = organizatsiya
+        if subiekt:
+            parametry_opendata["region"] = subiekt
+        if god:
+            parametry_opendata["year"] = god
+        dannye = await http_poluchit(adres_url, parametry=parametry_opendata, taimaut=15.0)
+        elementy = _izvlech_spisok(dannye)
+        if elementy:
+            return [_razobrat_proverku(zapis) for zapis in elementy if isinstance(zapis, dict)]
+    except Exception:
+        logger.debug("rpn.gov.ru/opendata недоступен для лесного надзора")
+
+    return []
+
+
 def poluchit_spisok_vidov_nadzora() -> list[dict[str, str]]:
     """Вернуть справочник видов надзора Росприроднадзора."""
     return VIDY_NADZORA

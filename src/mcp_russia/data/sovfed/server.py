@@ -9,6 +9,7 @@ from .prompts import analiz_senatora, obzor_zakonodatelstva
 from .resources import istochniki_dannyh, reglament, struktura_sovfeda
 from .tools import (
     info_senatora,
+    poimennoe_golosovanie,
     poisk_zakonoproektov,
     spisok_komissiy,
     spisok_komitetov,
@@ -25,6 +26,7 @@ mcp.tool(spisok_komitetov, tags={"комитеты", "справочник"})
 mcp.tool(spisok_komissiy, tags={"комиссии", "справочник"})
 mcp.tool(poisk_zakonoproektov, tags={"законопроекты", "поиск"})
 mcp.tool(spisok_zasedaniy, tags={"заседания", "справочник"})
+mcp.tool(poimennoe_golosovanie, tags={"голосование", "поимённое"})
 
 # Ресурсы
 mcp.resource("data://istochniki-sovfeda", mime_type="text/plain")(istochniki_dannyh)

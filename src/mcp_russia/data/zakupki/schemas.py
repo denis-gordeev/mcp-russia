@@ -74,3 +74,16 @@ class PlanZakupki(BaseModel):
     obshchiy_byudzhet: float = 0.0
     data_sozdaniya: str = ""
     data_obnovleniya: str = ""
+
+
+class ZapisRNP(BaseModel):
+    """Запись в реестре недобросовестных поставщиков."""
+
+    identifikator: str = ""
+    inn: str = ""
+    nazvanie: str = ""
+    data_vklyucheniya: str = ""
+    osnovanie: str = ""
+    organ_zakazchik: str = ""
+    nomer_zakupki: str = ""
+    sostoyanie: str = ""
