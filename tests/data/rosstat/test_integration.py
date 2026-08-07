@@ -28,6 +28,7 @@ async def test_instrumenty_zaregistrirovany(klient):
         "zarplata_dannye",
         "sravnenie_regionov",
         "indikator_dannye",
+        "dinamika_regiona",
     }
     assert ozhidayemyy.issubset(imena_instrumentov), (
         f"Отсутствуют инструменты: {ozhidayemyy - imena_instrumentov}"

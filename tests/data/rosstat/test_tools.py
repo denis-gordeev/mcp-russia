@@ -305,6 +305,67 @@ async def test_indikator_dannye_emiss_code_direct():
     assert "99999" in rezultat
 
 
+async def test_dinamika_regiona_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="58701",
+            nazvanie="Средняя заработная плата",
+            period="2023",
+            znachenie=80000.0,
+            edinitsa="руб.",
+            subiekt="г. Москва",
+        ),
+        IndikatorDannye(
+            kod_emiss="58701",
+            nazvanie="Средняя заработная плата",
+            period="2024",
+            znachenie=88000.0,
+            edinitsa="руб.",
+            subiekt="г. Москва",
+        ),
+        IndikatorDannye(
+            kod_emiss="58701",
+            nazvanie="Средняя заработная плата",
+            period="2022",
+            znachenie=70000.0,
+            edinitsa="руб.",
+            subiekt="г. Москва",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ) as klient:
+        rezultat = await rosstat_tools.dinamika_regiona(
+            "zarplata", "77", god_nachalo="2023", god_konets="2024"
+        )
+
+    klient.assert_awaited_once_with(kod="zarplata", subiekt="77")
+    assert "Москва" in rezultat
+    assert "2022" not in rezultat
+    assert rezultat.index("2023") < rezultat.index("2024")
+    assert "+10.00%" in rezultat
+
+
+async def test_dinamika_regiona_proveryaet_argumenty():
+    rezultat = await rosstat_tools.dinamika_regiona("neizvestnyy", "77")
+    assert "не поддерживается" in rezultat
+
+    rezultat = await rosstat_tools.dinamika_regiona("zarplata", "999")
+    assert "не найден" in rezultat
+
+    rezultat = await rosstat_tools.dinamika_regiona(
+        "zarplata", "77", god_nachalo="2025", god_konets="2024"
+    )
+    assert "не может быть больше" in rezultat
+
+
+async def test_dinamika_regiona_pustoy_rezultat():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.dinamika_regiona("vrp", "77")
+    assert "Данные за выбранный период временно недоступны" in rezultat
+    assert "61497" in rezultat
+
+
 async def test_constants_subiekty_bez_dublikatov():
     from mcp_russia.data.rosstat.constants import SUBIEKTY_RF
 

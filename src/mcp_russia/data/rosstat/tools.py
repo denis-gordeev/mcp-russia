@@ -408,6 +408,108 @@ async def indikator_dannye(
     )
 
 
+async def dinamika_regiona(
+    pokazatel: str,
+    subiekt: str,
+    god_nachalo: str = "",
+    god_konets: str = "",
+    kontekst: Context | None = None,
+) -> str:
+    """Получить динамику показателя Росстата для одного региона.
+
+    Аргументы:
+        pokazatel: Мнемонический код регионального показателя (например, 'vrp', 'zarplata').
+        subiekt: Код региона из spisok_regionov().
+        god_nachalo: Начальный год диапазона (необязательно).
+        god_konets: Конечный год диапазона (необязательно).
+
+    Возвращает:
+        Хронологический ряд и изменение показателя между соседними периодами.
+    """
+    if kontekst:
+        await kontekst.info(f"Запрос динамики показателя '{pokazatel}' для региона '{subiekt}'...")
+
+    if pokazatel not in REGIONALNYE_POKAZATELI:
+        dostupnye = ", ".join(sorted(REGIONALNYE_POKAZATELI))
+        return (
+            f"Показатель '{pokazatel}' не поддерживается для региональной динамики.\n\n"
+            f"Доступные показатели: {dostupnye}"
+        )
+
+    info_subiekta = next(
+        (region for region in SUBIEKTY_RF if region["kod"] == subiekt),
+        None,
+    )
+    if info_subiekta is None:
+        return (
+            f"Регион с кодом '{subiekt}' не найден.\n\n"
+            "Используйте spisok_regionov() для списка субъектов."
+        )
+
+    if god_nachalo and (len(god_nachalo) != 4 or not god_nachalo.isdigit()):
+        return "Начальный год должен состоять из четырёх цифр, например '2020'."
+    if god_konets and (len(god_konets) != 4 or not god_konets.isdigit()):
+        return "Конечный год должен состоять из четырёх цифр, например '2024'."
+    if god_nachalo and god_konets and god_nachalo > god_konets:
+        return "Начальный год не может быть больше конечного."
+
+    dannye = await client.poluchit_indikator_dannye(kod=pokazatel, subiekt=subiekt)
+    dannye = [
+        zapis
+        for zapis in dannye
+        if (not god_nachalo or zapis.period[:4] >= god_nachalo)
+        and (not god_konets or zapis.period[:4] <= god_konets)
+    ]
+    dannye.sort(key=lambda zapis: zapis.period)
+
+    kod_emiss = REGIONALNYE_POKAZATELI[pokazatel]
+    nazvanie_pokazatelya = next(
+        (
+            indikator["nazvanie"]
+            for indikator in KLYUCHEVYE_INDIKATORY
+            if indikator["kod"] == pokazatel
+        ),
+        pokazatel,
+    )
+    if not dannye:
+        return (
+            f"**Динамика показателя «{nazvanie_pokazatelya}» — "
+            f"{info_subiekta['nazvanie']}**\n\n"
+            "Данные за выбранный период временно недоступны.\n"
+            f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}"
+        )
+
+    stroki_tablitsy = []
+    predydushchee_znachenie: float | None = None
+    for zapis in dannye:
+        znachenie = (
+            formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
+        )
+        izmenenie = "—"
+        if (
+            zapis.znachenie is not None
+            and predydushchee_znachenie is not None
+            and predydushchee_znachenie != 0
+        ):
+            izmenenie = f"{(zapis.znachenie / predydushchee_znachenie - 1) * 100:+.2f}%"
+        stroki_tablitsy.append((zapis.period, znachenie, zapis.edinitsa or "—", izmenenie))
+        if zapis.znachenie is not None:
+            predydushchee_znachenie = zapis.znachenie
+
+    diapazon = ""
+    if god_nachalo or god_konets:
+        diapazon = f" ({god_nachalo or '…'}–{god_konets or '…'})"
+    zagolovok = (
+        f"**Динамика показателя «{nazvanie_pokazatelya}» — "
+        f"{info_subiekta['nazvanie']}**{diapazon}\n\n"
+        "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    )
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Значение", "Ед. изм.", "Изменение к пред. периоду"],
+        stroki_tablitsy,
+    )
+
+
 async def otraslevaya_struktura_vrp(
     subiekt: str = "",
     god: str = "",

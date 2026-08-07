@@ -9,6 +9,7 @@ from .prompts import analiz_regiona, obzor_inflyatsii
 from .resources import istochniki_dannyh, metodologiya
 from .tools import (
     demografiya,
+    dinamika_regiona,
     indikator_dannye,
     inflyatsiya,
     informatsiya_o_regionye,
@@ -38,6 +39,7 @@ mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
 mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
 mcp.tool(sravnenie_regionov, tags={"сравнение", "регионы"})
 mcp.tool(indikator_dannye, tags={"показатель", "ЕМИСС", "универсальный"})
+mcp.tool(dinamika_regiona, tags={"динамика", "регионы", "ЕМИСС"})
 mcp.tool(otraslevaya_struktura_vrp, tags={"ВРП", "отрасли", "ОКВЭД"})
 mcp.tool(investitsii_po_vidam, tags={"инвестиции", "отрасли", "ОКВЭД"})
 mcp.tool(sravnenie_okrugov, tags={"сравнение", "федеральные-округа"})
