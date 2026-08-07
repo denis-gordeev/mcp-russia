@@ -130,7 +130,7 @@ async def poluchit_inflyatsiyu(god: str = "") -> list[dict[str, Any]]:
         Список точек данных ИПЦ.
     """
     try:
-        kod_emiss = EMISS_KODY_POKAZATELEY.get("ipcz", "31088")
+        kod_emiss = EMISS_KODY_POKAZATELEY.get("ipcz", "31074")
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if god:
@@ -165,7 +165,7 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
         Список точек демографических данных.
     """
     try:
-        kod_emiss = EMISS_KODY_POKAZATELEY.get("naselenie", "24133")
+        kod_emiss = EMISS_KODY_POKAZATELEY.get("naselenie", "31557")
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
         if subiekt:
@@ -201,7 +201,7 @@ async def poluchit_vrp(subiekt: str = "", god: str = "") -> list[VRPDannye]:
     Возвращает:
         Список точек данных ВРП.
     """
-    kod_emiss = EMISS_KODY_POKAZATELEY.get("vrp", "26975")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("vrp", "61497")
     try:
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
@@ -255,7 +255,7 @@ async def poluchit_zarplatu(subiekt: str = "", god: str = "") -> list[DannyeZarp
     Возвращает:
         Список точек данных о заработной плате.
     """
-    kod_emiss = EMISS_KODY_POKAZATELEY.get("zarplata", "24140")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("zarplata", "58701")
     try:
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
@@ -466,7 +466,7 @@ async def poluchit_otraslevuyu_strukturu_vrp(
     Возвращает:
         Список точек данных отраслевой структуры.
     """
-    kod_emiss = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "27103")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("struktura_vrp", "59450")
     try:
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {}
@@ -557,7 +557,7 @@ async def poluchit_investitsii_po_vidam(
     Возвращает:
         Список точек данных об инвестициях по видам деятельности.
     """
-    kod_emiss = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "24145")
+    kod_emiss = EMISS_KODY_POKAZATELEY.get("investitsii_po_vidam", "33644")
     try:
         adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
         parametry: dict[str, str] = {"groupByActivity": "true"}

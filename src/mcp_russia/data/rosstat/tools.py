@@ -16,9 +16,11 @@ from mcp_russia._shared.formatting import formatirovat_chislo_ru, tablitsa_v_mar
 from . import client
 from .constants import (
     EMISS_KODY_POKAZATELEY,
+    FEDERALNYE_OKRUGA,
     KLYUCHEVYE_INDIKATORY,
     OTRASLEVAYA_STRUKTURA_VRP,
     REGIONALNYE_POKAZATELI,
+    SUBIEKTY_RF,
     VIDY_DEYATELNOSTI_INVESTITSII,
 )
 
@@ -125,10 +127,15 @@ async def pokazateli_rosstata(kontekst: Context) -> str:
     await kontekst.info("Запрос списка показателей Росстата...")
 
     stroki_tablitsy = [
-        (pokazatel["kod"], pokazatel["nazvanie"]) for pokazatel in KLYUCHEVYE_INDIKATORY
+        (
+            pokazatel["kod"],
+            EMISS_KODY_POKAZATELEY.get(pokazatel["kod"], "—"),
+            pokazatel["nazvanie"],
+        )
+        for pokazatel in KLYUCHEVYE_INDIKATORY
     ]
     zagolovok = "**Основные показатели Росстата**\n\n"
-    return zagolovok + tablitsa_v_markdown(["Код", "Показатель"], stroki_tablitsy)
+    return zagolovok + tablitsa_v_markdown(["Код", "ЕМИСС", "Показатель"], stroki_tablitsy)
 
 
 async def inflyatsiya(god: str = "", kontekst: Context | None = None) -> str:
@@ -147,7 +154,7 @@ async def inflyatsiya(god: str = "", kontekst: Context | None = None) -> str:
         return (
             f"**Инфляция в России (ИПЦ)**\n\n"
             f"Данные об индексе потребительских цен доступны через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/31088\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/31074\n"
             f"- Росстат: https://rosstat.gov.ru/statistics/price\n\n"
             f"Для запроса данных за {god or 'текущий период'} "
             f"используйте показатель 'ipcz' через API ЕМИСС."
@@ -184,7 +191,7 @@ async def demografiya(subiekt: str = "", kontekst: Context | None = None) -> str
             f"**Демографические данные{tekst_filtra}**\n\n"
             f"Демографическая статистика (рождаемость, смертность, "
             f"численность населения) доступна через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/24133\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/31557\n"
             f"- Росстат: https://rosstat.gov.ru/statistics/population\n\n"
             f"Для получения конкретных данных используйте API ЕМИСС."
         )
@@ -220,7 +227,7 @@ async def vrp_dannye(subiekt: str = "", god: str = "", kontekst: Context | None 
         return (
             f"**Валовой региональный продукт{tekst_filtra}**\n\n"
             f"Данные о ВРП доступны через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/26975\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/61497\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
             f"Для получения конкретных данных используйте инструмент "
             f"с указанием кода региона и/или года."
@@ -258,7 +265,7 @@ async def zarplata_dannye(
         return (
             f"**Средняя заработная плата{tekst_filtra}**\n\n"
             f"Данные о заработной плате доступны через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/24140\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/58701\n"
             f"- Росстат: https://rosstat.gov.ru/labor\n\n"
             f"Для получения конкретных данных используйте инструмент "
             f"с указанием кода региона и/или года."
@@ -423,7 +430,7 @@ async def otraslevaya_struktura_vrp(
         return (
             f"**Отраслевая структура ВРП{tekst_filtra}**\n\n"
             f"Данные доступны через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/27103\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/59450\n"
             f"- Росстат: https://rosstat.gov.ru/vrp\n\n"
             f"Разделы ОКВЭД: "
             + ", ".join(
@@ -465,7 +472,7 @@ async def investitsii_po_vidam(
         return (
             f"**Инвестиции по видам деятельности{tekst_filtra}**\n\n"
             f"Данные доступны через:\n"
-            f"- ЕМИСС: https://fedstat.ru/indicator/24145\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/33644\n"
             f"- Росстат: https://rosstat.gov.ru/investment\n\n"
             f"Виды деятельности: "
             + ", ".join(
@@ -483,5 +490,81 @@ async def investitsii_po_vidam(
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["ОКВЭД", "Вид деятельности", "Инвестиции (млрд ₽)", "Доля (%)"],
+        stroki_tablitsy,
+    )
+
+
+async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
+    """Сравнить федеральные округа по выбранному показателю.
+
+    Аргументы:
+        pokazatel: Код показателя (например, 'vrp', 'zarplata', 'dokhody_na_dushu').
+
+    Возвращает:
+        Рейтинг федеральных округов по показателю.
+    """
+    await kontekst.info(f"Запрос сравнения федеральных округов по показателю '{pokazatel}'...")
+    if pokazatel not in REGIONALNYE_POKAZATELI:
+        dostupnye = ", ".join(sorted(REGIONALNYE_POKAZATELI.keys()))
+        return (
+            f"Показатель '{pokazatel}' не поддерживается для сравнения округов.\n\n"
+            f"Доступные показатели: {dostupnye}"
+        )
+    dannye_regiony = await client.poluchit_sravnenie_regionov(pokazatel)
+    if not dannye_regiony:
+        kod_emiss = REGIONALNYE_POKAZATELI[pokazatel]
+        return (
+            f"**Сравнение округов по показателю '{pokazatel}'**\n\n"
+            f"Данные временно недоступны.\n"
+            f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}"
+        )
+    dannye_po_okrugam: dict[str, float] = {}
+    for zapis in dannye_regiony:
+        kod_reg = zapis.get("kod", "")
+        info_subiekta = next(
+            (subiekt_rf for subiekt_rf in SUBIEKTY_RF if subiekt_rf["kod"] == str(kod_reg)),
+            None,
+        )
+        if info_subiekta:
+            kod_okruga = info_subiekta.get("okrug", "")
+            znachenie = zapis.get("znachenie") or 0
+            if kod_okruga not in dannye_po_okrugam:
+                dannye_po_okrugam[kod_okruga] = 0.0
+            dannye_po_okrugam[kod_okruga] += znachenie
+    if not dannye_po_okrugam:
+        return (
+            f"**Сравнение округов по показателю '{pokazatel}'**\n\n"
+            f"Не удалось агрегировать данные по округам."
+        )
+    otsortirovannye = sorted(dannye_po_okrugam.items(), key=lambda x: x[1], reverse=True)
+    imya_indikatora = next(
+        (
+            indikator["nazvanie"]
+            for indikator in KLYUCHEVYE_INDIKATORY
+            if indikator["kod"] == pokazatel
+        ),
+        pokazatel,
+    )
+    nazvaniya_okrugov = {okrug["kod"]: okrug["nazvanie"] for okrug in FEDERALNYE_OKRUGA}
+    sokrashcheniya_okrugov = {
+        "ЦФО": "CFO",
+        "СЗФО": "SZFO",
+        "ЮФО": "YFO",
+        "СКФО": "SKFO",
+        "ПФО": "PFO",
+        "УФО": "UFO",
+        "СФО": "SIFO",
+        "ДФО": "DFO",
+    }
+    stroki_tablitsy = []
+    for i, (kod_okruga, znachenie) in enumerate(otsortirovannye, 1):
+        kod_latin = sokrashcheniya_okrugov.get(kod_okruga, kod_okruga)
+        nazvanie_okruga = nazvaniya_okrugov.get(kod_latin, kod_okruga)
+        znachenie_fmt = formatirovat_chislo_ru(znachenie, 2) if znachenie else "—"
+        stroki_tablitsy.append((i, nazvanie_okruga, kod_okruga, znachenie_fmt))
+    zagolovok = f"**Рейтинг федеральных округов по показателю «{imya_indikatora}»**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["№", "Федеральный округ", "Код", "Значение"],
         stroki_tablitsy,
     )

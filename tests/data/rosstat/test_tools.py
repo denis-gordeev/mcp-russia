@@ -241,13 +241,13 @@ async def test_sravnenie_regionov_pustoy():
 
 async def test_indikator_dannye_zapasnoy():
     rezultat = await rosstat_tools.indikator_dannye(kod="ipcz")
-    assert "ИПЦ" in rezultat or "Инфляц" in rezultat or "31088" in rezultat
+    assert "ИПЦ" in rezultat or "Инфляц" in rezultat or "31074" in rezultat
 
 
 async def test_indikator_dannye_s_dannymi():
     maket_dannykh = [
         IndikatorDannye(
-            kod_emiss="31088",
+            kod_emiss="31074",
             nazvanie="Индекс потребительских цен (инфляция)",
             period="2025-01",
             znachenie=105.2,
@@ -266,7 +266,7 @@ async def test_indikator_dannye_s_dannymi():
 async def test_indikator_dannye_s_regionom():
     maket_dannykh = [
         IndikatorDannye(
-            kod_emiss="24140",
+            kod_emiss="58701",
             nazvanie="Средняя заработная плата",
             period="2024",
             znachenie=85000.0,
@@ -284,7 +284,7 @@ async def test_indikator_dannye_s_regionom():
 async def test_indikator_dannye_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
         rezultat = await rosstat_tools.indikator_dannye(kod="ipcz")
-    assert "недоступны" in rezultat or "31088" in rezultat
+    assert "недоступны" in rezultat or "31074" in rezultat
 
 
 async def test_indikator_dannye_emiss_code_direct():
@@ -340,7 +340,7 @@ async def test_otraslevaya_struktura_vrp_s_dannymi():
 async def test_otraslevaya_struktura_vrp_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_otraslevuyu_strukturu_vrp", return_value=[]):
         rezultat = await rosstat_tools.otraslevaya_struktura_vrp()
-    assert "ОКВЭД" in rezultat or "27103" in rezultat
+    assert "ОКВЭД" in rezultat or "59450" in rezultat
 
 
 async def test_investitsii_po_vidam_zapasnoy():
@@ -370,7 +370,7 @@ async def test_investitsii_po_vidam_s_dannymi():
 async def test_investitsii_po_vidam_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_investitsii_po_vidam", return_value=[]):
         rezultat = await rosstat_tools.investitsii_po_vidam()
-    assert "инвестиц" in rezultat.lower() or "24145" in rezultat
+    assert "инвестиц" in rezultat.lower() or "33644" in rezultat
 
 
 async def test_constants_otraslevaya_struktura():
@@ -409,3 +409,30 @@ async def test_constants_novyy_regionalnye_pokazateli():
     assert "stroitelstvo" in REGIONALNYE_POKAZATELI
     assert "migratsiya" in REGIONALNYE_POKAZATELI
     assert "estestvennyy_prirost" in REGIONALNYE_POKAZATELI
+
+
+async def test_sravnenie_okrugov_nekorrektnyy_pokazatel():
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.sravnenie_okrugov("nekorrektnyy_kod", kontekst)
+    assert "не поддерживается" in rezultat
+
+
+async def test_sravnenie_okrugov_s_dannymi():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {"subiekt": "г. Москва", "kod": "77", "znachenie": 25400.5, "period": "2023"},
+        {"subiekt": "Московская область", "kod": "50", "znachenie": 4700.3, "period": "2023"},
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.sravnenie_okrugov("vrp", kontekst)
+    assert "ЦФО" in rezultat or "Центральн" in rezultat
+    assert "Рейтинг" in rezultat
+
+
+async def test_sravnenie_okrugov_pustoy():
+    kontekst = _maket_konteksta()
+    with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
+        rezultat = await rosstat_tools.sravnenie_okrugov("vrp", kontekst)
+    assert "недоступны" in rezultat or "ВРП" in rezultat

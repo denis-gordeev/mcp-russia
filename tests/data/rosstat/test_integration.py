@@ -102,4 +102,4 @@ async def test_indikator_dannye(klient):
         rezultat = await klient.call_tool("indikator_dannye", {"kod": "ipcz"})
     assert rezultat is not None
     tekst = str(rezultat)
-    assert "ИПЦ" in tekst or "Инфляц" in tekst or "31088" in tekst
+    assert "ИПЦ" in tekst or "Инфляц" in tekst or "31074" in tekst
