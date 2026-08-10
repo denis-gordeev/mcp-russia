@@ -6,7 +6,9 @@ from mcp_russia.data.rosstat import tools as rosstat_tools
 from mcp_russia.data.rosstat.schemas import (
     DannyeRegiona,
     DannyeZarplaty,
+    DemografiyaDannye,
     IndikatorDannye,
+    InflyatsiyaDannye,
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
     VRPDannye,
@@ -102,7 +104,7 @@ async def test_inflyatsiya_zapasnoy():
 
 async def test_inflyatsiya_s_dannymi():
     maket_dannykh = [
-        {"period": "2025-01", "ipcz_mesyac": 0.5, "ipcz_nakoplenny": 0.5, "ipcz_god": 9.9},
+        InflyatsiyaDannye(period="2025-01", ipcz_mesyac=0.5, ipcz_nakoplenny=0.5, ipcz_god=9.9),
     ]
     with patch.object(rosstat_tools.client, "poluchit_inflyatsiyu", return_value=maket_dannykh):
         rezultat = await rosstat_tools.inflyatsiya(god="2025")
@@ -117,7 +119,7 @@ async def test_demografiya_zapasnoy():
 
 async def test_demografiya_s_dannymi():
     maket_dannykh = [
-        {"period": "2025-01", "naselenie": 146000000, "rozhdaemost": 9.0, "smertnost": 12.5},
+        DemografiyaDannye(period="2025-01", naselenie=146000000, rozhdaemost=9.0, smertnost=12.5),
     ]
     with patch.object(rosstat_tools.client, "poluchit_demografiyu", return_value=maket_dannykh):
         rezultat = await rosstat_tools.demografiya(subiekt="")
@@ -647,3 +649,90 @@ async def test_srednyaya_pensiya_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
         rezultat = await rosstat_tools.srednyaya_pensiya()
     assert "60440" in rezultat
+
+
+async def test_poisk_regiona_nayden():
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.poisk_regiona("Москва", kontekst)
+    assert "Москва" in rezultat
+    assert "Найдено" in rezultat
+
+
+async def test_poisk_regiona_ne_nayden():
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.poisk_regiona("НесуществующийРегион", kontekst)
+    assert "не найден" in rezultat
+
+
+async def test_poisk_regiona_chastichnoe_sovpadenie():
+    kontekst = _maket_konteksta()
+    rezultat = await rosstat_tools.poisk_regiona("республика", kontekst)
+    assert "Найдено" in rezultat
+    assert "Республика" in rezultat
+
+
+async def test_sravnenie_okrugov_vzveshennaya_agregatsiya():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {"subiekt": "г. Москва", "kod": "77", "znachenie": 125000, "period": "2024"},
+        {"subiekt": "Московская область", "kod": "50", "znachenie": 65000, "period": "2024"},
+        {"subiekt": "Тюменская область", "kod": "72", "znachenie": 70000, "period": "2024"},
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.sravnenie_okrugov("zarplata", kontekst)
+    assert "взвешенное среднее" in rezultat
+
+
+async def test_sravnenie_okrugov_summa_dlya_absolyutnykh():
+    kontekst = _maket_konteksta()
+    maket_dannykh = [
+        {"subiekt": "г. Москва", "kod": "77", "znachenie": 25400, "period": "2023"},
+        {"subiekt": "Московская область", "kod": "50", "znachenie": 4700, "period": "2023"},
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.sravnenie_okrugov("vrp", kontekst)
+    assert "сумма" in rezultat
+
+
+async def test_constants_otnositelnye_pokazateli():
+    from mcp_russia.data.rosstat.constants import OTNOSITELNYE_POKAZATELI
+
+    assert "zarplata" in OTNOSITELNYE_POKAZATELI
+    assert "bezrabotitsa" in OTNOSITELNYE_POKAZATELI
+    assert "vrp" not in OTNOSITELNYE_POKAZATELI
+    assert "naselenie" not in OTNOSITELNYE_POKAZATELI
+
+
+async def test_constants_naselenie_subiektov():
+    from mcp_russia.data.rosstat.constants import NASELENIE_SUBIEKTOV
+
+    assert "77" in NASELENIE_SUBIEKTOV
+    assert "78" in NASELENIE_SUBIEKTOV
+    assert len(NASELENIE_SUBIEKTOV) >= 85
+
+
+async def test_inflyatsiya_skhema_imeet_vse_polya():
+    zapis = InflyatsiyaDannye(period="2025-01", ipcz_mesyac=0.5, ipcz_nakoplenny=0.5, ipcz_god=9.9)
+    assert zapis.period == "2025-01"
+    assert zapis.ipcz_mesyac == 0.5
+    assert zapis.ipcz_nakoplenny == 0.5
+    assert zapis.ipcz_god == 9.9
+
+
+async def test_demografiya_skhema_imeet_vse_polya():
+    zapis = DemografiyaDannye(
+        period="2025-01",
+        naselenie=146000000,
+        rozhdaemost=9.0,
+        smertnost=12.5,
+        estestvenny_prirost=-3.5,
+    )
+    assert zapis.period == "2025-01"
+    assert zapis.naselenie == 146000000
+    assert zapis.rozhdaemost == 9.0
+    assert zapis.smertnost == 12.5
+    assert zapis.estestvenny_prirost == -3.5

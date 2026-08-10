@@ -5,17 +5,6 @@ from __future__ import annotations
 from pydantic import BaseModel
 
 
-class PokazatelRosstata(BaseModel):
-    """Показатель Росстата."""
-
-    kod: str
-    nazvanie: str
-    znachenie: float
-    edinitsa: str = ""
-    data: str = ""
-    istochnik: str = "Федеральная служба государственной статистики (Росстат)"
-
-
 class DannyeRegiona(BaseModel):
     """Данные по региону РФ."""
 

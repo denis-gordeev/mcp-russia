@@ -5,8 +5,14 @@
 
 from fastmcp import FastMCP
 
-from .prompts import analiz_regiona, obzor_inflyatsii
-from .resources import istochniki_dannyh, metodologiya
+from .prompts import (
+    analiz_demografii,
+    analiz_regiona,
+    analiz_vrp_regionov,
+    obzor_inflyatsii,
+    obzor_truda,
+)
+from .resources import istochniki_dannyh, metodologiya, okved, pokazateli, subiekty_rf
 from .tools import (
     bezrabotitsa_dannye,
     demografiya,
@@ -18,6 +24,7 @@ from .tools import (
     informatsiya_ob_okruge,
     investitsii_po_vidam,
     otraslevaya_struktura_vrp,
+    poisk_regiona,
     pokazateli_rosstata,
     promyshlennoe_proizvodstvo,
     spisok_okrugov,
@@ -36,6 +43,7 @@ mcp = FastMCP("mcp-russia-rosstat")
 # Инструменты
 mcp.tool(spisok_regionov, tags={"регионы", "справочник"})
 mcp.tool(spisok_okrugov, tags={"федеральные-округа", "справочник"})
+mcp.tool(poisk_regiona, tags={"регионы", "поиск"})
 mcp.tool(informatsiya_o_regionye, tags={"регион", "информация"})
 mcp.tool(informatsiya_ob_okruge, tags={"федеральный-округ", "информация"})
 mcp.tool(pokazateli_rosstata, tags={"показатели", "справочник"})
@@ -59,7 +67,13 @@ mcp.tool(sravnenie_okrugov, tags={"сравнение", "федеральные-
 # Ресурсы
 mcp.resource("data://istochniki", mime_type="text/plain")(istochniki_dannyh)
 mcp.resource("data://metodologiya", mime_type="text/plain")(metodologiya)
+mcp.resource("data://pokazateli", mime_type="text/plain")(pokazateli)
+mcp.resource("data://okved", mime_type="text/plain")(okved)
+mcp.resource("data://subiekty-rf", mime_type="text/plain")(subiekty_rf)
 
 # Промпты
 mcp.prompt(analiz_regiona)
 mcp.prompt(obzor_inflyatsii)
+mcp.prompt(analiz_vrp_regionov)
+mcp.prompt(obzor_truda)
+mcp.prompt(analiz_demografii)

@@ -29,37 +29,15 @@ from .constants import (
 from .schemas import (
     DannyeRegiona,
     DannyeZarplaty,
+    DemografiyaDannye,
     IndikatorDannye,
+    InflyatsiyaDannye,
     InvestitsiiPoVidam,
     OtraslevayaStrukturaVRP,
-    PokazatelRosstata,
     VRPDannye,
 )
 
 logger = logging.getLogger(__name__)
-
-
-async def poluchit_indikator(kod: str, diapazon_dat: str = "") -> list[PokazatelRosstata]:
-    """Получение статистического показателя из ЕМИСС/Росстата.
-
-    Аргументы:
-        kod: Код показателя (напр. 'ipcz', 'naselenie').
-        diapazon_dat: Фильтр по диапазону дат (необязательно).
-
-    Возвращает:
-        Список значений показателя.
-    """
-    kod_emiss = EMISS_KODY_POKAZATELEY.get(kod, kod)
-    try:
-        adres_url = f"{EMISS_BAZA_API}/data/{kod_emiss}"
-        parametry: dict[str, str] = {}
-        if diapazon_dat:
-            parametry["date"] = diapazon_dat
-        dannye = await http_poluchit(adres_url, parametry=parametry, taimaut=20.0)
-        return _razobrat_otvet_indikatora(dannye, kod)
-    except Exception:
-        logger.exception("Ошибка при получении индикатора %s", kod)
-        return []
 
 
 async def poluchit_dannye_regiona(kod: str) -> DannyeRegiona | None:
@@ -120,7 +98,7 @@ async def poluchit_federalny_okrug(kod: str) -> dict[str, Any]:
     }
 
 
-async def poluchit_inflyatsiyu(god: str = "") -> list[dict[str, Any]]:
+async def poluchit_inflyatsiyu(god: str = "") -> list[InflyatsiyaDannye]:
     """Получение данных об инфляции (ИПЦ) из ЕМИСС.
 
     Аргументы:
@@ -140,12 +118,14 @@ async def poluchit_inflyatsiyu(god: str = "") -> list[dict[str, Any]]:
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
                 return [
-                    {
-                        "period": zapis.get("date", zapis.get("period", "")),
-                        "ipcz_mesyac": zapis.get("monthlyRate") or zapis.get("value"),
-                        "ipcz_nakoplenny": zapis.get("cumulativeRate"),
-                        "ipcz_god": zapis.get("yearlyRate"),
-                    }
+                    InflyatsiyaDannye(
+                        period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
+                        ipcz_mesyac=bezopasnoe_chislo(
+                            zapis.get("monthlyRate") or zapis.get("value")
+                        ),
+                        ipcz_nakoplenny=bezopasnoe_chislo(zapis.get("cumulativeRate")),
+                        ipcz_god=bezopasnoe_chislo(zapis.get("yearlyRate")),
+                    )
                     for zapis in elementy
                     if isinstance(zapis, dict)
                 ]
@@ -155,7 +135,7 @@ async def poluchit_inflyatsiyu(god: str = "") -> list[dict[str, Any]]:
         return []
 
 
-async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
+async def poluchit_demografiyu(subiekt: str = "") -> list[DemografiyaDannye]:
     """Получение демографических данных из ЕМИСС.
 
     Аргументы:
@@ -175,13 +155,16 @@ async def poluchit_demografiyu(subiekt: str = "") -> list[dict[str, Any]]:
             elementy = dannye.get("data", [])
             if isinstance(elementy, list):
                 return [
-                    {
-                        "period": zapis.get("date", zapis.get("period", "")),
-                        "naselenie": zapis.get("population") or zapis.get("value"),
-                        "rozhdaemost": zapis.get("birthRate"),
-                        "smertnost": zapis.get("deathRate"),
-                        "estestvenny_prirost": zapis.get("naturalGrowth"),
-                    }
+                    DemografiyaDannye(
+                        period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
+                        naselenie=int(v)
+                        if (v := bezopasnoe_chislo(zapis.get("population") or zapis.get("value")))
+                        is not None
+                        else None,
+                        rozhdaemost=bezopasnoe_chislo(zapis.get("birthRate")),
+                        smertnost=bezopasnoe_chislo(zapis.get("deathRate")),
+                        estestvenny_prirost=bezopasnoe_chislo(zapis.get("naturalGrowth")),
+                    )
                     for zapis in elementy
                     if isinstance(zapis, dict)
                 ]
@@ -413,34 +396,6 @@ async def poluchit_indikator_dannye(
     except Exception:
         logger.exception("Ошибка при получении данных индикатора %s", kod)
         return []
-
-
-def _razobrat_otvet_indikatora(dannye: Any, kod: str) -> list[PokazatelRosstata]:
-    """Разбор ответа API ЕМИСС в объекты PokazatelRosstata."""
-    if not isinstance(dannye, dict):
-        return []
-
-    elementy = dannye.get("data", [])
-    if not isinstance(elementy, list):
-        return []
-
-    rezultaty = []
-    for zapis in elementy:
-        if not isinstance(zapis, dict):
-            continue
-        try:
-            rezultaty.append(
-                PokazatelRosstata(
-                    kod=kod,
-                    nazvanie=zapis.get("name", kod),
-                    znachenie=float(zapis.get("value", 0)),
-                    edinitsa=zapis.get("unit", ""),
-                    data=zapis.get("date", ""),
-                )
-            )
-        except (ValueError, TypeError):
-            continue
-    return rezultaty
 
 
 def poluchit_spisok_subiektov() -> list[dict[str, str]]:

@@ -18,6 +18,8 @@ from .constants import (
     EMISS_KODY_POKAZATELEY,
     FEDERALNYE_OKRUGA,
     KLYUCHEVYE_INDIKATORY,
+    NASELENIE_SUBIEKTOV,
+    OTNOSITELNYE_POKAZATELI,
     OTRASLEVAYA_STRUKTURA_VRP,
     REGIONALNYE_POKAZATELI,
     SUBIEKTY_RF,
@@ -54,6 +56,35 @@ async def spisok_okrugov(kontekst: Context) -> str:
     stroki_tablitsy = [(okrug["kod"], okrug["nazvanie"]) for okrug in okruga]
     zagolovok = "**Федеральные округа Российской Федерации**\n\n"
     return zagolovok + tablitsa_v_markdown(["Код", "Округ"], stroki_tablitsy)
+
+
+async def poisk_regiona(podstroka: str, kontekst: Context) -> str:
+    """Найти субъект РФ по подстроке названия.
+
+    Аргументы:
+        podstroka: Часть названия региона (без учёта регистра).
+
+    Возвращает:
+        Подходящие субъекты с кодами и федеральными округами.
+    """
+    await kontekst.info(f"Поиск региона по подстроке '{podstroka}'...")
+    podstroka_nizh = podstroka.lower()
+    naydennye = [
+        subiekt_rf
+        for subiekt_rf in SUBIEKTY_RF
+        if podstroka_nizh in subiekt_rf["nazvanie"].lower()
+    ]
+    if not naydennye:
+        return (
+            f"По запросу '{podstroka}' субъекты не найдены.\n\n"
+            f"Используйте spisok_regionov() для полного списка."
+        )
+    stroki_tablitsy = [
+        (subiekt_rf["kod"], subiekt_rf["nazvanie"], subiekt_rf.get("okrug", ""))
+        for subiekt_rf in naydennye
+    ]
+    zagolovok = f"**Найдено субъектов: {len(naydennye)}** по запросу «{podstroka}»\n\n"
+    return zagolovok + tablitsa_v_markdown(["Код", "Регион", "ФО"], stroki_tablitsy)
 
 
 async def informatsiya_o_regionye(kod: str, kontekst: Context) -> str:
@@ -161,10 +192,10 @@ async def inflyatsiya(god: str = "", kontekst: Context | None = None) -> str:
         )
     stroki_tablitsy = []
     for zapis in dannye:
-        ipcz_m = f"{zapis.get('ipcz_mesyac', '')}%" if zapis.get("ipcz_mesyac") else "—"
-        ipcz_n = f"{zapis.get('ipcz_nakoplenny', '')}%" if zapis.get("ipcz_nakoplenny") else "—"
-        ipcz_g = f"{zapis.get('ipcz_god', '')}%" if zapis.get("ipcz_god") else "—"
-        stroki_tablitsy.append((zapis.get("period", ""), ipcz_m, ipcz_n, ipcz_g))
+        ipcz_m = f"{zapis.ipcz_mesyac}%" if zapis.ipcz_mesyac is not None else "—"
+        ipcz_n = f"{zapis.ipcz_nakoplenny}%" if zapis.ipcz_nakoplenny is not None else "—"
+        ipcz_g = f"{zapis.ipcz_god}%" if zapis.ipcz_god is not None else "—"
+        stroki_tablitsy.append((zapis.period, ipcz_m, ipcz_n, ipcz_g))
     zagolovok = "**Инфляция в России (ИПЦ)**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -197,14 +228,17 @@ async def demografiya(subiekt: str = "", kontekst: Context | None = None) -> str
         )
     stroki_tablitsy = []
     for zapis in dannye:
-        nas = formatirovat_chislo_ru(zapis["naselenie"], 0) if zapis.get("naselenie") else "—"
-        rozh = f"{zapis.get('rozhdaemost', '')}‰" if zapis.get("rozhdaemost") else "—"
-        sm = f"{zapis.get('smertnost', '')}‰" if zapis.get("smertnost") else "—"
-        stroki_tablitsy.append((zapis.get("period", ""), nas, rozh, sm))
+        nas = formatirovat_chislo_ru(zapis.naselenie, 0) if zapis.naselenie is not None else "—"
+        rozh = f"{zapis.rozhdaemost}‰" if zapis.rozhdaemost is not None else "—"
+        sm = f"{zapis.smertnost}‰" if zapis.smertnost is not None else "—"
+        est = (
+            f"{zapis.estestvenny_prirost:+.1f}‰" if zapis.estestvenny_prirost is not None else "—"
+        )
+        stroki_tablitsy.append((zapis.period, nas, rozh, sm, est))
     zagolovok = f"**Демографические данные{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
-        ["Период", "Население", "Рожд.", "Смерт."],
+        ["Период", "Население", "Рожд.", "Смерт.", "Ест. прирост"],
         stroki_tablitsy,
     )
 
@@ -844,7 +878,9 @@ async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
             f"Данные временно недоступны.\n"
             f"ЕМИСС: https://fedstat.ru/indicator/{kod_emiss}"
         )
+    otnositelnyy = pokazatel in OTNOSITELNYE_POKAZATELI
     dannye_po_okrugam: dict[str, float] = {}
+    vesa_po_okrugam: dict[str, float] = {}
     for zapis in dannye_regiony:
         kod_reg = zapis.get("kod", "")
         info_subiekta = next(
@@ -856,7 +892,19 @@ async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
             znachenie = zapis.get("znachenie") or 0
             if kod_okruga not in dannye_po_okrugam:
                 dannye_po_okrugam[kod_okruga] = 0.0
-            dannye_po_okrugam[kod_okruga] += znachenie
+                vesa_po_okrugam[kod_okruga] = 0.0
+            if otnositelnyy:
+                ves = NASELENIE_SUBIEKTOV.get(str(kod_reg), 1.0)
+                dannye_po_okrugam[kod_okruga] += znachenie * ves
+                vesa_po_okrugam[kod_okruga] += ves
+            else:
+                dannye_po_okrugam[kod_okruga] += znachenie
+    if otnositelnyy:
+        for kod_okruga in dannye_po_okrugam:
+            if vesa_po_okrugam.get(kod_okruga, 0) > 0:
+                dannye_po_okrugam[kod_okruga] = (
+                    dannye_po_okrugam[kod_okruga] / vesa_po_okrugam[kod_okruga]
+                )
     if not dannye_po_okrugam:
         return (
             f"**Сравнение округов по показателю '{pokazatel}'**\n\n"
@@ -871,6 +919,7 @@ async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
         ),
         pokazatel,
     )
+    tip_agregatsii = "взвешенное среднее" if otnositelnyy else "сумма"
     nazvaniya_okrugov = {okrug["kod"]: okrug["nazvanie"] for okrug in FEDERALNYE_OKRUGA}
     stroki_tablitsy = []
     for i, (kod_okruga, znachenie) in enumerate(otsortirovannye, 1):
@@ -878,6 +927,7 @@ async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
         znachenie_fmt = formatirovat_chislo_ru(znachenie, 2) if znachenie else "—"
         stroki_tablitsy.append((i, nazvanie_okruga, kod_okruga, znachenie_fmt))
     zagolovok = f"**Рейтинг федеральных округов по показателю «{imya_indikatora}»**\n\n"
+    zagolovok += f"Агрегация: {tip_agregatsii}\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
         ["№", "Федеральный округ", "Код", "Значение"],
