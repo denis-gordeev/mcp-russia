@@ -8,8 +8,10 @@ from fastmcp import FastMCP
 from .prompts import analiz_regiona, obzor_inflyatsii
 from .resources import istochniki_dannyh, metodologiya
 from .tools import (
+    bezrabotitsa_dannye,
     demografiya,
     dinamika_regiona,
+    dokhody_na_dushu,
     indikator_dannye,
     inflyatsiya,
     informatsiya_o_regionye,
@@ -17,11 +19,15 @@ from .tools import (
     investitsii_po_vidam,
     otraslevaya_struktura_vrp,
     pokazateli_rosstata,
+    promyshlennoe_proizvodstvo,
     spisok_okrugov,
     spisok_regionov,
     sravnenie_okrugov,
     sravnenie_regionov,
+    srednyaya_pensiya,
+    uroven_bednosti,
     vrp_dannye,
+    vvp_dannye,
     zarplata_dannye,
 )
 
@@ -36,7 +42,13 @@ mcp.tool(pokazateli_rosstata, tags={"показатели", "справочни�
 mcp.tool(inflyatsiya, tags={"инфляция", "ИПЦ"})
 mcp.tool(demografiya, tags={"демография", "население"})
 mcp.tool(vrp_dannye, tags={"ВРП", "экономика"})
+mcp.tool(vvp_dannye, tags={"ВВП", "экономика"})
 mcp.tool(zarplata_dannye, tags={"зарплата", "экономика"})
+mcp.tool(bezrabotitsa_dannye, tags={"безработица", "экономика"})
+mcp.tool(dokhody_na_dushu, tags={"доходы", "экономика"})
+mcp.tool(promyshlennoe_proizvodstvo, tags={"промышленность", "экономика"})
+mcp.tool(uroven_bednosti, tags={"бедность", "социальная"})
+mcp.tool(srednyaya_pensiya, tags={"пенсия", "социальная"})
 mcp.tool(sravnenie_regionov, tags={"сравнение", "регионы"})
 mcp.tool(indikator_dannye, tags={"показатель", "ЕМИСС", "универсальный"})
 mcp.tool(dinamika_regiona, tags={"динамика", "регионы", "ЕМИСС"})

@@ -200,3 +200,38 @@ async def test_open_meteo_kontrakt() -> None:
     pogoda = otvet["current_weather"]
     assert "temperature" in pogoda, "Ключ 'temperature' отсутствует в погоде"
     assert isinstance(pogoda["temperature"], (int, float)), "temperature не число"
+
+
+EMISS_KODY_DLYA_PROVERKI = [
+    {"kod": "31074", "nazvanie": "ИПЦ (инфляция)"},
+    {"kod": "31557", "nazvanie": "Население"},
+    {"kod": "60201", "nazvanie": "ВВП"},
+    {"kod": "43045", "nazvanie": "Промышленное производство"},
+    {"kod": "43062", "nazvanie": "Безработица"},
+    {"kod": "58701", "nazvanie": "Заработная плата"},
+    {"kod": "31260", "nazvanie": "Розничная торговля"},
+    {"kod": "33644", "nazvanie": "Инвестиции"},
+    {"kod": "34128", "nazvanie": "Сельское хозяйство"},
+    {"kod": "57605", "nazvanie": "Строительство"},
+    {"kod": "61497", "nazvanie": "ВРП"},
+    {"kod": "57039", "nazvanie": "Доходы на душу"},
+    {"kod": "33460", "nazvanie": "Уровень бедности"},
+    {"kod": "60440", "nazvanie": "Средняя пенсия"},
+]
+
+
+@pytest.mark.asyncio
+@pytest.mark.skipif(
+    not PROVODIM_SETOVYE_TESTY,
+    reason="Сетевые тесты отключены (MCP_RUSSIA_NETWORK_TESTS=1)",
+)
+async def test_emiss_kody_dostupny() -> None:
+    """Проверить доступность страниц обновлённых ЕМИСС-кодов показателей."""
+    oshibki: list[str] = []
+    for pokazatel in EMISS_KODY_DLYA_PROVERKI:
+        adres = f"https://www.fedstat.ru/indicator/{pokazatel['kod']}"
+        try:
+            await http_poluchit(adres, taimaut=30.0)
+        except Exception as isklyuchenie:
+            oshibki.append(f"{pokazatel['nazvanie']} ({pokazatel['kod']}): {isklyuchenie}")
+    assert not oshibki, "Недоступные ЕМИСС-коды:\n" + "\n".join(oshibki)

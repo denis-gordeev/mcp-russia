@@ -50,13 +50,13 @@ TIPY_OPASNOSTI = [
 ]
 
 FEDERALNYE_OKRUGA_MCHS = [
-    {"kod": "tcentralnyy", "nazvanie": "Центральный", "centry": ["Москва"]},
-    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный", "centry": ["Санкт-Петербург"]},
-    {"kod": "yuzhnyy", "nazvanie": "Южный", "centry": ["Ростов-на-Дону"]},
-    {"kod": "privolzhskiy", "nazvanie": "Приволжский", "centry": ["Нижний Новгород"]},
-    {"kod": "uralskiy", "nazvanie": "Уральский", "centry": ["Екатеринбург"]},
-    {"kod": "sibirskiy", "nazvanie": "Сибирский", "centry": ["Красноярск"]},
-    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный", "centry": ["Хабаровск"]},
+    {"kod": "ЦФО", "nazvanie": "Центральный", "centry": ["Москва"]},
+    {"kod": "СЗФО", "nazvanie": "Северо-Западный", "centry": ["Санкт-Петербург"]},
+    {"kod": "ЮФО", "nazvanie": "Южный", "centry": ["Ростов-на-Дону"]},
+    {"kod": "ПФО", "nazvanie": "Приволжский", "centry": ["Нижний Новгород"]},
+    {"kod": "УФО", "nazvanie": "Уральский", "centry": ["Екатеринбург"]},
+    {"kod": "СФО", "nazvanie": "Сибирский", "centry": ["Красноярск"]},
+    {"kod": "ДФО", "nazvanie": "Дальневосточный", "centry": ["Хабаровск"]},
 ]
 
 STATISTIKA_POZHAROV_2023 = {
@@ -65,12 +65,12 @@ STATISTIKA_POZHAROV_2023 = {
     "postradavshikh": 8647,
     "usherb_mlrd_rub": 15.2,
     "po_fo": {
-        "tcentralnyy": {"pojarov": 58432, "pogibshikh": 1254},
-        "severo-zapadnyy": {"pojarov": 32145, "pogibshikh": 876},
-        "yuzhnyy": {"pojarov": 28934, "pogibshikh": 643},
-        "privolzhskiy": {"pojarov": 62178, "pogibshikh": 1543},
-        "uralskiy": {"pojarov": 34521, "pogibshikh": 897},
-        "sibirskiy": {"pojarov": 56876, "pogibshikh": 1298},
-        "dalnevostochnyy": {"pojarov": 83756, "pogibshikh": 1453},
+        "ЦФО": {"pojarov": 58432, "pogibshikh": 1254},
+        "СЗФО": {"pojarov": 32145, "pogibshikh": 876},
+        "ЮФО": {"pojarov": 28934, "pogibshikh": 643},
+        "ПФО": {"pojarov": 62178, "pogibshikh": 1543},
+        "УФО": {"pojarov": 34521, "pogibshikh": 897},
+        "СФО": {"pojarov": 56876, "pogibshikh": 1298},
+        "ДФО": {"pojarov": 83756, "pogibshikh": 1453},
     },
 }

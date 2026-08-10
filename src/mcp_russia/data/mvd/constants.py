@@ -81,14 +81,14 @@ VIDY_DTP = [
 ]
 
 FEDERALNYE_OKRUGA = [
-    {"kod": "tcentralnyy", "nazvanie": "Центральный"},
-    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный"},
-    {"kod": "yuzhnyy", "nazvanie": "Южный"},
-    {"kod": "privolzhskiy", "nazvanie": "Приволжский"},
-    {"kod": "uralskiy", "nazvanie": "Уральский"},
-    {"kod": "sibirskiy", "nazvanie": "Сибирский"},
-    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный"},
-    {"kod": "skfo", "nazvanie": "Северо-Кавказский"},
+    {"kod": "ЦФО", "nazvanie": "Центральный"},
+    {"kod": "СЗФО", "nazvanie": "Северо-Западный"},
+    {"kod": "ЮФО", "nazvanie": "Южный"},
+    {"kod": "ПФО", "nazvanie": "Приволжский"},
+    {"kod": "УФО", "nazvanie": "Уральский"},
+    {"kod": "СФО", "nazvanie": "Сибирский"},
+    {"kod": "ДФО", "nazvanie": "Дальневосточный"},
+    {"kod": "СКФО", "nazvanie": "Северо-Кавказский"},
 ]
 
 STATISTIKA_PRESTUPNOSTI_2024 = {
@@ -100,14 +100,14 @@ STATISTIKA_PRESTUPNOSTI_2024 = {
     "ekonomicheskie": 310000,
     "narkoticheskie": 195000,
     "po_fo": {
-        "tcentralnyy": {"prestupleniy": 285000, "raskryto": 180000},
-        "severo-zapadnyy": {"prestupleniy": 148000, "raskryto": 95000},
-        "yuzhnyy": {"prestupleniy": 112000, "raskryto": 72000},
-        "skfo": {"prestupleniy": 68000, "raskryto": 43000},
-        "privolzhskiy": {"prestupleniy": 268000, "raskryto": 175000},
-        "uralskiy": {"prestupleniy": 152000, "raskryto": 98000},
-        "sibirskiy": {"prestupleniy": 224000, "raskryto": 145000},
-        "dalnevostochnyy": {"prestupleniy": 113000, "raskryto": 72000},
+        "ЦФО": {"prestupleniy": 285000, "raskryto": 180000},
+        "СЗФО": {"prestupleniy": 148000, "raskryto": 95000},
+        "ЮФО": {"prestupleniy": 112000, "raskryto": 72000},
+        "СКФО": {"prestupleniy": 68000, "raskryto": 43000},
+        "ПФО": {"prestupleniy": 268000, "raskryto": 175000},
+        "УФО": {"prestupleniy": 152000, "raskryto": 98000},
+        "СФО": {"prestupleniy": 224000, "raskryto": 145000},
+        "ДФО": {"prestupleniy": 113000, "raskryto": 72000},
     },
 }
 

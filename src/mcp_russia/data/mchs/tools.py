@@ -86,13 +86,13 @@ async def statistika_pojarov(
             ]
             for fo_kod, fo_dannye in statika["po_fo"].items():
                 fo_nazvanie = (
-                    fo_kod.replace("tcentralnyy", "Центральный")
-                    .replace("severo-zapadnyy", "Северо-Западный")
-                    .replace("yuzhnyy", "Южный")
-                    .replace("privolzhskiy", "Приволжский")
-                    .replace("uralskiy", "Уральский")
-                    .replace("sibirskiy", "Сибирский")
-                    .replace("dalnevostochnyy", "Дальневосточный")
+                    fo_kod.replace("ЦФО", "Центральный")
+                    .replace("СЗФО", "Северо-Западный")
+                    .replace("ЮФО", "Южный")
+                    .replace("ПФО", "Приволжский")
+                    .replace("УФО", "Уральский")
+                    .replace("СФО", "Сибирский")
+                    .replace("ДФО", "Дальневосточный")
                 )
                 stroki.append(
                     f"| {fo_nazvanie} | {fo_dannye['pojarov']:,} | {fo_dannye['pogibshikh']:,} |"

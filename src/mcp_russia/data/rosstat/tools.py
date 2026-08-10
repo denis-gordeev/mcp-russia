@@ -596,6 +596,230 @@ async def investitsii_po_vidam(
     )
 
 
+async def vvp_dannye(god: str = "", kontekst: Context | None = None) -> str:
+    """Получить данные о валовом внутреннем продукте (ВВП) России.
+
+    Аргументы:
+        god: Год для запроса (например, '2024'). По умолчанию — последний доступный.
+
+    Возвращает:
+        Данные о ВВП России.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных о ВВП...")
+    dannye = await client.poluchit_indikator_dannye(kod="vvp", god=god)
+    if not dannye:
+        return (
+            "**Валовой внутренний продукт (ВВП) России**\n\n"
+            "Данные о ВВП доступны через:\n"
+            "- ЕМИСС: https://fedstat.ru/indicator/60201\n"
+            "- Росстат: https://rosstat.gov.ru/vvp\n\n"
+            "Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = (
+            formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
+        )
+        stroki_tablitsy.append((zapis.period, znachenie, zapis.edinitsa or "—"))
+    zagolovok = "**Валовой внутренний продукт (ВВП) России**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "ВВП", "Ед. изм."],
+        stroki_tablitsy,
+    )
+
+
+async def bezrabotitsa_dannye(
+    subiekt: str = "", god: str = "", kontekst: Context | None = None
+) -> str:
+    """Получить данные об уровне безработицы.
+
+    Аргументы:
+        subiekt: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2024').
+
+    Возвращает:
+        Данные об уровне безработицы.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных о безработице...")
+    dannye = await client.poluchit_indikator_dannye(kod="bezrabotitsa", subiekt=subiekt, god=god)
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
+    if not dannye:
+        return (
+            f"**Уровень безработицы{tekst_filtra}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/43062\n"
+            f"- Росстат: https://rosstat.gov.ru/labor\n\n"
+            f"Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = f"{zapis.znachenie:.1f}%" if zapis.znachenie is not None else "—"
+        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", znachenie))
+    zagolovok = f"**Уровень безработицы{tekst_filtra}**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Регион", "Уровень"],
+        stroki_tablitsy,
+    )
+
+
+async def dokhody_na_dushu(
+    subiekt: str = "", god: str = "", kontekst: Context | None = None
+) -> str:
+    """Получить данные о среднедушевых денежных доходах населения.
+
+    Аргументы:
+        subiekt: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2024').
+
+    Возвращает:
+        Данные о среднедушевых доходах.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных о доходах на душу населения...")
+    dannye = await client.poluchit_indikator_dannye(
+        kod="dokhody_na_dushu", subiekt=subiekt, god=god
+    )
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
+    if not dannye:
+        return (
+            f"**Среднедушевые денежные доходы{tekst_filtra}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/57039\n"
+            f"- Росстат: https://rosstat.gov.ru/income\n\n"
+            f"Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = (
+            formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
+        )
+        stroki_tablitsy.append(
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+        )
+    zagolovok = f"**Среднедушевые денежные доходы{tekst_filtra}**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Регион", "Доходы", "Ед. изм."],
+        stroki_tablitsy,
+    )
+
+
+async def promyshlennoe_proizvodstvo(god: str = "", kontekst: Context | None = None) -> str:
+    """Получить данные об индексе промышленного производства.
+
+    Аргументы:
+        god: Год для запроса (например, '2024').
+
+    Возвращает:
+        Данные об индексе промышленного производства.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных о промышленном производстве...")
+    dannye = await client.poluchit_indikator_dannye(kod="promyshlennoe_proizvodstvo", god=god)
+    if not dannye:
+        return (
+            "**Индекс промышленного производства**\n\n"
+            "Данные доступны через:\n"
+            "- ЕМИСС: https://fedstat.ru/indicator/43045\n"
+            "- Росстат: https://rosstat.gov.ru/statistics/industry\n\n"
+            "Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = f"{zapis.znachenie:.1f}%" if zapis.znachenie is not None else "—"
+        stroki_tablitsy.append((zapis.period, znachenie))
+    zagolovok = "**Индекс промышленного производства**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Индекс (% к пред. году)"],
+        stroki_tablitsy,
+    )
+
+
+async def uroven_bednosti(
+    subiekt: str = "", god: str = "", kontekst: Context | None = None
+) -> str:
+    """Получить данные об уровне бедности (доля населения с доходами ниже прожиточного минимума).
+
+    Аргументы:
+        subiekt: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2024').
+
+    Возвращает:
+        Данные об уровне бедности.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных об уровне бедности...")
+    dannye = await client.poluchit_indikator_dannye(
+        kod="uroven_bednosti", subiekt=subiekt, god=god
+    )
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
+    if not dannye:
+        return (
+            f"**Уровень бедности{tekst_filtra}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/33460\n"
+            f"- Росстат: https://rosstat.gov.ru/income\n\n"
+            f"Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = f"{zapis.znachenie:.1f}%" if zapis.znachenie is not None else "—"
+        stroki_tablitsy.append((zapis.period, zapis.subiekt or "—", znachenie))
+    zagolovok = f"**Уровень бедности{tekst_filtra}**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Регион", "Доля (%)"],
+        stroki_tablitsy,
+    )
+
+
+async def srednyaya_pensiya(
+    subiekt: str = "", god: str = "", kontekst: Context | None = None
+) -> str:
+    """Получить данные о среднем размере назначенных пенсий.
+
+    Аргументы:
+        subiekt: Код региона (необязательно). Без указания — данные по России.
+        god: Год для запроса (например, '2024').
+
+    Возвращает:
+        Данные о среднем размере пенсий.
+    """
+    if kontekst:
+        await kontekst.info("Запрос данных о средней пенсии...")
+    dannye = await client.poluchit_indikator_dannye(
+        kod="srednyaya_pensiya", subiekt=subiekt, god=god
+    )
+    tekst_filtra = f" по региону {subiekt}" if subiekt else " по России"
+    if not dannye:
+        return (
+            f"**Средний размер назначенных пенсий{tekst_filtra}**\n\n"
+            f"Данные доступны через:\n"
+            f"- ЕМИСС: https://fedstat.ru/indicator/60440\n"
+            f"- Росстат: https://rosstat.gov.ru/society\n\n"
+            f"Для запроса данных за конкретный год используйте параметр god."
+        )
+    stroki_tablitsy = []
+    for zapis in dannye:
+        znachenie = (
+            formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
+        )
+        stroki_tablitsy.append(
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+        )
+    zagolovok = f"**Средний размер назначенных пенсий{tekst_filtra}**\n\n"
+    zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
+    return zagolovok + tablitsa_v_markdown(
+        ["Период", "Регион", "Размер пенсии", "Ед. изм."],
+        stroki_tablitsy,
+    )
+
+
 async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
     """Сравнить федеральные округа по выбранному показателю.
 
@@ -648,20 +872,9 @@ async def sravnenie_okrugov(pokazatel: str, kontekst: Context) -> str:
         pokazatel,
     )
     nazvaniya_okrugov = {okrug["kod"]: okrug["nazvanie"] for okrug in FEDERALNYE_OKRUGA}
-    sokrashcheniya_okrugov = {
-        "ЦФО": "CFO",
-        "СЗФО": "SZFO",
-        "ЮФО": "YFO",
-        "СКФО": "SKFO",
-        "ПФО": "PFO",
-        "УФО": "UFO",
-        "СФО": "SIFO",
-        "ДФО": "DFO",
-    }
     stroki_tablitsy = []
     for i, (kod_okruga, znachenie) in enumerate(otsortirovannye, 1):
-        kod_latin = sokrashcheniya_okrugov.get(kod_okruga, kod_okruga)
-        nazvanie_okruga = nazvaniya_okrugov.get(kod_latin, kod_okruga)
+        nazvanie_okruga = nazvaniya_okrugov.get(kod_okruga, kod_okruga)
         znachenie_fmt = formatirovat_chislo_ru(znachenie, 2) if znachenie else "—"
         stroki_tablitsy.append((i, nazvanie_okruga, kod_okruga, znachenie_fmt))
     zagolovok = f"**Рейтинг федеральных округов по показателю «{imya_indikatora}»**\n\n"

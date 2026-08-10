@@ -34,8 +34,8 @@ KategoriiVoditelskihUdostovereniy = [
     {"kod": "ce", "nazvanie": "CE — грузовики с прицепом"},
     {"kod": "de", "nazvanie": "DE — автобусы с прицепом"},
     {"kod": "m", "nazvanie": "M — мопеды и скутеры"},
-    {"kod": "tm", "nazvanie": "Tm — трамваи"},
-    {"kod": "tb", "nazvanie": "Tb — троллейбусы"},
+    {"kod": "tm", "nazvanie": "Тм — трамваи"},
+    {"kod": "tb", "nazvanie": "Тб — троллейбусы"},
 ]
 
 VidyNarusheniy = [

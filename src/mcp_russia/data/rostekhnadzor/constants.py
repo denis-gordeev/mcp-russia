@@ -42,14 +42,14 @@ VIDY_INTSIDENTOV = [
 ]
 
 FEDERALNYE_OKRUGA = [
-    {"kod": "tcentralnyy", "nazvanie": "Центральный"},
-    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный"},
-    {"kod": "yuzhnyy", "nazvanie": "Южный"},
-    {"kod": "privolzhskiy", "nazvanie": "Приволжский"},
-    {"kod": "uralskiy", "nazvanie": "Уральский"},
-    {"kod": "sibirskiy", "nazvanie": "Сибирский"},
-    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный"},
-    {"kod": "skfo", "nazvanie": "Северо-Кавказский"},
+    {"kod": "ЦФО", "nazvanie": "Центральный"},
+    {"kod": "СЗФО", "nazvanie": "Северо-Западный"},
+    {"kod": "ЮФО", "nazvanie": "Южный"},
+    {"kod": "ПФО", "nazvanie": "Приволжский"},
+    {"kod": "УФО", "nazvanie": "Уральский"},
+    {"kod": "СФО", "nazvanie": "Сибирский"},
+    {"kod": "ДФО", "nazvanie": "Дальневосточный"},
+    {"kod": "СКФО", "nazvanie": "Северо-Кавказский"},
 ]
 
 STATISTIKA_PROMBEZ_2024 = {

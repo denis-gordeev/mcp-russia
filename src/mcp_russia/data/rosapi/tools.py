@@ -59,7 +59,7 @@ async def konsul_adres_po_indeksu(indeks: str, kontekst: Context) -> str:
         f"**Почтовый индекс: {indeks}**\n\n"
         f"{rezultat['oshibka']}\n\n"
         f"Для получения данных подключите API Dadata (MCP_RUSSIA_DADATA_API_KEY):\n"
-        f"https://dadata.ru/api/adres_dannyeess/"
+        f"https://dadata.ru/api/address/"
     )
 
 

@@ -65,13 +65,13 @@ async def test_informatsiya_ob_okruge():
         rosstat_tools.client,
         "poluchit_federalny_okrug",
         return_value={
-            "kod": "CFO",
+            "kod": "ЦФО",
             "nazvanie": "Центральный федеральный округ",
             "kolichestvo_subiektov": 18,
             "subiekty": ["г. Москва", "Московская область"],
         },
     ):
-        rezultat = await rosstat_tools.informatsiya_ob_okruge("CFO", kontekst)
+        rezultat = await rosstat_tools.informatsiya_ob_okruge("ЦФО", kontekst)
     assert "Центральн" in rezultat
     assert "18" in rezultat
 
@@ -497,3 +497,153 @@ async def test_sravnenie_okrugov_pustoy():
     with patch.object(rosstat_tools.client, "poluchit_sravnenie_regionov", return_value=[]):
         rezultat = await rosstat_tools.sravnenie_okrugov("vrp", kontekst)
     assert "недоступны" in rezultat or "ВРП" in rezultat
+
+
+async def test_vvp_dannye_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="60201",
+            nazvanie="Валовой внутренний продукт",
+            period="2024",
+            znachenie=187000.0,
+            edinitsa="млрд руб.",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.vvp_dannye(god="2024")
+    assert "ВВП" in rezultat
+    assert "187" in rezultat
+
+
+async def test_vvp_dannye_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.vvp_dannye()
+    assert "60201" in rezultat
+
+
+async def test_bezrabotitsa_dannye_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="43062",
+            nazvanie="Уровень безработицы",
+            period="2024",
+            znachenie=3.2,
+            edinitsa="%",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.bezrabotitsa_dannye()
+    assert "безработиц" in rezultat
+    assert "3" in rezultat
+
+
+async def test_bezrabotitsa_dannye_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.bezrabotitsa_dannye()
+    assert "43062" in rezultat
+
+
+async def test_dokhody_na_dushu_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="57039",
+            nazvanie="Среднедушевые денежные доходы",
+            period="2024",
+            znachenie=45600.0,
+            edinitsa="руб./мес.",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.dokhody_na_dushu()
+    assert "доход" in rezultat
+    assert "45" in rezultat
+
+
+async def test_dokhody_na_dushu_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.dokhody_na_dushu()
+    assert "57039" in rezultat
+
+
+async def test_promyshlennoe_proizvodstvo_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="43045",
+            nazvanie="Индекс промышленного производства",
+            period="2024",
+            znachenie=103.5,
+            edinitsa="%",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.promyshlennoe_proizvodstvo()
+    assert "промышленн" in rezultat
+    assert "103" in rezultat
+
+
+async def test_promyshlennoe_proizvodstvo_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.promyshlennoe_proizvodstvo()
+    assert "43045" in rezultat
+
+
+async def test_uroven_bednosti_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="33460",
+            nazvanie="Уровень бедности",
+            period="2024",
+            znachenie=9.8,
+            edinitsa="%",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.uroven_bednosti()
+    assert "бедност" in rezultat
+    assert "9" in rezultat
+
+
+async def test_uroven_bednosti_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.uroven_bednosti()
+    assert "33460" in rezultat
+
+
+async def test_srednyaya_pensiya_s_dannymi():
+    maket_dannykh = [
+        IndikatorDannye(
+            kod_emiss="60440",
+            nazvanie="Средний размер назначенных пенсий",
+            period="2024",
+            znachenie=21500.0,
+            edinitsa="руб.",
+            subiekt="",
+        ),
+    ]
+    with patch.object(
+        rosstat_tools.client, "poluchit_indikator_dannye", return_value=maket_dannykh
+    ):
+        rezultat = await rosstat_tools.srednyaya_pensiya()
+    assert "пенси" in rezultat
+    assert "21" in rezultat
+
+
+async def test_srednyaya_pensiya_pustoy():
+    with patch.object(rosstat_tools.client, "poluchit_indikator_dannye", return_value=[]):
+        rezultat = await rosstat_tools.srednyaya_pensiya()
+    assert "60440" in rezultat

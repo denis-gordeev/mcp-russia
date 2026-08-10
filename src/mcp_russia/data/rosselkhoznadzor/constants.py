@@ -52,14 +52,14 @@ KARANTINNYE_OBYEKTY = [
 ]
 
 FEDERALNYE_OKRUGA_RSKHN = [
-    {"kod": "tcentralnyy", "nazvanie": "Центральный", "tsentry": ["Москва"]},
-    {"kod": "severo-zapadnyy", "nazvanie": "Северо-Западный", "tsentry": ["Санкт-Петербург"]},
-    {"kod": "yuzhnyy", "nazvanie": "Южный", "tsentry": ["Ростов-на-Дону"]},
-    {"kod": "privolzhskiy", "nazvanie": "Приволжский", "tsentry": ["Нижний Новгород"]},
-    {"kod": "uralskiy", "nazvanie": "Уральский", "tsentry": ["Екатеринбург"]},
-    {"kod": "sibirskiy", "nazvanie": "Сибирский", "tsentry": ["Красноярск"]},
-    {"kod": "dalnevostochnyy", "nazvanie": "Дальневосточный", "tsentry": ["Хабаровск"]},
-    {"kod": "krymskiy", "nazvanie": "Крымский", "tsentry": ["Симферополь"]},
+    {"kod": "ЦФО", "nazvanie": "Центральный", "tsentry": ["Москва"]},
+    {"kod": "СЗФО", "nazvanie": "Северо-Западный", "tsentry": ["Санкт-Петербург"]},
+    {"kod": "ЮФО", "nazvanie": "Южный", "tsentry": ["Ростов-на-Дону"]},
+    {"kod": "ПФО", "nazvanie": "Приволжский", "tsentry": ["Нижний Новгород"]},
+    {"kod": "УФО", "nazvanie": "Уральский", "tsentry": ["Екатеринбург"]},
+    {"kod": "СФО", "nazvanie": "Сибирский", "tsentry": ["Красноярск"]},
+    {"kod": "ДФО", "nazvanie": "Дальневосточный", "tsentry": ["Хабаровск"]},
+    {"kod": "КФО", "nazvanie": "Крымский", "tsentry": ["Симферополь"]},
 ]
 
 STATISTIKA_RSKHN_2023 = {
