@@ -24,6 +24,10 @@ keywords = [
     "model-context-protocol",
     "agent",
     "async",
+    "государственные-данные",
+    "открытые-данные",
+    "публичные-данные",
+    "русскоязычный",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
