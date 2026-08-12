@@ -5,7 +5,7 @@ HTTP-клиент доступен в инструментах через kontek
 Использование:
     from mcp_russia._shared.lifespan import http_zhiznennyy_tsikl
 
-    mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
+    mcp = FastMCP("mcp-russia", instructions="...", version="0.5.0", lifespan=http_zhiznennyy_tsikl)
 """
 
 from __future__ import annotations

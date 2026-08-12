@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_chrezvychaynoy_situatsii, obzor_pozharnoy_obstanovki
 from .resources import istochniki_dannyh, struktura_mchs, zakonodatelstvo_chs
 from .tools import (
@@ -19,7 +20,9 @@ from .tools import (
     statistika_pojarov,
 )
 
-mcp = FastMCP("mcp-russia-mchs")
+mcp = FastMCP(
+    "mcp-russia-mchs", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_vidov_chs, tags={"виды-ЧС", "справочник"})
 mcp.tool(spisok_klassov_chs, tags={"классы-ЧС", "справочник"})

@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_zakupki, obzor_zakupok
 from .resources import istochniki_dannyh, struktura_eis, zakonodatelstvo
 from .tools import (
@@ -19,7 +20,9 @@ from .tools import (
     statusy_zakupok,
 )
 
-mcp = FastMCP("mcp-russia-zakupki")
+mcp = FastMCP(
+    "mcp-russia-zakupki", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(poisk_zakupok, tags={"закупки", "поиск"})

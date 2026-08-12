@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_transportnogo_sredstva, analiz_voditelya
 from .resources import istochniki_dannyh, sistema_gibdd, zakonodatelstvo
 from .tools import (
@@ -22,7 +23,9 @@ from .tools import (
     statistika_dtp,
 )
 
-mcp = FastMCP("mcp-russia-gibdd")
+mcp = FastMCP(
+    "mcp-russia-gibdd", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_tipov_ts, tags={"тс", "справочник"})
 mcp.tool(spisok_kategoriyy_vu, tags={"ву", "справочник"})

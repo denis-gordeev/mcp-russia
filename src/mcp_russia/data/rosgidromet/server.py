@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_pogody_regiona, obzor_ekologii
 from .resources import istochniki_dannyh, metodologiya, opasnye_yavleniya
 from .tools import (
@@ -17,7 +18,9 @@ from .tools import (
     sputnik_monitoring,
 )
 
-mcp = FastMCP("mcp-russia-rosgidromet")
+mcp = FastMCP(
+    "mcp-russia-rosgidromet", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_stantsiy, tags={"станции", "справочник"})

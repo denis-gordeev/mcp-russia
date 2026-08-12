@@ -6,7 +6,7 @@ META_FUNKTSII = MetaFunktsii(
     imya="cbrf",
     opisanie=(
         "Данные Центрального банка РФ: ключевая ставка, официальные курсы валют, "
-        "инфляция, золотовалютые резервы, статистика"
+        "инфляция, золотовалютные резервы, статистика"
     ),
     versiya="0.1.0",
     baza_api="https://www.cbr-xml-daily.ru/daily_json.js",

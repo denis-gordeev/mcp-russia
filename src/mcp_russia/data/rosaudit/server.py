@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_auditorskogo_zaklyucheniya, obzor_ispolneniya_byudzheta
 from .resources import (
     istochniki_dannyh,
@@ -22,7 +23,9 @@ from .tools import (
     spisok_tipov_meropriyatiy,
 )
 
-mcp = FastMCP("mcp-russia-rosaudit")
+mcp = FastMCP(
+    "mcp-russia-rosaudit", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})

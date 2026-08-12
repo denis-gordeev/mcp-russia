@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_nalogoplatelshchika, obzor_rezhimov_nalogooblozheniya
 from .resources import istochniki_dannyh, sistema_nalogovyh_organov, zakonodatelstvo
 from .tools import (
@@ -19,7 +20,7 @@ from .tools import (
     spisok_vidov_nalogov,
 )
 
-mcp = FastMCP("mcp-russia-fns")
+mcp = FastMCP("mcp-russia-fns", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya)
 
 mcp.tool(spisok_nalogovyh_rezhimov, tags={"режимы", "справочник"})
 mcp.tool(spisok_vidov_nalogov, tags={"налоги", "справочник"})

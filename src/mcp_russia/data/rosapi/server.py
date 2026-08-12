@@ -6,6 +6,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_organizatsii, poisk_adresa_prompt
 from .resources import dostupnye_servisy, nalogovye_stavki_resurs
 from .tools import (
@@ -19,7 +20,9 @@ from .tools import (
     spisok_bankov,
 )
 
-mcp = FastMCP("mcp-russia-rosapi")
+mcp = FastMCP(
+    "mcp-russia-rosapi", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты (8)
 mcp.tool(konsul_adres_po_indeksu, tags={"адрес", "почтовый-индекс", "фиаc"})

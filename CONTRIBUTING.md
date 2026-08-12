@@ -89,9 +89,14 @@ META_FUNKTSII = MetaFunktsii(
 
 ```python
 from fastmcp import FastMCP
+from . import META_FUNKTSII
 from .tools import primer_instrument
 
-mcp = FastMCP("mcp-russia-primer-modul")
+mcp = FastMCP(
+    "mcp-russia-primer-modul",
+    instructions=META_FUNKTSII.opisanie,
+    version=META_FUNKTSII.versiya,
+)
 
 mcp.tool(primer_instrument)
 ```

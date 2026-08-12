@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_kandidata, sravnenie_partiy
 from .resources import (
     izvestnye_vybory_resource,
@@ -26,7 +27,9 @@ from .tools import (
     yavka_i_itogi,
 )
 
-mcp = FastMCP("mcp-russia-cekrf")
+mcp = FastMCP(
+    "mcp-russia-cekrf", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты (10)
 mcp.tool(tipy_vyborov, tags={"список", "типы-выборов", "справочник"})

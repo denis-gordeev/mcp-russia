@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import (
     analiz_demografii,
     analiz_regiona,
@@ -38,7 +39,9 @@ from .tools import (
     zarplata_dannye,
 )
 
-mcp = FastMCP("mcp-russia-rosstat")
+mcp = FastMCP(
+    "mcp-russia-rosstat", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_regionov, tags={"регионы", "справочник"})

@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_ispolneniya_byudzheta, obzor_byudzhetnoy_sistemy
 from .resources import byudzhetnaya_sistema, istochniki_dannyh, struktura_kaznacheistva
 from .tools import (
@@ -19,7 +20,9 @@ from .tools import (
     spisok_vidov_byudzhetov,
 )
 
-mcp = FastMCP("mcp-russia-kaznacheistvo")
+mcp = FastMCP(
+    "mcp-russia-kaznacheistvo", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_vidov_byudzhetov, tags={"виды-бюджетов", "справочник"})

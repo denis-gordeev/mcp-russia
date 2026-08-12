@@ -34,7 +34,12 @@ src/
 Фактическая сборка корневого сервера сейчас устроена так:
 
 ```python
-mcp = FastMCP("mcp-russia", lifespan=http_zhiznennyy_tsikl)
+mcp = FastMCP(
+    "mcp-russia",
+    instructions="Русскоязычный MCP-сервер для государственных и публичных данных РФ",
+    version="0.5.0",
+    lifespan=http_zhiznennyy_tsikl,
+)
 reyestr = ReyestrFunktsiy()
 reyestr.obnaruzhit("mcp_russia.data")
 reyestr.obnaruzhit("mcp_russia.agenty")

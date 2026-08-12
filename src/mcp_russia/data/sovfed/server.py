@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_senatora, obzor_zakonodatelstva
 from .resources import istochniki_dannyh, reglament, struktura_sovfeda
 from .tools import (
@@ -17,7 +18,9 @@ from .tools import (
     spisok_zasedaniy,
 )
 
-mcp = FastMCP("mcp-russia-sovfed")
+mcp = FastMCP(
+    "mcp-russia-sovfed", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_senatorov, tags={"сенаторы", "справочник"})

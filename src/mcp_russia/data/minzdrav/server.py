@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_zdorovya_regiona, obzor_med_organizatsiy
 from .resources import federalnyye_okruga, istochniki_dannyh, klassifikatsii
 from .tools import (
@@ -18,7 +19,9 @@ from .tools import (
     statistika_zabolevaniy,
 )
 
-mcp = FastMCP("mcp-russia-minzdrav")
+mcp = FastMCP(
+    "mcp-russia-minzdrav", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(poisk_med_organizatsiy, tags={"медицинские-организации", "поиск"})

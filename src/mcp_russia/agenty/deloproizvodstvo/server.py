@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import (
     redaktor_akt,
     redaktor_dokladnaya_zapiska,
@@ -34,7 +35,11 @@ from .tools import (
     validirovat_dokument,
 )
 
-mcp = FastMCP("mcp-russia-deloproizvodstvo")
+mcp = FastMCP(
+    "mcp-russia-deloproizvodstvo",
+    instructions=META_FUNKTSII.opisanie,
+    version=META_FUNKTSII.versiya,
+)
 
 # Инструменты
 mcp.tool(formatirovat_datu_propisyu, tags={"форматирование", "дата"})

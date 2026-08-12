@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_ekologicheskoy_proverki, obzor_nedropolzovaniya
 from .resources import (
     istochniki_dannyh,
@@ -23,7 +24,11 @@ from .tools import (
     spisok_vidov_nadzora,
 )
 
-mcp = FastMCP("mcp-russia-rosprirodnadzor")
+mcp = FastMCP(
+    "mcp-russia-rosprirodnadzor",
+    instructions=META_FUNKTSII.opisanie,
+    version=META_FUNKTSII.versiya,
+)
 
 # Инструменты
 mcp.tool(spisok_vidov_nadzora, tags={"виды-надзора", "справочник"})

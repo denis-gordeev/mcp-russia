@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_dela, analiz_uchastnika
 from .resources import istochniki_dannyh, kodifikatsiya_del, sistema_sudov
 from .tools import (
@@ -18,7 +19,9 @@ from .tools import (
     storony_dela,
 )
 
-mcp = FastMCP("mcp-russia-kad-arbitrazh")
+mcp = FastMCP(
+    "mcp-russia-kad_arbitrazh", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(poisk_del, tags={"дела", "поиск"})

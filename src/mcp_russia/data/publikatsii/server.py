@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_normativnogo_akta, obzor_zakonodatelstva
 from .resources import (
     istochniki_dannyh,
@@ -23,7 +24,9 @@ from .tools import (
     spisok_tipov_aktov,
 )
 
-mcp = FastMCP("mcp-russia-publikatsii")
+mcp = FastMCP(
+    "mcp-russia-publikatsii", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_tipov_aktov, tags={"типы-актов", "справочник"})

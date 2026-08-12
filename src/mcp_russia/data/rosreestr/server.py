@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_nedvizhimosti, obzor_zemelnogo_uchastka
 from .resources import istochniki_dannyh, sistema_registratsii, zakonodatelstvo
 from .tools import (
@@ -18,7 +19,9 @@ from .tools import (
     spisok_vidov_ispolzovaniya,
 )
 
-mcp = FastMCP("mcp-russia-rosreestr")
+mcp = FastMCP(
+    "mcp-russia-rosreestr", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_tipov_nedvizhimosti, tags={"типы", "справочник"})
 mcp.tool(spisok_kategoriy_zemel, tags={"категории", "справочник"})

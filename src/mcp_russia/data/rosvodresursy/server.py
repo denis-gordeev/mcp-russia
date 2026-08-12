@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_vodnogo_obekta, obzor_vodokhranilishch
 from .resources import (
     basseynovye_okruga_info,
@@ -22,7 +23,9 @@ from .tools import (
     vodopolzovanie_regionov,
 )
 
-mcp = FastMCP("mcp-russia-rosvodresursy")
+mcp = FastMCP(
+    "mcp-russia-rosvodresursy", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_basseynovykh_okrugov, tags={"бассейновые-округа", "справочник"})

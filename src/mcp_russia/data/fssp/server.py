@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_dolzhnika, obzor_ispolnitelnogo_proizvodstva
 from .resources import istochniki_dannyh, struktura_fssp, zakonodatelstvo
 from .tools import (
@@ -20,7 +21,9 @@ from .tools import (
     spisok_vidov_proizvodstv,
 )
 
-mcp = FastMCP("mcp-russia-fssp")
+mcp = FastMCP(
+    "mcp-russia-fssp", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_vidov_proizvodstv, tags={"виды", "справочник"})
 mcp.tool(spisok_statusov_proizvodstva, tags={"статус", "справочник"})

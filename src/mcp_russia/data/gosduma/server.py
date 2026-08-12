@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_deputata, obzor_zakonodatelstva
 from .resources import istochniki_dannyh, struktura_dumy
 from .tools import (
@@ -17,7 +18,9 @@ from .tools import (
     zakonoproekty,
 )
 
-mcp = FastMCP("mcp-russia-gosduma")
+mcp = FastMCP(
+    "mcp-russia-gosduma", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_deputatov, tags={"депутаты", "справочник"})

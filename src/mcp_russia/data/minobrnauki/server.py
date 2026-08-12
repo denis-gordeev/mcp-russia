@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_vuza, obzor_nauchnyh_grantov
 from .resources import istochniki_dannyh, sistema_obrazovaniya, zakonodatelstvo
 from .tools import (
@@ -27,7 +28,9 @@ from .tools import (
     vuzy_zapret_priema,
 )
 
-mcp = FastMCP("mcp-russia-minobrnauki")
+mcp = FastMCP(
+    "mcp-russia-minobrnauki", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_tipov_vuzov, tags={"вузы", "справочник"})
 mcp.tool(spisok_form_obucheniya, tags={"обучение", "справочник"})

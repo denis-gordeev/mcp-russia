@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_valyut, obzor_ekonomiki
 from .resources import dostupnye_valyuty, osnovnye_valyuty, spravochnik_kursov
 from .tools import (
@@ -16,7 +17,9 @@ from .tools import (
     uznat_kurs_valyuty,
 )
 
-mcp = FastMCP("mcp-russia-cbrf")
+mcp = FastMCP(
+    "mcp-russia-cbrf", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(tekushchie_kursy, tags={"курсы-валют", "основные"})
 mcp.tool(uznat_kurs_valyuty, tags={"курс-валюты", "конкретная"})

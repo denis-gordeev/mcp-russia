@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_prestupnosti, obzor_dorozhnoy_bezopasnosti
 from .resources import istochniki_dannyh, struktura_mvd, zakonodatelstvo
 from .tools import (
@@ -18,7 +19,7 @@ from .tools import (
     statistika_prestupnosti,
 )
 
-mcp = FastMCP("mcp-russia-mvd")
+mcp = FastMCP("mcp-russia-mvd", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya)
 
 mcp.tool(spisok_naborov_dannykh, tags={"наборы-данных", "справочник"})
 mcp.tool(spisok_vidov_prestupleniy, tags={"преступления", "справочник"})

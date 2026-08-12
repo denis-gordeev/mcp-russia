@@ -116,10 +116,14 @@ async def spisok_zapisey(stranitsa: int = 1) -> str:
 ```python
 from fastmcp import FastMCP
 
-from . import tools
+from . import META_FUNKTSII, tools
 
 
-mcp = FastMCP("primer")
+mcp = FastMCP(
+    "primer",
+    instructions=META_FUNKTSII.opisanie,
+    version=META_FUNKTSII.versiya,
+)
 mcp.tool(tools.spisok_zapisey)
 ```
 

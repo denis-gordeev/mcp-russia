@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_veterinarnoy_proverki, obzor_karantinnoy_obstanovki
 from .resources import istochniki_dannyh, struktura_rskhn, zakonodatelstvo_rskhn
 from .tools import (
@@ -19,7 +20,11 @@ from .tools import (
     veterinarsnye_sertifikaty,
 )
 
-mcp = FastMCP("mcp-russia-rosselkhoznadzor")
+mcp = FastMCP(
+    "mcp-russia-rosselkhoznadzor",
+    instructions=META_FUNKTSII.opisanie,
+    version=META_FUNKTSII.versiya,
+)
 
 mcp.tool(spisok_vidov_nadzora, tags={"виды-надзора", "справочник"})
 mcp.tool(spisok_kategoriy_proverok, tags={"категории-проверок", "справочник"})

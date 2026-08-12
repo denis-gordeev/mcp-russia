@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_narusheniya, obzor_reestrov
 from .resources import (
     istochniki_dannyh,
@@ -27,7 +28,9 @@ from .tools import (
     zapisi_reestra,
 )
 
-mcp = FastMCP("mcp-russia-roskomnadzor")
+mcp = FastMCP(
+    "mcp-russia-roskomnadzor", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 # Инструменты
 mcp.tool(spisok_napravleniy, tags={"направления", "справочник"})

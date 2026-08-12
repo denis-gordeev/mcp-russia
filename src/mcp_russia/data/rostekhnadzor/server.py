@@ -5,6 +5,7 @@
 
 from fastmcp import FastMCP
 
+from . import META_FUNKTSII
 from .prompts import analiz_intsidenta, obzor_promyshlennoy_bezopasnosti
 from .resources import istochniki_dannyh, struktura_rostekhnadzora, zakonodatelstvo_prombez
 from .tools import (
@@ -17,7 +18,9 @@ from .tools import (
     spisok_vidov_nadzora,
 )
 
-mcp = FastMCP("mcp-russia-rostekhnadzor")
+mcp = FastMCP(
+    "mcp-russia-rostekhnadzor", instructions=META_FUNKTSII.opisanie, version=META_FUNKTSII.versiya
+)
 
 mcp.tool(spisok_vidov_nadzora, tags={"надзор", "справочник"})
 mcp.tool(spisok_klassov_opasnosti, tags={"опасность", "справочник"})
