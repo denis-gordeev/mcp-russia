@@ -12,5 +12,5 @@ META_FUNKTSII = MetaFunktsii(
     versiya="0.2.0",
     baza_api="https://ach.gov.ru",
     trebuet_autentifikatsii=False,
-    tegi=["счётная-палата", "аудит", "бюджет", "контроль", "росфинмониторинг"],
+    tegi=["счётная-палата", "аудит", "бюджет", "контроль", "государственный-аудит"],
 )
