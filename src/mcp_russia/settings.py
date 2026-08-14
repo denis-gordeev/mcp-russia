@@ -16,7 +16,7 @@ load_dotenv()
 TAIMAUT_HTTP: float = float(os.environ.get("MCP_RUSSIA_HTTP_TIMEOUT", "30.0"))
 MAKS_POVTOROV_HTTP: int = int(os.environ.get("MCP_RUSSIA_HTTP_MAX_RETRIES", "3"))
 BAZA_EKSPON_ZADERZH: float = float(os.environ.get("MCP_RUSSIA_HTTP_BACKOFF_BASE", "1.0"))
-POLZOVATELSKIY_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/0.5.0")
+POLZOVATELSKIY_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/0.6.0")
 
 # --- Поиск инструментов ---
 # "bm25" (по умолчанию): BM25-поиск — заменяет spisok_instrumentov

@@ -20,6 +20,16 @@ META_FUNKTSII = MetaFunktsii(
     baza_api="https://dadata.ru/api",
     trebuet_autentifikatsii=True,
     peremennaya_avt_env="MCP_RUSSIA_DADATA_API_KEY",
+    operatsii_trebuyut_avtorizatsii=[
+        "konsul_adres_po_indeksu",
+        "poisk_adresa",
+        "poisk_org_po_inn",
+        "poisk_org_po_ogrn",
+        "spisok_bankov",
+        "konsul_bank_po_bik",
+        "prazdniki_rf",
+        "nalogovye_stavki",
+    ],
     tegi=[
         "адрес",
         "фиас",

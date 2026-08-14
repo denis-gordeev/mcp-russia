@@ -1,6 +1,6 @@
 [project]
 name = "mcp-russia"
-version = "0.5.0"
+version = "0.6.0"
 description = "Русскоязычный MCP-сервер для государственных и публичных данных РФ"
 readme = "README.md"
 license = "MIT"
