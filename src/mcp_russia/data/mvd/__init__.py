@@ -8,7 +8,7 @@ META_FUNKTSII = MetaFunktsii(
         "Данные МВД России: статистика преступности, ДТП, розыск, "
         "наркотические преступления, государственный контроль, лицензирование"
     ),
-    versiya="0.1.0",
+    versiya="0.2.0",
     baza_api="https://мвд.рф",
     trebuet_autentifikatsii=False,
     tegi=[

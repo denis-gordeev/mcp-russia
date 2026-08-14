@@ -9,7 +9,7 @@ META_FUNKTSII = MetaFunktsii(
         "Данные Ростехнадзора: промышленная безопасность, атомный надзор, "
         "лицензирование, инциденты, радиационная обстановка объектов"
     ),
-    versiya="0.1.0",
+    versiya="0.2.0",
     baza_api="https://rostechnadzor.gov.ru",
     trebuet_autentifikatsii=False,
     tegi=[

@@ -8,7 +8,7 @@ META_FUNKTSII = MetaFunktsii(
         "Данные Центрального банка РФ: ключевая ставка, официальные курсы валют, "
         "инфляция, золотовалютные резервы, статистика"
     ),
-    versiya="0.1.0",
+    versiya="0.2.0",
     baza_api="https://www.cbr-xml-daily.ru/daily_json.js",
     trebuet_autentifikatsii=False,
     tegi=["экономика", "ключевая-ставка", "курс-валют", "инфляция", "цб-рф"],

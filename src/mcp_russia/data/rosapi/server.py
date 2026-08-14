@@ -25,8 +25,8 @@ mcp = FastMCP(
 )
 
 # Инструменты (8)
-mcp.tool(konsul_adres_po_indeksu, tags={"адрес", "почтовый-индекс", "фиаc"})
-mcp.tool(poisk_adresa, tags={"адрес", "поиск", "фиаc"})
+mcp.tool(konsul_adres_po_indeksu, tags={"адрес", "почтовый-индекс", "фиас"})
+mcp.tool(poisk_adresa, tags={"адрес", "поиск", "фиас"})
 mcp.tool(poisk_org_po_inn, tags={"организация", "инн", "егр юл"})
 mcp.tool(poisk_org_po_ogrn, tags={"организация", "огрн", "егр юл"})
 mcp.tool(spisok_bankov, tags={"банки", "справочник", "бик"})

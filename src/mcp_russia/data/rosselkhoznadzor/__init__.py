@@ -9,7 +9,7 @@ META_FUNKTSII = MetaFunktsii(
         "земельный надзор, пестициды и агрохимикаты, карантин растений, "
         "регистрация кормов и удобрений"
     ),
-    versiya="0.1.0",
+    versiya="0.2.0",
     baza_api="https://fsvps.gov.ru",
     trebuet_autentifikatsii=False,
     tegi=[

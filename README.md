@@ -26,7 +26,7 @@ Python-пакет `mcp_russia` является единой точкой вхо
 - Мета-инструменты сервера на русском: `spisok_funktsiy`, `rekomendovat_instrumenty`, `splanirovat_zapros`, `vypolnit_paket`.
 - Базовый класс исключений: `OshibkaMcpRussia`.
 - 26 российских модулей данных, подключённых к реальным API-интеграциям.
-- Модули данных: ЦБ РФ (cbr-xml-daily.ru), Росгидромет (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru), МВД России (мвд.рф, data.gov.ru), Ростехнадзор (rostechnadzor.gov.ru).
+- Модули данных: ЦБ РФ (cbr-xml-daily.ru), Росгидромет / Open-Meteo (open-meteo.com), ФНС (egrul.nalog.ru), Госдума (api.duma.gov.ru), Закупки (zakupki.gov.ru), Картотека арбитражных дел (kad.arbitr.ru), РосАПИ (Dadata), Росреестр (pkk.rosreestr.ru), ГИБДД (гибдд.рф), ЦИК РФ (vybory.izbirkom.ru), ФССП (fssp.gov.ru), Официальные публикации (pravo.gov.ru), Минобрнауки и Рособрнадзор (obrnadzor.gov.ru), Роспотребнадзор (proverki.rospotrebnadzor.ru), Роскомнадзор (rkn.gov.ru), Росстат (fedstat.ru), Росводресурсы (text.water.ru, gmvo.skniigkh.ru), Минздрав (data.minzdrav.gov.ru, roszdravnadzor.gov.ru), Счётная палата (ach.gov.ru, budget.gov.ru), Совет Федерации (sovfed.ru, data.gov.ru), Федеральное казначейство (roskazna.gov.ru, budget.gov.ru), Росприроднадзор (rpn.gov.ru), МЧС России (mchs.gov.ru, data.mchs.gov.ru, fires.ru), Россельхознадзор (fsvps.gov.ru, data.fsvps.gov.ru), МВД России (мвд.рф, data.gov.ru), Ростехнадзор (rostechnadzor.gov.ru).
 - Агентный модуль: Делопроизводство (официальная переписка по ГОСТ Р 7.0.97-2016).
 - Инструменты отраслевой структуры ВРП (`otraslevaya_struktura_vrp`) и инвестиций по видам деятельности (`investitsii_po_vidam`).
 - Инструменты сравнения регионов (`sravnenie_regionov`) и федеральных округов (`sravnenie_okrugov`) по показателям.
@@ -41,7 +41,7 @@ Python-пакет `mcp_russia` является единой точкой вхо
 ## Что здесь есть
 
 - Архитектура MCP-сервера на Python с авторегистрацией модулей.
-- 26 активных российских модулей данных с реальными интеграциями: ЦБ РФ, Росгидромет, ФНС, Госдума, Закупки, КАД Арбитраж, РосАПИ (Dadata), Росреестр, ГИБДД, ЦИК РФ, ФССП, Официальные публикации, Минобрнауки, Роспотребнадзор, Роскомнадзор, Росстат, Росводресурсы, Минздрав, Счётная палата, Совет Федерации, Казначейство, Росприроднадзор, МЧС, Россельхознадзор, МВД, Ростехнадзор.
+- 26 активных российских модулей данных с реальными интеграциями: ЦБ РФ, Росгидромет (Open-Meteo), ФНС, Госдума, Закупки, КАД Арбитраж, РосАПИ (Dadata), Росреестр, ГИБДД, ЦИК РФ, ФССП, Официальные публикации, Минобрнауки и Рособрнадзор, Роспотребнадзор, Роскомнадзор, Росстат, Росводресурсы, Минздрав, Счётная палата, Совет Федерации, Казначейство, Росприроднадзор, МЧС, Россельхознадзор, МВД, Ростехнадзор.
 - Инструменты разработки: `uv`, `pytest`, `ruff`, `mypy`, `Makefile`.
 
 ## Направление развития

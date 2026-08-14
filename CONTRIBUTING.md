@@ -29,12 +29,12 @@ src/mcp_russia/
 │   ├── kad_arbitrazh/  # Картотека арбитражных дел
 │   ├── kaznacheistvo/  # Федеральное казначейство
 │   ├── mchs/           # МЧС России
-│   ├── minobrnauki/    # Минобрнауки
+│   ├── minobrnauki/    # Минобрнауки и Рособрнадзор
 │   ├── minzdrav/       # Минздрав
 │   ├── publikatsii/    # Официальные публикации
 │   ├── rosapi/         # РосАПИ (Dadata)
 │   ├── rosaudit/       # Счётная палата
-│   ├── rosgidromet/    # Росгидромет
+│   ├── rosgidromet/    # Росгидромет (Open-Meteo)
 │   ├── roskomnadzor/   # Роскомнадзор
 │   ├── rospotrebnadzor/# Роспотребнадзор
 │   ├── rosprirodnadzor/# Росприроднадзор

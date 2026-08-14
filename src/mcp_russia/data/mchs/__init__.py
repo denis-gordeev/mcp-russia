@@ -10,7 +10,7 @@ META_FUNKTSII = MetaFunktsii(
         "гражданская оборона, радиационный мониторинг, спасательные операции, "
         "гидрологическая обстановка, прогнозы чрезвычайных ситуаций"
     ),
-    versiya="0.1.0",
+    versiya="0.2.0",
     baza_api="https://mchs.gov.ru",
     trebuet_autentifikatsii=False,
     tegi=[

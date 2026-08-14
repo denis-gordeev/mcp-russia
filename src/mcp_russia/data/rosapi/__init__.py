@@ -22,7 +22,7 @@ META_FUNKTSII = MetaFunktsii(
     peremennaya_avt_env="MCP_RUSSIA_DADATA_API_KEY",
     tegi=[
         "адрес",
-        "фиаc",
+        "фиас",
         "инн",
         "огрн",
         "банки",
