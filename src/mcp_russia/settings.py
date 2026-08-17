@@ -21,7 +21,7 @@ POLZOVATELSKIY_AGENT: str = os.environ.get("MCP_RUSSIA_USER_AGENT", "mcp-russia/
 # --- Поиск инструментов ---
 # "bm25" (по умолчанию): BM25-поиск — заменяет spisok_instrumentov
 #   на poisk_instrumentov + vypolnit_instrument
-# "rezhim_koda": Экспериментальный режим кода — poisk + poluchit_tegi + vypolnit
+# "rezhim_koda": Экспериментальный режим кода — teg + poisk + poluchit_skhemy
 # "none": Без трансформации — все 257 инструментов доступны сразу
 POISK_INSTRUMENTOV: str = os.environ.get("MCP_RUSSIA_TOOL_SEARCH", "bm25")
 

@@ -49,7 +49,7 @@ class PokazatelBezopasnosti(BaseModel):
     znachenie: float | None = None
     edinitsa_izmereniya: str = ""
     predelno_dopustimoe: float | None = None
-    sostoyanie: str = ""  # "norma", "prevyshenie", "ponizhenie"
+    sostoyanie: str = ""  # возможные значения: «норма», «превышение», «понижение»
 
 
 class ZhalobaPotrebitelya(BaseModel):

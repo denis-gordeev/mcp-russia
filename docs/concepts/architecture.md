@@ -37,7 +37,7 @@ src/
 mcp = FastMCP(
     "mcp-russia",
     instructions="Русскоязычный MCP-сервер для государственных и публичных данных РФ",
-    version="0.5.0",
+    version="0.6.0",
     lifespan=http_zhiznennyy_tsikl,
 )
 reyestr = ReyestrFunktsiy()

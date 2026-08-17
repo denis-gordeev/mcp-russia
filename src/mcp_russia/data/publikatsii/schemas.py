@@ -13,7 +13,7 @@ class NormativnyyAkt(BaseModel):
     tip: str = ""  # фз, указ, постановление пр. и т.д.
     data_prinyatiya: str = ""
     data_publikatsii: str = ""
-    istochnik: str = ""  # pravo.gov.ru, rg.ru и т.д.
+    istochnik: str = ""  # источник: pravo.gov.ru, rg.ru и т.д.
     sostoyanie: str = ""  # действующий, утратил силу и т.д.
     otrasl: str = ""
     kratkoe_opisanie: str = ""

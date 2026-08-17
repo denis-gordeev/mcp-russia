@@ -14,7 +14,7 @@ server.py с объектом `mcp`, будет автоматически об�
     from fastmcp import FastMCP
     from mcp_russia._shared.feature import ReyestrFunktsiy
 
-    mcp = FastMCP("mcp-russia", instructions="...", version="0.5.0")
+    mcp = FastMCP("mcp-russia", instructions="...", version="0.6.0")
     reyestr = ReyestrFunktsiy()
     reyestr.obnaruzhit()
     reyestr.smontirovat_vse(mcp)
