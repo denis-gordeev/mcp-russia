@@ -140,7 +140,7 @@ async def info_zakupki(
         stroki.append(f"- ИНН заказчика: {zakupka.organizator_inn}")
 
     stroki.append("\nИсточник: ЕИС закупок / zakupki.gov.ru")
-    return "\n".join(stroki)
+    return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
 
 async def poisk_kontraktov(

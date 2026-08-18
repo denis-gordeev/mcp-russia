@@ -101,7 +101,7 @@ async def info_deputata(identifikator_deputata: int, kontekst: Context) -> str:
 
     stroki.append("\nИсточник: api.duma.gov.ru / Госдума ФС РФ")
 
-    return "\n".join(stroki)
+    return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
 
 async def spisok_fraktsii(kontekst: Context) -> str:

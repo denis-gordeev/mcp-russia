@@ -13,5 +13,10 @@ META_FUNKTSII = MetaFunktsii(
     trebuet_autentifikatsii=False,
     peremennaya_avt_env="MCP_RUSSIA_DUMA_API_TOKEN",
     tegi=["госдума", "депутаты", "законопроекты", "парламент", "голосования"],
-    operatsii_trebuyut_avtorizatsii=["spisok_deputatov", "zakonoproekty", "golosovaniya"],
+    operatsii_trebuyut_avtorizatsii=[
+        "spisok_deputatov",
+        "info_deputata",
+        "zakonoproekty",
+        "golosovaniya",
+    ],
 )

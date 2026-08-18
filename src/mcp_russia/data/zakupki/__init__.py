@@ -13,5 +13,11 @@ META_FUNKTSII = MetaFunktsii(
     trebuet_autentifikatsii=False,
     peremennaya_avt_env="MCP_RUSSIA_ZAKUPKI_API_TOKEN",
     tegi=["закупки", "44-фз", "223-фз", "контракты", "тендеры", "еис"],
-    operatsii_trebuyut_avtorizatsii=["poisk_zakupok", "poisk_kontraktov", "info_zakupki"],
+    operatsii_trebuyut_avtorizatsii=[
+        "poisk_zakupok",
+        "poisk_kontraktov",
+        "info_zakupki",
+        "plany_zakupok",
+        "poisk_rnp",
+    ],
 )

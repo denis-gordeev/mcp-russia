@@ -96,7 +96,7 @@ API: kaznacheistvo_mezhbyudzhetnye_transferty(subiekt="16") *(детализац
 > Промпт: "Какие муниципалитеты получили наибольший объём специальных перечислений в 2024 году?"
 
 ```
-API: kaznacheistvo_mezhbyudzhetnye_transferty(god=2024) *(планируемый модуль «Бюджетная система»)*
+API: kaznacheistvo_mezhbyudzhetnye_transferty(god=2024)
 ```
 
 **2. Расчёт на душу населения и сравнение с индикаторами**
@@ -104,7 +104,7 @@ API: kaznacheistvo_mezhbyudzhetnye_transferty(god=2024) *(планируемый
 > Промпт: "Сопоставьте объём специальных перечислений на душу населения с индексом человеческого развития (ИЧР) муниципалитетов"
 
 ```
-API: kaznacheistvo_mezhbyudzhetnye_transferty *(планируемый)* + rosstat_informatsiya_o_regionye + rosstat_pokazateli_rosstata
+API: kaznacheistvo_mezhbyudzhetnye_transferty + rosstat_informatsiya_o_regionye + rosstat_pokazateli_rosstata
 ```
 
 **3. Проверка целевого использования ресурсов**
@@ -120,7 +120,7 @@ API: zakupki_poisk_kontraktov(inn_zakazchika="...") + rosaudit_ispolnenie_byudzh
 > Промпт: "Специальные перечисления направляются в муниципалитеты с опорой на социальную необходимость или распределяются пропорционально?"
 
 ```
-API: kaznacheistvo_mezhbyudzhetnye_transferty *(планируемый)* + rosstat_pokazateli_rosstata()
+API: kaznacheistvo_mezhbyudzhetnye_transferty + rosstat_pokazateli_rosstata()
 ```
 
 ### Типовой вывод
@@ -282,7 +282,7 @@ API: zakupki_sposoby_zakupok()
 > Промпт: "Сколько поставщиков федеральных органов власти включены в реестр недобросовестных поставщиков (РНП)?"
 
 ```
-API: zakupki_poisk_zakupok(zapros="недобросовестный поставщик") *(функционал РНП — планируемый)*
+API: zakupki_poisk_rnp(inn="...")
 ```
 
 ---
@@ -316,7 +316,7 @@ API: zakupki_poisk_zakupok(zapros="недобросовестный постав
 ## Следующие шаги
 
 - привязать примеры к конкретным кейсам по программам лекарственного обеспечения, национального проекта «Здравоохранение» и экологического мониторинга;
-- добавить недостающие инструменты: детализация казначейства по разделам/подразделам, лесной надзор в Росприроднадзоре, функционал РНП в модуле «Закупки», поимённое голосование в Совете Федерации.
+- добавить недостающие инструменты: детализация казначейства по разделам/подразделам, региональная фильтрация лесного надзора в Росприроднадзоре;
 
 ### Автоматизация Через `splanirovat_zapros`
 
