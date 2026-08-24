@@ -123,6 +123,7 @@ async def poisk_org_po_inn(inn: str, kontekst: Context) -> str:
                 "LIQUIDATING": "Ликвидируется",
                 "LIQUIDATED": "Ликвидирована",
                 "BANKRUPT": "Банкрот",
+                "REORGANIZING": "Реорганизуется",
             }
             status_tekst = karta_statusov.get(rezultat.sostoyanie, rezultat.sostoyanie)
             stroki.append(f"- Статус: {status_tekst}")

@@ -11,5 +11,5 @@ META_FUNKTSII = MetaFunktsii(
     versiya="0.2.0",
     baza_api="https://гибдд.рф",
     trebuet_autentifikatsii=False,
-    tegi=["гибдд", "мвд", "штрафы", "транспорт", "дтп", "водители"],
+    tegi=["гибдд", "штрафы", "транспорт", "дтп", "водители"],
 )

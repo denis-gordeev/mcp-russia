@@ -44,7 +44,7 @@ async def spisok_deputatov(sozyv: str = "", kontekst: Context | None = None) -> 
             f"Открытые данные доступны на:\n"
             f"- https://api.duma.gov.ru\n"
             f"- https://download.data.duma.gov.ru\n\n"
-            f"Для доступа к API может потребоваться токен (DUMA_API_TOKEN)."
+            f"Для доступа к API может потребоваться токен (MCP_RUSSIA_DUMA_API_TOKEN)."
         )
 
     stroki_tablitsy = [
@@ -230,7 +230,7 @@ async def golosovaniya(
             "Результаты голосований доступны на:\n"
             "- https://duma.gov.ru\n"
             "- https://api.duma.gov.ru\n\n"
-            "Для доступа к API может потребоваться токен (DUMA_API_TOKEN)."
+            "Для доступа к API может потребоваться токен (MCP_RUSSIA_DUMA_API_TOKEN)."
         )
 
     stroki_tablitsy = [

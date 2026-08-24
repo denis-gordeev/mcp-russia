@@ -218,29 +218,25 @@ LLM группирует результаты и выявляет законом
 
 ---
 
-## Сравнение между регионами: мощь 9 контрольно-счётных органов
+## Сравнение между регионами: федеральные и региональные контрольно-счётные органы
 
-В `mcp-russia` доступны данные **9 контрольно-счётных органов субъектов РФ**. Это позволяет строить сквозные сравнения между регионами:
+В `mcp-russia` доступен федеральный модуль Счётной палаты (`rosaudit`). Данные региональных контрольно-счётных органов — **планируемое расширение** (8 субъектов: Москва, Московская область, Санкт-Петербург, Красноярский край, Нижегородская область, Ростовская область, Республика Татарстан, Свердловская область).
+
+Пока региональные модули не реализованы, сравнение между регионами ограничено данными федерального уровня:
 
 > Промпт: "Сравни расходы на здравоохранение на душу населения для столиц субъектов РФ: Московская область, Санкт-Петербург, Свердловская область, Ростовская область, Нижегородская область, Краснодарский край, Республика Татарстан, Красноярский край"
 
-Используя `vypolnit_paket`:
+Используя `vypolnit_paket` (только федеральный модуль):
 
 ```json
 [
   {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"tip": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Москва", "tip": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Свердловская область"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Нижегородская область"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Ростовская область", "tip": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Красноярский край", "tip": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Татарстан"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "СПб", "tip": "Здравоохранение"}},
-  {"imya_instrumenta": "rosaudit_poisk_narusheniy", "argumenty": {"organizatsiya": "Красноярский край"}}
+  {"imya_instrumenta": "rosstat_spisok_regionov", "argumenty": {}},
+  {"imya_instrumenta": "kaznacheistvo_ispolnenie_byudzheta", "argumenty": {"god": 2024}}
 ]
 ```
 
-9 источников, один вызов — параллельный опрос.
+Федеральные источники, один вызов — параллельный опрос. Региональные контрольно-счётные органы будут добавлены отдельными модулями.
 
 ---
 

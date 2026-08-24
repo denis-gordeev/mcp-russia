@@ -88,7 +88,7 @@ API: minzdrav_poisk_med_organizatsiy (по субъекту) + rosstat_demografi
 > Промпт: «Сколько каждый субъект РФ тратит на здравоохранение в расчёте на душу населения?»
 
 ```
-API: rosaudit_ispolnenie_byudzheta (по субъекту) + rosstat_demografiya (численность)
+API: rosaudit_ispolnenie_byudzheta + rosstat_demografiya (численность)
 ```
 
 **3. Итоговые показатели**
