@@ -43,7 +43,7 @@ src/mcp_russia/data/{modul}/
 В `constants.py` храните URL, коды, словари типа перечислений и прочие фиксированные значения.
 
 ```python
-PRIMER_BAZA_API = "https://api.example.gov/v1"
+PRIMER_BAZA_API = "https://api.example.gov.ru/v1"
 
 TIPY_ZAPROSA = {
     "1": "Базовый",
@@ -141,7 +141,7 @@ META_FUNKTSII = MetaFunktsii(
     imya="primer",
     opisanie="Описание новой интеграции",
     versiya="0.1.0",
-    baza_api="https://api.example.gov/v1",
+    baza_api="https://api.example.gov.ru/v1",
     trebuet_autentifikatsii=False,
     tegi=["primer", "publichnye-dannye"],
 )

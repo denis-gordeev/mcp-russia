@@ -7,6 +7,7 @@ on:
 
 jobs:
   ci:
+    name: Проверка качества
     runs-on: ubuntu-latest
     strategy:
       matrix:
