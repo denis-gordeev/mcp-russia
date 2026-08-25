@@ -26,6 +26,15 @@ from .constants import NALOGOVYE_STAVKI, OSNOVNYE_BANKI
 from .schemas import AdresRF, BankRF, Organizatsiya
 
 
+def _zametka_ob_avtorizatsii() -> str:
+    """Заметка о необходимости настройки API-ключа Dadata при его отсутствии."""
+    from mcp_russia.settings import KLYUCH_DADATA_API
+
+    if not KLYUCH_DADATA_API:
+        return "\n\n*Для полного доступа к API настройте MCP_RUSSIA_DADATA_API_KEY*"
+    return ""
+
+
 async def konsul_adres_po_indeksu(indeks: str, kontekst: Context) -> str:
     """Найти адрес по почтовому индексу РФ.
 
@@ -53,7 +62,7 @@ async def konsul_adres_po_indeksu(indeks: str, kontekst: Context) -> str:
             stroki.append(f"**Дом:** {rezultat.dom}")
 
         stroki.append("\nИсточник: ФИАС / Dadata")
-        return "\n".join(stroki)
+        return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
     return (
         f"**Почтовый индекс: {indeks}**\n\n"
@@ -93,7 +102,8 @@ async def poisk_adresa(zapros: str, kontekst: Context) -> str:
 
     zagolovok = f"**Результаты поиска: {zapros}**\n\n"
     zagolovok += "Источник: ФИАС / Dadata\n\n"
-    return zagolovok + tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
+    tablitsa = tablitsa_v_markdown(["#", "Адрес", "Индекс"], stroki_tablitsy)
+    return zagolovok + tablitsa + _zametka_ob_avtorizatsii()
 
 
 async def poisk_org_po_inn(inn: str, kontekst: Context) -> str:
@@ -124,8 +134,15 @@ async def poisk_org_po_inn(inn: str, kontekst: Context) -> str:
                 "LIQUIDATED": "Ликвидирована",
                 "BANKRUPT": "Банкрот",
                 "REORGANIZING": "Реорганизуется",
+                "MERGING": "Слияние",
+                "DIVIDING": "Разделение",
+                "SEPARATING": "Выделение",
+                "INSOLVENT": "Неплатёжеспособна",
             }
-            status_tekst = karta_statusov.get(rezultat.sostoyanie, rezultat.sostoyanie)
+            status_tekst = karta_statusov.get(
+                rezultat.sostoyanie,
+                f"неизвестный ({rezultat.sostoyanie})",
+            )
             stroki.append(f"- Статус: {status_tekst}")
         if rezultat.adres:
             stroki.append(f"- Адрес: {rezultat.adres}")
@@ -135,7 +152,7 @@ async def poisk_org_po_inn(inn: str, kontekst: Context) -> str:
             stroki.append(f"- Дата регистрации: {rezultat.data_registratsii}")
 
         stroki.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
-        return "\n".join(stroki)
+        return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
     return (
         f"**ИНН: {inn}**\n\n"
@@ -170,7 +187,7 @@ async def poisk_org_po_ogrn(ogrn: str, kontekst: Context) -> str:
             stroki.append(f"- Адрес: {rezultat.adres}")
 
         stroki.append("- Источник: ЕГРЮЛ/ЕГРИП через Dadata")
-        return "\n".join(stroki)
+        return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
     return f"**ОГРН: {ogrn}**\n\n{rezultat['oshibka']}"
 
@@ -226,7 +243,7 @@ async def konsul_bank_po_bik(bik: str, kontekst: Context) -> str:
             stroki.append(f"- SWIFT: {rezultat.svift}")
 
         stroki.append("- Источник: ЦБ РФ через Dadata")
-        return "\n".join(stroki)
+        return "\n".join(stroki) + _zametka_ob_avtorizatsii()
 
     naydennye = None
     for bank in OSNOVNYE_BANKI:
@@ -282,12 +299,12 @@ async def nalogovye_stavki(kontekst: Context) -> str:
     await kontekst.info("Запрос налоговых ставок...")
 
     stavki_info = {
-        "NDS": "20% (базовая), 10% (льготная), 0% (экспорт)",
-        "NP": "20% (базовая)",
-        "NDFL": "13% (резидент), 30% (нерезидент)",
-        "USN_D": "6% (может быть снижен регионом до 1%)",
-        "USN_DR": "15% (может быть снижен регионом до 5%)",
-        "ESN": "6% (от дохода)",
+        "НДС": "20% (базовая), 10% (льготная), 0% (экспорт)",
+        "НП": "20% (базовая)",
+        "НДФЛ": "13% (резидент), 30% (нерезидент)",
+        "УСН-Д": "6% (может быть снижен регионом до 1%)",
+        "УСН-ДР": "15% (может быть снижен регионом до 5%)",
+        "ЕСН": "6% (от дохода)",
     }
 
     stroki_tablitsy = []

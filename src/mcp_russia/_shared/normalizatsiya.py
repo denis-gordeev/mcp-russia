@@ -74,7 +74,7 @@ def bezopasnoe_chislo(znachenie: object, po_umolchaniyu: float | None = None) ->
 def izvlech_spisok(dannye: object, *klyuchi: str) -> list[Any]:
     """Извлекает список из корневого массива или известных полей ответа.
 
-    Если даны ключи — ищет по ним; иначе — по типичным именам:
+    Если даны ключи — ищет по ним; иначе — по типичным именам полей ответа:
     data, items, results, records, list.
     """
     if isinstance(dannye, list):
