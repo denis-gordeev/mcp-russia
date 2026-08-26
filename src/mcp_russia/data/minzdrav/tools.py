@@ -160,7 +160,7 @@ async def pokazateli_zdorovya(
         (
             pokazatel.get("nazvanie", ""),
             str(pokazatel.get("znachenie", "")),
-            pokazatel.get("ed_izm", ""),
+            pokazatel.get("edinitsa_izmereniya", ""),
             str(pokazatel.get("god", "")),
             pokazatel.get("subiekt", ""),
         )

@@ -60,7 +60,7 @@ class Postavshchik(BaseModel):
     kontraktov_vyigrano: int = 0
     kontraktov_ispolneno: int = 0
     obshchiy_dokhod: float = 0.0
-    is_dobrosovestny: bool = True
+    dobrosovestny: bool = True
 
 
 class PlanZakupki(BaseModel):

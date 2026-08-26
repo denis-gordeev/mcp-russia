@@ -200,7 +200,7 @@ async def radiatsionnyy_monitoring(
             monitoring.get("stantsiya", ""),
             monitoring.get("subiekt", "")[:30],
             str(monitoring.get("uroven_radiatsii", "")),
-            monitoring.get("edinitsa", ""),
+            monitoring.get("edinitsa_izmereniya", ""),
             str(monitoring.get("norma", "")),
             monitoring.get("data_izmereniya", ""),
         )

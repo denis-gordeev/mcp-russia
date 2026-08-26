@@ -292,7 +292,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
                     kontraktov_vyigrano=0,
                     kontraktov_ispolneno=0,
                     obshchiy_dokhod=0.0,
-                    is_dobrosovestny=True,
+                    dobrosovestny=True,
                 )
         elif len(inn) == 12:
             ip = await poluchit_ip(inn)
@@ -305,7 +305,7 @@ async def info_postavshchika(inn: str) -> Postavshchik | None:
                     kontraktov_vyigrano=0,
                     kontraktov_ispolneno=0,
                     obshchiy_dokhod=0.0,
-                    is_dobrosovestny=True,
+                    dobrosovestny=True,
                 )
     except Exception:
         logger.exception("Ошибка при получении информации о поставщике %s", inn)

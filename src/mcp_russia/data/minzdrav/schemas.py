@@ -39,7 +39,7 @@ class PokazatelZdorovya(BaseModel):
     kod: str
     nazvanie: str
     znachenie: float = 0.0
-    ed_izm: str = ""
+    edinitsa_izmereniya: str = ""
     god: int = 0
     subiekt: str = ""
     istochnik: str = ""

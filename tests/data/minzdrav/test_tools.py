@@ -98,7 +98,7 @@ async def test_pokazateli_zdorovya_nayden():
         {
             "nazvanie": "Ожидаемая продолжительность жизни",
             "znachenie": 73.5,
-            "ed_izm": "лет",
+            "edinitsa_izmereniya": "лет",
             "god": 2024,
             "subiekt": "РФ",
         },

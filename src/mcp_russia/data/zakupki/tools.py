@@ -247,9 +247,7 @@ async def info_postavshchika(
     if not postavshchik:
         return f"Поставщик с ИНН {inn} не найден.\n\nПроверьте корректность ИНН."
 
-    sostoyanie = (
-        "Добросовестный" if postavshchik.is_dobrosovestny else "В реестре недобросовестных"
-    )
+    sostoyanie = "Добросовестный" if postavshchik.dobrosovestny else "В реестре недобросовестных"
     stroki = [
         f"**Поставщик: {postavshchik.nazvanie}**",
         f"- ИНН: {postavshchik.inn}",

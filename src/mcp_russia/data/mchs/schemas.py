@@ -31,7 +31,7 @@ class RadiatsionnyyMonitoring(BaseModel):
     stantsiya: str
     subiekt: str = ""
     uroven_radiatsii: float = 0.0
-    edinitsa: str = "мкЗв/ч"
+    edinitsa_izmereniya: str = "мкЗв/ч"
     data_izmereniya: str = ""
     norma: float = 0.30
 

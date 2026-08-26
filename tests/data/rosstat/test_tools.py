@@ -253,7 +253,7 @@ async def test_indikator_dannye_s_dannymi():
             nazvanie="Индекс потребительских цен (инфляция)",
             period="2025-01",
             znachenie=105.2,
-            edinitsa="%",
+            edinitsa_izmereniya="%",
             subiekt="",
         ),
     ]
@@ -272,7 +272,7 @@ async def test_indikator_dannye_s_regionom():
             nazvanie="Средняя заработная плата",
             period="2024",
             znachenie=85000.0,
-            edinitsa="руб.",
+            edinitsa_izmereniya="руб.",
             subiekt="г. Москва",
         ),
     ]
@@ -296,7 +296,7 @@ async def test_indikator_dannye_emiss_code_direct():
             nazvanie="Тестовый показатель",
             period="2024",
             znachenie=42.0,
-            edinitsa="шт.",
+            edinitsa_izmereniya="шт.",
             subiekt="",
         ),
     ]
@@ -314,7 +314,7 @@ async def test_dinamika_regiona_s_dannymi():
             nazvanie="Средняя заработная плата",
             period="2023",
             znachenie=80000.0,
-            edinitsa="руб.",
+            edinitsa_izmereniya="руб.",
             subiekt="г. Москва",
         ),
         IndikatorDannye(
@@ -322,7 +322,7 @@ async def test_dinamika_regiona_s_dannymi():
             nazvanie="Средняя заработная плата",
             period="2024",
             znachenie=88000.0,
-            edinitsa="руб.",
+            edinitsa_izmereniya="руб.",
             subiekt="г. Москва",
         ),
         IndikatorDannye(
@@ -330,7 +330,7 @@ async def test_dinamika_regiona_s_dannymi():
             nazvanie="Средняя заработная плата",
             period="2022",
             znachenie=70000.0,
-            edinitsa="руб.",
+            edinitsa_izmereniya="руб.",
             subiekt="г. Москва",
         ),
     ]
@@ -508,7 +508,7 @@ async def test_vvp_dannye_s_dannymi():
             nazvanie="Валовой внутренний продукт",
             period="2024",
             znachenie=187000.0,
-            edinitsa="млрд руб.",
+            edinitsa_izmereniya="млрд руб.",
             subiekt="",
         ),
     ]
@@ -533,7 +533,7 @@ async def test_bezrabotitsa_dannye_s_dannymi():
             nazvanie="Уровень безработицы",
             period="2024",
             znachenie=3.2,
-            edinitsa="%",
+            edinitsa_izmereniya="%",
             subiekt="",
         ),
     ]
@@ -558,7 +558,7 @@ async def test_dokhody_na_dushu_s_dannymi():
             nazvanie="Среднедушевые денежные доходы",
             period="2024",
             znachenie=45600.0,
-            edinitsa="руб./мес.",
+            edinitsa_izmereniya="руб./мес.",
             subiekt="",
         ),
     ]
@@ -583,7 +583,7 @@ async def test_promyshlennoe_proizvodstvo_s_dannymi():
             nazvanie="Индекс промышленного производства",
             period="2024",
             znachenie=103.5,
-            edinitsa="%",
+            edinitsa_izmereniya="%",
             subiekt="",
         ),
     ]
@@ -608,7 +608,7 @@ async def test_uroven_bednosti_s_dannymi():
             nazvanie="Уровень бедности",
             period="2024",
             znachenie=9.8,
-            edinitsa="%",
+            edinitsa_izmereniya="%",
             subiekt="",
         ),
     ]
@@ -633,7 +633,7 @@ async def test_srednyaya_pensiya_s_dannymi():
             nazvanie="Средний размер назначенных пенсий",
             period="2024",
             znachenie=21500.0,
-            edinitsa="руб.",
+            edinitsa_izmereniya="руб.",
             subiekt="",
         ),
     ]

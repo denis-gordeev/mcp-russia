@@ -60,7 +60,7 @@ class IndikatorDannye(BaseModel):
     nazvanie: str = ""
     period: str = ""
     znachenie: float | None = None
-    edinitsa: str = ""
+    edinitsa_izmereniya: str = ""
     subiekt: str = ""
 
 

@@ -388,7 +388,7 @@ async def poluchit_indikator_dannye(
                     nazvanie=imya_indikatora or bezopasnaya_stroka(zapis.get("name"), kod),
                     period=bezopasnaya_stroka(zapis.get("date", zapis.get("period", ""))),
                     znachenie=bezopasnoe_chislo(zapis.get("value")),
-                    edinitsa=bezopasnaya_stroka(zapis.get("unit")),
+                    edinitsa_izmereniya=bezopasnaya_stroka(zapis.get("unit")),
                     subiekt=nazvanie_subiekta,
                 )
             )

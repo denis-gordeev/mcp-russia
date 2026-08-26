@@ -102,7 +102,7 @@ async def test_radiatsionnyy_monitoring_s_dannymi():
             "stantsiya": "Москва-1",
             "subiekt": "Москва",
             "uroven_radiatsii": 0.12,
-            "edinitsa": "мкЗв/ч",
+            "edinitsa_izmereniya": "мкЗв/ч",
             "data_izmereniya": "2026-06-01",
             "norma": 0.30,
         },

@@ -289,7 +289,7 @@ def _razobrat_radiatsiyu(dannye: dict[str, Any]) -> dict[str, Any]:
         "stantsiya": dannye.get("station", "") or dannye.get("stantsiya", ""),
         "subiekt": dannye.get("region", "") or dannye.get("subject", ""),
         "uroven_radiatsii": dannye.get("level", 0.0) or dannye.get("uroven_radiatsii", 0.0),
-        "edinitsa": dannye.get("unit", "мкЗв/ч"),
+        "edinitsa_izmereniya": dannye.get("unit", "мкЗв/ч"),
         "data_izmereniya": dannye.get("date", "") or dannye.get("data_izmereniya", ""),
         "norma": dannye.get("norm", 0.30) or dannye.get("norma", 0.30),
         "istochnik": "МЧС России (mchs.gov.ru)",

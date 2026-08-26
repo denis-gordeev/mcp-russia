@@ -431,7 +431,7 @@ async def indikator_dannye(
             formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
         )
         stroki_tablitsy.append(
-            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa_izmereniya or "—")
         )
     zagolovok_tekst = imya_indikatora or f"Показатель ЕМИСС {kod_emiss}"
     zagolovok = f"**{zagolovok_tekst}**{tekst_filtra}\n\n"
@@ -526,7 +526,9 @@ async def dinamika_regiona(
             and predydushchee_znachenie != 0
         ):
             izmenenie = f"{(zapis.znachenie / predydushchee_znachenie - 1) * 100:+.2f}%"
-        stroki_tablitsy.append((zapis.period, znachenie, zapis.edinitsa or "—", izmenenie))
+        stroki_tablitsy.append(
+            (zapis.period, znachenie, zapis.edinitsa_izmereniya or "—", izmenenie)
+        )
         if zapis.znachenie is not None:
             predydushchee_znachenie = zapis.znachenie
 
@@ -655,7 +657,7 @@ async def vvp_dannye(god: str = "", kontekst: Context | None = None) -> str:
         znachenie = (
             formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
         )
-        stroki_tablitsy.append((zapis.period, znachenie, zapis.edinitsa or "—"))
+        stroki_tablitsy.append((zapis.period, znachenie, zapis.edinitsa_izmereniya or "—"))
     zagolovok = "**Валовой внутренний продукт (ВВП) России**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
     return zagolovok + tablitsa_v_markdown(
@@ -732,7 +734,7 @@ async def dokhody_na_dushu(
             formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
         )
         stroki_tablitsy.append(
-            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa_izmereniya or "—")
         )
     zagolovok = f"**Среднедушевые денежные доходы{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"
@@ -844,7 +846,7 @@ async def srednyaya_pensiya(
             formatirovat_chislo_ru(zapis.znachenie, 2) if zapis.znachenie is not None else "—"
         )
         stroki_tablitsy.append(
-            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa or "—")
+            (zapis.period, zapis.subiekt or "—", znachenie, zapis.edinitsa_izmereniya or "—")
         )
     zagolovok = f"**Средний размер назначенных пенсий{tekst_filtra}**\n\n"
     zagolovok += "Источник: Росстат / ЕМИСС (fedstat.ru)\n\n"

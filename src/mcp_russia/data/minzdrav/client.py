@@ -253,7 +253,7 @@ def _razobrat_pokazatel(zapis: dict[str, Any]) -> dict[str, Any]:
         "kod": zapis.get("code", "") or zapis.get("kod", ""),
         "nazvanie": zapis.get("name", ""),
         "znachenie": zapis.get("value") or zapis.get("znachenie", 0),
-        "ed_izm": zapis.get("unit", "") or zapis.get("ed_izm", ""),
+        "edinitsa_izmereniya": zapis.get("unit", "") or zapis.get("ed_izm", ""),
         "god": zapis.get("year") or zapis.get("god", 0),
         "subiekt": zapis.get("region", ""),
         "istochnik": zapis.get("source", "Открытые данные Минздрава"),
